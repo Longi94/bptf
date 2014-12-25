@@ -3,15 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="16dp">
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp"
+    android:gravity="center_vertical"
+    android:baselineAligned="false">
 
     <RelativeLayout
-        android:layout_width="64dp"
-        android:layout_height="64dp">
+        android:layout_width="84dp"
+        android:layout_height="72dp"
+        android:id="@+id/item_frame">
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:id="@+id/image_view_effect"
+            android:scaleType="centerCrop"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/image_view_item_icon"
+            android:scaleType="centerCrop"/>
+
     </RelativeLayout>
 
     <LinearLayout
