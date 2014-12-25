@@ -8,9 +8,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
-/**
- * Created by ThanhLong on 2014.12.25..
- */
 public class PriceListProvider extends ContentProvider {
 
     // The URI Matcher used by this content provider.

@@ -2,82 +2,53 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="16dp">
 
+    <RelativeLayout
+        android:layout_width="64dp"
+        android:layout_height="64dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:id="@+id/item_name"
-            android:paddingRight="2dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:id="@+id/item_tradable"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:id="@+id/item_craftable"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:id="@+id/item_quality"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:id="@+id/item_price_index"
-            android:paddingLeft="2dp"/>
-
-        </LinearLayout>
+        android:layout_weight="1"
+        android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:id="@+id/item_currency"/>
+        android:id="@+id/item_name"
+        android:paddingRight="2dp"
+        android:text="Kritzkrieg"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:id="@+id/item_price"/>
+        android:id="@+id/item_price"
+        android:text="0.11-0.33 ref"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:id="@+id/item_price_max"/>
+        android:id="@+id/item_last_update"
+        android:text="1 day ago"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:id="@+id/item_last_update"/>
+        android:id="@+id/item_difference"
+        android:text="-0.11 ref"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:id="@+id/item_difference"/>
+    </LinearLayout>
+
 </LinearLayout>

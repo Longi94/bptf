@@ -7,17 +7,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.adapter.PriceListCursorAdapter;
 import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
 import com.tlongdev.bktf.task.FetchPriceList;
 
@@ -55,8 +53,6 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             PriceEntry.COLUMN_DIFFERENCE
     };
 
-    // These indices are tied to FORECAST_COLUMNS.  If FORECAST_COLUMNS changes, these
-    // must change.
     public static final int COL_PRICE_LIST_ID = 0;
     public static final int COL_PRICE_LIST_NAME = 1;
     public static final int COL_PRICE_LIST_QUAL = 2;
@@ -66,12 +62,12 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     public static final int COL_PRICE_LIST_CURR = 6;
     public static final int COL_PRICE_LIST_PRIC = 7;
     public static final int COL_PRICE_LIST_PMAX = 8;
-    public static final int COL_PRICE_LIST_UPDA = 10;
-    public static final int COL_PRICE_LIST_DIFF = 11;
+    public static final int COL_PRICE_LIST_UPDA = 9;
+    public static final int COL_PRICE_LIST_DIFF = 10;
 
     private ListView mListView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private SimpleCursorAdapter cursorAdapter;
+    private PriceListCursorAdapter cursorAdapter;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -102,54 +98,21 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
         // The SimpleCursorAdapter will take data from the database through the
         // Loader and use it to populate the ListView it's attached to.
-        cursorAdapter = new SimpleCursorAdapter(
-                getActivity(),
-                R.layout.list_changes,
-                null,
-                // the column names to use to fill the textviews
-                new String[]{PriceEntry.COLUMN_ITEM_NAME,
-                        PriceEntry.COLUMN_ITEM_QUALITY,
-                        PriceEntry.COLUMN_ITEM_TRADABLE,
-                        PriceEntry.COLUMN_ITEM_CRAFTABLE,
-                        PriceEntry.COLUMN_PRICE_INDEX,
-                        PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
-                        PriceEntry.COLUMN_ITEM_PRICE,
-                        PriceEntry.COLUMN_ITEM_PRICE_MAX,
-                        PriceEntry.COLUMN_LAST_UPDATE,
-                        PriceEntry.COLUMN_DIFFERENCE
-                },
-                // the textviews to fill with the data pulled from the columns above
-                new int[]{R.id.item_name,
-                        R.id.item_quality,
-                        R.id.item_tradable,
-                        R.id.item_craftable,
-                        R.id.item_price_index,
-                        R.id.item_currency,
-                        R.id.item_price,
-                        R.id.item_price_max,
-                        R.id.item_last_update,
-                        R.id.item_difference
-                },
-                0
+        cursorAdapter = new PriceListCursorAdapter(
+                getActivity(), null, 0
         );
 
         // Get a reference to the ListView, and attach this adapter to it.
         mListView = (ListView) rootView.findViewById(R.id.list_view_changes);
-
         mListView.setAdapter(cursorAdapter);
 
         return rootView;
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main, menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.refresh){
-            new FetchPriceList(getActivity()).execute(getResources().getString(R.string.api_key));
+            new FetchPriceList(getActivity()).execute(getResources().getString(R.string.backpack_tf_api_key));
             return true;
         }
         return super.onOptionsItemSelected(item);
