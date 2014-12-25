@@ -1,8 +1,10 @@
 package com.tlongdev.bktf;
 
-import android.support.v4.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -13,6 +15,7 @@ import android.view.MenuItem;
 import com.tlongdev.bktf.fragment.HomeFragment;
 import com.tlongdev.bktf.fragment.PriceListFragment;
 import com.tlongdev.bktf.fragment.UserFragment;
+import com.tlongdev.bktf.task.FetchPriceList;
 
 
 public class MainActivity extends ActionBarActivity
@@ -41,6 +44,20 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (prefs.getBoolean(getResources().getString(R.string.pref_initial_load), true)){
+            new FetchPriceList(this).execute(getResources().getString(R.string.backpack_tf_api_key));
+            SharedPreferences.Editor editor = prefs.edit();
+
+            editor.putBoolean(getResources().getString(R.string.pref_initial_load), false);
+            editor.apply();
+        }
     }
 
     @Override

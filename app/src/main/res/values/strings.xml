@@ -18,5 +18,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_prices">Prices</string>
     <string name="action_refresh">Refresh</string>
+    <string name="pref_initial_load">initial_load</string>
 
 </resources>

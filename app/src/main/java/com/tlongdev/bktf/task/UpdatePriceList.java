@@ -1,6 +1,5 @@
 package com.tlongdev.bktf.task;
 
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -9,7 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
+import com.tlongdev.bktf.data.PriceListContract;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,20 +23,13 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Vector;
 
-public class FetchPriceList extends AsyncTask<String, Void, Void>{
+public class UpdatePriceList extends AsyncTask<String, Void, Void>{
 
-    private static final String LOG_TAG = FetchPriceList.class.getSimpleName();
+    public static final String LOG_TAG = UpdatePriceList.class.getSimpleName();
 
     private final Context mContext;
-    private ProgressDialog loadingDialog;
-
-    public FetchPriceList(Context context) {
+    public UpdatePriceList(Context context) {
         mContext = context;
-    }
-
-    @Override
-    protected void onPreExecute() {
-        loadingDialog = ProgressDialog.show(mContext, null, "Creating initial database...", true);
     }
 
     @Override
@@ -123,12 +115,6 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
         return null;
     }
 
-    @Override
-    protected void onPostExecute(Void pVoid) {
-        if (loadingDialog != null)
-            loadingDialog.dismiss();
-    }
-
     private void getItemsFromJson(String jsonString) throws JSONException {
 
         final String OWM_RESPONSE = "response";
@@ -146,6 +132,18 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
         final String OWM_VALUE_RAW = "value_raw";
         final String OWM_LAST_UPDATE = "last_update";
         final String OWM_DIFFERENCE = "difference";
+
+        String[] columns = {PriceListContract.PriceEntry.COLUMN_LAST_UPDATE};
+        Cursor cursor = mContext.getContentResolver().query(
+                PriceListContract.PriceEntry.CONTENT_URI,
+                columns,
+                null,
+                null,
+                PriceListContract.PriceEntry.COLUMN_LAST_UPDATE + " DESC LIMIT 1"
+        );
+        int latestUpdate = 0;
+        if (cursor.moveToFirst())
+            latestUpdate = cursor.getInt(0);
 
         JSONObject jsonObject = new JSONObject(jsonString);
         JSONObject response = jsonObject.getJSONObject(OWM_RESPONSE);
@@ -192,16 +190,19 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
                                 String priceIndex = (String) priceIndexIterator.next();
                                 JSONObject price = priceIndexes.getJSONObject(priceIndex);
 
-                                Double high = null;
-                                if (price.has(OWM_VALUE_HIGH))
-                                    high = price.getDouble(OWM_VALUE_HIGH);
+                                if (latestUpdate <= price.getInt(OWM_LAST_UPDATE)) {
 
-                                cVVector.add(buildContentValues(
-                                        name, quality, tradable, craftable, priceIndex, price.getString(OWM_CURRENCY),
-                                        price.getDouble(OWM_VALUE), high,
-                                        price.getDouble(OWM_VALUE_RAW), price.getInt(OWM_LAST_UPDATE),
-                                        price.getDouble(OWM_DIFFERENCE)
-                                ));
+                                    Double high = null;
+                                    if (price.has(OWM_VALUE_HIGH))
+                                        high = price.getDouble(OWM_VALUE_HIGH);
+
+                                    cVVector.add(buildContentValues(
+                                            name, quality, tradable, craftable, priceIndex, price.getString(OWM_CURRENCY),
+                                            price.getDouble(OWM_VALUE), high,
+                                            price.getDouble(OWM_VALUE_RAW), price.getInt(OWM_LAST_UPDATE),
+                                            price.getDouble(OWM_DIFFERENCE)
+                                    ));
+                                }
                             }
                         }
                         else {
@@ -209,16 +210,18 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
 
                             JSONObject price = priceIndexes.getJSONObject(0);
 
-                            Double high = null;
-                            if (price.has(OWM_VALUE_HIGH))
-                                high = price.getDouble(OWM_VALUE_HIGH);
+                            if (latestUpdate <= price.getInt(OWM_LAST_UPDATE)) {
+                                Double high = null;
+                                if (price.has(OWM_VALUE_HIGH))
+                                    high = price.getDouble(OWM_VALUE_HIGH);
 
-                            cVVector.add(buildContentValues(
-                                    name, quality, tradable, craftable, "0", price.getString(OWM_CURRENCY),
-                                    price.getDouble(OWM_VALUE), high,
-                                    price.getDouble(OWM_VALUE_RAW), price.getInt(OWM_LAST_UPDATE),
-                                    price.getDouble(OWM_DIFFERENCE)
-                            ));
+                                cVVector.add(buildContentValues(
+                                        name, quality, tradable, craftable, "0", price.getString(OWM_CURRENCY),
+                                        price.getDouble(OWM_VALUE), high,
+                                        price.getDouble(OWM_VALUE_RAW), price.getInt(OWM_LAST_UPDATE),
+                                        price.getDouble(OWM_DIFFERENCE)
+                                ));
+                            }
                         }
                     }
                 }
@@ -229,14 +232,14 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
             ContentValues[] cvArray = new ContentValues[cVVector.size()];
             cVVector.toArray(cvArray);
             int rowsInserted = mContext.getContentResolver()
-                    .bulkInsert(PriceEntry.CONTENT_URI, cvArray);
+                    .bulkInsert(PriceListContract.PriceEntry.CONTENT_URI, cvArray);
             Log.v(LOG_TAG, "inserted " + rowsInserted + " rows of weather data");
             // Use a DEBUG variable to gate whether or not you do this, so you can easily
             // turn it on and off, and so that it's easy to see what you can rip out if
             // you ever want to remove it.
             if (true) {
                 Cursor priceListCursor = mContext.getContentResolver().query(
-                        PriceEntry.CONTENT_URI,
+                        PriceListContract.PriceEntry.CONTENT_URI,
                         null,
                         null,
                         null,
@@ -276,20 +279,21 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
 
         ContentValues itemValues = new ContentValues();
 
-        itemValues.put(PriceEntry.COLUMN_ITEM_NAME, name);
-        itemValues.put(PriceEntry.COLUMN_ITEM_QUALITY, quality);
-        itemValues.put(PriceEntry.COLUMN_ITEM_TRADABLE, itemTradable);
-        itemValues.put(PriceEntry.COLUMN_ITEM_CRAFTABLE, itemCraftable);
-        itemValues.put(PriceEntry.COLUMN_PRICE_INDEX, Integer.parseInt(priceIndex));
-        itemValues.put(PriceEntry.COLUMN_ITEM_PRICE_CURRENCY, currency);
-        itemValues.put(PriceEntry.COLUMN_ITEM_PRICE, value);
+        itemValues.put(PriceListContract.PriceEntry.COLUMN_ITEM_NAME, name);
+        itemValues.put(PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY, quality);
+        itemValues.put(PriceListContract.PriceEntry.COLUMN_ITEM_TRADABLE, itemTradable);
+        itemValues.put(PriceListContract.PriceEntry.COLUMN_ITEM_CRAFTABLE, itemCraftable);
+        itemValues.put(PriceListContract.PriceEntry.COLUMN_PRICE_INDEX, Integer.parseInt(priceIndex));
+        itemValues.put(PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_CURRENCY, currency);
+        itemValues.put(PriceListContract.PriceEntry.COLUMN_ITEM_PRICE, value);
         if (valueHigh != null) {
-            itemValues.put(PriceEntry.COLUMN_ITEM_PRICE_MAX, valueHigh);
+            itemValues.put(PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_MAX, valueHigh);
         }
-        itemValues.put(PriceEntry.COLUMN_ITEM_PRICE_RAW, valueRaw);
-        itemValues.put(PriceEntry.COLUMN_LAST_UPDATE, update);
-        itemValues.put(PriceEntry.COLUMN_DIFFERENCE, difference);
+        itemValues.put(PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW, valueRaw);
+        itemValues.put(PriceListContract.PriceEntry.COLUMN_LAST_UPDATE, update);
+        itemValues.put(PriceListContract.PriceEntry.COLUMN_DIFFERENCE, difference);
 
         return itemValues;
     }
+
 }

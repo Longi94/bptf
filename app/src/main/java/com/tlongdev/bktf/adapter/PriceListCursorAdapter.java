@@ -2,19 +2,22 @@ package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.enums.Quality;
 import com.tlongdev.bktf.fragment.HomeFragment;
 
-/**
- * Created by ThanhLong on 2014.12.25..
- */
+import java.io.IOException;
+import java.io.InputStream;
+
 public class PriceListCursorAdapter extends CursorAdapter {
 
     public PriceListCursorAdapter(Context context, Cursor c, int flags) {
@@ -35,46 +38,88 @@ public class PriceListCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        if (cursor.getDouble(HomeFragment.COL_PRICE_LIST_DIFF) > 0)
-            view.setBackgroundColor(Color.GREEN);
-        else if (cursor.getDouble(HomeFragment.COL_PRICE_LIST_DIFF) < 0)
-            view.setBackgroundColor(Color.RED);
-        else
-            view.setBackgroundColor(Color.GRAY);
+        setItemBackground(viewHolder.itemFrame, cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL));
+
+        setEffectImage(context, viewHolder.effect, cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE));
 
         viewHolder.nameView.setText(cursor.getString(HomeFragment.COL_PRICE_LIST_NAME));
-        viewHolder.tradableView.setText("" + cursor.getInt(HomeFragment.COL_PRICE_LIST_TRAD));
-        viewHolder.craftableView.setText("" + cursor.getInt(HomeFragment.COL_PRICE_LIST_CRAF));
-        viewHolder.qualityView.setText("" + cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL));
-        viewHolder.indexView.setText("" + cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE));
-        viewHolder.currencyView.setText(cursor.getString(HomeFragment.COL_PRICE_LIST_CURR));
         viewHolder.priceView.setText("" + cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRIC));
-        viewHolder.priceMaxView.setText("" + cursor.getDouble(HomeFragment.COL_PRICE_LIST_PMAX));
         viewHolder.lastUpdateView.setText("" + cursor.getInt(HomeFragment.COL_PRICE_LIST_UPDA));
         viewHolder.differenceView.setText("" + cursor.getDouble(HomeFragment.COL_PRICE_LIST_DIFF));
     }
 
+    private void setItemBackground(View frame, int quality) {
+        Quality q = Quality.values()[quality];
+
+        switch (q) {
+            case GENUINE:
+                frame.setBackgroundColor(0xFF4D7455);
+                break;
+            case VINTAGE:
+                frame.setBackgroundColor(0xFF476291);
+                break;
+            case UNUSUAL:
+                frame.setBackgroundColor(0xFF8650AC);
+                break;
+            case UNIQUE:
+                frame.setBackgroundColor(0xFFFFD700);
+                break;
+            case COMMUNITY:
+                frame.setBackgroundColor(0xFF70B04A);
+                break;
+            case VALVE:
+                frame.setBackgroundColor(0xFFA50F79);
+                break;
+            case SELF_MADE:
+                frame.setBackgroundColor(0xFF70B04A);
+                break;
+            case STRANGE:
+                frame.setBackgroundColor(0xFFCF6A32);
+                break;
+            case HAUNTED:
+                frame.setBackgroundColor(0xFF38F3AB);
+                break;
+            case COLLECTORS:
+                frame.setBackgroundColor(0xFFAA0000);
+                break;
+            default:
+                frame.setBackgroundColor(0xFFB2B2B2);
+                break;
+        }
+    }
+
+    private void setEffectImage(Context context, ImageView effect, int index) {
+        if (index != 0) {
+            try {
+                // get input stream
+                InputStream ims = context.getAssets().open("effects/" + index + "_380x380.png");
+                // load image as Drawable
+                Drawable d = Drawable.createFromStream(ims, null);
+                // set image to ImageView
+                effect.setImageDrawable(d);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else
+            effect.setImageDrawable(null);
+    }
+
     public static class ViewHolder {
+        public final RelativeLayout itemFrame;
+
+        public final ImageView effect;
+
         public final TextView nameView;
-        public final TextView tradableView;
-        public final TextView craftableView;
-        public final TextView qualityView;
-        public final TextView indexView;
-        public final TextView currencyView;
         public final TextView priceView;
-        public final TextView priceMaxView;
         public final TextView lastUpdateView;
         public final TextView differenceView;
 
         public ViewHolder(View view) {
+            itemFrame = (RelativeLayout) view.findViewById(R.id.item_frame);
+            effect = (ImageView) view.findViewById(R.id.image_view_effect);
             nameView = (TextView) view.findViewById(R.id.item_name);
-            tradableView = (TextView) view.findViewById(R.id.item_tradable);
-            craftableView = (TextView) view.findViewById(R.id.item_craftable);
-            qualityView = (TextView) view.findViewById(R.id.item_quality);
-            indexView = (TextView) view.findViewById(R.id.item_price_index);
-            currencyView = (TextView) view.findViewById(R.id.item_currency);
             priceView = (TextView) view.findViewById(R.id.item_price);
-            priceMaxView = (TextView) view.findViewById(R.id.item_price_max);
             lastUpdateView = (TextView) view.findViewById(R.id.item_last_update);
             differenceView = (TextView) view.findViewById(R.id.item_difference);
         }

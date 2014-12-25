@@ -17,7 +17,7 @@ import android.widget.ListView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.PriceListCursorAdapter;
 import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
-import com.tlongdev.bktf.task.FetchPriceList;
+import com.tlongdev.bktf.task.UpdatePriceList;
 
 
 /**
@@ -86,6 +86,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+
         getLoaderManager().initLoader(PRICE_LIST_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
@@ -112,7 +113,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.refresh){
-            new FetchPriceList(getActivity()).execute(getResources().getString(R.string.backpack_tf_api_key));
+            new UpdatePriceList(getActivity()).execute(getResources().getString(R.string.backpack_tf_api_key));
             return true;
         }
         return super.onOptionsItemSelected(item);
