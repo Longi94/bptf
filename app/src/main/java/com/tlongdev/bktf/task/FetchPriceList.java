@@ -7,13 +7,8 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.tlongdev.bktf.adapter.PriceListAdapter;
 import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
 
 import org.json.JSONArray;
@@ -26,21 +21,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
 
-public class FetchPriceList extends AsyncTask<String, Void, ArrayList<String>> implements LoaderManager.LoaderCallbacks{
+public class FetchPriceList extends AsyncTask<String, Void, Void>{
 
     private static final String LOG_TAG = FetchPriceList.class.getSimpleName();
 
-    private RecyclerView mRecyclerView;
     private final Context mContext;
     private ProgressDialog loadingDialog;
 
-    public FetchPriceList(Context context, RecyclerView recyclerView) {
+    public FetchPriceList(Context context) {
         mContext = context;
-        mRecyclerView = recyclerView;
     }
 
     @Override
@@ -49,7 +41,7 @@ public class FetchPriceList extends AsyncTask<String, Void, ArrayList<String>> i
     }
 
     @Override
-    protected ArrayList<String> doInBackground(String... params) {
+    protected Void doInBackground(String... params) {
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
         HttpURLConnection urlConnection = null;
@@ -122,37 +114,22 @@ public class FetchPriceList extends AsyncTask<String, Void, ArrayList<String>> i
             }
         }
         try {
-            return getItemsFromJson(itemsJsonStr);
+            getItemsFromJson(itemsJsonStr);
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
             return null;
         }
-    }
-
-    @Override
-    protected void onPostExecute(ArrayList<String> strings) {
-        mRecyclerView.setAdapter(new PriceListAdapter(strings));
-        if (loadingDialog != null)
-            loadingDialog.dismiss();
-    }
-
-    @Override
-    public Loader onCreateLoader(int id, Bundle args) {
         return null;
     }
 
     @Override
-    public void onLoadFinished(Loader loader, Object data) {
-
+    protected void onPostExecute(Void pVoid) {
+        if (loadingDialog != null)
+            loadingDialog.dismiss();
     }
 
-    @Override
-    public void onLoaderReset(Loader loader) {
-
-    }
-
-    private ArrayList<String> getItemsFromJson(String jsonString) throws JSONException {
+    private void getItemsFromJson(String jsonString) throws JSONException {
 
         final String OWM_RESPONSE = "response";
         final String OWM_SUCCESS = "success";
@@ -175,14 +152,13 @@ public class FetchPriceList extends AsyncTask<String, Void, ArrayList<String>> i
 
         if (response.getInt(OWM_SUCCESS) == 0) {
             Log.v(LOG_TAG, response.getString(OWM_MESSAGE));
-            return null;
+            return;
         }
 
         JSONObject items = response.getJSONObject(OWM_ITEMS);
 
         Iterator<String> i = items.keys();
 
-        ArrayList<String> itemNames = new ArrayList<>();
         Vector<ContentValues> cVVector = new Vector<>();
 
         while (i.hasNext()) {
@@ -216,76 +192,33 @@ public class FetchPriceList extends AsyncTask<String, Void, ArrayList<String>> i
                                 String priceIndex = (String) priceIndexIterator.next();
                                 JSONObject price = priceIndexes.getJSONObject(priceIndex);
 
-                                String temporary = "";
+                                Double high = null;
+                                if (price.has(OWM_VALUE_HIGH))
+                                    high = price.getDouble(OWM_VALUE_HIGH);
 
-                                temporary = temporary + name + " - " + tradable + " - " + craftable + " - " + quality + " - " + priceIndex + "\n";
-                                temporary = temporary + "Price: " + price.getDouble(OWM_VALUE);
-
-                                if (price.has(OWM_VALUE_HIGH)) {
-                                    temporary = temporary + " - " + price.getDouble(OWM_VALUE_HIGH);
-                                }
-                                temporary = temporary + " " + price.getString(OWM_CURRENCY) + "\n";
-                                temporary = temporary + "Raw: " + price.getDouble(OWM_VALUE_RAW) + "\n";
-                                temporary = temporary + "Last Update: " + price.getInt(OWM_LAST_UPDATE) + "\n";
-                                temporary = temporary + "Difference: " + price.getDouble(OWM_DIFFERENCE);
-
-                                itemNames.add(temporary);
-
-                                ContentValues itemValues = new ContentValues();
-
-                                itemValues.put(PriceEntry.COLUMN_ITEM_NAME, name);
-                                itemValues.put(PriceEntry.COLUMN_ITEM_QUALITY, quality);
-                                itemValues.put(PriceEntry.COLUMN_ITEM_TRADABLE, tradable);
-                                itemValues.put(PriceEntry.COLUMN_ITEM_CRAFTABLE, craftable);
-                                itemValues.put(PriceEntry.COLUMN_PRICE_INDEX, priceIndex);
-                                itemValues.put(PriceEntry.COLUMN_ITEM_PRICE_CURRENCY, price.getString(OWM_CURRENCY));
-                                itemValues.put(PriceEntry.COLUMN_ITEM_PRICE, price.getDouble(OWM_VALUE));
-                                if (price.has(OWM_VALUE_HIGH)) {
-                                    itemValues.put(PriceEntry.COLUMN_ITEM_PRICE_MAX, price.has(OWM_VALUE_HIGH));
-                                }
-                                itemValues.put(PriceEntry.COLUMN_ITEM_PRICE_RAW, price.getDouble(OWM_VALUE_RAW));
-                                itemValues.put(PriceEntry.COLUMN_LAST_UPDATE, price.getInt(OWM_LAST_UPDATE));
-                                itemValues.put(PriceEntry.COLUMN_DIFFERENCE, price.getDouble(OWM_DIFFERENCE));
-
-                                cVVector.add(itemValues);
+                                cVVector.add(buildContentValues(
+                                        name, quality, tradable, craftable, priceIndex, price.getString(OWM_CURRENCY),
+                                        price.getDouble(OWM_VALUE), high,
+                                        price.getDouble(OWM_VALUE_RAW), price.getInt(OWM_LAST_UPDATE),
+                                        price.getDouble(OWM_DIFFERENCE)
+                                ));
                             }
                         }
                         else {
                             JSONArray priceIndexes = craftability.getJSONArray(craftable);
 
                             JSONObject price = priceIndexes.getJSONObject(0);
-                            String temporary = "";
 
-                            temporary = temporary + name + " - " + tradable + " - " + craftable + " - " + quality + " - 0" + "\n";
-                            temporary = temporary + "Price: " + price.getDouble(OWM_VALUE);
+                            Double high = null;
+                            if (price.has(OWM_VALUE_HIGH))
+                                high = price.getDouble(OWM_VALUE_HIGH);
 
-                            if (price.has(OWM_VALUE_HIGH)) {
-                                temporary = temporary + " - " + price.getDouble(OWM_VALUE_HIGH);
-                            }
-                            temporary = temporary + " " + price.getString(OWM_CURRENCY) + "\n";
-                            temporary = temporary + "Raw: " + price.getDouble(OWM_VALUE_RAW) + "\n";
-                            temporary = temporary + "Last Update: " + price.getInt(OWM_LAST_UPDATE) + "\n";
-                            temporary = temporary + "Difference: " + price.getDouble(OWM_DIFFERENCE);
-
-                            itemNames.add(temporary);
-
-                            ContentValues itemValues = new ContentValues();
-
-                            itemValues.put(PriceEntry.COLUMN_ITEM_NAME, name);
-                            itemValues.put(PriceEntry.COLUMN_ITEM_QUALITY, quality);
-                            itemValues.put(PriceEntry.COLUMN_ITEM_TRADABLE, tradable);
-                            itemValues.put(PriceEntry.COLUMN_ITEM_CRAFTABLE, craftable);
-                            itemValues.put(PriceEntry.COLUMN_PRICE_INDEX, 0);
-                            itemValues.put(PriceEntry.COLUMN_ITEM_PRICE_CURRENCY, price.getString(OWM_CURRENCY));
-                            itemValues.put(PriceEntry.COLUMN_ITEM_PRICE, price.getDouble(OWM_VALUE));
-                            if (price.has(OWM_VALUE_HIGH)) {
-                                itemValues.put(PriceEntry.COLUMN_ITEM_PRICE_MAX, price.has(OWM_VALUE_HIGH));
-                            }
-                            itemValues.put(PriceEntry.COLUMN_ITEM_PRICE_RAW, price.getDouble(OWM_VALUE_RAW));
-                            itemValues.put(PriceEntry.COLUMN_LAST_UPDATE, price.getInt(OWM_LAST_UPDATE));
-                            itemValues.put(PriceEntry.COLUMN_DIFFERENCE, price.getDouble(OWM_DIFFERENCE));
-
-                            cVVector.add(itemValues);
+                            cVVector.add(buildContentValues(
+                                    name, quality, tradable, craftable, "0", price.getString(OWM_CURRENCY),
+                                    price.getDouble(OWM_VALUE), high,
+                                    price.getDouble(OWM_VALUE_RAW), price.getInt(OWM_LAST_UPDATE),
+                                    price.getDouble(OWM_DIFFERENCE)
+                            ));
                         }
                     }
                 }
@@ -322,6 +255,41 @@ public class FetchPriceList extends AsyncTask<String, Void, ArrayList<String>> i
                 }
             }
         }
-        return itemNames;
+    }
+
+    private ContentValues buildContentValues(String name, String quality, String tradable,
+                                             String craftable, String priceIndex, String currency,
+                                             double value, Double valueHigh, double valueRaw,
+                                             int update, double difference){
+        int itemTradable;
+        int itemCraftable;
+
+        if (tradable.equals("Tradable"))
+            itemTradable = 1;
+        else
+            itemTradable = 0;
+
+        if (craftable.equals("Craftable"))
+            itemCraftable = 1;
+        else
+            itemCraftable = 0;
+
+        ContentValues itemValues = new ContentValues();
+
+        itemValues.put(PriceEntry.COLUMN_ITEM_NAME, name);
+        itemValues.put(PriceEntry.COLUMN_ITEM_QUALITY, quality);
+        itemValues.put(PriceEntry.COLUMN_ITEM_TRADABLE, itemTradable);
+        itemValues.put(PriceEntry.COLUMN_ITEM_CRAFTABLE, itemCraftable);
+        itemValues.put(PriceEntry.COLUMN_PRICE_INDEX, Integer.parseInt(priceIndex));
+        itemValues.put(PriceEntry.COLUMN_ITEM_PRICE_CURRENCY, currency);
+        itemValues.put(PriceEntry.COLUMN_ITEM_PRICE, value);
+        if (valueHigh != null) {
+            itemValues.put(PriceEntry.COLUMN_ITEM_PRICE_MAX, valueHigh);
+        }
+        itemValues.put(PriceEntry.COLUMN_ITEM_PRICE_RAW, valueRaw);
+        itemValues.put(PriceEntry.COLUMN_LAST_UPDATE, update);
+        itemValues.put(PriceEntry.COLUMN_DIFFERENCE, difference);
+
+        return itemValues;
     }
 }

@@ -1,10 +1,13 @@
 package com.tlongdev.bktf.fragment;
 
-import android.app.ProgressDialog;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,13 +15,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.adapter.PriceListAdapter;
+import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
 import com.tlongdev.bktf.task.FetchPriceList;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 
 /**
@@ -29,7 +30,7 @@ import java.util.Arrays;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -38,11 +39,39 @@ public class HomeFragment extends Fragment {
 
     private static final String LOG_TAG = HomeFragment.class.getSimpleName();
 
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private static final int PRICE_LIST_LOADER = 0;
+
+    private static final String[] PRICE_LIST_COLUMNS = {
+            PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
+            PriceEntry.COLUMN_ITEM_NAME,
+            PriceEntry.COLUMN_ITEM_QUALITY,
+            PriceEntry.COLUMN_ITEM_TRADABLE,
+            PriceEntry.COLUMN_ITEM_CRAFTABLE,
+            PriceEntry.COLUMN_PRICE_INDEX,
+            PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
+            PriceEntry.COLUMN_ITEM_PRICE,
+            PriceEntry.COLUMN_ITEM_PRICE_MAX,
+            PriceEntry.COLUMN_LAST_UPDATE,
+            PriceEntry.COLUMN_DIFFERENCE
+    };
+
+    // These indices are tied to FORECAST_COLUMNS.  If FORECAST_COLUMNS changes, these
+    // must change.
+    public static final int COL_PRICE_LIST_ID = 0;
+    public static final int COL_PRICE_LIST_NAME = 1;
+    public static final int COL_PRICE_LIST_QUAL = 2;
+    public static final int COL_PRICE_LIST_TRAD = 3;
+    public static final int COL_PRICE_LIST_CRAF = 4;
+    public static final int COL_PRICE_LIST_INDE = 5;
+    public static final int COL_PRICE_LIST_CURR = 6;
+    public static final int COL_PRICE_LIST_PRIC = 7;
+    public static final int COL_PRICE_LIST_PMAX = 8;
+    public static final int COL_PRICE_LIST_UPDA = 10;
+    public static final int COL_PRICE_LIST_DIFF = 11;
+
+    private ListView mListView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private ProgressDialog loadingDialog;
-    private PriceListAdapter pca;
+    private SimpleCursorAdapter cursorAdapter;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -60,41 +89,54 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        getLoaderManager().initLoader(PRICE_LIST_LOADER, null, this);
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         setHasOptionsMenu(true);
 
-        String[] data = {
-                "Bat",
-                "Minigun",
-                "Kritzkrieg",
-                "Stuff1",
-                "Stuff2",
-                "Stuff3",
-                "Stuff4",
-                "Bat",
-                "Minigun",
-                "Kritzkrieg",
-                "Stuff1",
-                "Stuff2",
-                "Stuff3",
-                "Stuff4"
-        };
-        ArrayList<String> changes = new ArrayList<String>(Arrays.asList(data));
-
-        pca = new PriceListAdapter(changes);
+        // The SimpleCursorAdapter will take data from the database through the
+        // Loader and use it to populate the ListView it's attached to.
+        cursorAdapter = new SimpleCursorAdapter(
+                getActivity(),
+                R.layout.list_changes,
+                null,
+                // the column names to use to fill the textviews
+                new String[]{PriceEntry.COLUMN_ITEM_NAME,
+                        PriceEntry.COLUMN_ITEM_QUALITY,
+                        PriceEntry.COLUMN_ITEM_TRADABLE,
+                        PriceEntry.COLUMN_ITEM_CRAFTABLE,
+                        PriceEntry.COLUMN_PRICE_INDEX,
+                        PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
+                        PriceEntry.COLUMN_ITEM_PRICE,
+                        PriceEntry.COLUMN_ITEM_PRICE_MAX,
+                        PriceEntry.COLUMN_LAST_UPDATE,
+                        PriceEntry.COLUMN_DIFFERENCE
+                },
+                // the textviews to fill with the data pulled from the columns above
+                new int[]{R.id.item_name,
+                        R.id.item_quality,
+                        R.id.item_tradable,
+                        R.id.item_craftable,
+                        R.id.item_price_index,
+                        R.id.item_currency,
+                        R.id.item_price,
+                        R.id.item_price_max,
+                        R.id.item_last_update,
+                        R.id.item_difference
+                },
+                0
+        );
 
         // Get a reference to the ListView, and attach this adapter to it.
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_changes);
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
+        mListView = (ListView) rootView.findViewById(R.id.list_view_changes);
 
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(pca);
+        mListView.setAdapter(cursorAdapter);
 
         return rootView;
     }
@@ -107,10 +149,40 @@ public class HomeFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.refresh){
-            new FetchPriceList(getActivity(), mRecyclerView).execute(getResources().getString(R.string.api_key));
+            new FetchPriceList(getActivity()).execute(getResources().getString(R.string.api_key));
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        // This is called when a new Loader needs to be created.  This
+        // fragment only uses one loader, so we don't care about checking the id.
+
+        // Sort order:  Ascending, by date.
+        String sortOrder = PriceEntry.COLUMN_LAST_UPDATE + " DESC";
+
+        // Now create and return a CursorLoader that will take care of
+        // creating a Cursor for the data being displayed.
+        return new CursorLoader(
+                getActivity(),
+                PriceEntry.CONTENT_URI,
+                PRICE_LIST_COLUMNS,
+                null,
+                null,
+                sortOrder
+        );
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        cursorAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        cursorAdapter.swapCursor(null);
     }
 
     /**

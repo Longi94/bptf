@@ -6,11 +6,11 @@
     android:layout_height="match_parent"
     tools:context="com.tlongdev.bktf.fragment.HomeFragment">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_changes"
-        android:scrollbars="vertical"
+    <ListView
+        android:id="@+id/list_view_changes"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:scrollbars="none"/>
 
 
 </FrameLayout>

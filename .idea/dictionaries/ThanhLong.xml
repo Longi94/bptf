@@ -2,6 +2,7 @@
   <dictionary name="ThanhLong">
     <words>
       <w>craftable</w>
+      <w>recycler</w>
       <w>tradable</w>
     </words>
   </dictionary>

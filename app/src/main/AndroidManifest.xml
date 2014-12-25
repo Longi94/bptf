@@ -29,7 +29,9 @@
         
         <provider
             android:authorities="com.tlongdev.bktf"
-            android:name="com.tlongdev.bktf.data.PriceListProvider"/>
+            android:name="com.tlongdev.bktf.data.PriceListProvider"
+            android:exported="false"
+            android:enabled="true"/>
     </application>
 
 </manifest>
