@@ -18,6 +18,7 @@ public class PriceListProvider extends ContentProvider {
     public static final int PRICE_WITH_NAME = 101;
     public static final int PRICE_WITH_NAME_SPECIFIC = 102;
     public static final int PRICE_LIST_ID = 103;
+    public static final int PRICE_LIST_SEARCH = 104;
 
     private static UriMatcher buildUriMatcher(){
         // I know what you're thinking.  Why create a UriMatcher when you can use regular
@@ -34,6 +35,7 @@ public class PriceListProvider extends ContentProvider {
         matcher.addURI(authority, PriceListContract.PATH_PRICE_LIST + "/name/*", PRICE_WITH_NAME);
         matcher.addURI(authority, PriceListContract.PATH_PRICE_LIST + "/name/*/*", PRICE_WITH_NAME_SPECIFIC);
         matcher.addURI(authority, PriceListContract.PATH_PRICE_LIST + "/id/#", PRICE_LIST_ID);
+        matcher.addURI(authority, PriceListContract.PATH_PRICE_LIST + "/search/*", PRICE_LIST_SEARCH);
 
         return matcher;
     }
@@ -41,6 +43,10 @@ public class PriceListProvider extends ContentProvider {
     private static final String sNameSelection =
             PriceListContract.PriceEntry.TABLE_NAME+
                     "." + PriceListContract.PriceEntry.COLUMN_ITEM_NAME + " = ? ";
+
+    private static final String sNameSearch =
+            PriceListContract.PriceEntry.TABLE_NAME+
+                    "." + PriceListContract.PriceEntry.COLUMN_ITEM_NAME + " LIKE ?";
 
     private static final String sNameSpecificSelection =
             PriceListContract.PriceEntry.TABLE_NAME +
@@ -98,6 +104,10 @@ public class PriceListProvider extends ContentProvider {
                 );
                 break;
             }
+            case PRICE_LIST_SEARCH: {
+                retCursor = getPricesBySearch(uri, projection, sortOrder);
+                break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -120,6 +130,8 @@ public class PriceListProvider extends ContentProvider {
                 return PriceListContract.PriceEntry.CONTENT_ITEM_TYPE;
             case PRICE_LIST_ID:
                 return PriceListContract.PriceEntry.CONTENT_ITEM_TYPE;
+            case PRICE_LIST_SEARCH:
+                return PriceListContract.PriceEntry.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -212,11 +224,8 @@ public class PriceListProvider extends ContentProvider {
     }
 
     private Cursor getSpecificPricesByName(Uri uri, String[] projection, String sortOrder) {
-        String itemName = PriceListContract.PriceEntry.getNameFromUri(uri);
-        String itemSpecification = PriceListContract.PriceEntry.getSpecificationFromUri(uri);
-
-        String[] nameArray = {itemName};
-        String[] selectionArgs = concatenate(nameArray, itemSpecification.split("-"));
+        String[] nameArray = {PriceListContract.PriceEntry.getNameFromUri(uri)};
+        String[] selectionArgs = concatenate(nameArray, PriceListContract.PriceEntry.getSpecificationFromUri(uri).split("-"));
         String selection = sNameSpecificSelection;
 
         return mOpenHelper.getReadableDatabase().query(
@@ -231,10 +240,23 @@ public class PriceListProvider extends ContentProvider {
     }
 
     private Cursor getPricesByName(Uri uri, String[] projection, String sortOrder) {
-        String itemName = PriceListContract.PriceEntry.getNameFromUri(uri);
-
-        String[] selectionArgs = {itemName};
+        String[] selectionArgs = {PriceListContract.PriceEntry.getNameFromUri(uri)};
         String selection = sNameSelection;
+
+        return mOpenHelper.getReadableDatabase().query(
+                PriceListContract.PriceEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
+    }
+
+    private Cursor getPricesBySearch(Uri uri, String[] projection, String sortOrder) {
+        String[] selectionArgs = {"%" + PriceListContract.PriceEntry.getNameFromUri(uri) + "%"};
+        String selection = sNameSearch;
 
         return mOpenHelper.getReadableDatabase().query(
                 PriceListContract.PriceEntry.TABLE_NAME,

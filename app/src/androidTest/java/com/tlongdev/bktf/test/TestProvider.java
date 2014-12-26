@@ -67,6 +67,16 @@ public class TestProvider extends AndroidTestCase{
         );
 
         TestDb.validateCursor(cursor, testValues);
+
+        cursor = mContext.getContentResolver().query(
+                PriceEntry.buildPriceListSearchUri("rush"),
+                null, // leaving "columns" null just returns all the columns.
+                null, // cols for "where" clause
+                null, // values for "where" clause
+                null  // sort order
+        );
+
+        TestDb.validateCursor(cursor, testValues);
     }
 
     public void testGetType() {
@@ -84,5 +94,8 @@ public class TestProvider extends AndroidTestCase{
 
         type = mContext.getContentResolver().getType(PriceEntry.buildPriceListUri(1L));
         assertEquals(PriceEntry.CONTENT_ITEM_TYPE, type);
+
+        type = mContext.getContentResolver().getType(PriceEntry.buildPriceListSearchUri(TestDb.TEST_NAME));
+        assertEquals(PriceEntry.CONTENT_TYPE, type);
     }
 }

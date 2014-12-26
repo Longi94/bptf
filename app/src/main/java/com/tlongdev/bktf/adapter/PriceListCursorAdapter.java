@@ -51,7 +51,12 @@ public class PriceListCursorAdapter extends CursorAdapter {
                 cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL),
                 cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE)));
         viewHolder.priceView.setText("" + cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRIC));
-        viewHolder.differenceView.setText("" + cursor.getDouble(HomeFragment.COL_PRICE_LIST_DIFF));
+
+        if (cursor.getDouble(HomeFragment.COL_PRICE_LIST_PMAX) > 0.0){
+            viewHolder.priceView.append(" - " + cursor.getDouble(HomeFragment.COL_PRICE_LIST_PMAX));
+        }
+
+        viewHolder.priceView.append(" " + cursor.getString(HomeFragment.COL_PRICE_LIST_CURR));
     }
 
     private void setChangeImage(Context context, ImageView change, double difference, double raw) {
@@ -145,7 +150,6 @@ public class PriceListCursorAdapter extends CursorAdapter {
 
         public final TextView nameView;
         public final TextView priceView;
-        public final TextView differenceView;
 
         public ViewHolder(View view) {
             itemFrame = (RelativeLayout) view.findViewById(R.id.item_frame);
@@ -153,7 +157,6 @@ public class PriceListCursorAdapter extends CursorAdapter {
             change = (ImageView) view.findViewById(R.id.image_view_change);
             nameView = (TextView) view.findViewById(R.id.item_name);
             priceView = (TextView) view.findViewById(R.id.item_price);
-            differenceView = (TextView) view.findViewById(R.id.item_difference);
         }
     }
 }
