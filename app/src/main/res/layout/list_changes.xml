@@ -66,4 +66,11 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:id="@+id/image_view_change"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
+
 </LinearLayout>
