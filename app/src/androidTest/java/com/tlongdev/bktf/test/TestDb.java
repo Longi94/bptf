@@ -60,6 +60,7 @@ public class TestDb extends AndroidTestCase{
     static ContentValues createValues() {
         ContentValues values = new ContentValues();
 
+        values.put(PriceEntry.COLUMN_DEFINDEX, 1);
         values.put(PriceEntry.COLUMN_ITEM_NAME, TEST_NAME);
         values.put(PriceEntry.COLUMN_ITEM_QUALITY, TEST_QUALITY);
         values.put(PriceEntry.COLUMN_ITEM_TRADABLE, TEST_TRADABLE);

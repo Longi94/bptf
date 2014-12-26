@@ -9,7 +9,7 @@ import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
 
 public class PriceListDbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "pricelist.db";
 
     public PriceListDbHelper(Context context) {
@@ -22,6 +22,7 @@ public class PriceListDbHelper extends SQLiteOpenHelper {
                 "CREATE TABLE " + PriceEntry.TABLE_NAME + " (" +
                 PriceEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
+                PriceEntry.COLUMN_DEFINDEX + " INTEGER NOT NULL, " +
                 PriceEntry.COLUMN_ITEM_NAME + " TEXT NOT NULL, " +
                 PriceEntry.COLUMN_ITEM_QUALITY + " INTEGER NOT NULL, " +
                 PriceEntry.COLUMN_ITEM_TRADABLE + " INTEGER NOT NULL, " +

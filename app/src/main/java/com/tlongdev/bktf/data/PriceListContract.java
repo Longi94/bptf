@@ -38,6 +38,7 @@ public final class PriceListContract {
 
         public static final String TABLE_NAME = "pricelist";
 
+        public static final String COLUMN_DEFINDEX = "defindex";
         public static final String COLUMN_ITEM_NAME = "name";
         public static final String COLUMN_ITEM_QUALITY = "quality";
         public static final String COLUMN_ITEM_TRADABLE = "tradable";
@@ -61,6 +62,10 @@ public final class PriceListContract {
         public static Uri buildPriceListUriWithNameSpecific(String name, int quality, int tradable, int craftable, int index){
             return CONTENT_URI.buildUpon().appendPath("name").appendPath(name)
                     .appendPath("" + quality + "-" + tradable + "-" + craftable + "-" + index).build();
+        }
+
+        public static Uri buildPriceListSearchUri(String name){
+            return CONTENT_URI.buildUpon().appendPath("search").appendPath(name).build();
         }
 
         public static String getNameFromUri(Uri uri){

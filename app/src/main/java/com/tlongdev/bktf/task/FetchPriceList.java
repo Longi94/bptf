@@ -140,6 +140,7 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
         final String OWM_USD_CURRENCY_INDEX = "usd_currency_index";
         final String OWM_ITEMS = "items";
         final String OWM_PRICES = "prices";
+        final String OWM_DEFINDEX = "defindex";
         final String OWM_CURRENCY = "currency";
         final String OWM_VALUE = "value";
         final String OWM_VALUE_HIGH = "value_high";
@@ -165,6 +166,16 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
             String name = (String)i.next();
 
             JSONObject prices = items.getJSONObject(name).getJSONObject(OWM_PRICES);
+            JSONArray defindexes = items.getJSONObject(name).getJSONArray(OWM_DEFINDEX);
+
+            int defindex = 0;
+            if (defindexes.length() > 0) {
+                defindex = defindexes.getInt(0);
+            } else if (name.equals("Strange Part: Fires Survived")) {
+                defindex = 6057;
+            } else if (name.equals("Strange Part: Freezecam Taunt Appearances")) {
+                defindex = 6055;
+            }
 
             Iterator<String> qualityIterator = prices.keys();
 
@@ -196,7 +207,7 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
                                 if (price.has(OWM_VALUE_HIGH))
                                     high = price.getDouble(OWM_VALUE_HIGH);
 
-                                cVVector.add(buildContentValues(
+                                cVVector.add(buildContentValues(defindex,
                                         name, quality, tradable, craftable, priceIndex, price.getString(OWM_CURRENCY),
                                         price.getDouble(OWM_VALUE), high,
                                         price.getDouble(OWM_VALUE_RAW), price.getInt(OWM_LAST_UPDATE),
@@ -213,7 +224,7 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
                             if (price.has(OWM_VALUE_HIGH))
                                 high = price.getDouble(OWM_VALUE_HIGH);
 
-                            cVVector.add(buildContentValues(
+                            cVVector.add(buildContentValues(defindex,
                                     name, quality, tradable, craftable, "0", price.getString(OWM_CURRENCY),
                                     price.getDouble(OWM_VALUE), high,
                                     price.getDouble(OWM_VALUE_RAW), price.getInt(OWM_LAST_UPDATE),
@@ -257,7 +268,7 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
         }
     }
 
-    private ContentValues buildContentValues(String name, String quality, String tradable,
+    private ContentValues buildContentValues(int defindex, String name, String quality, String tradable,
                                              String craftable, String priceIndex, String currency,
                                              double value, Double valueHigh, double valueRaw,
                                              int update, double difference){
@@ -276,6 +287,7 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
 
         ContentValues itemValues = new ContentValues();
 
+        itemValues.put(PriceEntry.COLUMN_DEFINDEX, defindex);
         itemValues.put(PriceEntry.COLUMN_ITEM_NAME, name);
         itemValues.put(PriceEntry.COLUMN_ITEM_QUALITY, quality);
         itemValues.put(PriceEntry.COLUMN_ITEM_TRADABLE, itemTradable);
