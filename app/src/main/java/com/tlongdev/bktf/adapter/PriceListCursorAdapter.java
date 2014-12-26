@@ -42,6 +42,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
         setItemBackground(viewHolder.itemFrame, cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL));
 
         setEffectImage(context, viewHolder.effect, cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE));
+        setIconImage(context, viewHolder.icon, cursor.getInt(HomeFragment.COL_PRICE_LIST_DEFI));
         setChangeImage(context, viewHolder.change, cursor.getDouble(HomeFragment.COL_PRICE_LIST_DIFF),
                 cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRAW));
 
@@ -142,11 +143,25 @@ public class PriceListCursorAdapter extends CursorAdapter {
             effect.setImageDrawable(null);
     }
 
+    private void setIconImage(Context context, ImageView icon, int defindex) {
+        try {
+            // get input stream
+            InputStream ims = context.getAssets().open("items/" + defindex + ".png");
+            // load image as Drawable
+            Drawable d = Drawable.createFromStream(ims, null);
+            // set image to ImageView
+            icon.setImageDrawable(d);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static class ViewHolder {
         public final RelativeLayout itemFrame;
 
         public final ImageView effect;
         public final ImageView change;
+        public final ImageView icon;
 
         public final TextView nameView;
         public final TextView priceView;
@@ -155,6 +170,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
             itemFrame = (RelativeLayout) view.findViewById(R.id.item_frame);
             effect = (ImageView) view.findViewById(R.id.image_view_effect);
             change = (ImageView) view.findViewById(R.id.image_view_change);
+            icon = (ImageView) view.findViewById(R.id.image_view_item_icon);
             nameView = (TextView) view.findViewById(R.id.item_name);
             priceView = (TextView) view.findViewById(R.id.item_price);
         }

@@ -75,7 +75,7 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
             urlConnection.connect();
 
             InputStream inputStream = urlConnection.getInputStream();
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
 
             if (inputStream == null) {
                 // Nothing to do.

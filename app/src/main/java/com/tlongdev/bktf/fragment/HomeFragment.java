@@ -47,6 +47,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
     private static final String[] PRICE_LIST_COLUMNS = {
             PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
+            PriceEntry.COLUMN_DEFINDEX,
             PriceEntry.COLUMN_ITEM_NAME,
             PriceEntry.COLUMN_ITEM_QUALITY,
             PriceEntry.COLUMN_ITEM_TRADABLE,
@@ -61,17 +62,18 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     };
 
     public static final int COL_PRICE_LIST_ID = 0;
-    public static final int COL_PRICE_LIST_NAME = 1;
-    public static final int COL_PRICE_LIST_QUAL = 2;
-    public static final int COL_PRICE_LIST_TRAD = 3;
-    public static final int COL_PRICE_LIST_CRAF = 4;
-    public static final int COL_PRICE_LIST_INDE = 5;
-    public static final int COL_PRICE_LIST_CURR = 6;
-    public static final int COL_PRICE_LIST_PRIC = 7;
-    public static final int COL_PRICE_LIST_PMAX = 8;
-    public static final int COL_PRICE_LIST_PRAW = 9;
-    public static final int COL_PRICE_LIST_UPDA = 10;
-    public static final int COL_PRICE_LIST_DIFF = 11;
+    public static final int COL_PRICE_LIST_DEFI = 1;
+    public static final int COL_PRICE_LIST_NAME = 2;
+    public static final int COL_PRICE_LIST_QUAL = 3;
+    public static final int COL_PRICE_LIST_TRAD = 4;
+    public static final int COL_PRICE_LIST_CRAF = 5;
+    public static final int COL_PRICE_LIST_INDE = 6;
+    public static final int COL_PRICE_LIST_CURR = 7;
+    public static final int COL_PRICE_LIST_PRIC = 8;
+    public static final int COL_PRICE_LIST_PMAX = 9;
+    public static final int COL_PRICE_LIST_PRAW = 10;
+    public static final int COL_PRICE_LIST_UPDA = 11;
+    public static final int COL_PRICE_LIST_DIFF = 12;
     private static final String LIST_VIEW_POSITION_KEY = "position_index";
     private static final String LIST_VIEW_TOP_POSITION_KEY = "position_top";
 

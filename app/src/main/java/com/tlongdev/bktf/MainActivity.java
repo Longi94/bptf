@@ -67,8 +67,13 @@ public class MainActivity extends ActionBarActivity
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            Toast.makeText(this, query, Toast.LENGTH_SHORT).show();
+            if (intent.hasExtra(SearchManager.EXTRA_DATA_KEY)) {
+                Toast.makeText(this, "" + intent.getIntExtra(SearchManager.EXTRA_DATA_KEY, 0), Toast.LENGTH_SHORT).show();
+            }
+            else {
+                String query = intent.getStringExtra(SearchManager.QUERY);
+                Toast.makeText(this, query, Toast.LENGTH_SHORT).show();
+            }
             // TODO doMySearch(query);
         }
     }
