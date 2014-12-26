@@ -287,7 +287,8 @@ public class PriceListProvider extends ContentProvider {
 
         MatrixCursor mtxC = new MatrixCursor(new String[] {BaseColumns._ID,
                                                            SearchManager.SUGGEST_COLUMN_TEXT_1,
-                                                           SearchManager.SUGGEST_COLUMN_TEXT_2});
+                                                           SearchManager.SUGGEST_COLUMN_TEXT_2,
+                                                           SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA});
 
         Cursor cursor = mOpenHelper.getReadableDatabase().query(
                 PriceListContract.PriceEntry.TABLE_NAME,
@@ -315,7 +316,8 @@ public class PriceListProvider extends ContentProvider {
                                 cursor.getInt(COL_PRICE_LIST_CRAF),
                                 cursor.getInt(COL_PRICE_LIST_QUAL),
                                 cursor.getInt(COL_PRICE_LIST_INDE)),
-                        price
+                        price,
+                        cursor.getInt(COL_PRICE_LIST_DEFI)
                 });
             }
         }
