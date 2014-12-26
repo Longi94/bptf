@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.enums.Quality;
 import com.tlongdev.bktf.fragment.HomeFragment;
 
@@ -41,11 +42,43 @@ public class PriceListCursorAdapter extends CursorAdapter {
         setItemBackground(viewHolder.itemFrame, cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL));
 
         setEffectImage(context, viewHolder.effect, cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE));
+        setChangeImage(context, viewHolder.change, cursor.getDouble(HomeFragment.COL_PRICE_LIST_DIFF),
+                cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRAW));
 
-        viewHolder.nameView.setText(cursor.getString(HomeFragment.COL_PRICE_LIST_NAME));
+        viewHolder.nameView.setText(Utility.formatItemName(cursor.getString(HomeFragment.COL_PRICE_LIST_NAME),
+                cursor.getInt(HomeFragment.COL_PRICE_LIST_TRAD),
+                cursor.getInt(HomeFragment.COL_PRICE_LIST_CRAF),
+                cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL),
+                cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE)));
         viewHolder.priceView.setText("" + cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRIC));
         viewHolder.lastUpdateView.setText("" + cursor.getInt(HomeFragment.COL_PRICE_LIST_UPDA));
         viewHolder.differenceView.setText("" + cursor.getDouble(HomeFragment.COL_PRICE_LIST_DIFF));
+    }
+
+    private void setChangeImage(Context context, ImageView change, double difference, double raw) {
+        try {
+            InputStream ims;
+            if (difference == raw) {
+                ims = context.getAssets().open("changes/new.png");
+            }
+            else if (difference == 0.0) {
+                ims = context.getAssets().open("changes/refresh.png");
+            }
+            else if (difference > 0.0) {
+                ims = context.getAssets().open("changes/up.png");
+            }
+            else {
+                ims = context.getAssets().open("changes/down.png");
+            }
+
+
+            // load image as Drawable
+            Drawable d = Drawable.createFromStream(ims, null);
+            // set image to ImageView
+            change.setImageDrawable(d);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setItemBackground(View frame, int quality) {
@@ -109,6 +142,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
         public final RelativeLayout itemFrame;
 
         public final ImageView effect;
+        public final ImageView change;
 
         public final TextView nameView;
         public final TextView priceView;
@@ -118,6 +152,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
         public ViewHolder(View view) {
             itemFrame = (RelativeLayout) view.findViewById(R.id.item_frame);
             effect = (ImageView) view.findViewById(R.id.image_view_effect);
+            change = (ImageView) view.findViewById(R.id.image_view_change);
             nameView = (TextView) view.findViewById(R.id.item_name);
             priceView = (TextView) view.findViewById(R.id.item_price);
             lastUpdateView = (TextView) view.findViewById(R.id.item_last_update);

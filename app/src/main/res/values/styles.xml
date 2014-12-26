@@ -3,6 +3,8 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
+        <item name="android:colorPrimary">@color/bktf_main_blue</item>
+        <item name="android:colorPrimaryDark">@color/bktf_main_blue_dark</item>
     </style>
 
 </resources>

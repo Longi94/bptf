@@ -49,6 +49,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
             PriceEntry.COLUMN_ITEM_PRICE,
             PriceEntry.COLUMN_ITEM_PRICE_MAX,
+            PriceEntry.COLUMN_ITEM_PRICE_RAW,
             PriceEntry.COLUMN_LAST_UPDATE,
             PriceEntry.COLUMN_DIFFERENCE
     };
@@ -62,8 +63,9 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     public static final int COL_PRICE_LIST_CURR = 6;
     public static final int COL_PRICE_LIST_PRIC = 7;
     public static final int COL_PRICE_LIST_PMAX = 8;
-    public static final int COL_PRICE_LIST_UPDA = 9;
-    public static final int COL_PRICE_LIST_DIFF = 10;
+    public static final int COL_PRICE_LIST_PRAW = 9;
+    public static final int COL_PRICE_LIST_UPDA = 10;
+    public static final int COL_PRICE_LIST_DIFF = 11;
 
     private ListView mListView;
     private RecyclerView.LayoutManager mLayoutManager;
