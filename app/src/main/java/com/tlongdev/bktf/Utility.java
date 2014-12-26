@@ -6,9 +6,6 @@ import android.preference.PreferenceManager;
 
 import com.tlongdev.bktf.enums.Quality;
 
-/**
- * Created by ThanhLong on 2014.12.25..
- */
 public class Utility {
 
     public static String getSteamId(Context context) {

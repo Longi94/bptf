@@ -1,5 +1,6 @@
 package com.tlongdev.bktf.data;
 
+import android.app.SearchManager;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -65,7 +66,7 @@ public final class PriceListContract {
         }
 
         public static Uri buildPriceListSearchUri(String name){
-            return CONTENT_URI.buildUpon().appendPath("search").appendPath(name).build();
+            return CONTENT_URI.buildUpon().appendPath(SearchManager.SUGGEST_URI_PATH_QUERY).appendPath(name).build();
         }
 
         public static String getNameFromUri(Uri uri){

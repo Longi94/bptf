@@ -1,5 +1,6 @@
 package com.tlongdev.bktf;
 
+import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,8 +12,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.tlongdev.bktf.fragment.HomeFragment;
+import com.tlongdev.bktf.fragment.NavigationDrawerFragment;
 import com.tlongdev.bktf.fragment.PriceListFragment;
 import com.tlongdev.bktf.fragment.UserFragment;
 import com.tlongdev.bktf.task.FetchPriceList;
@@ -61,6 +64,16 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Toast.makeText(this, query, Toast.LENGTH_SHORT).show();
+            // TODO doMySearch(query);
+        }
+    }
+
+    @Override
     public void onNavigationDrawerItemSelected(int position) {
         Fragment fragment;
         if (position == 0) {
@@ -78,7 +91,11 @@ public class MainActivity extends ActionBarActivity
         fragmentManager.beginTransaction()
                 .replace(R.id.container, fragment)
                 .commit();
+
+        onSectionAttached(position);
     }
+
+
 
     public void onSectionAttached(int number) {
         switch (number) {

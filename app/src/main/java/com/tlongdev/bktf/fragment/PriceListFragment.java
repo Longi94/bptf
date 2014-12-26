@@ -3,10 +3,7 @@ package com.tlongdev.bktf.fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,11 +69,6 @@ public class PriceListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_price_list, container, false);
-
-        ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.view_pager_prices);
-        adapterViewPager = new PriceListPagerAdapter(((FragmentActivity)getActivity()).getSupportFragmentManager());
-        viewPager.setAdapter(adapterViewPager);
-
         return rootView;
     }
 
@@ -93,43 +85,6 @@ public class PriceListFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
-    }
-
-    public static class PriceListPagerAdapter extends FragmentPagerAdapter {
-
-
-        public PriceListPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public android.support.v4.app.Fragment getItem(int position) {
-            switch (position){
-                case 0:
-                    return new UniqueItemsFragment();
-                case 1:
-                    return new UnusualItemsFragment();
-                default:
-                    return null;
-            }
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position){
-                case 0:
-                    return "Items";
-                case 1:
-                    return "Unusuals";
-                default:
-                    return null;
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
     }
 
 }

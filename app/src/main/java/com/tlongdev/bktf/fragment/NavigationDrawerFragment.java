@@ -1,4 +1,4 @@
-package com.tlongdev.bktf;
+package com.tlongdev.bktf.fragment;
 
 import android.app.Activity;
 import android.content.res.Configuration;
@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.tlongdev.bktf.R;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
