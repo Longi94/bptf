@@ -1,5 +1,7 @@
 package com.tlongdev.bktf.fragment;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,8 +9,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +34,7 @@ import com.tlongdev.bktf.task.UpdatePriceList;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class HomeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener{
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -66,10 +72,16 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     public static final int COL_PRICE_LIST_PRAW = 9;
     public static final int COL_PRICE_LIST_UPDA = 10;
     public static final int COL_PRICE_LIST_DIFF = 11;
+    private static final String LIST_VIEW_POSITION_KEY = "position_index";
+    private static final String LIST_VIEW_TOP_POSITION_KEY = "position_top";
 
     private ListView mListView;
     private RecyclerView.LayoutManager mLayoutManager;
     private PriceListCursorAdapter cursorAdapter;
+
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private int mPositionIndex = ListView.INVALID_POSITION;
+    private int mPositionTop = 0;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -87,8 +99,13 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(PRICE_LIST_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
@@ -97,7 +114,6 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-        setHasOptionsMenu(true);
 
         // The SimpleCursorAdapter will take data from the database through the
         // Loader and use it to populate the ListView it's attached to.
@@ -109,16 +125,46 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         mListView = (ListView) rootView.findViewById(R.id.list_view_changes);
         mListView.setAdapter(cursorAdapter);
 
+        mSwipeRefreshLayout = (SwipeRefreshLayout)rootView.findViewById(R.id.swipe_refresh);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+
+        if(savedInstanceState != null && savedInstanceState.containsKey(LIST_VIEW_POSITION_KEY) &&
+                savedInstanceState.containsKey(LIST_VIEW_TOP_POSITION_KEY)) {
+            mPositionIndex = savedInstanceState.getInt(LIST_VIEW_POSITION_KEY);
+            mPositionTop = savedInstanceState.getInt(LIST_VIEW_TOP_POSITION_KEY);
+        }
+
         return rootView;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.refresh){
-            new UpdatePriceList(getActivity()).execute(getResources().getString(R.string.backpack_tf_api_key));
-            return true;
+    public void onSaveInstanceState(Bundle outState) {
+        if (mPositionIndex != ListView.INVALID_POSITION) {
+            // save index and top position
+            int index = mListView.getFirstVisiblePosition();
+            View v = mListView.getChildAt(0);
+            int top = (v == null) ? 0 : v.getTop();
+
+            outState.putInt(LIST_VIEW_POSITION_KEY, index);
+            outState.putInt(LIST_VIEW_TOP_POSITION_KEY, top);
         }
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -144,11 +190,22 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         cursorAdapter.swapCursor(data);
+        if (mPositionIndex != ListView.INVALID_POSITION) {
+            // If we don't need to restart the loader, and there's a desired position to restore
+            // to, do so now.
+            mListView.setSelectionFromTop(mPositionIndex, mPositionTop);
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         cursorAdapter.swapCursor(null);
+    }
+
+    @Override
+    public void onRefresh() {
+        new UpdatePriceList(getActivity(), mSwipeRefreshLayout)
+                .execute(getResources().getString(R.string.backpack_tf_api_key));
     }
 
     /**

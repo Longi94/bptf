@@ -25,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/image_view_item_icon"
+            android:src="@drawable/m139"
             android:scaleType="centerCrop"/>
 
     </RelativeLayout>

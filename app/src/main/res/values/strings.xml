@@ -19,5 +19,7 @@
     <string name="title_prices">Prices</string>
     <string name="action_refresh">Refresh</string>
     <string name="pref_initial_load">initial_load</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
 import com.tlongdev.bktf.data.PriceListContract;
@@ -28,8 +29,10 @@ public class UpdatePriceList extends AsyncTask<String, Void, Void>{
     public static final String LOG_TAG = UpdatePriceList.class.getSimpleName();
 
     private final Context mContext;
-    public UpdatePriceList(Context context) {
+    private final SwipeRefreshLayout mSwipeRefreshLayout;
+    public UpdatePriceList(Context context, SwipeRefreshLayout swipeRefreshLayout) {
         mContext = context;
+        mSwipeRefreshLayout = swipeRefreshLayout;
     }
 
     @Override
@@ -113,6 +116,11 @@ public class UpdatePriceList extends AsyncTask<String, Void, Void>{
             return null;
         }
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     private void getItemsFromJson(String jsonString) throws JSONException {
