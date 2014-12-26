@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.tlongdev.bktf.fragment.HomeFragment">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+
+        </FrameLayout>
+
     <ListView
+        android:paddingTop="100dp"
         android:id="@+id/list_view_changes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none"/>
+        android:scrollbars="none"
+        android:clipToPadding="false"/>
 
 
-</FrameLayout>
+</RelativeLayout>
