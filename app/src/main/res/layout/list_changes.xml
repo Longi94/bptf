@@ -54,13 +54,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:id="@+id/item_last_update"
-        android:text="1 day ago"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
         android:id="@+id/item_difference"
         android:text="-0.11 ref"/>
 

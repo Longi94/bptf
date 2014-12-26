@@ -51,7 +51,6 @@ public class PriceListCursorAdapter extends CursorAdapter {
                 cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL),
                 cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE)));
         viewHolder.priceView.setText("" + cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRIC));
-        viewHolder.lastUpdateView.setText("" + cursor.getInt(HomeFragment.COL_PRICE_LIST_UPDA));
         viewHolder.differenceView.setText("" + cursor.getDouble(HomeFragment.COL_PRICE_LIST_DIFF));
     }
 
@@ -146,7 +145,6 @@ public class PriceListCursorAdapter extends CursorAdapter {
 
         public final TextView nameView;
         public final TextView priceView;
-        public final TextView lastUpdateView;
         public final TextView differenceView;
 
         public ViewHolder(View view) {
@@ -155,7 +153,6 @@ public class PriceListCursorAdapter extends CursorAdapter {
             change = (ImageView) view.findViewById(R.id.image_view_change);
             nameView = (TextView) view.findViewById(R.id.item_name);
             priceView = (TextView) view.findViewById(R.id.item_price);
-            lastUpdateView = (TextView) view.findViewById(R.id.item_last_update);
             differenceView = (TextView) view.findViewById(R.id.item_difference);
         }
     }

@@ -34,6 +34,10 @@ public class Utility {
             case VINTAGE:
                 formattedName = formattedName + "Vintage ";
                 break;
+            case UNIQUE:
+                if (index > 0)
+                  name = name + " #" + index;
+                break;
             case UNUSUAL:
                 formattedName = formattedName + getUnusualEffectName(index);
                 break;

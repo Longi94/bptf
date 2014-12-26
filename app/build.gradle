@@ -31,7 +31,7 @@ android {
 
         defaultConfig {
             applicationId "com.tlongdev.bktf"
-            minSdkVersion 21
+            minSdkVersion 14
             targetSdkVersion 21
             versionCode version_Code
             versionName "${versionMajor}.${versionMinor}.${versionPatch}"
