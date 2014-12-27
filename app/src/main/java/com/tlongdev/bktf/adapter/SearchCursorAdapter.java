@@ -7,8 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
@@ -27,7 +27,7 @@ public class SearchCursorAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View view = LayoutInflater.from(context).inflate(R.layout.list_changes, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.list_search, parent, false);
 
         ViewHolder viewHolder = new ViewHolder(view);
         view.setTag(viewHolder);
@@ -54,7 +54,7 @@ public class SearchCursorAdapter extends CursorAdapter {
             viewHolder.priceView.append(" - " + cursor.getDouble(SearchFragment.COL_PRICE_LIST_PMAX));
         }
 
-        viewHolder.priceView.append(" " + cursor.getString(SearchFragment.COL_PRICE_LIST_CURR));
+        viewHolder.priceView.append("\n" + cursor.getString(SearchFragment.COL_PRICE_LIST_CURR));
     }
 
     private void setItemBackground(View frame, int quality) {
@@ -111,7 +111,7 @@ public class SearchCursorAdapter extends CursorAdapter {
     }
 
     public static class ViewHolder {
-        public final RelativeLayout itemFrame;
+        public final FrameLayout itemFrame;
 
         public final ImageView icon;
 
@@ -119,7 +119,7 @@ public class SearchCursorAdapter extends CursorAdapter {
         public final TextView priceView;
 
         public ViewHolder(View view) {
-            itemFrame = (RelativeLayout) view.findViewById(R.id.item_frame);
+            itemFrame = (FrameLayout) view.findViewById(R.id.item_frame);
             icon = (ImageView) view.findViewById(R.id.image_view_item_icon);
             nameView = (TextView) view.findViewById(R.id.item_name);
             priceView = (TextView) view.findViewById(R.id.item_price);

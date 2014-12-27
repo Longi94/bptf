@@ -2,8 +2,8 @@ package com.tlongdev.bktf;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -15,7 +15,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.tlongdev.bktf.fragment.HomeFragment;
 import com.tlongdev.bktf.fragment.NavigationDrawerFragment;
@@ -37,7 +36,9 @@ public class MainActivity extends ActionBarActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+
     private SearchView mSearchView;
+    private SearchFragment mSearchFragment;
 
     private int previousFragment = -1;
 
@@ -46,9 +47,12 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xff5787c5));
+
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
+        onSectionAttached(0);
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
@@ -60,6 +64,7 @@ public class MainActivity extends ActionBarActivity
     protected void onResume() {
         super.onResume();
 
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (prefs.getBoolean(getResources().getString(R.string.pref_initial_load), true)){
             new FetchPriceList(this).execute(getResources().getString(R.string.backpack_tf_api_key));
@@ -67,21 +72,6 @@ public class MainActivity extends ActionBarActivity
 
             editor.putBoolean(getResources().getString(R.string.pref_initial_load), false);
             editor.apply();
-        }
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            if (intent.hasExtra(SearchManager.EXTRA_DATA_KEY)) {
-                Toast.makeText(this, "" + intent.getIntExtra(SearchManager.EXTRA_DATA_KEY, 0), Toast.LENGTH_SHORT).show();
-            }
-            else {
-                String query = intent.getStringExtra(SearchManager.QUERY);
-                Toast.makeText(this, query, Toast.LENGTH_SHORT).show();
-            }
-            // TODO doMySearch(query);
         }
     }
 
@@ -104,20 +94,20 @@ public class MainActivity extends ActionBarActivity
                 .replace(R.id.container, fragment)
                 .commit();
 
-        onSectionAttached(position + 1);
+        onSectionAttached(position);
     }
 
 
 
     public void onSectionAttached(int number) {
         switch (number) {
-            case 1:
+            case 0:
                 mTitle = getString(R.string.title_home);
                 break;
-            case 2:
+            case 1:
                 mTitle = getString(R.string.title_user_profile);
                 break;
-            case 3:
+            case 2:
                 mTitle = getString(R.string.title_prices);
                 break;
         }
@@ -142,6 +132,24 @@ public class MainActivity extends ActionBarActivity
         mSearchView = (SearchView) menuItem.getActionView();
         mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                if (mSearchFragment != null && mSearchFragment.isAdded()){
+                    mSearchFragment.restartLoader(s);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if (mSearchFragment != null && mSearchFragment.isAdded()){
+                    mSearchFragment.restartLoader(s);
+                }
+                return true;
+            }
+        });
+
         MenuItemCompat.setOnActionExpandListener(menuItem,
                 new MenuItemCompat.OnActionExpandListener() {
                     @Override
@@ -153,9 +161,10 @@ public class MainActivity extends ActionBarActivity
 
                         previousFragment = mNavigationDrawerFragment.getCheckedItemPosition();
 
+                        mSearchFragment = new SearchFragment();
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         fragmentManager.beginTransaction()
-                                .replace(R.id.container, new SearchFragment())
+                                .replace(R.id.container, mSearchFragment)
                                 .commit();
 
                         return true;
@@ -172,8 +181,6 @@ public class MainActivity extends ActionBarActivity
 
         return super.onCreateOptionsMenu(menu);
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
