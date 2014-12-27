@@ -1,11 +1,52 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.tlongdev.bktf.fragment.UserFragment">
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context="com.tlongdev.bktf.fragment.UserFragment">
 
-    <TextView
-        android:id="@+id/jsonText"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="userfragment" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-</FrameLayout>
+        <ImageView
+            android:id="@+id/player_avatar"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:src="@android:drawable/btn_dialog"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_view_player_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PLAYER NAME"
+                android:textSize="28sp"/>
+
+            <TextView
+                android:id="@+id/text_view_player_reputation"
+                android:paddingTop="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reputation: "
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/text_view_player_bp_value"
+                android:paddingTop="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Backpack Value: "
+                android:textSize="16sp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+</LinearLayout>

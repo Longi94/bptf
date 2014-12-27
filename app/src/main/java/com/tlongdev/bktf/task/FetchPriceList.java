@@ -152,7 +152,7 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
         JSONObject response = jsonObject.getJSONObject(OWM_RESPONSE);
 
         if (response.getInt(OWM_SUCCESS) == 0) {
-            Log.v(LOG_TAG, response.getString(OWM_MESSAGE));
+            Log.e(LOG_TAG, response.getString(OWM_MESSAGE));
             return;
         }
 

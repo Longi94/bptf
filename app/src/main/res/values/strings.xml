@@ -18,5 +18,17 @@
     <string name="pref_initial_load">initial_load</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="pref_player_group">pref_player_group</string>
+    <string name="pref_player_banned">pref_player_banned</string>
+    <string name="pref_player_scammer">pref_player_scammer</string>
+    <string name="pref_player_community_banned">pref_player_community_banned</string>
+    <string name="pref_player_economy_banned">pref_player_economy_banned</string>
+    <string name="pref_player_vac_banned">pref_player_vac_banned</string>
+    <string name="pref_player_name">pref_player_name</string>
+    <string name="pref_player_reputation">pref_player_reputation</string>
+    <string name="pref_player_backpack_value_tf2">pref_player_backpack_value_tf2</string>
+    <string name="pref_player_backpack_value_dota2">pref_player_backpack_value_dota2</string>
+    <string name="pref_player_trust_positive">pref_player_trust_positive</string>
+    <string name="pref_player_trust_negative">pref_player_trust_negative</string>
 
 </resources>
