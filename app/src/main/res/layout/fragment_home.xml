@@ -9,14 +9,14 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/swipe_refresh">
+        android:id="@+id/swipe_refresh"
+        android:clipChildren="false">
 
         <ListView
             android:id="@+id/list_view_changes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none"
-            android:clipToPadding="false"
             android:divider="@android:color/transparent"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>

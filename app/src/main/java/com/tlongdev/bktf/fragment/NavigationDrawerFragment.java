@@ -247,6 +247,23 @@ public class NavigationDrawerFragment extends Fragment {
         return ((ActionBarActivity) getActivity()).getSupportActionBar();
     }
 
+    public void closeDrawer() {
+        if (mDrawerLayout != null)
+            mDrawerLayout.closeDrawers();
+    }
+
+    public void lockDrawer() {
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    }
+
+    public void unlockDrawer() {
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+    }
+
+    public int getCheckedItemPosition() {
+        return mDrawerListView.getCheckedItemPosition();
+    }
+
     /**
      * Callbacks interface that all activities using this fragment must implement.
      */
