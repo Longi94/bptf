@@ -11,6 +11,6 @@
     <!-- ActionBar styles -->
     <style name="bptfActionBar"
         parent="@android:style/Widget.Material.Light.ActionBar">
-        <item name="android:background">@color/bktf_main_blue</item>
+        <item name="android:background">#ff5787c5</item>
     </style>
 </resources>
