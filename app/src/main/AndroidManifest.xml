@@ -36,6 +36,12 @@
             android:authorities="com.tlongdev.bktf"
             android:enabled="true"
             android:exported="false" />
+
+        <provider
+            android:name=".provider.SuggestionAssetsProvider"
+            android:authorities="com.tlongdev.assets"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>
