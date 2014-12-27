@@ -1,17 +1,12 @@
 package com.tlongdev.bktf.data;
 
-import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
-import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.provider.BaseColumns;
-
-import com.tlongdev.bktf.Utility;
 
 public class PriceListProvider extends ContentProvider {
 
@@ -23,22 +18,6 @@ public class PriceListProvider extends ContentProvider {
     public static final int PRICE_WITH_NAME = 101;
     public static final int PRICE_WITH_NAME_SPECIFIC = 102;
     public static final int PRICE_LIST_ID = 103;
-    public static final int PRICE_LIST_SEARCH = 104;
-    public static final int PRICE_LIST_SEARCH_EMPTY = 105;
-
-    public static final int COL_PRICE_LIST_ID = 0;
-    public static final int COL_PRICE_LIST_DEFI = 1;
-    public static final int COL_PRICE_LIST_NAME = 2;
-    public static final int COL_PRICE_LIST_QUAL = 3;
-    public static final int COL_PRICE_LIST_TRAD = 4;
-    public static final int COL_PRICE_LIST_CRAF = 5;
-    public static final int COL_PRICE_LIST_INDE = 6;
-    public static final int COL_PRICE_LIST_CURR = 7;
-    public static final int COL_PRICE_LIST_PRIC = 8;
-    public static final int COL_PRICE_LIST_PMAX = 9;
-    public static final int COL_PRICE_LIST_PRAW = 10;
-    public static final int COL_PRICE_LIST_UPDA = 11;
-    public static final int COL_PRICE_LIST_DIFF = 12;
 
     private static UriMatcher buildUriMatcher(){
         // I know what you're thinking.  Why create a UriMatcher when you can use regular
@@ -55,8 +34,6 @@ public class PriceListProvider extends ContentProvider {
         matcher.addURI(authority, PriceListContract.PATH_PRICE_LIST + "/name/*", PRICE_WITH_NAME);
         matcher.addURI(authority, PriceListContract.PATH_PRICE_LIST + "/name/*/*", PRICE_WITH_NAME_SPECIFIC);
         matcher.addURI(authority, PriceListContract.PATH_PRICE_LIST + "/id/#", PRICE_LIST_ID);
-        matcher.addURI(authority, PriceListContract.PATH_PRICE_LIST + "/" + SearchManager.SUGGEST_URI_PATH_QUERY + "/*", PRICE_LIST_SEARCH);
-        matcher.addURI(authority, PriceListContract.PATH_PRICE_LIST + "/" + SearchManager.SUGGEST_URI_PATH_QUERY, PRICE_LIST_SEARCH_EMPTY);
 
         return matcher;
     }
@@ -64,11 +41,6 @@ public class PriceListProvider extends ContentProvider {
     private static final String sNameSelection =
             PriceListContract.PriceEntry.TABLE_NAME+
                     "." + PriceListContract.PriceEntry.COLUMN_ITEM_NAME + " = ? ";
-
-    private static final String sNameSearch =
-            PriceListContract.PriceEntry.TABLE_NAME+
-                    "." + PriceListContract.PriceEntry.COLUMN_ITEM_NAME + " LIKE ? AND " +
-                    PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY + " != 5";
 
     private static final String sNameSpecificSelection =
             PriceListContract.PriceEntry.TABLE_NAME +
@@ -126,14 +98,6 @@ public class PriceListProvider extends ContentProvider {
                 );
                 break;
             }
-            case PRICE_LIST_SEARCH: {
-                retCursor = getPricesBySearch(uri, projection, sortOrder);
-                break;
-            }
-            case PRICE_LIST_SEARCH_EMPTY: {
-                retCursor = null;
-                break;
-            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -157,8 +121,6 @@ public class PriceListProvider extends ContentProvider {
                 return PriceListContract.PriceEntry.CONTENT_ITEM_TYPE;
             case PRICE_LIST_ID:
                 return PriceListContract.PriceEntry.CONTENT_ITEM_TYPE;
-            case PRICE_LIST_SEARCH:
-                return PriceListContract.PriceEntry.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -279,52 +241,6 @@ public class PriceListProvider extends ContentProvider {
                 null,
                 sortOrder
         );
-    }
-
-    private Cursor getPricesBySearch(Uri uri, String[] projection, String sortOrder) {
-        String[] selectionArgs = {"%" + PriceListContract.PriceEntry.getNameFromUri(uri) + "%"};
-        String selection = sNameSearch;
-
-        MatrixCursor mtxC = new MatrixCursor(new String[] {BaseColumns._ID,
-                                                           SearchManager.SUGGEST_COLUMN_TEXT_1,
-                                                           SearchManager.SUGGEST_COLUMN_TEXT_2,
-                                                           SearchManager.SUGGEST_COLUMN_ICON_1,
-                                                           SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA});
-
-        Cursor cursor = mOpenHelper.getReadableDatabase().query(
-                PriceListContract.PriceEntry.TABLE_NAME,
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null,
-                "50"
-        );
-
-
-        if (cursor.moveToFirst()) {
-            while (cursor.move(1)) {
-                String price = "" + cursor.getDouble(COL_PRICE_LIST_PRIC);
-                if (cursor.getDouble(COL_PRICE_LIST_PMAX) > 0.0)
-                    price = price + " - " + cursor.getDouble(COL_PRICE_LIST_PMAX);
-                price = price + " " + cursor.getString(COL_PRICE_LIST_CURR);
-
-                mtxC.addRow(new Object[]{
-                        cursor.getInt(COL_PRICE_LIST_ID),
-                        Utility.formatItemName(cursor.getString(COL_PRICE_LIST_NAME),
-                                cursor.getInt(COL_PRICE_LIST_TRAD),
-                                cursor.getInt(COL_PRICE_LIST_CRAF),
-                                cursor.getInt(COL_PRICE_LIST_QUAL),
-                                cursor.getInt(COL_PRICE_LIST_INDE)),
-                        price,
-                        "content://com.tlongdev.assets/items/"+cursor.getInt(COL_PRICE_LIST_DEFI)+".png",
-                        cursor.getInt(COL_PRICE_LIST_DEFI)
-                });
-            }
-        }
-
-        return mtxC;
     }
 
     public String[] concatenate(String[] a, String[] b) {

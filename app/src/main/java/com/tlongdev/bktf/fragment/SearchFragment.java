@@ -17,6 +17,9 @@ import com.tlongdev.bktf.data.PriceListContract;
 
 public class SearchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
+    private static final int PRICE_LIST_LOADER = 0;
+    private static final String QUERY_KEY = "query";
+
     private static final String[] PRICE_LIST_COLUMNS = {
             PriceListContract.PriceEntry.TABLE_NAME + "." + PriceListContract.PriceEntry._ID,
             PriceListContract.PriceEntry.COLUMN_DEFINDEX,
@@ -41,11 +44,22 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     public static final int COL_PRICE_LIST_PRIC = 8;
     public static final int COL_PRICE_LIST_PMAX = 9;
 
+    private static final String sNameSearch =
+            PriceListContract.PriceEntry.TABLE_NAME+
+                    "." + PriceListContract.PriceEntry.COLUMN_ITEM_NAME + " LIKE ? AND " +
+                    PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY + " != 5";
+
     ListView mListView;
     private SearchCursorAdapter cursorAdapter;
 
     public SearchFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        getLoaderManager().initLoader(PRICE_LIST_LOADER, null, this);
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -64,12 +78,27 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        String query;
+        String[] selectionArgs;
+        String selection = sNameSearch;
+
+        if (args != null){
+            query = args.getString(QUERY_KEY);
+            if (query.length() > 0)
+                selectionArgs = new String[] {"%" + query + "%"};
+            else
+                selectionArgs = new String[] {"%" + "there is no such itme like thisasd" + "%"};
+        }
+        else {
+            selectionArgs = new String[] {"%" + "there is no such itme like thisasd" + "%"};
+        }
         return new CursorLoader(
                 getActivity(),
                 PriceListContract.PriceEntry.CONTENT_URI,
                 PRICE_LIST_COLUMNS,
-                null,
-                null,
+                selection,
+                selectionArgs,
                 null
         );
     }
@@ -82,5 +111,11 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         cursorAdapter.swapCursor(null);
+    }
+
+    public void restartLoader(String s) {
+        Bundle args = new Bundle();
+        args.putString(QUERY_KEY, s);
+        getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
     }
 }

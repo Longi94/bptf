@@ -2,9 +2,6 @@
 <resources>
 
     <string name="app_name">bptf</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
@@ -13,10 +10,10 @@
     <string name="search_hint">Item name</string>
     <string name="pref_steam_id">Steam ID</string>
     <string name="pref_steam_id_default"></string>
-    <string name="title_home">Home</string>
+    <string name="title_home">Latest Changes</string>
     <string name="title_user_profile">User Profile</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_prices">Prices</string>
+    <string name="title_prices">Unusual Prices</string>
     <string name="action_refresh">Refresh</string>
     <string name="pref_initial_load">initial_load</string>
     <string name="title_activity_search">SearchActivity</string>
