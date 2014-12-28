@@ -1,5 +1,6 @@
 package com.tlongdev.bktf.fragment;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -17,12 +18,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.felipecsl.quickreturn.library.QuickReturnAttacher;
-import com.felipecsl.quickreturn.library.widget.QuickReturnAdapter;
-import com.felipecsl.quickreturn.library.widget.QuickReturnTargetView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.PriceListCursorAdapter;
 import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
+import com.tlongdev.bktf.quickreturn.QuickReturnAttacher;
+import com.tlongdev.bktf.quickreturn.widget.QuickReturnAdapter;
+import com.tlongdev.bktf.quickreturn.widget.QuickReturnTargetView;
 import com.tlongdev.bktf.task.UpdatePriceList;
 
 public class HomeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener{
@@ -93,6 +94,16 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        metalPrice = (TextView)rootView.findViewById(R.id.text_view_metal_price);
+        keyPrice = (TextView)rootView.findViewById(R.id.text_view_key_price);
+        budsPrice = (TextView)rootView.findViewById(R.id.text_view_buds_price);
+
+        metalPrice.setText("$" + prefs.getFloat(getString(R.string.pref_metal_price), 0));
+        keyPrice.setText("" + prefs.getFloat(getString(R.string.pref_key_price), 0) + " ref");
+        budsPrice.setText("" + prefs.getFloat(getString(R.string.pref_buds_price), 0) + " keys");
+
         // The SimpleCursorAdapter will take data from the database through the
         // Loader and use it to populate the ListView it's attached to.
         cursorAdapter = new PriceListCursorAdapter(
@@ -109,7 +120,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("debug_header_key", false)){
             mListView.setAdapter(cursorAdapter);
         } else {
-
+            mListView.setAdapter(cursorAdapter);
             quickReturnTarget = (LinearLayout) rootView.findViewById(R.id.list_changes_header);
 
             mListView.setAdapter(new QuickReturnAdapter(cursorAdapter));
@@ -117,7 +128,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             quickReturnAttacher = QuickReturnAttacher.forView(mListView);
             int offset = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 125, getResources().getDisplayMetrics());
             quickReturnAttacher.addTargetView(quickReturnTarget, QuickReturnTargetView.POSITION_TOP, offset);
-            mSwipeRefreshLayout.setProgressViewOffset(false, (int)(offset * 1.0/2.0), (int)(offset * 5.0/4.0));
+            mSwipeRefreshLayout.setProgressViewOffset(false, (int) (offset * 1.0 / 2.0), (int) (offset * 5.0 / 4.0));
         }
 
         if(savedInstanceState != null && savedInstanceState.containsKey(LIST_VIEW_POSITION_KEY) &&
@@ -151,13 +162,9 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        // This is called when a new Loader needs to be created.  This
-        // fragment only uses one loader, so we don't care about checking the id.
 
         String sortOrder = PriceEntry.COLUMN_LAST_UPDATE + " DESC";
 
-        // Now create and return a CursorLoader that will take care of
-        // creating a Cursor for the data being displayed.
         return new CursorLoader(
                 getActivity(),
                 PriceEntry.CONTENT_URI,

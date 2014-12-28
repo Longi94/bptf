@@ -2,13 +2,16 @@ package com.tlongdev.bktf.task;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
+import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.PriceListContract;
 
 import org.json.JSONArray;
@@ -240,6 +243,28 @@ public class UpdatePriceList extends AsyncTask<String, Void, Void>{
                                         price.getDouble(OWM_VALUE_RAW), price.getInt(OWM_LAST_UPDATE),
                                         price.getDouble(OWM_DIFFERENCE)
                                 ));
+
+                                if (quality.equals("6") && tradable.equals("Tradable") && craftable.equals("Craftable"))  {
+                                    if (defindex == 143) {
+                                        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+
+                                        editor.putFloat(mContext.getString(R.string.pref_metal_price), (float)price.getDouble(OWM_VALUE));
+
+                                        editor.apply();
+                                    } else if (defindex == 5002) {
+                                        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+
+                                        editor.putFloat(mContext.getString(R.string.pref_key_price), (float)price.getDouble(OWM_VALUE));
+
+                                        editor.apply();
+                                    } else if (defindex == 5021) {
+                                        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+
+                                        editor.putFloat(mContext.getString(R.string.pref_buds_price), (float)price.getDouble(OWM_VALUE));
+
+                                        editor.apply();
+                                    }
+                                }
                             }
                         }
                     }
@@ -253,28 +278,21 @@ public class UpdatePriceList extends AsyncTask<String, Void, Void>{
             int rowsInserted = mContext.getContentResolver()
                     .bulkInsert(PriceListContract.PriceEntry.CONTENT_URI, cvArray);
             Log.v(LOG_TAG, "inserted " + rowsInserted + " rows of weather data");
-            // Use a DEBUG variable to gate whether or not you do this, so you can easily
-            // turn it on and off, and so that it's easy to see what you can rip out if
-            // you ever want to remove it.
-            if (true) {
-                Cursor priceListCursor = mContext.getContentResolver().query(
-                        PriceListContract.PriceEntry.CONTENT_URI,
-                        null,
-                        null,
-                        null,
-                        null
-                );
 
-                if (priceListCursor.moveToFirst()) {
-                    ContentValues resultValues = new ContentValues();
-                    DatabaseUtils.cursorRowToContentValues(priceListCursor, resultValues);
-                    Log.v(LOG_TAG, "Query succeeded! **********");
-                    for (String key : resultValues.keySet()) {
-                        Log.v(LOG_TAG, key + ": " + resultValues.getAsString(key));
-                    }
-                } else {
-                    Log.v(LOG_TAG, "Query failed! :( **********");
-                }
+            Cursor priceListCursor = mContext.getContentResolver().query(
+                    PriceListContract.PriceEntry.CONTENT_URI,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+
+            if (priceListCursor.moveToFirst()) {
+                ContentValues resultValues = new ContentValues();
+                DatabaseUtils.cursorRowToContentValues(priceListCursor, resultValues);
+                Log.v(LOG_TAG, "Query succeeded! **********");
+            } else {
+                Log.v(LOG_TAG, "Query failed! :( **********");
             }
         }
     }

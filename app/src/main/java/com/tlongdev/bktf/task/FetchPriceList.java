@@ -3,12 +3,15 @@ package com.tlongdev.bktf.task;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
 
 import org.json.JSONArray;
@@ -194,6 +197,7 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
                     while (craftableIterator.hasNext()){
 
                         String craftable = (String)craftableIterator.next();
+
                         if (craftability.get(craftable) instanceof JSONObject) {
                             JSONObject priceIndexes = craftability.getJSONObject(craftable);
                             Iterator<String> priceIndexIterator = priceIndexes.keys();
@@ -230,6 +234,28 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
                                     price.getDouble(OWM_VALUE_RAW), price.getInt(OWM_LAST_UPDATE),
                                     price.getDouble(OWM_DIFFERENCE)
                             ));
+
+                            if (quality.equals("6") && tradable.equals("Tradable") && craftable.equals("Craftable"))  {
+                                if (defindex == 143) {
+                                    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+
+                                    editor.putFloat(mContext.getString(R.string.pref_metal_price), (float)price.getDouble(OWM_VALUE));
+
+                                    editor.apply();
+                                } else if (defindex == 5002) {
+                                    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+
+                                    editor.putFloat(mContext.getString(R.string.pref_key_price), (float)price.getDouble(OWM_VALUE));
+
+                                    editor.apply();
+                                } else if (defindex == 5021) {
+                                    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+
+                                    editor.putFloat(mContext.getString(R.string.pref_buds_price), (float)price.getDouble(OWM_VALUE));
+
+                                    editor.apply();
+                                }
+                            }
                         }
                     }
                 }
@@ -245,25 +271,20 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
             // Use a DEBUG variable to gate whether or not you do this, so you can easily
             // turn it on and off, and so that it's easy to see what you can rip out if
             // you ever want to remove it.
-            if (true) {
-                Cursor priceListCursor = mContext.getContentResolver().query(
-                        PriceEntry.CONTENT_URI,
-                        null,
-                        null,
-                        null,
-                        null
-                );
+            Cursor priceListCursor = mContext.getContentResolver().query(
+                    PriceEntry.CONTENT_URI,
+                    null,
+                    null,
+                    null,
+                    null
+            );
 
-                if (priceListCursor.moveToFirst()) {
-                    ContentValues resultValues = new ContentValues();
-                    DatabaseUtils.cursorRowToContentValues(priceListCursor, resultValues);
-                    Log.v(LOG_TAG, "Query succeeded! **********");
-                    for (String key : resultValues.keySet()) {
-                        Log.v(LOG_TAG, key + ": " + resultValues.getAsString(key));
-                    }
-                } else {
-                    Log.v(LOG_TAG, "Query failed! :( **********");
-                }
+            if (priceListCursor.moveToFirst()) {
+                ContentValues resultValues = new ContentValues();
+                DatabaseUtils.cursorRowToContentValues(priceListCursor, resultValues);
+                Log.v(LOG_TAG, "Query succeeded! **********");
+            } else {
+                Log.v(LOG_TAG, "Query failed! :( **********");
             }
         }
     }
@@ -289,7 +310,7 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
 
         itemValues.put(PriceEntry.COLUMN_DEFINDEX, defindex);
         itemValues.put(PriceEntry.COLUMN_ITEM_NAME, name);
-        itemValues.put(PriceEntry.COLUMN_ITEM_QUALITY, quality);
+        itemValues.put(PriceEntry.COLUMN_ITEM_QUALITY, Integer.parseInt(quality));
         itemValues.put(PriceEntry.COLUMN_ITEM_TRADABLE, itemTradable);
         itemValues.put(PriceEntry.COLUMN_ITEM_CRAFTABLE, itemCraftable);
         itemValues.put(PriceEntry.COLUMN_PRICE_INDEX, Integer.parseInt(priceIndex));
