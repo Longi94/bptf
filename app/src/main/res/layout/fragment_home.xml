@@ -24,77 +24,82 @@
     <LinearLayout
         android:id="@+id/list_changes_header"
         android:layout_width="match_parent"
-        android:layout_height="125dp"
+        android:layout_height="40dp"
         android:orientation="horizontal"
         android:background="@color/bktf_main_blue_dark">
 
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
             android:orientation="vertical">
-
-
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:src="@drawable/h5002"/>
+                android:src="@drawable/h5002"
+                android:layout_gravity="center"
+                android:alpha="0.5"/>
 
             <TextView
                 android:id="@+id/text_view_metal_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:textColor="#fff"
-                android:text="Price Here"/>
+                android:text="Price Here"
+                android:textSize="16sp"/>
 
-        </LinearLayout>
+        </FrameLayout>
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
             android:orientation="vertical">
-
-
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:src="@drawable/h5021"/>
+                android:src="@drawable/h5021"
+                android:layout_gravity="center"
+                android:alpha="0.5"/>
 
             <TextView
                 android:id="@+id/text_view_key_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textColor="#fff"
-                android:text="Price Here"/>
+                android:text="Price Here"
+                android:gravity="center"
+                android:textSize="16sp"/>
 
-        </LinearLayout>
+        </FrameLayout>
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
             android:orientation="vertical">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:src="@drawable/h143"/>
+                android:src="@drawable/h143"
+                android:layout_gravity="center"
+                android:alpha="0.7"/>
 
             <TextView
                 android:id="@+id/text_view_buds_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textColor="#fff"
-                android:text="Price Here"/>
+                android:text="Price Here"
+                android:gravity="center"
+                android:textSize="16sp"/>
 
-        </LinearLayout>
+        </FrameLayout>
 
-        </LinearLayout>
+    </LinearLayout>
 </FrameLayout>

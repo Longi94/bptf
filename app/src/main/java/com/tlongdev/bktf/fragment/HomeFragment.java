@@ -126,9 +126,9 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             mListView.setAdapter(new QuickReturnAdapter(cursorAdapter));
 
             quickReturnAttacher = QuickReturnAttacher.forView(mListView);
-            int offset = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 125, getResources().getDisplayMetrics());
+            int offset = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 42, getResources().getDisplayMetrics());
             quickReturnAttacher.addTargetView(quickReturnTarget, QuickReturnTargetView.POSITION_TOP, offset);
-            mSwipeRefreshLayout.setProgressViewOffset(false, (int) (offset * 1.0 / 2.0), (int) (offset * 5.0 / 4.0));
+            mSwipeRefreshLayout.setProgressViewOffset(false, (int)(offset * -1.0/2.0), (int) (offset * 3.0 / 2.0));
         }
 
         if(savedInstanceState != null && savedInstanceState.containsKey(LIST_VIEW_POSITION_KEY) &&
