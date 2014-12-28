@@ -44,7 +44,7 @@
                 android:src="@drawable/h5002"/>
 
             <TextView
-                android:id="@+id/text_view_key_metal"
+                android:id="@+id/text_view_metal_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#fff"

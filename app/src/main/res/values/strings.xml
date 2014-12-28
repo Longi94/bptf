@@ -30,5 +30,8 @@
     <string name="pref_player_backpack_value_dota2">pref_player_backpack_value_dota2</string>
     <string name="pref_player_trust_positive">pref_player_trust_positive</string>
     <string name="pref_player_trust_negative">pref_player_trust_negative</string>
+    <string name="pref_metal_price">pref_metal_price</string>
+    <string name="pref_key_price">pref_key_price</string>
+    <string name="pref_buds_price">pref_buds_price</string>
 
 </resources>
