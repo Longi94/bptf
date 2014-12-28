@@ -11,4 +11,9 @@
         android:singleLine="true"
         android:maxLines="1" />
 
+    <CheckBoxPreference
+        android:key="debug_header_key"
+        android:title="DEBUG"
+        android:defaultValue="false" />
+
 </PreferenceScreen>

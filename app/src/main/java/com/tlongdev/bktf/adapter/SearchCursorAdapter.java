@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,7 +38,7 @@ public class SearchCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        setItemBackground(viewHolder.itemFrame, cursor.getInt(SearchFragment.COL_PRICE_LIST_QUAL));
+        setItemBackground(viewHolder.icon, cursor.getInt(SearchFragment.COL_PRICE_LIST_QUAL));
 
         setIconImage(context, viewHolder.icon, cursor.getInt(SearchFragment.COL_PRICE_LIST_DEFI));
 
@@ -111,7 +110,6 @@ public class SearchCursorAdapter extends CursorAdapter {
     }
 
     public static class ViewHolder {
-        public final FrameLayout itemFrame;
 
         public final ImageView icon;
 
@@ -119,7 +117,6 @@ public class SearchCursorAdapter extends CursorAdapter {
         public final TextView priceView;
 
         public ViewHolder(View view) {
-            itemFrame = (FrameLayout) view.findViewById(R.id.item_frame);
             icon = (ImageView) view.findViewById(R.id.image_view_item_icon);
             nameView = (TextView) view.findViewById(R.id.item_name);
             priceView = (TextView) view.findViewById(R.id.item_price);
