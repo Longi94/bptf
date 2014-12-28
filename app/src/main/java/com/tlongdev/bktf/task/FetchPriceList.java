@@ -9,9 +9,11 @@ import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.data.PriceListContract;
 import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
 
 import org.json.JSONArray;
@@ -32,15 +34,24 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
     private static final String LOG_TAG = FetchPriceList.class.getSimpleName();
 
     private final Context mContext;
+    private boolean updateDatabase;
     private ProgressDialog loadingDialog;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public FetchPriceList(Context context) {
+        this(context, null);
+    }
+
+    public FetchPriceList(Context context, SwipeRefreshLayout swipeRefreshLayout) {
         mContext = context;
+        this.swipeRefreshLayout = swipeRefreshLayout;
+        updateDatabase = swipeRefreshLayout != null;
     }
 
     @Override
     protected void onPreExecute() {
-        loadingDialog = ProgressDialog.show(mContext, null, "Creating initial database...", true);
+        if (!updateDatabase)
+            loadingDialog = ProgressDialog.show(mContext, null, "Creating initial database...", true);
     }
 
     @Override
@@ -128,8 +139,10 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
 
     @Override
     protected void onPostExecute(Void pVoid) {
-        if (loadingDialog != null)
+        if (loadingDialog != null && !updateDatabase)
             loadingDialog.dismiss();
+        else
+            swipeRefreshLayout.setRefreshing(false);
     }
 
     private void getItemsFromJson(String jsonString) throws JSONException {
@@ -151,8 +164,23 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
         final String OWM_LAST_UPDATE = "last_update";
         final String OWM_DIFFERENCE = "difference";
 
+		int latestUpdate = 0;
+		if (updateDatabase) {
+			String[] columns = {PriceListContract.PriceEntry.COLUMN_LAST_UPDATE};
+			Cursor cursor = mContext.getContentResolver().query(
+					PriceListContract.PriceEntry.CONTENT_URI,
+					columns,
+					null,
+					null,
+					PriceListContract.PriceEntry.COLUMN_LAST_UPDATE + " DESC LIMIT 1"
+			);
+			if (cursor.moveToFirst())
+				latestUpdate = cursor.getInt(0);
+		}
+		
         JSONObject jsonObject = new JSONObject(jsonString);
         JSONObject response = jsonObject.getJSONObject(OWM_RESPONSE);
+		
 
         if (response.getInt(OWM_SUCCESS) == 0) {
             Log.e(LOG_TAG, response.getString(OWM_MESSAGE));
@@ -206,17 +234,20 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
 
                                 String priceIndex = (String) priceIndexIterator.next();
                                 JSONObject price = priceIndexes.getJSONObject(priceIndex);
+								
+								if (latestUpdate <= price.getInt(OWM_LAST_UPDATE)) {
 
-                                Double high = null;
-                                if (price.has(OWM_VALUE_HIGH))
-                                    high = price.getDouble(OWM_VALUE_HIGH);
+									Double high = null;
+									if (price.has(OWM_VALUE_HIGH))
+										high = price.getDouble(OWM_VALUE_HIGH);
 
-                                cVVector.add(buildContentValues(defindex,
-                                        name, quality, tradable, craftable, priceIndex, price.getString(OWM_CURRENCY),
-                                        price.getDouble(OWM_VALUE), high,
-                                        price.getDouble(OWM_VALUE_RAW), price.getInt(OWM_LAST_UPDATE),
-                                        price.getDouble(OWM_DIFFERENCE)
-                                ));
+									cVVector.add(buildContentValues(defindex,
+											name, quality, tradable, craftable, priceIndex, price.getString(OWM_CURRENCY),
+											price.getDouble(OWM_VALUE), high,
+											price.getDouble(OWM_VALUE_RAW), price.getInt(OWM_LAST_UPDATE),
+											price.getDouble(OWM_DIFFERENCE)
+									));
+								}
                             }
                         }
                         else {
@@ -224,34 +255,91 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
 
                             JSONObject price = priceIndexes.getJSONObject(0);
 
-                            Double high = null;
-                            if (price.has(OWM_VALUE_HIGH))
-                                high = price.getDouble(OWM_VALUE_HIGH);
+							if (latestUpdate <= price.getInt(OWM_LAST_UPDATE)) {
+								Double high = null;
+								if (price.has(OWM_VALUE_HIGH))
+									high = price.getDouble(OWM_VALUE_HIGH);
 
-                            cVVector.add(buildContentValues(defindex,
-                                    name, quality, tradable, craftable, "0", price.getString(OWM_CURRENCY),
-                                    price.getDouble(OWM_VALUE), high,
-                                    price.getDouble(OWM_VALUE_RAW), price.getInt(OWM_LAST_UPDATE),
-                                    price.getDouble(OWM_DIFFERENCE)
-                            ));
+								cVVector.add(buildContentValues(defindex,
+										name, quality, tradable, craftable, "0", price.getString(OWM_CURRENCY),
+										price.getDouble(OWM_VALUE), high,
+										price.getDouble(OWM_VALUE_RAW), price.getInt(OWM_LAST_UPDATE),
+										price.getDouble(OWM_DIFFERENCE)
+								));
+							}
 
                             if (quality.equals("6") && tradable.equals("Tradable") && craftable.equals("Craftable"))  {
                                 if (defindex == 143) {
                                     SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
 
-                                    editor.putFloat(mContext.getString(R.string.pref_metal_price), (float)price.getDouble(OWM_VALUE));
+                                    String priceString = "";
+                                    double itemPrice = price.getDouble(OWM_VALUE);
+
+                                    if ((int)itemPrice == itemPrice)
+                                        priceString = priceString + (int)itemPrice;
+                                    else
+                                        priceString = priceString + itemPrice;
+
+                                    if (price.has(OWM_VALUE_HIGH)) {
+                                        itemPrice = price.getDouble(OWM_VALUE_HIGH);
+
+                                        if ((int)itemPrice == itemPrice)
+                                            priceString = priceString + "-" + (int)itemPrice;
+                                        else
+                                            priceString = priceString + "-" + itemPrice;
+                                    }
+
+                                    priceString = priceString + " keys";
+
+                                    editor.putString(mContext.getString(R.string.pref_buds_price), priceString);
 
                                     editor.apply();
                                 } else if (defindex == 5002) {
                                     SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
 
-                                    editor.putFloat(mContext.getString(R.string.pref_key_price), (float)price.getDouble(OWM_VALUE));
+                                    String priceString = "$";
+                                    double itemPrice = price.getDouble(OWM_VALUE);
+
+                                    if ((int)itemPrice == itemPrice)
+                                        priceString = priceString + (int)itemPrice;
+                                    else
+                                        priceString = priceString + itemPrice;
+
+                                    if (price.has(OWM_VALUE_HIGH)) {
+                                        itemPrice = price.getDouble(OWM_VALUE_HIGH);
+
+                                        if ((int)itemPrice == itemPrice)
+                                            priceString = priceString + "-" + (int)itemPrice;
+                                        else
+                                            priceString = priceString + "-" + itemPrice;
+                                    }
+
+                                    editor.putString(mContext.getString(R.string.pref_metal_price), priceString);
 
                                     editor.apply();
                                 } else if (defindex == 5021) {
                                     SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
 
-                                    editor.putFloat(mContext.getString(R.string.pref_buds_price), (float)price.getDouble(OWM_VALUE));
+                                    String priceString = "";
+                                    double itemPrice = price.getDouble(OWM_VALUE);
+
+                                    if ((int)itemPrice == itemPrice)
+                                        priceString = priceString + (int)itemPrice;
+                                    else
+                                        priceString = priceString + itemPrice;
+
+                                    if (price.has(OWM_VALUE_HIGH)) {
+                                        itemPrice = price.getDouble(OWM_VALUE_HIGH);
+
+                                        if ((int)itemPrice == itemPrice)
+                                            priceString = priceString + "-" + (int)itemPrice;
+                                        else
+                                            priceString = priceString + "-" + itemPrice;
+                                    }
+
+                                    priceString = priceString + " ref";
+
+                                    editor.putString(mContext.getString(R.string.pref_key_price), priceString);
 
                                     editor.apply();
                                 }
