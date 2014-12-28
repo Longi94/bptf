@@ -24,7 +24,7 @@ import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
 import com.tlongdev.bktf.quickreturn.QuickReturnAttacher;
 import com.tlongdev.bktf.quickreturn.widget.QuickReturnAdapter;
 import com.tlongdev.bktf.quickreturn.widget.QuickReturnTargetView;
-import com.tlongdev.bktf.task.UpdatePriceList;
+import com.tlongdev.bktf.task.FetchPriceList;
 
 public class HomeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener{
 
@@ -100,9 +100,9 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         keyPrice = (TextView)rootView.findViewById(R.id.text_view_key_price);
         budsPrice = (TextView)rootView.findViewById(R.id.text_view_buds_price);
 
-        metalPrice.setText("$" + prefs.getFloat(getString(R.string.pref_metal_price), 0));
-        keyPrice.setText("" + prefs.getFloat(getString(R.string.pref_key_price), 0) + " ref");
-        budsPrice.setText("" + prefs.getFloat(getString(R.string.pref_buds_price), 0) + " keys");
+        metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
+        keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
+        budsPrice.setText(prefs.getString(getString(R.string.pref_buds_price), ""));
 
         // The SimpleCursorAdapter will take data from the database through the
         // Loader and use it to populate the ListView it's attached to.
@@ -192,7 +192,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onRefresh() {
-        new UpdatePriceList(getActivity(), mSwipeRefreshLayout)
+        new FetchPriceList(getActivity(), mSwipeRefreshLayout)
                 .execute(getResources().getString(R.string.backpack_tf_api_key));
     }
 
