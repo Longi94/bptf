@@ -7,12 +7,18 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.felipecsl.quickreturn.library.QuickReturnAttacher;
+import com.felipecsl.quickreturn.library.widget.QuickReturnAdapter;
+import com.felipecsl.quickreturn.library.widget.QuickReturnTargetView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.PriceListCursorAdapter;
 import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
@@ -57,6 +63,13 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     private static final String LIST_VIEW_TOP_POSITION_KEY = "position_top";
 
     private ListView mListView;
+    private QuickReturnAttacher quickReturnAttacher;
+    private LinearLayout quickReturnTarget;
+    private TextView metalPrice;
+    private TextView keyPrice;
+    private TextView budsPrice;
+
+
     private PriceListCursorAdapter cursorAdapter;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -68,7 +81,9 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+
         getLoaderManager().initLoader(PRICE_LIST_LOADER, null, this);
+
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -85,9 +100,18 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
         // Get a reference to the ListView, and attach this adapter to it.
         mListView = (ListView) rootView.findViewById(R.id.list_view_changes);
-        mListView.setAdapter(cursorAdapter);
+
+        quickReturnTarget = (LinearLayout) rootView.findViewById(R.id.list_changes_header);
+
+        mListView.setAdapter(new QuickReturnAdapter(cursorAdapter));
+
+        quickReturnAttacher = QuickReturnAttacher.forView(mListView);
+        int offset = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 125, getResources().getDisplayMetrics());
+        quickReturnAttacher.addTargetView(quickReturnTarget, QuickReturnTargetView.POSITION_TOP, offset);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout)rootView.findViewById(R.id.swipe_refresh);
+        mSwipeRefreshLayout.setColorSchemeColors(0xff5787c5);
+        mSwipeRefreshLayout.setProgressViewOffset(false, (int)(offset * 1.0/2.0), (int)(offset * 5.0/4.0));
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         if(savedInstanceState != null && savedInstanceState.containsKey(LIST_VIEW_POSITION_KEY) &&
@@ -141,11 +165,11 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         cursorAdapter.swapCursor(data);
-        if (mPositionIndex != ListView.INVALID_POSITION) {
+        /*if (mPositionIndex != ListView.INVALID_POSITION) {
             // If we don't need to restart the loader, and there's a desired position to restore
             // to, do so now.
             mListView.setSelectionFromTop(mPositionIndex, mPositionTop);
-        }
+        }*/
     }
 
     @Override
