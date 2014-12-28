@@ -10,24 +10,11 @@
     android:gravity="center_vertical"
     android:baselineAligned="false">
 
-    <RelativeLayout
+    <ImageView
         android:layout_width="84dp"
         android:layout_height="72dp"
-        android:id="@+id/item_frame">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/image_view_effect"
-            android:scaleType="centerCrop"/>
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/image_view_item_icon"
-            android:scaleType="centerCrop"/>
-
-    </RelativeLayout>
+        android:id="@+id/image_view_item_icon"
+        android:scaleType="centerCrop"/>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -43,7 +30,8 @@
         android:id="@+id/item_name"
         android:paddingRight="2dp"
         android:text="Kritzkrieg"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textColor="#000"/>
 
     <TextView
         android:layout_width="wrap_content"

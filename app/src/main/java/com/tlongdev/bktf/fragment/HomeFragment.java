@@ -2,6 +2,7 @@ package com.tlongdev.bktf.fragment;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -101,18 +102,23 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         // Get a reference to the ListView, and attach this adapter to it.
         mListView = (ListView) rootView.findViewById(R.id.list_view_changes);
 
-        quickReturnTarget = (LinearLayout) rootView.findViewById(R.id.list_changes_header);
-
-        mListView.setAdapter(new QuickReturnAdapter(cursorAdapter));
-
-        quickReturnAttacher = QuickReturnAttacher.forView(mListView);
-        int offset = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 125, getResources().getDisplayMetrics());
-        quickReturnAttacher.addTargetView(quickReturnTarget, QuickReturnTargetView.POSITION_TOP, offset);
-
         mSwipeRefreshLayout = (SwipeRefreshLayout)rootView.findViewById(R.id.swipe_refresh);
         mSwipeRefreshLayout.setColorSchemeColors(0xff5787c5);
-        mSwipeRefreshLayout.setProgressViewOffset(false, (int)(offset * 1.0/2.0), (int)(offset * 5.0/4.0));
         mSwipeRefreshLayout.setOnRefreshListener(this);
+
+        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("debug_header_key", false)){
+            mListView.setAdapter(cursorAdapter);
+        } else {
+
+            quickReturnTarget = (LinearLayout) rootView.findViewById(R.id.list_changes_header);
+
+            mListView.setAdapter(new QuickReturnAdapter(cursorAdapter));
+
+            quickReturnAttacher = QuickReturnAttacher.forView(mListView);
+            int offset = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 125, getResources().getDisplayMetrics());
+            quickReturnAttacher.addTargetView(quickReturnTarget, QuickReturnTargetView.POSITION_TOP, offset);
+            mSwipeRefreshLayout.setProgressViewOffset(false, (int)(offset * 1.0/2.0), (int)(offset * 5.0/4.0));
+        }
 
         if(savedInstanceState != null && savedInstanceState.containsKey(LIST_VIEW_POSITION_KEY) &&
                 savedInstanceState.containsKey(LIST_VIEW_TOP_POSITION_KEY)) {

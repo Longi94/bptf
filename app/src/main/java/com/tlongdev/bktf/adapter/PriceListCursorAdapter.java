@@ -1,14 +1,16 @@
 package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
@@ -18,6 +20,7 @@ import com.tlongdev.bktf.fragment.HomeFragment;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 
 public class PriceListCursorAdapter extends CursorAdapter {
 
@@ -39,51 +42,38 @@ public class PriceListCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        setItemBackground(viewHolder.itemFrame, cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL));
+        setItemBackground(viewHolder.icon, cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL));
+        viewHolder.icon.setImageDrawable(null);
 
-        setEffectImage(context, viewHolder.effect, cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE));
-        setIconImage(context, viewHolder.icon, cursor.getInt(HomeFragment.COL_PRICE_LIST_DEFI));
-        setChangeImage(context, viewHolder.change, cursor.getDouble(HomeFragment.COL_PRICE_LIST_DIFF),
-                cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRAW));
+        new LoadImagesTask(context, viewHolder.icon, viewHolder.change).execute(
+                (double)cursor.getInt(HomeFragment.COL_PRICE_LIST_DEFI),
+                (double)cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE),
+                cursor.getDouble(HomeFragment.COL_PRICE_LIST_DIFF),
+                cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRAW)
+        );
 
         viewHolder.nameView.setText(Utility.formatItemName(cursor.getString(HomeFragment.COL_PRICE_LIST_NAME),
                 cursor.getInt(HomeFragment.COL_PRICE_LIST_TRAD),
                 cursor.getInt(HomeFragment.COL_PRICE_LIST_CRAF),
                 cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL),
                 cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE)));
-        viewHolder.priceView.setText("" + cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRIC));
 
-        if (cursor.getDouble(HomeFragment.COL_PRICE_LIST_PMAX) > 0.0){
-            viewHolder.priceView.append(" - " + cursor.getDouble(HomeFragment.COL_PRICE_LIST_PMAX));
+        double price = cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRIC);
+        if ((int)price == price)
+            viewHolder.priceView.setText("" + (int)price);
+        else
+            viewHolder.priceView.setText("" + price);
+
+        price = cursor.getDouble(HomeFragment.COL_PRICE_LIST_PMAX);
+
+        if (price > 0.0){
+            if ((int)price == price)
+                viewHolder.priceView.append(" - " + (int)price);
+            else
+                viewHolder.priceView.append(" - " + price);
         }
 
         viewHolder.priceView.append(" " + cursor.getString(HomeFragment.COL_PRICE_LIST_CURR));
-    }
-
-    private void setChangeImage(Context context, ImageView change, double difference, double raw) {
-        try {
-            InputStream ims;
-            if (difference == raw) {
-                ims = context.getAssets().open("changes/new.png");
-            }
-            else if (difference == 0.0) {
-                ims = context.getAssets().open("changes/refresh.png");
-            }
-            else if (difference > 0.0) {
-                ims = context.getAssets().open("changes/up.png");
-            }
-            else {
-                ims = context.getAssets().open("changes/down.png");
-            }
-
-
-            // load image as Drawable
-            Drawable d = Drawable.createFromStream(ims, null);
-            // set image to ImageView
-            change.setImageDrawable(d);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void setItemBackground(View frame, int quality) {
@@ -126,40 +116,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
         }
     }
 
-    private void setEffectImage(Context context, ImageView effect, int index) {
-        if (index != 0) {
-            try {
-                // get input stream
-                InputStream ims = context.getAssets().open("effects/" + index + "_380x380.png");
-                // load image as Drawable
-                Drawable d = Drawable.createFromStream(ims, null);
-                // set image to ImageView
-                effect.setImageDrawable(d);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        else
-            effect.setImageDrawable(null);
-    }
-
-    private void setIconImage(Context context, ImageView icon, int defindex) {
-        try {
-            // get input stream
-            InputStream ims = context.getAssets().open("items/" + defindex + ".png");
-            // load image as Drawable
-            Drawable d = Drawable.createFromStream(ims, null);
-            // set image to ImageView
-            icon.setImageDrawable(d);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static class ViewHolder {
-        public final RelativeLayout itemFrame;
-
-        public final ImageView effect;
         public final ImageView change;
         public final ImageView icon;
 
@@ -167,12 +124,67 @@ public class PriceListCursorAdapter extends CursorAdapter {
         public final TextView priceView;
 
         public ViewHolder(View view) {
-            itemFrame = (RelativeLayout) view.findViewById(R.id.item_frame);
-            effect = (ImageView) view.findViewById(R.id.image_view_effect);
             change = (ImageView) view.findViewById(R.id.image_view_change);
             icon = (ImageView) view.findViewById(R.id.image_view_item_icon);
             nameView = (TextView) view.findViewById(R.id.item_name);
             priceView = (TextView) view.findViewById(R.id.item_price);
+        }
+    }
+
+    private class LoadImagesTask extends AsyncTask<Double, Void, Drawable[]>{
+        private Context mContext;
+        private ImageView icon;
+        private ImageView change;
+
+        private LoadImagesTask(Context context, ImageView icon, ImageView change) {
+            mContext = context;
+            this.icon = icon;
+            this.change = change;
+        }
+
+        @Override
+        protected Drawable[] doInBackground(Double... params) {
+            try {
+                Drawable[] returnVal = new Drawable[2];
+                AssetManager assetManager = mContext.getAssets();
+                InputStream ims = assetManager.open("items/" + (new DecimalFormat("#0")).format(params[0]) + ".png");
+                Drawable iconDrawable = Drawable.createFromStream(ims, null);
+                if (params[1] != 0) {
+                    ims = assetManager.open("effects/" + (new DecimalFormat("#0")).format(params[1]) + "_380x380.png");
+                    Drawable effectDrawable = Drawable.createFromStream(ims, null);
+                    returnVal[0] = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
+                } else {
+                    returnVal[0] = iconDrawable;
+                }
+
+                if (params[2].equals(params[3])) {
+                    ims = mContext.getAssets().open("changes/new.png");
+                }
+                else if (params[2] == 0.0) {
+                    ims = mContext.getAssets().open("changes/refresh.png");
+                }
+                else if (params[2] > 0.0) {
+                    ims = mContext.getAssets().open("changes/up.png");
+                }
+                else {
+                    ims = mContext.getAssets().open("changes/down.png");
+                }
+
+                returnVal[1] = Drawable.createFromStream(ims, null);
+
+                return returnVal;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Drawable[] drawable) {
+            if (icon != null) {
+                icon.setImageDrawable(drawable[0]);
+                change.setImageDrawable(drawable[1]);
+            }
         }
     }
 }

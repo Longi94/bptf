@@ -10,18 +10,11 @@
     android:gravity="center_vertical"
     android:baselineAligned="false">
 
-    <FrameLayout
+    <ImageView
         android:layout_width="64dp"
         android:layout_height="50dp"
-        android:id="@+id/item_frame">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/image_view_item_icon"
-            android:scaleType="centerCrop"/>
-
-    </FrameLayout>
+        android:id="@+id/image_view_item_icon"
+        android:scaleType="centerCrop"/>
 
     <TextView
         android:layout_width="0dp"
