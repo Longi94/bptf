@@ -45,18 +45,22 @@ public class PriceListCursorAdapter extends CursorAdapter {
         setItemBackground(viewHolder.icon, cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL));
         viewHolder.icon.setImageDrawable(null);
 
-        new LoadImagesTask(context, viewHolder.icon, viewHolder.change).execute(
+        viewHolder.nameView.setText(Utility.formatItemName(cursor.getString(HomeFragment.COL_PRICE_LIST_NAME),
+                cursor.getInt(HomeFragment.COL_PRICE_LIST_TRAD),
+                cursor.getInt(HomeFragment.COL_PRICE_LIST_CRAF),
+                cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL),
+                cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE)));
+
+        viewHolder.icon.setTag(viewHolder.nameView.getText());
+
+        new LoadImagesTask(context, viewHolder.icon, viewHolder.change)
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
                 (double)cursor.getInt(HomeFragment.COL_PRICE_LIST_DEFI),
                 (double)cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE),
                 cursor.getDouble(HomeFragment.COL_PRICE_LIST_DIFF),
                 cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRAW)
         );
 
-        viewHolder.nameView.setText(Utility.formatItemName(cursor.getString(HomeFragment.COL_PRICE_LIST_NAME),
-                cursor.getInt(HomeFragment.COL_PRICE_LIST_TRAD),
-                cursor.getInt(HomeFragment.COL_PRICE_LIST_CRAF),
-                cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL),
-                cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE)));
 
         double price = cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRIC);
         if ((int)price == price)
@@ -135,11 +139,13 @@ public class PriceListCursorAdapter extends CursorAdapter {
         private Context mContext;
         private ImageView icon;
         private ImageView change;
+        private String path;
 
         private LoadImagesTask(Context context, ImageView icon, ImageView change) {
             mContext = context;
             this.icon = icon;
             this.change = change;
+            path = icon.getTag().toString();
         }
 
         @Override
@@ -181,7 +187,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
 
         @Override
         protected void onPostExecute(Drawable[] drawable) {
-            if (icon != null) {
+            if (icon.getTag().toString().equals(path)) {
                 icon.setImageDrawable(drawable[0]);
                 change.setImageDrawable(drawable[1]);
             }

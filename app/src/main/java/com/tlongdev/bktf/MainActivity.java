@@ -64,7 +64,6 @@ public class MainActivity extends ActionBarActivity
     protected void onResume() {
         super.onResume();
 
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (prefs.getBoolean(getResources().getString(R.string.pref_initial_load), true)){
             new FetchPriceList(this).execute(getResources().getString(R.string.backpack_tf_api_key));
@@ -130,6 +129,7 @@ public class MainActivity extends ActionBarActivity
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         MenuItem menuItem = menu.findItem(R.id.action_search);
         mSearchView = (SearchView) menuItem.getActionView();
+
         mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
