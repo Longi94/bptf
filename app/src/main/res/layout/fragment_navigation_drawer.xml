@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#cccc">
+    android:background="#fff">
     <ListView
         android:id="@+id/list_view_drawer"
         android:layout_width="match_parent"
@@ -18,16 +18,14 @@
     <TextView
         android:id="@+id/text_view_settings"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?android:attr/listPreferredItemHeightSmall"
         android:text="@string/action_settings"
-        android:padding="16dp"
-        android:background="#ffff" />
+        android:padding="16dp" />
 
     <TextView
         android:id="@+id/text_view_about"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?android:attr/listPreferredItemHeightSmall"
         android:text="About"
-        android:padding="16dp"
-        android:background="#ffff"/>
+        android:padding="16dp"/>
 </LinearLayout>

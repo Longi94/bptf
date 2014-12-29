@@ -2,4 +2,15 @@
 <resources>
     <color name="bktf_main_blue_dark">#ff456292</color>
     <color name="bktf_main_blue">#ff5787c5</color>
+
+    <color name="tf2_unusual_color">#8650AC</color>
+    <color name="tf2_unique_color">#FFD700</color>
+    <color name="tf2_strange_color">#CF6A32</color>
+    <color name="tf2_normal_color">#B2B2B2</color>
+    <color name="tf2_valve_color">#A50F79</color>
+    <color name="tf2_haunted_color">#38F3AB</color>
+    <color name="tf2_collectors_color">#AA0000</color>
+    <color name="tf2_community_color">#70B04A</color>
+    <color name="tf2_vintage_color">#476291</color>
+    <color name="tf2_genuine_color">#4D7455</color>
 </resources>

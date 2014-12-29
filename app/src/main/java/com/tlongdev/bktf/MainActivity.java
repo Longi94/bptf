@@ -18,7 +18,7 @@ import android.view.MenuItem;
 
 import com.tlongdev.bktf.fragment.HomeFragment;
 import com.tlongdev.bktf.fragment.NavigationDrawerFragment;
-import com.tlongdev.bktf.fragment.PriceListFragment;
+import com.tlongdev.bktf.fragment.UnusualPriceListFragment;
 import com.tlongdev.bktf.fragment.SearchFragment;
 import com.tlongdev.bktf.fragment.UserFragment;
 import com.tlongdev.bktf.task.FetchPriceList;
@@ -84,7 +84,7 @@ public class MainActivity extends ActionBarActivity
             fragment = new UserFragment();
         }
         else /*if (position == 2)*/ {
-            fragment = new PriceListFragment();
+            fragment = new UnusualPriceListFragment();
         }
 
         // update the main content by replacing fragments
