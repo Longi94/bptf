@@ -1,0 +1,127 @@
+package com.tlongdev.bktf.adapter;
+
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.database.Cursor;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.os.AsyncTask;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CursorAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.UnusualActivity;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.DecimalFormat;
+
+public class UnusualPricesCursorAdapter extends CursorAdapter{
+
+    int defindex;
+
+
+    public UnusualPricesCursorAdapter(Context context, Cursor c, int flags, int defindex) {
+        super(context, c, flags);
+        this.defindex = defindex;
+    }
+
+    @Override
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        View view = LayoutInflater.from(context).inflate(R.layout.grid_items, parent, false);
+
+        ViewHolder viewHolder = new ViewHolder(view);
+        view.setTag(viewHolder);
+
+        return view;
+    }
+
+    @Override
+    public void bindView(View view, final Context context, Cursor cursor) {
+        ViewHolder viewHolder = (ViewHolder) view.getTag();
+
+        viewHolder.icon.setImageDrawable(null);
+        viewHolder.icon.setTag(cursor.getInt(UnusualActivity.COL_PRICE_LIST_INDE));
+
+        new LoadImagesTask(context, viewHolder.icon).
+                executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (double)defindex,
+                        (double)cursor.getInt(UnusualActivity.COL_PRICE_LIST_INDE),
+                        cursor.getDouble(UnusualActivity.COL_PRICE_LIST_DIFF),
+                        cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRAW));
+
+        viewHolder.icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+
+        double price = cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRIC);
+        if ((int)price == price)
+            viewHolder.priceView.setText("" + (int)price);
+        else
+            viewHolder.priceView.setText("" + price);
+
+        price = cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PMAX);
+
+        if (price > 0.0){
+            if ((int)price == price)
+                viewHolder.priceView.append(" - " + (int)price);
+            else
+                viewHolder.priceView.append(" - " + price);
+        }
+
+        viewHolder.priceView.append(" " + cursor.getString(UnusualActivity.COL_PRICE_LIST_CURR));
+    }
+
+    public static class ViewHolder {
+
+        public final ImageView icon;
+        public final TextView priceView;
+
+        public ViewHolder(View view) {
+            icon = (ImageView) view.findViewById(R.id.image_view_item_icon);
+            priceView = (TextView) view.findViewById(R.id.grid_item_price);
+        }
+    }
+
+    private class LoadImagesTask extends AsyncTask<Double, Void, Drawable> {
+        private Context mContext;
+        private ImageView icon;
+        private String path;
+
+        private LoadImagesTask(Context context, ImageView icon) {
+            mContext = context;
+            this.icon = icon;
+            path = icon.getTag().toString();
+        }
+
+        @Override
+        protected Drawable doInBackground(Double... params) {
+            try {
+                Drawable d;
+                AssetManager assetManager = mContext.getAssets();
+                InputStream ims = assetManager.open("items/" + (new DecimalFormat("#0")).format(params[0]) + ".png");
+                Drawable iconDrawable = Drawable.createFromStream(ims, null);
+                ims = assetManager.open("effects/" + (new DecimalFormat("#0")).format(params[1]) + "_380x380.png");
+                Drawable effectDrawable = Drawable.createFromStream(ims, null);
+                d = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
+
+                return d;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Drawable drawable) {
+            if (icon.getTag().toString().equals(path)) {
+                icon.setImageDrawable(drawable);
+            }
+        }
+    }
+}

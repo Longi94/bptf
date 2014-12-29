@@ -1,0 +1,15 @@
+<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="4dp"
+    android:clipToPadding="false"
+    android:id="@+id/grid_view"
+    android:verticalSpacing="4dp"
+    android:horizontalSpacing="4dp"
+    android:stretchMode="columnWidth"
+    android:numColumns="3"
+    android:gravity="center"
+    tools:context="com.tlongdev.bktf.UnusualActivity">
+
+</GridView>

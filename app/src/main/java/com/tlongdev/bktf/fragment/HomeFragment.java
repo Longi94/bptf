@@ -104,11 +104,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
         budsPrice.setText(prefs.getString(getString(R.string.pref_buds_price), ""));
 
-        // The SimpleCursorAdapter will take data from the database through the
-        // Loader and use it to populate the ListView it's attached to.
-        cursorAdapter = new PriceListCursorAdapter(
-                getActivity(), null, 0
-        );
+        cursorAdapter = new PriceListCursorAdapter(getActivity(), null, 0);
 
         // Get a reference to the ListView, and attach this adapter to it.
         mListView = (ListView) rootView.findViewById(R.id.list_view_changes);
@@ -120,7 +116,6 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("debug_header_key", false)){
             mListView.setAdapter(cursorAdapter);
         } else {
-            mListView.setAdapter(cursorAdapter);
             quickReturnTarget = (LinearLayout) rootView.findViewById(R.id.list_changes_header);
 
             mListView.setAdapter(new QuickReturnAdapter(cursorAdapter));
