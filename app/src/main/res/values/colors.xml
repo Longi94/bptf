@@ -13,4 +13,15 @@
     <color name="tf2_community_color">#70B04A</color>
     <color name="tf2_vintage_color">#476291</color>
     <color name="tf2_genuine_color">#4D7455</color>
+
+    <color name="tf2_unusual_color_dark">#ff4f3469</color>
+    <color name="tf2_unique_color_dark">#ffc5a800</color>
+    <color name="tf2_strange_color_dark">#ffa8542a</color>
+    <color name="tf2_normal_color_dark">#ff959595</color>
+    <color name="tf2_valve_color_dark">#ff860e62</color>
+    <color name="tf2_haunted_color_dark">#ff32c88f</color>
+    <color name="tf2_collectors_color_dark">#ff7e0000</color>
+    <color name="tf2_community_color_dark">#ff5a903b</color>
+    <color name="tf2_vintage_color_dark">#ff37496e</color>
+    <color name="tf2_genuine_color_dark">#ff36583d</color>
 </resources>

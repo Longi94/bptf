@@ -2,6 +2,8 @@ package com.tlongdev.bktf;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.preference.PreferenceManager;
 
 import com.tlongdev.bktf.enums.Quality;
@@ -25,6 +27,9 @@ public class Utility {
         Quality q = Quality.values()[quality];
 
         switch (q) {
+            case NORMAL:
+                formattedName = formattedName + "Normal ";
+                break;
             case GENUINE:
                 formattedName = formattedName + "Genuine ";
                 break;
@@ -221,5 +226,65 @@ public class Utility {
                 return "";
         }
     }
+
+    public static LayerDrawable getItemBackground(Context context, int quality, int tradable, int craftable) {
+        Quality q = Quality.values()[quality];
+
+        Drawable itemFrame = null;
+        Drawable craftableFrame = null;
+        Drawable tradableFrame = null;
+
+        switch (q) {
+            case GENUINE:
+                itemFrame =  context.getResources().getDrawable(R.drawable.item_background_genuine);
+                break;
+            case VINTAGE:
+                itemFrame =  context.getResources().getDrawable(R.drawable.item_background_vintage);
+                break;
+            case UNUSUAL:
+                itemFrame =  context.getResources().getDrawable(R.drawable.item_background_unusual);
+                break;
+            case UNIQUE:
+                itemFrame =  context.getResources().getDrawable(R.drawable.item_background_unique);
+                break;
+            case COMMUNITY:
+                itemFrame =  context.getResources().getDrawable(R.drawable.item_background_community);
+                break;
+            case VALVE:
+                itemFrame =  context.getResources().getDrawable(R.drawable.item_background_valve);
+                break;
+            case SELF_MADE:
+                itemFrame =  context.getResources().getDrawable(R.drawable.item_background_community);
+                break;
+            case STRANGE:
+                itemFrame =  context.getResources().getDrawable(R.drawable.item_background_strange);
+                break;
+            case HAUNTED:
+                itemFrame =  context.getResources().getDrawable(R.drawable.item_background_haunted);
+                break;
+            case COLLECTORS:
+                itemFrame =  context.getResources().getDrawable(R.drawable.item_background_collectors);
+                break;
+            default:
+                itemFrame =  context.getResources().getDrawable(R.drawable.item_background_normal);
+                break;
+        }
+
+        if (tradable == 0){
+            tradableFrame = context.getResources().getDrawable(R.drawable.non_tradable_border);
+        }
+        else {
+            tradableFrame = context.getResources().getDrawable(R.drawable.empty_drawable);
+        }
+        if (craftable == 0){
+            craftableFrame = context.getResources().getDrawable(R.drawable.non_craftable_border);
+        }
+        else {
+            craftableFrame = context.getResources().getDrawable(R.drawable.empty_drawable);
+        }
+
+        return new LayerDrawable(new Drawable[] {itemFrame, tradableFrame, craftableFrame});
+    }
+
 }
 

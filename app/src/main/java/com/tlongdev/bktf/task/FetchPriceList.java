@@ -221,11 +221,11 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
         Vector<ContentValues> cVVector = new Vector<>();
 
         if (updateDatabase &&
-                (items.getJSONObject("Mann Co. Supply Crate Key").getJSONObject("6").getJSONObject("Tradable")
+                (items.getJSONObject("Mann Co. Supply Crate Key").getJSONObject("prices").getJSONObject("6").getJSONObject("Tradable")
                 .getJSONArray("Craftable").getJSONObject(0).getInt(OWM_LAST_UPDATE) > latestUpdate ||
-                items.getJSONObject("Earbuds").getJSONObject("6").getJSONObject("Tradable")
+                items.getJSONObject("Earbuds").getJSONObject("prices").getJSONObject("6").getJSONObject("Tradable")
                         .getJSONArray("Craftable").getJSONObject(0).getInt(OWM_LAST_UPDATE) > latestUpdate ||
-                items.getJSONObject("Refined Metal").getJSONObject("6").getJSONObject("Tradable")
+                items.getJSONObject("Refined Metal").getJSONObject("prices").getJSONObject("6").getJSONObject("Tradable")
                         .getJSONArray("Craftable").getJSONObject(0).getInt(OWM_LAST_UPDATE) > latestUpdate)) {
             updateDatabase = false;
             latestUpdate = 0;

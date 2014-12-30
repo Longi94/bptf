@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
-import com.tlongdev.bktf.enums.Quality;
 import com.tlongdev.bktf.fragment.HomeFragment;
 
 import java.io.IOException;
@@ -23,6 +22,8 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 
 public class PriceListCursorAdapter extends CursorAdapter {
+
+    boolean isCrate = false;
 
     public PriceListCursorAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
@@ -42,8 +43,8 @@ public class PriceListCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        setItemBackground(viewHolder.icon, cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL));
         viewHolder.icon.setImageDrawable(null);
+        viewHolder.icon.setBackgroundDrawable(null);
         viewHolder.change.setImageDrawable(null);
 
         viewHolder.nameView.setText(Utility.formatItemName(cursor.getString(HomeFragment.COL_PRICE_LIST_NAME),
@@ -52,6 +53,8 @@ public class PriceListCursorAdapter extends CursorAdapter {
                 cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL),
                 cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE)));
 
+        isCrate = cursor.getString(HomeFragment.COL_PRICE_LIST_NAME).contains("Crate");
+
         viewHolder.icon.setTag(viewHolder.nameView.getText());
 
         new LoadImagesTask(context, viewHolder.icon, viewHolder.change)
@@ -59,7 +62,10 @@ public class PriceListCursorAdapter extends CursorAdapter {
                 (double)cursor.getInt(HomeFragment.COL_PRICE_LIST_DEFI),
                 (double)cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE),
                 cursor.getDouble(HomeFragment.COL_PRICE_LIST_DIFF),
-                cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRAW)
+                cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRAW),
+                (double)cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL),
+                (double)cursor.getInt(HomeFragment.COL_PRICE_LIST_TRAD),
+                (double)cursor.getInt(HomeFragment.COL_PRICE_LIST_CRAF)
         );
 
 
@@ -79,46 +85,6 @@ public class PriceListCursorAdapter extends CursorAdapter {
         }
 
         viewHolder.priceView.append(" " + cursor.getString(HomeFragment.COL_PRICE_LIST_CURR));
-    }
-
-    private void setItemBackground(View frame, int quality) {
-        Quality q = Quality.values()[quality];
-
-        switch (q) {
-            case GENUINE:
-                frame.setBackgroundColor(0xFF4D7455);
-                break;
-            case VINTAGE:
-                frame.setBackgroundColor(0xFF476291);
-                break;
-            case UNUSUAL:
-                frame.setBackgroundColor(0xFF8650AC);
-                break;
-            case UNIQUE:
-                frame.setBackgroundColor(0xFFFFD700);
-                break;
-            case COMMUNITY:
-                frame.setBackgroundColor(0xFF70B04A);
-                break;
-            case VALVE:
-                frame.setBackgroundColor(0xFFA50F79);
-                break;
-            case SELF_MADE:
-                frame.setBackgroundColor(0xFF70B04A);
-                break;
-            case STRANGE:
-                frame.setBackgroundColor(0xFFCF6A32);
-                break;
-            case HAUNTED:
-                frame.setBackgroundColor(0xFF38F3AB);
-                break;
-            case COLLECTORS:
-                frame.setBackgroundColor(0xFFAA0000);
-                break;
-            default:
-                frame.setBackgroundColor(0xFFB2B2B2);
-                break;
-        }
     }
 
     public static class ViewHolder {
@@ -152,11 +118,11 @@ public class PriceListCursorAdapter extends CursorAdapter {
         @Override
         protected Drawable[] doInBackground(Double... params) {
             try {
-                Drawable[] returnVal = new Drawable[2];
+                Drawable[] returnVal = new Drawable[3];
                 AssetManager assetManager = mContext.getAssets();
                 InputStream ims = assetManager.open("items/" + (new DecimalFormat("#0")).format(params[0]) + ".png");
                 Drawable iconDrawable = Drawable.createFromStream(ims, null);
-                if (params[1] != 0) {
+                if (params[1] != 0 && !isCrate) {
                     ims = assetManager.open("effects/" + (new DecimalFormat("#0")).format(params[1]) + "_380x380.png");
                     Drawable effectDrawable = Drawable.createFromStream(ims, null);
                     returnVal[0] = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
@@ -177,7 +143,10 @@ public class PriceListCursorAdapter extends CursorAdapter {
                     ims = mContext.getAssets().open("changes/down.png");
                 }
 
-                returnVal[1] = Drawable.createFromStream(ims, null);
+                returnVal[2] = Drawable.createFromStream(ims, null);
+
+
+                returnVal[1] = Utility.getItemBackground(mContext, params[4].intValue(), params[5].intValue(), params[6].intValue());
 
                 return returnVal;
             } catch (IOException e) {
@@ -190,7 +159,8 @@ public class PriceListCursorAdapter extends CursorAdapter {
         protected void onPostExecute(Drawable[] drawable) {
             if (icon.getTag().toString().equals(path)) {
                 icon.setImageDrawable(drawable[0]);
-                change.setImageDrawable(drawable[1]);
+                icon.setBackgroundDrawable(drawable[1]);
+                change.setImageDrawable(drawable[2]);
             }
         }
     }

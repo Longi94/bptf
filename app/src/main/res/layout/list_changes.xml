@@ -13,6 +13,7 @@
     <ImageView
         android:layout_width="84dp"
         android:layout_height="72dp"
+        android:padding="3dp"
         android:id="@+id/image_view_item_icon"
         android:scaleType="centerCrop"/>
 
