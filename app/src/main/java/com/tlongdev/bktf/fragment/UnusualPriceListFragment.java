@@ -7,6 +7,9 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
@@ -20,6 +23,7 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
     public static final String LOG_TAG = UnusualPriceListFragment.class.getSimpleName();
 
     private static final int PRICE_LIST_LOADER = 0;
+    private static final String QUERY_KEY = "query";
 
     private static final String[] PRICE_LIST_COLUMNS = {
             PriceListContract.PriceEntry.TABLE_NAME + "." + PriceListContract.PriceEntry._ID,
@@ -36,6 +40,8 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
     private GridView mGridView;
     private UnusualListCursorAdapter cursorAdapter;
 
+    private int currentSort = 0;
+
     public UnusualPriceListFragment() {
         // Required empty public constructor
     }
@@ -43,6 +49,7 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -60,7 +67,9 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
-        getLoaderManager().initLoader(PRICE_LIST_LOADER, null, this);
+        Bundle args = new Bundle();
+        args.putString(QUERY_KEY, "AVG(" + PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW + ") DESC");
+        getLoaderManager().initLoader(PRICE_LIST_LOADER, args, this);
 
         super.onActivityCreated(savedInstanceState);
     }
@@ -81,7 +90,7 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
                 PRICE_LIST_COLUMNS,
                 selection,
                 selectionArgs,
-                "AVG(" + PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW + ") DESC"
+                args.getString(QUERY_KEY)
         );
     }
 
@@ -93,5 +102,29 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         cursorAdapter.swapCursor(null);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_unusual, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.menu_sort_name && currentSort != 1){
+            Bundle args = new Bundle();
+            args.putString(QUERY_KEY, PriceListContract.PriceEntry.COLUMN_ITEM_NAME + " ASC");
+            getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
+            currentSort = 1;
+        }
+        else if (id == R.id.menu_sort_price && currentSort != 0){
+            Bundle args = new Bundle();
+            args.putString(QUERY_KEY, "AVG(" + PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW + ") DESC");
+            getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
+            currentSort = 0;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

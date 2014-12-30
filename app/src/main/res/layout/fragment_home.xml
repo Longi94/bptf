@@ -25,8 +25,7 @@
         android:id="@+id/list_changes_header"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:orientation="horizontal"
-        android:background="@color/bktf_main_blue_dark">
+        android:orientation="horizontal">
 
 
         <FrameLayout
@@ -36,11 +35,11 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/image_view_metal_price"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:src="@drawable/h5002"
-                android:layout_gravity="center"
-                android:alpha="0.5"/>
+                android:layout_gravity="center"/>
 
             <TextView
                 android:id="@+id/text_view_metal_price"
@@ -60,11 +59,11 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/image_view_key_price"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:src="@drawable/h5021"
-                android:layout_gravity="center"
-                android:alpha="0.5"/>
+                android:layout_gravity="center"/>
 
             <TextView
                 android:id="@+id/text_view_key_price"
@@ -84,11 +83,11 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/image_view_buds_price"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:src="@drawable/h143"
-                android:layout_gravity="center"
-                android:alpha="0.7"/>
+                android:layout_gravity="center"/>
 
             <TextView
                 android:id="@+id/text_view_buds_price"

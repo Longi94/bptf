@@ -18,6 +18,7 @@ import com.tlongdev.bktf.data.PriceListContract;
 public class UnusualActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
     public static final String DEFINDEX_KEY = "defindex";
+    public static final String ITEM_NAME_KEY = "item_name";
 
     public static final String LOG_TAG = UnusualActivity.class.getSimpleName();
 
@@ -57,8 +58,12 @@ public class UnusualActivity extends ActionBarActivity implements LoaderManager.
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xff5787c5));
 
+
+
         defindex = getIntent().getIntExtra(DEFINDEX_KEY, -1);
         cursorAdapter = new UnusualPricesCursorAdapter(this, null, 0, defindex);
+
+        getSupportActionBar().setTitle(getIntent().getStringExtra(ITEM_NAME_KEY));
 
         mGridView = (GridView) getWindow().getDecorView().findViewById(R.id.grid_view);
         mGridView.setAdapter(cursorAdapter);

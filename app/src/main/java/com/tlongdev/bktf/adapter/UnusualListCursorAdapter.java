@@ -62,6 +62,7 @@ public class UnusualListCursorAdapter extends CursorAdapter {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
         final int defindex = cursor.getInt(UnusualPriceListFragment.COL_PRICE_LIST_DEFI);
+        final String name = cursor.getString(UnusualPriceListFragment.COL_PRICE_LIST_NAME);
         viewHolder.icon.setTag("" + defindex);
 
         new LoadImagesTask(context, viewHolder.icon).
@@ -72,6 +73,7 @@ public class UnusualListCursorAdapter extends CursorAdapter {
             public void onClick(View v) {
                 Intent i = new Intent(context, UnusualActivity.class);
                 i.putExtra(UnusualActivity.DEFINDEX_KEY, defindex);
+                i.putExtra(UnusualActivity.ITEM_NAME_KEY, name);
                 context.startActivity(i);
             }
         });
