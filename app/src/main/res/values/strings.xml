@@ -34,5 +34,10 @@
     <string name="pref_key_price">pref_key_price</string>
     <string name="pref_buds_price">pref_buds_price</string>
     <string name="title_activity_unusual">UnusualActivity</string>
+    <string name="pref_buds_diff">pref_buds_diff</string>
+    <string name="pref_key_diff">pref_key_diff</string>
+    <string name="pref_metal_diff">pref_metal_diff</string>
+    <string name="sort_title">Sort</string>
+    <string name="browse_effect">Browse by effect</string>
 
 </resources>

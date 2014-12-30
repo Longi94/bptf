@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -66,10 +67,14 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
     private ListView mListView;
     private QuickReturnAttacher quickReturnAttacher;
-    private LinearLayout quickReturnTarget;
+    private LinearLayout header;
     private TextView metalPrice;
     private TextView keyPrice;
     private TextView budsPrice;
+
+    private ImageView metalPriceImage;
+    private ImageView keyPriceImage;
+    private ImageView budsPriceImage;
 
 
     private PriceListCursorAdapter cursorAdapter;
@@ -86,6 +91,15 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
         getLoaderManager().initLoader(PRICE_LIST_LOADER, null, this);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        if (prefs.getBoolean(getResources().getString(R.string.pref_initial_load), true)){
+            new FetchPriceList(getActivity(), null, header).execute(getResources().getString(R.string.backpack_tf_api_key));
+            SharedPreferences.Editor editor = prefs.edit();
+
+            editor.putBoolean(getResources().getString(R.string.pref_initial_load), false);
+            editor.apply();
+        }
+
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -100,9 +114,29 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         keyPrice = (TextView)rootView.findViewById(R.id.text_view_key_price);
         budsPrice = (TextView)rootView.findViewById(R.id.text_view_buds_price);
 
+        metalPriceImage = (ImageView)rootView.findViewById(R.id.image_view_metal_price);
+        keyPriceImage = (ImageView)rootView.findViewById(R.id.image_view_key_price);
+        budsPriceImage = (ImageView)rootView.findViewById(R.id.image_view_buds_price);
+
         metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
         keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
         budsPrice.setText(prefs.getString(getString(R.string.pref_buds_price), ""));
+
+        if (prefs.getFloat(getString(R.string.pref_metal_diff), 0) > 0) {
+            metalPriceImage.setBackgroundColor(0xff008504);
+        } else {
+            metalPriceImage.setBackgroundColor(0xff850000);
+        }
+        if (prefs.getFloat(getString(R.string.pref_key_diff), 0) > 0) {
+            keyPriceImage.setBackgroundColor(0xff008504);
+        } else {
+            keyPriceImage.setBackgroundColor(0xff850000);
+        }
+        if (prefs.getFloat(getString(R.string.pref_buds_diff), 0) > 0) {
+            budsPriceImage.setBackgroundColor(0xff008504);
+        } else {
+            budsPriceImage.setBackgroundColor(0xff850000);
+        }
 
         cursorAdapter = new PriceListCursorAdapter(getActivity(), null, 0);
 
@@ -116,13 +150,13 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("debug_header_key", false)){
             mListView.setAdapter(cursorAdapter);
         } else {
-            quickReturnTarget = (LinearLayout) rootView.findViewById(R.id.list_changes_header);
+            header = (LinearLayout) rootView.findViewById(R.id.list_changes_header);
 
             mListView.setAdapter(new QuickReturnAdapter(cursorAdapter));
 
             quickReturnAttacher = QuickReturnAttacher.forView(mListView);
             int offset = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 42, getResources().getDisplayMetrics());
-            quickReturnAttacher.addTargetView(quickReturnTarget, QuickReturnTargetView.POSITION_TOP, offset);
+            quickReturnAttacher.addTargetView(header, QuickReturnTargetView.POSITION_TOP, offset);
             mSwipeRefreshLayout.setProgressViewOffset(false, (int)(offset * -1.0/2.0), (int) (offset * 3.0 / 2.0));
         }
 
@@ -187,7 +221,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onRefresh() {
-        new FetchPriceList(getActivity(), mSwipeRefreshLayout)
+        new FetchPriceList(getActivity(), mSwipeRefreshLayout, header)
                 .execute(getResources().getString(R.string.backpack_tf_api_key));
     }
 

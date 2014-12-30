@@ -11,6 +11,8 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.PriceListContract;
@@ -37,14 +39,12 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
     private boolean updateDatabase;
     private ProgressDialog loadingDialog;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private LinearLayout header;
 
-    public FetchPriceList(Context context) {
-        this(context, null);
-    }
-
-    public FetchPriceList(Context context, SwipeRefreshLayout swipeRefreshLayout) {
+    public FetchPriceList(Context context, SwipeRefreshLayout swipeRefreshLayout, LinearLayout header) {
         mContext = context;
         this.swipeRefreshLayout = swipeRefreshLayout;
+        this.header = header;
         updateDatabase = swipeRefreshLayout != null;
     }
 
@@ -143,6 +143,33 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
             loadingDialog.dismiss();
         else
             swipeRefreshLayout.setRefreshing(false);
+
+        if (header != null) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+            ((TextView) header.findViewById(R.id.text_view_metal_price))
+                    .setText(prefs.getString(mContext.getString(R.string.pref_metal_price), ""));
+            ((TextView) header.findViewById(R.id.text_view_key_price))
+                    .setText(prefs.getString(mContext.getString(R.string.pref_key_price), ""));
+            ((TextView) header.findViewById(R.id.text_view_buds_price))
+                    .setText(prefs.getString(mContext.getString(R.string.pref_buds_price), ""));
+
+            if (prefs.getFloat(mContext.getString(R.string.pref_metal_diff), 0) > 0) {
+                header.findViewById(R.id.image_view_metal_price).setBackgroundColor(0xff008504);
+            } else {
+                header.findViewById(R.id.image_view_metal_price).setBackgroundColor(0xff850000);
+            }
+            if (prefs.getFloat(mContext.getString(R.string.pref_key_diff), 0) > 0) {
+                header.findViewById(R.id.image_view_key_price).setBackgroundColor(0xff008504);
+            } else {
+                header.findViewById(R.id.image_view_key_price).setBackgroundColor(0xff850000);
+            }
+            if (prefs.getFloat(mContext.getString(R.string.pref_buds_diff), 0) > 0) {
+                header.findViewById(R.id.image_view_buds_price).setBackgroundColor(0xff008504);
+            } else {
+                header.findViewById(R.id.image_view_buds_price).setBackgroundColor(0xff850000);
+            }
+        }
     }
 
     private void getItemsFromJson(String jsonString) throws JSONException {
@@ -192,6 +219,17 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
         Iterator<String> i = items.keys();
 
         Vector<ContentValues> cVVector = new Vector<>();
+
+        if (updateDatabase &&
+                (items.getJSONObject("Mann Co. Supply Crate Key").getJSONObject("6").getJSONObject("Tradable")
+                .getJSONArray("Craftable").getJSONObject(0).getInt(OWM_LAST_UPDATE) > latestUpdate ||
+                items.getJSONObject("Earbuds").getJSONObject("6").getJSONObject("Tradable")
+                        .getJSONArray("Craftable").getJSONObject(0).getInt(OWM_LAST_UPDATE) > latestUpdate ||
+                items.getJSONObject("Refined Metal").getJSONObject("6").getJSONObject("Tradable")
+                        .getJSONArray("Craftable").getJSONObject(0).getInt(OWM_LAST_UPDATE) > latestUpdate)) {
+            updateDatabase = false;
+            latestUpdate = 0;
+        }
 
         while (i.hasNext()) {
             String name = (String)i.next();
@@ -292,6 +330,7 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
                                     priceString = priceString + " keys";
 
                                     editor.putString(mContext.getString(R.string.pref_buds_price), priceString);
+                                    editor.putFloat(mContext.getString(R.string.pref_buds_diff), (float)price.getDouble(OWM_DIFFERENCE));
 
                                     editor.apply();
                                 } else if (defindex == 5002) {
@@ -315,6 +354,7 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
                                     }
 
                                     editor.putString(mContext.getString(R.string.pref_metal_price), priceString);
+                                    editor.putFloat(mContext.getString(R.string.pref_metal_diff), (float) price.getDouble(OWM_DIFFERENCE));
 
                                     editor.apply();
                                 } else if (defindex == 5021) {
@@ -340,6 +380,7 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
                                     priceString = priceString + " ref";
 
                                     editor.putString(mContext.getString(R.string.pref_key_price), priceString);
+                                    editor.putFloat(mContext.getString(R.string.pref_key_diff), (float) price.getDouble(OWM_DIFFERENCE));
 
                                     editor.apply();
                                 }
@@ -355,7 +396,7 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
             cVVector.toArray(cvArray);
             int rowsInserted = mContext.getContentResolver()
                     .bulkInsert(PriceEntry.CONTENT_URI, cvArray);
-            Log.v(LOG_TAG, "inserted " + rowsInserted + " rows of weather data");
+            Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
             // Use a DEBUG variable to gate whether or not you do this, so you can easily
             // turn it on and off, and so that it's easy to see what you can rip out if
             // you ever want to remove it.

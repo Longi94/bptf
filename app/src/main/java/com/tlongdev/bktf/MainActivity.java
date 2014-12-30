@@ -64,14 +64,7 @@ public class MainActivity extends ActionBarActivity
     protected void onResume() {
         super.onResume();
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (prefs.getBoolean(getResources().getString(R.string.pref_initial_load), true)){
-            new FetchPriceList(this).execute(getResources().getString(R.string.backpack_tf_api_key));
-            SharedPreferences.Editor editor = prefs.edit();
 
-            editor.putBoolean(getResources().getString(R.string.pref_initial_load), false);
-            editor.apply();
-        }
     }
 
     @Override
@@ -107,7 +100,7 @@ public class MainActivity extends ActionBarActivity
                 mTitle = getString(R.string.title_user_profile);
                 break;
             case 2:
-                mTitle = getString(R.string.title_prices);
+                mTitle = "Unusuals";
                 break;
         }
     }
