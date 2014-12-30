@@ -41,7 +41,7 @@ public class Utility {
                   name = name + " #" + index;
                 break;
             case UNUSUAL:
-                formattedName = formattedName + getUnusualEffectName(index);
+                formattedName = formattedName + getUnusualEffectName(index) + " ";
                 break;
             case COMMUNITY:
                 formattedName = formattedName + "Community ";
@@ -66,162 +66,162 @@ public class Utility {
         return  formattedName + name;
     }
 
-    private static String getUnusualEffectName(int index) {
+    public static String getUnusualEffectName(int index) {
         switch (index) {
             case 6:
-                return "Green Confetti ";
+                return "Green Confetti";
             case 7:
-                return "Purple Confetti ";
+                return "Purple Confetti";
             case 8:
-                return "Haunted Ghosts ";
+                return "Haunted Ghosts";
             case 9:
-                return "Green Energy ";
+                return "Green Energy";
             case 10:
-                return "Purple Energy ";
+                return "Purple Energy";
             case 11:
-                return "Circling TF Logo ";
+                return "Circling TF Logo";
             case 12:
-                return "Massed Flies ";
+                return "Massed Flies";
             case 13:
-                return "Burning Flames ";
+                return "Burning Flames";
             case 14:
-                return "Scorching Flames ";
+                return "Scorching Flames";
             case 17:
-                return "Sunbeams ";
+                return "Sunbeams";
             case 29:
-                return "Stormy Storm ";
+                return "Stormy Storm";
             case 33:
-                return "Orbiting Fire ";
+                return "Orbiting Fire";
             case 34:
-                return "Bubbling ";
+                return "Bubbling";
             case 35:
-                return "Smoking ";
+                return "Smoking";
             case 36:
-                return "Steaming ";
+                return "Steaming";
             case 38:
-                return "Cloudy Moon ";
+                return "Cloudy Moon";
             case 56:
-                return "Kill-a-Watt ";
+                return "Kill-a-Watt";
             case 57:
-                return "Terror-Watt ";
+                return "Terror-Watt";
             case 58:
-                return "Cloud 9 ";
+                return "Cloud 9";
             case 70:
-                return "Time Warp ";
+                return "Time Warp";
             case 15:
-                return "Searing Plasma ";
+                return "Searing Plasma";
             case 16:
-                return "Vivid Plasma ";
+                return "Vivid Plasma";
             case 18:
-                return "Circling Peace Sign ";
+                return "Circling Peace Sign";
             case 19:
-                return "Circling Heart ";
+                return "Circling Heart";
             case 30:
-                return "Blizzardy Storm ";
+                return "Blizzardy Storm";
             case 31:
-                return "Nuts n' Bolts ";
+                return "Nuts n' Bolts";
             case 32:
-                return "Orbiting Planets ";
+                return "Orbiting Planets";
             case 37:
-                return "Flaming Lantern ";
+                return "Flaming Lantern";
             case 39:
-                return "Cauldron Bubbles ";
+                return "Cauldron Bubbles";
             case 40:
-                return "Eerie Orbiting Fire ";
+                return "Eerie Orbiting Fire";
             case 43:
-                return "Knifestorm ";
+                return "Knifestorm";
             case 44:
-                return "Misty Skull ";
+                return "Misty Skull";
             case 45:
-                return "Harvest Moon ";
+                return "Harvest Moon";
             case 46:
-                return "It's A Secret To Everybody ";
+                return "It's A Secret To Everybody";
             case 47:
-                return "Stormy 13th Hour ";
+                return "Stormy 13th Hour";
             case 59:
-                return "Aces High ";
+                return "Aces High";
             case 60:
-                return "Dead Presidents ";
+                return "Dead Presidents";
             case 61:
-                return "Miami Nights ";
+                return "Miami Nights";
             case 62:
-                return "Disco Beat Down ";
+                return "Disco Beat Down";
             case 63:
-                return "Phosphorous ";
+                return "Phosphorous";
             case 64:
-                return "Sulphurous ";
+                return "Sulphurous";
             case 65:
-                return "Memory Leak ";
+                return "Memory Leak";
             case 66:
-                return "Overclocked ";
+                return "Overclocked";
             case 67:
-                return "Electrostatic ";
+                return "Electrostatic";
             case 68:
-                return "Power Surge ";
+                return "Power Surge";
             case 69:
-                return "Anti-Freeze ";
+                return "Anti-Freeze";
             case 71:
-                return "Green Black Hole ";
+                return "Green Black Hole";
             case 72:
-                return "Roboactive ";
+                return "Roboactive";
             case 73:
-                return "Arcana ";
+                return "Arcana";
             case 74:
-                return "Spellbound ";
+                return "Spellbound";
             case 75:
-                return "Chiroptera Venenata ";
+                return "Chiroptera Venenata";
             case 76:
-                return "Poisoned Shadows ";
+                return "Poisoned Shadows";
             case 77:
-                return "Something Burning This Way Comes ";
+                return "Something Burning This Way Comes";
             case 78:
-                return "Hellfire ";
+                return "Hellfire";
             case 79:
-                return "Darkblaze ";
+                return "Darkblaze";
             case 80:
-                return "Demonflame ";
+                return "Demonflame";
             case 3001:
-                return "Showstopper ";
+                return "Showstopper";
             case 3003:
-                return "Holy Grail ";
+                return "Holy Grail";
             case 3004:
-                return "'72 ";
+                return "'72";
             case 3005:
-                return "Fountain of Delight ";
+                return "Fountain of Delight";
             case 3006:
-                return "Screaming Tiger ";
+                return "Screaming Tiger";
             case 3007:
-                return "Skill Gotten Gains ";
+                return "Skill Gotten Gains";
             case 3008:
-                return "Midnight Whirlwind ";
+                return "Midnight Whirlwind";
             case 3009:
-                return "Silver Cyclone ";
+                return "Silver Cyclone";
             case 3010:
-                return "Mega Strike ";
+                return "Mega Strike";
             case 81:
-                return "Bonzo The All-Gnawing ";
+                return "Bonzo The All-Gnawing";
             case 82:
-                return "Amaranthine ";
+                return "Amaranthine";
             case 83:
-                return "Stare From Beyond ";
+                return "Stare From Beyond";
             case 84:
-                return "The Ooze ";
+                return "The Ooze";
             case 85:
-                return "Ghastly Ghosts Jr ";
+                return "Ghastly Ghosts Jr";
             case 86:
-                return "Haunted Phantasm Jr ";
+                return "Haunted Phantasm Jr";
             case 3011:
-                return "Haunted Phantasm ";
+                return "Haunted Phantasm";
             case 3012:
-                return "Ghastly Ghosts ";
+                return "Ghastly Ghosts";
             case 87:
-                return "Frostbite ";
+                return "Frostbite";
             case 88:
-                return "Molten Mallard ";
+                return "Molten Mallard";
             case 89:
-                return "Morning Glory ";
+                return "Morning Glory";
             case 90:
-                return "Death at Dusk ";
+                return "Death at Dusk";
             default:
                 return "";
         }
@@ -286,5 +286,8 @@ public class Utility {
         return new LayerDrawable(new Drawable[] {itemFrame, tradableFrame, craftableFrame});
     }
 
+    public static String formatPrice(double low, double high, String originalCurrency, String targetCurrency) {
+        return null;
+    }
 }
 

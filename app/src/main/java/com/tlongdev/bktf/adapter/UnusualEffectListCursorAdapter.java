@@ -1,10 +1,9 @@
 package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
-import android.content.res.AssetManager;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,19 +14,38 @@ import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.UnusualActivity;
+import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.data.PriceListContract;
+import com.tlongdev.bktf.fragment.UnusualPriceListFragment;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 
-public class UnusualPricesCursorAdapter extends CursorAdapter{
+public class UnusualEffectListCursorAdapter extends CursorAdapter {
 
-    int defindex;
+    private double rawBudsPrice;
 
-
-    public UnusualPricesCursorAdapter(Context context, Cursor c, int flags, int defindex) {
+    public UnusualEffectListCursorAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
-        this.defindex = defindex;
+        String[] columns = {PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW};
+        Cursor cursor = context.getContentResolver().query(
+                PriceListContract.PriceEntry.buildPriceListUriWithNameSpecific(
+                        "Earbuds",
+                        6,
+                        1,
+                        1,
+                        0
+                ),
+                columns,
+                null,
+                null,
+                null
+        );
+
+        if (cursor.moveToFirst()) {
+            rawBudsPrice = cursor.getDouble(0);
+        }
     }
 
     @Override
@@ -44,38 +62,26 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
     public void bindView(View view, final Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        viewHolder.icon.setImageDrawable(null);
-        viewHolder.icon.setTag(cursor.getInt(UnusualActivity.COL_PRICE_LIST_INDE));
+        final int index = cursor.getInt(UnusualPriceListFragment.COL_PRICE_LIST_INDE);
+        final String name = cursor.getString(UnusualPriceListFragment.COL_PRICE_LIST_NAME);
+        viewHolder.icon.setTag("" + index);
 
         new LoadImagesTask(context, viewHolder.icon).
-                executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                        (double)cursor.getInt(UnusualActivity.COL_PRICE_LIST_DEFI),
-                        (double)cursor.getInt(UnusualActivity.COL_PRICE_LIST_INDE),
-                        cursor.getDouble(UnusualActivity.COL_PRICE_LIST_DIFF),
-                        cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRAW));
+                executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, index);
 
         viewHolder.icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent i = new Intent(context, UnusualActivity.class);
+                i.putExtra(UnusualActivity.PRICE_INDEX_KEY, index);
+                i.putExtra(UnusualActivity.NAME_KEY, Utility.getUnusualEffectName(index));
+                context.startActivity(i);
             }
         });
 
-        double price = cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRIC);
-        if ((int)price == price)
-            viewHolder.priceView.setText("" + (int)price);
-        else
-            viewHolder.priceView.setText("" + price);
-
-        price = cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PMAX);
-
-        if (price > 0.0){
-            if ((int)price == price)
-                viewHolder.priceView.append(" - " + (int)price);
-            else
-                viewHolder.priceView.append(" - " + price);
-        }
-
-        viewHolder.priceView.append(" " + cursor.getString(UnusualActivity.COL_PRICE_LIST_CURR));
+        viewHolder.priceView.setText("" +
+                new DecimalFormat("#0.00").format(cursor.getDouble(UnusualPriceListFragment.COL_PRICE_LIST_AVG_PRICE) / rawBudsPrice)
+                + " buds");
     }
 
     public static class ViewHolder {
@@ -89,7 +95,7 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
         }
     }
 
-    private class LoadImagesTask extends AsyncTask<Double, Void, Drawable> {
+    private class LoadImagesTask extends AsyncTask<Integer, Void, Drawable> {
         private Context mContext;
         private ImageView icon;
         private String path;
@@ -101,17 +107,10 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
         }
 
         @Override
-        protected Drawable doInBackground(Double... params) {
+        protected Drawable doInBackground(Integer... params) {
             try {
-                Drawable d;
-                AssetManager assetManager = mContext.getAssets();
-                InputStream ims = assetManager.open("items/" + (new DecimalFormat("#0")).format(params[0]) + ".png");
-                Drawable iconDrawable = Drawable.createFromStream(ims, null);
-                ims = assetManager.open("effects/" + (new DecimalFormat("#0")).format(params[1]) + "_380x380.png");
-                Drawable effectDrawable = Drawable.createFromStream(ims, null);
-                d = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
-
-                return d;
+                InputStream ims = mContext.getAssets().open("effects/" + params[0] + "_380x380.png");
+                return Drawable.createFromStream(ims, null);
             } catch (IOException e) {
                 e.printStackTrace();
                 return null;

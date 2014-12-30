@@ -73,7 +73,7 @@ public class UnusualListCursorAdapter extends CursorAdapter {
             public void onClick(View v) {
                 Intent i = new Intent(context, UnusualActivity.class);
                 i.putExtra(UnusualActivity.DEFINDEX_KEY, defindex);
-                i.putExtra(UnusualActivity.ITEM_NAME_KEY, name);
+                i.putExtra(UnusualActivity.NAME_KEY, name);
                 context.startActivity(i);
             }
         });
