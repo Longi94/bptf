@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
-import com.tlongdev.bktf.enums.Quality;
 import com.tlongdev.bktf.fragment.SearchFragment;
 
 import java.io.IOException;
@@ -38,7 +37,10 @@ public class SearchCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        setItemBackground(viewHolder.icon, cursor.getInt(SearchFragment.COL_PRICE_LIST_QUAL));
+        viewHolder.icon.setBackgroundDrawable(Utility.getItemBackground(context,
+                cursor.getInt(SearchFragment.COL_PRICE_LIST_QUAL),
+                cursor.getInt(SearchFragment.COL_PRICE_LIST_TRAD),
+                cursor.getInt(SearchFragment.COL_PRICE_LIST_CRAF)));
 
         setIconImage(context, viewHolder.icon, cursor.getInt(SearchFragment.COL_PRICE_LIST_DEFI));
 
@@ -54,46 +56,6 @@ public class SearchCursorAdapter extends CursorAdapter {
         }
 
         viewHolder.priceView.append("\n" + cursor.getString(SearchFragment.COL_PRICE_LIST_CURR));
-    }
-
-    private void setItemBackground(View frame, int quality) {
-        Quality q = Quality.values()[quality];
-
-        switch (q) {
-            case GENUINE:
-                frame.setBackgroundColor(0xFF4D7455);
-                break;
-            case VINTAGE:
-                frame.setBackgroundColor(0xFF476291);
-                break;
-            case UNUSUAL:
-                frame.setBackgroundColor(0xFF8650AC);
-                break;
-            case UNIQUE:
-                frame.setBackgroundColor(0xFFFFD700);
-                break;
-            case COMMUNITY:
-                frame.setBackgroundColor(0xFF70B04A);
-                break;
-            case VALVE:
-                frame.setBackgroundColor(0xFFA50F79);
-                break;
-            case SELF_MADE:
-                frame.setBackgroundColor(0xFF70B04A);
-                break;
-            case STRANGE:
-                frame.setBackgroundColor(0xFFCF6A32);
-                break;
-            case HAUNTED:
-                frame.setBackgroundColor(0xFF38F3AB);
-                break;
-            case COLLECTORS:
-                frame.setBackgroundColor(0xFFAA0000);
-                break;
-            default:
-                frame.setBackgroundColor(0xFFB2B2B2);
-                break;
-        }
     }
 
     private void setIconImage(Context context, ImageView icon, int defindex) {
