@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.adapter.UnusualEffectListCursorAdapter;
 import com.tlongdev.bktf.adapter.UnusualListCursorAdapter;
 import com.tlongdev.bktf.data.PriceListContract;
 
@@ -23,6 +25,7 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
     public static final String LOG_TAG = UnusualPriceListFragment.class.getSimpleName();
 
     private static final int PRICE_LIST_LOADER = 0;
+    private static final int EFFECT_LIST_LOADER = 1;
     private static final String QUERY_KEY = "query";
 
     private static final String[] PRICE_LIST_COLUMNS = {
@@ -31,16 +34,26 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
             PriceListContract.PriceEntry.COLUMN_ITEM_NAME,
             "AVG(" + PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW + ")"
     };
+    private static final String[] EFFECT_LIST_COLUMNS = {
+            PriceListContract.PriceEntry.TABLE_NAME + "." + PriceListContract.PriceEntry._ID,
+            PriceListContract.PriceEntry.COLUMN_PRICE_INDEX,
+            PriceListContract.PriceEntry.COLUMN_ITEM_NAME,
+            "AVG(" + PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW + ")"
+    };
 
     public static final int COL_PRICE_LIST_ID = 0;
+    public static final int COL_PRICE_LIST_INDE = 1;
     public static final int COL_PRICE_LIST_DEFI = 1;
     public static final int COL_PRICE_LIST_NAME = 2;
     public static final int COL_PRICE_LIST_AVG_PRICE = 3;
 
     private GridView mGridView;
     private UnusualListCursorAdapter cursorAdapter;
+    private UnusualEffectListCursorAdapter effectCursorAdapter;
+    private MenuItem effectMenuItem;
 
     private int currentSort = 0;
+    private boolean showEffect = false;
 
     public UnusualPriceListFragment() {
         // Required empty public constructor
@@ -59,6 +72,7 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
         mGridView = (GridView) inflater.inflate(R.layout.fragment_unusual_price_list, container, false);
 
         cursorAdapter = new UnusualListCursorAdapter(getActivity(), null, 0);
+        effectCursorAdapter = new UnusualEffectListCursorAdapter(getActivity(), null, 0);
 
         mGridView.setAdapter(cursorAdapter);
         return mGridView;
@@ -67,7 +81,11 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
+
+        getLoaderManager().initLoader(EFFECT_LIST_LOADER, null, this);
+
         Bundle args = new Bundle();
+
         args.putString(QUERY_KEY, "AVG(" + PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW + ") DESC");
         getLoaderManager().initLoader(PRICE_LIST_LOADER, args, this);
 
@@ -77,36 +95,65 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        String selection = PriceListContract.PriceEntry.TABLE_NAME+
-                "." + PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
-                PriceListContract.PriceEntry.COLUMN_PRICE_INDEX + " != 0 GROUP BY " +
-                PriceListContract.PriceEntry.COLUMN_DEFINDEX;
+        String selection;
+        String[] selectionArgs ={"5"};
 
-        String[] selectionArgs = {"5"};
+        switch (id){
+            case PRICE_LIST_LOADER:
+                selection = PriceListContract.PriceEntry.TABLE_NAME+
+                        "." + PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
+                        PriceListContract.PriceEntry.COLUMN_PRICE_INDEX + " != 0 GROUP BY " +
+                        PriceListContract.PriceEntry.COLUMN_DEFINDEX;
 
-        return new CursorLoader(
-                getActivity(),
-                PriceListContract.PriceEntry.CONTENT_URI,
-                PRICE_LIST_COLUMNS,
-                selection,
-                selectionArgs,
-                args.getString(QUERY_KEY)
-        );
+                return new CursorLoader(
+                        getActivity(),
+                        PriceListContract.PriceEntry.CONTENT_URI,
+                        PRICE_LIST_COLUMNS,
+                        selection,
+                        selectionArgs,
+                        args.getString(QUERY_KEY)
+                );
+            case EFFECT_LIST_LOADER:
+                selection = PriceListContract.PriceEntry.TABLE_NAME+
+                        "." + PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
+                        PriceListContract.PriceEntry.COLUMN_PRICE_INDEX + " != 0 GROUP BY " +
+                        PriceListContract.PriceEntry.COLUMN_PRICE_INDEX;
+
+                return new CursorLoader(
+                        getActivity(),
+                        PriceListContract.PriceEntry.CONTENT_URI,
+                        EFFECT_LIST_COLUMNS,
+                        selection,
+                        selectionArgs,
+                        "AVG(" + PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW + ") DESC"
+                );
+            default:
+                return null;
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        cursorAdapter.swapCursor(data);
+        if (loader.getId() == EFFECT_LIST_LOADER) {
+            effectCursorAdapter.swapCursor(data);
+        } else {
+            cursorAdapter.swapCursor(data);
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        cursorAdapter.swapCursor(null);
+        if (loader.getId() == EFFECT_LIST_LOADER){
+            effectCursorAdapter.swapCursor(null);
+        } else {
+            cursorAdapter.swapCursor(null);
+        }
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_unusual, menu);
+        effectMenuItem = menu.findItem(R.id.action_effect);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -124,6 +171,18 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
             args.putString(QUERY_KEY, "AVG(" + PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW + ") DESC");
             getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
             currentSort = 0;
+        } else if (id == R.id.action_effect) {
+            if (showEffect){
+                showEffect = false;
+                effectMenuItem.setIcon(R.drawable.ic_star_outline_white_24dp);
+                mGridView.setAdapter(cursorAdapter);
+                ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("Unusuals");
+            } else {
+                showEffect = true;
+                effectMenuItem.setIcon(R.drawable.ic_star_white_24dp);
+                mGridView.setAdapter(effectCursorAdapter);
+                ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("Effects");
+            }
         }
         return super.onOptionsItemSelected(item);
     }
