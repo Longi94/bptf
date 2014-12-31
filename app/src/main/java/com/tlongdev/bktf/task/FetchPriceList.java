@@ -56,6 +56,12 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
 
     @Override
     protected Void doInBackground(String... params) {
+
+        if (System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(mContext)
+                .getLong(mContext.getString(R.string.pref_last_price_list_update), 0) < 3600000L){
+            return null;
+        }
+
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
         HttpURLConnection urlConnection = null;
@@ -128,7 +134,12 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
             }
         }
         try {
+
             getItemsFromJson(itemsJsonStr);
+
+            PreferenceManager.getDefaultSharedPreferences(mContext).edit()
+                    .putLong(mContext.getString(R.string.pref_last_price_list_update),
+                            System.currentTimeMillis()).apply();
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();

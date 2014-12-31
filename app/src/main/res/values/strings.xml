@@ -42,5 +42,21 @@
     <string name="pref_buds_raw">pref_buds_raw</string>
     <string name="pref_metal_raw_usd">pref_metal_raw</string>
     <string name="pref_key_raw">pref_key_raw</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="pref_category_steam">Steam</string>
+    <string name="pref_category_sync">Syncing</string>
+    <string name="pref_background_sync">pref_background_sync</string>
+    <string name="pref_background_sync_title">Sync in the background</string>
+    <string name="pref_sync_interval">pref_sync_interval</string>
+    <string name="pref_sync_interval_title">Sync frequency</string>
+    <string name="pref_ringtone_silent">Silent</string>
+    <string name="pref_category_notification">Notifications</string>
+    <string name="pref_notification">pref_notification</string>
+    <string name="pref_notification_title">Notifications</string>
+    <string name="pref_notification_interval">pref_notification_interval</string>
+    <string name="pref_notification_interval_title">Check for notifications</string>
+    <string name="pref_steam_id_hint">64bit SteamID or vanity name</string>
+    <string name="pref_last_price_list_update">pref_last_price_list_update</string>
+    <string name="pref_last_user_data_update">pref_last_user_data_update</string>
 
 </resources>

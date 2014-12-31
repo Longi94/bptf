@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,11 +28,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class UserFragment extends Fragment {
+public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private TextView playerName;
     private TextView playerReputation;
     private TextView playerBackpackValue;
+
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public UserFragment() {
         // Required empty public constructor
@@ -46,23 +49,42 @@ public class UserFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_user, container, false);
+        mSwipeRefreshLayout = (SwipeRefreshLayout)inflater.inflate(R.layout.fragment_user, container, false);
 
-        playerName = (TextView)rootView.findViewById(R.id.text_view_player_name);
-        playerReputation = (TextView)rootView.findViewById(R.id.text_view_player_reputation);
-        playerBackpackValue = (TextView)rootView.findViewById(R.id.text_view_player_bp_value);
+        playerName = (TextView)mSwipeRefreshLayout.findViewById(R.id.text_view_player_name);
+        playerReputation = (TextView)mSwipeRefreshLayout.findViewById(R.id.text_view_player_reputation);
+        playerBackpackValue = (TextView)mSwipeRefreshLayout.findViewById(R.id.text_view_player_bp_value);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         playerName.setText(prefs.getString(getString(R.string.pref_player_name), ""));
         playerReputation.setText("Reputation: " + prefs.getInt(getString(R.string.pref_player_reputation), 0));
         playerBackpackValue.setText("Backpack value: " + prefs.getFloat(getString(R.string.pref_player_backpack_value_tf2), 0));
 
+        mSwipeRefreshLayout.setColorSchemeColors(0xff5787c5);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+
         new FetchUserInfo().execute();
-        return rootView;
+        return mSwipeRefreshLayout;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .getLong(getString(R.string.pref_last_price_list_update), 0) >= 3600000L) {
+            new FetchUserInfo().execute();
+            mSwipeRefreshLayout.setRefreshing(true);
+        }
+    }
+
+    @Override
+    public void onRefresh() {
+        new FetchUserInfo().execute();
     }
 
     private class FetchUserInfo extends AsyncTask<String, Void, Void> {
-        private Context context = getActivity();
+        private Context mContext = getActivity();
         @Override
         protected Void doInBackground(String... params) {
             // These two need to be declared outside the try/catch
@@ -83,7 +105,7 @@ public class UserFragment extends Fragment {
                 final String KEY_STEAM_ID = "steamids";
                 final String KEY_COMPRESS = "compress";
 
-                steamId = Utility.getSteamId(context);
+                steamId = Utility.getSteamId(mContext);
                 Uri uri;
                 URL url;
                 InputStream inputStream;
@@ -123,7 +145,7 @@ public class UserFragment extends Fragment {
                 }
 
                 if (!Utility.isSteamId(steamId)) {
-                    Toast.makeText(context, steamId, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, steamId, Toast.LENGTH_SHORT).show();
                     return null;
                 }
 
@@ -181,6 +203,10 @@ public class UserFragment extends Fragment {
             }
             try {
                 parseUserInfoJson(userJsonStr, steamId);
+
+                PreferenceManager.getDefaultSharedPreferences(mContext).edit()
+                        .putLong(mContext.getString(R.string.pref_last_user_data_update),
+                                System.currentTimeMillis()).apply();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -190,11 +216,13 @@ public class UserFragment extends Fragment {
         @Override
         protected void onPostExecute(Void param) {
             if(isAdded()){
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
                 playerName.setText(prefs.getString(getString(R.string.pref_player_name), ""));
                 playerReputation.setText("Reputation: " + prefs.getInt(getString(R.string.pref_player_reputation), 0));
                 playerBackpackValue.setText("Backpack value: " + prefs.getFloat(getString(R.string.pref_player_backpack_value_tf2), 0));
+
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         }
 
@@ -245,7 +273,7 @@ public class UserFragment extends Fragment {
             }
 
             JSONObject players = response.getJSONObject(OWM_PLAYERS);
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
             JSONObject current_user = players.getJSONObject(steamId);
 
@@ -253,34 +281,34 @@ public class UserFragment extends Fragment {
 
                 SharedPreferences.Editor editor = prefs.edit();
 
-                editor.putString(context.getString(R.string.pref_player_name), current_user.getString(OWM_PLAYER_NAME));
-                editor.putInt(context.getString(R.string.pref_player_reputation), current_user.getInt(OWM_PLAYER_REPUTATION));
-                editor.putFloat(context.getString(R.string.pref_player_backpack_value_tf2),
+                editor.putString(mContext.getString(R.string.pref_player_name), current_user.getString(OWM_PLAYER_NAME));
+                editor.putInt(mContext.getString(R.string.pref_player_reputation), current_user.getInt(OWM_PLAYER_REPUTATION));
+                editor.putFloat(mContext.getString(R.string.pref_player_backpack_value_tf2),
                         (float) current_user.getJSONObject(OWM_BACKPACK_VALUE).getDouble(OWM_BACKPACK_VALUE_TF2));
-                editor.putFloat(context.getString(R.string.pref_player_backpack_value_dota2),
+                editor.putFloat(mContext.getString(R.string.pref_player_backpack_value_dota2),
                         (float)current_user.getJSONObject(OWM_BACKPACK_VALUE).getDouble(OWM_BACKPACK_VALUE_DOTA2));
 
                 if (current_user.has(OWM_PLAYER_GROUP)) {
-                    editor.putBoolean(context.getString(R.string.pref_player_group), true);
+                    editor.putBoolean(mContext.getString(R.string.pref_player_group), true);
                 }
                 if (current_user.has(OWM_PLAYER_BANNED)) {
-                    editor.putBoolean(context.getString(R.string.pref_player_banned), true);
+                    editor.putBoolean(mContext.getString(R.string.pref_player_banned), true);
                 }
                 if (current_user.has(OWM_PLAYER_SCAMMER)) {
-                    editor.putBoolean(context.getString(R.string.pref_player_scammer), true);
+                    editor.putBoolean(mContext.getString(R.string.pref_player_scammer), true);
                 }
                 if (current_user.has(OWM_PLAYER_BAN_COMMUNITY)) {
-                    editor.putBoolean(context.getString(R.string.pref_player_community_banned), true);
+                    editor.putBoolean(mContext.getString(R.string.pref_player_community_banned), true);
                 }
                 if (current_user.has(OWM_PLAYER_BAN_ECONOMY)) {
-                    editor.putBoolean(context.getString(R.string.pref_player_economy_banned), true);
+                    editor.putBoolean(mContext.getString(R.string.pref_player_economy_banned), true);
                 }
                 if (current_user.has(OWM_PLAYER_BAN_VAC)) {
-                    editor.putBoolean(context.getString(R.string.pref_player_vac_banned), true);
+                    editor.putBoolean(mContext.getString(R.string.pref_player_vac_banned), true);
                 }
                 if (current_user.has(OWM_PLAYER_TRUST)) {
-                    editor.putInt(context.getString(R.string.pref_player_trust_positive), current_user.getInt(OWM_PLAYER_TRUST_FOR));
-                    editor.putInt(context.getString(R.string.pref_player_trust_negative), current_user.getInt(OWM_PLAYER_TRUST_AGAINST));
+                    editor.putInt(mContext.getString(R.string.pref_player_trust_positive), current_user.getInt(OWM_PLAYER_TRUST_FOR));
+                    editor.putInt(mContext.getString(R.string.pref_player_trust_negative), current_user.getInt(OWM_PLAYER_TRUST_AGAINST));
                 }
 
                 editor.apply();
