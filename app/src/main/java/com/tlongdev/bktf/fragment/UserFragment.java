@@ -28,11 +28,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener{
 
     private TextView playerName;
     private TextView playerReputation;
-    private TextView playerBackpackValue;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -53,12 +52,10 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         playerName = (TextView)mSwipeRefreshLayout.findViewById(R.id.text_view_player_name);
         playerReputation = (TextView)mSwipeRefreshLayout.findViewById(R.id.text_view_player_reputation);
-        playerBackpackValue = (TextView)mSwipeRefreshLayout.findViewById(R.id.text_view_player_bp_value);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         playerName.setText(prefs.getString(getString(R.string.pref_player_name), ""));
         playerReputation.setText("Reputation: " + prefs.getInt(getString(R.string.pref_player_reputation), 0));
-        playerBackpackValue.setText("Backpack value: " + prefs.getFloat(getString(R.string.pref_player_backpack_value_tf2), 0));
 
         mSwipeRefreshLayout.setColorSchemeColors(0xff5787c5);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -81,6 +78,11 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onRefresh() {
         new FetchUserInfo().execute();
+    }
+
+    @Override
+    public void onClick(View v){
+
     }
 
     private class FetchUserInfo extends AsyncTask<String, Void, Void> {
@@ -220,7 +222,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
                 playerName.setText(prefs.getString(getString(R.string.pref_player_name), ""));
                 playerReputation.setText("Reputation: " + prefs.getInt(getString(R.string.pref_player_reputation), 0));
-                playerBackpackValue.setText("Backpack value: " + prefs.getFloat(getString(R.string.pref_player_backpack_value_tf2), 0));
 
                 mSwipeRefreshLayout.setRefreshing(false);
             }
