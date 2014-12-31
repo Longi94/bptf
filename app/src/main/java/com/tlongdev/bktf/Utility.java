@@ -391,5 +391,9 @@ public class Utility {
                 throw new Throwable("Unknown currency: " + originalCurrency + " - " + targetCurrency);
         }
     }
+
+    public static boolean isSteamId(String id) {
+        return id.matches("7656119[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]");
+    }
 }
 
