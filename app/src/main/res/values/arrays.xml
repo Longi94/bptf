@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pref_sync_interval_titles" >
+        <item>Every 30 minutes</item>
+        <item>Every hour</item>
+        <item>Every 3 hours</item>
+        <item>Every 6 hours</item>
+        <item>Daily</item>
+    </string-array>
+    <string-array name="pref_sync_interval_values" >
+        <item>1800000</item>
+        <item>3600000</item>
+        <item>10800000</item>
+        <item>21600000</item>
+        <item>86400000</item>
+    </string-array>
+
+    <string-array name="pref_notification_interval_titles" >
+        <item>Every 5 minutes</item>
+        <item>Every 15 minutes</item>
+        <item>Every 30 minutes</item>
+        <item>Every hour</item>
+        <item>Every 3 hours</item>
+        <item>Every 6 hours</item>
+        <item>Daily</item>
+    </string-array>
+    <string-array name="pref_notification_interval_values" >
+        <item>300000</item>
+        <item>900000</item>
+        <item>1800000</item>
+        <item>3600000</item>
+        <item>10800000</item>
+        <item>21600000</item>
+        <item>86400000</item>
+    </string-array>
+</resources>

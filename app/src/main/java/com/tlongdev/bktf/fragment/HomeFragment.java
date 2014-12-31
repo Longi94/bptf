@@ -100,6 +100,13 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             editor.apply();
         }
 
+        if (System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .getLong(getString(R.string.pref_last_price_list_update), 0) >= 3600000L) {
+            new FetchPriceList(getActivity(), mSwipeRefreshLayout, header).execute(getResources()
+                    .getString(R.string.backpack_tf_api_key));
+            mSwipeRefreshLayout.setRefreshing(true);
+        }
+
         super.onActivityCreated(savedInstanceState);
     }
 

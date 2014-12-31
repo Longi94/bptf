@@ -56,12 +56,6 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
                         cursor.getDouble(UnusualActivity.COL_PRICE_LIST_DIFF),
                         cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRAW));
 
-        viewHolder.icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
-
         try {
             if (Math.abs(cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRAW) - PreferenceManager
                     .getDefaultSharedPreferences(context).getFloat(context.getString(R.string.pref_buds_raw), 0)) < 0.001 ||
