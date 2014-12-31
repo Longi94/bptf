@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.UnusualActivity;
+import com.tlongdev.bktf.Utility;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,22 +62,26 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
             }
         });
 
-        double price = cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRIC);
-        if ((int)price == price)
-            viewHolder.priceView.setText("" + (int)price);
-        else
-            viewHolder.priceView.setText("" + price);
-
-        price = cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PMAX);
-
-        if (price > 0.0){
-            if ((int)price == price)
-                viewHolder.priceView.append(" - " + (int)price);
-            else
-                viewHolder.priceView.append(" - " + price);
+        try {
+            if (Math.abs(cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRAW) - PreferenceManager
+                    .getDefaultSharedPreferences(context).getFloat(context.getString(R.string.pref_buds_raw), 0)) < 0.001 ||
+                    cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRAW) >= PreferenceManager
+                            .getDefaultSharedPreferences(context).getFloat(context.getString(R.string.pref_buds_raw), 0)) {
+                viewHolder.priceView.setText(Utility.formatPrice(context,
+                        cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRIC),
+                        cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PMAX),
+                        cursor.getString(UnusualActivity.COL_PRICE_LIST_CURR),
+                        Utility.CURRENCY_BUD));
+            } else {
+                viewHolder.priceView.setText(Utility.formatPrice(context,
+                        cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRIC),
+                        cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PMAX),
+                        cursor.getString(UnusualActivity.COL_PRICE_LIST_CURR),
+                        Utility.CURRENCY_KEY));
+            }
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
-
-        viewHolder.priceView.append(" " + cursor.getString(UnusualActivity.COL_PRICE_LIST_CURR));
     }
 
     public static class ViewHolder {

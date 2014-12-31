@@ -68,23 +68,15 @@ public class PriceListCursorAdapter extends CursorAdapter {
                 (double)cursor.getInt(HomeFragment.COL_PRICE_LIST_CRAF)
         );
 
-
-        double price = cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRIC);
-        if ((int)price == price)
-            viewHolder.priceView.setText("" + (int)price);
-        else
-            viewHolder.priceView.setText("" + price);
-
-        price = cursor.getDouble(HomeFragment.COL_PRICE_LIST_PMAX);
-
-        if (price > 0.0){
-            if ((int)price == price)
-                viewHolder.priceView.append(" - " + (int)price);
-            else
-                viewHolder.priceView.append(" - " + price);
+        try {
+            viewHolder.priceView.setText(Utility.formatPrice(context,
+                    cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRIC),
+                    cursor.getDouble(HomeFragment.COL_PRICE_LIST_PMAX),
+                    cursor.getString(HomeFragment.COL_PRICE_LIST_CURR),
+                    cursor.getString(HomeFragment.COL_PRICE_LIST_CURR)));
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
-
-        viewHolder.priceView.append(" " + cursor.getString(HomeFragment.COL_PRICE_LIST_CURR));
     }
 
     public static class ViewHolder {

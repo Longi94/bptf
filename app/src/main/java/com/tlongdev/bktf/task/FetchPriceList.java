@@ -330,7 +330,8 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
                                     priceString = priceString + " keys";
 
                                     editor.putString(mContext.getString(R.string.pref_buds_price), priceString);
-                                    editor.putFloat(mContext.getString(R.string.pref_buds_diff), (float)price.getDouble(OWM_DIFFERENCE));
+                                    editor.putFloat(mContext.getString(R.string.pref_buds_diff), (float) price.getDouble(OWM_DIFFERENCE));
+                                    editor.putFloat(mContext.getString(R.string.pref_buds_raw), (float) price.getDouble(OWM_VALUE_RAW));
 
                                     editor.apply();
                                 } else if (defindex == 5002) {
@@ -355,6 +356,13 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
 
                                     editor.putString(mContext.getString(R.string.pref_metal_price), priceString);
                                     editor.putFloat(mContext.getString(R.string.pref_metal_diff), (float) price.getDouble(OWM_DIFFERENCE));
+
+                                    if (price.has(OWM_VALUE_HIGH)){
+                                        editor.putFloat(mContext.getString(R.string.pref_metal_raw_usd),
+                                                (float)((price.getDouble(OWM_VALUE) + price.getDouble(OWM_VALUE_HIGH)) / 2));
+                                    } else {
+                                        editor.putFloat(mContext.getString(R.string.pref_metal_raw_usd), (float) price.getDouble(OWM_VALUE));
+                                    }
 
                                     editor.apply();
                                 } else if (defindex == 5021) {
@@ -381,6 +389,7 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
 
                                     editor.putString(mContext.getString(R.string.pref_key_price), priceString);
                                     editor.putFloat(mContext.getString(R.string.pref_key_diff), (float) price.getDouble(OWM_DIFFERENCE));
+                                    editor.putFloat(mContext.getString(R.string.pref_key_raw), (float) price.getDouble(OWM_VALUE_RAW));
 
                                     editor.apply();
                                 }

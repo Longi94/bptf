@@ -72,7 +72,7 @@ public class UnusualActivity extends ActionBarActivity implements LoaderManager.
         getSupportLoaderManager().initLoader(PRICE_LIST_LOADER, null, this);
 
     }
-    
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String selection = PriceListContract.PriceEntry.TABLE_NAME+
