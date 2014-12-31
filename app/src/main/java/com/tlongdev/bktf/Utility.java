@@ -8,7 +8,14 @@ import android.preference.PreferenceManager;
 
 import com.tlongdev.bktf.enums.Quality;
 
+import java.text.DecimalFormat;
+
 public class Utility {
+
+    public static final String CURRENCY_USD = "usd";
+    public static final String CURRENCY_METAL = "metal";
+    public static final String CURRENCY_KEY = "keys";
+    public static final String CURRENCY_BUD = "earbuds";
 
     public static String getSteamId(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -286,8 +293,103 @@ public class Utility {
         return new LayerDrawable(new Drawable[] {itemFrame, tradableFrame, craftableFrame});
     }
 
-    public static String formatPrice(double low, double high, String originalCurrency, String targetCurrency) {
-        return null;
+    public static String formatPrice(Context context, double low, double high, String originalCurrency, String targetCurrency) throws Throwable {
+        String product = "";
+
+        low = convertPrice(context, low, originalCurrency, targetCurrency);
+        if (high > 0.0)
+            high = convertPrice(context, high, originalCurrency, targetCurrency);
+
+        if ((int)low == low)
+            product = product + (int)low;
+        else if (("" + low).substring(("" + low).indexOf('.') + 1).length() > 2)
+            product = product + new DecimalFormat("#0.00").format(low);
+        else
+            product = product + low;
+
+        if (high > 0.0){
+            if ((int)high == high)
+                product = product + "-" + (int)high;
+            else if (("" + high).substring(("" + high).indexOf('.') + 1).length() > 2)
+                product = product + "-" + new DecimalFormat("#0.00").format(high);
+            else
+                product = product + "-" + high;
+        }
+
+        switch(targetCurrency) {
+            case CURRENCY_BUD:
+                if (low == 1.0 && high == 0.0)
+                    return product + "bud";
+                else
+                    return product + " buds";
+            case CURRENCY_METAL:
+                return product + " ref";
+            case CURRENCY_KEY:
+                if (low == 1.0 && high == 0.0)
+                    return product + "key";
+                else
+                    return product + " keys";
+            case CURRENCY_USD:
+                return "$" + product;
+            default:
+                throw new Throwable("Error while formatting price");
+        }
+    }
+
+    public static double convertPrice(Context context, double price, String originalCurrency, String targetCurrency) throws Throwable {
+
+        if (originalCurrency.equals(targetCurrency))
+            return price;
+
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        switch(originalCurrency){
+            case CURRENCY_BUD:
+                switch(targetCurrency){
+                    case CURRENCY_KEY:
+                        return price * (prefs.getFloat(context.getString(R.string.pref_buds_raw), 1)
+                                / prefs.getFloat(context.getString(R.string.pref_key_raw), 1));
+                    case CURRENCY_METAL:
+                        return price * prefs.getFloat(context.getString(R.string.pref_buds_raw), 1);
+                    case CURRENCY_USD:
+                        return price * (prefs.getFloat(context.getString(R.string.pref_buds_raw), 1)
+                                / prefs.getFloat(context.getString(R.string.pref_metal_raw_usd), 1));
+                }
+            case CURRENCY_METAL:
+                switch(targetCurrency){
+                    case CURRENCY_KEY:
+                        return price / prefs.getFloat(context.getString(R.string.pref_key_raw), 1);
+                    case CURRENCY_BUD:
+                        return price / prefs.getFloat(context.getString(R.string.pref_buds_raw), 1);
+                    case CURRENCY_USD:
+                        return price / prefs.getFloat(context.getString(R.string.pref_metal_raw_usd), 1);
+                }
+            case CURRENCY_KEY:
+                switch(targetCurrency){
+                    case CURRENCY_METAL:
+                        return price * prefs.getFloat(context.getString(R.string.pref_key_raw), 1);
+                    case CURRENCY_BUD:
+                        return price * (prefs.getFloat(context.getString(R.string.pref_key_raw), 1)
+                                / prefs.getFloat(context.getString(R.string.pref_buds_raw), 1));
+                    case CURRENCY_USD:
+                        return price * prefs.getFloat(context.getString(R.string.pref_key_raw), 1)
+                                * prefs.getFloat(context.getString(R.string.pref_metal_raw_usd), 1);
+                }
+            case CURRENCY_USD:
+                switch(targetCurrency){
+                    case CURRENCY_METAL:
+                        return price / prefs.getFloat(context.getString(R.string.pref_metal_raw_usd), 1);
+                    case CURRENCY_BUD:
+                        return price / prefs.getFloat(context.getString(R.string.pref_metal_raw_usd), 1)
+                                / prefs.getFloat(context.getString(R.string.pref_buds_raw), 1);
+                    case CURRENCY_KEY:
+                        return price / prefs.getFloat(context.getString(R.string.pref_metal_raw_usd), 1)
+                                / prefs.getFloat(context.getString(R.string.pref_key_raw), 1);
+                }
+            default:
+                throw new Throwable("Unknown currency: " + originalCurrency + " - " + targetCurrency);
+        }
     }
 }
 

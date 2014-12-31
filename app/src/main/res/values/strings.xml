@@ -39,5 +39,8 @@
     <string name="pref_metal_diff">pref_metal_diff</string>
     <string name="sort_title">Sort</string>
     <string name="browse_effect">Browse by effect</string>
+    <string name="pref_buds_raw">pref_buds_raw</string>
+    <string name="pref_metal_raw_usd">pref_metal_raw</string>
+    <string name="pref_key_raw">pref_key_raw</string>
 
 </resources>
