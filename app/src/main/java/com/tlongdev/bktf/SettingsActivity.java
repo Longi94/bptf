@@ -1,6 +1,8 @@
 package com.tlongdev.bktf;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -26,7 +28,7 @@ import android.text.TextUtils;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class SettingsActivity extends PreferenceActivity {
+public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     /**
      * Determines whether to always show the simplified settings UI, where
      * settings are presented in a single list. When false, settings are shown
@@ -58,6 +60,8 @@ public class SettingsActivity extends PreferenceActivity {
 
         // Add 'general' preferences.
         addPreferencesFromResource(R.xml.pref_general);
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+
 
         // Bind the summaries of EditText/List/Dialog/Ringtone preferences to
         // their values. When their values change, their summaries are updated
@@ -170,4 +174,38 @@ public class SettingsActivity extends PreferenceActivity {
                         .getString(preference.getKey(), ""));
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        if (key.equals(getString(R.string.pref_steam_id))) {
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            if (Utility.isSteamId(sharedPreferences.getString(getString(R.string.pref_steam_id), ""))) {
+                editor.putString(getString(R.string.pref_resolved_steam_id),
+                        sharedPreferences.getString(getString(R.string.pref_steam_id), ""));
+            }
+
+            editor.remove(getString(R.string.pref_player_avatar_url));
+            editor.remove(getString(R.string.pref_player_name));
+            editor.remove(getString(R.string.pref_player_reputation));
+            editor.remove(getString(R.string.pref_player_profile_created));
+            editor.remove(getString(R.string.pref_player_state));
+            editor.remove(getString(R.string.pref_player_last_online));
+            editor.remove(getString(R.string.pref_player_banned));
+            editor.remove(getString(R.string.pref_player_scammer));
+            editor.remove(getString(R.string.pref_player_economy_banned));
+            editor.remove(getString(R.string.pref_player_vac_banned));
+            editor.remove(getString(R.string.pref_player_community_banned));
+            editor.remove(getString(R.string.pref_player_backpack_value_tf2));
+            editor.remove(getString(R.string.pref_new_avatar));
+            editor.remove(getString(R.string.pref_last_user_data_update));
+
+            editor.apply();
+
+            Intent i = new Intent();
+            i.putExtra("preference_changed", true);
+            setResult(RESULT_OK, i);
+        }
+    }
 }

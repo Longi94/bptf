@@ -9,6 +9,8 @@ import android.preference.PreferenceManager;
 import com.tlongdev.bktf.enums.Quality;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Utility {
 
@@ -237,9 +239,9 @@ public class Utility {
     public static LayerDrawable getItemBackground(Context context, int quality, int tradable, int craftable) {
         Quality q = Quality.values()[quality];
 
-        Drawable itemFrame = null;
-        Drawable craftableFrame = null;
-        Drawable tradableFrame = null;
+        Drawable itemFrame;
+        Drawable craftableFrame;
+        Drawable tradableFrame;
 
         switch (q) {
             case GENUINE:
@@ -394,6 +396,53 @@ public class Utility {
 
     public static boolean isSteamId(String id) {
         return id.matches("7656119[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]");
+    }
+
+    public static String formatUnixTimeStamp(long unixSeconds){
+        Date date = new Date(unixSeconds*1000L); // *1000 is to convert seconds to milliseconds
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // the format of your date
+        return sdf.format(date);
+    }
+
+    public static String formatLastOnlineTime(long time) {
+        if (time >= 172800000L) {
+            long days = time / 86400000;
+            return "" + days + " days ago";
+        }
+        if (time >= 3600000L) {
+            long hours = time / 3600000;
+            if (time % 3600000L == 0) {
+                if (hours == 1)
+                    return "" + hours + " hour ago";
+                else {
+                    return "" + hours + " hours ago";
+                }
+            }
+            else {
+                long minutes = (time % 3600000L) / 60000;
+                if (hours == 1)
+                    if (minutes == 1)
+                        return "" + hours + " hour " + minutes + " minute ago";
+                    else
+                        return "" + hours + " hour " + minutes + " minutes ago";
+                else {
+                    if (minutes == 1)
+                        return "" + hours + " hours " + minutes + " minute ago";
+                    else
+                        return "" + hours + " hours " + minutes + " minutes ago";
+                }
+            }
+        }
+        else {
+            long minutes = time / 60000;
+            if (minutes == 0){
+                return "Just now";
+            } else if (minutes == 1){
+                return "1 minute ago";
+            } else {
+                return "" + minutes + " minutes ago";
+            }
+        }
     }
 }
 

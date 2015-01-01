@@ -1,6 +1,7 @@
 <android.support.v4.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/swipe_refresh"
@@ -14,109 +15,161 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="8dp"
+            android:clipChildren="false"
+            android:clipToPadding="false">
 
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/player_avatar"
-                    android:layout_width="128dp"
-                    android:layout_height="128dp"
-                    android:background="#000"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginEnd="16dp"/>
+                card_view:cardCornerRadius="4dp" >
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="4dp">
 
-                    <TextView
-                        android:id="@+id/text_view_player_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Player Name"
-                        android:textSize="28sp"
-                        android:singleLine="true"/>
+                    <ImageView
+                        android:id="@+id/player_avatar"
+                        android:layout_width="128dp"
+                        android:layout_height="128dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/frame_user_state_offline"
+                        android:contentDescription="@string/player_avatar_description" />
 
-                    <TextView
-                        android:id="@+id/text_view_player_reputation"
-                        android:paddingTop="4dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Reputation: "/>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/text_view_user_since"
-                        android:paddingTop="4dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Steam user since: \n2008"/>
+                        <TextView
+                            android:id="@+id/text_view_player_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="28sp"
+                            android:singleLine="true"/>
 
-                    <TextView
-                        android:id="@+id/text_view_user_last_online"
-                        android:paddingTop="4dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Last online: "/>
+                        <TextView
+                            android:id="@+id/text_view_player_reputation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Reputation: "/>
+
+                        <TextView
+                            android:id="@+id/text_view_user_since"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Steam user since: \n2008"/>
+
+                        <TextView
+                            android:id="@+id/text_view_user_last_online"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Last online: "/>
 
 
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+            </android.support.v7.widget.CardView>
 
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp">
 
-                <Button
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:clickable="true"
-                    android:text="Bazaar.tf"/>
+                    android:orientation="vertical"
+                    android:padding="4dp"
+                    card_view:cardCornerRadius="4dp">
 
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:clickable="true"
-                    android:text="TF2Outpost"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-            </LinearLayout>
+                        <Button
+                            android:id="@+id/button_bazaar_tf"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:clickable="true"
+                            android:text="Bazaar.tf"/>
 
-            <LinearLayout
+                        <Button
+                            android:id="@+id/button_tf2op"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:clickable="true"
+                            android:text="TF2Outpost"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/button_tf2tp"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:clickable="true"
+                            android:text="TF2TP"/>
+
+                        <Button
+                            android:id="@+id/button_steamrep"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:clickable="true"
+                            android:text="Steamrep"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/button_steam_community"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:clickable="true"
+                            android:text="Community"/>
+
+                        <Button
+                            android:id="@+id/button_backpack"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:clickable="true"
+                            android:text="Backpack"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:clickable="true"
-                    android:text="TF2TP"/>
-
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:clickable="true"
-                    android:text="Steamrep"/>
-
-            </LinearLayout>
-
-
-
+                card_view:cardCornerRadius="4dp" >
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:baselineAligned="false">
+                android:baselineAligned="false"
+                android:padding="4dp">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -143,16 +196,56 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:text="TRUST"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:id="@+id/text_view_trust_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="\?"
+                            android:textSize="16sp"
+                            android:textColor="#fff"
+                            android:paddingLeft="3dp"
+                            android:paddingRight="3dp"
+                            android:paddingEnd="3dp"
+                            android:background="@drawable/status_background_neutral"/>
+
+                    </LinearLayout>
+
+                    <View
+                        style="@style/DividerHorizontal"
+                        android:background="#555"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:text="STEAMREP"
                             android:textSize="16sp"/>
 
                         <TextView
+                            android:id="@+id/text_view_steamrep_status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="OK"
-                            android:textSize="16sp"/>
+                            android:text="\?"
+                            android:textSize="16sp"
+                            android:textColor="#fff"
+                            android:paddingLeft="3dp"
+                            android:paddingRight="3dp"
+                            android:paddingEnd="3dp"
+                            android:background="@drawable/status_background_neutral"/>
 
                     </LinearLayout>
+
+                    <View
+                        style="@style/DividerHorizontal"
+                        android:background="#555"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -167,12 +260,22 @@
                             android:textSize="16sp"/>
 
                         <TextView
+                            android:id="@+id/text_view_trade_status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="OK"
-                            android:textSize="16sp"/>
+                            android:text="\?"
+                            android:textSize="16sp"
+                            android:textColor="#fff"
+                            android:paddingLeft="3dp"
+                            android:paddingRight="3dp"
+                            android:paddingEnd="3dp"
+                            android:background="@drawable/status_background_neutral"/>
 
                     </LinearLayout>
+
+                    <View
+                        style="@style/DividerHorizontal"
+                        android:background="#555"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -187,12 +290,22 @@
                             android:textSize="16sp"/>
 
                         <TextView
+                            android:id="@+id/text_view_vac_status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="OK"
-                            android:textSize="16sp"/>
+                            android:text="\?"
+                            android:textSize="16sp"
+                            android:textColor="#fff"
+                            android:paddingLeft="3dp"
+                            android:paddingRight="3dp"
+                            android:paddingEnd="3dp"
+                            android:background="@drawable/status_background_neutral"/>
 
                     </LinearLayout>
+
+                    <View
+                        style="@style/DividerHorizontal"
+                        android:background="#555"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -207,14 +320,18 @@
                             android:textSize="16sp"/>
 
                         <TextView
+                            android:id="@+id/text_view_community_status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="OK"
-                            android:textSize="16sp"/>
+                            android:text="\?"
+                            android:textSize="16sp"
+                            android:textColor="#fff"
+                            android:paddingLeft="3dp"
+                            android:paddingRight="3dp"
+                            android:paddingEnd="3dp"
+                            android:background="@drawable/status_background_neutral"/>
 
                     </LinearLayout>
-
-
 
                 </LinearLayout>
 
@@ -240,12 +357,25 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/text_view_bp_refined"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1 REFINED"
+                            android:text="\?"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#000"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" REFINED"
                             android:textSize="16sp"/>
 
                     </LinearLayout>
+
+                    <View
+                        style="@style/DividerHorizontal"
+                        android:background="#555"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -253,12 +383,25 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/text_view_bp_raw_metal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1 RAW METAL"
+                            android:text="\?"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#000"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" RAW METAL"
                             android:textSize="16sp"/>
 
                     </LinearLayout>
+
+                    <View
+                        style="@style/DividerHorizontal"
+                        android:background="#555"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -266,12 +409,25 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/text_view_bp_raw_keys"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1 RAW KEYS"
+                            android:text="\?"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#000"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" RAW KEYS"
                             android:textSize="16sp"/>
 
                     </LinearLayout>
+
+                    <View
+                        style="@style/DividerHorizontal"
+                        android:background="#555"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -279,15 +435,51 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/text_view_bp_usd"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1 USD"
+                            android:text="\?"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#000"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" USD"
+                            android:textSize="16sp"/>
+
+                    </LinearLayout>
+
+                    <View
+                        style="@style/DividerHorizontal"
+                        android:background="#555"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/text_view_bp_slots"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="\?/\?"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#000"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" SLOTS USED"
                             android:textSize="16sp"/>
 
                     </LinearLayout>
 
                 </LinearLayout>
             </LinearLayout>
+            </android.support.v7.widget.CardView>
         </LinearLayout>
     </ScrollView>
 </android.support.v4.widget.SwipeRefreshLayout>
