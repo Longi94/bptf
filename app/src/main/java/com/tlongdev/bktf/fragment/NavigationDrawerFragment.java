@@ -1,7 +1,6 @@
 package com.tlongdev.bktf.fragment;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,8 +19,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.tlongdev.bktf.MainActivity;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.SettingsActivity;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -86,7 +85,7 @@ public class NavigationDrawerFragment extends Fragment {
                 selectItem(position);
             }
         });
-        mDrawerListView.setAdapter(new ArrayAdapter<String>(
+        mDrawerListView.setAdapter(new ArrayAdapter<>(
                 getActionBar().getThemedContext(),
                 R.layout.simple_drawer_list_item,
                 R.id.text,
@@ -100,8 +99,7 @@ public class NavigationDrawerFragment extends Fragment {
         rootView.findViewById(R.id.text_view_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent settingsIntent = new Intent(getActivity(), SettingsActivity.class);
-                startActivity(settingsIntent);
+                ((MainActivity)getActivity()).startSettingsActivity();
             }
         });
         return rootView;

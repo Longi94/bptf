@@ -2,11 +2,9 @@ package com.tlongdev.bktf;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -18,10 +16,9 @@ import android.view.MenuItem;
 
 import com.tlongdev.bktf.fragment.HomeFragment;
 import com.tlongdev.bktf.fragment.NavigationDrawerFragment;
-import com.tlongdev.bktf.fragment.UnusualPriceListFragment;
 import com.tlongdev.bktf.fragment.SearchFragment;
+import com.tlongdev.bktf.fragment.UnusualPriceListFragment;
 import com.tlongdev.bktf.fragment.UserFragment;
-import com.tlongdev.bktf.task.FetchPriceList;
 
 
 public class MainActivity extends ActionBarActivity
@@ -37,10 +34,11 @@ public class MainActivity extends ActionBarActivity
      */
     private CharSequence mTitle;
 
-    private SearchView mSearchView;
     private SearchFragment mSearchFragment;
 
     private int previousFragment = -1;
+    private int currentFragment = -1;
+    private boolean restartUserFragment = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,32 +62,57 @@ public class MainActivity extends ActionBarActivity
     protected void onResume() {
         super.onResume();
 
+        if (restartUserFragment){
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, new UserFragment())
+                    .commit();
+            restartUserFragment = false;
+        }
 
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        Fragment fragment;
-        if (position == 0) {
-            fragment = new HomeFragment();
+        if (position == 0 && currentFragment != 0) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, new HomeFragment())
+                    .commit();
         }
-        else if (position == 1) {
-            fragment = new UserFragment();
+        else if (position == 1 && currentFragment != 1) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, new UserFragment())
+                    .commit();
         }
-        else /*if (position == 2)*/ {
-            fragment = new UnusualPriceListFragment();
+        else if (position == 2  && currentFragment != 2) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, new UnusualPriceListFragment())
+                    .commit();
         }
-
-        // update the main content by replacing fragments
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, fragment)
-                .commit();
-
+        currentFragment = position;
         onSectionAttached(position);
     }
 
+    public void startSettingsActivity(){
+        Intent settingsIntent = new Intent(this, SettingsActivity.class);
+        startActivityForResult(settingsIntent, 0);
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0){
+            if (resultCode == RESULT_OK){
+                if (currentFragment == 1){
+                    if (data != null && data.getBooleanExtra("preference_changed", false)){
+                        restartUserFragment = true;
+                    }
+                }
+            }
+        }
+    }
 
     public void onSectionAttached(int number) {
         switch (number) {
@@ -121,14 +144,14 @@ public class MainActivity extends ActionBarActivity
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         MenuItem menuItem = menu.findItem(R.id.action_search);
-        mSearchView = (SearchView) menuItem.getActionView();
+        SearchView mSearchView = (SearchView) menuItem.getActionView();
 
         mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                if (mSearchFragment != null && mSearchFragment.isAdded()){
+                if (mSearchFragment != null && mSearchFragment.isAdded()) {
                     mSearchFragment.restartLoader(s);
                 }
                 return true;
@@ -136,7 +159,7 @@ public class MainActivity extends ActionBarActivity
 
             @Override
             public boolean onQueryTextChange(String s) {
-                if (mSearchFragment != null && mSearchFragment.isAdded()){
+                if (mSearchFragment != null && mSearchFragment.isAdded()) {
                     mSearchFragment.restartLoader(s);
                 }
                 return true;

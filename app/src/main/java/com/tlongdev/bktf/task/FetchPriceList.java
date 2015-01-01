@@ -37,15 +37,17 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
 
     private final Context mContext;
     private boolean updateDatabase;
+    private boolean manualSync;
     private ProgressDialog loadingDialog;
     private SwipeRefreshLayout swipeRefreshLayout;
     private LinearLayout header;
 
-    public FetchPriceList(Context context, SwipeRefreshLayout swipeRefreshLayout, LinearLayout header) {
+    public FetchPriceList(Context context, boolean manualSync, SwipeRefreshLayout swipeRefreshLayout, LinearLayout header) {
         mContext = context;
         this.swipeRefreshLayout = swipeRefreshLayout;
         this.header = header;
         updateDatabase = swipeRefreshLayout != null;
+        this.manualSync = manualSync;
     }
 
     @Override
@@ -58,7 +60,7 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
     protected Void doInBackground(String... params) {
 
         if (System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(mContext)
-                .getLong(mContext.getString(R.string.pref_last_price_list_update), 0) < 3600000L){
+                .getLong(mContext.getString(R.string.pref_last_price_list_update), 0) < 3600000L && !manualSync){
             return null;
         }
 
