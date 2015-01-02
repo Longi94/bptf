@@ -42,11 +42,11 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
     private SwipeRefreshLayout swipeRefreshLayout;
     private LinearLayout header;
 
-    public FetchPriceList(Context context, boolean manualSync, SwipeRefreshLayout swipeRefreshLayout, LinearLayout header) {
+    public FetchPriceList(Context context, boolean updateDatabase, boolean manualSync, SwipeRefreshLayout swipeRefreshLayout, LinearLayout header) {
         mContext = context;
         this.swipeRefreshLayout = swipeRefreshLayout;
         this.header = header;
-        updateDatabase = swipeRefreshLayout != null;
+        this.updateDatabase = updateDatabase;
         this.manualSync = manualSync;
     }
 
@@ -154,7 +154,7 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
     protected void onPostExecute(Void pVoid) {
         if (loadingDialog != null && !updateDatabase)
             loadingDialog.dismiss();
-        else
+        else if (swipeRefreshLayout != null)
             swipeRefreshLayout.setRefreshing(false);
 
         if (header != null) {

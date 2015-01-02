@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.InsetDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -151,7 +149,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void updateUserPage() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        if (prefs.getBoolean(getString(R.string.pref_new_avatar), false)) {
+        if (prefs.contains(getString(R.string.pref_new_avatar))) {
             new AvatarDownLoader(PreferenceManager.getDefaultSharedPreferences(getActivity()).
                     getString(getString(R.string.pref_player_avatar_url), ""), getActivity()).execute();
         }
@@ -297,6 +295,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         private String url;
         private Context mContext;
         private Bitmap bmp;
+        private Drawable d;
 
         private AvatarDownLoader(String url, Context mContext) {
             this.url = url;
@@ -358,9 +357,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         break;
                 }
 
-                InsetDrawable id = new InsetDrawable(Drawable.createFromPath(path.toString() + "/avatar.png"),
-                        (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics()));
-                avatar.setBackgroundDrawable(id);
+                d = Drawable.createFromPath(path.toString() + "/avatar.png");
+                avatar.setBackgroundDrawable(d);
 
                 PreferenceManager.getDefaultSharedPreferences(mContext).edit().putBoolean(
                         mContext.getString(R.string.pref_new_avatar), false).apply();

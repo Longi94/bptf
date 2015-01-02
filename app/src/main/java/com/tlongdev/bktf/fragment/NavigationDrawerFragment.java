@@ -1,6 +1,7 @@
 package com.tlongdev.bktf.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.tlongdev.bktf.AboutActivity;
 import com.tlongdev.bktf.MainActivity;
 import com.tlongdev.bktf.R;
 
@@ -100,6 +102,12 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 ((MainActivity)getActivity()).startSettingsActivity();
+            }
+        });
+        rootView.findViewById(R.id.text_view_about).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().startActivity(new Intent(getActivity(), AboutActivity.class));
             }
         });
         return rootView;

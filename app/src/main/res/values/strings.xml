@@ -66,5 +66,6 @@
     <string name="pref_player_profile_created">pref_player_profile_created</string>
     <string name="player_avatar_description">Player Avatar</string>
     <string name="pref_new_avatar">pref_new_avatar</string>
+    <string name="title_activity_about">AboutActivity</string>
 
 </resources>

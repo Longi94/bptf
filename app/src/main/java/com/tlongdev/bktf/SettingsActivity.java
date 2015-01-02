@@ -17,6 +17,9 @@ import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
 
+import com.tlongdev.bktf.service.NotificationsService;
+import com.tlongdev.bktf.service.UpdateDatabaseService;
+
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
  * handset devices, settings are presented as a single list. On tablets,
@@ -181,9 +184,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
-            if (Utility.isSteamId(sharedPreferences.getString(getString(R.string.pref_steam_id), ""))) {
+            if (Utility.isSteamId(sharedPreferences.getString(key, ""))) {
                 editor.putString(getString(R.string.pref_resolved_steam_id),
-                        sharedPreferences.getString(getString(R.string.pref_steam_id), ""));
+                        sharedPreferences.getString(key, ""));
             }
 
             editor.remove(getString(R.string.pref_player_avatar_url));
@@ -206,6 +209,26 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             Intent i = new Intent();
             i.putExtra("preference_changed", true);
             setResult(RESULT_OK, i);
+        }
+        else if (key.equals(getString(R.string.pref_notification))){
+            if (sharedPreferences.getBoolean(key, false)) {
+                startService(new Intent(this, NotificationsService.class));
+            }
+        }
+        else if (key.equals(getString(R.string.pref_notification_interval))){
+            if (sharedPreferences.getBoolean(getString(R.string.pref_notification), false)) {
+                startService(new Intent(this, NotificationsService.class));
+            }
+        }
+        else if (key.equals(getString(R.string.pref_background_sync))){
+            if (sharedPreferences.getBoolean(key, false)) {
+                startService(new Intent(this, UpdateDatabaseService.class));
+            }
+        }
+        else if (key.equals(getString(R.string.pref_notification_interval))){
+            if (sharedPreferences.getBoolean(getString(R.string.pref_background_sync), false)) {
+                startService(new Intent(this, UpdateDatabaseService.class));
+            }
         }
     }
 }
