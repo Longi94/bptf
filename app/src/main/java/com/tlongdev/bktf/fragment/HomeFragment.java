@@ -93,7 +93,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         if (prefs.getBoolean(getResources().getString(R.string.pref_initial_load), true)){
-            new FetchPriceList(getActivity(), false, null, header).execute(getResources().getString(R.string.backpack_tf_api_key));
+            new FetchPriceList(getActivity(), false, false, null, header).execute(getResources().getString(R.string.backpack_tf_api_key));
             SharedPreferences.Editor editor = prefs.edit();
 
             editor.putBoolean(getResources().getString(R.string.pref_initial_load), false);
@@ -101,7 +101,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         }
         else if (System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(getActivity())
                 .getLong(getString(R.string.pref_last_price_list_update), 0) >= 3600000L) {
-            new FetchPriceList(getActivity(), false, mSwipeRefreshLayout, header).execute(getResources()
+            new FetchPriceList(getActivity(), true, false, mSwipeRefreshLayout, header).execute(getResources()
                     .getString(R.string.backpack_tf_api_key));
             mSwipeRefreshLayout.setRefreshing(true);
         }
@@ -227,7 +227,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onRefresh() {
-        new FetchPriceList(getActivity(), true, mSwipeRefreshLayout, header)
+        new FetchPriceList(getActivity(), true, true, mSwipeRefreshLayout, header)
                 .execute(getResources().getString(R.string.backpack_tf_api_key));
     }
 

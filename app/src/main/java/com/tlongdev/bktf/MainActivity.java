@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,6 +20,8 @@ import com.tlongdev.bktf.fragment.NavigationDrawerFragment;
 import com.tlongdev.bktf.fragment.SearchFragment;
 import com.tlongdev.bktf.fragment.UnusualPriceListFragment;
 import com.tlongdev.bktf.fragment.UserFragment;
+import com.tlongdev.bktf.service.NotificationsService;
+import com.tlongdev.bktf.service.UpdateDatabaseService;
 
 
 public class MainActivity extends ActionBarActivity
@@ -56,6 +59,13 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_notification), false)){
+            startService(new Intent(this, NotificationsService.class));
+        }
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_background_sync), false)){
+            startService(new Intent(this, UpdateDatabaseService.class));
+        }
     }
 
     @Override
@@ -182,6 +192,8 @@ public class MainActivity extends ActionBarActivity
                         fragmentManager.beginTransaction()
                                 .replace(R.id.container, mSearchFragment)
                                 .commit();
+
+                        currentFragment = -1;
 
                         return true;
                     }
