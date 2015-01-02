@@ -25,7 +25,8 @@
         android:id="@+id/list_changes_header"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
 
         <FrameLayout
@@ -47,7 +48,6 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:textColor="#fff"
-                android:text="Price Here"
                 android:textSize="16sp"/>
 
         </FrameLayout>
@@ -70,7 +70,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="#fff"
-                android:text="Price Here"
                 android:gravity="center"
                 android:textSize="16sp"/>
 
@@ -94,7 +93,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="#fff"
-                android:text="Price Here"
                 android:gravity="center"
                 android:textSize="16sp"/>
 

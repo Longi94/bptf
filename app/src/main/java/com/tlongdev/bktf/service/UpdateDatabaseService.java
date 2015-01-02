@@ -18,7 +18,7 @@ public class UpdateDatabaseService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.hasExtra("notification") &&
+        if (intent.hasExtra("update") &&
                 PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_notification), false)) {
 
             new FetchPriceList(this, true, true, null, null).execute(getResources().getString(R.string.backpack_tf_api_key));

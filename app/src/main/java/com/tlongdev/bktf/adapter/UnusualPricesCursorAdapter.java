@@ -78,6 +78,11 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
         }
     }
 
+    @Override
+    public boolean isEnabled(int position) {
+        return false;
+    }
+
     public static class ViewHolder {
 
         public final ImageView icon;

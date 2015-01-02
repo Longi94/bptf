@@ -22,7 +22,6 @@
         android:gravity="center"
         android:layout_gravity="bottom"
         android:background="#44000000"
-        android:text="Price"
         android:padding="4dp"
         android:textColor="#fff"/>
 

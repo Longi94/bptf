@@ -1,6 +1,7 @@
 package com.tlongdev.bktf;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -13,6 +14,7 @@ public class AboutActivity extends ActionBarActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xff5787c5));
 
         findViewById(R.id.text_view_quick_return).setOnClickListener(this);
         findViewById(R.id.text_view_particles).setOnClickListener(this);

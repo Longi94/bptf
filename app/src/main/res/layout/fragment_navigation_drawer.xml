@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#fff">
+
     <ListView
         android:id="@+id/list_view_drawer"
         android:layout_width="match_parent"
@@ -15,21 +16,54 @@
         android:dividerHeight="0dp"
         tools:context=".NavigationDrawerFragment" />
 
-    <TextView
+    <LinearLayout
         android:id="@+id/text_view_settings"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/listPreferredItemHeightSmall"
+        android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:text="@string/action_settings"
-        android:background="@drawable/simple_drawer_item_background"
-        android:paddingLeft="16dp" />
+        android:paddingLeft="16dp"
+        android:background="@drawable/simple_drawer_item_background" >
 
-    <TextView
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_settings_black_24dp"/>
+
+        <TextView
+            android:layout_marginLeft="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action_settings"
+            android:textColor="#000"/>
+
+        </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/text_view_about"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/listPreferredItemHeightSmall"
+        android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:background="@drawable/simple_drawer_item_background"
-        android:text="About"
-        android:paddingLeft="16dp"/>
+        android:paddingLeft="16dp"
+        android:background="@drawable/simple_drawer_item_background" >
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_info_outline_black_24dp"/>
+
+        <TextView
+            android:layout_marginLeft="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="About"
+            android:textColor="#000"/>
+
+    </LinearLayout>
+
+
+
+
 </LinearLayout>

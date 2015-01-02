@@ -326,14 +326,14 @@ public class Utility {
         switch(targetCurrency) {
             case CURRENCY_BUD:
                 if (low == 1.0 && high == 0.0)
-                    return product + "bud";
+                    return product + " bud";
                 else
                     return product + " buds";
             case CURRENCY_METAL:
                 return product + " ref";
             case CURRENCY_KEY:
                 if (low == 1.0 && high == 0.0)
-                    return product + "key";
+                    return product + " key";
                 else
                     return product + " keys";
             case CURRENCY_USD:
