@@ -58,6 +58,11 @@ public class SearchCursorAdapter extends CursorAdapter {
         viewHolder.priceView.append("\n" + cursor.getString(SearchFragment.COL_PRICE_LIST_CURR));
     }
 
+    @Override
+    public boolean isEnabled(int position) {
+        return false;
+    }
+
     private void setIconImage(Context context, ImageView icon, int defindex) {
         try {
             // get input stream

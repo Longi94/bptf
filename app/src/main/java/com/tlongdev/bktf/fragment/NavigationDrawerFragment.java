@@ -17,12 +17,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.tlongdev.bktf.AboutActivity;
 import com.tlongdev.bktf.MainActivity;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.adapter.NavigationDrawerAdapter;
+
+import java.util.Arrays;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -87,15 +89,12 @@ public class NavigationDrawerFragment extends Fragment {
                 selectItem(position);
             }
         });
-        mDrawerListView.setAdapter(new ArrayAdapter<>(
+        mDrawerListView.setAdapter(new NavigationDrawerAdapter(
                 getActionBar().getThemedContext(),
                 R.layout.simple_drawer_list_item,
-                R.id.text,
-                new String[]{
-                        getString(R.string.title_home),
+                Arrays.asList(getString(R.string.title_home),
                         getString(R.string.title_user_profile),
-                        getString(R.string.title_prices),
-                }));
+                        getString(R.string.title_prices))));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 
         rootView.findViewById(R.id.text_view_settings).setOnClickListener(new View.OnClickListener() {
