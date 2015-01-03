@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.UnusualActivity;
@@ -65,13 +66,13 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
                         cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRIC),
                         cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PMAX),
                         cursor.getString(UnusualActivity.COL_PRICE_LIST_CURR),
-                        Utility.CURRENCY_BUD));
+                        Utility.CURRENCY_BUD, false));
             } else {
                 viewHolder.priceView.setText(Utility.formatPrice(context,
                         cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRIC),
                         cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PMAX),
                         cursor.getString(UnusualActivity.COL_PRICE_LIST_CURR),
-                        Utility.CURRENCY_KEY));
+                        Utility.CURRENCY_KEY, false));
             }
         } catch (Throwable throwable) {
             throwable.printStackTrace();
@@ -98,6 +99,7 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
         private Context mContext;
         private ImageView icon;
         private String path;
+        private String errorMessage;
 
         private LoadImagesTask(Context context, ImageView icon) {
             mContext = context;
@@ -118,9 +120,16 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
 
                 return d;
             } catch (IOException e) {
+                errorMessage = e.getMessage();
+                publishProgress();
                 e.printStackTrace();
                 return null;
             }
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_LONG).show();
         }
 
         @Override

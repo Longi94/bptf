@@ -1,8 +1,11 @@
 package com.tlongdev.bktf.task;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
@@ -13,6 +16,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.PriceListContract;
@@ -31,7 +35,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Vector;
 
-public class FetchPriceList extends AsyncTask<String, Void, Void>{
+public class FetchPriceList extends AsyncTask<String, Integer, Void>{
 
     private static final String LOG_TAG = FetchPriceList.class.getSimpleName();
 
@@ -41,6 +45,7 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
     private ProgressDialog loadingDialog;
     private SwipeRefreshLayout swipeRefreshLayout;
     private LinearLayout header;
+    private String errorMessage;
 
     public FetchPriceList(Context context, boolean updateDatabase, boolean manualSync, SwipeRefreshLayout swipeRefreshLayout, LinearLayout header) {
         mContext = context;
@@ -53,7 +58,7 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
     @Override
     protected void onPreExecute() {
         if (!updateDatabase)
-            loadingDialog = ProgressDialog.show(mContext, null, "Creating initial database...", true);
+            loadingDialog = ProgressDialog.show(mContext, null, "Downloading data...", true);
     }
 
     @Override
@@ -108,19 +113,17 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
 
             String line;
             while ((line = reader.readLine()) != null) {
-                // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                // But it does make debugging a *lot* easier if you print out the completed
-                // buffer for debugging.
-                buffer.append(line + "\n");
+                buffer.append(line);
             }
 
             if (buffer.length() == 0) {
-                // Stream was empty.  No point in parsing.
                 return null;
             }
             itemsJsonStr = buffer.toString();
 
         } catch (IOException e) {
+            errorMessage = "network error";
+            publishProgress(-1);
             e.printStackTrace();
             return null;
         } finally {
@@ -131,7 +134,9 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
                 try {
                     reader.close();
                 } catch (final IOException e) {
-                    Log.e("HomeFragment", "Error closing stream", e);
+                    errorMessage = e.getMessage();
+                    publishProgress(-1);
+                    e.printStackTrace();
                 }
             }
         }
@@ -139,15 +144,53 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
 
             getItemsFromJson(itemsJsonStr);
 
-            PreferenceManager.getDefaultSharedPreferences(mContext).edit()
-                    .putLong(mContext.getString(R.string.pref_last_price_list_update),
-                            System.currentTimeMillis()).apply();
+            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+            editor.putLong(mContext.getString(R.string.pref_last_price_list_update), System.currentTimeMillis()).apply();
+            editor.putBoolean(mContext.getString(R.string.pref_initial_load), false);
+
+
         } catch (JSONException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
+            errorMessage = "error while parsing data";
+            publishProgress(-1);
             e.printStackTrace();
             return null;
         }
         return null;
+    }
+
+    @Override
+    protected void onProgressUpdate(Integer... values) {
+        if (loadingDialog != null) {
+            switch (values[0]) {
+                case 0:
+                    loadingDialog.dismiss();
+                    loadingDialog = new ProgressDialog(mContext, ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT);
+                    loadingDialog.setIndeterminate(false);
+                    loadingDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                    loadingDialog.setMessage("Creating database...");
+                    loadingDialog.setMax(values[1]);
+                    loadingDialog.show();
+                    break;
+                case 1:
+                    loadingDialog.incrementProgressBy(1);
+                    break;
+                case -1:
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    builder.setMessage("Failed to download database. Check your internet connection and try again.").setCancelable(false).
+                            setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ((Activity)mContext).finish();
+                                }
+                            });
+                    AlertDialog alertDialog = builder.create();
+                    loadingDialog.dismiss();
+                    alertDialog.show();
+                    break;
+            }
+        } else if (values[0] == -1){
+            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -228,6 +271,8 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
         }
 
         JSONObject items = response.getJSONObject(OWM_ITEMS);
+
+        publishProgress(0, items.length());
 
         Iterator<String> i = items.keys();
 
@@ -411,6 +456,8 @@ public class FetchPriceList extends AsyncTask<String, Void, Void>{
                     }
                 }
             }
+
+            publishProgress(1);
         }
 
         if (cVVector.size() > 0) {

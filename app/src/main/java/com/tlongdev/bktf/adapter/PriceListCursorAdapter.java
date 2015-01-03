@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
@@ -73,8 +74,9 @@ public class PriceListCursorAdapter extends CursorAdapter {
                     cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRIC),
                     cursor.getDouble(HomeFragment.COL_PRICE_LIST_PMAX),
                     cursor.getString(HomeFragment.COL_PRICE_LIST_CURR),
-                    cursor.getString(HomeFragment.COL_PRICE_LIST_CURR)));
+                    cursor.getString(HomeFragment.COL_PRICE_LIST_CURR), false));
         } catch (Throwable throwable) {
+            Toast.makeText(context, "bptf: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
             throwable.printStackTrace();
         }
     }
@@ -104,6 +106,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
         private ImageView icon;
         private ImageView change;
         private String path;
+        private String errorMessage;
 
         private LoadImagesTask(Context context, ImageView icon, ImageView change) {
             mContext = context;
@@ -147,9 +150,17 @@ public class PriceListCursorAdapter extends CursorAdapter {
 
                 return returnVal;
             } catch (IOException e) {
+                errorMessage = e.getMessage();
+                publishProgress();
                 e.printStackTrace();
                 return null;
             }
+        }
+
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_LONG).show();
         }
 
         @Override

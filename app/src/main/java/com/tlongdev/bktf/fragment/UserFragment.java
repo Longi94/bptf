@@ -13,12 +13,13 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
@@ -52,6 +53,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private ImageView avatar;
+    private ProgressBar progressBar;
 
     public UserFragment() {
     }
@@ -88,6 +90,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mSwipeRefreshLayout.findViewById(R.id.button_backpack).setOnClickListener(this);
 
         avatar = (ImageView)mSwipeRefreshLayout.findViewById(R.id.player_avatar);
+
+        progressBar = (ProgressBar)mSwipeRefreshLayout.findViewById(R.id.progress_bar);
 
         updateUserPage();
 
@@ -296,6 +300,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         private Context mContext;
         private Bitmap bmp;
         private Drawable d;
+        private String errorMessage;
 
         private AvatarDownLoader(String url, Context mContext) {
             this.url = url;
@@ -303,9 +308,15 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         @Override
+        protected void onPreExecute() {
+            if (progressBar != null)
+                progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
         protected Void doInBackground(Void... params) {
             if (PreferenceManager.getDefaultSharedPreferences(mContext).
-                    getBoolean(mContext.getString(R.string.pref_new_avatar), true)) {
+                    getBoolean(mContext.getString(R.string.pref_new_avatar), false)) {
                 bmp = getBitmapFromURL(url);
 
                 try {
@@ -315,10 +326,18 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     fos.close();
 
                 } catch (IOException e) {
+                    errorMessage = e.getMessage();
+                    publishProgress();
                     e.printStackTrace();
+                    return null;
                 }
             }
             return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_LONG).show();
         }
 
         public Bitmap getBitmapFromURL(String link) {
@@ -334,8 +353,9 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 return BitmapFactory.decodeStream(input);
 
             } catch (IOException e) {
+                errorMessage = e.getMessage();
+                publishProgress();
                 e.printStackTrace();
-                Log.e("getBmpFromUrl error: ", e.getMessage());
                 return null;
             }
         }
@@ -359,6 +379,9 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
                 d = Drawable.createFromPath(path.toString() + "/avatar.png");
                 avatar.setBackgroundDrawable(d);
+
+                if (progressBar != null)
+                    progressBar.setVisibility(View.GONE);
 
                 PreferenceManager.getDefaultSharedPreferences(mContext).edit().putBoolean(
                         mContext.getString(R.string.pref_new_avatar), false).apply();
