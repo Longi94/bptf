@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.UnusualActivity;
@@ -98,6 +99,7 @@ public class UnusualListCursorAdapter extends CursorAdapter {
         private Context mContext;
         private ImageView icon;
         private String path;
+        private String errorMessage;
 
         private LoadImagesTask(Context context, ImageView icon) {
             mContext = context;
@@ -111,9 +113,16 @@ public class UnusualListCursorAdapter extends CursorAdapter {
                 InputStream ims = mContext.getAssets().open("items/" + params[0] + ".png");
                 return Drawable.createFromStream(ims, null);
             } catch (IOException e) {
+                errorMessage = e.getMessage();
+                publishProgress();
                 e.printStackTrace();
                 return null;
             }
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_LONG).show();
         }
 
         @Override

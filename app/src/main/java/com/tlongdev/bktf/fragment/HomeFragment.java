@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
@@ -66,15 +67,9 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     private static final String LIST_VIEW_TOP_POSITION_KEY = "position_top";
 
     private ListView mListView;
-    private QuickReturnAttacher quickReturnAttacher;
     private LinearLayout header;
-    private TextView metalPrice;
-    private TextView keyPrice;
-    private TextView budsPrice;
 
-    private ImageView metalPriceImage;
-    private ImageView keyPriceImage;
-    private ImageView budsPriceImage;
+    private ProgressBar progressBar;
 
 
     private PriceListCursorAdapter cursorAdapter;
@@ -92,15 +87,11 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         getLoaderManager().initLoader(PRICE_LIST_LOADER, null, this);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        if (prefs.getBoolean(getResources().getString(R.string.pref_initial_load), true)){
+        if (prefs.getBoolean(getString(R.string.pref_initial_load), true)){
             new FetchPriceList(getActivity(), false, false, null, header).execute(getResources().getString(R.string.backpack_tf_api_key));
-            SharedPreferences.Editor editor = prefs.edit();
-
-            editor.putBoolean(getResources().getString(R.string.pref_initial_load), false);
-            editor.apply();
         }
-        else if (System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(getActivity())
-                .getLong(getString(R.string.pref_last_price_list_update), 0) >= 3600000L) {
+        else if (prefs.getBoolean(getString(R.string.pref_auto_sync), false) &&
+                System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_price_list_update), 0) >= 3600000L) {
             new FetchPriceList(getActivity(), true, false, mSwipeRefreshLayout, header).execute(getResources()
                     .getString(R.string.backpack_tf_api_key));
             mSwipeRefreshLayout.setRefreshing(true);
@@ -116,13 +107,13 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        metalPrice = (TextView)rootView.findViewById(R.id.text_view_metal_price);
-        keyPrice = (TextView)rootView.findViewById(R.id.text_view_key_price);
-        budsPrice = (TextView)rootView.findViewById(R.id.text_view_buds_price);
+        TextView metalPrice = (TextView) rootView.findViewById(R.id.text_view_metal_price);
+        TextView keyPrice = (TextView) rootView.findViewById(R.id.text_view_key_price);
+        TextView budsPrice = (TextView) rootView.findViewById(R.id.text_view_buds_price);
 
-        metalPriceImage = (ImageView)rootView.findViewById(R.id.image_view_metal_price);
-        keyPriceImage = (ImageView)rootView.findViewById(R.id.image_view_key_price);
-        budsPriceImage = (ImageView)rootView.findViewById(R.id.image_view_buds_price);
+        ImageView metalPriceImage = (ImageView) rootView.findViewById(R.id.image_view_metal_price);
+        ImageView keyPriceImage = (ImageView) rootView.findViewById(R.id.image_view_key_price);
+        ImageView budsPriceImage = (ImageView) rootView.findViewById(R.id.image_view_buds_price);
 
         metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
         keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
@@ -160,7 +151,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
             mListView.setAdapter(new QuickReturnAdapter(cursorAdapter));
 
-            quickReturnAttacher = QuickReturnAttacher.forView(mListView);
+            QuickReturnAttacher quickReturnAttacher = QuickReturnAttacher.forView(mListView);
             int offset = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 42, getResources().getDisplayMetrics());
             quickReturnAttacher.addTargetView(header, QuickReturnTargetView.POSITION_TOP, offset);
             mSwipeRefreshLayout.setProgressViewOffset(false, (int)(offset * -1.0/2.0), (int) (offset * 3.0 / 2.0));
@@ -171,6 +162,8 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             mPositionIndex = savedInstanceState.getInt(LIST_VIEW_POSITION_KEY);
             mPositionTop = savedInstanceState.getInt(LIST_VIEW_TOP_POSITION_KEY);
         }
+
+        progressBar = (ProgressBar)rootView.findViewById(R.id.progress_bar);
 
         return rootView;
     }
@@ -213,6 +206,8 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         cursorAdapter.swapCursor(data);
+        if (progressBar != null)
+            progressBar.setVisibility(View.GONE);
         /*if (mPositionIndex != ListView.INVALID_POSITION) {
             // If we don't need to restart the loader, and there's a desired position to restore
             // to, do so now.

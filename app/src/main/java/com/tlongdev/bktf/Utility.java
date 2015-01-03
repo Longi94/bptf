@@ -21,6 +21,9 @@ public class Utility {
 
     public static String getSteamId(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        if (prefs.getString(context.getString(R.string.pref_steam_id), null).equals("")){
+            return null;
+        }
         return prefs.getString(context.getString(R.string.pref_steam_id), null);
     }
 
@@ -33,47 +36,47 @@ public class Utility {
         String formattedName = "";
 
         if (tradable == 0) {
-            formattedName = formattedName + "Non-Tradable ";
+            formattedName += "Non-Tradable ";
         }
         if (craftable == 0) {
-            formattedName = formattedName + "Non-Craftable ";
+            formattedName += "Non-Craftable ";
         }
         Quality q = Quality.values()[quality];
 
         switch (q) {
             case NORMAL:
-                formattedName = formattedName + "Normal ";
+                formattedName += "Normal ";
                 break;
             case GENUINE:
-                formattedName = formattedName + "Genuine ";
+                formattedName += "Genuine ";
                 break;
             case VINTAGE:
-                formattedName = formattedName + "Vintage ";
+                formattedName += "Vintage ";
                 break;
             case UNIQUE:
                 if (index > 0)
                   name = name + " #" + index;
                 break;
             case UNUSUAL:
-                formattedName = formattedName + getUnusualEffectName(index) + " ";
+                formattedName += getUnusualEffectName(index) + " ";
                 break;
             case COMMUNITY:
-                formattedName = formattedName + "Community ";
+                formattedName += "Community ";
                 break;
             case VALVE:
-                formattedName = formattedName + "Valve ";
+                formattedName += "Valve ";
                 break;
             case SELF_MADE:
-                formattedName = formattedName + "Self-made ";
+                formattedName += "Self-made ";
                 break;
             case STRANGE:
-                formattedName = formattedName + "Strange ";
+                formattedName += "Strange ";
                 break;
             case HAUNTED:
-                formattedName = formattedName + "Haunted ";
+                formattedName += "Haunted ";
                 break;
             case COLLECTORS:
-                formattedName = formattedName + "Collector's ";
+                formattedName += "Collector's ";
                 break;
         }
 
@@ -283,13 +286,6 @@ public class Utility {
                 itemFrame =  context.getResources().getDrawable(R.drawable.item_background_normal);
                 break;
         }
-
-        if (tradable == 0){
-            tradableFrame = context.getResources().getDrawable(R.drawable.non_tradable_border);
-        }
-        else {
-            tradableFrame = context.getResources().getDrawable(R.drawable.empty_drawable);
-        }
         if (craftable == 0){
             craftableFrame = context.getResources().getDrawable(R.drawable.non_craftable_border);
         }
@@ -297,10 +293,17 @@ public class Utility {
             craftableFrame = context.getResources().getDrawable(R.drawable.empty_drawable);
         }
 
-        return new LayerDrawable(new Drawable[] {itemFrame, tradableFrame, craftableFrame});
+        if (tradable == 0){
+            tradableFrame = context.getResources().getDrawable(R.drawable.non_tradable_border);
+        }
+        else {
+            tradableFrame = context.getResources().getDrawable(R.drawable.empty_drawable);
+        }
+
+        return new LayerDrawable(new Drawable[] {itemFrame, craftableFrame, tradableFrame});
     }
 
-    public static String formatPrice(Context context, double low, double high, String originalCurrency, String targetCurrency) throws Throwable {
+    public static String formatPrice(Context context, double low, double high, String originalCurrency, String targetCurrency, boolean twoLines) throws Throwable {
         String product = "";
 
         low = convertPrice(context, low, originalCurrency, targetCurrency);
@@ -308,19 +311,23 @@ public class Utility {
             high = convertPrice(context, high, originalCurrency, targetCurrency);
 
         if ((int)low == low)
-            product = product + (int)low;
+            product += (int)low;
         else if (("" + low).substring(("" + low).indexOf('.') + 1).length() > 2)
-            product = product + new DecimalFormat("#0.00").format(low);
+            product += new DecimalFormat("#0.00").format(low);
         else
-            product = product + low;
+            product += low;
 
         if (high > 0.0){
             if ((int)high == high)
-                product = product + "-" + (int)high;
+                product += "-" + (int)high;
             else if (("" + high).substring(("" + high).indexOf('.') + 1).length() > 2)
-                product = product + "-" + new DecimalFormat("#0.00").format(high);
+                product += "-" + new DecimalFormat("#0.00").format(high);
             else
-                product = product + "-" + high;
+                product += "-" + high;
+        }
+
+        if (twoLines) {
+            product += "\n";
         }
 
         switch(targetCurrency) {

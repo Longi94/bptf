@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
@@ -29,6 +28,7 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
     private boolean manualSync;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private UserFragment mFragment;
+    private String errorMessage;
 
     public FetchUserInfo(Context mContext, boolean manualSync, UserFragment fragment, SwipeRefreshLayout swipeRefreshLayout) {
         this.mContext = mContext;
@@ -66,6 +66,8 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
 
             steamId = Utility.getSteamId(mContext);
             if (steamId == null){
+                errorMessage = "no steamID provided";
+                publishProgress();
                 return null;
             }
             Uri uri;
@@ -107,7 +109,8 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
             }
 
             if (!Utility.isSteamId(steamId)) {
-                Toast.makeText(mContext, steamId, Toast.LENGTH_SHORT).show();
+                errorMessage = steamId;
+                publishProgress();
                 return null;
             }
 
@@ -177,10 +180,15 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
                             System.currentTimeMillis()).apply();
 
         } catch (IOException e) {
+            errorMessage = "network error";
+            publishProgress();
             e.printStackTrace();
             return null;
         } catch (JSONException e) {
+            errorMessage = "error while parsing data";
+            publishProgress();
             e.printStackTrace();
+            return null;
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -189,14 +197,19 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
                 try {
                     reader.close();
                 } catch (final IOException e) {
-                    Log.e("UserFragment", "Error closing stream", e);
+                    errorMessage = e.getMessage();
+                    publishProgress();
+                    e.printStackTrace();
                 }
             }
         }
         return null;
     }
 
-
+    @Override
+    protected void onProgressUpdate(Void... values) {
+        Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_LONG).show();
+    }
 
     @Override
     protected void onPostExecute(Void param) {

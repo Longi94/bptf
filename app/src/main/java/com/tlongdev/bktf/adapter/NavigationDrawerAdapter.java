@@ -12,9 +12,6 @@ import com.tlongdev.bktf.R;
 
 import java.util.List;
 
-/**
- * Created by ThanhLong on 2015.01.02..
- */
 public class NavigationDrawerAdapter extends ArrayAdapter<String> {
     public NavigationDrawerAdapter(Context context, int resource, List<String> titles) {
         super(context, resource, titles);

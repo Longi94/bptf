@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
@@ -49,13 +50,19 @@ public class SearchCursorAdapter extends CursorAdapter {
                 cursor.getInt(SearchFragment.COL_PRICE_LIST_CRAF),
                 cursor.getInt(SearchFragment.COL_PRICE_LIST_QUAL),
                 cursor.getInt(SearchFragment.COL_PRICE_LIST_INDE)));
-        viewHolder.priceView.setText("" + cursor.getDouble(SearchFragment.COL_PRICE_LIST_PRIC));
 
-        if (cursor.getDouble(SearchFragment.COL_PRICE_LIST_PMAX) > 0.0){
-            viewHolder.priceView.append(" - " + cursor.getDouble(SearchFragment.COL_PRICE_LIST_PMAX));
+        try {
+            viewHolder.priceView.setText(Utility.formatPrice(
+                    context, cursor.getDouble(SearchFragment.COL_PRICE_LIST_PRIC),
+                    cursor.getDouble(SearchFragment.COL_PRICE_LIST_PMAX),
+                    cursor.getString(SearchFragment.COL_PRICE_LIST_CURR),
+                    cursor.getString(SearchFragment.COL_PRICE_LIST_CURR),
+                    true
+            ));
+        } catch (Throwable throwable) {
+            Toast.makeText(context, "bptf: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
+            throwable.printStackTrace();
         }
-
-        viewHolder.priceView.append("\n" + cursor.getString(SearchFragment.COL_PRICE_LIST_CURR));
     }
 
     @Override
@@ -72,6 +79,7 @@ public class SearchCursorAdapter extends CursorAdapter {
             // set image to ImageView
             icon.setImageDrawable(d);
         } catch (IOException e) {
+            Toast.makeText(context, "bptf: " + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }

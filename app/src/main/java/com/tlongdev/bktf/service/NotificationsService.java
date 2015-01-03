@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
@@ -146,6 +147,7 @@ public class NotificationsService extends Service {
                     }
                 }
             } catch (IOException | JSONException e) {
+                Toast.makeText(mContext, "bptf: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
             return 0;

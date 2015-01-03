@@ -17,6 +17,14 @@
         android:title="@string/pref_category_sync">
 
         <CheckBoxPreference
+            android:key="@string/pref_auto_sync"
+            android:title="@string/pref_auto_sync_title"
+            android:summary=""
+            android:summaryOff="@string/pref_auto_sync_summary_off"
+            android:summaryOn="@string/pref_auto_sync_summary_on"
+            android:defaultValue="true"/>
+
+        <CheckBoxPreference
             android:key="@string/pref_background_sync"
             android:title="@string/pref_background_sync_title"
             android:defaultValue="false"/>
