@@ -10,11 +10,26 @@
     android:gravity="center_vertical"
     android:baselineAligned="false">
 
-    <ImageView
+    <FrameLayout
         android:layout_width="64dp"
-        android:layout_height="55dp"
-        android:id="@+id/image_view_item_icon"
-        android:scaleType="centerCrop"/>
+        android:layout_height="55dp">
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="55dp"
+            android:id="@+id/image_view_item_background"
+            />
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="55dp"
+            android:id="@+id/image_view_item_icon"
+            android:scaleType="centerCrop"
+            />
+
+    </FrameLayout>
+
+
 
     <TextView
         android:layout_width="0dp"

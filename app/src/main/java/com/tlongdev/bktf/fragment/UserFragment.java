@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,15 +100,20 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onResume() {
+        super.onResume();
 
         if (System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(getActivity())
                 .getLong(getString(R.string.pref_last_user_data_update), 0) >= 3600000L) {
             new FetchUserInfo(getActivity(), false, this, mSwipeRefreshLayout).execute();
+
+            //A workaround for the refreshing animation not appearing when calling setRefreshing(true)
+            TypedValue typed_value = new TypedValue();
+            getActivity().getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, typed_value, true);
+            mSwipeRefreshLayout.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId));
             mSwipeRefreshLayout.setRefreshing(true);
         }
 
-        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -118,6 +124,12 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onClick(View v) {
         String url;
+        String steamId = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(
+                getString(R.string.pref_resolved_steam_id), "");
+        if (steamId.equals("")){
+            Toast.makeText(getActivity(), "bptf: no steamID provided", Toast.LENGTH_LONG).show();
+            return;
+        }
         switch (v.getId()) {
             case R.id.button_bazaar_tf:
                 url = "http://bazaar.tf/profiles/";
@@ -141,8 +153,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 return;
         }
 
-        Uri webPage = Uri.parse(url + PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(
-                getString(R.string.pref_resolved_steam_id), ""));
+        Uri webPage = Uri.parse(url + steamId);
 
         Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -292,6 +303,18 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             else
                 backpackValueUsd.setText("" + bpValueUsd);
         }
+
+        switch (prefs.getInt(getString(R.string.pref_player_state), 0)){
+            case 0:
+                avatar.setBackgroundDrawable(getResources().getDrawable(R.drawable.frame_user_state_offline));
+                break;
+            case 7:
+                avatar.setBackgroundDrawable(getResources().getDrawable(R.drawable.frame_user_state_in_game));
+                break;
+            default:
+                avatar.setBackgroundDrawable(getResources().getDrawable(R.drawable.frame_user_state_online));
+                break;
+        }
     }
 
     private class AvatarDownLoader extends AsyncTask<Void, Void, Void>{
@@ -365,20 +388,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             if (isAdded()){
                 File path = mContext.getFilesDir();
 
-                switch (PreferenceManager.getDefaultSharedPreferences(mContext).getInt(getString(R.string.pref_player_state), 0)){
-                    case 0:
-                        avatar.setImageDrawable(getResources().getDrawable(R.drawable.frame_user_state_offline));
-                        break;
-                    case 7:
-                        avatar.setImageDrawable(getResources().getDrawable(R.drawable.frame_user_state_in_game));
-                        break;
-                    default:
-                        avatar.setImageDrawable(getResources().getDrawable(R.drawable.frame_user_state_online));
-                        break;
-                }
-
                 d = Drawable.createFromPath(path.toString() + "/avatar.png");
-                avatar.setBackgroundDrawable(d);
+                avatar.setImageDrawable(d);
 
                 if (progressBar != null)
                     progressBar.setVisibility(View.GONE);

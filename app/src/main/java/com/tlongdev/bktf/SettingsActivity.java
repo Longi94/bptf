@@ -217,6 +217,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             editor.remove(getString(R.string.pref_player_backpack_value_tf2));
             editor.remove(getString(R.string.pref_new_avatar));
             editor.remove(getString(R.string.pref_last_user_data_update));
+            editor.remove(getString(R.string.pref_resolved_steam_id));
 
             editor.apply();
 

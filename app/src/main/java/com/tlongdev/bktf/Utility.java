@@ -21,10 +21,11 @@ public class Utility {
 
     public static String getSteamId(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        if (prefs.getString(context.getString(R.string.pref_steam_id), null).equals("")){
+        String steamId = prefs.getString(context.getString(R.string.pref_steam_id), null);
+        if (steamId != null && steamId.equals("")){
             return null;
         }
-        return prefs.getString(context.getString(R.string.pref_steam_id), null);
+        return steamId;
     }
 
     public static String getResolvedSteamId(Context context) {

@@ -138,6 +138,7 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
                     publishProgress(-1);
                     e.printStackTrace();
                 }
+
             }
         }
         try {
@@ -145,8 +146,9 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
             getItemsFromJson(itemsJsonStr);
 
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
-            editor.putLong(mContext.getString(R.string.pref_last_price_list_update), System.currentTimeMillis()).apply();
+            editor.putLong(mContext.getString(R.string.pref_last_price_list_update), System.currentTimeMillis());
             editor.putBoolean(mContext.getString(R.string.pref_initial_load), false);
+            editor.apply();
 
 
         } catch (JSONException e) {

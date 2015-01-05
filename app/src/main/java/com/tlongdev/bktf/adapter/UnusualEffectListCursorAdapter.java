@@ -111,7 +111,7 @@ public class UnusualEffectListCursorAdapter extends CursorAdapter {
         @Override
         protected Drawable doInBackground(Integer... params) {
             try {
-                InputStream ims = mContext.getAssets().open("effects/" + params[0] + "_380x380.png");
+                InputStream ims = mContext.getAssets().open("effects/" + params[0] + "_188x188.png");
                 return Drawable.createFromStream(ims, null);
             } catch (IOException e) {
                 errorMessage = e.getMessage();
