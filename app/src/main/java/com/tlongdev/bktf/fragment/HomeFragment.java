@@ -83,20 +83,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-
         getLoaderManager().initLoader(PRICE_LIST_LOADER, null, this);
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        if (prefs.getBoolean(getString(R.string.pref_initial_load), true)){
-            new FetchPriceList(getActivity(), false, false, null, header).execute(getResources().getString(R.string.backpack_tf_api_key));
-        }
-        else if (prefs.getBoolean(getString(R.string.pref_auto_sync), false) &&
-                System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_price_list_update), 0) >= 3600000L) {
-            new FetchPriceList(getActivity(), true, false, mSwipeRefreshLayout, header).execute(getResources()
-                    .getString(R.string.backpack_tf_api_key));
-            mSwipeRefreshLayout.setRefreshing(true);
-        }
-
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -166,6 +153,22 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         progressBar = (ProgressBar)rootView.findViewById(R.id.progress_bar);
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        if (prefs.getBoolean(getString(R.string.pref_initial_load), true)){
+            new FetchPriceList(getActivity(), false, false, null, header).execute(getResources().getString(R.string.backpack_tf_api_key));
+        }
+        else if (prefs.getBoolean(getString(R.string.pref_auto_sync), false) &&
+                System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_price_list_update), 0) >= 3600000L) {
+            new FetchPriceList(getActivity(), true, false, mSwipeRefreshLayout, header).execute(getResources()
+                    .getString(R.string.backpack_tf_api_key));
+            mSwipeRefreshLayout.setRefreshing(true);
+        }
     }
 
     @Override

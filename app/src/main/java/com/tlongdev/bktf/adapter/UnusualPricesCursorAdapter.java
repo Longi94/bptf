@@ -114,7 +114,7 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
                 AssetManager assetManager = mContext.getAssets();
                 InputStream ims = assetManager.open("items/" + (new DecimalFormat("#0")).format(params[0]) + ".png");
                 Drawable iconDrawable = Drawable.createFromStream(ims, null);
-                ims = assetManager.open("effects/" + (new DecimalFormat("#0")).format(params[1]) + "_380x380.png");
+                ims = assetManager.open("effects/" + (new DecimalFormat("#0")).format(params[1]) + "_188x188.png");
                 Drawable effectDrawable = Drawable.createFromStream(ims, null);
                 d = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
 

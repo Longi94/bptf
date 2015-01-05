@@ -49,6 +49,7 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xff5787c5));
+        PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);

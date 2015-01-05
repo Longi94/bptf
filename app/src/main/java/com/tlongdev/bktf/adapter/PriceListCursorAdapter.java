@@ -58,7 +58,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
 
         viewHolder.icon.setTag(viewHolder.nameView.getText());
 
-        new LoadImagesTask(context, viewHolder.icon, viewHolder.change)
+        new LoadImagesTask(context, viewHolder.icon, viewHolder.background, viewHolder.change)
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
                 (double)cursor.getInt(HomeFragment.COL_PRICE_LIST_DEFI),
                 (double)cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE),
@@ -89,6 +89,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
     public static class ViewHolder {
         public final ImageView change;
         public final ImageView icon;
+        public final ImageView background;
 
         public final TextView nameView;
         public final TextView priceView;
@@ -96,6 +97,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
         public ViewHolder(View view) {
             change = (ImageView) view.findViewById(R.id.image_view_change);
             icon = (ImageView) view.findViewById(R.id.image_view_item_icon);
+            background = (ImageView) view.findViewById(R.id.image_view_item_background);
             nameView = (TextView) view.findViewById(R.id.item_name);
             priceView = (TextView) view.findViewById(R.id.item_price);
         }
@@ -104,14 +106,16 @@ public class PriceListCursorAdapter extends CursorAdapter {
     private class LoadImagesTask extends AsyncTask<Double, Void, Drawable[]>{
         private Context mContext;
         private ImageView icon;
+        private ImageView background;
         private ImageView change;
         private String path;
         private String errorMessage;
 
-        private LoadImagesTask(Context context, ImageView icon, ImageView change) {
+        private LoadImagesTask(Context context, ImageView icon, ImageView background, ImageView change) {
             mContext = context;
             this.icon = icon;
             this.change = change;
+            this.background = background;
             path = icon.getTag().toString();
         }
 
@@ -120,10 +124,17 @@ public class PriceListCursorAdapter extends CursorAdapter {
             try {
                 Drawable[] returnVal = new Drawable[3];
                 AssetManager assetManager = mContext.getAssets();
-                InputStream ims = assetManager.open("items/" + (new DecimalFormat("#0")).format(params[0]) + ".png");
+
+                InputStream ims;
+                if (path.contains("Australium") && params[0] != 5037) {
+                    ims = assetManager.open("items/" + (new DecimalFormat("#0")).format(params[0]) + "aus.png");
+                } else {
+                    ims = assetManager.open("items/" + (new DecimalFormat("#0")).format(params[0]) + ".png");
+                }
+
                 Drawable iconDrawable = Drawable.createFromStream(ims, null);
                 if (params[1] != 0 && !isCrate) {
-                    ims = assetManager.open("effects/" + (new DecimalFormat("#0")).format(params[1]) + "_380x380.png");
+                    ims = assetManager.open("effects/" + (new DecimalFormat("#0")).format(params[1]) + "_188x188.png");
                     Drawable effectDrawable = Drawable.createFromStream(ims, null);
                     returnVal[0] = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
                 } else {
@@ -144,7 +155,6 @@ public class PriceListCursorAdapter extends CursorAdapter {
                 }
 
                 returnVal[2] = Drawable.createFromStream(ims, null);
-
 
                 returnVal[1] = Utility.getItemBackground(mContext, params[4].intValue(), params[5].intValue(), params[6].intValue());
 
@@ -167,7 +177,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
         protected void onPostExecute(Drawable[] drawable) {
             if (icon.getTag().toString().equals(path)) {
                 icon.setImageDrawable(drawable[0]);
-                icon.setBackgroundDrawable(drawable[1]);
+                background.setBackgroundDrawable(drawable[1]);
                 change.setImageDrawable(drawable[2]);
             }
         }
