@@ -48,7 +48,7 @@
                             android:id="@+id/player_avatar"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:src="@drawable/frame_user_state_offline"
+                            android:background="@drawable/frame_user_state_offline"
                             android:contentDescription="@string/player_avatar_description" />
 
                     </FrameLayout>

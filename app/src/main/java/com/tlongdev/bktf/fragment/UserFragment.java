@@ -83,6 +83,11 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mSwipeRefreshLayout.setColorSchemeColors(0xff5787c5);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
+        //A workaround for the refreshing animation not appearing when calling setRefreshing(true)
+        mSwipeRefreshLayout.setProgressViewOffset(false,
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, -55, getResources().getDisplayMetrics()),
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 25, getResources().getDisplayMetrics()));
+
         mSwipeRefreshLayout.findViewById(R.id.button_bazaar_tf).setOnClickListener(this);
         mSwipeRefreshLayout.findViewById(R.id.button_steamrep).setOnClickListener(this);
         mSwipeRefreshLayout.findViewById(R.id.button_tf2op).setOnClickListener(this);
@@ -107,10 +112,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 .getLong(getString(R.string.pref_last_user_data_update), 0) >= 3600000L) {
             new FetchUserInfo(getActivity(), false, this, mSwipeRefreshLayout).execute();
 
-            //A workaround for the refreshing animation not appearing when calling setRefreshing(true)
-            TypedValue typed_value = new TypedValue();
-            getActivity().getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, typed_value, true);
-            mSwipeRefreshLayout.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId));
             mSwipeRefreshLayout.setRefreshing(true);
         }
 

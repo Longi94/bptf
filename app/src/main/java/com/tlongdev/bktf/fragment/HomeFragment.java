@@ -131,18 +131,17 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         mSwipeRefreshLayout.setColorSchemeColors(0xff5787c5);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("debug_header_key", false)){
-            mListView.setAdapter(cursorAdapter);
-        } else {
-            header = (LinearLayout) rootView.findViewById(R.id.list_changes_header);
+        mSwipeRefreshLayout.setProgressViewOffset(false,
+                (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, -15, getResources().getDisplayMetrics()),
+                (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 65, getResources().getDisplayMetrics()));
 
-            mListView.setAdapter(new QuickReturnAdapter(cursorAdapter));
+        header = (LinearLayout) rootView.findViewById(R.id.list_changes_header);
 
-            QuickReturnAttacher quickReturnAttacher = QuickReturnAttacher.forView(mListView);
-            int offset = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 42, getResources().getDisplayMetrics());
-            quickReturnAttacher.addTargetView(header, QuickReturnTargetView.POSITION_TOP, offset);
-            mSwipeRefreshLayout.setProgressViewOffset(false, (int)(offset * -1.0/2.0), (int) (offset * 3.0 / 2.0));
-        }
+        mListView.setAdapter(new QuickReturnAdapter(cursorAdapter));
+
+        QuickReturnAttacher quickReturnAttacher = QuickReturnAttacher.forView(mListView);
+        quickReturnAttacher.addTargetView(header, QuickReturnTargetView.POSITION_TOP,
+                (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 42, getResources().getDisplayMetrics()));
 
         if(savedInstanceState != null && savedInstanceState.containsKey(LIST_VIEW_POSITION_KEY) &&
                 savedInstanceState.containsKey(LIST_VIEW_TOP_POSITION_KEY)) {
