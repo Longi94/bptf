@@ -45,7 +45,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
         viewHolder.icon.setImageDrawable(null);
-        viewHolder.icon.setBackgroundDrawable(null);
+        viewHolder.background.setBackgroundDrawable(null);
         viewHolder.change.setImageDrawable(null);
 
         viewHolder.nameView.setText(Utility.formatItemName(cursor.getString(HomeFragment.COL_PRICE_LIST_NAME),
