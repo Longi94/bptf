@@ -8,6 +8,10 @@ import android.preference.PreferenceManager;
 
 import com.tlongdev.bktf.enums.Quality;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -456,6 +460,37 @@ public class Utility {
                 return "" + minutes + " minutes ago";
             }
         }
+    }
+
+    public static String parseSteamIdFromVanityJson(String userJsonStr) throws JSONException {
+        final String OWM_RESPONSE = "response";
+        final String OWM_SUCCESS = "success";
+        final String OWM_STEAM_ID = "steamid";
+        final String OWM_MESSAGE = "message";
+
+        JSONObject jsonObject = new JSONObject(userJsonStr);
+        JSONObject response = jsonObject.getJSONObject(OWM_RESPONSE);
+
+        if (response.getInt(OWM_SUCCESS) != 1){
+            return response.getString(OWM_MESSAGE);
+        }
+
+        return response.getString(OWM_STEAM_ID);
+    }
+
+    public static String parseUserNameFromJson(String jsonString) throws JSONException {
+        final String OWM_RESPONSE = "response";
+        final String OWM_PLAYERS = "players";
+        final String OWM_NAME = "personaname";
+        final String OWM_AVATAR = "avatarfull";
+
+        JSONObject jsonObject = new JSONObject(jsonString);
+        JSONObject response = jsonObject.getJSONObject(OWM_RESPONSE);
+        JSONArray players = response.getJSONArray(OWM_PLAYERS);
+        JSONObject player = players.getJSONObject(0);
+
+        return player.getString(OWM_NAME);
+//        player.getString(OWM_AVATAR);
     }
 }
 

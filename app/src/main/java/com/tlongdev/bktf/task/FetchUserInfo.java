@@ -104,7 +104,8 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
                     }
                     jsonString = buffer.toString();
 
-                    steamId = parseVanityJson(jsonString);
+                    steamId = Utility.parseSteamIdFromVanityJson(jsonString);
+
                 }
             }
 
@@ -113,6 +114,9 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
                 publishProgress();
                 return null;
             }
+
+            PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString(mContext
+                    .getString(R.string.pref_resolved_steam_id), steamId).apply();
 
             uri = Uri.parse(USER_INFO_BASE_URL).buildUpon()
                     .appendQueryParameter(KEY_STEAM_ID, steamId)
@@ -253,25 +257,6 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
         }
 
         editor.apply();
-    }
-
-    private String parseVanityJson(String userJsonStr) throws JSONException {
-        final String OWM_RESPONSE = "response";
-        final String OWM_SUCCESS = "success";
-        final String OWM_STEAM_ID = "steamid";
-        final String OWM_MESSAGE = "message";
-
-        JSONObject jsonObject = new JSONObject(userJsonStr);
-        JSONObject response = jsonObject.getJSONObject(OWM_RESPONSE);
-
-        if (response.getInt(OWM_SUCCESS) != 1){
-            return response.getString(OWM_MESSAGE);
-        }
-
-        PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString(mContext
-                .getString(R.string.pref_resolved_steam_id), response.getString(OWM_STEAM_ID)).apply();
-
-        return response.getString(OWM_STEAM_ID);
     }
 
     private void parseUserInfoJson(String jsonString, String steamId) throws JSONException {

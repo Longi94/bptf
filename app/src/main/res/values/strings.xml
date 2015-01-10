@@ -71,5 +71,6 @@
     <string name="pref_auto_sync_title">Automatically update database</string>
     <string name="pref_auto_sync_summary_off">Manual refresh.</string>
     <string name="pref_auto_sync_summary_on">Auto update database, when opened (if needed).</string>
+    <string name="title_activity_user_info">UserInfoActivity</string>
 
 </resources>

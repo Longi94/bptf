@@ -21,56 +21,93 @@ import java.io.InputStream;
 
 public class SearchCursorAdapter extends CursorAdapter {
 
+    private static final int VIEW_TYPE_COUNT = 2;
+    private static final int VIEW_TYPE_PRICE = 0;
+    private static final int VIEW_TYPE_USER = 1;
+
+    private boolean userFound = false;
+
     public SearchCursorAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View view = LayoutInflater.from(context).inflate(R.layout.list_search, parent, false);
+        int viewType = getItemViewType(cursor.getPosition());
+        View view;
+        switch (viewType) {
+            case VIEW_TYPE_USER: {
+                view = LayoutInflater.from(context).inflate(R.layout.list_search_user, parent, false);
+                break;
+            }
+            default: {
+                view = LayoutInflater.from(context).inflate(R.layout.list_search, parent, false);
 
-        ViewHolder viewHolder = new ViewHolder(view);
-        view.setTag(viewHolder);
-
+                ViewHolder viewHolder = new ViewHolder(view);
+                view.setTag(viewHolder);
+                break;
+            }
+        }
         return view;
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        ViewHolder viewHolder = (ViewHolder) view.getTag();
+        int viewType = getItemViewType(cursor.getPosition());
+        switch (viewType){
+            case VIEW_TYPE_USER:
+                ((TextView)view.findViewById(R.id.text_view_user_name)).setText(cursor.getString(SearchFragment.COL_PRICE_LIST_NAME));
+                break;
+            case VIEW_TYPE_PRICE:
+                ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        viewHolder.background.setBackgroundDrawable(Utility.getItemBackground(context,
-                cursor.getInt(SearchFragment.COL_PRICE_LIST_QUAL),
-                cursor.getInt(SearchFragment.COL_PRICE_LIST_TRAD),
-                cursor.getInt(SearchFragment.COL_PRICE_LIST_CRAF)));
+                viewHolder.background.setBackgroundDrawable(Utility.getItemBackground(context,
+                        cursor.getInt(SearchFragment.COL_PRICE_LIST_QUAL),
+                        cursor.getInt(SearchFragment.COL_PRICE_LIST_TRAD),
+                        cursor.getInt(SearchFragment.COL_PRICE_LIST_CRAF)));
 
+                viewHolder.nameView.setText(Utility.formatItemName(cursor.getString(SearchFragment.COL_PRICE_LIST_NAME),
+                        cursor.getInt(SearchFragment.COL_PRICE_LIST_TRAD),
+                        cursor.getInt(SearchFragment.COL_PRICE_LIST_CRAF),
+                        cursor.getInt(SearchFragment.COL_PRICE_LIST_QUAL),
+                        cursor.getInt(SearchFragment.COL_PRICE_LIST_INDE)));
 
-        viewHolder.nameView.setText(Utility.formatItemName(cursor.getString(SearchFragment.COL_PRICE_LIST_NAME),
-                cursor.getInt(SearchFragment.COL_PRICE_LIST_TRAD),
-                cursor.getInt(SearchFragment.COL_PRICE_LIST_CRAF),
-                cursor.getInt(SearchFragment.COL_PRICE_LIST_QUAL),
-                cursor.getInt(SearchFragment.COL_PRICE_LIST_INDE)));
+                setIconImage(context, viewHolder.icon, cursor.getInt(SearchFragment.COL_PRICE_LIST_DEFI),
+                        ((String) viewHolder.nameView.getText()).contains("Australium"));
 
-        setIconImage(context, viewHolder.icon, cursor.getInt(SearchFragment.COL_PRICE_LIST_DEFI),
-                ((String)viewHolder.nameView.getText()).contains("Australium"));
-
-        try {
-            viewHolder.priceView.setText(Utility.formatPrice(
-                    context, cursor.getDouble(SearchFragment.COL_PRICE_LIST_PRIC),
-                    cursor.getDouble(SearchFragment.COL_PRICE_LIST_PMAX),
-                    cursor.getString(SearchFragment.COL_PRICE_LIST_CURR),
-                    cursor.getString(SearchFragment.COL_PRICE_LIST_CURR),
-                    true
-            ));
-        } catch (Throwable throwable) {
-            Toast.makeText(context, "bptf: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
-            throwable.printStackTrace();
+                try {
+                    viewHolder.priceView.setText(Utility.formatPrice(
+                            context, cursor.getDouble(SearchFragment.COL_PRICE_LIST_PRIC),
+                            cursor.getDouble(SearchFragment.COL_PRICE_LIST_PMAX),
+                            cursor.getString(SearchFragment.COL_PRICE_LIST_CURR),
+                            cursor.getString(SearchFragment.COL_PRICE_LIST_CURR),
+                            true
+                    ));
+                } catch (Throwable throwable) {
+                    Toast.makeText(context, "bptf: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
+                    throwable.printStackTrace();
+                }
+                break;
         }
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return userFound && position == 0 ? VIEW_TYPE_USER : VIEW_TYPE_PRICE;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return VIEW_TYPE_COUNT;
+    }
+
+    @Override
     public boolean isEnabled(int position) {
-        return false;
+        return userFound && position == 0;
+    }
+
+    public void setUserFound(boolean userFound) {
+        this.userFound = userFound;
     }
 
     private void setIconImage(Context context, ImageView icon, int defindex, boolean isAustralium) {
