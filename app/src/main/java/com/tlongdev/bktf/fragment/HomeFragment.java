@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -23,12 +24,14 @@ import android.widget.TextView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.PriceListCursorAdapter;
 import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
+import com.tlongdev.bktf.quickreturn.AbsListViewQuickReturnAttacher;
 import com.tlongdev.bktf.quickreturn.QuickReturnAttacher;
 import com.tlongdev.bktf.quickreturn.widget.QuickReturnAdapter;
 import com.tlongdev.bktf.quickreturn.widget.QuickReturnTargetView;
 import com.tlongdev.bktf.task.FetchPriceList;
 
-public class HomeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener{
+public class HomeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+        SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener {
 
     private static final String LOG_TAG = HomeFragment.class.getSimpleName();
 
@@ -139,9 +142,11 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
         mListView.setAdapter(new QuickReturnAdapter(cursorAdapter));
 
-        QuickReturnAttacher quickReturnAttacher = QuickReturnAttacher.forView(mListView);
+        AbsListViewQuickReturnAttacher quickReturnAttacher =
+                (AbsListViewQuickReturnAttacher)QuickReturnAttacher.forView(mListView);
         quickReturnAttacher.addTargetView(header, QuickReturnTargetView.POSITION_TOP,
                 (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 42, getResources().getDisplayMetrics()));
+        quickReturnAttacher.addOnScrollListener(this);
 
         if(savedInstanceState != null && savedInstanceState.containsKey(LIST_VIEW_POSITION_KEY) &&
                 savedInstanceState.containsKey(LIST_VIEW_TOP_POSITION_KEY)) {
@@ -228,4 +233,13 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
                 .execute(getResources().getString(R.string.backpack_tf_api_key));
     }
 
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+    }
 }
