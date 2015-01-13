@@ -21,13 +21,23 @@ import com.tlongdev.bktf.fragment.HomeFragment;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class PriceListCursorAdapter extends CursorAdapter {
+
+    private final Map<String, Drawable[]> drawableManager;
 
     boolean isCrate = false;
 
     public PriceListCursorAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
+        drawableManager = new LinkedHashMap<String, Drawable[]>(20, 0.75f, true){
+            @Override
+            protected boolean removeEldestEntry(Entry<String, Drawable[]> eldest) {
+                return size() > 20;
+            }
+        };
     }
 
     @Override
@@ -55,19 +65,26 @@ public class PriceListCursorAdapter extends CursorAdapter {
 
         viewHolder.icon.setTag(itemTag);
 
-        viewHolder.icon.setImageDrawable(null);
-        viewHolder.background.setBackgroundDrawable(null);
-        viewHolder.change.setImageDrawable(null);
-        new LoadImagesTask(context, viewHolder.icon, viewHolder.background, viewHolder.change)
-                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                        (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_DEFI),
-                        (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE),
-                        cursor.getDouble(HomeFragment.COL_PRICE_LIST_DIFF),
-                        cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRAW),
-                        (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL),
-                        (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_TRAD),
-                        (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_CRAF)
-                );
+        if (!drawableManager.containsKey(itemTag)) {
+            viewHolder.icon.setImageDrawable(null);
+            viewHolder.background.setBackgroundDrawable(null);
+            viewHolder.change.setImageDrawable(null);
+            new LoadImagesTask(context, viewHolder.icon, viewHolder.background, viewHolder.change)
+                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                            (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_DEFI),
+                            (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE),
+                            cursor.getDouble(HomeFragment.COL_PRICE_LIST_DIFF),
+                            cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRAW),
+                            (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL),
+                            (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_TRAD),
+                            (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_CRAF)
+                    );
+        } else {
+            Drawable[] drawable = drawableManager.get(itemTag);
+            viewHolder.icon.setImageDrawable(drawable[0]);
+            viewHolder.background.setBackgroundDrawable(drawable[1]);
+            viewHolder.change.setImageDrawable(drawable[2]);
+        }
 
         try {
             viewHolder.priceView.setText(Utility.formatPrice(context,
@@ -122,6 +139,9 @@ public class PriceListCursorAdapter extends CursorAdapter {
 
         @Override
         protected Drawable[] doInBackground(Double... params) {
+            if (drawableManager.containsKey(path)){
+                return drawableManager.get(path);
+            }
             try {
                 Drawable[] returnVal = new Drawable[3];
                 AssetManager assetManager = mContext.getAssets();
@@ -158,6 +178,8 @@ public class PriceListCursorAdapter extends CursorAdapter {
                 returnVal[2] = Drawable.createFromStream(ims, null);
 
                 returnVal[1] = Utility.getItemBackground(mContext, params[4].intValue(), params[5].intValue(), params[6].intValue());
+
+                drawableManager.put(path, returnVal);
                 return returnVal;
             } catch (IOException e) {
                 errorMessage = e.getMessage();
