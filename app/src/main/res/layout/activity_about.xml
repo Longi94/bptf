@@ -21,7 +21,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="bptf 1.1.0"
+                android:text="bptf 1.0.3"
                 android:textSize="40sp"
                 android:textColor="#000"/>
 

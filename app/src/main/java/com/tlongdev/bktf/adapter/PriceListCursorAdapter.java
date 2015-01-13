@@ -21,13 +21,18 @@ import com.tlongdev.bktf.fragment.HomeFragment;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PriceListCursorAdapter extends CursorAdapter {
+
+    private final Map<String, Drawable[]> drawableManager;
 
     boolean isCrate = false;
 
     public PriceListCursorAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
+        drawableManager = new HashMap<String, Drawable[]>();
     }
 
     @Override
@@ -44,30 +49,37 @@ public class PriceListCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        viewHolder.icon.setImageDrawable(null);
-        viewHolder.background.setBackgroundDrawable(null);
-        viewHolder.change.setImageDrawable(null);
-
-        viewHolder.nameView.setText(Utility.formatItemName(cursor.getString(HomeFragment.COL_PRICE_LIST_NAME),
+        String itemTag = Utility.formatItemName(cursor.getString(HomeFragment.COL_PRICE_LIST_NAME),
                 cursor.getInt(HomeFragment.COL_PRICE_LIST_TRAD),
                 cursor.getInt(HomeFragment.COL_PRICE_LIST_CRAF),
                 cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL),
-                cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE)));
+                cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE));
+        viewHolder.nameView.setText(itemTag);
 
         isCrate = cursor.getString(HomeFragment.COL_PRICE_LIST_NAME).contains("Crate");
 
-        viewHolder.icon.setTag(viewHolder.nameView.getText());
+        viewHolder.icon.setTag(itemTag);
 
-        new LoadImagesTask(context, viewHolder.icon, viewHolder.background, viewHolder.change)
-                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                (double)cursor.getInt(HomeFragment.COL_PRICE_LIST_DEFI),
-                (double)cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE),
-                cursor.getDouble(HomeFragment.COL_PRICE_LIST_DIFF),
-                cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRAW),
-                (double)cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL),
-                (double)cursor.getInt(HomeFragment.COL_PRICE_LIST_TRAD),
-                (double)cursor.getInt(HomeFragment.COL_PRICE_LIST_CRAF)
-        );
+        if (!drawableManager.containsKey(itemTag)) {
+            viewHolder.icon.setImageDrawable(null);
+            viewHolder.background.setBackgroundDrawable(null);
+            viewHolder.change.setImageDrawable(null);
+            new LoadImagesTask(context, viewHolder.icon, viewHolder.background, viewHolder.change)
+                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                            (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_DEFI),
+                            (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE),
+                            cursor.getDouble(HomeFragment.COL_PRICE_LIST_DIFF),
+                            cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRAW),
+                            (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL),
+                            (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_TRAD),
+                            (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_CRAF)
+                    );
+        } else {
+            Drawable[] drawable = drawableManager.get(itemTag);
+            viewHolder.icon.setImageDrawable(drawable[0]);
+            viewHolder.background.setBackgroundDrawable(drawable[1]);
+            viewHolder.change.setImageDrawable(drawable[2]);
+        }
 
         try {
             viewHolder.priceView.setText(Utility.formatPrice(context,
@@ -77,7 +89,8 @@ public class PriceListCursorAdapter extends CursorAdapter {
                     cursor.getString(HomeFragment.COL_PRICE_LIST_CURR), false));
         } catch (Throwable throwable) {
             Toast.makeText(context, "bptf: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
-            throwable.printStackTrace();
+            if (Utility.isDebugging())
+                throwable.printStackTrace();
         }
     }
 
@@ -121,6 +134,9 @@ public class PriceListCursorAdapter extends CursorAdapter {
 
         @Override
         protected Drawable[] doInBackground(Double... params) {
+            if (drawableManager.containsKey(path)){
+                return drawableManager.get(path);
+            }
             try {
                 Drawable[] returnVal = new Drawable[3];
                 AssetManager assetManager = mContext.getAssets();
@@ -158,11 +174,13 @@ public class PriceListCursorAdapter extends CursorAdapter {
 
                 returnVal[1] = Utility.getItemBackground(mContext, params[4].intValue(), params[5].intValue(), params[6].intValue());
 
+                drawableManager.put(path, returnVal);
                 return returnVal;
             } catch (IOException e) {
                 errorMessage = e.getMessage();
                 publishProgress();
-                e.printStackTrace();
+                if (Utility.isDebugging())
+                    e.printStackTrace();
                 return null;
             }
         }

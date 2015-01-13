@@ -335,8 +335,9 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
                 editor.putInt(mContext.getString(R.string.pref_player_vac_banned), 0);
             }
             if (current_user.has(OWM_PLAYER_TRUST)) {
-                editor.putInt(mContext.getString(R.string.pref_player_trust_positive), current_user.getInt(OWM_PLAYER_TRUST_FOR));
-                editor.putInt(mContext.getString(R.string.pref_player_trust_negative), current_user.getInt(OWM_PLAYER_TRUST_AGAINST));
+                JSONObject trustScore = current_user.getJSONObject(OWM_PLAYER_TRUST);
+                editor.putInt(mContext.getString(R.string.pref_player_trust_positive), trustScore.getInt(OWM_PLAYER_TRUST_FOR));
+                editor.putInt(mContext.getString(R.string.pref_player_trust_negative), trustScore.getInt(OWM_PLAYER_TRUST_AGAINST));
             }
 
             editor.apply();

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 
 import com.tlongdev.bktf.enums.Quality;
@@ -482,7 +484,6 @@ public class Utility {
         final String OWM_RESPONSE = "response";
         final String OWM_PLAYERS = "players";
         final String OWM_NAME = "personaname";
-        final String OWM_AVATAR = "avatarfull";
 
         JSONObject jsonObject = new JSONObject(jsonString);
         JSONObject response = jsonObject.getJSONObject(OWM_RESPONSE);
@@ -490,7 +491,38 @@ public class Utility {
         JSONObject player = players.getJSONObject(0);
 
         return player.getString(OWM_NAME);
-//        player.getString(OWM_AVATAR);
+    }
+
+    public static String parseAvatarUrlFromJson(String jsonString) throws JSONException {
+        final String OWM_RESPONSE = "response";
+        final String OWM_PLAYERS = "players";
+        final String OWM_AVATAR = "avatarfull";
+
+        JSONObject jsonObject = new JSONObject(jsonString);
+        JSONObject response = jsonObject.getJSONObject(OWM_RESPONSE);
+        JSONArray players = response.getJSONArray(OWM_PLAYERS);
+        JSONObject player = players.getJSONObject(0);
+
+        return player.getString(OWM_AVATAR);
+    }
+
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public static SharedPreferences.Editor putDouble(final SharedPreferences.Editor edit, final String key, final double value) {
+        return edit.putLong(key, Double.doubleToRawLongBits(value));
+    }
+
+    public static double getDouble(final SharedPreferences prefs, final String key, final double defaultValue) {
+        return Double.longBitsToDouble(prefs.getLong(key, Double.doubleToLongBits(defaultValue)));
+    }
+
+    public static boolean isDebugging(){
+        return true;
     }
 }
 

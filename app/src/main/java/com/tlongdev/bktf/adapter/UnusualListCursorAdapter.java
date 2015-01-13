@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.UnusualActivity;
+import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.PriceListContract;
 import com.tlongdev.bktf.fragment.UnusualPriceListFragment;
 
@@ -115,7 +116,8 @@ public class UnusualListCursorAdapter extends CursorAdapter {
             } catch (IOException e) {
                 errorMessage = e.getMessage();
                 publishProgress();
-                e.printStackTrace();
+                if (Utility.isDebugging())
+                    e.printStackTrace();
                 return null;
             }
         }
