@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp"
+    android:gravity="center_vertical"
+    android:baselineAligned="false">
+
+    <FrameLayout
+        android:layout_width="84dp"
+        android:layout_height="72dp">
+
+        <ImageView
+            android:layout_width="84dp"
+            android:layout_height="72dp"
+            android:id="@+id/image_view_item_background"
+            android:contentDescription="Item icon" />
+
+        <ImageView
+            android:layout_width="84dp"
+            android:layout_height="72dp"
+            android:id="@+id/image_view_item_icon"
+            android:scaleType="centerCrop"
+            android:contentDescription="Item icon" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="4dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:id="@+id/item_name"
+            android:paddingRight="2dp"
+            android:textSize="16sp"
+            android:textColor="#000"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:id="@+id/item_price"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:id="@+id/image_view_change"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:contentDescription="Change icon" />
+
+</LinearLayout>

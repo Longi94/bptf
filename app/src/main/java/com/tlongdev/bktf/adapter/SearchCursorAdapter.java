@@ -57,6 +57,8 @@ public class SearchCursorAdapter extends CursorAdapter {
         switch (viewType){
             case VIEW_TYPE_USER:
                 ((TextView)view.findViewById(R.id.text_view_user_name)).setText(cursor.getString(SearchFragment.COL_PRICE_LIST_NAME));
+                ((ImageView)view.findViewById(R.id.image_view_avatar)).setImageDrawable(Drawable.
+                        createFromPath(context.getFilesDir().toString() + "/avatar_search.png"));
                 break;
             case VIEW_TYPE_PRICE:
                 ViewHolder viewHolder = (ViewHolder) view.getTag();
@@ -85,7 +87,8 @@ public class SearchCursorAdapter extends CursorAdapter {
                     ));
                 } catch (Throwable throwable) {
                     Toast.makeText(context, "bptf: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
-                    throwable.printStackTrace();
+                    if (Utility.isDebugging())
+                        throwable.printStackTrace();
                 }
                 break;
         }
@@ -126,7 +129,8 @@ public class SearchCursorAdapter extends CursorAdapter {
             icon.setImageDrawable(d);
         } catch (IOException e) {
             Toast.makeText(context, "bptf: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            e.printStackTrace();
+            if (Utility.isDebugging())
+                e.printStackTrace();
         }
     }
 

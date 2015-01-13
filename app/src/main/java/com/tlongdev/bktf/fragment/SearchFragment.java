@@ -1,9 +1,13 @@
 package com.tlongdev.bktf.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.MergeCursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,6 +30,7 @@ import com.tlongdev.bktf.data.PriceListContract;
 import org.json.JSONException;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -132,7 +137,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
         }
         if (searchQuery != null)
         {
-            searchTask = new SearchForUserTask();
+            searchTask = new SearchForUserTask(getActivity());
             searchTask.execute(searchQuery);
         }
     }
@@ -151,17 +156,25 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
 
     private class SearchForUserTask extends AsyncTask<String, Void, String[]>{
 
-        final String VANITY_BASE_URL = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/";
-        final String KEY_API = "key";
-        final String KEY_VANITY_URL = "vanityurl";
+        private final String VANITY_BASE_URL = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/";
+        private final String KEY_API = "key";
+        private final String KEY_VANITY_URL = "vanityurl";
 
-        final String KEY_STEAM_ID = "steamids";
+        private final String KEY_STEAM_ID = "steamids";
 
-        final String USER_SUMMARIES_BASE_URL = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/";
+        private final String USER_SUMMARIES_BASE_URL = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/";
+
+        private Bitmap bmp;
+        private Drawable d;
+        private Context mContext;
+
+        private SearchForUserTask(Context mContext) {
+            this.mContext = mContext;
+        }
 
         @Override
         protected String[] doInBackground(String... params) {
-            String[] userData = new String[2];
+            String[] userData = new String[3];
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection;
@@ -177,7 +190,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
 
                 if (!Utility.isSteamId(params[0])) {
                     uri = Uri.parse(VANITY_BASE_URL).buildUpon()
-                            .appendQueryParameter(KEY_API, getString(R.string.steam_web_api_key))
+                            .appendQueryParameter(KEY_API, mContext.getString(R.string.steam_web_api_key))
                             .appendQueryParameter(KEY_VANITY_URL, params[0]).build();
                     url = new URL(uri.toString());
 
@@ -215,7 +228,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
                     }
 
                     uri = Uri.parse(USER_SUMMARIES_BASE_URL).buildUpon()
-                            .appendQueryParameter(KEY_API, getString(R.string.steam_web_api_key))
+                            .appendQueryParameter(KEY_API, mContext.getString(R.string.steam_web_api_key))
                             .appendQueryParameter(KEY_STEAM_ID, steamId)
                             .build();
 
@@ -241,20 +254,30 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
                         }
 
                         if (buffer.length() > 0) {
-                            jsonString = buffer.toString();
+                            jsonString = userData[2] = buffer.toString();
                             userData[0] = Utility.parseUserNameFromJson(jsonString);
+                            bmp = getBitmapFromURL(Utility.parseAvatarUrlFromJson(jsonString));
                         }
+
+                        if (bmp != null){
+                            FileOutputStream fos = mContext.openFileOutput("avatar_search.png", Context.MODE_PRIVATE);
+                            bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                            fos.close();
+                        }
+
                     }
                 }
             } catch (IOException | JSONException e) {
-                e.printStackTrace();
+                if (Utility.isDebugging())
+                    e.printStackTrace();
             }
+
             return userData;
         }
 
         @Override
         protected void onPostExecute(final String[] s) {
-            if (s[0] != null) {
+            if (isAdded() && s != null && s[0] != null) {
                 Cursor cursor = cursorAdapter.getCursor();
                 MatrixCursor extras = new MatrixCursor(new String[] {
                         PriceListContract.PriceEntry._ID,
@@ -278,10 +301,30 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
                         if (position == 0){
                             Intent intent = new Intent(getActivity(), UserInfoActivity.class);
                             intent.putExtra(UserInfoActivity.STEAM_ID_KEY, s[1]);
+                            intent.putExtra(UserInfoActivity.JSON_USER_SUMMARIES_KEY, s[2]);
                             startActivity(intent);
                         }
                     }
                 });
+            }
+        }
+
+        public Bitmap getBitmapFromURL(String link) {
+
+            try {
+                URL url = new URL(link);
+                HttpURLConnection connection = (HttpURLConnection) url
+                        .openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+
+                return BitmapFactory.decodeStream(input);
+
+            } catch (IOException e) {
+                if (Utility.isDebugging())
+                    e.printStackTrace();
+                return null;
             }
         }
     }

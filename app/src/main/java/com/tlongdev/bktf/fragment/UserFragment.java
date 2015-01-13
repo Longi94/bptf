@@ -107,7 +107,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onResume() {
         super.onResume();
-
         if (System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(getActivity())
                 .getLong(getString(R.string.pref_last_user_data_update), 0) >= 3600000L) {
             new FetchUserInfo(getActivity(), false, this, mSwipeRefreshLayout).execute();
@@ -316,6 +315,19 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 avatar.setBackgroundDrawable(getResources().getDrawable(R.drawable.frame_user_state_online));
                 break;
         }
+
+        int positiveScore = prefs.getInt(getString(R.string.pref_player_trust_positive), 0);
+        int negativeScore = prefs.getInt(getString(R.string.pref_player_trust_negative), 0);
+        trustStatus.setText("" + (positiveScore - negativeScore));
+        if (negativeScore > positiveScore){
+            trustStatus.setBackgroundDrawable(getResources().getDrawable(R.drawable.status_background_bad));
+        } else if (positiveScore > negativeScore && negativeScore == 0){
+            trustStatus.setBackgroundDrawable(getResources().getDrawable(R.drawable.status_background_good));
+        } else if (positiveScore > negativeScore && negativeScore >= 0){
+            trustStatus.setBackgroundDrawable(getResources().getDrawable(R.drawable.status_background_caution));
+        } else {
+            trustStatus.setBackgroundDrawable(getResources().getDrawable(R.drawable.status_background_neutral));
+        }
     }
 
     private class AvatarDownLoader extends AsyncTask<Void, Void, Void>{
@@ -352,7 +364,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 } catch (IOException e) {
                     errorMessage = e.getMessage();
                     publishProgress();
-                    e.printStackTrace();
+                    if (Utility.isDebugging())
+                        e.printStackTrace();
                     return null;
                 }
             }
@@ -379,7 +392,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             } catch (IOException e) {
                 errorMessage = e.getMessage();
                 publishProgress();
-                e.printStackTrace();
+                if (Utility.isDebugging())
+                    e.printStackTrace();
                 return null;
             }
         }

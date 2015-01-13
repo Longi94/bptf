@@ -116,7 +116,8 @@ public class UnusualEffectListCursorAdapter extends CursorAdapter {
             } catch (IOException e) {
                 errorMessage = e.getMessage();
                 publishProgress();
-                e.printStackTrace();
+                if (Utility.isDebugging())
+                    e.printStackTrace();
                 return null;
             }
         }

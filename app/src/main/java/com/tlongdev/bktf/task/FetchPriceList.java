@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.PriceListContract;
 import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
 
@@ -95,7 +96,8 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
 
             URL url = new URL(uri.toString());
 
-            Log.v(LOG_TAG, "Built Uri = " + uri.toString());
+            if (Utility.isDebugging())
+                Log.v(LOG_TAG, "Built Uri = " + uri.toString());
 
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
@@ -124,7 +126,8 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
         } catch (IOException e) {
             errorMessage = "network error";
             publishProgress(-1);
-            e.printStackTrace();
+            if (Utility.isDebugging())
+                e.printStackTrace();
             return null;
         } finally {
             if (urlConnection != null) {
@@ -136,7 +139,8 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
                 } catch (final IOException e) {
                     errorMessage = e.getMessage();
                     publishProgress(-1);
-                    e.printStackTrace();
+                    if (Utility.isDebugging())
+                        e.printStackTrace();
                 }
 
             }
@@ -154,7 +158,8 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
         } catch (JSONException e) {
             errorMessage = "error while parsing data";
             publishProgress(-1);
-            e.printStackTrace();
+            if (Utility.isDebugging())
+                e.printStackTrace();
             return null;
         }
         return null;
@@ -268,7 +273,8 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
 		
 
         if (response.getInt(OWM_SUCCESS) == 0) {
-            Log.e(LOG_TAG, response.getString(OWM_MESSAGE));
+            if (Utility.isDebugging())
+                Log.e(LOG_TAG, response.getString(OWM_MESSAGE));
             return;
         }
 
@@ -467,7 +473,8 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
             cVVector.toArray(cvArray);
             int rowsInserted = mContext.getContentResolver()
                     .bulkInsert(PriceEntry.CONTENT_URI, cvArray);
-            Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
+            if (Utility.isDebugging())
+                Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
             // Use a DEBUG variable to gate whether or not you do this, so you can easily
             // turn it on and off, and so that it's easy to see what you can rip out if
             // you ever want to remove it.
@@ -482,9 +489,11 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
             if (priceListCursor.moveToFirst()) {
                 ContentValues resultValues = new ContentValues();
                 DatabaseUtils.cursorRowToContentValues(priceListCursor, resultValues);
-                Log.v(LOG_TAG, "Query succeeded! **********");
+                if (Utility.isDebugging())
+                    Log.v(LOG_TAG, "Query succeeded! **********");
             } else {
-                Log.v(LOG_TAG, "Query failed! :( **********");
+                if (Utility.isDebugging())
+                    Log.v(LOG_TAG, "Query failed! :( **********");
             }
         }
     }

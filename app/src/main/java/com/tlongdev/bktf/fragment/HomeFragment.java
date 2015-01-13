@@ -1,5 +1,6 @@
 package com.tlongdev.bktf.fragment;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -74,12 +75,13 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
     private ProgressBar progressBar;
 
-
     private PriceListCursorAdapter cursorAdapter;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private int mPositionIndex = ListView.INVALID_POSITION;
     private int mPositionTop = 0;
+    private int currentPage = 1;
+    private int threshold = 1;
 
     public HomeFragment() {
     }
@@ -129,6 +131,8 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
         // Get a reference to the ListView, and attach this adapter to it.
         mListView = (ListView) rootView.findViewById(R.id.list_view_changes);
+        View footerView =  ((LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.list_view_footer, null, false);
+        mListView.addFooterView(footerView);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout)rootView.findViewById(R.id.swipe_refresh);
         mSwipeRefreshLayout.setColorSchemeColors(0xff5787c5);
@@ -198,7 +202,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        String sortOrder = PriceEntry.COLUMN_LAST_UPDATE + " DESC";
+        String sortOrder = PriceEntry.COLUMN_LAST_UPDATE + " DESC LIMIT " + currentPage * 10;
 
         return new CursorLoader(
                 getActivity(),
@@ -234,8 +238,14 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-
+    public void onScrollStateChanged(AbsListView listView, int scrollState) {
+        if (scrollState == SCROLL_STATE_IDLE) {
+            if (listView.getLastVisiblePosition() >= listView.getCount() - 1 - threshold) {
+                currentPage++;
+                //load more list items:
+                getLoaderManager().restartLoader(PRICE_LIST_LOADER, null, this);
+            }
+        }
     }
 
     @Override
