@@ -1,6 +1,8 @@
 package com.tlongdev.bktf.fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -21,8 +23,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.adapter.PriceListCursorAdapter;
 import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
 import com.tlongdev.bktf.quickreturn.AbsListViewQuickReturnAttacher;
@@ -82,6 +86,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     private int mPositionTop = 0;
     private int currentPage = 1;
     private int threshold = 1;
+    private View footerView;
 
     public HomeFragment() {
     }
@@ -131,7 +136,9 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
         // Get a reference to the ListView, and attach this adapter to it.
         mListView = (ListView) rootView.findViewById(R.id.list_view_changes);
-        View footerView =  ((LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.list_view_footer, null, false);
+        footerView =  ((LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                .inflate(R.layout.list_view_footer, null, false);
+        footerView.setVisibility(View.INVISIBLE);
         mListView.addFooterView(footerView);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout)rootView.findViewById(R.id.swipe_refresh);
@@ -169,10 +176,24 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         if (prefs.getBoolean(getString(R.string.pref_initial_load), true)){
-            new FetchPriceList(getActivity(), false, false, null, header).execute(getResources().getString(R.string.backpack_tf_api_key));
+            if (Utility.isNetworkAvailable(getActivity())) {
+                new FetchPriceList(getActivity(), false, false, null, header).execute(getResources().getString(R.string.backpack_tf_api_key));
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Failed to download database. Check your internet connection and try again.").setCancelable(false).
+                        setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                getActivity().finish();
+                            }
+                        });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
         }
         else if (prefs.getBoolean(getString(R.string.pref_auto_sync), false) &&
-                System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_price_list_update), 0) >= 3600000L) {
+                System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_price_list_update), 0) >= 3600000L
+                && Utility.isNetworkAvailable(getActivity())) {
             new FetchPriceList(getActivity(), true, false, mSwipeRefreshLayout, header).execute(getResources()
                     .getString(R.string.backpack_tf_api_key));
             mSwipeRefreshLayout.setRefreshing(true);
@@ -219,6 +240,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         cursorAdapter.swapCursor(data);
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
+        footerView.setVisibility(View.INVISIBLE);
         /*if (mPositionIndex != ListView.INVALID_POSITION) {
             // If we don't need to restart the loader, and there's a desired position to restore
             // to, do so now.
@@ -233,8 +255,13 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onRefresh() {
-        new FetchPriceList(getActivity(), true, true, mSwipeRefreshLayout, header)
-                .execute(getResources().getString(R.string.backpack_tf_api_key));
+        if (Utility.isNetworkAvailable(getActivity())) {
+            new FetchPriceList(getActivity(), true, true, mSwipeRefreshLayout, header)
+                    .execute(getResources().getString(R.string.backpack_tf_api_key));
+        } else {
+            Toast.makeText(getActivity(), "bptf: no connection", Toast.LENGTH_SHORT).show();
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     @Override
@@ -243,6 +270,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             if (listView.getLastVisiblePosition() >= listView.getCount() - 1 - threshold) {
                 currentPage++;
                 //load more list items:
+                footerView.setVisibility(View.VISIBLE);
                 getLoaderManager().restartLoader(PRICE_LIST_LOADER, null, this);
             }
         }

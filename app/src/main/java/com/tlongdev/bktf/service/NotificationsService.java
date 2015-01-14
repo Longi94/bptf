@@ -34,8 +34,9 @@ public class NotificationsService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        if (intent.hasExtra("notification") &&
-                PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_notification), false)) {
+        if (intent.hasExtra(CHECK_FOR_NOTIFICATIONS) &&
+                PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_notification), false)
+                && Utility.isNetworkAvailable(this)) {
             new CheckNotificationTask(this).execute();
         }
         return START_NOT_STICKY;
@@ -147,7 +148,7 @@ public class NotificationsService extends Service {
                     }
                 }
             } catch (IOException | JSONException e) {
-                Toast.makeText(mContext, "bptf: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "bptf: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 if (Utility.isDebugging())
                     e.printStackTrace();
             }

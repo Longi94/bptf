@@ -107,7 +107,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onResume() {
         super.onResume();
-        if (System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(getActivity())
+        if (Utility.isNetworkAvailable(getActivity()) &&
+                System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(getActivity())
                 .getLong(getString(R.string.pref_last_user_data_update), 0) >= 3600000L) {
             new FetchUserInfo(getActivity(), false, this, mSwipeRefreshLayout).execute();
 
@@ -118,7 +119,12 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onRefresh() {
-        new FetchUserInfo(getActivity(), true, this, mSwipeRefreshLayout).execute();
+        if (Utility.isNetworkAvailable(getActivity())) {
+            new FetchUserInfo(getActivity(), true, this, mSwipeRefreshLayout).execute();
+        } else {
+            Toast.makeText(getActivity(), "bptf: no connection", Toast.LENGTH_SHORT).show();
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     @Override
@@ -127,7 +133,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         String steamId = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(
                 getString(R.string.pref_resolved_steam_id), "");
         if (steamId.equals("")){
-            Toast.makeText(getActivity(), "bptf: no steamID provided", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "bptf: no steamID provided", Toast.LENGTH_SHORT).show();
             return;
         }
         switch (v.getId()) {
@@ -164,7 +170,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void updateUserPage() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        if (prefs.contains(getString(R.string.pref_new_avatar))) {
+        if (prefs.contains(getString(R.string.pref_new_avatar)) && Utility.isNetworkAvailable(getActivity())) {
             new AvatarDownLoader(PreferenceManager.getDefaultSharedPreferences(getActivity()).
                     getString(getString(R.string.pref_player_avatar_url), ""), getActivity()).execute();
         }
@@ -374,7 +380,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         @Override
         protected void onProgressUpdate(Void... values) {
-            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
         }
 
         public Bitmap getBitmapFromURL(String link) {

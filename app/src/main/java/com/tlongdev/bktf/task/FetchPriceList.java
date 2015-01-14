@@ -196,7 +196,7 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
                     break;
             }
         } else if (values[0] == -1){
-            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.task.FetchPriceList;
 
 public class UpdateDatabaseService extends Service {
@@ -18,8 +19,9 @@ public class UpdateDatabaseService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.hasExtra("update") &&
-                PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_notification), false)) {
+        if (intent.hasExtra(UPDATE_DATABASE) &&
+                PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_notification), false)
+                && Utility.isNetworkAvailable(this)) {
 
             new FetchPriceList(this, true, true, null, null).execute(getResources().getString(R.string.backpack_tf_api_key));
         }
