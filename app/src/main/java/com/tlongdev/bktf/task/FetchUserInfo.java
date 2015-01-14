@@ -212,7 +212,7 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
 
     @Override
     protected void onProgressUpdate(Void... values) {
-        Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -135,7 +135,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
         if (searchTask  != null){
             searchTask.cancel(true);
         }
-        if (searchQuery != null)
+        if (Utility.isNetworkAvailable(getActivity()) && searchQuery != null)
         {
             searchTask = new SearchForUserTask(getActivity());
             searchTask.execute(searchQuery);

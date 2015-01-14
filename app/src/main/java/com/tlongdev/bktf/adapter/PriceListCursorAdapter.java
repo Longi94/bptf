@@ -32,10 +32,10 @@ public class PriceListCursorAdapter extends CursorAdapter {
 
     public PriceListCursorAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
-        drawableManager = new LinkedHashMap<String, Drawable[]>(20, 0.75f, true){
+        drawableManager = new LinkedHashMap<String, Drawable[]>(15, 0.75f, true){
             @Override
             protected boolean removeEldestEntry(Entry<String, Drawable[]> eldest) {
-                return size() > 20;
+                return size() > 15;
             }
         };
     }
