@@ -522,7 +522,7 @@ public class Utility {
     }
 
     public static boolean isDebugging(){
-        return true;
+        return false;
     }
 }
 
