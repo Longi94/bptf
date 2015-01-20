@@ -80,7 +80,7 @@
             android:name=".AboutActivity"
             android:label="@string/title_activity_about"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tlongdev.bktf.MainActivity" />
@@ -89,10 +89,30 @@
             android:name=".UserInfoActivity"
             android:label=""
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tlongdev.bktf.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ItemChooserActivity"
+            android:excludeFromRecents="true"
+            android:label="@string/title_activity_item_chooser"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tlongdev.bktf.MainActivity" />
+        </activity>
+        <activity
+            android:name=".CreditsActivity"
+            android:label="@string/title_activity_credits"
+            android:excludeFromRecents="true"
+            android:parentActivityName=".SettingsActivity"
+            android:theme="@style/Theme.AppCompat.Light.Dialog"  >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tlongdev.bktf.SettingsActivity" />
         </activity>
     </application>
 
