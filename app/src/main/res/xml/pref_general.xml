@@ -56,4 +56,28 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="@string/pref_category_about">
+
+        <Preference
+            android:title="@string/pref_developer_title"
+            android:summary="@string/pref_developer_summary"/>
+
+        <Preference
+            android:title="@string/pref_version_title"
+            android:summary="@string/pref_version_summary"/>
+
+        <Preference
+            android:title="@string/pref_credits_title"
+            android:key="@string/pref_credits_title"/>
+
+        <Preference
+            android:title="@string/pref_feedback_title"
+            android:key="@string/pref_feedback_title"/>
+
+        <Preference
+            android:title="@string/pref_rate_title"
+            android:key="@string/pref_rate_title"/>
+
+    </PreferenceCategory>
 </PreferenceScreen>

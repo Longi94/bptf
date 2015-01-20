@@ -15,6 +15,7 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.tlongdev.bktf.fragment.CalculatorFragment;
 import com.tlongdev.bktf.fragment.HomeFragment;
 import com.tlongdev.bktf.fragment.NavigationDrawerFragment;
 import com.tlongdev.bktf.fragment.SearchFragment;
@@ -103,6 +104,12 @@ public class MainActivity extends ActionBarActivity
                     .replace(R.id.container, new UnusualPriceListFragment())
                     .commit();
         }
+        else if (position == 3  && currentFragment != 3) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, new CalculatorFragment())
+                    .commit();
+        }
         currentFragment = position;
         onSectionAttached(position);
     }
@@ -136,6 +143,8 @@ public class MainActivity extends ActionBarActivity
             case 2:
                 mTitle = "Unusuals";
                 break;
+            case 3:
+                mTitle = "Calculator";
         }
     }
 

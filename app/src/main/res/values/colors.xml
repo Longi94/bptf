@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="white_ripple">#99ffffff</color>
     <color name="bktf_main_blue_dark">#ff456292</color>
     <color name="bktf_main_blue">#ff5787c5</color>
 

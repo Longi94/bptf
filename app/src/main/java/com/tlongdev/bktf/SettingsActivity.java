@@ -86,6 +86,39 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_steam_id)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_notification_interval)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_sync_interval)));
+
+        findPreference(getString(R.string.pref_feedback_title)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto","tlongdev@gmail.com", null));
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(Intent.createChooser(intent, "Send email..."));
+                }
+                return true;
+            }
+        });
+        findPreference(getString(R.string.pref_credits_title)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent(SettingsActivity.this, CreditsActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
+
+        findPreference(getString(R.string.pref_rate_title)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                final String appPackageName = getPackageName();
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                } catch (android.content.ActivityNotFoundException e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                }
+                return true;
+            }
+        });
     }
 
     /**

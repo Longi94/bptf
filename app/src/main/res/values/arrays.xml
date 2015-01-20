@@ -33,4 +33,30 @@
         <item>21600000</item>
         <item>86400000</item>
     </string-array>
+
+    <string-array name="origins">
+        <item>Timed Drop</item>
+        <item>Achievement</item>
+        <item>Purchased</item>
+        <item>Traded</item>
+        <item>Crafted</item>
+        <item>Store Promotion</item>
+        <item>Gifted</item>
+        <item>Support Granted</item>
+        <item>Found in Crate</item>
+        <item>Earned</item>
+        <item>Third-Party Promotion</item>
+        <item>Wrapped Gift</item>
+        <item>Halloween Drop</item>
+        <item>Steam Purchase</item>
+        <item>Foreign Item</item>
+        <item>CD Key</item>
+        <item>Collection Reward</item>
+        <item>Preview Item</item>
+        <item>Steam Workshop Contribution</item>
+        <item>Periodic score reward</item>
+        <item>MvM Badge completion reward</item>
+        <item>MvM Squad surplus reward</item>
+        <item>Recipe output</item>
+    </string-array>
 </resources>

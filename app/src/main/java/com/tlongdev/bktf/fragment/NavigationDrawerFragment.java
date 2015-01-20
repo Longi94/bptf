@@ -1,7 +1,6 @@
 package com.tlongdev.bktf.fragment;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.tlongdev.bktf.AboutActivity;
 import com.tlongdev.bktf.MainActivity;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.NavigationDrawerAdapter;
@@ -94,19 +92,14 @@ public class NavigationDrawerFragment extends Fragment {
                 R.layout.simple_drawer_list_item,
                 Arrays.asList(getString(R.string.title_home),
                         getString(R.string.title_user_profile),
-                        getString(R.string.title_prices))));
+                        getString(R.string.title_prices),
+                        getString(R.string.title_calculator))));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 
         rootView.findViewById(R.id.text_view_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((MainActivity)getActivity()).startSettingsActivity();
-            }
-        });
-        rootView.findViewById(R.id.text_view_about).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().startActivity(new Intent(getActivity(), AboutActivity.class));
             }
         });
         return rootView;

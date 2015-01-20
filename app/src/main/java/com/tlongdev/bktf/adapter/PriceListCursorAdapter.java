@@ -28,8 +28,6 @@ public class PriceListCursorAdapter extends CursorAdapter {
 
     private final Map<String, Drawable[]> drawableManager;
 
-    boolean isCrate = false;
-
     public PriceListCursorAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
         drawableManager = new LinkedHashMap<String, Drawable[]>(15, 0.75f, true){
@@ -60,8 +58,6 @@ public class PriceListCursorAdapter extends CursorAdapter {
                 cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL),
                 cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE));
         viewHolder.nameView.setText(itemTag);
-
-        isCrate = cursor.getString(HomeFragment.COL_PRICE_LIST_NAME).contains("Crate");
 
         viewHolder.icon.setTag(itemTag);
 
@@ -154,7 +150,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
                 }
 
                 Drawable iconDrawable = Drawable.createFromStream(ims, null);
-                if (params[1] != 0 && !isCrate) {
+                if (params[1] != 0 && !path.contains("Crate")) {
                     ims = assetManager.open("effects/" + (new DecimalFormat("#0")).format(params[1]) + "_188x188.png");
                     Drawable effectDrawable = Drawable.createFromStream(ims, null);
                     returnVal[0] = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
@@ -198,7 +194,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
 
         @Override
         protected void onPostExecute(Drawable[] drawable) {
-            if (icon.getTag().toString().equals(path)) {
+            if (icon.getTag().toString().equals(path) && drawable != null) {
                 icon.setImageDrawable(drawable[0]);
                 background.setBackgroundDrawable(drawable[1]);
                 change.setImageDrawable(drawable[2]);
