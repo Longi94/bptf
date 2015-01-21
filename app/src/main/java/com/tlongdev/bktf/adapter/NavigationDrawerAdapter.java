@@ -48,6 +48,9 @@ public class NavigationDrawerAdapter extends ArrayAdapter<String> {
             case 2:
                 holder.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_whatshot_black_24dp));
                 break;
+            case 3:
+                holder.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_whatshot_black_24dp));
+                break;
         }
 
         return v;

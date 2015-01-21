@@ -1,6 +1,7 @@
 package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
@@ -59,10 +60,9 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
                         cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRAW));
 
         try {
-            if (Math.abs(cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRAW) - PreferenceManager
-                    .getDefaultSharedPreferences(context).getFloat(context.getString(R.string.pref_buds_raw), 0)) < 0.001 ||
-                    cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRAW) >= PreferenceManager
-                            .getDefaultSharedPreferences(context).getFloat(context.getString(R.string.pref_buds_raw), 0)) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            if (cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRAW) == Utility.getDouble(prefs, context.getString(R.string.pref_buds_raw), 0) ||
+                    cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRAW) >= Utility.getDouble(prefs, context.getString(R.string.pref_buds_raw), 0)) {
                 viewHolder.priceView.setText(Utility.formatPrice(context,
                         cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRIC),
                         cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PMAX),

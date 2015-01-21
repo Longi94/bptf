@@ -242,17 +242,17 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
             ((TextView) header.findViewById(R.id.text_view_buds_price))
                     .setText(prefs.getString(mContext.getString(R.string.pref_buds_price), ""));
 
-            if (prefs.getFloat(mContext.getString(R.string.pref_metal_diff), 0) > 0) {
+            if (Utility.getDouble(prefs, mContext.getString(R.string.pref_metal_diff), 0.0) > 0.0) {
                 header.findViewById(R.id.image_view_metal_price).setBackgroundColor(0xff008504);
             } else {
                 header.findViewById(R.id.image_view_metal_price).setBackgroundColor(0xff850000);
             }
-            if (prefs.getFloat(mContext.getString(R.string.pref_key_diff), 0) > 0) {
+            if (Utility.getDouble(prefs, mContext.getString(R.string.pref_key_diff), 0.0) > 0.0) {
                 header.findViewById(R.id.image_view_key_price).setBackgroundColor(0xff008504);
             } else {
                 header.findViewById(R.id.image_view_key_price).setBackgroundColor(0xff850000);
             }
-            if (prefs.getFloat(mContext.getString(R.string.pref_buds_diff), 0) > 0) {
+            if (Utility.getDouble(prefs, mContext.getString(R.string.pref_buds_diff), 0.0) > 0) {
                 header.findViewById(R.id.image_view_buds_price).setBackgroundColor(0xff008504);
             } else {
                 header.findViewById(R.id.image_view_buds_price).setBackgroundColor(0xff850000);
@@ -425,8 +425,8 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
                                     priceString = priceString + " keys";
 
                                     editor.putString(mContext.getString(R.string.pref_buds_price), priceString);
-                                    editor.putFloat(mContext.getString(R.string.pref_buds_diff), (float) price.getDouble(OWM_DIFFERENCE));
-                                    editor.putFloat(mContext.getString(R.string.pref_buds_raw), (float) price.getDouble(OWM_VALUE_RAW));
+                                    Utility.putDouble(editor, mContext.getString(R.string.pref_buds_diff), price.getDouble(OWM_DIFFERENCE));
+                                    Utility.putDouble(editor, mContext.getString(R.string.pref_buds_raw), price.getDouble(OWM_VALUE_RAW));
 
                                     editor.apply();
                                 } else if (defindex == 5002) {
@@ -450,13 +450,15 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
                                     }
 
                                     editor.putString(mContext.getString(R.string.pref_metal_price), priceString);
-                                    editor.putFloat(mContext.getString(R.string.pref_metal_diff), (float) price.getDouble(OWM_DIFFERENCE));
+                                    Utility.putDouble(editor, mContext.getString(R.string.pref_metal_diff), price.getDouble(OWM_DIFFERENCE));
 
                                     if (price.has(OWM_VALUE_HIGH)){
-                                        editor.putFloat(mContext.getString(R.string.pref_metal_raw_usd),
-                                                (float)((price.getDouble(OWM_VALUE) + price.getDouble(OWM_VALUE_HIGH)) / 2));
+                                        Utility.putDouble(editor, mContext.getString(R.string.pref_metal_raw_usd),
+                                                ((price.getDouble(OWM_VALUE) + price.getDouble(OWM_VALUE_HIGH)) / 2));
                                     } else {
-                                        editor.putFloat(mContext.getString(R.string.pref_metal_raw_usd), (float) price.getDouble(OWM_VALUE));
+
+                                        Utility.putDouble(editor, mContext.getString(R.string.pref_metal_raw_usd),
+                                                price.getDouble(OWM_VALUE));
                                     }
 
                                     editor.apply();
@@ -483,8 +485,8 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
                                     priceString = priceString + " ref";
 
                                     editor.putString(mContext.getString(R.string.pref_key_price), priceString);
-                                    editor.putFloat(mContext.getString(R.string.pref_key_diff), (float) price.getDouble(OWM_DIFFERENCE));
-                                    editor.putFloat(mContext.getString(R.string.pref_key_raw), (float) price.getDouble(OWM_VALUE_RAW));
+                                    Utility.putDouble(editor, mContext.getString(R.string.pref_key_diff), price.getDouble(OWM_DIFFERENCE));
+                                    Utility.putDouble(editor, mContext.getString(R.string.pref_key_raw), price.getDouble(OWM_VALUE_RAW));
 
                                     editor.apply();
                                 }

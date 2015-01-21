@@ -112,17 +112,17 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
         budsPrice.setText(prefs.getString(getString(R.string.pref_buds_price), ""));
 
-        if (prefs.getFloat(getString(R.string.pref_metal_diff), 0) > 0) {
+        if (Utility.getDouble(prefs, getString(R.string.pref_metal_diff), 0) > 0) {
             metalPriceImage.setBackgroundColor(0xff008504);
         } else {
             metalPriceImage.setBackgroundColor(0xff850000);
         }
-        if (prefs.getFloat(getString(R.string.pref_key_diff), 0) > 0) {
+        if (Utility.getDouble(prefs, getString(R.string.pref_key_diff), 0) > 0) {
             keyPriceImage.setBackgroundColor(0xff008504);
         } else {
             keyPriceImage.setBackgroundColor(0xff850000);
         }
-        if (prefs.getFloat(getString(R.string.pref_buds_diff), 0) > 0) {
+        if (Utility.getDouble(prefs, getString(R.string.pref_buds_diff), 0) > 0) {
             budsPriceImage.setBackgroundColor(0xff008504);
         } else {
             budsPriceImage.setBackgroundColor(0xff850000);

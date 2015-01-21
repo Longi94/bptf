@@ -301,7 +301,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 break;
         }
 
-        float bpValue = prefs.getFloat(getString(R.string.pref_player_backpack_value_tf2), -1);
+        double bpValue = Utility.getDouble(prefs, getString(R.string.pref_player_backpack_value_tf2), -1);
         if (bpValue == -1) {
             backpackValueRefined.setText("?");
             backpackValueUsd.setText("?");
@@ -313,7 +313,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             else
                 backpackValueRefined.setText("" + bpValue);
 
-            float bpValueUsd = bpValue * prefs.getFloat(getString(R.string.pref_metal_raw_usd), 1);
+            double bpValueUsd = bpValue * Utility.getDouble(prefs, getString(R.string.pref_metal_raw_usd), 1);
             if ((int) bpValueUsd == bpValueUsd)
                 backpackValueUsd.setText("" + (int) bpValueUsd);
             else if (("" + bpValueUsd).substring(("" + bpValueUsd).indexOf('.') + 1).length() > 2)

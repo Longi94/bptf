@@ -15,10 +15,10 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.tlongdev.bktf.fragment.CalculatorFragment;
 import com.tlongdev.bktf.fragment.HomeFragment;
 import com.tlongdev.bktf.fragment.NavigationDrawerFragment;
 import com.tlongdev.bktf.fragment.SearchFragment;
+import com.tlongdev.bktf.fragment.SimpleCalculatorFragment;
 import com.tlongdev.bktf.fragment.UnusualPriceListFragment;
 import com.tlongdev.bktf.fragment.UserFragment;
 import com.tlongdev.bktf.service.NotificationsService;
@@ -116,7 +116,7 @@ public class MainActivity extends ActionBarActivity
         else if (position == 3  && currentFragment != 3) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.container, new CalculatorFragment())
+                    .replace(R.id.container, new SimpleCalculatorFragment())
                     .commit();
         }
         currentFragment = position;

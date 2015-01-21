@@ -324,8 +324,8 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
             if (current_user.has(OWM_PLAYER_REPUTATION)) {
                 editor.putInt(mContext.getString(R.string.pref_player_reputation), current_user.getInt(OWM_PLAYER_REPUTATION));
             }
-            editor.putFloat(mContext.getString(R.string.pref_player_backpack_value_tf2),
-                    (float) current_user.getJSONObject(OWM_BACKPACK_VALUE).getDouble(OWM_BACKPACK_VALUE_TF2));
+            Utility.putDouble(editor, mContext.getString(R.string.pref_player_backpack_value_tf2),
+                    current_user.getJSONObject(OWM_BACKPACK_VALUE).getDouble(OWM_BACKPACK_VALUE_TF2));
 
             if (current_user.has(OWM_PLAYER_GROUP)) {
                 editor.putInt(mContext.getString(R.string.pref_player_group), 1);
