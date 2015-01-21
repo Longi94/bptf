@@ -21,12 +21,13 @@ import com.tlongdev.bktf.Utility;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DecimalFormat;
 
+/**
+ * Adapter to be used in the UnusualActivity.
+ */
 public class UnusualPricesCursorAdapter extends CursorAdapter{
 
     int defindex;
-
 
     public UnusualPricesCursorAdapter(Context context, Cursor c, int flags, int defindex) {
         super(context, c, flags);
@@ -78,6 +79,19 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
             if (Utility.isDebugging(context))
                 throwable.printStackTrace();
         }
+
+        if (!Utility.isPriceOld(cursor.getInt(UnusualActivity.COL_PRICE_LIST_UPDA))){
+            int difference = cursor.getInt(UnusualActivity.COL_PRICE_LIST_DIFF);
+            if (difference > 0){
+                viewHolder.priceView.setBackgroundColor(0x44008504);
+            } else if (difference < 0){
+                viewHolder.priceView.setBackgroundColor(0x44850000);
+            } else {
+                viewHolder.priceView.setBackgroundColor(0x44f2ee11);
+            }
+        } else {
+            viewHolder.priceView.setBackgroundColor(0x44000000);
+        }
     }
 
     @Override
@@ -96,6 +110,9 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
         }
     }
 
+    /**
+     * Task for loading images in the background
+     */
     private class LoadImagesTask extends AsyncTask<Double, Void, Drawable> {
         private Context mContext;
         private ImageView icon;
@@ -113,9 +130,9 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
             try {
                 Drawable d;
                 AssetManager assetManager = mContext.getAssets();
-                InputStream ims = assetManager.open("items/" + (new DecimalFormat("#0")).format(params[0]) + ".png");
+                InputStream ims = assetManager.open("items/" + params[0].intValue() + ".png");
                 Drawable iconDrawable = Drawable.createFromStream(ims, null);
-                ims = assetManager.open("effects/" + (new DecimalFormat("#0")).format(params[1]) + "_188x188.png");
+                ims = assetManager.open("effects/" + params[1].intValue() + "_188x188.png");
                 Drawable effectDrawable = Drawable.createFromStream(ims, null);
                 d = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
 

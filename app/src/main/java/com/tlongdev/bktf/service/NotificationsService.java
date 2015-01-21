@@ -27,6 +27,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * Service for checking for notifications in the background
+ */
 public class NotificationsService extends Service {
 
     private static final String CHECK_FOR_NOTIFICATIONS = "notification";
@@ -34,6 +37,7 @@ public class NotificationsService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        //Only check for notifications if the service was started by scheduling itself
         if (intent.hasExtra(CHECK_FOR_NOTIFICATIONS) &&
                 PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_notification), false)
                 && Utility.isNetworkAvailable(this)) {
@@ -50,6 +54,7 @@ public class NotificationsService extends Service {
     @Override
     public void onDestroy() {
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_notification), false)) {
+            //Schedule the service to run again after a given time
             AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
             long delay = Long.parseLong(PreferenceManager.getDefaultSharedPreferences(this)
                     .getString(getString(R.string.pref_notification_interval), "86400000"));
@@ -63,6 +68,9 @@ public class NotificationsService extends Service {
         }
     }
 
+    /**
+     * Task the actually checks for notifications.
+     */
     private class CheckNotificationTask extends AsyncTask<Void, Void, Integer>{
 
         Context mContext;
@@ -78,6 +86,7 @@ public class NotificationsService extends Service {
 
         @Override
         protected void onPostExecute(Integer aInt) {
+            //Show notification if there is a new notifications on backpack.tf
             if (aInt > 0) {
                 Uri webPage = Uri.parse("http://backpack.tf/notifications");
                 Intent i = new Intent(Intent.ACTION_VIEW, webPage);
@@ -100,6 +109,9 @@ public class NotificationsService extends Service {
             stopSelf();
         }
 
+        /**
+         * Connect to the api and check for notifications.
+         */
         private int checkForNotifications() {
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
@@ -131,7 +143,7 @@ public class NotificationsService extends Service {
                 urlConnection.connect();
 
                 InputStream inputStream = urlConnection.getInputStream();
-                StringBuffer buffer = new StringBuffer();
+                StringBuilder buffer = new StringBuilder();
 
                 String line;
                 if (inputStream != null) {
@@ -155,6 +167,9 @@ public class NotificationsService extends Service {
             return 0;
         }
 
+        /**
+         * Get the number of new notification from the JSON.
+         */
         private int parseUserInfoJson(String jsonString, String steamId) throws JSONException {
 
             final String OWM_RESPONSE = "response";

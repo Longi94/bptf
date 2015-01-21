@@ -34,6 +34,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 
+/**
+ * Fragment for displaying the user profile.
+ */
 public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     private TextView playerName;
@@ -44,7 +47,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private TextView tradeStatus;
     private TextView communityStatus;
     private TextView backpackValueRefined;
-    private TextView backpackRawMetal;
+    private TextView backpackRawMetal; //TODO fix raw items after implementing backpack viewer
     private TextView backpackRawKeys;
     private TextView backpackValueUsd;
     private TextView backpackSlots;
@@ -80,6 +83,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         userSinceText = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_user_since);
         lastOnlineText = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_user_last_online);
 
+        //Set the color of the refreshing animation
         mSwipeRefreshLayout.setColorSchemeColors(0xff5787c5);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
@@ -107,6 +111,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onResume() {
         super.onResume();
+        //Update user info if needed
         if (Utility.isNetworkAvailable(getActivity()) &&
                 System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(getActivity())
                 .getLong(getString(R.string.pref_last_user_data_update), 0) >= 3600000L) {
@@ -129,6 +134,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onClick(View v) {
+        //Handle all the buttons here
         String url;
         String steamId = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(
                 getString(R.string.pref_resolved_steam_id), "");
@@ -161,15 +167,20 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         Uri webPage = Uri.parse(url + steamId);
 
+        //Open link in the device default web browser
         Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivity(intent);
         }
     }
 
+    /**
+     * Update all info on the user page
+     */
     public void updateUserPage() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
+        //Download avatar if needed.
         if (prefs.contains(getString(R.string.pref_new_avatar)) && Utility.isNetworkAvailable(getActivity())) {
             new AvatarDownLoader(PreferenceManager.getDefaultSharedPreferences(getActivity()).
                     getString(getString(R.string.pref_player_avatar_url), ""), getActivity()).execute();
@@ -177,6 +188,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         playerName.setText(prefs.getString(getString(R.string.pref_player_name), ""));
         if (prefs.getInt(getString(R.string.pref_player_banned), 0) == 1){
+            //Set player name to red and cross name out if banned
             playerName.setTextColor(0xffdd4c44);
             playerName.setPaintFlags(playerName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
@@ -336,6 +348,9 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
     }
 
+    /**
+     * Asynctask for downloading the avatar in the background.
+     */
     private class AvatarDownLoader extends AsyncTask<Void, Void, Void>{
 
         private String url;
@@ -363,6 +378,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
                 try {
 
+                    //Save avatar as png into the private data folder
                     FileOutputStream fos = mContext.openFileOutput("avatar.png", Context.MODE_PRIVATE);
                     bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
                     fos.close();
@@ -383,6 +399,9 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
         }
 
+        /**
+         * Method to download the image
+         */
         public Bitmap getBitmapFromURL(String link) {
 
             try {
@@ -415,6 +434,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 if (progressBar != null)
                     progressBar.setVisibility(View.GONE);
 
+                //Save to preferences that we don't need to download the avatar again.
                 PreferenceManager.getDefaultSharedPreferences(mContext).edit().putBoolean(
                         mContext.getString(R.string.pref_new_avatar), false).apply();
             }

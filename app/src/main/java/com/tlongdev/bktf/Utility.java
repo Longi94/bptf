@@ -605,5 +605,9 @@ public class Utility {
     public static boolean isDebugging(Context context){
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_debug), false);
     }
+
+    public static boolean isPriceOld(int unixTimeStamp){
+        return System.currentTimeMillis() - unixTimeStamp*1000L > 7884000000L;
+    }
 }
 

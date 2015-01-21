@@ -1,5 +1,8 @@
 package com.tlongdev.bktf.enums;
 
+/**
+ * Enum for readability
+ */
 public enum Quality {
     NORMAL,
     GENUINE,

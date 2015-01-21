@@ -14,7 +14,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -35,6 +34,9 @@ import com.tlongdev.bktf.quickreturn.widget.QuickReturnAdapter;
 import com.tlongdev.bktf.quickreturn.widget.QuickReturnTargetView;
 import com.tlongdev.bktf.task.FetchPriceList;
 
+/**
+ * Main fragment the shows the latest price changes.
+ */
 public class HomeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
         SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener {
 
@@ -42,6 +44,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
     private static final int PRICE_LIST_LOADER = 0;
 
+    //Query columns
     private static final String[] PRICE_LIST_COLUMNS = {
             PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
             PriceEntry.COLUMN_DEFINDEX,
@@ -54,11 +57,10 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             PriceEntry.COLUMN_ITEM_PRICE,
             PriceEntry.COLUMN_ITEM_PRICE_MAX,
             PriceEntry.COLUMN_ITEM_PRICE_RAW,
-            PriceEntry.COLUMN_LAST_UPDATE,
             PriceEntry.COLUMN_DIFFERENCE
     };
 
-    public static final int COL_PRICE_LIST_ID = 0;
+    //Indexes for the columns above
     public static final int COL_PRICE_LIST_DEFI = 1;
     public static final int COL_PRICE_LIST_NAME = 2;
     public static final int COL_PRICE_LIST_QUAL = 3;
@@ -69,12 +71,8 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     public static final int COL_PRICE_LIST_PRIC = 8;
     public static final int COL_PRICE_LIST_PMAX = 9;
     public static final int COL_PRICE_LIST_PRAW = 10;
-    public static final int COL_PRICE_LIST_UPDA = 11;
-    public static final int COL_PRICE_LIST_DIFF = 12;
-    private static final String LIST_VIEW_POSITION_KEY = "position_index";
-    private static final String LIST_VIEW_TOP_POSITION_KEY = "position_top";
+    public static final int COL_PRICE_LIST_DIFF = 11;
 
-    private ListView mListView;
     private LinearLayout header;
 
     private ProgressBar progressBar;
@@ -82,13 +80,11 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     private PriceListCursorAdapter cursorAdapter;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private int mPositionIndex = ListView.INVALID_POSITION;
-    private int mPositionTop = 0;
     private int currentPage = 1;
-    private int threshold = 1;
     private View footerView;
 
     public HomeFragment() {
+        //Required empty constructor
     }
 
     @Override
@@ -135,35 +131,31 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         cursorAdapter = new PriceListCursorAdapter(getActivity(), null, 0);
 
         // Get a reference to the ListView, and attach this adapter to it.
-        mListView = (ListView) rootView.findViewById(R.id.list_view_changes);
+        ListView mListView = (ListView) rootView.findViewById(R.id.list_view_changes);
         footerView =  ((LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                 .inflate(R.layout.list_view_footer, null, false);
         footerView.setVisibility(View.INVISIBLE);
         mListView.addFooterView(footerView);
 
+        //Set up the swipe refresh layout (color and listener)
         mSwipeRefreshLayout = (SwipeRefreshLayout)rootView.findViewById(R.id.swipe_refresh);
         mSwipeRefreshLayout.setColorSchemeColors(0xff5787c5);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
+        //Offset, so the header isn't in the way
         mSwipeRefreshLayout.setProgressViewOffset(false,
                 (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, -15, getResources().getDisplayMetrics()),
                 (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 65, getResources().getDisplayMetrics()));
 
         header = (LinearLayout) rootView.findViewById(R.id.list_changes_header);
 
+        //Set up quick return
         mListView.setAdapter(new QuickReturnAdapter(cursorAdapter));
-
         AbsListViewQuickReturnAttacher quickReturnAttacher =
                 (AbsListViewQuickReturnAttacher)QuickReturnAttacher.forView(mListView);
         quickReturnAttacher.addTargetView(header, QuickReturnTargetView.POSITION_TOP,
                 (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 42, getResources().getDisplayMetrics()));
         quickReturnAttacher.addOnScrollListener(this);
-
-        if(savedInstanceState != null && savedInstanceState.containsKey(LIST_VIEW_POSITION_KEY) &&
-                savedInstanceState.containsKey(LIST_VIEW_TOP_POSITION_KEY)) {
-            mPositionIndex = savedInstanceState.getInt(LIST_VIEW_POSITION_KEY);
-            mPositionTop = savedInstanceState.getInt(LIST_VIEW_TOP_POSITION_KEY);
-        }
 
         progressBar = (ProgressBar)rootView.findViewById(R.id.progress_bar);
 
@@ -175,10 +167,12 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         super.onResume();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        //Download whole database when the app is first opened.
         if (prefs.getBoolean(getString(R.string.pref_initial_load), true)){
             if (Utility.isNetworkAvailable(getActivity())) {
                 new FetchPriceList(getActivity(), false, false, null, header).execute(getResources().getString(R.string.backpack_tf_api_key));
             } else {
+                //Quit the app if the download failed.
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage("Failed to download database. Check your internet connection and try again.").setCancelable(false).
                         setPositiveButton("Close", new DialogInterface.OnClickListener() {
@@ -191,6 +185,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
                 alertDialog.show();
             }
         }
+        //Update database if the last update happened more than an hour ago
         else if (prefs.getBoolean(getString(R.string.pref_auto_sync), false) &&
                 System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_price_list_update), 0) >= 3600000L
                 && Utility.isNetworkAvailable(getActivity())) {
@@ -198,26 +193,6 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
                     .getString(R.string.backpack_tf_api_key));
             mSwipeRefreshLayout.setRefreshing(true);
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        if (mPositionIndex != ListView.INVALID_POSITION) {
-            // save index and top position
-            int index = mListView.getFirstVisiblePosition();
-            View v = mListView.getChildAt(0);
-            int top = (v == null) ? 0 : v.getTop();
-
-            outState.putInt(LIST_VIEW_POSITION_KEY, index);
-            outState.putInt(LIST_VIEW_TOP_POSITION_KEY, top);
-        }
-
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -241,11 +216,6 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
         footerView.setVisibility(View.INVISIBLE);
-        /*if (mPositionIndex != ListView.INVALID_POSITION) {
-            // If we don't need to restart the loader, and there's a desired position to restore
-            // to, do so now.
-            mListView.setSelectionFromTop(mPositionIndex, mPositionTop);
-        }*/
     }
 
     @Override
@@ -255,6 +225,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onRefresh() {
+        //Manual update
         if (Utility.isNetworkAvailable(getActivity())) {
             new FetchPriceList(getActivity(), true, true, mSwipeRefreshLayout, header)
                     .execute(getResources().getString(R.string.backpack_tf_api_key));
@@ -267,9 +238,10 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onScrollStateChanged(AbsListView listView, int scrollState) {
         if (scrollState == SCROLL_STATE_IDLE) {
+            int threshold = 1;
             if (listView.getLastVisiblePosition() >= listView.getCount() - 1 - threshold) {
                 currentPage++;
-                //load more list items:
+                //load more list items
                 footerView.setVisibility(View.VISIBLE);
                 getLoaderManager().restartLoader(PRICE_LIST_LOADER, null, this);
             }
