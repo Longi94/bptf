@@ -268,7 +268,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
                     }
                 }
             } catch (IOException | JSONException e) {
-                if (Utility.isDebugging())
+                if (Utility.isDebugging(getActivity()))
                     e.printStackTrace();
             }
 
@@ -322,7 +322,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
                 return BitmapFactory.decodeStream(input);
 
             } catch (IOException e) {
-                if (Utility.isDebugging())
+                if (Utility.isDebugging(getActivity()))
                     e.printStackTrace();
                 return null;
             }

@@ -149,7 +149,7 @@ public class NotificationsService extends Service {
                 }
             } catch (IOException | JSONException e) {
                 Toast.makeText(mContext, "bptf: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                if (Utility.isDebugging())
+                if (Utility.isDebugging(mContext))
                     e.printStackTrace();
             }
             return 0;

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
+//Used in grid view to achieve fixed item height
 public class CustomLayout extends FrameLayout {
 
     public CustomLayout(Context context) {
@@ -21,6 +22,7 @@ public class CustomLayout extends FrameLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        //7:8 rectangle
         setMeasuredDimension(getMeasuredWidth(), (int)(getMeasuredWidth() * 7.0/8.0));
     }
 }

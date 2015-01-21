@@ -65,11 +65,15 @@
 
         <Preference
             android:title="@string/pref_version_title"
-            android:summary="@string/pref_version_summary"/>
+            android:key="@string/pref_version_title"/>
 
-        <Preference
+        <PreferenceScreen
             android:title="@string/pref_credits_title"
-            android:key="@string/pref_credits_title"/>
+            android:key="@string/pref_credits_title">
+            <intent android:action="android.intent.action.VIEW"
+                android:targetClass="com.tlongdev.bktf.CreditsActivity"
+                android:targetPackage="com.tlongdev.bktf"/>
+        </PreferenceScreen>
 
         <Preference
             android:title="@string/pref_feedback_title"

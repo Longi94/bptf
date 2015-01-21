@@ -24,7 +24,9 @@ import com.tlongdev.bktf.fragment.UserFragment;
 import com.tlongdev.bktf.service.NotificationsService;
 import com.tlongdev.bktf.service.UpdateDatabaseService;
 
-
+/**
+ * Tha main activity if the application. Navigation drawer is used.
+ */
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
@@ -38,8 +40,10 @@ public class MainActivity extends ActionBarActivity
      */
     private CharSequence mTitle;
 
+    //Store reference to search fragment to pass search queries.
     private SearchFragment mSearchFragment;
 
+    //Variables used for managing fragments.
     private int previousFragment = -1;
     private int currentFragment = -1;
     private boolean restartUserFragment = false;
@@ -49,7 +53,10 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Set the color of the action bar
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xff5787c5));
+
+        //Set the default values for all preferences when the app is first loaded
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -62,6 +69,7 @@ public class MainActivity extends ActionBarActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
+        //Start services if option is on
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_notification), false)){
             startService(new Intent(this, NotificationsService.class));
         }
@@ -74,6 +82,7 @@ public class MainActivity extends ActionBarActivity
     protected void onResume() {
         super.onResume();
 
+        //If needed (mostly when the steamId was changed) reload a new instance of the UserFragment
         if (restartUserFragment){
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
@@ -125,6 +134,7 @@ public class MainActivity extends ActionBarActivity
             if (resultCode == RESULT_OK){
                 if (currentFragment == 1){
                     if (data != null && data.getBooleanExtra("preference_changed", false)){
+                        //User fragment needs to be reloaded if the steamId was changed
                         restartUserFragment = true;
                     }
                 }
@@ -144,7 +154,7 @@ public class MainActivity extends ActionBarActivity
                 mTitle = "Unusuals";
                 break;
             case 3:
-                mTitle = "Calculator";
+                mTitle = getString(R.string.title_calculator);
         }
     }
 
@@ -162,6 +172,7 @@ public class MainActivity extends ActionBarActivity
         getMenuInflater().inflate(R.menu.main, menu);
         restoreActionBar();
 
+        //Setup the search widget
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         MenuItem menuItem = menu.findItem(R.id.action_search);
         SearchView mSearchView = (SearchView) menuItem.getActionView();
@@ -218,14 +229,5 @@ public class MainActivity extends ActionBarActivity
         ;
 
         return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        return super.onOptionsItemSelected(item);
     }
 }

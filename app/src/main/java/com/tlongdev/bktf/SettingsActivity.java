@@ -51,6 +51,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         setupSimplePreferencesScreen();
 
+        //Re-add actionbar that was removed in recent build tools.
         LinearLayout root = (LinearLayout)findViewById(android.R.id.list).getParent().getParent().getParent();
         Toolbar bar = (Toolbar) LayoutInflater.from(this).inflate(R.layout.settings_toolbar, root, false);
         root.addView(bar, 0); // insert at top
@@ -98,14 +99,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 return true;
             }
         });
-        findPreference(getString(R.string.pref_credits_title)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(SettingsActivity.this, CreditsActivity.class);
-                startActivity(intent);
-                return true;
-            }
-        });
 
         findPreference(getString(R.string.pref_rate_title)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -119,6 +112,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 return true;
             }
         });
+
+        //Set the version name to the summary, so I don't have to change it manually every goddamn
+        //update
+        findPreference(getString(R.string.pref_version_title)).setSummary(BuildConfig.VERSION_NAME);
     }
 
     /**

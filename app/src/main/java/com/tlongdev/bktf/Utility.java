@@ -7,6 +7,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.tlongdev.bktf.enums.Quality;
 
@@ -18,13 +19,21 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Utility class (static only).
+ */
 public class Utility {
+
+    public static final String LOG_TAG = Utility.class.getSimpleName();
 
     public static final String CURRENCY_USD = "usd";
     public static final String CURRENCY_METAL = "metal";
     public static final String CURRENCY_KEY = "keys";
     public static final String CURRENCY_BUD = "earbuds";
 
+    /**
+     * Convenient method for getting the steamId (or vanity user name) of the user.
+     */
     public static String getSteamId(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String steamId = prefs.getString(context.getString(R.string.pref_steam_id), null);
@@ -34,11 +43,17 @@ public class Utility {
         return steamId;
     }
 
+    /**
+     * Convenient method for getting the steamId of the user.
+     */
     public static String getResolvedSteamId(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getString(context.getString(R.string.pref_resolved_steam_id), null);
     }
 
+    /**
+     * Properly formats the item name according to its properties.
+     */
     public static String formatItemName(String name, int tradable, int craftable, int quality, int index) {
         String formattedName = "";
 
@@ -48,6 +63,8 @@ public class Utility {
         if (craftable == 0) {
             formattedName += "Non-Craftable ";
         }
+
+        //Convert the quality int to enum for better readability
         Quality q = Quality.values()[quality];
 
         switch (q) {
@@ -61,7 +78,7 @@ public class Utility {
                 formattedName += "Vintage ";
                 break;
             case UNIQUE:
-                if (index > 0)
+                if (index > 0) //A unique item with a number
                   name = name + " #" + index;
                 break;
             case UNUSUAL:
@@ -90,6 +107,9 @@ public class Utility {
         return  formattedName + name;
     }
 
+    /**
+     * Get the proper name of the unusual effect
+     */
     public static String getUnusualEffectName(int index) {
         switch (index) {
             case 6:
@@ -251,7 +271,11 @@ public class Utility {
         }
     }
 
+    /**
+     * Returns a drawable based on the item's properties to use asa background
+     */
     public static LayerDrawable getItemBackground(Context context, int quality, int tradable, int craftable) {
+        //Convert the quality int to enum for better readability
         Quality q = Quality.values()[quality];
 
         Drawable itemFrame;
@@ -297,6 +321,7 @@ public class Utility {
             craftableFrame = context.getResources().getDrawable(R.drawable.non_craftable_border);
         }
         else {
+            //Easier to use an empty drawable instead of resizing the layer drawable
             craftableFrame = context.getResources().getDrawable(R.drawable.empty_drawable);
         }
 
@@ -304,39 +329,51 @@ public class Utility {
             tradableFrame = context.getResources().getDrawable(R.drawable.non_tradable_border);
         }
         else {
+            //Easier to use an empty drawable instead of resizing the layer drawable
             tradableFrame = context.getResources().getDrawable(R.drawable.empty_drawable);
         }
 
         return new LayerDrawable(new Drawable[] {itemFrame, craftableFrame, tradableFrame});
     }
 
+    /**
+     * Formats the given price and converts it to the desired currency.
+     */
     public static String formatPrice(Context context, double low, double high, String originalCurrency, String targetCurrency, boolean twoLines) throws Throwable {
+        //Initial string
         String product = "";
 
+        //Convert the prices first
         low = convertPrice(context, low, originalCurrency, targetCurrency);
         if (high > 0.0)
             high = convertPrice(context, high, originalCurrency, targetCurrency);
 
+        //Check if the price is an int
         if ((int)low == low)
             product += (int)low;
+        //Check if the double has fraction smaller than 0.01, if so we need to format the double
         else if (("" + low).substring(("" + low).indexOf('.') + 1).length() > 2)
             product += new DecimalFormat("#0.00").format(low);
         else
             product += low;
 
         if (high > 0.0){
+            //Check if the price is an int
             if ((int)high == high)
                 product += "-" + (int)high;
+            //Check if the double has fraction smaller than 0.01, if so we need to format the double
             else if (("" + high).substring(("" + high).indexOf('.') + 1).length() > 2)
                 product += "-" + new DecimalFormat("#0.00").format(high);
             else
                 product += "-" + high;
         }
 
+        //If the price needs to be in two lines, the currency will be in a seperate line.
         if (twoLines) {
             product += "\n";
         }
 
+        //Append the string with the proper currency
         switch(targetCurrency) {
             case CURRENCY_BUD:
                 if (low == 1.0 && high == 0.0)
@@ -353,18 +390,25 @@ public class Utility {
             case CURRENCY_USD:
                 return "$" + product;
             default:
+                //App should never reach this code
+                if (isDebugging(context))
+                    Log.e(LOG_TAG, "Error formatting price");
                 throw new Throwable("Error while formatting price");
         }
     }
 
+    /**
+     * Converts the price to that desired currency.
+     */
     public static double convertPrice(Context context, double price, String originalCurrency, String targetCurrency) throws Throwable {
 
         if (originalCurrency.equals(targetCurrency))
+            //The target currency equals the original currency, nothing to do.
             return price;
-
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
+        //Magic converter block
         switch(originalCurrency){
             case CURRENCY_BUD:
                 switch(targetCurrency){
@@ -409,25 +453,39 @@ public class Utility {
                                 / prefs.getFloat(context.getString(R.string.pref_key_raw), 1);
                 }
             default:
-                throw new Throwable("Unknown currency: " + originalCurrency + " - " + targetCurrency);
+                String error = "Unknown currency: " + originalCurrency + " - " + targetCurrency;
+                if (isDebugging(context))
+                    Log.e(LOG_TAG, error);
+                throw new Throwable(error);
         }
     }
 
+    /**
+     * Check if the given steamId is a 64bit steamId using Regex.
+     */
     public static boolean isSteamId(String id) {
         return id.matches("7656119[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]");
     }
 
+    /**
+     * Format the unix timestamp the a user readable string.
+     */
     public static String formatUnixTimeStamp(long unixSeconds){
         Date date = new Date(unixSeconds*1000L); // *1000 is to convert seconds to milliseconds
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // the format of your date
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(date);
     }
 
+    /**
+     * Format the timestamp to a user friendly string that is the same as on steam profile pages.
+     */
     public static String formatLastOnlineTime(long time) {
+        //If the time is longer than 2 days tho format is X days.
         if (time >= 172800000L) {
             long days = time / 86400000;
             return "" + days + " days ago";
         }
+        //If the time is longer than an hour, the format is X hour(s) Y minute(s)
         if (time >= 3600000L) {
             long hours = time / 3600000;
             if (time % 3600000L == 0) {
@@ -452,6 +510,7 @@ public class Utility {
                 }
             }
         }
+        //Else it was less than an hour ago, the format is X minute(s).
         else {
             long minutes = time / 60000;
             if (minutes == 0){
@@ -464,6 +523,9 @@ public class Utility {
         }
     }
 
+    /**
+     * Retrieves the steamId from a properly formatted JSON.
+     */
     public static String parseSteamIdFromVanityJson(String userJsonStr) throws JSONException {
         final String OWM_RESPONSE = "response";
         final String OWM_SUCCESS = "success";
@@ -474,12 +536,16 @@ public class Utility {
         JSONObject response = jsonObject.getJSONObject(OWM_RESPONSE);
 
         if (response.getInt(OWM_SUCCESS) != 1){
+            //Return the error message if unsuccessful.
             return response.getString(OWM_MESSAGE);
         }
 
         return response.getString(OWM_STEAM_ID);
     }
 
+    /**
+     * Retrieves the user name from a properly formatted JSON.
+     */
     public static String parseUserNameFromJson(String jsonString) throws JSONException {
         final String OWM_RESPONSE = "response";
         final String OWM_PLAYERS = "players";
@@ -493,6 +559,9 @@ public class Utility {
         return player.getString(OWM_NAME);
     }
 
+    /**
+     * Retrieves the url for the user avatar from a proerly formatted JSON.
+     */
     public static String parseAvatarUrlFromJson(String jsonString) throws JSONException {
         final String OWM_RESPONSE = "response";
         final String OWM_PLAYERS = "players";
@@ -506,6 +575,9 @@ public class Utility {
         return player.getString(OWM_AVATAR);
     }
 
+    /**
+     * Check whether the user if connected to the internet.
+     */
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -513,16 +585,25 @@ public class Utility {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+    /**
+     * Convenient method for storing double values in shared preferences.
+     */
     public static SharedPreferences.Editor putDouble(final SharedPreferences.Editor edit, final String key, final double value) {
         return edit.putLong(key, Double.doubleToRawLongBits(value));
     }
 
+    /**
+     * Convenient method for getting double values from shared preferences.
+     */
     public static double getDouble(final SharedPreferences prefs, final String key, final double defaultValue) {
         return Double.longBitsToDouble(prefs.getLong(key, Double.doubleToLongBits(defaultValue)));
     }
 
-    public static boolean isDebugging(){
-        return false;
+    /**
+     * Whether we should log or not
+     */
+    public static boolean isDebugging(Context context){
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_debug), false);
     }
 }
 

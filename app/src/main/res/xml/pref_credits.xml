@@ -1,11 +1,17 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <Preference android:title="@string/title_quick_return"
+    <PreferenceScreen android:title="@string/title_quick_return"
         android:summary="@string/summary_quick_return"
-        android:key="@string/title_quick_return"/>
+        android:key="@string/title_quick_return">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="https://github.com/felipecsl/QuickReturn"/>
+    </PreferenceScreen>
 
-    <Preference android:title="@string/title_particles"
+    <PreferenceScreen android:title="@string/title_particles"
         android:summary="@string/summary_particles"
-        android:key="@string/title_particles"/>
+        android:key="@string/title_particles">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="http://backpack.tf/developer/particles"/>
+    </PreferenceScreen>
 
 </PreferenceScreen>

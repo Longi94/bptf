@@ -23,11 +23,19 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * Task for fetching data about the user in the background.
+ */
 public class FetchUserInfo extends AsyncTask<String, Void, Void> {
     private Context mContext;
+
+    //Whether it was a user initiated update
     private boolean manualSync;
+    //Stored for stopping the animation.
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    //Stored for a callback to update the UI.
     private UserFragment mFragment;
+
     private String errorMessage;
 
     public FetchUserInfo(Context mContext, boolean manualSync, UserFragment fragment, SwipeRefreshLayout swipeRefreshLayout) {
@@ -41,6 +49,7 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
     protected Void doInBackground(String... params) {
         if (System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(mContext)
                 .getLong(mContext.getString(R.string.pref_last_user_data_update), 0) < 3600000L && !manualSync){
+            //This task ran less than an hour ago and wasn't a manual sync, nothing to do.
             return null;
         }
 
@@ -64,22 +73,28 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
 
             final String USER_SUMMARIES_BASE_URL = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/";
 
-            steamId = Utility.getSteamId(mContext);
-            if (steamId == null){
-                errorMessage = "no steamID provided";
-                publishProgress();
-                return null;
+            steamId = Utility.getResolvedSteamId(mContext);
+            //Check if there is a resolve steamId saved
+            if (steamId == null || steamId.equals("")) {
+                steamId = Utility.getSteamId(mContext);
+                if (steamId == null) {
+                    errorMessage = "no steamID provided";
+                    publishProgress();
+                    return null;
+                }
             }
             Uri uri;
             URL url;
             InputStream inputStream;
             StringBuffer buffer;
             if (!Utility.isSteamId(steamId)) {
+                //First we try to resolve the steamId if the provided one isn't a 64bit steamId
                 uri = Uri.parse(VANITY_BASE_URL).buildUpon()
                         .appendQueryParameter(KEY_API, mContext.getString(R.string.steam_web_api_key))
                         .appendQueryParameter(KEY_VANITY_URL, steamId).build();
                 url = new URL(uri.toString());
 
+                //Open connection.
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
@@ -87,37 +102,36 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
                 inputStream = urlConnection.getInputStream();
                 buffer = new StringBuffer();
 
-                // Nothing to do.
+                // Nothing to do if the stream was empty.
                 if (inputStream != null) {
                     reader = new BufferedReader(new InputStreamReader(inputStream));
+                    //Read input
                     String line;
                     while ((line = reader.readLine()) != null) {
-                        // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                        // But it does make debugging a *lot* easier if you print out the completed
-                        // buffer for debugging.
                         buffer.append(line);
                     }
 
-                    if (buffer.length() == 0) {
-                        // Stream was empty.  No point in parsing.
-                        return null;
+                    if (buffer.length() != 0) {
+                        // If the stream was empty there is no point in parsing.
+                        jsonString = buffer.toString();
+                        steamId = Utility.parseSteamIdFromVanityJson(jsonString);
                     }
-                    jsonString = buffer.toString();
-
-                    steamId = Utility.parseSteamIdFromVanityJson(jsonString);
 
                 }
             }
 
             if (!Utility.isSteamId(steamId)) {
+                //Still couldn't get the steamId, there was an error. Nothing to do.
                 errorMessage = steamId;
                 publishProgress();
                 return null;
             }
 
+            //Save the resolved steamId
             PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString(mContext
                     .getString(R.string.pref_resolved_steam_id), steamId).apply();
 
+            //Build user info uri
             uri = Uri.parse(USER_INFO_BASE_URL).buildUpon()
                     .appendQueryParameter(KEY_STEAM_ID, steamId)
                     .appendQueryParameter(KEY_COMPRESS, "1")
@@ -125,6 +139,7 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
 
             url = new URL(uri.toString());
 
+            //Open connection
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
@@ -133,25 +148,24 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
             buffer = new StringBuffer();
 
             String line;
+            //Parse only if the stream isn't empty
             if (inputStream != null) {
 
                 reader = new BufferedReader(new InputStreamReader(inputStream));
 
+                //Read input
                 while ((line = reader.readLine()) != null) {
-                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                    // But it does make debugging a *lot* easier if you print out the completed
-                    // buffer for debugging.
                     buffer.append(line);
                 }
 
+                //Only parse if the input isn't empty
                 if (buffer.length() > 0) {
                     jsonString = buffer.toString();
                     parseUserInfoJson(jsonString, steamId);
                 }
             }
 
-
-
+            //Build user summaries uri
             uri = Uri.parse(USER_SUMMARIES_BASE_URL).buildUpon()
                     .appendQueryParameter(KEY_API, mContext.getString(R.string.steam_web_api_key))
                     .appendQueryParameter(KEY_STEAM_ID, steamId)
@@ -159,6 +173,7 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
 
             url = new URL(uri.toString());
 
+            //Open connection
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
@@ -179,6 +194,7 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
                 }
             }
 
+            //Save the update time
             PreferenceManager.getDefaultSharedPreferences(mContext).edit()
                     .putLong(mContext.getString(R.string.pref_last_user_data_update),
                             System.currentTimeMillis()).apply();
@@ -186,12 +202,14 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
         } catch (IOException e) {
             errorMessage = "network error";
             publishProgress();
-            e.printStackTrace();
+            if (Utility.isDebugging(mContext))
+                e.printStackTrace();
             return null;
         } catch (JSONException e) {
             errorMessage = "error while parsing data";
             publishProgress();
-            e.printStackTrace();
+            if (Utility.isDebugging(mContext))
+                e.printStackTrace();
             return null;
         } finally {
             if (urlConnection != null) {
@@ -203,7 +221,8 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
                 } catch (final IOException e) {
                     errorMessage = e.getMessage();
                     publishProgress();
-                    e.printStackTrace();
+                    if (Utility.isDebugging(mContext))
+                        e.printStackTrace();
                 }
             }
         }
@@ -259,15 +278,16 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
         editor.apply();
     }
 
+    /**
+     * Get all the data needed from the JSON string.
+     */
     private void parseUserInfoJson(String jsonString, String steamId) throws JSONException {
 
         final String OWM_RESPONSE = "response";
         final String OWM_SUCCESS = "success";
-        final String OWM_CURRENT_TIME = "current_time";
         final String OWM_PLAYERS = "players";
         final String OWM_BACKPACK_VALUE = "backpack_value";
         final String OWM_BACKPACK_VALUE_TF2 = "440";
-        final String OWM_BACKPACK_UPDATE = "backpack_update";
         final String OWM_PLAYER_NAME = "name";
         final String OWM_PLAYER_REPUTATION = "backpack_tf_reputation";
         final String OWM_PLAYER_GROUP = "backpack_tf_group";
@@ -279,7 +299,6 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
         final String OWM_PLAYER_BAN_ECONOMY = "ban_economy";
         final String OWM_PLAYER_BAN_COMMUNITY = "ban_community";
         final String OWM_PLAYER_BAN_VAC = "ban_vac";
-        final String OWM_PLAYER_NOTIFICATION = "notification";
 
         JSONObject jsonObject = new JSONObject(jsonString);
         JSONObject response = jsonObject.getJSONObject(OWM_RESPONSE);

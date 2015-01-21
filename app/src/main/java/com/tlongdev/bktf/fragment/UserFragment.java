@@ -370,7 +370,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 } catch (IOException e) {
                     errorMessage = e.getMessage();
                     publishProgress();
-                    if (Utility.isDebugging())
+                    if (Utility.isDebugging(mContext))
                         e.printStackTrace();
                     return null;
                 }
@@ -398,7 +398,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             } catch (IOException e) {
                 errorMessage = e.getMessage();
                 publishProgress();
-                if (Utility.isDebugging())
+                if (Utility.isDebugging(mContext))
                     e.printStackTrace();
                 return null;
             }

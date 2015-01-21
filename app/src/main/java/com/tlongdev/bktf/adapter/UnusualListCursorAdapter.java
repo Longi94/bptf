@@ -116,7 +116,7 @@ public class UnusualListCursorAdapter extends CursorAdapter {
             } catch (IOException e) {
                 errorMessage = e.getMessage();
                 publishProgress();
-                if (Utility.isDebugging())
+                if (Utility.isDebugging(mContext))
                     e.printStackTrace();
                 return null;
             }
