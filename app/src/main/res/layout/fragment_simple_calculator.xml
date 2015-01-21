@@ -1,0 +1,62 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context="com.tlongdev.bktf.fragment.SimpleCalculatorFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Earbuds"
+        android:textStyle="bold"
+        android:textColor="@color/bktf_main_blue"/>
+
+    <EditText
+        android:id="@+id/edit_text_earbuds"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Keys"
+        android:textStyle="bold"
+        android:textColor="@color/bktf_main_blue"/>
+
+    <EditText
+        android:id="@+id/edit_text_keys"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Refined Metal"
+        android:textStyle="bold"
+        android:textColor="@color/bktf_main_blue"/>
+
+    <EditText
+        android:id="@+id/edit_text_metal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="USD"
+        android:textStyle="bold"
+        android:textColor="@color/bktf_main_blue"/>
+
+    <EditText
+        android:id="@+id/edit_text_usd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"/>
+    
+</LinearLayout>

@@ -352,7 +352,7 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
                 backpackValueRefined.setText("" + backpackValue);
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            float bpValueUsd = (float)backpackValue * prefs.getFloat(getString(R.string.pref_metal_raw_usd), 1);
+            double bpValueUsd = backpackValue * Utility.getDouble(prefs, getString(R.string.pref_metal_raw_usd), 1);
             if ((int) bpValueUsd == bpValueUsd)
                 backpackValueUsd.setText("" + (int) bpValueUsd);
             else if (("" + bpValueUsd).substring(("" + bpValueUsd).indexOf('.') + 1).length() > 2)

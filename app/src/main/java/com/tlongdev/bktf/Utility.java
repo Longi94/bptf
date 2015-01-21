@@ -15,6 +15,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -413,44 +415,44 @@ public class Utility {
             case CURRENCY_BUD:
                 switch(targetCurrency){
                     case CURRENCY_KEY:
-                        return price * (prefs.getFloat(context.getString(R.string.pref_buds_raw), 1)
-                                / prefs.getFloat(context.getString(R.string.pref_key_raw), 1));
+                        return price * (getDouble(prefs, context.getString(R.string.pref_buds_raw), 1) 
+                                / getDouble(prefs, context.getString(R.string.pref_key_raw), 1));
                     case CURRENCY_METAL:
-                        return price * prefs.getFloat(context.getString(R.string.pref_buds_raw), 1);
+                        return price * getDouble(prefs, context.getString(R.string.pref_buds_raw), 1);
                     case CURRENCY_USD:
-                        return price * (prefs.getFloat(context.getString(R.string.pref_buds_raw), 1)
-                                / prefs.getFloat(context.getString(R.string.pref_metal_raw_usd), 1));
+                        return price * (getDouble(prefs, context.getString(R.string.pref_buds_raw), 1)
+                                * getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1));
                 }
             case CURRENCY_METAL:
                 switch(targetCurrency){
                     case CURRENCY_KEY:
-                        return price / prefs.getFloat(context.getString(R.string.pref_key_raw), 1);
+                        return price / getDouble(prefs, context.getString(R.string.pref_key_raw), 1);
                     case CURRENCY_BUD:
-                        return price / prefs.getFloat(context.getString(R.string.pref_buds_raw), 1);
+                        return price / getDouble(prefs, context.getString(R.string.pref_buds_raw), 1);
                     case CURRENCY_USD:
-                        return price / prefs.getFloat(context.getString(R.string.pref_metal_raw_usd), 1);
+                        return price / getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1);
                 }
             case CURRENCY_KEY:
                 switch(targetCurrency){
                     case CURRENCY_METAL:
-                        return price * prefs.getFloat(context.getString(R.string.pref_key_raw), 1);
+                        return price * getDouble(prefs, context.getString(R.string.pref_key_raw), 1);
                     case CURRENCY_BUD:
-                        return price * (prefs.getFloat(context.getString(R.string.pref_key_raw), 1)
-                                / prefs.getFloat(context.getString(R.string.pref_buds_raw), 1));
+                        return price * (getDouble(prefs, context.getString(R.string.pref_key_raw), 1)
+                                / getDouble(prefs, context.getString(R.string.pref_buds_raw), 1));
                     case CURRENCY_USD:
-                        return price * prefs.getFloat(context.getString(R.string.pref_key_raw), 1)
-                                * prefs.getFloat(context.getString(R.string.pref_metal_raw_usd), 1);
+                        return price * getDouble(prefs, context.getString(R.string.pref_key_raw), 1)
+                                * getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1);
                 }
             case CURRENCY_USD:
                 switch(targetCurrency){
                     case CURRENCY_METAL:
-                        return price / prefs.getFloat(context.getString(R.string.pref_metal_raw_usd), 1);
+                        return price / getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1);
                     case CURRENCY_BUD:
-                        return price / prefs.getFloat(context.getString(R.string.pref_metal_raw_usd), 1)
-                                / prefs.getFloat(context.getString(R.string.pref_buds_raw), 1);
+                        return price / getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1)
+                                / getDouble(prefs, context.getString(R.string.pref_buds_raw), 1);
                     case CURRENCY_KEY:
-                        return price / prefs.getFloat(context.getString(R.string.pref_metal_raw_usd), 1)
-                                / prefs.getFloat(context.getString(R.string.pref_key_raw), 1);
+                        return price / getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1)
+                                / getDouble(prefs, context.getString(R.string.pref_key_raw), 1);
                 }
             default:
                 String error = "Unknown currency: " + originalCurrency + " - " + targetCurrency;
@@ -606,8 +608,22 @@ public class Utility {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_debug), false);
     }
 
+    /**
+     * Check whether the given timestamp is older than 3 months
+     */
     public static boolean isPriceOld(int unixTimeStamp){
         return System.currentTimeMillis() - unixTimeStamp*1000L > 7884000000L;
+    }
+
+    /**
+     * Rounds the given double
+     */
+    public static double roundDouble(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }
 
