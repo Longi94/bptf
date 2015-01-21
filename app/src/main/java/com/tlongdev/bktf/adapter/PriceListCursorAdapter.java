@@ -90,7 +90,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
                     cursor.getString(HomeFragment.COL_PRICE_LIST_CURR), false));
         } catch (Throwable throwable) {
             Toast.makeText(context, "bptf: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
-            if (Utility.isDebugging())
+            if (Utility.isDebugging(context))
                 throwable.printStackTrace();
         }
     }
@@ -180,7 +180,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
             } catch (IOException e) {
                 errorMessage = e.getMessage();
                 publishProgress();
-                if (Utility.isDebugging())
+                if (Utility.isDebugging(mContext))
                     e.printStackTrace();
                 return null;
             }

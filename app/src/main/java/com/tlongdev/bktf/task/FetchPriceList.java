@@ -36,16 +36,27 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Vector;
 
+/**
+ * Task for fetching all data for prices database and updating it in the background.
+ */
 public class FetchPriceList extends AsyncTask<String, Integer, Void>{
 
     private static final String LOG_TAG = FetchPriceList.class.getSimpleName();
 
     private final Context mContext;
+
+    //Whether it's an update or full database download
     private boolean updateDatabase;
+
+    //Whether it was a user initiated update
     private boolean manualSync;
     private ProgressDialog loadingDialog;
+
+    //Stored for stopping the animation.
     private SwipeRefreshLayout swipeRefreshLayout;
+    //Stored for updating the currency prices on UI
     private LinearLayout header;
+
     private String errorMessage;
 
     public FetchPriceList(Context context, boolean updateDatabase, boolean manualSync, SwipeRefreshLayout swipeRefreshLayout, LinearLayout header) {
@@ -67,6 +78,7 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
 
         if (System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(mContext)
                 .getLong(mContext.getString(R.string.pref_last_price_list_update), 0) < 3600000L && !manualSync){
+            //This task ran less than an hour ago and wasn't a manual sync, nothing to do.
             return null;
         }
 
@@ -96,9 +108,10 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
 
             URL url = new URL(uri.toString());
 
-            if (Utility.isDebugging())
-                Log.v(LOG_TAG, "Built Uri = " + uri.toString());
+            if (Utility.isDebugging(mContext))
+                Log.v(LOG_TAG, "Built uri: " + uri.toString());
 
+            //Open connection
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
@@ -107,18 +120,20 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
             StringBuilder buffer = new StringBuilder();
 
             if (inputStream == null) {
-                // Nothing to do.
+                // Stream was empty. Nothing to do.
                 return null;
             }
 
             reader = new BufferedReader(new InputStreamReader(inputStream));
 
+            //Read the input
             String line;
             while ((line = reader.readLine()) != null) {
                 buffer.append(line);
             }
 
             if (buffer.length() == 0) {
+                //Stream was empty, nothing to do.
                 return null;
             }
             itemsJsonStr = buffer.toString();
@@ -126,7 +141,7 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
         } catch (IOException e) {
             errorMessage = "network error";
             publishProgress(-1);
-            if (Utility.isDebugging())
+            if (Utility.isDebugging(mContext))
                 e.printStackTrace();
             return null;
         } finally {
@@ -139,7 +154,7 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
                 } catch (final IOException e) {
                     errorMessage = e.getMessage();
                     publishProgress(-1);
-                    if (Utility.isDebugging())
+                    if (Utility.isDebugging(mContext))
                         e.printStackTrace();
                 }
 
@@ -150,6 +165,8 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
             getItemsFromJson(itemsJsonStr);
 
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+
+            //Save when the update finished
             editor.putLong(mContext.getString(R.string.pref_last_price_list_update), System.currentTimeMillis());
             editor.putBoolean(mContext.getString(R.string.pref_initial_load), false);
             editor.apply();
@@ -158,7 +175,7 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
         } catch (JSONException e) {
             errorMessage = "error while parsing data";
             publishProgress(-1);
-            if (Utility.isDebugging())
+            if (Utility.isDebugging(mContext))
                 e.printStackTrace();
             return null;
         }
@@ -169,6 +186,7 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
     protected void onProgressUpdate(Integer... values) {
         if (loadingDialog != null) {
             switch (values[0]) {
+                //Download finished. Replace dialog.
                 case 0:
                     loadingDialog.dismiss();
                     loadingDialog = new ProgressDialog(mContext, ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT);
@@ -178,9 +196,11 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
                     loadingDialog.setMax(values[1]);
                     loadingDialog.show();
                     break;
+                //One item processed
                 case 1:
                     loadingDialog.incrementProgressBy(1);
                     break;
+                //There was an error (exception) while trying to create initial database
                 case -1:
                     AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                     builder.setMessage("Failed to download database. Check your internet connection and try again.").setCancelable(false).
@@ -196,17 +216,22 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
                     break;
             }
         } else if (values[0] == -1){
+            //There was an error while trying to update database
             Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     protected void onPostExecute(Void pVoid) {
+        //Dismiss loading dialog
         if (loadingDialog != null && !updateDatabase)
             loadingDialog.dismiss();
+
+        //Stop animation
         else if (swipeRefreshLayout != null)
             swipeRefreshLayout.setRefreshing(false);
 
+        //Update the header with currency prices
         if (header != null) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
@@ -235,15 +260,12 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
         }
     }
 
+    //Parse all the items from the JSON string.
     private void getItemsFromJson(String jsonString) throws JSONException {
 
         final String OWM_RESPONSE = "response";
         final String OWM_SUCCESS = "success";
         final String OWM_MESSAGE = "message";
-        final String OWM_CURRENT_TIME = "current_time";
-        final String OWM_RAW_USD_VALUE = "raw_usd_value";
-        final String OWM_USD_CURRENCY = "usd_currency";
-        final String OWM_USD_CURRENCY_INDEX = "usd_currency_index";
         final String OWM_ITEMS = "items";
         final String OWM_PRICES = "prices";
         final String OWM_DEFINDEX = "defindex";
@@ -266,26 +288,25 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
 			);
 			if (cursor.moveToFirst())
 				latestUpdate = cursor.getInt(0);
+            cursor.close();
 		}
 		
         JSONObject jsonObject = new JSONObject(jsonString);
         JSONObject response = jsonObject.getJSONObject(OWM_RESPONSE);
-		
 
         if (response.getInt(OWM_SUCCESS) == 0) {
-            if (Utility.isDebugging())
+            //Unsuccessful query, nothing to do
+            if (Utility.isDebugging(mContext))
                 Log.e(LOG_TAG, response.getString(OWM_MESSAGE));
             return;
         }
 
         JSONObject items = response.getJSONObject(OWM_ITEMS);
-
         publishProgress(0, items.length());
-
         Iterator<String> i = items.keys();
-
         Vector<ContentValues> cVVector = new Vector<>();
 
+        // If any of the currencies was updated, the whole database needs to be updated.
         if (updateDatabase &&
                 (items.getJSONObject("Mann Co. Supply Crate Key").getJSONObject("prices").getJSONObject("6").getJSONObject("Tradable")
                 .getJSONArray("Craftable").getJSONObject(0).getInt(OWM_LAST_UPDATE) > latestUpdate ||
@@ -304,6 +325,8 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
             JSONArray defindexes = items.getJSONObject(name).getJSONArray(OWM_DEFINDEX);
 
             int defindex = 0;
+
+            //The api does not return any defindex for these items.
             if (defindexes.length() > 0) {
                 defindex = defindexes.getInt(0);
             } else if (name.equals("Strange Part: Fires Survived")) {
@@ -330,6 +353,8 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
 
                         String craftable = (String)craftableIterator.next();
 
+                        //If there are multiple price indexes the api return a JSONObject, if there
+                        //is only one (0) the api returns a JSONArray (great...)
                         if (craftability.get(craftable) instanceof JSONObject) {
                             JSONObject priceIndexes = craftability.getJSONObject(craftable);
                             Iterator<String> priceIndexIterator = priceIndexes.keys();
@@ -338,8 +363,9 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
 
                                 String priceIndex = (String) priceIndexIterator.next();
                                 JSONObject price = priceIndexes.getJSONObject(priceIndex);
-								
-								if (latestUpdate <= price.getInt(OWM_LAST_UPDATE)) {
+
+                                //Check whether the price is new
+								if (latestUpdate < price.getInt(OWM_LAST_UPDATE)) {
 
 									Double high = null;
 									if (price.has(OWM_VALUE_HIGH))
@@ -359,7 +385,8 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
 
                             JSONObject price = priceIndexes.getJSONObject(0);
 
-							if (latestUpdate <= price.getInt(OWM_LAST_UPDATE)) {
+                            //Check whether the price is new
+							if (latestUpdate < price.getInt(OWM_LAST_UPDATE)) {
 								Double high = null;
 								if (price.has(OWM_VALUE_HIGH))
 									high = price.getDouble(OWM_VALUE_HIGH);
@@ -372,6 +399,8 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
 								));
 							}
 
+                            //Currency prices a processed slightly differently, some more info is
+                            //saved to the default shared preferences
                             if (quality.equals("6") && tradable.equals("Tradable") && craftable.equals("Craftable"))  {
                                 if (defindex == 143) {
                                     SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
@@ -471,9 +500,10 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
         if (cVVector.size() > 0) {
             ContentValues[] cvArray = new ContentValues[cVVector.size()];
             cVVector.toArray(cvArray);
+            //Insert all the data into the database
             int rowsInserted = mContext.getContentResolver()
                     .bulkInsert(PriceEntry.CONTENT_URI, cvArray);
-            if (Utility.isDebugging())
+            if (Utility.isDebugging(mContext))
                 Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
             // Use a DEBUG variable to gate whether or not you do this, so you can easily
             // turn it on and off, and so that it's easy to see what you can rip out if
@@ -489,15 +519,18 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
             if (priceListCursor.moveToFirst()) {
                 ContentValues resultValues = new ContentValues();
                 DatabaseUtils.cursorRowToContentValues(priceListCursor, resultValues);
-                if (Utility.isDebugging())
-                    Log.v(LOG_TAG, "Query succeeded! **********");
+                if (Utility.isDebugging(mContext))
+                    Log.v(LOG_TAG, "Query succeeded");
             } else {
-                if (Utility.isDebugging())
-                    Log.v(LOG_TAG, "Query failed! :( **********");
+                if (Utility.isDebugging(mContext))
+                    Log.v(LOG_TAG, "Query failed");
             }
+
+            priceListCursor.close();
         }
     }
 
+    //Convenient method for building content values which are to be inserted into the database
     private ContentValues buildContentValues(int defindex, String name, String quality, String tradable,
                                              String craftable, String priceIndex, String currency,
                                              double value, Double valueHigh, double valueRaw,

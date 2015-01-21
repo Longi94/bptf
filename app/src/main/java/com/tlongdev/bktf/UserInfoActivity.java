@@ -10,8 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -30,8 +29,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 
-
+/**
+ * Profile page activity.
+ */
 public class UserInfoActivity extends ActionBarActivity implements View.OnClickListener {
+
+    private static final String LOG_TAG = UserInfoActivity.class.getSimpleName();
 
     public static final String STEAM_ID_KEY = "steamid";
     public static final String JSON_USER_SUMMARIES_KEY = "json_user_summaries";
@@ -46,6 +49,7 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
     private TextView tradeStatus;
     private TextView communityStatus;
     private TextView backpackValueRefined;
+    //TODO fix these after implementing backpack viewer.
     private TextView backpackRawMetal;
     private TextView backpackRawKeys;
     private TextView backpackValueUsd;
@@ -74,10 +78,16 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
+
+        //Set the color of the action bar
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xff5787c5));
 
+        //Retrieve steamId from intent
         Intent i = getIntent();
         steamId = i.getStringExtra(STEAM_ID_KEY);
+        if (Utility.isDebugging(this)){
+            Log.d(LOG_TAG, "steamID: " + steamId);
+        }
 
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
@@ -104,31 +114,14 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         findViewById(R.id.button_steam_community).setOnClickListener(this);
         findViewById(R.id.button_backpack).setOnClickListener(this);
 
+        //Start downloading remaining info if the user.
         new FetchUserInfoTask().execute(i.getStringExtra(JSON_USER_SUMMARIES_KEY));
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        /*getMenuInflater().inflate(R.menu.menu_user_info, menu);*/
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        /*int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }*/
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onClick(View v) {
         String url;
+        //Handle all the buttons.
         switch (v.getId()) {
             case R.id.button_bazaar_tf:
                 url = "http://bazaar.tf/profiles/";
@@ -154,21 +147,24 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
 
         Uri webPage = Uri.parse(url + steamId);
 
+        //Open the link using the device default web browser.
         Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
     }
 
+    /**
+     * Get all relevant info from a properly formatted JSON string.
+     * @see <a href="http://backpack.tf/api/users">Users API</a>
+     */
     private void parseUserInfoJson(String jsonString, String steamId) throws JSONException {
 
         final String OWM_RESPONSE = "response";
         final String OWM_SUCCESS = "success";
-        final String OWM_CURRENT_TIME = "current_time";
         final String OWM_PLAYERS = "players";
         final String OWM_BACKPACK_VALUE = "backpack_value";
         final String OWM_BACKPACK_VALUE_TF2 = "440";
-        final String OWM_BACKPACK_UPDATE = "backpack_update";
         final String OWM_PLAYER_NAME = "name";
         final String OWM_PLAYER_REPUTATION = "backpack_tf_reputation";
         final String OWM_PLAYER_GROUP = "backpack_tf_group";
@@ -185,11 +181,13 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         JSONObject response = jsonObject.getJSONObject(OWM_RESPONSE);
 
         if (response.getInt(OWM_SUCCESS) == 0) {
+            if (Utility.isDebugging(this)){
+                Log.e(LOG_TAG, "Response unsuccessful");
+            }
             return;
         }
 
         JSONObject players = response.getJSONObject(OWM_PLAYERS);
-
         JSONObject current_user = players.getJSONObject(steamId);
 
         if (current_user.getInt(OWM_SUCCESS) == 1) {
@@ -200,6 +198,7 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
             }
             backpackValue =  current_user.getJSONObject(OWM_BACKPACK_VALUE).getDouble(OWM_BACKPACK_VALUE_TF2);
 
+            //If these are set, then the value is true
             isInGroup = current_user.has(OWM_PLAYER_GROUP);
             isBanned = current_user.has(OWM_PLAYER_BANNED);
             isScammer = current_user.has(OWM_PLAYER_SCAMMER);
@@ -215,13 +214,16 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         }
     }
 
+    /**
+     * Get all relevant info from properly formatted JSON string.
+     * @see <a href="https://wiki.teamfortress.com/wiki/WebAPI/GetPlayerSummaries">GetUserSummaries API</a>
+     */
     private void parseUserSummariesJson(String jsonString) throws JSONException {
 
         final String OWM_RESPONSE = "response";
         final String OWM_PLAYERS = "players";
         final String OWM_NAME = "personaname";
         final String OWM_LAST_ONLINE = "lastlogoff";
-        final String OWM_AVATAR = "avatarfull";
         final String OWM_PLAYER_STATE = "personastate";
         final String OWM_PROFILE_CREATED = "timecreated";
         final String OWM_IN_GAME = "gameid";
@@ -242,12 +244,17 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
             playerState = 7;
         }
     }
-    
+
+    /**
+     * Update the UI with all available data.
+     */
     private void updateUI() {
+        //Set the title to X's profile
         getSupportActionBar().setTitle(playerNameString + "'s profile");
         playerName.setText(playerNameString);
         
         if (isBanned){
+            //Set player name to red and cross it out.
             playerName.setTextColor(0xffdd4c44);
             playerName.setPaintFlags(playerName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
@@ -336,6 +343,7 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
             backpackValueRefined.setText("?");
             backpackValueUsd.setText("?");
         } else {
+            //Properly format the backpack value (is it int, does it have a fraction smaller than 0.01)
             if ((int) backpackValue == backpackValue)
                 backpackValueRefined.setText("" + (int) backpackValue);
             else if (("" + backpackValue).substring(("" + backpackValue).indexOf('.') + 1).length() > 2)
@@ -376,15 +384,22 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
             trustStatus.setBackgroundDrawable(getResources().getDrawable(R.drawable.status_background_neutral));
         }
 
+        //Image should be available in data folder by the time this method is called.
         avatar.setImageDrawable(Drawable.createFromPath(getFilesDir().toString() + "/avatar_search.png"));
 
+        //Reveal all the info and remove the progress bar.
         findViewById(R.id.scroll_view).setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
     }
 
+    /**
+     * Task the retrieves all the necessary user data in the background.
+     */
     private class FetchUserInfoTask extends AsyncTask<String, Void, Void> {
 
-        String errorMessage = "";
+        public final String LOG_TAG = FetchUserInfoTask.class.getSimpleName();
+
+        String errorMessage;
 
         @Override
         protected Void doInBackground(String... params) {
@@ -407,13 +422,18 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
                 InputStream inputStream;
                 StringBuffer buffer;
 
+                //Build uri
                 uri = Uri.parse(USER_INFO_BASE_URL).buildUpon()
                         .appendQueryParameter(KEY_STEAM_ID, steamId)
                         .appendQueryParameter(KEY_COMPRESS, "1")
                         .build();
 
+                if (Utility.isDebugging(UserInfoActivity.this)){
+                    Log.d(LOG_TAG, "Built uri: " + uri.toString());
+                }
                 url = new URL(uri.toString());
 
+                //Open connection
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
@@ -426,10 +446,8 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
 
                     reader = new BufferedReader(new InputStreamReader(inputStream));
 
+                    //Read the input
                     while ((line = reader.readLine()) != null) {
-                        // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                        // But it does make debugging a *lot* easier if you print out the completed
-                        // buffer for debugging.
                         buffer.append(line);
                     }
 
@@ -437,18 +455,19 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
                         jsonString = buffer.toString();
                         parseUserInfoJson(jsonString, steamId);
                     }
+                    //JSON that arrived with the intent
                     parseUserSummariesJson(params[0]);
                 }
             } catch (IOException e) {
                 errorMessage = "network error";
                 publishProgress();
-                if (Utility.isDebugging())
+                if (Utility.isDebugging(UserInfoActivity.this))
                     e.printStackTrace();
                 return null;
             } catch (JSONException e) {
                 errorMessage = "error while parsing data";
                 publishProgress();
-                if (Utility.isDebugging())
+                if (Utility.isDebugging(UserInfoActivity.this))
                     e.printStackTrace();
                 return null;
             } finally {
@@ -470,6 +489,7 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
 
         @Override
         protected void onProgressUpdate(Void... values) {
+            //only used for showing error messages to the user.
             Toast.makeText(UserInfoActivity.this, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
         }
 

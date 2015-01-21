@@ -5,12 +5,5 @@
         <!-- Customize your theme here. -->
         <item name="android:colorPrimary">@color/bktf_main_blue</item>
         <item name="android:colorPrimaryDark">@color/bktf_main_blue_dark</item>
-        <item name="android:actionBarStyle">@style/bptfActionBar</item>
-    </style>
-
-    <!-- ActionBar styles -->
-    <style name="bptfActionBar"
-        parent="@android:style/Widget.Material.Light.ActionBar">
-        <item name="android:background">#ff5787c5</item>
     </style>
 </resources>

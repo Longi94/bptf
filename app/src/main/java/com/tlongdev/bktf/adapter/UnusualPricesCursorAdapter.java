@@ -75,7 +75,7 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
                         Utility.CURRENCY_KEY, false));
             }
         } catch (Throwable throwable) {
-            if (Utility.isDebugging())
+            if (Utility.isDebugging(context))
                 throwable.printStackTrace();
         }
     }
@@ -123,7 +123,7 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
             } catch (IOException e) {
                 errorMessage = e.getMessage();
                 publishProgress();
-                if (Utility.isDebugging())
+                if (Utility.isDebugging(mContext))
                     e.printStackTrace();
                 return null;
             }

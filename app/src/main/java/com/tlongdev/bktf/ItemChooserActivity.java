@@ -3,7 +3,7 @@ package com.tlongdev.bktf;
 import android.app.Activity;
 import android.os.Bundle;
 
-
+//TODO implement item chooser for calculator
 public class ItemChooserActivity extends Activity {
 
     @Override

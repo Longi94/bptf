@@ -6,6 +6,7 @@ import android.widget.FrameLayout;
 
 import com.tlongdev.bktf.R;
 
+// TODO implement classifieds
 public class ClassifiedListingView extends FrameLayout {
 
     public ClassifiedListingView(Context context) {

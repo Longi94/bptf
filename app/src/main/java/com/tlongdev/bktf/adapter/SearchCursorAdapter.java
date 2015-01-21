@@ -87,7 +87,7 @@ public class SearchCursorAdapter extends CursorAdapter {
                     ));
                 } catch (Throwable throwable) {
                     Toast.makeText(context, "bptf: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
-                    if (Utility.isDebugging())
+                    if (Utility.isDebugging(context))
                         throwable.printStackTrace();
                 }
                 break;
@@ -129,7 +129,7 @@ public class SearchCursorAdapter extends CursorAdapter {
             icon.setImageDrawable(d);
         } catch (IOException e) {
             Toast.makeText(context, "bptf: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            if (Utility.isDebugging())
+            if (Utility.isDebugging(context))
                 e.printStackTrace();
         }
     }
