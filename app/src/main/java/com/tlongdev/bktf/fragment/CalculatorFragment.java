@@ -14,6 +14,9 @@ import android.widget.Toast;
 import com.tlongdev.bktf.ItemChooserActivity;
 import com.tlongdev.bktf.R;
 
+/**
+ * Fragment for calculator TODO finish
+ */
 public class CalculatorFragment extends Fragment {
 
     private RecyclerView mRecyclerView;

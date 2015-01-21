@@ -236,12 +236,16 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
 
     @Override
     protected void onPostExecute(Void param) {
+        //Stop the refreshing animation and update the UI
         if(mFragment.isAdded()){
             mFragment.updateUserPage();
             mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
+    /**
+     * Get all the data from JSON and save them into the default shared preferences
+     */
     private void parseUserSummariesJson(String jsonString) throws JSONException {
         final String OWM_RESPONSE = "response";
         final String OWM_PLAYERS = "players";
@@ -279,7 +283,7 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
     }
 
     /**
-     * Get all the data needed from the JSON string.
+     * Get all the data needed from the JSON string and save them to the default shared preferences.
      */
     private void parseUserInfoJson(String jsonString, String steamId) throws JSONException {
 

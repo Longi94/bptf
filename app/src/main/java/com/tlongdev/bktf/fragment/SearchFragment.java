@@ -7,7 +7,6 @@ import android.database.MatrixCursor;
 import android.database.MergeCursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,12 +36,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
 
+/**
+ * Fragment for searching for prices.
+ */
 public class SearchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+
+    private static final String LOG_TAG = SearchFragment.class.getSimpleName();
 
     private static final int PRICE_LIST_LOADER = 0;
     private static final String QUERY_KEY = "query";
 
+    //The columns we need
     private static final String[] PRICE_LIST_COLUMNS = {
             PriceListContract.PriceEntry.TABLE_NAME + "." + PriceListContract.PriceEntry._ID,
             PriceListContract.PriceEntry.COLUMN_DEFINDEX,
@@ -55,7 +62,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
             PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_MAX,
     };
 
-    public static final int COL_PRICE_LIST_ID = 0;
+    //Indexes of the columns above
     public static final int COL_PRICE_LIST_DEFI = 1;
     public static final int COL_PRICE_LIST_NAME = 2;
     public static final int COL_PRICE_LIST_QUAL = 3;
@@ -66,6 +73,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     public static final int COL_PRICE_LIST_PRIC = 8;
     public static final int COL_PRICE_LIST_PMAX = 9;
 
+    //Selection
     private static final String sNameSearch =
             PriceListContract.PriceEntry.TABLE_NAME+
                     "." + PriceListContract.PriceEntry.COLUMN_ITEM_NAME + " LIKE ? AND " +
@@ -106,7 +114,6 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
 
         String query;
         String[] selectionArgs;
-        String selection = sNameSearch;
 
         if (args != null){
             query = args.getString(QUERY_KEY);
@@ -118,11 +125,14 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
         else {
             selectionArgs = new String[] {"%" + "there is no such itme like thisasd" + "%"};
         }
+        if (Utility.isDebugging(getActivity())){
+            Log.d(LOG_TAG, "selection: " + sNameSearch + ", arguments: " + Arrays.toString(selectionArgs));
+        }
         return new CursorLoader(
                 getActivity(),
                 PriceListContract.PriceEntry.CONTENT_URI,
                 PRICE_LIST_COLUMNS,
-                selection,
+                sNameSearch,
                 selectionArgs,
                 null
         );
@@ -132,11 +142,13 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         cursorAdapter.setUserFound(false);
         cursorAdapter.swapCursor(data);
+        //Cancel the user search task when query is updated and running
         if (searchTask  != null){
             searchTask.cancel(true);
         }
         if (Utility.isNetworkAvailable(getActivity()) && searchQuery != null)
         {
+            //Search for user
             searchTask = new SearchForUserTask(getActivity());
             searchTask.execute(searchQuery);
         }
@@ -147,10 +159,10 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
         cursorAdapter.swapCursor(null);
     }
 
-    public void restartLoader(String s) {
-        searchQuery = s;
+    public void restartLoader(String query) {
+        searchQuery = query;
         Bundle args = new Bundle();
-        args.putString(QUERY_KEY, s);
+        args.putString(QUERY_KEY, query);
         getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
     }
 
@@ -165,7 +177,6 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
         private final String USER_SUMMARIES_BASE_URL = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/";
 
         private Bitmap bmp;
-        private Drawable d;
         private Context mContext;
 
         private SearchForUserTask(Context mContext) {
@@ -278,6 +289,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
         @Override
         protected void onPostExecute(final String[] s) {
             if (isAdded() && s != null && s[0] != null) {
+                //Insert an extra row to the cursor
                 Cursor cursor = cursorAdapter.getCursor();
                 MatrixCursor extras = new MatrixCursor(new String[] {
                         PriceListContract.PriceEntry._ID,
@@ -298,6 +310,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        //Open user page if user clicks on the user name
                         if (position == 0){
                             Intent intent = new Intent(getActivity(), UserInfoActivity.class);
                             intent.putExtra(UserInfoActivity.STEAM_ID_KEY, s[1]);
@@ -309,6 +322,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
             }
         }
 
+        //Method for downloading image
         public Bitmap getBitmapFromURL(String link) {
 
             try {
