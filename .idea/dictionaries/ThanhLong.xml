@@ -2,6 +2,7 @@
   <dictionary name="ThanhLong">
     <words>
       <w>attacher</w>
+      <w>australium</w>
       <w>bktf</w>
       <w>bptf</w>
       <w>craftability</w>
@@ -10,8 +11,10 @@
       <w>defindexes</w>
       <w>earbuds</w>
       <w>recycler</w>
+      <w>scammer</w>
       <w>tradability</w>
       <w>tradable</w>
+      <w>unusuals</w>
     </words>
   </dictionary>
 </component>

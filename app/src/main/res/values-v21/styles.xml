@@ -3,7 +3,22 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="android:colorPrimary">@color/bktf_main_blue</item>
-        <item name="android:colorPrimaryDark">@color/bktf_main_blue_dark</item>
+        <item name="colorPrimary">@color/bktf_main_blue</item>
+        <item name="colorPrimaryDark">@color/bktf_main_blue_dark</item>
+        <item name="colorAccent">@color/bktf_main_blue</item>
+        <item name="actionBarStyle">@style/bptfActionBar</item>
+    </style>
+
+    <!-- ActionBar styles -->
+    <style name="bptfActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
+        <item name="background">@color/bktf_main_blue</item>
+        <item name="elevation">3dp</item>
+    </style>
+
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/bktf_main_blue</item>
+        <item name="colorPrimaryDark">@color/bktf_main_blue_dark</item>
+        <item name="colorAccent">@color/bktf_main_blue</item>
+        <item name="actionBarStyle">@style/bptfActionBar</item>
     </style>
 </resources>

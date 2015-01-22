@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,8 +75,14 @@ public class SearchCursorAdapter extends CursorAdapter {
                         cursor.getInt(SearchFragment.COL_PRICE_LIST_QUAL),
                         cursor.getInt(SearchFragment.COL_PRICE_LIST_INDE)));
 
-                setIconImage(context, viewHolder.icon, cursor.getInt(SearchFragment.COL_PRICE_LIST_DEFI),
-                        ((String) viewHolder.nameView.getText()).contains("Australium"));
+                if (cursor.getInt(SearchFragment.COL_PRICE_LIST_INDE) == 0) {
+                    setIconImage(context, viewHolder.icon, cursor.getInt(SearchFragment.COL_PRICE_LIST_DEFI),
+                            viewHolder.nameView.getText().toString().contains("Australium"));
+                } else if (!cursor.getString(SearchFragment.COL_PRICE_LIST_NAME).contains("Crate")) {
+                    setIconImageWithIndex(context, viewHolder.icon, cursor.getInt(SearchFragment.COL_PRICE_LIST_DEFI),
+                            cursor.getInt(SearchFragment.COL_PRICE_LIST_INDE),
+                            viewHolder.nameView.getText().toString().contains("Australium"));
+                }
 
                 try {
                     viewHolder.priceView.setText(Utility.formatPrice(
@@ -127,6 +134,30 @@ public class SearchCursorAdapter extends CursorAdapter {
             Drawable d = Drawable.createFromStream(ims, null);
             // set image to ImageView
             icon.setImageDrawable(d);
+        } catch (IOException e) {
+            Toast.makeText(context, "bptf: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            if (Utility.isDebugging(context))
+                e.printStackTrace();
+        }
+    }
+
+    private void setIconImageWithIndex(Context context, ImageView icon, int defindex, int priceIndex, boolean isAustralium) {
+        try {
+            InputStream ims;
+            AssetManager assetManager = context.getAssets();
+            if (isAustralium && defindex != 5037) {
+                ims = assetManager.open("items/" + defindex + "aus.png");
+            } else {
+                ims = assetManager.open("items/" + defindex + ".png");
+            }
+
+            // load image as Drawable
+            Drawable iconDrawable = Drawable.createFromStream(ims, null);
+
+            ims = assetManager.open("effects/" + priceIndex + "_188x188.png");
+            Drawable effectDrawable = Drawable.createFromStream(ims, null);
+            // set image to ImageView
+            icon.setImageDrawable(new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable}));
         } catch (IOException e) {
             Toast.makeText(context, "bptf: " + e.getMessage(), Toast.LENGTH_LONG).show();
             if (Utility.isDebugging(context))

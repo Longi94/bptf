@@ -59,4 +59,89 @@
         <item>MvM Squad surplus reward</item>
         <item>Recipe output</item>
     </string-array>
+    
+    <string-array name="item_chooser_spinner">
+        <item>Regular items</item>
+        <item>Unusuals</item>
+    </string-array>
+    
+    <string-array name="effects">
+        <item>Green Confetti</item>
+        <item>Purple Confetti</item>
+        <item>Haunted Ghosts</item>
+        <item>Green Energy</item>
+        <item>Purple Energy</item>
+        <item>Circling TF Logo</item>
+        <item>Massed Flies</item>
+        <item>Burning Flames</item>
+        <item>Scorching Flames</item>
+        <item>Sunbeams</item>
+        <item>Stormy Storm</item>
+        <item>Orbiting Fire</item>
+        <item>Bubbling</item>
+        <item>Smoking</item>
+        <item>Steaming</item>
+        <item>Cloudy Moon</item>
+        <item>Kill-a-Watt</item>
+        <item>Terror-Watt</item>
+        <item>Cloud 9</item>
+        <item>Time Warp</item>
+        <item>Searing Plasma</item>
+        <item>Vivid Plasma</item>
+        <item>Circling Peace Sign</item>
+        <item>Circling Heart</item>
+        <item>Blizzardy Storm</item>
+        <item>Nuts n\' Bolts</item>
+        <item>Orbiting Planets</item>
+        <item>Flaming Lantern</item>
+        <item>Cauldron Bubbles</item>
+        <item>Eerie Orbiting Fire</item>
+        <item>Knifestorm</item>
+        <item>Misty Skull</item>
+        <item>Harvest Moon</item>
+        <item>It\'s A Secret To Everybody</item>
+        <item>Stormy 13th Hour</item>
+        <item>Aces High</item>
+        <item>Dead Presidents</item>
+        <item>Miami Nights</item>
+        <item>Disco Beat Down</item>
+        <item>Phosphorous</item>
+        <item>Sulphurous</item>
+        <item>Memory Leak</item>
+        <item>Overclocked</item>
+        <item>Electrostatic</item>
+        <item>Power Surge</item>
+        <item>Anti-Freeze</item>
+        <item>Green Black Hole</item>
+        <item>Roboactive</item>
+        <item>Arcana</item>
+        <item>Spellbound</item>
+        <item>Chiroptera Venenata</item>
+        <item>Poisoned Shadows</item>
+        <item>Something Burning This Way Comes</item>
+        <item>Hellfire</item>
+        <item>Darkblaze</item>
+        <item>Demonflame</item>
+        <item>Showstopper</item>
+        <item>Holy Grail</item>
+        <item>\'72</item>
+        <item>Fountain of Delight</item>
+        <item>Screaming Tiger</item>
+        <item>Skill Gotten Gains</item>
+        <item>Midnight Whirlwind</item>
+        <item>Silver Cyclone</item>
+        <item>Mega Strike</item>
+        <item>Bonzo The All-Gnawing</item>
+        <item>Amaranthine</item>
+        <item>Stare From Beyond</item>
+        <item>The Ooze</item>
+        <item>Ghastly Ghosts Jr</item>
+        <item>Haunted Phantasm Jr</item>
+        <item>Haunted Phantasm</item>
+        <item>Ghastly Ghosts</item>
+        <item>Frostbite</item>
+        <item>Molten Mallard</item>
+        <item>Morning Glory</item>
+        <item>Death at Dusk</item>
+    </string-array>
 </resources>

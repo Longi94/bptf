@@ -20,7 +20,6 @@ import com.tlongdev.bktf.fragment.HomeFragment;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DecimalFormat;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -144,14 +143,14 @@ public class PriceListCursorAdapter extends CursorAdapter {
 
                 InputStream ims;
                 if (path.contains("Australium") && params[0] != 5037) {
-                    ims = assetManager.open("items/" + (new DecimalFormat("#0")).format(params[0]) + "aus.png");
+                    ims = assetManager.open("items/" + params[0].intValue() + "aus.png");
                 } else {
-                    ims = assetManager.open("items/" + (new DecimalFormat("#0")).format(params[0]) + ".png");
+                    ims = assetManager.open("items/" + params[0].intValue() + ".png");
                 }
 
                 Drawable iconDrawable = Drawable.createFromStream(ims, null);
                 if (params[1] != 0 && !path.contains("Crate")) {
-                    ims = assetManager.open("effects/" + (new DecimalFormat("#0")).format(params[1]) + "_188x188.png");
+                    ims = assetManager.open("effects/" + params[1].intValue() + "_188x188.png");
                     Drawable effectDrawable = Drawable.createFromStream(ims, null);
                     returnVal[0] = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
                 } else {

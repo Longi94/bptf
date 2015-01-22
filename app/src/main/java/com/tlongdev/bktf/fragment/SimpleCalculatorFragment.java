@@ -2,10 +2,15 @@ package com.tlongdev.bktf.fragment;
 
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -22,6 +27,12 @@ public class SimpleCalculatorFragment extends Fragment {
 
     public SimpleCalculatorFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -168,5 +179,28 @@ public class SimpleCalculatorFragment extends Fragment {
                 throwable.printStackTrace();
         }
         return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_simple_calculator, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId){
+            case R.id.action_show_advanced:
+                PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
+                        .putBoolean(getString(R.string.pref_prefered_advanced_calculator), true).apply();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.simple_fade_in, R.anim.simple_fade_out)
+                        .replace(R.id.container, new AdvancedCalculatorFragment())
+                        .commit();
+                break;
+        }
+        return true;
     }
 }
