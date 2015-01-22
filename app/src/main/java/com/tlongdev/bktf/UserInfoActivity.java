@@ -3,7 +3,6 @@ package com.tlongdev.bktf;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -78,9 +77,6 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
-
-        //Set the color of the action bar
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xff5787c5));
 
         //Retrieve steamId from intent
         Intent i = getIntent();

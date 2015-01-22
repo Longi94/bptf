@@ -2,7 +2,6 @@ package com.tlongdev.bktf;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -62,9 +61,6 @@ public class UnusualActivity extends ActionBarActivity implements LoaderManager.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unusual);
-
-        //Set the color of the action bar.
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xff5787c5));
 
         //Get necessary data from intent
         Intent i = getIntent();

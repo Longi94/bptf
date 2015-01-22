@@ -33,7 +33,7 @@ public class CreditsActivity extends PreferenceActivity {
      * as a master/detail two-pane view on tablets. When true, a single pane is
      * shown on tablets.
      */
-    private static final boolean ALWAYS_SIMPLE_PREFS = false;
+    private static final boolean ALWAYS_SIMPLE_PREFS = true;
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {

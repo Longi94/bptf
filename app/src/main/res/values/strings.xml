@@ -87,5 +87,9 @@
     <string name="summary_particles">provided by backpack.tf</string>
     <string name="pref_rate_title">Rate the app on Google Play</string>
     <string name="pref_debug">pref_debug</string>
+    <string name="action_show_advanced">Advanced mode</string>
+    <string name="action_show_simple">Simple mode</string>
+    <string name="action_clear">Clear items</string>
+    <string name="pref_prefered_advanced_calculator">pref_prefered_advanced_calculator</string>
 
 </resources>

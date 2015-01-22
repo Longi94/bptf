@@ -18,7 +18,8 @@
         android:id="@+id/edit_text_earbuds"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal"/>
+        android:inputType="numberDecimal"
+        android:textColorHighlight="@color/bktf_main_blue_light"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -31,7 +32,8 @@
         android:id="@+id/edit_text_keys"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal"/>
+        android:inputType="numberDecimal"
+        android:textColorHighlight="@color/bktf_main_blue_light"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -44,7 +46,8 @@
         android:id="@+id/edit_text_metal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal"/>
+        android:inputType="numberDecimal"
+        android:textColorHighlight="@color/bktf_main_blue_light"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -57,6 +60,7 @@
         android:id="@+id/edit_text_usd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal"/>
+        android:inputType="numberDecimal"
+        android:textColorHighlight="@color/bktf_main_blue_light"/>
     
 </LinearLayout>

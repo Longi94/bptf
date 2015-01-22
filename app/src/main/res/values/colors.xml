@@ -3,6 +3,7 @@
     <color name="white_ripple">#99ffffff</color>
     <color name="bktf_main_blue_dark">#ff456292</color>
     <color name="bktf_main_blue">#ff5787c5</color>
+    <color name="bktf_main_blue_light">#ff60a2e8</color>
 
     <color name="tf2_unusual_color">#8650AC</color>
     <color name="tf2_unique_color">#FFD700</color>

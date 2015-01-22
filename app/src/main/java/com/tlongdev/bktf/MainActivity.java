@@ -3,10 +3,10 @@ package com.tlongdev.bktf;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -15,6 +15,7 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.tlongdev.bktf.fragment.AdvancedCalculatorFragment;
 import com.tlongdev.bktf.fragment.HomeFragment;
 import com.tlongdev.bktf.fragment.NavigationDrawerFragment;
 import com.tlongdev.bktf.fragment.SearchFragment;
@@ -52,9 +53,6 @@ public class MainActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //Set the color of the action bar
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xff5787c5));
 
         //Set the default values for all preferences when the app is first loaded
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
@@ -95,30 +93,29 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        if (currentFragment != -1) {
+            transaction.setCustomAnimations(R.anim.simple_fade_in, R.anim.simple_fade_out);
+        }
         if (position == 0 && currentFragment != 0) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, new HomeFragment())
-                    .commit();
+            transaction.replace(R.id.container, new HomeFragment());
         }
         else if (position == 1 && currentFragment != 1) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, new UserFragment())
-                    .commit();
+            transaction.replace(R.id.container, new UserFragment());
         }
         else if (position == 2  && currentFragment != 2) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, new UnusualPriceListFragment())
-                    .commit();
+            transaction.replace(R.id.container, new UnusualPriceListFragment());
         }
         else if (position == 3  && currentFragment != 3) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, new SimpleCalculatorFragment())
-                    .commit();
+            if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_prefered_advanced_calculator), false)){
+                transaction.replace(R.id.container, new SimpleCalculatorFragment());
+            } else {
+                transaction.replace(R.id.container, new AdvancedCalculatorFragment());
+            }
         }
+        transaction.commit();
+
         currentFragment = position;
         onSectionAttached(position);
     }
@@ -211,10 +208,11 @@ public class MainActivity extends ActionBarActivity
                         mSearchFragment = new SearchFragment();
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         fragmentManager.beginTransaction()
+                                .setCustomAnimations(R.anim.simple_fade_in, R.anim.simple_fade_out)
                                 .replace(R.id.container, mSearchFragment)
                                 .commit();
 
-                        currentFragment = -1;
+                        currentFragment = -2;
 
                         return true;
                     }
