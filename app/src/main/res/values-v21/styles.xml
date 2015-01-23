@@ -7,12 +7,18 @@
         <item name="colorPrimaryDark">@color/bktf_main_blue_dark</item>
         <item name="colorAccent">@color/bktf_main_blue</item>
         <item name="actionBarStyle">@style/bptfActionBar</item>
+        <item name="searchViewStyle">@style/bptfSearchView</item>
     </style>
 
     <!-- ActionBar styles -->
     <style name="bptfActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
         <item name="background">@color/bktf_main_blue</item>
         <item name="elevation">3dp</item>
+    </style>
+
+    <style name="bptfSearchView" parent="Widget.AppCompat.Light.SearchView">
+        <item name="colorControlActivated">@android:color/white</item>
+        <item name="colorAccent">@android:color/white</item>
     </style>
 
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">

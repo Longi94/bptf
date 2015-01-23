@@ -13,13 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <EditText
-        android:id="@+id/edit_text_search"
+    <Spinner
+        android:id="@+id/spinner_effect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
-        android:hint="Start typing"
-        android:textColorHighlight="@color/bktf_main_blue_light"/>
+        android:clickable="false" />
 
     <ListView
         android:id="@+id/list_view_item_chooser"
@@ -28,11 +26,14 @@
         android:layout_weight="1"
         android:scrollbars="none"/>
 
-    <Spinner
-        android:id="@+id/spinner_effect"
+    <EditText
+        android:id="@+id/edit_text_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:inputType="text"
+        android:hint="Start typing..."
+        android:textColorHighlight="@color/bktf_main_blue_light"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"

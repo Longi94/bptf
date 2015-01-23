@@ -7,7 +7,7 @@
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
     <string name="search_title">Search</string>
-    <string name="search_hint">Item name</string>
+    <string name="search_hint">Start typing…</string>
     <string name="pref_steam_id">Steam ID</string>
     <string name="pref_steam_id_default"></string>
     <string name="title_home">Latest Changes</string>
@@ -91,5 +91,9 @@
     <string name="action_show_simple">Simple mode</string>
     <string name="action_clear">Clear items</string>
     <string name="pref_prefered_advanced_calculator">pref_prefered_advanced_calculator</string>
+    <string name="pref_user_developer">pref_user_developer</string>
+    <string name="main_preference_screen">main_preference_screen</string>
+    <string name="pref_category_dev">Developer</string>
+    <string name="pref_debug_logs">Enable debug logs</string>
 
 </resources>

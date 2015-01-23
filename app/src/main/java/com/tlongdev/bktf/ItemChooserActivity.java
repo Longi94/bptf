@@ -42,6 +42,7 @@ public class ItemChooserActivity extends Activity implements AdapterView.OnItemS
         itemChooserList = (ListView)findViewById(R.id.list_view_item_chooser);
 
         effectTypeSpinner = (Spinner)findViewById(R.id.spinner_effect);
+        effectTypeSpinner.setEnabled(false);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> effectsAdapter = ArrayAdapter.createFromResource(this,
                 R.array.effects, android.R.layout.simple_spinner_item);
@@ -81,10 +82,12 @@ public class ItemChooserActivity extends Activity implements AdapterView.OnItemS
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch (position){
             case 0:
-                effectTypeSpinner.setVisibility(View.GONE);
+                effectTypeSpinner.setClickable(false);
+                effectTypeSpinner.setEnabled(false);
                 break;
             case 1:
-                effectTypeSpinner.setVisibility(View.VISIBLE);
+                effectTypeSpinner.setClickable(true);
+                effectTypeSpinner.setEnabled(true);
                 break;
         }
     }
