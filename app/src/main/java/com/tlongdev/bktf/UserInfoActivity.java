@@ -192,7 +192,12 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
             if (current_user.has(OWM_PLAYER_REPUTATION)) {
                 playerReputationValue = current_user.getInt(OWM_PLAYER_REPUTATION);
             }
-            backpackValue =  current_user.getJSONObject(OWM_BACKPACK_VALUE).getDouble(OWM_BACKPACK_VALUE_TF2);
+            if (current_user.has(OWM_BACKPACK_VALUE)) {
+                JSONObject backpackValues = current_user.getJSONObject(OWM_BACKPACK_VALUE);
+                if (backpackValues.has(OWM_BACKPACK_VALUE_TF2)) {
+                    backpackValue = backpackValues.getDouble(OWM_BACKPACK_VALUE_TF2);
+                }
+            }
 
             //If these are set, then the value is true
             isInGroup = current_user.has(OWM_PLAYER_GROUP);

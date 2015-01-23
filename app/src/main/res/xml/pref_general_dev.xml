@@ -86,4 +86,14 @@
             android:key="@string/pref_rate_title"/>
 
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_category_dev"
+        android:key="@string/pref_category_dev">
+
+        <SwitchPreference
+            android:title="@string/pref_debug_logs"
+            android:key="@string/pref_debug"
+            android:defaultValue="false"/>
+    </PreferenceCategory>
 </PreferenceScreen>

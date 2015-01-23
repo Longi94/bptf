@@ -14,11 +14,14 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.tlongdev.bktf.service.NotificationsService;
 import com.tlongdev.bktf.service.UpdateDatabaseService;
@@ -35,14 +38,9 @@ import com.tlongdev.bktf.service.UpdateDatabaseService;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
-    /**
-     * Determines whether to always show the simplified settings UI, where
-     * settings are presented in a single list. When false, settings are shown
-     * as a master/detail two-pane view on tablets. When true, a single pane is
-     * shown on tablets.
-     */
-    private static final boolean ALWAYS_SIMPLE_PREFS = true;
 
+    private boolean secretSwitch = true;
+    private int secretCounter = 0;
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -60,6 +58,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 finish();
             }
         });
+        ViewCompat.setElevation(bar, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, getResources().getDisplayMetrics()));
     }
 
     /**
@@ -68,17 +67,16 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * shown.
      */
     private void setupSimplePreferencesScreen() {
-        if (!isSimplePreferences(this)) {
-            return;
-        }
-
         // In the simplified UI, fragments are not used at all and we instead
         // use the older PreferenceActivity APIs.
 
         // Add 'general' preferences.
-        addPreferencesFromResource(R.xml.pref_general);
+        if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_user_developer), false)) {
+            addPreferencesFromResource(R.xml.pref_general);
+        } else {
+            addPreferencesFromResource(R.xml.pref_general_dev);
+        }
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
-
 
         // Bind the summaries of EditText/List/Dialog/Ringtone preferences to
         // their values. When their values change, their summaries are updated
@@ -115,6 +113,38 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         //Set the version name to the summary, so I don't have to change it manually every goddamn
         //update
         findPreference(getString(R.string.pref_version_title)).setSummary(BuildConfig.VERSION_NAME);
+
+
+        if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_user_developer), false)) {
+            findPreference(getString(R.string.pref_version_title)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    if (secretSwitch) {
+                        secretCounter++;
+                        secretSwitch = false;
+                    }
+                    return true;
+                }
+            });
+
+            findPreference(getString(R.string.pref_developer_title)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    if (!secretSwitch) {
+                        secretCounter++;
+                        secretSwitch = true;
+                        if (secretCounter == 6){
+                            Toast.makeText(SettingsActivity.this, "You're now the developer of this app!", Toast.LENGTH_SHORT).show();
+                            findPreference(getString(R.string.pref_developer_title)).setOnPreferenceClickListener(null);
+                            findPreference(getString(R.string.pref_version_title)).setOnPreferenceClickListener(null);
+                            PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this).
+                                    edit().putBoolean(getString(R.string.pref_user_developer), true).apply();
+                        }
+                    }
+                    return true;
+                }
+            });
+        }
     }
 
     /**
@@ -136,7 +166,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     /**
      * Determines whether the simplified settings UI should be shown. This is
-     * true if this is forced via {@link #ALWAYS_SIMPLE_PREFS}, or the device
+     * true if this is forced via or the device
      * doesn't have newer APIs like {@link PreferenceFragment}, or the device
      * doesn't have an extra-large screen. In these cases, a single-pane
      * "simplified" settings UI should be shown.
