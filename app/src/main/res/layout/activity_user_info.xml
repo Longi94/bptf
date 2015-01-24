@@ -228,7 +228,7 @@
                         </LinearLayout>
 
                         <View
-                            style="@style/DividerHorizontal"
+                            style="@style/DividerHorizontal.Margins"
                             android:background="#555"/>
 
                         <LinearLayout
@@ -259,7 +259,7 @@
                         </LinearLayout>
 
                         <View
-                            style="@style/DividerHorizontal"
+                            style="@style/DividerHorizontal.Margins"
                             android:background="#555"/>
 
                         <LinearLayout
@@ -289,7 +289,7 @@
                         </LinearLayout>
 
                         <View
-                            style="@style/DividerHorizontal"
+                            style="@style/DividerHorizontal.Margins"
                             android:background="#555"/>
 
                         <LinearLayout
@@ -319,7 +319,7 @@
                         </LinearLayout>
 
                         <View
-                            style="@style/DividerHorizontal"
+                            style="@style/DividerHorizontal.Margins"
                             android:background="#555"/>
 
                         <LinearLayout
@@ -389,7 +389,7 @@
                         </LinearLayout>
 
                         <View
-                            style="@style/DividerHorizontal"
+                            style="@style/DividerHorizontal.Margins"
                             android:background="#555"/>
 
                         <LinearLayout
@@ -415,7 +415,7 @@
                         </LinearLayout>
 
                         <View
-                            style="@style/DividerHorizontal"
+                            style="@style/DividerHorizontal.Margins"
                             android:background="#555"/>
 
                         <LinearLayout
@@ -441,7 +441,7 @@
                         </LinearLayout>
 
                         <View
-                            style="@style/DividerHorizontal"
+                            style="@style/DividerHorizontal.Margins"
                             android:background="#555"/>
 
                         <LinearLayout
@@ -467,7 +467,7 @@
                         </LinearLayout>
 
                         <View
-                            style="@style/DividerHorizontal"
+                            style="@style/DividerHorizontal.Margins"
                             android:background="#555"/>
 
                         <LinearLayout

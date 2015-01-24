@@ -102,9 +102,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
         // Inflate the layout for this fragment
         mListView = (ListView)inflater.inflate(R.layout.fragment_search, container, false);
 
-        cursorAdapter = new SearchCursorAdapter(
-                getActivity(), null, 0
-        );
+        cursorAdapter = new SearchCursorAdapter(getActivity(), null, 0);
         mListView.setAdapter(cursorAdapter);
 
         return mListView;

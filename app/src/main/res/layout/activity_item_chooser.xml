@@ -17,7 +17,9 @@
         android:id="@+id/spinner_effect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="false" />
+        android:clickable="false"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"/>
 
     <ListView
         android:id="@+id/list_view_item_chooser"
@@ -26,13 +28,43 @@
         android:layout_weight="1"
         android:scrollbars="none"/>
 
-    <EditText
-        android:id="@+id/edit_text_search"
+    <TextView
+        android:id="@+id/text_view_no_match"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
-        android:hint="Start typing..."
-        android:textColorHighlight="@color/bktf_main_blue_light"/>
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:text="No match or item has no price"
+        android:gravity="center"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/edit_text_search"
+            android:layout_weight="3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="Start typing..."
+            android:textColorHighlight="@color/bktf_main_blue_light"
+            android:textSize="16sp"/>
+
+        <EditText
+            android:id="@+id/edit_text_count"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:gravity="center"
+            android:text="1"
+            android:textColorHighlight="@color/bktf_main_blue_light"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
 
 
     <LinearLayout
@@ -48,12 +80,14 @@
             android:text="Cancel"
             android:textColor="@color/bktf_main_blue"
             style="?android:attr/buttonBarButtonStyle"/>
+
         <Button
             android:id="@+id/button_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add"
             android:textColor="@color/bktf_main_blue"
+            android:enabled="false"
             style="?android:attr/buttonBarButtonStyle"/>
 
     </LinearLayout>

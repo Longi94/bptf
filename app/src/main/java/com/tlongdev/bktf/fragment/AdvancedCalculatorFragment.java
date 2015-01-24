@@ -1,7 +1,9 @@
 package com.tlongdev.bktf.fragment;
 
 
+import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -14,19 +16,42 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.tlongdev.bktf.ItemChooserActivity;
+import com.tlongdev.bktf.MainActivity;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.adapter.AdvancedCalculatorAdapter;
+import com.tlongdev.bktf.data.PriceListContract;
+
+import java.util.ArrayList;
 
 /**
  * Fragment for calculator TODO finish
  */
 public class AdvancedCalculatorFragment extends Fragment {
 
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private static final String[] PRICE_LIST_COLUMNS = {
+            PriceListContract.PriceEntry.TABLE_NAME + "." + PriceListContract.PriceEntry._ID,
+            PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW,
+    };
+
+    //Indexes for the columns above
+    public static final int COL_PRICE_LIST_PRAW = 1;
+
+    public static final String mSelection = PriceListContract.PriceEntry.TABLE_NAME+
+            "." + PriceListContract.PriceEntry._ID + " = ?";
+
+    private AdvancedCalculatorAdapter mAdapter;
+
+    private ArrayList<Utility.IntegerPair> ids = new ArrayList<>();
+
+    private TextView priceMetal;
+    private TextView priceKeys;
+    private TextView priceBuds;
+    private TextView priceUsd;
+
 
     public AdvancedCalculatorFragment() {
         // Required empty public constructor
@@ -42,26 +67,52 @@ public class AdvancedCalculatorFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_advanced_calculator, container, false);
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
 
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mAdapter = new AdvancedCalculatorAdapter(getActivity(), ids);
+        mAdapter.setOnItemDeletedListener(new AdvancedCalculatorAdapter.OnItemDeletedListener() {
+            @Override
+            public void onItemDeleted() {
+                updatePrices();
+            }
+        });
+        mRecyclerView.setAdapter(mAdapter);
 
         rootView.findViewById(R.id.image_button_add).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), ItemChooserActivity.class);
-                startActivityForResult(i, 0);
+                startActivityForResult(i, MainActivity.REQUEST_NEW_ITEM);
                 getActivity().overridePendingTransition(R.anim.item_chooser_animation, 0);
             }
         });
+
+        priceMetal = (TextView)rootView.findViewById(R.id.text_view_price_metal);
+        priceKeys = (TextView)rootView.findViewById(R.id.text_view_price_keys);
+        priceBuds = (TextView)rootView.findViewById(R.id.text_view_price_buds);
+        priceUsd = (TextView)rootView.findViewById(R.id.text_view_price_usd);
+
         return rootView;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Toast.makeText(getActivity(), "returned", Toast.LENGTH_SHORT).show();
+        // Check which request we're responding to
+        if (requestCode == MainActivity.REQUEST_NEW_ITEM) {
+            // Make sure the request was successful
+            if (resultCode == Activity.RESULT_OK) {
+                int id = data.getIntExtra(ItemChooserActivity.EXTRA_ITEM_ID, -1);
+                if (id >= 0) {
+                    ids.add(new Utility.IntegerPair(id, data.getIntExtra(ItemChooserActivity.EXTRA_ITEM_COUNT, 0)));
+                    mAdapter.notifyDataSetChanged();
+                    updatePrices();
+                }
+            }
+        }
     }
 
     @Override
@@ -84,8 +135,44 @@ public class AdvancedCalculatorFragment extends Fragment {
                         .commit();
                 break;
             case R.id.action_clear:
+                ids.clear();
+                mAdapter.notifyDataSetChanged();
+                updatePrices();
                 break;
         }
         return true;
+    }
+
+    private void updatePrices(){
+        double totalPrice = 0;
+        for (Utility.IntegerPair pair : ids){
+            Cursor cursor = getActivity().getContentResolver().query(
+                    PriceListContract.PriceEntry.CONTENT_URI,
+                    PRICE_LIST_COLUMNS,
+                    mSelection,
+                    new String[]{"" + pair.getX()},
+                    null
+            );
+
+            if (cursor.moveToFirst()){
+                totalPrice += cursor.getDouble(COL_PRICE_LIST_PRAW) * pair.getY();
+            }
+            cursor.close();
+        }
+
+        try {
+            priceMetal.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
+                    Utility.CURRENCY_METAL, Utility.CURRENCY_METAL, false));
+            priceKeys.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
+                    Utility.CURRENCY_METAL, Utility.CURRENCY_KEY, false));
+            priceBuds.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
+                    Utility.CURRENCY_METAL, Utility.CURRENCY_BUD, false));
+            priceUsd.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
+                    Utility.CURRENCY_METAL, Utility.CURRENCY_USD, false));
+        } catch (Throwable throwable) {
+            if (Utility.isDebugging(getActivity())) {
+                throwable.printStackTrace();
+            }
+        }
     }
 }

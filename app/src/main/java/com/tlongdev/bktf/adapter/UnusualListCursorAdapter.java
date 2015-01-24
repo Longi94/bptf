@@ -47,6 +47,7 @@ public class UnusualListCursorAdapter extends CursorAdapter {
         if (cursor.moveToFirst()) {
             rawBudsPrice = cursor.getDouble(0);
         }
+        cursor.close();
     }
 
     @Override

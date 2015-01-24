@@ -69,7 +69,8 @@ public class SearchCursorAdapter extends CursorAdapter {
                         cursor.getInt(SearchFragment.COL_PRICE_LIST_TRAD),
                         cursor.getInt(SearchFragment.COL_PRICE_LIST_CRAF)));
 
-                viewHolder.nameView.setText(Utility.formatItemName(cursor.getString(SearchFragment.COL_PRICE_LIST_NAME),
+                viewHolder.nameView.setText(Utility.formatItemName(
+                        cursor.getString(SearchFragment.COL_PRICE_LIST_NAME),
                         cursor.getInt(SearchFragment.COL_PRICE_LIST_TRAD),
                         cursor.getInt(SearchFragment.COL_PRICE_LIST_CRAF),
                         cursor.getInt(SearchFragment.COL_PRICE_LIST_QUAL),

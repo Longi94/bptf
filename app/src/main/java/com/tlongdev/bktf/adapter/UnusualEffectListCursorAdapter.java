@@ -47,6 +47,7 @@ public class UnusualEffectListCursorAdapter extends CursorAdapter {
         if (cursor.moveToFirst()) {
             rawBudsPrice = cursor.getDouble(0);
         }
+        cursor.close();
     }
 
     @Override
@@ -64,7 +65,6 @@ public class UnusualEffectListCursorAdapter extends CursorAdapter {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
         final int index = cursor.getInt(UnusualPriceListFragment.COL_PRICE_LIST_INDE);
-        final String name = cursor.getString(UnusualPriceListFragment.COL_PRICE_LIST_NAME);
         viewHolder.icon.setTag("" + index);
 
         new LoadImagesTask(context, viewHolder.icon).

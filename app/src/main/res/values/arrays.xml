@@ -66,82 +66,162 @@
     </string-array>
     
     <string-array name="effects">
-        <item>Green Confetti</item>
-        <item>Purple Confetti</item>
-        <item>Haunted Ghosts</item>
-        <item>Green Energy</item>
-        <item>Purple Energy</item>
-        <item>Circling TF Logo</item>
-        <item>Massed Flies</item>
-        <item>Burning Flames</item>
-        <item>Scorching Flames</item>
-        <item>Sunbeams</item>
-        <item>Stormy Storm</item>
-        <item>Orbiting Fire</item>
-        <item>Bubbling</item>
-        <item>Smoking</item>
-        <item>Steaming</item>
-        <item>Cloudy Moon</item>
-        <item>Kill-a-Watt</item>
-        <item>Terror-Watt</item>
-        <item>Cloud 9</item>
-        <item>Time Warp</item>
-        <item>Searing Plasma</item>
-        <item>Vivid Plasma</item>
-        <item>Circling Peace Sign</item>
-        <item>Circling Heart</item>
-        <item>Blizzardy Storm</item>
-        <item>Nuts n\' Bolts</item>
-        <item>Orbiting Planets</item>
-        <item>Flaming Lantern</item>
-        <item>Cauldron Bubbles</item>
-        <item>Eerie Orbiting Fire</item>
-        <item>Knifestorm</item>
-        <item>Misty Skull</item>
-        <item>Harvest Moon</item>
-        <item>It\'s A Secret To Everybody</item>
-        <item>Stormy 13th Hour</item>
         <item>Aces High</item>
-        <item>Dead Presidents</item>
-        <item>Miami Nights</item>
-        <item>Disco Beat Down</item>
-        <item>Phosphorous</item>
-        <item>Sulphurous</item>
-        <item>Memory Leak</item>
-        <item>Overclocked</item>
-        <item>Electrostatic</item>
-        <item>Power Surge</item>
-        <item>Anti-Freeze</item>
-        <item>Green Black Hole</item>
-        <item>Roboactive</item>
-        <item>Arcana</item>
-        <item>Spellbound</item>
-        <item>Chiroptera Venenata</item>
-        <item>Poisoned Shadows</item>
-        <item>Something Burning This Way Comes</item>
-        <item>Hellfire</item>
-        <item>Darkblaze</item>
-        <item>Demonflame</item>
-        <item>Showstopper</item>
-        <item>Holy Grail</item>
-        <item>\'72</item>
-        <item>Fountain of Delight</item>
-        <item>Screaming Tiger</item>
-        <item>Skill Gotten Gains</item>
-        <item>Midnight Whirlwind</item>
-        <item>Silver Cyclone</item>
-        <item>Mega Strike</item>
-        <item>Bonzo The All-Gnawing</item>
         <item>Amaranthine</item>
-        <item>Stare From Beyond</item>
-        <item>The Ooze</item>
-        <item>Ghastly Ghosts Jr</item>
-        <item>Haunted Phantasm Jr</item>
-        <item>Haunted Phantasm</item>
-        <item>Ghastly Ghosts</item>
+        <item>Anti-Freeze</item>
+        <item>Arcana</item>
+        <item>Blizzardy Storm</item>
+        <item>Bonzo The All-Gnawing</item>
+        <item>Bubbling</item>
+        <item>Burning Flames</item>
+        <item>Cauldron Bubbles</item>
+        <item>Chiroptera Venenata</item>
+        <item>Circling Heart</item>
+        <item>Circling Peace Sign</item>
+        <item>Circling TF Logo</item>
+        <item>Cloud 9</item>
+        <item>Cloudy Moon</item>
+        <item>Darkblaze</item>
+        <item>Dead Presidents</item>
+        <item>Death at Dusk</item>
+        <item>Demonflame</item>
+        <item>Disco Beat Down</item>
+        <item>Eerie Orbiting Fire</item>
+        <item>Electrostatic</item>
+        <item>Flaming Lantern</item>
+        <item>Fountain of Delight</item>
         <item>Frostbite</item>
+        <item>Ghastly Ghosts</item>
+        <item>Ghastly Ghosts Jr</item>
+        <item>Green Confetti</item>
+        <item>Green Black Hole</item>
+        <item>Green Energy</item>
+        <item>Harvest Moon</item>
+        <item>Haunted Ghosts</item>
+        <item>Haunted Phantasm</item>
+        <item>Haunted Phantasm Jr</item>
+        <item>Hellfire</item>
+        <item>Holy Grail</item>
+        <item>It\'s A Secret To Everybody</item>
+        <item>Kill-a-Watt</item>
+        <item>Knifestorm</item>
+        <item>Massed Flies</item>
+        <item>Mega Strike</item>
+        <item>Memory Leak</item>
+        <item>Miami Nights</item>
+        <item>Midnight Whirlwind</item>
+        <item>Misty Skull</item>
         <item>Molten Mallard</item>
         <item>Morning Glory</item>
-        <item>Death at Dusk</item>
+        <item>Nuts n\' Bolts</item>
+        <item>Orbiting Fire</item>
+        <item>Orbiting Planets</item>
+        <item>Overclocked</item>
+        <item>Phosphorous</item>
+        <item>Poisoned Shadows</item>
+        <item>Power Surge</item>
+        <item>Purple Confetti</item>
+        <item>Purple Energy</item>
+        <item>Roboactive</item>
+        <item>Scorching Flames</item>
+        <item>Screaming Tiger</item>
+        <item>Searing Plasma</item>
+        <item>Silver Cyclone</item>
+        <item>Skill Gotten Gains</item>
+        <item>Showstopper</item>
+        <item>Smoking</item>
+        <item>Something Burning This Way Comes</item>
+        <item>Spellbound</item>
+        <item>Stare From Beyond</item>
+        <item>Steaming</item>
+        <item>Stormy 13th Hour</item>
+        <item>Stormy Storm</item>
+        <item>Sulphurous</item>
+        <item>Sunbeams</item>
+        <item>Terror-Watt</item>
+        <item>The Ooze</item>
+        <item>Time Warp</item>
+        <item>Vivid Plasma</item>
+        <item>\'72</item>
     </string-array>
+
+    <integer-array name="effects_indexes">
+        <item>59</item>
+        <item>82</item>
+        <item>69</item>
+        <item>73</item>
+        <item>30</item>
+        <item>81</item>
+        <item>34</item>
+        <item>13</item>
+        <item>39</item>
+        <item>75</item>
+        <item>19</item>
+        <item>18</item>
+        <item>11</item>
+        <item>58</item>
+        <item>38</item>
+        <item>79</item>
+        <item>60</item>
+        <item>90</item>
+        <item>80</item>
+        <item>62</item>
+        <item>40</item>
+        <item>67</item>
+        <item>37</item>
+        <item>3005</item>
+        <item>87</item>
+        <item>3012</item>
+        <item>85</item>
+        <item>6</item>
+        <item>71</item>
+        <item>9</item>
+        <item>45</item>
+        <item>8</item>
+        <item>3011</item>
+        <item>86</item>
+        <item>78</item>
+        <item>3003</item>
+        <item>46</item>
+        <item>56</item>
+        <item>43</item>
+        <item>12</item>
+        <item>3070</item>
+        <item>65</item>
+        <item>61</item>
+        <item>3008</item>
+        <item>44</item>
+        <item>88</item>
+        <item>89</item>
+        <item>31</item>
+        <item>33</item>
+        <item>32</item>
+        <item>66</item>
+        <item>63</item>
+        <item>76</item>
+        <item>68</item>
+        <item>7</item>
+        <item>10</item>
+        <item>72</item>
+        <item>14</item>
+        <item>3006</item>
+        <item>15</item>
+        <item>3009</item>
+        <item>3007</item>
+        <item>3001</item>
+        <item>35</item>
+        <item>77</item>
+        <item>74</item>
+        <item>83</item>
+        <item>36</item>
+        <item>47</item>
+        <item>29</item>
+        <item>64</item>
+        <item>17</item>
+        <item>57</item>
+        <item>84</item>
+        <item>70</item>
+        <item>16</item>
+        <item>3004</item>
+    </integer-array>
 </resources>
