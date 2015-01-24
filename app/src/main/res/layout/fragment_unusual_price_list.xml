@@ -10,6 +10,7 @@
     android:stretchMode="columnWidth"
     android:numColumns="3"
     android:gravity="center"
+    android:scrollbars="none"
     tools:context="com.tlongdev.bktf.fragment.UnusualPriceListFragment">
 
 </GridView>

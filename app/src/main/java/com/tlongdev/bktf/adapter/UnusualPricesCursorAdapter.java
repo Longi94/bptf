@@ -61,8 +61,7 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
 
         try {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            if (cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRAW) == Utility.getDouble(prefs, context.getString(R.string.pref_buds_raw), 0) ||
-                    cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRAW) >= Utility.getDouble(prefs, context.getString(R.string.pref_buds_raw), 0)) {
+            if (cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRAW) >= Utility.getDouble(prefs, context.getString(R.string.pref_buds_raw), 0)) {
                 viewHolder.priceView.setText(Utility.formatPrice(context,
                         cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRIC),
                         cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PMAX),

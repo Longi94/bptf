@@ -31,6 +31,9 @@ import com.tlongdev.bktf.service.UpdateDatabaseService;
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
+    public static final int REQUEST_SETTINGS = 100;
+    public static final int REQUEST_NEW_ITEM = 101;
+
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -127,7 +130,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 0){
+        if (requestCode == REQUEST_SETTINGS){
             if (resultCode == RESULT_OK){
                 if (currentFragment == 1){
                     if (data != null && data.getBooleanExtra("preference_changed", false)){
@@ -136,7 +139,9 @@ public class MainActivity extends ActionBarActivity
                     }
                 }
             }
+            return;
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void onSectionAttached(int number) {

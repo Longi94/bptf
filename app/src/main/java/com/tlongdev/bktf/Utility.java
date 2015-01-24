@@ -132,10 +132,24 @@ public class Utility {
                 return "Burning Flames";
             case 14:
                 return "Scorching Flames";
+            case 15:
+                return "Searing Plasma";
+            case 16:
+                return "Vivid Plasma";
             case 17:
                 return "Sunbeams";
+            case 18:
+                return "Circling Peace Sign";
+            case 19:
+                return "Circling Heart";
             case 29:
                 return "Stormy Storm";
+            case 30:
+                return "Blizzardy Storm";
+            case 31:
+                return "Nuts n' Bolts";
+            case 32:
+                return "Orbiting Planets";
             case 33:
                 return "Orbiting Fire";
             case 34:
@@ -144,32 +158,10 @@ public class Utility {
                 return "Smoking";
             case 36:
                 return "Steaming";
-            case 38:
-                return "Cloudy Moon";
-            case 56:
-                return "Kill-a-Watt";
-            case 57:
-                return "Terror-Watt";
-            case 58:
-                return "Cloud 9";
-            case 70:
-                return "Time Warp";
-            case 15:
-                return "Searing Plasma";
-            case 16:
-                return "Vivid Plasma";
-            case 18:
-                return "Circling Peace Sign";
-            case 19:
-                return "Circling Heart";
-            case 30:
-                return "Blizzardy Storm";
-            case 31:
-                return "Nuts n' Bolts";
-            case 32:
-                return "Orbiting Planets";
             case 37:
                 return "Flaming Lantern";
+            case 38:
+                return "Cloudy Moon";
             case 39:
                 return "Cauldron Bubbles";
             case 40:
@@ -184,6 +176,12 @@ public class Utility {
                 return "It's A Secret To Everybody";
             case 47:
                 return "Stormy 13th Hour";
+            case 56:
+                return "Kill-a-Watt";
+            case 57:
+                return "Terror-Watt";
+            case 58:
+                return "Cloud 9";
             case 59:
                 return "Aces High";
             case 60:
@@ -206,6 +204,8 @@ public class Utility {
                 return "Power Surge";
             case 69:
                 return "Anti-Freeze";
+            case 70:
+                return "Time Warp";
             case 71:
                 return "Green Black Hole";
             case 72:
@@ -226,6 +226,26 @@ public class Utility {
                 return "Darkblaze";
             case 80:
                 return "Demonflame";
+            case 81:
+                return "Bonzo The All-Gnawing";
+            case 82:
+                return "Amaranthine";
+            case 83:
+                return "Stare From Beyond";
+            case 84:
+                return "The Ooze";
+            case 85:
+                return "Ghastly Ghosts Jr";
+            case 86:
+                return "Haunted Phantasm Jr";
+            case 87:
+                return "Frostbite";
+            case 88:
+                return "Molten Mallard";
+            case 89:
+                return "Morning Glory";
+            case 90:
+                return "Death at Dusk";
             case 3001:
                 return "Showstopper";
             case 3003:
@@ -244,30 +264,10 @@ public class Utility {
                 return "Silver Cyclone";
             case 3010:
                 return "Mega Strike";
-            case 81:
-                return "Bonzo The All-Gnawing";
-            case 82:
-                return "Amaranthine";
-            case 83:
-                return "Stare From Beyond";
-            case 84:
-                return "The Ooze";
-            case 85:
-                return "Ghastly Ghosts Jr";
-            case 86:
-                return "Haunted Phantasm Jr";
             case 3011:
                 return "Haunted Phantasm";
             case 3012:
                 return "Ghastly Ghosts";
-            case 87:
-                return "Frostbite";
-            case 88:
-                return "Molten Mallard";
-            case 89:
-                return "Morning Glory";
-            case 90:
-                return "Death at Dusk";
             default:
                 return "";
         }
@@ -430,7 +430,7 @@ public class Utility {
                     case CURRENCY_BUD:
                         return price / getDouble(prefs, context.getString(R.string.pref_buds_raw), 1);
                     case CURRENCY_USD:
-                        return price / getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1);
+                        return price * getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1);
                 }
             case CURRENCY_KEY:
                 switch(targetCurrency){
@@ -451,7 +451,7 @@ public class Utility {
                         return price / getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1)
                                 / getDouble(prefs, context.getString(R.string.pref_buds_raw), 1);
                     case CURRENCY_KEY:
-                        return price / getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1)
+                        return price * getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1)
                                 / getDouble(prefs, context.getString(R.string.pref_key_raw), 1);
                 }
             default:
@@ -624,6 +624,40 @@ public class Utility {
         BigDecimal bd = new BigDecimal(value);
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
+    }
+
+    public static class IntegerPair{
+        int x;
+        int y;
+
+        public IntegerPair(){
+            this(0);
+        }
+
+        public IntegerPair(int x) {
+            this(x, 0);
+        }
+
+        public IntegerPair(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public void setX(int x) {
+            this.x = x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        public void setY(int y) {
+            this.y = y;
+        }
     }
 }
 
