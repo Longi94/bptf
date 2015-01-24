@@ -56,7 +56,7 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
     public static final String mSelection = PriceListContract.PriceEntry.TABLE_NAME+
                     "." + PriceListContract.PriceEntry._ID + " = ?";
 
-    private OnItemDeletedListener listener;
+    private OnItemEditListener listener;
 
     public AdvancedCalculatorAdapter(Context context, ArrayList<Utility.IntegerPair> ids) {
         mContext = context;
@@ -140,11 +140,11 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
             holder.delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (listener != null){
+                        listener.onItemDeleted(ids.get(position).getX(), ids.get(position).getY());
+                    }
                     ids.remove(position);
                     notifyDataSetChanged();
-                    if (listener != null){
-                        listener.onItemDeleted();
-                    }
                 }
             });
         }
@@ -200,7 +200,7 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
         return ids.size();
     }
 
-    public void setOnItemDeletedListener(OnItemDeletedListener listener){
+    public void setOnItemDeletedListener(OnItemEditListener listener){
         this.listener = listener;
     }
 
@@ -210,7 +210,6 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
         TextView name;
         TextView price;
         TextView count;
-        ImageView edit;
         ImageView delete;
 
         public ViewHolder(View itemView) {
@@ -219,12 +218,11 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
             name = (TextView)itemView.findViewById(R.id.text_view_item_name);
             price = (TextView)itemView.findViewById(R.id.text_view_item_price);
             count = (TextView)itemView.findViewById(R.id.text_view_item_count);
-            edit = (ImageView)itemView.findViewById(R.id.image_view_edit);
             delete = (ImageView)itemView.findViewById(R.id.image_view_delete);
         }
     }
 
-    public interface OnItemDeletedListener {
-        public void onItemDeleted();
+    public interface OnItemEditListener {
+        public void onItemDeleted(int itemId, int count);
     }
 }

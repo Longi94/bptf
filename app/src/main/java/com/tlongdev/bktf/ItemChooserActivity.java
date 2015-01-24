@@ -22,7 +22,7 @@ import com.tlongdev.bktf.adapter.ItemChooserAdapter;
 import com.tlongdev.bktf.data.PriceListContract;
 
 //TODO implement item chooser for calculator
-public class ItemChooserActivity extends FragmentActivity implements AdapterView.OnItemSelectedListener,
+public class ItemChooserActivity extends FragmentActivity implements
         TextWatcher, LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener, View.OnFocusChangeListener {
 
     public static final String EXTRA_ITEM_ID = "item_id";
@@ -97,9 +97,13 @@ public class ItemChooserActivity extends FragmentActivity implements AdapterView
         // Apply the adapter to the spinner
         effectTypeSpinner.setAdapter(effectsAdapter);
         effectTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            private int previousSelection = -1;
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                getSupportLoaderManager().restartLoader(0, null, ItemChooserActivity.this);
+                if (previousSelection != position) {
+                    previousSelection = position;
+                    getSupportLoaderManager().restartLoader(0, null, ItemChooserActivity.this);
+                }
             }
 
             @Override
@@ -107,7 +111,32 @@ public class ItemChooserActivity extends FragmentActivity implements AdapterView
         });
 
         itemTypeSpinner = (Spinner)findViewById(R.id.spinner_item);
-        itemTypeSpinner.setOnItemSelectedListener(this);
+        itemTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            private int previousSelection = -1;
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (previousSelection != position){
+                    switch (position) {
+                        case 0:
+                            effectTypeSpinner.setClickable(false);
+                            effectTypeSpinner.setEnabled(false);
+                            break;
+                        case 1:
+                            effectTypeSpinner.setClickable(true);
+                            effectTypeSpinner.setEnabled(true);
+                            break;
+                    }
+                    getSupportLoaderManager().restartLoader(0, null, ItemChooserActivity.this);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> typeAdapter = ArrayAdapter.createFromResource(this,
                 R.array.item_chooser_spinner, android.R.layout.simple_spinner_item);
@@ -141,35 +170,10 @@ public class ItemChooserActivity extends FragmentActivity implements AdapterView
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (parent.getId() == R.id.spinner_item) {
-            switch (position) {
-                case 0:
-                    effectTypeSpinner.setClickable(false);
-                    effectTypeSpinner.setEnabled(false);
-                    break;
-                case 1:
-                    effectTypeSpinner.setClickable(true);
-                    effectTypeSpinner.setEnabled(true);
-                    break;
-            }
-        }
-        getSupportLoaderManager().restartLoader(0, null, this);
-    }
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-    }
+    public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
     @Override
     public void afterTextChanged(Editable s) {
