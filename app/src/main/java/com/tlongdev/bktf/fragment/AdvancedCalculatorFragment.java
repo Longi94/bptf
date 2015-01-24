@@ -52,6 +52,7 @@ public class AdvancedCalculatorFragment extends Fragment {
     private TextView priceBuds;
     private TextView priceUsd;
 
+    private double totalPrice = 0;
 
     public AdvancedCalculatorFragment() {
         // Required empty public constructor
@@ -74,10 +75,10 @@ public class AdvancedCalculatorFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mAdapter = new AdvancedCalculatorAdapter(getActivity(), ids);
-        mAdapter.setOnItemDeletedListener(new AdvancedCalculatorAdapter.OnItemDeletedListener() {
+        mAdapter.setOnItemDeletedListener(new AdvancedCalculatorAdapter.OnItemEditListener() {
             @Override
-            public void onItemDeleted() {
-                updatePrices();
+            public void onItemDeleted(int id, int count) {
+                deleteItem(id, count);
             }
         });
         mRecyclerView.setAdapter(mAdapter);
@@ -109,7 +110,7 @@ public class AdvancedCalculatorFragment extends Fragment {
                 if (id >= 0) {
                     ids.add(new Utility.IntegerPair(id, data.getIntExtra(ItemChooserActivity.EXTRA_ITEM_COUNT, 0)));
                     mAdapter.notifyDataSetChanged();
-                    updatePrices();
+                    addItem(id, data.getIntExtra(ItemChooserActivity.EXTRA_ITEM_COUNT, 0));
                 }
             }
         }
@@ -137,28 +138,73 @@ public class AdvancedCalculatorFragment extends Fragment {
             case R.id.action_clear:
                 ids.clear();
                 mAdapter.notifyDataSetChanged();
-                updatePrices();
+                deleteAllItems();
                 break;
         }
         return true;
     }
 
-    private void updatePrices(){
-        double totalPrice = 0;
-        for (Utility.IntegerPair pair : ids){
-            Cursor cursor = getActivity().getContentResolver().query(
-                    PriceListContract.PriceEntry.CONTENT_URI,
-                    PRICE_LIST_COLUMNS,
-                    mSelection,
-                    new String[]{"" + pair.getX()},
-                    null
-            );
-
-            if (cursor.moveToFirst()){
-                totalPrice += cursor.getDouble(COL_PRICE_LIST_PRAW) * pair.getY();
+    private void deleteAllItems() {
+        totalPrice = 0;
+        try {
+            priceMetal.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
+                    Utility.CURRENCY_METAL, Utility.CURRENCY_METAL, false));
+            priceKeys.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
+                    Utility.CURRENCY_METAL, Utility.CURRENCY_KEY, false));
+            priceBuds.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
+                    Utility.CURRENCY_METAL, Utility.CURRENCY_BUD, false));
+            priceUsd.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
+                    Utility.CURRENCY_METAL, Utility.CURRENCY_USD, false));
+        } catch (Throwable throwable) {
+            if (Utility.isDebugging(getActivity())) {
+                throwable.printStackTrace();
             }
-            cursor.close();
         }
+    }
+
+    private void addItem(int id, int count){
+        Cursor cursor = getActivity().getContentResolver().query(
+                PriceListContract.PriceEntry.CONTENT_URI,
+                PRICE_LIST_COLUMNS,
+                mSelection,
+                new String[]{"" + id},
+                null
+        );
+
+        if (cursor.moveToFirst()){
+            totalPrice += cursor.getDouble(COL_PRICE_LIST_PRAW) * count;
+        }
+        cursor.close();
+
+        try {
+            priceMetal.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
+                    Utility.CURRENCY_METAL, Utility.CURRENCY_METAL, false));
+            priceKeys.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
+                    Utility.CURRENCY_METAL, Utility.CURRENCY_KEY, false));
+            priceBuds.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
+                    Utility.CURRENCY_METAL, Utility.CURRENCY_BUD, false));
+            priceUsd.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
+                    Utility.CURRENCY_METAL, Utility.CURRENCY_USD, false));
+        } catch (Throwable throwable) {
+            if (Utility.isDebugging(getActivity())) {
+                throwable.printStackTrace();
+            }
+        }
+    }
+
+    private void deleteItem(int id, int count) {
+        Cursor cursor = getActivity().getContentResolver().query(
+                PriceListContract.PriceEntry.CONTENT_URI,
+                PRICE_LIST_COLUMNS,
+                mSelection,
+                new String[]{"" + id},
+                null
+        );
+
+        if (cursor.moveToFirst()){
+            totalPrice -= cursor.getDouble(COL_PRICE_LIST_PRAW) * count;
+        }
+        cursor.close();
 
         try {
             priceMetal.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
