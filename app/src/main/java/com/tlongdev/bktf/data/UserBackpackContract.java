@@ -3,7 +3,7 @@ package com.tlongdev.bktf.data;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-public class BackpackContract {
+public class UserBackpackContract {
 
     // The "Content authority" is a name for the entire content provider, similar to the
     // relationship between a domain name and its website.  A convenient string to use for the
@@ -22,7 +22,7 @@ public class BackpackContract {
     // At least, let's hope not.  Don't be that dev, reader.  Don't be that dev.
     public static final String PATH_BACKPACK = "backpack";
 
-    public static final class BackpackEntry implements BaseColumns{
+    public static final class UserBackpackEntry implements BaseColumns{
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_BACKPACK).build();
@@ -47,7 +47,10 @@ public class BackpackContract {
         public static final String COLUMN_CUSTOM_NAME = "custom_name";
         public static final String COLUMN_CUSTOM_DESCRIPTION = "custom_description";
         public static final String COLUMN_ATTRIBUTES = "attributes";
-        public static final String COLUMN_EQUIPPED = "ewuipped";
+        public static final String COLUMN_EQUIPPED = "equipped";
 
+        public static Uri buildBackPackUri(long id) {
+            return CONTENT_URI.buildUpon().appendPath("id").appendPath("" + id).build();
+        }
     }
 }
