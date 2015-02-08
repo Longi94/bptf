@@ -68,7 +68,7 @@ public class TestBackPackDb extends AndroidTestCase {
         values.put(UserBackpackContract.UserBackpackEntry.COLUMN_CUSTOM_NAME, "asdasd");
         values.put(UserBackpackContract.UserBackpackEntry.COLUMN_CUSTOM_DESCRIPTION, "asdasdasdasd");
         values.put(UserBackpackContract.UserBackpackEntry.COLUMN_EQUIPPED, 1);
-        values.put(UserBackpackContract.UserBackpackEntry.COLUMN_PRICE_INDEX, 0);
+        values.put(UserBackpackContract.UserBackpackEntry.COLUMN_ITEM_INDEX, 0);
         values.put(UserBackpackContract.UserBackpackEntry.COLUMN_PAINT, 550);
         values.put(UserBackpackContract.UserBackpackEntry.COLUMN_CRAFT_NUMBER, 0);
         values.put(UserBackpackContract.UserBackpackEntry.COLUMN_CREATOR_NAME, "repp");

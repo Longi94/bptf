@@ -626,6 +626,67 @@ public class Utility {
         return bd.doubleValue();
     }
 
+    public static int getPaintDefindex(int value) {
+        switch (value){
+            case 7511618: //Indubitably Green
+                return 0;
+            case 4345659: //Zepheniah's Greed
+                return 0;
+            case 5322826: //Noble Hatter's Violet
+                return 0;
+            case 14204632: //Color No. 216-190-216
+                return 0;
+            case 8208497: //Deep Commitment to Purple
+                return 0;
+            case 13595446: //Mann Co. Orange
+                return 0;
+            case 10843461: //Muskelmannbraun
+                return 0;
+            case 12955537: //Peculiarly Drab Tincture
+                return 0;
+            case 6901050: //Radigan Conagher Brown
+                return 0;
+            case 8154199: //Ye Olde Rustic Color
+                return 0;
+            case 15185211: //Australium Gold
+                return 0;
+            case 8289918: //Aged Moustache Grey
+                return 0;
+            case 15132390: //An Extraordinary Abundance of Tinge
+                return 0;
+            case 1315860: //A Distinctive Lack of Hue
+                return 0;
+            case 16738740: //Pink as Hell
+                return 0;
+            case 3100495: //Color Similar to Slate
+                return 0;
+            case 8421376: //Drably Olive
+                return 0;
+            case 3329330: //The Bitter Taste of Defeat and Lime
+                return 0;
+            case 15787660: //The Color of a Gentlemann's Business Pants
+                return 0;
+            case 15308410: //Salmon Injustice
+                return 0;
+            case 12073019: //Team Spirit (RED)
+                return 0;
+            case 4732984: //Operator's Overalls (RED)
+                return 0;
+            case 11049612: //Waterlogged Lab Coat (RED)
+                return 0;
+            case 3874595: //Balaclava's Are Forever (RED)
+                return 0;
+            case 6637376: //Air of Debonair (RED)
+                return 0;
+            case 8400928: //The Value of Teamwork (RED)
+                return 0;
+            case 12807213: //Cream Spirit (RED)
+                return 0;
+            default:
+                return 0;
+        }
+    }
+
     public static class IntegerPair{
         int x;
         int y;

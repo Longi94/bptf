@@ -116,37 +116,39 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        String url;
-        //Handle all the buttons.
-        switch (v.getId()) {
-            case R.id.button_bazaar_tf:
-                url = "http://bazaar.tf/profiles/";
-                break;
-            case R.id.button_steamrep:
-                url = "http://steamrep.com/profiles/";
-                break;
-            case R.id.button_tf2op:
-                url = "http://www.tf2outpost.com/user/";
-                break;
-            case R.id.button_tf2tp:
-                url = "http://tf2tp.com/user/";
-                break;
-            case R.id.button_steam_community:
-                url = "http://steamcommunity.com/profiles/";
-                break;
-            case R.id.button_backpack:
-                url = "http://backpack.tf/profiles/";
-                break;
-            default:
-                return;
-        }
+        if (v.getId() != R.id.button_backpack) {
+            String url;
+            //Handle all the buttons.
+            switch (v.getId()) {
+                case R.id.button_bazaar_tf:
+                    url = "http://bazaar.tf/profiles/";
+                    break;
+                case R.id.button_steamrep:
+                    url = "http://steamrep.com/profiles/";
+                    break;
+                case R.id.button_tf2op:
+                    url = "http://www.tf2outpost.com/user/";
+                    break;
+                case R.id.button_tf2tp:
+                    url = "http://tf2tp.com/user/";
+                    break;
+                case R.id.button_steam_community:
+                    url = "http://steamcommunity.com/profiles/";
+                    break;
+                default:
+                    return;
+            }
 
-        Uri webPage = Uri.parse(url + steamId);
 
-        //Open the link using the device default web browser.
-        Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
+            Uri webPage = Uri.parse(url + steamId);
+
+            //Open the link using the device default web browser.
+            Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+            }
+        } else {
+            startActivity(new Intent(this, UserBackpackActivity.class));
         }
     }
 

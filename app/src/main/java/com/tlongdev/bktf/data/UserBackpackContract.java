@@ -39,16 +39,14 @@ public class UserBackpackContract {
         public static final String COLUMN_ORIGINAL_ID = "original_id";
         public static final String COLUMN_DEFINDEX = "defindex";
         public static final String COLUMN_LEVEL = "level";
-        public static final String COLUMN_QUANTITY = "quantity";
         public static final String COLUMN_ORIGIN = "origin";
         public static final String COLUMN_FLAG_CANNOT_TRADE = "flag_cannot_trade";
         public static final String COLUMN_FLAG_CANNOT_CRAFT = "flag_cannot_craft";
-        public static final String COLUMN_INVENTORY_TOKEN = "inventory";
         public static final String COLUMN_QUALITY = "quality";
         public static final String COLUMN_CUSTOM_NAME = "custom_name";
         public static final String COLUMN_CUSTOM_DESCRIPTION = "custom_description";
         public static final String COLUMN_EQUIPPED = "equipped";
-        public static final String COLUMN_PRICE_INDEX = "item_index";
+        public static final String COLUMN_ITEM_INDEX = "item_index";
         public static final String COLUMN_PAINT = "paint";
         public static final String COLUMN_CRAFT_NUMBER = "craft_index";
         public static final String COLUMN_CREATOR_NAME = "creator_name";

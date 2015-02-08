@@ -23,7 +23,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.UserBackpackActivity;
 import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.task.FetchUserBackpack;
 import com.tlongdev.bktf.task.FetchUserInfo;
 
 import java.io.File;
@@ -126,6 +128,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onRefresh() {
         if (Utility.isNetworkAvailable(getActivity())) {
             new FetchUserInfo(getActivity(), true, this, mSwipeRefreshLayout).execute();
+            new FetchUserBackpack(getActivity(), true).execute();
         } else {
             Toast.makeText(getActivity(), "bptf: no connection", Toast.LENGTH_SHORT).show();
             mSwipeRefreshLayout.setRefreshing(false);
@@ -135,42 +138,44 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onClick(View v) {
         //Handle all the buttons here
-        String url;
         String steamId = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(
                 getString(R.string.pref_resolved_steam_id), "");
         if (steamId.equals("")){
             Toast.makeText(getActivity(), "bptf: no steamID provided", Toast.LENGTH_SHORT).show();
             return;
         }
-        switch (v.getId()) {
-            case R.id.button_bazaar_tf:
-                url = "http://bazaar.tf/profiles/";
-                break;
-            case R.id.button_steamrep:
-                url = "http://steamrep.com/profiles/";
-                break;
-            case R.id.button_tf2op:
-                url = "http://www.tf2outpost.com/user/";
-                break;
-            case R.id.button_tf2tp:
-                url = "http://tf2tp.com/user/";
-                break;
-            case R.id.button_steam_community:
-                url = "http://steamcommunity.com/profiles/";
-                break;
-            case R.id.button_backpack:
-                url = "http://backpack.tf/profiles/";
-                break;
-            default:
-                return;
-        }
+        if (v.getId() != R.id.button_backpack) {
 
-        Uri webPage = Uri.parse(url + steamId);
+            String url;
+            switch (v.getId()) {
+                case R.id.button_bazaar_tf:
+                    url = "http://bazaar.tf/profiles/";
+                    break;
+                case R.id.button_steamrep:
+                    url = "http://steamrep.com/profiles/";
+                    break;
+                case R.id.button_tf2op:
+                    url = "http://www.tf2outpost.com/user/";
+                    break;
+                case R.id.button_tf2tp:
+                    url = "http://tf2tp.com/user/";
+                    break;
+                case R.id.button_steam_community:
+                    url = "http://steamcommunity.com/profiles/";
+                    break;
+                default:
+                    return;
+            }
 
-        //Open link in the device default web browser
-        Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
-        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivity(intent);
+            Uri webPage = Uri.parse(url + steamId);
+
+            //Open link in the device default web browser
+            Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
+            if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                startActivity(intent);
+            }
+        } else {
+            startActivity(new Intent(getActivity(), UserBackpackActivity.class));
         }
     }
 
