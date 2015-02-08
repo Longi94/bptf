@@ -114,6 +114,11 @@
             android:enabled="true"
             android:exported="false" >
         </provider>
+
+        <activity
+            android:name=".UserBackpackActivity"
+            android:label="@string/title_activity_user_backpack"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -26,25 +26,23 @@ public class UserBackpackDbHelper extends SQLiteOpenHelper{
                         UserBackpackEntry.COLUMN_ORIGINAL_ID + " INTEGER NOT NULL, " +
                         UserBackpackEntry.COLUMN_DEFINDEX + " INTEGER NOT NULL, " +
                         UserBackpackEntry.COLUMN_LEVEL + " INTEGER NOT NULL, " +
-                        UserBackpackEntry.COLUMN_QUANTITY + " INTEGER, " +
                         UserBackpackEntry.COLUMN_ORIGIN + " INTEGER NOT NULL, " +
                         UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE + " INTEGER NOT NULL, " +
                         UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT + " INTEGER NOT NULL, " +
-                        UserBackpackEntry.COLUMN_INVENTORY_TOKEN + " INTEGER NOT NULL, " +
                         UserBackpackEntry.COLUMN_QUALITY + " INTEGER NOT NULL, " +
                         UserBackpackEntry.COLUMN_CUSTOM_NAME + " TEXT, " +
                         UserBackpackEntry.COLUMN_CUSTOM_DESCRIPTION + " TEXT, " +
                         UserBackpackEntry.COLUMN_EQUIPPED + " INTEGER NOT NULL, " +
-                        UserBackpackEntry.COLUMN_PRICE_INDEX + " INTEGER NOT NULL, " +
+                        UserBackpackEntry.COLUMN_ITEM_INDEX + " INTEGER NOT NULL, " +
                         UserBackpackEntry.COLUMN_PAINT + " INTEGER, " +
-                        UserBackpackEntry.COLUMN_CRAFT_NUMBER + " INTEGER NOT NULL, " +
+                        UserBackpackEntry.COLUMN_CRAFT_NUMBER + " INTEGER, " +
                         UserBackpackEntry.COLUMN_CREATOR_NAME + " TEXT, " +
                         UserBackpackEntry.COLUMN_GIFTER_NAME + " TEXT, " +
                         UserBackpackEntry.COLUMN_CONTAINED_ITEM + " TEXT, " +
                         UserBackpackEntry.COLUMN_AUSTRALIUM + " INTEGER NOT NULL, " +
 
 
-                        " UNIQUE (" + UserBackpackEntry.COLUMN_INVENTORY_TOKEN + ", " +
+                        " UNIQUE (" + UserBackpackEntry.COLUMN_POSITION + ", " +
                         UserBackpackEntry.COLUMN_UNIQUE_ID + ") ON CONFLICT REPLACE);";
 
         db.execSQL(SQL_CREATE_BACKPACK_TABLE);
