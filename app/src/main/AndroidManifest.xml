@@ -90,23 +90,30 @@
             android:excludeFromRecents="true"
             android:label="@string/title_activity_item_chooser"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.Dialog"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dialog" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tlongdev.bktf.MainActivity" />
         </activity>
         <activity
             android:name=".CreditsActivity"
-            android:label="@string/title_activity_credits"
             android:excludeFromRecents="true"
+            android:label="@string/title_activity_credits"
             android:parentActivityName=".SettingsActivity"
-            android:theme="@style/AppTheme.Dialog"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dialog" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tlongdev.bktf.SettingsActivity" />
         </activity>
+
+        <provider
+            android:name=".data.UserBackpackProvider"
+            android:authorities="com.tlongdev.bktf.backpack"
+            android:enabled="true"
+            android:exported="false" >
+        </provider>
     </application>
 
 </manifest>

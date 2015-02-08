@@ -9,7 +9,7 @@ public class UserBackpackContract {
     // relationship between a domain name and its website.  A convenient string to use for the
     // content authority is the package name for the app, which is guaranteed to be unique on the
     // device.
-    public static final String CONTENT_AUTHORITY = "com.tlongdev.bktf";
+    public static final String CONTENT_AUTHORITY = "com.tlongdev.bktf.backpack";
 
     // Use CONTENT_AUTHORITY to create the base of all URI's which apps will use to contact
     // the content provider.
@@ -34,6 +34,7 @@ public class UserBackpackContract {
 
         public static final String TABLE_NAME = "backpack";
 
+        public static final String COLUMN_POSITION = "position";
         public static final String COLUMN_UNIQUE_ID = "unique_id";
         public static final String COLUMN_ORIGINAL_ID = "original_id";
         public static final String COLUMN_DEFINDEX = "defindex";
@@ -46,8 +47,14 @@ public class UserBackpackContract {
         public static final String COLUMN_QUALITY = "quality";
         public static final String COLUMN_CUSTOM_NAME = "custom_name";
         public static final String COLUMN_CUSTOM_DESCRIPTION = "custom_description";
-        public static final String COLUMN_ATTRIBUTES = "attributes";
         public static final String COLUMN_EQUIPPED = "equipped";
+        public static final String COLUMN_PRICE_INDEX = "item_index";
+        public static final String COLUMN_PAINT = "paint";
+        public static final String COLUMN_CRAFT_NUMBER = "craft_index";
+        public static final String COLUMN_CREATOR_NAME = "creator_name";
+        public static final String COLUMN_GIFTER_NAME = "gifter_name";
+        public static final String COLUMN_CONTAINED_ITEM = "contained_item";
+        public static final String COLUMN_AUSTRALIUM = "australium";
 
         public static Uri buildBackPackUri(long id) {
             return CONTENT_URI.buildUpon().appendPath("id").appendPath("" + id).build();
