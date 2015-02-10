@@ -81,7 +81,6 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     protected void onResume() {
-        super.onResume();
 
         //If needed (mostly when the steamId was changed) reload a new instance of the UserFragment
         if (restartUserFragment){
@@ -91,6 +90,7 @@ public class MainActivity extends ActionBarActivity
                     .commit();
             restartUserFragment = false;
         }
+        super.onResume();
 
     }
 
@@ -125,7 +125,7 @@ public class MainActivity extends ActionBarActivity
 
     public void startSettingsActivity(){
         Intent settingsIntent = new Intent(this, SettingsActivity.class);
-        startActivityForResult(settingsIntent, 0);
+        startActivityForResult(settingsIntent, REQUEST_SETTINGS);
     }
 
     @Override

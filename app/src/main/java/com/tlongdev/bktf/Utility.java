@@ -687,6 +687,10 @@ public class Utility {
         }
     }
 
+    public static double getRawMetal(int rawRef, int rawRec, int rawScraps) {
+        return (1.0/9.0 * rawScraps) + (1.0/3.0 * rawRec) + rawRef;
+    }
+
     public static class IntegerPair{
         int x;
         int y;

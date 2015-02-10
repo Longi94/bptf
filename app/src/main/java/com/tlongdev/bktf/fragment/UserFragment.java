@@ -25,7 +25,6 @@ import android.widget.Toast;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.UserBackpackActivity;
 import com.tlongdev.bktf.Utility;
-import com.tlongdev.bktf.task.FetchUserBackpack;
 import com.tlongdev.bktf.task.FetchUserInfo;
 
 import java.io.File;
@@ -39,7 +38,8 @@ import java.text.DecimalFormat;
 /**
  * Fragment for displaying the user profile.
  */
-public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
+public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener,
+        FetchUserInfo.OnFetchUserInfoListener {
 
     private TextView playerName;
     private TextView playerReputation;
@@ -60,6 +60,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private ImageView avatar;
     private ProgressBar progressBar;
+
+    private FetchUserInfo fetchTask;
 
     public UserFragment() {
     }
@@ -117,7 +119,10 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         if (Utility.isNetworkAvailable(getActivity()) &&
                 System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(getActivity())
                 .getLong(getString(R.string.pref_last_user_data_update), 0) >= 3600000L) {
-            new FetchUserInfo(getActivity(), false, this, mSwipeRefreshLayout).execute();
+
+            fetchTask = new FetchUserInfo(getActivity(), false);
+            fetchTask.registerFetchUserInfoListener(this);
+            fetchTask.execute();
 
             mSwipeRefreshLayout.setRefreshing(true);
         }
@@ -127,8 +132,9 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onRefresh() {
         if (Utility.isNetworkAvailable(getActivity())) {
-            new FetchUserInfo(getActivity(), true, this, mSwipeRefreshLayout).execute();
-            new FetchUserBackpack(getActivity(), true).execute();
+            fetchTask = new FetchUserInfo(getActivity(), true);
+            fetchTask.registerFetchUserInfoListener(this);
+            fetchTask.execute();
         } else {
             Toast.makeText(getActivity(), "bptf: no connection", Toast.LENGTH_SHORT).show();
             mSwipeRefreshLayout.setRefreshing(false);
@@ -175,7 +181,10 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 startActivity(intent);
             }
         } else {
-            startActivity(new Intent(getActivity(), UserBackpackActivity.class));
+            Intent i = new Intent(getActivity(), UserBackpackActivity.class);
+            i.putExtra(UserBackpackActivity.EXTRA_NAME, playerName.getText());
+            i.putExtra(UserBackpackActivity.EXTRA_GUEST, false);
+            startActivity(i);
         }
     }
 
@@ -237,7 +246,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 lastOnlineText.setTextColor(0xff24a9de);
                 break;
             case 6:
-                lastOnlineText.setText("Looking to playe");
+                lastOnlineText.setText("Looking to play");
                 lastOnlineText.setTextColor(0xff24a9de);
                 break;
             case 7:
@@ -350,6 +359,21 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             trustStatus.setBackgroundDrawable(getResources().getDrawable(R.drawable.status_background_caution));
         } else {
             trustStatus.setBackgroundDrawable(getResources().getDrawable(R.drawable.status_background_neutral));
+        }
+
+        backpackRawKeys.setText("" + prefs.getInt(getString(R.string.pref_user_raw_key), 0));
+        backpackRawMetal.setText("" + Utility.roundDouble(Utility.getDouble(prefs, getString(R.string.pref_user_raw_metal), 0.0), 2));
+
+        backpackSlots.setText("" + prefs.getInt(getString(R.string.pref_user_items), 0) + "/" +
+                prefs.getInt(getString(R.string.pref_user_slots), 0));
+    }
+
+    @Override
+    public void onFetchFinished() {
+        //Stop the refreshing animation and update the UI
+        if(isAdded()){
+            updateUserPage();
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 

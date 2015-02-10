@@ -27,12 +27,16 @@ public class UserBackpackContract {
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_BACKPACK).build();
 
+        public static final Uri CONTENT_URI_GUEST =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_BACKPACK).appendPath("guest").build();
+
         public static final String CONTENT_TYPE =
                 "vnd.android.cursor.dir/" + CONTENT_AUTHORITY + "/" + PATH_BACKPACK;
         public static final String CONTENT_ITEM_TYPE =
                 "vnd.android.cursor.item/" + CONTENT_AUTHORITY + "/" + PATH_BACKPACK;
 
         public static final String TABLE_NAME = "backpack";
+        public static final String TABLE_NAME_GUEST = "backpack2";
 
         public static final String COLUMN_POSITION = "position";
         public static final String COLUMN_UNIQUE_ID = "unique_id";
@@ -53,9 +57,5 @@ public class UserBackpackContract {
         public static final String COLUMN_GIFTER_NAME = "gifter_name";
         public static final String COLUMN_CONTAINED_ITEM = "contained_item";
         public static final String COLUMN_AUSTRALIUM = "australium";
-
-        public static Uri buildBackPackUri(long id) {
-            return CONTENT_URI.buildUpon().appendPath("id").appendPath("" + id).build();
-        }
     }
 }

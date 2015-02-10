@@ -277,6 +277,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             editor.remove(getString(R.string.pref_resolved_steam_id));
             editor.remove(getString(R.string.pref_player_trust_negative));
             editor.remove(getString(R.string.pref_player_trust_positive));
+            editor.remove(getString(R.string.pref_user_raw_key));
+            editor.remove(getString(R.string.pref_user_raw_metal));
+            editor.remove(getString(R.string.pref_user_slots));
+            editor.remove(getString(R.string.pref_user_items));
 
             editor.apply();
 

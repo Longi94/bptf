@@ -5,12 +5,10 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
-import com.tlongdev.bktf.fragment.UserFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,23 +24,22 @@ import java.net.URL;
 /**
  * Task for fetching data about the user in the background.
  */
-public class FetchUserInfo extends AsyncTask<String, Void, Void> {
+public class FetchUserInfo extends AsyncTask<String, Void, Void> implements FetchUserBackpack.OnFetchUserBackpackListener{
     private Context mContext;
 
     //Whether it was a user initiated update
     private boolean manualSync;
-    //Stored for stopping the animation.
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    //Stored for a callback to update the UI.
-    private UserFragment mFragment;
 
     private String errorMessage;
+    private OnFetchUserInfoListener listener = null;
 
-    public FetchUserInfo(Context mContext, boolean manualSync, UserFragment fragment, SwipeRefreshLayout swipeRefreshLayout) {
+    private FetchUserBackpack fetchTask;
+    private boolean backpackFetching = false;
+    private boolean isRunning = true;
+
+    public FetchUserInfo(Context mContext, boolean manualSync) {
         this.mContext = mContext;
         this.manualSync = manualSync;
-        mSwipeRefreshLayout = swipeRefreshLayout;
-        mFragment = fragment;
     }
 
     @Override
@@ -126,6 +123,11 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
                 publishProgress();
                 return null;
             }
+
+            fetchTask = new FetchUserBackpack(mContext, false);
+            fetchTask.registerOnFetchUserBackpackListener(this);
+            backpackFetching = true;
+            fetchTask.execute(steamId);
 
             //Save the resolved steamId
             PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString(mContext
@@ -236,10 +238,9 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
 
     @Override
     protected void onPostExecute(Void param) {
-        //Stop the refreshing animation and update the UI
-        if(mFragment.isAdded()){
-            mFragment.updateUserPage();
-            mSwipeRefreshLayout.setRefreshing(false);
+        isRunning = false;
+        if (!backpackFetching && listener != null){
+            listener.onFetchFinished();
         }
     }
 
@@ -365,5 +366,28 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> {
 
             editor.apply();
         }
+    }
+
+    public void registerFetchUserInfoListener(OnFetchUserInfoListener listener){
+        this.listener = listener;
+    }
+
+    @Override
+    public void onFetchFinished(int rawKeys, double rawMetal, int backpackSlots, int itemNumber) {
+        backpackFetching = false;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(mContext.getString(R.string.pref_user_slots), backpackSlots);
+        editor.putInt(mContext.getString(R.string.pref_user_items), itemNumber);
+        editor.putInt(mContext.getString(R.string.pref_user_raw_key), rawKeys);
+        Utility.putDouble(editor, mContext.getString(R.string.pref_user_raw_metal), rawMetal);
+        editor.apply();
+        if (!isRunning && listener != null) {
+            listener.onFetchFinished();
+        }
+    }
+
+    public interface OnFetchUserInfoListener {
+        public void onFetchFinished();
     }
 }
