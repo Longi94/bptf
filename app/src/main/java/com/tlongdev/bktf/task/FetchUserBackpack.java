@@ -3,8 +3,6 @@ package com.tlongdev.bktf.task;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -25,9 +23,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Vector;
 
-public class FetchUserBackpack extends AsyncTask<Void, Void, Void> {
+public class FetchUserBackpack extends AsyncTask<String, Void, Void> {
     
     public static final String LOG_TAG = FetchUserBackpack.class.getSimpleName();
 
@@ -52,8 +51,19 @@ public class FetchUserBackpack extends AsyncTask<Void, Void, Void> {
 
     private Context mContext;
     private boolean manualSync;
+    private boolean isGuest;
 
     private String errorMessage;
+
+    private static ArrayList<Integer> slotNumbers;
+
+    private int rawKeys = 0;
+    private int rawRef = 0;
+    private int rawRec = 0;
+    private int rawScraps = 0;
+    private OnFetchUserBackpackListener listener = null;
+    private int backpackSlots = 0;
+    private int itemNumber = 0;
 
     public FetchUserBackpack(Context context, boolean manualSync) {
         mContext = context;
@@ -61,9 +71,11 @@ public class FetchUserBackpack extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(Void... params) {
+    protected Void doInBackground(String... params) {
+        isGuest = !params[0].equals(PreferenceManager.getDefaultSharedPreferences(mContext)
+                .getString(mContext.getString(R.string.pref_resolved_steam_id), ""));
 
-        if (System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(mContext)
+        if (isGuest && System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(mContext)
                 .getLong(mContext.getString(R.string.pref_last_backpack_update), 0) < 3600000L && !manualSync){
             //This task ran less than an hour ago and wasn't a manual sync, nothing to do.
             return null;
@@ -83,8 +95,7 @@ public class FetchUserBackpack extends AsyncTask<Void, Void, Void> {
             
             Uri uri = Uri.parse(mContext.getString(R.string.steam_get_player_items_url)).buildUpon()
                     .appendQueryParameter(KEY_PARAM, mContext.getString(R.string.steam_web_api_key))
-                    .appendQueryParameter(ID_PARAM, PreferenceManager.getDefaultSharedPreferences(mContext)
-                            .getString(mContext.getString(R.string.pref_resolved_steam_id), ""))
+                    .appendQueryParameter(ID_PARAM, params[0])
                     .build();
 
             URL url = new URL(uri.toString());
@@ -143,12 +154,14 @@ public class FetchUserBackpack extends AsyncTask<Void, Void, Void> {
         }
         try {
 
-            getItemsFromJson(jsonStr);
+            getItemsFromJson(jsonStr, params[0]);
 
-            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+            if (!isGuest) {
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
 
-            //Save when the update finished
-            editor.putLong(mContext.getString(R.string.pref_last_backpack_update), System.currentTimeMillis()).apply();
+                //Save when the update finished
+                editor.putLong(mContext.getString(R.string.pref_last_backpack_update), System.currentTimeMillis()).apply();
+            }
 
 
         } catch (JSONException e) {
@@ -161,7 +174,14 @@ public class FetchUserBackpack extends AsyncTask<Void, Void, Void> {
         return null;
     }
 
-    private void getItemsFromJson(String jsonStr) throws JSONException {
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        if (listener!= null){
+            listener.onFetchFinished(rawKeys, Utility.getRawMetal(rawRef, rawRec, rawScraps), backpackSlots, itemNumber);
+        }
+    }
+
+    private void getItemsFromJson(String jsonStr, String steamId) throws JSONException {
         final String OWM_RESULT = "result";
         final String OWM_STATUS = "status";
         final String OWM_SLOTS = "num_backpack_slots";
@@ -175,46 +195,46 @@ public class FetchUserBackpack extends AsyncTask<Void, Void, Void> {
                 Vector<ContentValues> cVVector = new Vector<>();
                 JSONArray items = response.getJSONArray(OWM_ITEMS);
 
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putInt(mContext.getString(R.string.pref_user_slots), response.getInt(OWM_SLOTS));
-                editor.putInt(mContext.getString(R.string.pref_user_items), items.length());
-                editor.apply();
+
+                backpackSlots = response.getInt(OWM_SLOTS);
+                itemNumber = items.length();
+
+                if (!isGuest) {
+
+                }
+
+
+                slotNumbers = new ArrayList<>();
+
+                for (int i = 1; i <= backpackSlots; i++){
+                    slotNumbers.add(i);
+                }
 
                 for (int i = 0; i < items.length(); i++){
                     cVVector.add(buildContentValues(items.getJSONObject(i)));
                 }
 
+                fillInEmptySlots(cVVector);
+
                 if (cVVector.size() > 0) {
                     ContentValues[] cvArray = new ContentValues[cVVector.size()];
                     cVVector.toArray(cvArray);
-                    //Insert all the data into the database
-                    int rowsInserted = mContext.getContentResolver()
-                            .bulkInsert(UserBackpackEntry.CONTENT_URI, cvArray);
-                    if (Utility.isDebugging(mContext))
-                        Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
-                    // Use a DEBUG variable to gate whether or not you do this, so you can easily
-                    // turn it on and off, and so that it's easy to see what you can rip out if
-                    // you ever want to remove it.
-                    Cursor cursor = mContext.getContentResolver().query(
-                            UserBackpackEntry.CONTENT_URI,
-                            null,
-                            null,
-                            null,
-                            null
-                    );
 
-                    if (cursor.moveToFirst()) {
-                        ContentValues resultValues = new ContentValues();
-                        DatabaseUtils.cursorRowToContentValues(cursor, resultValues);
-                        if (Utility.isDebugging(mContext))
-                            Log.v(LOG_TAG, "Query succeeded");
+                    Uri contentUri;
+                    if (!isGuest) {
+                        contentUri = UserBackpackEntry.CONTENT_URI;
                     } else {
-                        if (Utility.isDebugging(mContext))
-                            Log.v(LOG_TAG, "Query failed");
+                        contentUri = UserBackpackEntry.CONTENT_URI_GUEST;
                     }
 
-                    cursor.close();
+                    int rowsDeleted = mContext.getContentResolver().delete(contentUri, null, null);
+                    if (Utility.isDebugging(mContext))
+                        Log.v(LOG_TAG, "deleted " + rowsDeleted + " rows");
+                    //Insert all the data into the database
+                    int rowsInserted = mContext.getContentResolver()
+                            .bulkInsert(contentUri, cvArray);
+                    if (Utility.isDebugging(mContext))
+                        Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
                 }
                 break;
             case 8: //Invalid ID
@@ -228,13 +248,51 @@ public class FetchUserBackpack extends AsyncTask<Void, Void, Void> {
         }
     }
 
-    private static ContentValues buildContentValues(JSONObject item) throws JSONException {
+    private static void fillInEmptySlots(Vector<ContentValues> cVVector) {
+        for (int i : slotNumbers){
+            ContentValues values = new ContentValues();
+            values.put(UserBackpackEntry.COLUMN_UNIQUE_ID, 0);
+            values.put(UserBackpackEntry.COLUMN_ORIGINAL_ID, 0);
+            values.put(UserBackpackEntry.COLUMN_DEFINDEX, 0);
+            values.put(UserBackpackEntry.COLUMN_LEVEL, 0);
+            values.put(UserBackpackEntry.COLUMN_ORIGIN, 0);
+            values.put(UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE, 0);
+            values.put(UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT, 0);
+            values.put(UserBackpackEntry.COLUMN_POSITION, i);
+            values.put(UserBackpackEntry.COLUMN_QUALITY, 0);
+            values.put(UserBackpackEntry.COLUMN_ITEM_INDEX, 0);
+            values.put(UserBackpackEntry.COLUMN_CRAFT_NUMBER, 0);
+            values.put(UserBackpackEntry.COLUMN_AUSTRALIUM, 0);
+            values.put(UserBackpackEntry.COLUMN_EQUIPPED, 0);
+
+            cVVector.add(values);
+        }
+    }
+
+    private ContentValues buildContentValues(JSONObject item) throws JSONException {
 
         ContentValues values = new ContentValues();
 
+        int defindex = item.getInt(OWM_DEFINDEX);
+
+        switch (defindex){
+            case 5021:
+                rawKeys++;
+                break;
+            case 5000:
+                rawScraps++;
+                break;
+            case 5001:
+                rawRec++;
+                break;
+            case 5002:
+                rawRef++;
+                break;
+        }
+
         values.put(UserBackpackEntry.COLUMN_UNIQUE_ID, item.getLong(OWM_UNIQUE_ID));
         values.put(UserBackpackEntry.COLUMN_ORIGINAL_ID, item.getLong(OWM_ORIGINAL_ID));
-        values.put(UserBackpackEntry.COLUMN_DEFINDEX, item.getInt(OWM_DEFINDEX));
+        values.put(UserBackpackEntry.COLUMN_DEFINDEX, defindex);
         values.put(UserBackpackEntry.COLUMN_LEVEL, item.getInt(OWM_LEVEL));
 
         if (item.has(OWM_ORIGIN))
@@ -256,7 +314,9 @@ public class FetchUserBackpack extends AsyncTask<Void, Void, Void> {
         if (inventoryToken == 0){
             values.put(UserBackpackEntry.COLUMN_POSITION, -1);
         } else {
-            values.put(UserBackpackEntry.COLUMN_POSITION, inventoryToken % ((Double)Math.pow(2, 16)).intValue());
+            int position = (int)(inventoryToken % ((Double)Math.pow(2, 16)).intValue());
+            values.put(UserBackpackEntry.COLUMN_POSITION, position);
+            slotNumbers.remove(Integer.valueOf(position));
         }
 
         values.put(UserBackpackEntry.COLUMN_QUALITY, item.getInt(OWM_QUALITY));
@@ -333,5 +393,13 @@ public class FetchUserBackpack extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onProgressUpdate(Void... values) {
         Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
+    }
+
+    public void registerOnFetchUserBackpackListener(OnFetchUserBackpackListener listener){
+        this.listener = listener;
+    }
+
+    public static interface OnFetchUserBackpackListener{
+        public void onFetchFinished(int rawKeys, double rawMetal, int backpackSlots, int itemNumber);
     }
 }

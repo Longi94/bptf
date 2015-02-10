@@ -1,6 +1,7 @@
 package com.tlongdev.bktf;
 
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -38,14 +39,22 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
     public static final int COL_BACKPACK_INDE = 7;
     public static final int COL_BACKPACK_PAIN = 8;
 
+    public static final String EXTRA_NAME = "name";
+    public static final String EXTRA_GUEST = "guest";
+
     private SimpleBackpackAdapter adapter;
     private ListView listView;
+
+    private boolean isGuest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_backpack);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getIntent().getStringExtra(EXTRA_NAME));
+
+        isGuest = getIntent().getBooleanExtra(EXTRA_GUEST, false);
 
         listView = (ListView)findViewById(R.id.list_view);
         adapter = new SimpleBackpackAdapter(this, null, 0);
@@ -69,10 +78,17 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String sortOrder = UserBackpackContract.UserBackpackEntry.COLUMN_POSITION + " ASC";
+        Uri uri;
+
+        if (isGuest){
+            uri = UserBackpackContract.UserBackpackEntry.CONTENT_URI_GUEST;
+        } else {
+            uri = UserBackpackContract.UserBackpackEntry.CONTENT_URI;
+        }
 
         return new CursorLoader(
                 this,
-                UserBackpackContract.UserBackpackEntry.CONTENT_URI,
+                uri,
                 QUERY_COLUMNS,
                 null,
                 null,

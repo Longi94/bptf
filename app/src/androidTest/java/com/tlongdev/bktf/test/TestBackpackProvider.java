@@ -1,6 +1,5 @@
 package com.tlongdev.bktf.test;
 
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
@@ -22,7 +21,6 @@ public class TestBackpackProvider extends AndroidTestCase{
         ContentValues testValues = TestBackPackDb.createValues();
 
         Uri insertUri = mContext.getContentResolver().insert(UserBackpackEntry.CONTENT_URI, testValues);
-        long rowId = ContentUris.parseId(insertUri);
 
         // A cursor is your primary interface to the query results.
         Cursor cursor = mContext.getContentResolver().query(
@@ -35,13 +33,15 @@ public class TestBackpackProvider extends AndroidTestCase{
 
         TestDb.validateCursor(cursor, testValues);
 
-        // Now see if we can successfully query if we include the row id
+        insertUri = mContext.getContentResolver().insert(UserBackpackEntry.CONTENT_URI_GUEST, testValues);
+
+        // A cursor is your primary interface to the query results.
         cursor = mContext.getContentResolver().query(
-                UserBackpackEntry.buildBackPackUri(rowId),
+                UserBackpackEntry.CONTENT_URI_GUEST,  // Table to Query
                 null, // leaving "columns" null just returns all the columns.
-                null, // cols for "where" clause
-                null, // values for "where" clause
-                null  // sort order
+                null, // Columns for the "where" clause
+                null, // Values for the "where" clause
+                null // sort order
         );
 
         TestDb.validateCursor(cursor, testValues);
@@ -51,8 +51,7 @@ public class TestBackpackProvider extends AndroidTestCase{
         String type = mContext.getContentResolver().getType(UserBackpackEntry.CONTENT_URI);
         assertEquals(UserBackpackEntry.CONTENT_TYPE, type);
 
-        type = mContext.getContentResolver().getType(
-                UserBackpackEntry.buildBackPackUri(0));
+        type = mContext.getContentResolver().getType(UserBackpackEntry.CONTENT_URI_GUEST);
         assertEquals(UserBackpackEntry.CONTENT_TYPE, type);
     }
 }

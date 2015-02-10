@@ -16,6 +16,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tlongdev.bktf.task.FetchUserBackpack;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +33,7 @@ import java.text.DecimalFormat;
 /**
  * Profile page activity.
  */
-public class UserInfoActivity extends ActionBarActivity implements View.OnClickListener {
+public class UserInfoActivity extends ActionBarActivity implements View.OnClickListener, FetchUserBackpack.OnFetchUserBackpackListener {
 
     private static final String LOG_TAG = UserInfoActivity.class.getSimpleName();
 
@@ -61,7 +63,6 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
     private String playerNameString;
     private int playerReputationValue = 0;
     private double backpackValue = 0;
-    private boolean isInGroup = false;
     private boolean isBanned = false;
     private boolean isScammer = false;
     private boolean isCommunityBanned = false;
@@ -72,6 +73,14 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
     private long lastOnline = -1;
     private int playerState = 0;
     private long profileCreated = -1;
+    private int backpackSlotNumber;
+    private int itemNumber;
+    private int rawKeys;
+    private double rawMetal;
+
+    private FetchUserBackpack fetchTask;
+    private boolean backpackFetching = false;
+    private boolean userFetching = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +93,16 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         if (Utility.isDebugging(this)){
             Log.d(LOG_TAG, "steamID: " + steamId);
         }
+        //Start downloading remaining info if the user.
+        new FetchUserInfoTask().execute(i.getStringExtra(JSON_USER_SUMMARIES_KEY));
+        userFetching = true;
+        fetchTask = new FetchUserBackpack(this, false);
+        fetchTask.registerOnFetchUserBackpackListener(this);
+        fetchTask.execute(steamId);
+        backpackFetching = true;
+
+        //Set the title to X's profile
+        getSupportActionBar().setTitle(playerNameString + "'s profile");
 
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
@@ -110,8 +129,6 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         findViewById(R.id.button_steam_community).setOnClickListener(this);
         findViewById(R.id.button_backpack).setOnClickListener(this);
 
-        //Start downloading remaining info if the user.
-        new FetchUserInfoTask().execute(i.getStringExtra(JSON_USER_SUMMARIES_KEY));
     }
 
     @Override
@@ -148,7 +165,12 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
                 startActivity(intent);
             }
         } else {
-            startActivity(new Intent(this, UserBackpackActivity.class));
+
+            Intent i = new Intent(this, UserBackpackActivity.class);
+            i.putExtra(UserBackpackActivity.EXTRA_NAME, playerNameString);
+            i.putExtra(UserBackpackActivity.EXTRA_GUEST, !steamId.equals(PreferenceManager.getDefaultSharedPreferences(this)
+                    .getString(getString(R.string.pref_resolved_steam_id), "")));
+            startActivity(i);
         }
     }
 
@@ -202,7 +224,6 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
             }
 
             //If these are set, then the value is true
-            isInGroup = current_user.has(OWM_PLAYER_GROUP);
             isBanned = current_user.has(OWM_PLAYER_BANNED);
             isScammer = current_user.has(OWM_PLAYER_SCAMMER);
             isCommunityBanned = current_user.has(OWM_PLAYER_BAN_COMMUNITY);
@@ -252,8 +273,6 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
      * Update the UI with all available data.
      */
     private void updateUI() {
-        //Set the title to X's profile
-        getSupportActionBar().setTitle(playerNameString + "'s profile");
         playerName.setText(playerNameString);
         
         if (isBanned){
@@ -300,7 +319,7 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
                 lastOnlineText.setTextColor(0xff24a9de);
                 break;
             case 6:
-                lastOnlineText.setText("Looking to playe");
+                lastOnlineText.setText("Looking to play");
                 lastOnlineText.setTextColor(0xff24a9de);
                 break;
             case 7:
@@ -390,9 +409,26 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         //Image should be available in data folder by the time this method is called.
         avatar.setImageDrawable(Drawable.createFromPath(getFilesDir().toString() + "/avatar_search.png"));
 
+        backpackRawKeys.setText("" + rawKeys);
+        backpackRawMetal.setText("" + Utility.roundDouble(rawMetal, 2));
+
+        backpackSlots.setText("" + itemNumber + "/" + backpackSlotNumber);
+
         //Reveal all the info and remove the progress bar.
         findViewById(R.id.scroll_view).setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onFetchFinished(int rawKeys, double rawMetal, int backpackSlots, int itemNumber) {
+        this.rawKeys = rawKeys;
+        this.rawMetal = rawMetal;
+        this.backpackSlotNumber = backpackSlots;
+        this.itemNumber = itemNumber;
+        backpackFetching = false;
+        if (!userFetching){
+            updateUI();
+        }
     }
 
     /**
@@ -498,7 +534,9 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            updateUI();
+            userFetching = false;
+            if (!backpackFetching)
+                updateUI();
         }
     }
 }

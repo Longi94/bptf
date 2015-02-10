@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -507,28 +506,6 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
                     .bulkInsert(PriceEntry.CONTENT_URI, cvArray);
             if (Utility.isDebugging(mContext))
                 Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
-            // Use a DEBUG variable to gate whether or not you do this, so you can easily
-            // turn it on and off, and so that it's easy to see what you can rip out if
-            // you ever want to remove it.
-            Cursor priceListCursor = mContext.getContentResolver().query(
-                    PriceEntry.CONTENT_URI,
-                    null,
-                    null,
-                    null,
-                    null
-            );
-
-            if (priceListCursor.moveToFirst()) {
-                ContentValues resultValues = new ContentValues();
-                DatabaseUtils.cursorRowToContentValues(priceListCursor, resultValues);
-                if (Utility.isDebugging(mContext))
-                    Log.v(LOG_TAG, "Query succeeded");
-            } else {
-                if (Utility.isDebugging(mContext))
-                    Log.v(LOG_TAG, "Query failed");
-            }
-
-            priceListCursor.close();
         }
     }
 

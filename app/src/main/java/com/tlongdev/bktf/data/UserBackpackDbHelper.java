@@ -45,12 +45,42 @@ public class UserBackpackDbHelper extends SQLiteOpenHelper{
                         " UNIQUE (" + UserBackpackEntry.COLUMN_POSITION + ", " +
                         UserBackpackEntry.COLUMN_UNIQUE_ID + ") ON CONFLICT REPLACE);";
 
+        final String SQL_CREATE_GUEST_BACKPACK_TABLE =
+                "CREATE TABLE " + UserBackpackEntry.TABLE_NAME_GUEST + " (" +
+                        UserBackpackEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+
+                        UserBackpackEntry.COLUMN_POSITION + " INTEGER NOT NULL, " +
+                        UserBackpackEntry.COLUMN_UNIQUE_ID + " INTEGER NOT NULL, " +
+                        UserBackpackEntry.COLUMN_ORIGINAL_ID + " INTEGER NOT NULL, " +
+                        UserBackpackEntry.COLUMN_DEFINDEX + " INTEGER NOT NULL, " +
+                        UserBackpackEntry.COLUMN_LEVEL + " INTEGER NOT NULL, " +
+                        UserBackpackEntry.COLUMN_ORIGIN + " INTEGER NOT NULL, " +
+                        UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE + " INTEGER NOT NULL, " +
+                        UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT + " INTEGER NOT NULL, " +
+                        UserBackpackEntry.COLUMN_QUALITY + " INTEGER NOT NULL, " +
+                        UserBackpackEntry.COLUMN_CUSTOM_NAME + " TEXT, " +
+                        UserBackpackEntry.COLUMN_CUSTOM_DESCRIPTION + " TEXT, " +
+                        UserBackpackEntry.COLUMN_EQUIPPED + " INTEGER NOT NULL, " +
+                        UserBackpackEntry.COLUMN_ITEM_INDEX + " INTEGER NOT NULL, " +
+                        UserBackpackEntry.COLUMN_PAINT + " INTEGER, " +
+                        UserBackpackEntry.COLUMN_CRAFT_NUMBER + " INTEGER, " +
+                        UserBackpackEntry.COLUMN_CREATOR_NAME + " TEXT, " +
+                        UserBackpackEntry.COLUMN_GIFTER_NAME + " TEXT, " +
+                        UserBackpackEntry.COLUMN_CONTAINED_ITEM + " TEXT, " +
+                        UserBackpackEntry.COLUMN_AUSTRALIUM + " INTEGER NOT NULL, " +
+
+
+                        " UNIQUE (" + UserBackpackEntry.COLUMN_POSITION + ", " +
+                        UserBackpackEntry.COLUMN_UNIQUE_ID + ") ON CONFLICT REPLACE);";
+
         db.execSQL(SQL_CREATE_BACKPACK_TABLE);
+        db.execSQL(SQL_CREATE_GUEST_BACKPACK_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + UserBackpackContract.UserBackpackEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + UserBackpackEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + UserBackpackEntry.TABLE_NAME_GUEST);
         onCreate(db);
     }
 }
