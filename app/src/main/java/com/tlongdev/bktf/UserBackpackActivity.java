@@ -29,6 +29,18 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
             UserBackpackContract.UserBackpackEntry.COLUMN_PAINT
     };
 
+    private static final String[] QUERY_COLUMNS_GUEST = {
+            UserBackpackContract.UserBackpackEntry.TABLE_NAME_GUEST + "." + UserBackpackContract.UserBackpackEntry._ID,
+            UserBackpackContract.UserBackpackEntry.COLUMN_DEFINDEX,
+            UserBackpackContract.UserBackpackEntry.COLUMN_POSITION,
+            UserBackpackContract.UserBackpackEntry.COLUMN_QUALITY,
+            UserBackpackContract.UserBackpackEntry.COLUMN_CRAFT_NUMBER,
+            UserBackpackContract.UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE,
+            UserBackpackContract.UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT,
+            UserBackpackContract.UserBackpackEntry.COLUMN_ITEM_INDEX,
+            UserBackpackContract.UserBackpackEntry.COLUMN_PAINT
+    };
+
     //Indexes for the columns above
     public static final int COL_BACKPACK_DEFI = 1;
     public static final int COL_BACKPACK_POS = 2;
@@ -79,17 +91,20 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String sortOrder = UserBackpackContract.UserBackpackEntry.COLUMN_POSITION + " ASC";
         Uri uri;
+        String[] columns;
 
         if (isGuest){
             uri = UserBackpackContract.UserBackpackEntry.CONTENT_URI_GUEST;
+            columns = QUERY_COLUMNS_GUEST;
         } else {
             uri = UserBackpackContract.UserBackpackEntry.CONTENT_URI;
+            columns = QUERY_COLUMNS;
         }
 
         return new CursorLoader(
                 this,
                 uri,
-                QUERY_COLUMNS,
+                columns,
                 null,
                 null,
                 sortOrder
