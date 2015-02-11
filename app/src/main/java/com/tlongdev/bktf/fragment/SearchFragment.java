@@ -75,7 +75,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
 
     //Selection
     private static final String sNameSearch =
-            PriceListContract.PriceEntry.TABLE_NAME+
+            PriceListContract.PriceEntry.TABLE_NAME +
                     "." + PriceListContract.PriceEntry.COLUMN_ITEM_NAME + " LIKE ? AND NOT(" +
                     PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY + " = 5 AND " +
                     PriceListContract.PriceEntry.COLUMN_PRICE_INDEX + " != 0)";

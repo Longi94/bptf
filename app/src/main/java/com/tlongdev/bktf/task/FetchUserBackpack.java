@@ -199,11 +199,6 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Void> {
                 backpackSlots = response.getInt(OWM_SLOTS);
                 itemNumber = items.length();
 
-                if (!isGuest) {
-
-                }
-
-
                 slotNumbers = new ArrayList<>();
 
                 for (int i = 1; i <= backpackSlots; i++){
@@ -211,7 +206,9 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Void> {
                 }
 
                 for (int i = 0; i < items.length(); i++){
-                    cVVector.add(buildContentValues(items.getJSONObject(i)));
+                    ContentValues values = buildContentValues(items.getJSONObject(i));
+                    if (values != null)
+                        cVVector.add(values);
                 }
 
                 fillInEmptySlots(cVVector);
@@ -271,6 +268,11 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Void> {
 
     private ContentValues buildContentValues(JSONObject item) throws JSONException {
 
+        long inventoryToken = item.getLong(OWM_INVENTORY_TOKEN);
+        if (inventoryToken == 0){
+            return null;
+        }
+
         ContentValues values = new ContentValues();
 
         int defindex = item.getInt(OWM_DEFINDEX);
@@ -310,8 +312,7 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Void> {
         else
             values.put(UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT, 0);
 
-        long inventoryToken = item.getLong(OWM_INVENTORY_TOKEN);
-        if (inventoryToken == 0){
+        if (inventoryToken >= 3221225472L /*11000000000000000000000000000000*/){
             values.put(UserBackpackEntry.COLUMN_POSITION, -1);
         } else {
             int position = (int)(inventoryToken % ((Double)Math.pow(2, 16)).intValue());

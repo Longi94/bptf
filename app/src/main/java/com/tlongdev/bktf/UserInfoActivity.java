@@ -101,9 +101,6 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         fetchTask.execute(steamId);
         backpackFetching = true;
 
-        //Set the title to X's profile
-        getSupportActionBar().setTitle(playerNameString + "'s profile");
-
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
         playerName = (TextView) findViewById(R.id.text_view_player_name);
@@ -273,6 +270,9 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
      * Update the UI with all available data.
      */
     private void updateUI() {
+
+        //Set the title to X's profile
+        getSupportActionBar().setTitle(playerNameString + "'s profile");
         playerName.setText(playerNameString);
         
         if (isBanned){

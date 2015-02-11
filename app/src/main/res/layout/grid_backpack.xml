@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.tlongdev.bktf.view.SquareRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/root_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/item_background_unique" >
+    android:layout_height="match_parent" >
+
+    <com.tlongdev.bktf.view.SquareImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/image_view_item_background"
+        android:background="@drawable/item_background_unique"
+        />
 
     <com.tlongdev.bktf.view.SquareImageView
         android:padding="3dp"
@@ -14,16 +19,5 @@
         android:scaleType="centerCrop"
         android:layout_gravity="center"
         android:background="@drawable/simple_grid_item_background"/>
-
-    <TextView
-        android:layout_margin="3dp"
-        android:id="@+id/grid_item_price"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_gravity="bottom"
-        android:background="#44000000"
-        android:padding="4dp"
-        android:textColor="#fff"/>
 
 </com.tlongdev.bktf.view.SquareRelativeLayout>
