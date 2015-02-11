@@ -75,7 +75,7 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Void> {
         isGuest = !params[0].equals(PreferenceManager.getDefaultSharedPreferences(mContext)
                 .getString(mContext.getString(R.string.pref_resolved_steam_id), ""));
 
-        if (isGuest && System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(mContext)
+        if (!isGuest && System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(mContext)
                 .getLong(mContext.getString(R.string.pref_last_backpack_update), 0) < 3600000L && !manualSync){
             //This task ran less than an hour ago and wasn't a manual sync, nothing to do.
             return null;
