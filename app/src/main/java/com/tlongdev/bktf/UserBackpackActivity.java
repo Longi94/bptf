@@ -8,9 +8,9 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
-import android.widget.ListView;
+import android.widget.GridView;
 
-import com.tlongdev.bktf.adapter.SimpleBackpackAdapter;
+import com.tlongdev.bktf.adapter.UserBackpackAdapter;
 import com.tlongdev.bktf.data.UserBackpackContract;
 
 
@@ -26,7 +26,8 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
             UserBackpackContract.UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE,
             UserBackpackContract.UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT,
             UserBackpackContract.UserBackpackEntry.COLUMN_ITEM_INDEX,
-            UserBackpackContract.UserBackpackEntry.COLUMN_PAINT
+            UserBackpackContract.UserBackpackEntry.COLUMN_PAINT,
+            UserBackpackContract.UserBackpackEntry.COLUMN_AUSTRALIUM
     };
 
     private static final String[] QUERY_COLUMNS_GUEST = {
@@ -38,7 +39,8 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
             UserBackpackContract.UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE,
             UserBackpackContract.UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT,
             UserBackpackContract.UserBackpackEntry.COLUMN_ITEM_INDEX,
-            UserBackpackContract.UserBackpackEntry.COLUMN_PAINT
+            UserBackpackContract.UserBackpackEntry.COLUMN_PAINT,
+            UserBackpackContract.UserBackpackEntry.COLUMN_AUSTRALIUM
     };
 
     //Indexes for the columns above
@@ -50,12 +52,13 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
     public static final int COL_BACKPACK_CRAF = 6;
     public static final int COL_BACKPACK_INDE = 7;
     public static final int COL_BACKPACK_PAIN = 8;
+    public static final int COL_BACKPACK_AUS = 9;
 
     public static final String EXTRA_NAME = "name";
     public static final String EXTRA_GUEST = "guest";
 
-    private SimpleBackpackAdapter adapter;
-    private ListView listView;
+    private UserBackpackAdapter adapter;
+    private GridView gridView;
 
     private boolean isGuest;
 
@@ -64,13 +67,13 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_backpack);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(getIntent().getStringExtra(EXTRA_NAME));
+        getSupportActionBar().setTitle(getIntent().getStringExtra(EXTRA_NAME) + "'s backpack");
 
         isGuest = getIntent().getBooleanExtra(EXTRA_GUEST, false);
 
-        listView = (ListView)findViewById(R.id.list_view);
-        adapter = new SimpleBackpackAdapter(this, null, 0);
-        listView.setAdapter(adapter);
+        gridView = (GridView)findViewById(R.id.grid_view_backpack);
+        adapter = new UserBackpackAdapter(this, null, 0);
+        gridView.setAdapter(adapter);
 
         getSupportLoaderManager().initLoader(0, null, this);
     }
@@ -92,20 +95,25 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
         String sortOrder = UserBackpackContract.UserBackpackEntry.COLUMN_POSITION + " ASC";
         Uri uri;
         String[] columns;
+        String selection;
 
         if (isGuest){
             uri = UserBackpackContract.UserBackpackEntry.CONTENT_URI_GUEST;
             columns = QUERY_COLUMNS_GUEST;
+            selection = UserBackpackContract.UserBackpackEntry.TABLE_NAME_GUEST + "." +
+                    UserBackpackContract.UserBackpackEntry.COLUMN_POSITION + " >= 1";
         } else {
             uri = UserBackpackContract.UserBackpackEntry.CONTENT_URI;
             columns = QUERY_COLUMNS;
+            selection = UserBackpackContract.UserBackpackEntry.TABLE_NAME + "." +
+                    UserBackpackContract.UserBackpackEntry.COLUMN_POSITION + " >= 1";
         }
 
         return new CursorLoader(
                 this,
                 uri,
                 columns,
-                null,
+                selection,
                 null,
                 sortOrder
         );

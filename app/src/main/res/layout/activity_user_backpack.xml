@@ -4,9 +4,17 @@
     android:layout_height="match_parent"
     tools:context="com.tlongdev.bktf.UserBackpackActivity">
 
-    <ListView
-        android:id="@+id/list_view"
+    <GridView
+        android:id="@+id/grid_view_backpack"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:padding="2dp"
+        android:clipToPadding="false"
+        android:stretchMode="columnWidth"
+        android:numColumns="5"
+        android:gravity="center"
+        android:scrollbars="none"
+        android:verticalSpacing="2dp"
+        android:horizontalSpacing="2dp"/>
 
 </RelativeLayout>
