@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false">
+
+    <com.tlongdev.bktf.view.SquareRelativeLayout
+        android:id="@+id/relative_layout_1"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:padding="1dp"
+        android:foreground="@drawable/simple_grid_item_background" >
+
+        <com.tlongdev.bktf.view.SquareImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/image_view_item_background_1"
+            android:background="@drawable/item_background_blank"
+            />
+
+        <com.tlongdev.bktf.view.SquareImageView
+            android:id="@+id/image_view_item_icon_1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center"/>
+
+    </com.tlongdev.bktf.view.SquareRelativeLayout>
+
+    <com.tlongdev.bktf.view.SquareRelativeLayout
+        android:id="@+id/relative_layout_2"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:padding="1dp"
+        android:foreground="@drawable/simple_grid_item_background">
+
+        <com.tlongdev.bktf.view.SquareImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/image_view_item_background_2"
+            android:background="@drawable/item_background_blank"
+            />
+
+        <com.tlongdev.bktf.view.SquareImageView
+            android:id="@+id/image_view_item_icon_2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center"
+            android:background="@drawable/simple_grid_item_background"/>
+
+    </com.tlongdev.bktf.view.SquareRelativeLayout>
+
+    <com.tlongdev.bktf.view.SquareRelativeLayout
+        android:id="@+id/relative_layout_3"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:padding="1dp"
+        android:foreground="@drawable/simple_grid_item_background" >
+
+        <com.tlongdev.bktf.view.SquareImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/image_view_item_background_3"
+            android:background="@drawable/item_background_blank"
+            />
+
+        <com.tlongdev.bktf.view.SquareImageView
+            android:id="@+id/image_view_item_icon_3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center"
+            android:background="@drawable/simple_grid_item_background"/>
+
+    </com.tlongdev.bktf.view.SquareRelativeLayout>
+
+    <com.tlongdev.bktf.view.SquareRelativeLayout
+        android:id="@+id/relative_layout_4"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:padding="1dp"
+        android:foreground="@drawable/simple_grid_item_background" >
+
+        <com.tlongdev.bktf.view.SquareImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/image_view_item_background_4"
+            android:background="@drawable/item_background_blank"
+            />
+
+        <com.tlongdev.bktf.view.SquareImageView
+            android:id="@+id/image_view_item_icon_4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center"
+            android:background="@drawable/simple_grid_item_background"/>
+
+    </com.tlongdev.bktf.view.SquareRelativeLayout>
+
+    <com.tlongdev.bktf.view.SquareRelativeLayout
+        android:id="@+id/relative_layout_5"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:padding="1dp"
+        android:foreground="@drawable/simple_grid_item_background" >
+
+        <com.tlongdev.bktf.view.SquareImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/image_view_item_background_5"
+            android:background="@drawable/item_background_blank"
+            />
+
+        <com.tlongdev.bktf.view.SquareImageView
+            android:id="@+id/image_view_item_icon_5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center"
+            android:background="@drawable/simple_grid_item_background"/>
+
+    </com.tlongdev.bktf.view.SquareRelativeLayout>
+
+</LinearLayout>
