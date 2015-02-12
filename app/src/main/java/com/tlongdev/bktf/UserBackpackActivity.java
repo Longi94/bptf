@@ -7,10 +7,11 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
-import android.widget.GridView;
 
-import com.tlongdev.bktf.adapter.UserBackpackAdapter;
+import com.tlongdev.bktf.adapter.BackpackSectionHeaderAdapter;
 import com.tlongdev.bktf.data.UserBackpackContract;
 
 
@@ -57,8 +58,8 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
     public static final String EXTRA_NAME = "name";
     public static final String EXTRA_GUEST = "guest";
 
-    private UserBackpackAdapter adapter;
-    private GridView gridView;
+    private BackpackSectionHeaderAdapter adapter;
+    private RecyclerView listView;
 
     private boolean isGuest;
 
@@ -71,9 +72,17 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
 
         isGuest = getIntent().getBooleanExtra(EXTRA_GUEST, false);
 
-        gridView = (GridView)findViewById(R.id.grid_view_backpack);
-        adapter = new UserBackpackAdapter(this, null, 0);
-        gridView.setAdapter(adapter);
+        listView = (RecyclerView)findViewById(R.id.list_view_backpack);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        listView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        listView.setLayoutManager(new LinearLayoutManager(this));
+
+        adapter = new BackpackSectionHeaderAdapter(this);
+        listView.setAdapter(adapter);
 
         getSupportLoaderManager().initLoader(0, null, this);
     }
@@ -122,10 +131,12 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         adapter.swapCursor(data);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         adapter.swapCursor(null);
+        adapter.notifyDataSetChanged();
     }
 }
