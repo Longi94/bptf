@@ -1,9 +1,11 @@
 package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tlongdev.bktf.ItemDetailActivity;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.UserBackpackActivity;
 import com.tlongdev.bktf.Utility;
@@ -26,9 +29,11 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
 
     private Cursor mDataSet;
     private Context mContext;
+    private boolean isGuest = false;
 
-    public BackpackSectionHeaderAdapter(Context mContext) {
+    public BackpackSectionHeaderAdapter(Context mContext, boolean isGuest) {
         this.mContext = mContext;
+        this.isGuest = isGuest;
     }
 
     @Override
@@ -63,6 +68,7 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                 int cursorPosition = (position - (position / 11) - 1) * 5;
                 if (mDataSet.moveToPosition(cursorPosition)){
                     for (int i = 0; i < 5; i++){
+                        final int id = mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_ID);
                         int defindex = mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_DEFI);
                         int quality = mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_QUAL);
                         int tradable = Math.abs(mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_TRAD) - 1);
@@ -71,17 +77,20 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                         int paint = mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_PAIN);
                         int australium = mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_AUS);
 
-                        if (defindex == 0){
+                        if (defindex == 0) {
                             holder.icon[i].setImageDrawable(null);
                             holder.background[i].setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.item_background_blank));
                         } else {
-                            setIconImage(mContext, holder.icon[i], defindex, australium == 1);
+                            setIconImage(mContext, holder.icon[i], defindex, itemIndex, quality, australium == 1);
                             holder.background[i].setBackgroundDrawable(Utility.getItemBackground(mContext,
                                     quality, tradable, craftable));
                             holder.parent[i].setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-
+                                    Intent i = new Intent(mContext, ItemDetailActivity.class);
+                                    i.putExtra(ItemDetailActivity.EXTRA_ITEM_ID, id);
+                                    i.putExtra(ItemDetailActivity.EXTRA_GUEST, isGuest);
+                                    mContext.startActivity(i);
                                 }
                             });
                         }
@@ -92,18 +101,26 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
         }
     }
 
-    private void setIconImage(Context context, ImageView icon, int defindex, boolean isAustralium) {
+    private void setIconImage(Context context, ImageView icon, int defindex, int index, int quality, boolean isAustralium) {
         try {
             InputStream ims;
             AssetManager assetManager = context.getAssets();
+            Drawable d;
+
             if (isAustralium) {
                 ims = assetManager.open("items/" + defindex + "aus.png");
             } else {
                 ims = assetManager.open("items/" + defindex + ".png");
             }
 
-            // load image as Drawable
-            Drawable d = Drawable.createFromStream(ims, null);
+            Drawable iconDrawable = Drawable.createFromStream(ims, null);
+            if (index != 0 && quality == 5) {
+                ims = assetManager.open("effects/" + index + "_188x188.png");
+                Drawable effectDrawable = Drawable.createFromStream(ims, null);
+                d = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
+            } else {
+                d = iconDrawable;
+            }
             // set image to ImageView
             icon.setImageDrawable(d);
         } catch (IOException e) {

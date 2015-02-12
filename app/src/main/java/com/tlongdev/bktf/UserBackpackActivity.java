@@ -21,7 +21,6 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
     private static final String[] QUERY_COLUMNS = {
             UserBackpackContract.UserBackpackEntry.TABLE_NAME + "." + UserBackpackContract.UserBackpackEntry._ID,
             UserBackpackContract.UserBackpackEntry.COLUMN_DEFINDEX,
-            UserBackpackContract.UserBackpackEntry.COLUMN_POSITION,
             UserBackpackContract.UserBackpackEntry.COLUMN_QUALITY,
             UserBackpackContract.UserBackpackEntry.COLUMN_CRAFT_NUMBER,
             UserBackpackContract.UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE,
@@ -34,7 +33,6 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
     private static final String[] QUERY_COLUMNS_GUEST = {
             UserBackpackContract.UserBackpackEntry.TABLE_NAME_GUEST + "." + UserBackpackContract.UserBackpackEntry._ID,
             UserBackpackContract.UserBackpackEntry.COLUMN_DEFINDEX,
-            UserBackpackContract.UserBackpackEntry.COLUMN_POSITION,
             UserBackpackContract.UserBackpackEntry.COLUMN_QUALITY,
             UserBackpackContract.UserBackpackEntry.COLUMN_CRAFT_NUMBER,
             UserBackpackContract.UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE,
@@ -45,15 +43,15 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
     };
 
     //Indexes for the columns above
+    public static final int COL_BACKPACK_ID = 0;
     public static final int COL_BACKPACK_DEFI = 1;
-    public static final int COL_BACKPACK_POS = 2;
-    public static final int COL_BACKPACK_QUAL = 3;
-    public static final int COL_BACKPACK_CRFN = 4;
-    public static final int COL_BACKPACK_TRAD = 5;
-    public static final int COL_BACKPACK_CRAF = 6;
-    public static final int COL_BACKPACK_INDE = 7;
-    public static final int COL_BACKPACK_PAIN = 8;
-    public static final int COL_BACKPACK_AUS = 9;
+    public static final int COL_BACKPACK_QUAL = 2;
+    public static final int COL_BACKPACK_CRFN = 3;
+    public static final int COL_BACKPACK_TRAD = 4;
+    public static final int COL_BACKPACK_CRAF = 5;
+    public static final int COL_BACKPACK_INDE = 6;
+    public static final int COL_BACKPACK_PAIN = 7;
+    public static final int COL_BACKPACK_AUS = 8;
 
     public static final String EXTRA_NAME = "name";
     public static final String EXTRA_GUEST = "guest";
@@ -81,7 +79,7 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
         // use a linear layout manager
         listView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new BackpackSectionHeaderAdapter(this);
+        adapter = new BackpackSectionHeaderAdapter(this, isGuest);
         listView.setAdapter(adapter);
 
         getSupportLoaderManager().initLoader(0, null, this);
