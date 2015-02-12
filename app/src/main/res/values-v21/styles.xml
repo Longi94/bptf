@@ -8,6 +8,15 @@
         <item name="colorAccent">@color/bktf_main_blue</item>
         <item name="actionBarStyle">@style/bptfActionBar</item>
         <item name="searchViewStyle">@style/bptfSearchView</item>
+
+        <!-- enable window content transitions -->
+        <item name="android:windowContentTransitions">true</item>
+
+        <!-- specify shared element transitions -->
+        <item name="android:windowSharedElementEnterTransition">
+            @transition/change_image_transform</item>
+        <item name="android:windowSharedElementExitTransition">
+            @transition/change_image_transform</item>
     </style>
 
     <!-- ActionBar styles -->

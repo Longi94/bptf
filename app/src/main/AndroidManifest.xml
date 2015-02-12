@@ -118,7 +118,17 @@
         <activity
             android:name=".UserBackpackActivity"
             android:label="@string/title_activity_user_backpack"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ItemDetailActivity"
+            android:label="@string/title_activity_item_detail"
+            android:parentActivityName=".UserBackpackActivity"
+            android:theme="@style/AppTheme.Dialog"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tlongdev.bktf.UserBackpackActivity" />
+        </activity>
     </application>
 
 </manifest>
