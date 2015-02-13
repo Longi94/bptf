@@ -1,11 +1,15 @@
 package com.tlongdev.bktf.adapter;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.os.Build;
+import android.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,7 +63,7 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         switch (getItemViewType(position)){
             case VIEW_TYPE_HEADER:
                 holder.header.setText("Page " + (position / 11 + 1));
@@ -68,6 +72,7 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                 int cursorPosition = (position - (position / 11) - 1) * 5;
                 if (mDataSet.moveToPosition(cursorPosition)){
                     for (int i = 0; i < 5; i++){
+                        final int i2 = i;
                         final int id = mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_ID);
                         int defindex = mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_DEFI);
                         int quality = mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_QUAL);
@@ -80,6 +85,7 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                         if (defindex == 0) {
                             holder.icon[i].setImageDrawable(null);
                             holder.background[i].setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.item_background_blank));
+                            holder.parent[i].setOnClickListener(null);
                         } else {
                             setIconImage(mContext, holder.icon[i], defindex, itemIndex, quality, australium == 1);
                             holder.background[i].setBackgroundDrawable(Utility.getItemBackground(mContext,
@@ -90,7 +96,16 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                                     Intent i = new Intent(mContext, ItemDetailActivity.class);
                                     i.putExtra(ItemDetailActivity.EXTRA_ITEM_ID, id);
                                     i.putExtra(ItemDetailActivity.EXTRA_GUEST, isGuest);
-                                    mContext.startActivity(i);
+
+                                    if (Build.VERSION.SDK_INT >= 21) {
+                                        ActivityOptions options = ActivityOptions
+                                                .makeSceneTransitionAnimation((Activity)mContext,
+                                                        Pair.create((View)holder.icon[i2], "icon_transition"),
+                                                        Pair.create((View)holder.background[i2], "background_transition"));
+                                        mContext.startActivity(i, options.toBundle());
+                                    } else {
+                                        mContext.startActivity(i);
+                                    }
                                 }
                             });
                         }
