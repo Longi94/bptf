@@ -1,17 +1,16 @@
 package com.tlongdev.bktf;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.view.ViewGroup;
+import android.support.v7.widget.CardView;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,13 +23,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 
-public class ItemDetailActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+public class ItemDetailActivity extends Activity {
 
     public static final String EXTRA_ITEM_ID = "id";
     public static final String EXTRA_GUEST = "guest";
-
-    public static final int LOADER_ITEM = 0;
-    public static final int LOADER_PRICE = 1;
 
     //Query columns
     private static final String[] QUERY_COLUMNS = {
@@ -141,7 +137,18 @@ public class ItemDetailActivity extends FragmentActivity implements LoaderManage
         layout.getLayoutParams().height = screenWidth / 3;
         layout.requestLayout();
 
-        getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        final CardView cardView = (CardView)findViewById(R.id.card_view);
+
+        ((View)cardView.getParent()).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= 21)
+                    finishAfterTransition();
+                else
+                    finish();
+            }
+        });
+        cardView.setOnClickListener(null);
 
         name = (TextView)findViewById(R.id.text_view_name);
         level = (TextView)findViewById(R.id.text_view_level);
@@ -157,101 +164,80 @@ public class ItemDetailActivity extends FragmentActivity implements LoaderManage
         icon = (ImageView)findViewById(R.id.image_view_item_icon);
         background = (ImageView)findViewById(R.id.image_view_item_background);
 
-        getSupportLoaderManager().initLoader(LOADER_ITEM, null, this);
+        queryItemDetails();
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    private void queryItemDetails() {
         Uri uri;
         String[] columns;
         String selection;
+        if (isGuest) {
+            uri = UserBackpackEntry.CONTENT_URI_GUEST;
+            columns = QUERY_COLUMNS_GUEST;
+            selection = UserBackpackEntry.TABLE_NAME_GUEST + "." +
+                    UserBackpackEntry._ID + " = ?";
+        } else {
+            uri = UserBackpackEntry.CONTENT_URI;
+            columns = QUERY_COLUMNS;
+            selection = UserBackpackEntry.TABLE_NAME + "." +
+                    UserBackpackEntry._ID + " = ?";
+        }
 
-        switch (id){
-            case LOADER_ITEM:
-                if (isGuest){
-                    uri = UserBackpackEntry.CONTENT_URI_GUEST;
-                    columns = QUERY_COLUMNS_GUEST;
-                    selection = UserBackpackEntry.TABLE_NAME_GUEST + "." +
-                            UserBackpackEntry._ID + " = ?";
-                } else {
-                    uri = UserBackpackEntry.CONTENT_URI;
-                    columns = QUERY_COLUMNS;
-                    selection = UserBackpackEntry.TABLE_NAME + "." +
-                            UserBackpackEntry._ID + " = ?";
-                }
+        itemCursor = getContentResolver().query(
+                uri,
+                columns,
+                selection,
+                new String[]{"" + id},
+                null
+        );
 
-                return new CursorLoader(
-                        this,
-                        uri,
-                        columns,
-                        selection,
-                        new String[]{"" + this.id},
-                        null
-                );
-            case LOADER_PRICE:
-                uri = PriceEntry.CONTENT_URI;
-                columns = QUERY_COLUMNS_PRICE;
-                selection = PriceEntry.TABLE_NAME + "." +
-                        PriceEntry.COLUMN_DEFINDEX + " = ? AND " +
-                        PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
-                        PriceEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
-                        PriceEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
-                        PriceEntry.COLUMN_PRICE_INDEX + " = ?";
+        if (itemCursor.moveToFirst()){
+            defindex = itemCursor.getInt(COL_BACKPACK_DEFI);
+            priceIndex = itemCursor.getInt(COL_BACKPACK_INDE);
+            tradable = Math.abs(itemCursor.getInt(COL_BACKPACK_TRAD) - 1);
+            craftable = Math.abs(itemCursor.getInt(COL_BACKPACK_CRAF) - 1);
+            quality = itemCursor.getInt(COL_BACKPACK_QUAL);
 
-                return new CursorLoader(
-                        this,
-                        uri,
-                        columns,
-                        selection,
-                        new String[]{"" + defindex, "" + quality, "" + tradable, "" + craftable, "" + priceIndex},
-                        null
-                );
-            default:
-                return null;
+            name.setText("" + defindex);
+            level.setText("" + itemCursor.getInt(COL_BACKPACK_LEVEL));
+            origin.setText("Origin: " + itemCursor.getInt(COL_BACKPACK_ORIGIN));
+
+            setIconImage(this, icon, defindex, priceIndex, quality, itemCursor.getInt(COL_BACKPACK_AUS) == 1);
+            background.setBackgroundDrawable(Utility.getItemBackground(this,
+                    quality, tradable, craftable));
+        } else {
+            throw new RuntimeException("Item with id " + id + " not found (selection: " + selection + ")");
+        }
+
+        uri = PriceEntry.CONTENT_URI;
+        columns = QUERY_COLUMNS_PRICE;
+        selection = PriceEntry.TABLE_NAME + "." +
+                PriceEntry.COLUMN_DEFINDEX + " = ? AND " +
+                PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
+                PriceEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
+                PriceEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
+                PriceEntry.COLUMN_PRICE_INDEX + " = ?";
+
+        priceCursor = getContentResolver().query(
+                uri,
+                columns,
+                selection,
+                new String[]{"" + defindex, "" + quality, "" + tradable, "" + craftable, "" + priceIndex},
+                null
+        );
+
+        if (priceCursor.moveToFirst()) {
+            try {
+                price.setVisibility(View.VISIBLE);
+                price.setText("" + Utility.formatPrice(this, priceCursor.getDouble(COL_PRICE_LIST_PRICE),
+                        priceCursor.getDouble(COL_PRICE_LIST_PMAX), priceCursor.getString(COL_PRICE_LIST_CURRENCY),
+                        priceCursor.getString(COL_PRICE_LIST_CURRENCY), false));
+            } catch (Throwable throwable) {
+                if (Utility.isDebugging(this))
+                    throwable.printStackTrace();
+            }
         }
     }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        switch(loader.getId()){
-            case LOADER_ITEM:
-                itemCursor = data;
-                if (data.moveToFirst()){
-                    defindex = data.getInt(COL_BACKPACK_DEFI);
-                    priceIndex = data.getInt(COL_BACKPACK_INDE);
-                    tradable = Math.abs(data.getInt(COL_BACKPACK_TRAD) - 1);
-                    craftable = Math.abs(data.getInt(COL_BACKPACK_CRAF) - 1);
-                    quality = data.getInt(COL_BACKPACK_QUAL);
-                }
-                getSupportLoaderManager().initLoader(LOADER_PRICE, null, this);
-                break;
-            case LOADER_PRICE:
-                priceCursor = data;
-                name.setText("" + defindex);
-                level.setText("" + itemCursor.getInt(COL_BACKPACK_LEVEL));
-                origin.setText("Origin: " + itemCursor.getInt(COL_BACKPACK_ORIGIN));
-                if (data.moveToFirst()) {
-                    try {
-                        price.setText("" + Utility.formatPrice(this, data.getDouble(COL_PRICE_LIST_PRICE),
-                                data.getDouble(COL_PRICE_LIST_PMAX), data.getString(COL_PRICE_LIST_CURRENCY),
-                                data.getString(COL_PRICE_LIST_CURRENCY), false));
-                    } catch (Throwable throwable) {
-                        if (Utility.isDebugging(this))
-                            throwable.printStackTrace();
-                    }
-                }
-
-                setIconImage(this, icon, defindex, priceIndex, quality, itemCursor.getInt(COL_BACKPACK_AUS) == 1);
-                background.setBackgroundDrawable(Utility.getItemBackground(this,
-                        quality, tradable, craftable));
-                break;
-            default:
-                break;
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {}
 
     private void setIconImage(Context context, ImageView icon, int defindex, int index, int quality, boolean isAustralium) {
         try {

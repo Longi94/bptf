@@ -123,7 +123,7 @@
             android:name=".ItemDetailActivity"
             android:label="@string/title_activity_item_detail"
             android:parentActivityName=".UserBackpackActivity"
-            android:theme="@style/AppTheme.Dialog"
+            android:theme="@style/AppTheme.Transparent"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
