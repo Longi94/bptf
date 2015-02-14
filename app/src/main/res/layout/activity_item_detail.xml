@@ -3,6 +3,8 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
+    android:clipToPadding="false"
     android:gravity="center">
 
     <android.support.v7.widget.CardView
@@ -47,12 +49,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_name"
-                android:text="Modest Pile of Hats"/>
+                android:gravity="center"
+                android:text="Modest Pile of Hats"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_level"
+                android:gravity="center"
                 android:text="Level 1 Hat"/>
 
             <TextView
@@ -60,12 +66,14 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_effect_name"
                 android:text="Effect: Terror-Watt"
+                android:gravity="center"
                 android:visibility="gone"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_custom_name"
+                android:gravity="center"
                 android:text="Custom name"
                 android:visibility="gone"/>
 
@@ -73,6 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_custom_desc"
+                android:gravity="center"
                 android:text="Custom description"
                 android:visibility="gone"/>
 
@@ -80,6 +89,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_crafted"
+                android:gravity="center"
                 android:text="Crafted by Drop"
                 android:visibility="gone"/>
 
@@ -87,6 +97,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_gifted"
+                android:gravity="center"
                 android:text="Gifted by Drop"
                 android:visibility="gone"/>
 
@@ -94,6 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_origin"
+                android:gravity="center"
                 android:text="Origin: Drop"/>
 
             <TextView
@@ -101,12 +113,14 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_paint"
                 android:text="Paint: Pink as Hell"
+                android:gravity="center"
                 android:visibility="gone"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_price"
+                android:gravity="center"
                 android:text="1 Earbuds"
                 android:visibility="gone"/>
 

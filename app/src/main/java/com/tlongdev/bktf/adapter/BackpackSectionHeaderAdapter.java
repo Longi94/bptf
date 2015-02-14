@@ -22,6 +22,7 @@ import com.tlongdev.bktf.ItemDetailActivity;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.UserBackpackActivity;
 import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.data.ItemSchemaDbHelper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,10 +35,12 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
     private Cursor mDataSet;
     private Context mContext;
     private boolean isGuest = false;
+    private ItemSchemaDbHelper mDbHelper;
 
     public BackpackSectionHeaderAdapter(Context mContext, boolean isGuest) {
         this.mContext = mContext;
         this.isGuest = isGuest;
+        mDbHelper = new ItemSchemaDbHelper(mContext);
     }
 
     @Override
@@ -74,7 +77,7 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                     for (int i = 0; i < 5; i++){
                         final int i2 = i;
                         final int id = mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_ID);
-                        int defindex = mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_DEFI);
+                        final int defindex = mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_DEFI);
                         int quality = mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_QUAL);
                         int tradable = Math.abs(mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_TRAD) - 1);
                         int craftable = Math.abs(mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_CRAF) - 1);
@@ -96,6 +99,16 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                                     Intent i = new Intent(mContext, ItemDetailActivity.class);
                                     i.putExtra(ItemDetailActivity.EXTRA_ITEM_ID, id);
                                     i.putExtra(ItemDetailActivity.EXTRA_GUEST, isGuest);
+                                    Cursor itemCursor = mDbHelper.getItem(defindex);
+                                    if (itemCursor.moveToFirst()){
+                                        i.putExtra(ItemDetailActivity.EXTRA_ITEM_NAME,
+                                                itemCursor.getString(0));
+                                        i.putExtra(ItemDetailActivity.EXTRA_ITEM_TYPE,
+                                                itemCursor.getString(1));
+                                        i.putExtra(ItemDetailActivity.EXTRA_PROPER_NAME,
+                                                itemCursor.getInt(2));
+                                    }
+                                    itemCursor.close();
 
                                     if (Build.VERSION.SDK_INT >= 21) {
                                         ActivityOptions options = ActivityOptions
