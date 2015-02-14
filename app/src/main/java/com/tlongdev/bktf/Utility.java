@@ -109,6 +109,56 @@ public class Utility {
         return  formattedName + name;
     }
 
+    public static String formatSimpleItemName(String name, int quality, int index, boolean isProper) {
+        String formattedName = "";
+
+        //Convert the quality int to enum for better readability
+        Quality q = Quality.values()[quality];
+
+        switch (q) {
+            case NORMAL:
+                formattedName += "Normal ";
+                break;
+            case GENUINE:
+                formattedName += "Genuine ";
+                break;
+            case VINTAGE:
+                formattedName += "Vintage ";
+                break;
+            case UNIQUE:
+                if (index > 0) //A unique item with a number
+                    name = name + " #" + index;
+
+                if (isProper){
+                    name = "The " + name;
+                }
+                break;
+            case UNUSUAL:
+                formattedName += "Unusual ";
+                break;
+            case COMMUNITY:
+                formattedName += "Community ";
+                break;
+            case VALVE:
+                formattedName += "Valve ";
+                break;
+            case SELF_MADE:
+                formattedName += "Self-made ";
+                break;
+            case STRANGE:
+                formattedName += "Strange ";
+                break;
+            case HAUNTED:
+                formattedName += "Haunted ";
+                break;
+            case COLLECTORS:
+                formattedName += "Collector's ";
+                break;
+        }
+
+        return  formattedName + name;
+    }
+
     /**
      * Get the proper name of the unusual effect
      */

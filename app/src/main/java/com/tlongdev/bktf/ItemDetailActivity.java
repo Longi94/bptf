@@ -2,6 +2,7 @@ package com.tlongdev.bktf;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
@@ -27,6 +28,9 @@ public class ItemDetailActivity extends Activity {
 
     public static final String EXTRA_ITEM_ID = "id";
     public static final String EXTRA_GUEST = "guest";
+    public static final String EXTRA_ITEM_NAME = "name";
+    public static final String EXTRA_ITEM_TYPE = "type";
+    public static final String EXTRA_PROPER_NAME = "proper";
 
     //Query columns
     private static final String[] QUERY_COLUMNS = {
@@ -97,9 +101,6 @@ public class ItemDetailActivity extends Activity {
     public static final int COL_PRICE_LIST_PMAX = 2;
     public static final int COL_PRICE_LIST_CURRENCY = 3;
 
-    private Cursor itemCursor;
-    private Cursor priceCursor;
-
     private boolean isGuest;
     private int id;
     
@@ -123,13 +124,17 @@ public class ItemDetailActivity extends Activity {
     private ImageView icon;
     private ImageView background;
 
+    private Intent mIntent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
 
-        isGuest = getIntent().getBooleanExtra(EXTRA_GUEST, false);
-        id = getIntent().getIntExtra(EXTRA_ITEM_ID, 0);
+        mIntent = getIntent();
+
+        isGuest = mIntent.getBooleanExtra(EXTRA_GUEST, false);
+        id = mIntent.getIntExtra(EXTRA_ITEM_ID, 0);
 
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
         FrameLayout layout = (FrameLayout)findViewById(R.id.relative_layout_image);
@@ -183,7 +188,7 @@ public class ItemDetailActivity extends Activity {
                     UserBackpackEntry._ID + " = ?";
         }
 
-        itemCursor = getContentResolver().query(
+        Cursor itemCursor = getContentResolver().query(
                 uri,
                 columns,
                 selection,
@@ -198,9 +203,15 @@ public class ItemDetailActivity extends Activity {
             craftable = Math.abs(itemCursor.getInt(COL_BACKPACK_CRAF) - 1);
             quality = itemCursor.getInt(COL_BACKPACK_QUAL);
 
-            name.setText("" + defindex);
-            level.setText("" + itemCursor.getInt(COL_BACKPACK_LEVEL));
-            origin.setText("Origin: " + itemCursor.getInt(COL_BACKPACK_ORIGIN));
+            name.setText(Utility.formatSimpleItemName(
+                    mIntent.getStringExtra(EXTRA_ITEM_NAME),
+                    quality,
+                    priceIndex,
+                    mIntent.getIntExtra(EXTRA_PROPER_NAME, 0) == 1));
+
+            level.setText("Level " + itemCursor.getInt(COL_BACKPACK_LEVEL) + " " + mIntent.getStringExtra(EXTRA_ITEM_TYPE));
+
+            origin.setText("Origin: " + getResources().getStringArray(R.array.origins)[itemCursor.getInt(COL_BACKPACK_ORIGIN)]);
 
             setIconImage(this, icon, defindex, priceIndex, quality, itemCursor.getInt(COL_BACKPACK_AUS) == 1);
             background.setBackgroundDrawable(Utility.getItemBackground(this,
@@ -218,7 +229,7 @@ public class ItemDetailActivity extends Activity {
                 PriceEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
                 PriceEntry.COLUMN_PRICE_INDEX + " = ?";
 
-        priceCursor = getContentResolver().query(
+        Cursor priceCursor = getContentResolver().query(
                 uri,
                 columns,
                 selection,
@@ -229,7 +240,7 @@ public class ItemDetailActivity extends Activity {
         if (priceCursor.moveToFirst()) {
             try {
                 price.setVisibility(View.VISIBLE);
-                price.setText("" + Utility.formatPrice(this, priceCursor.getDouble(COL_PRICE_LIST_PRICE),
+                price.setText("Suggested price: " + Utility.formatPrice(this, priceCursor.getDouble(COL_PRICE_LIST_PRICE),
                         priceCursor.getDouble(COL_PRICE_LIST_PMAX), priceCursor.getString(COL_PRICE_LIST_CURRENCY),
                         priceCursor.getString(COL_PRICE_LIST_CURRENCY), false));
             } catch (Throwable throwable) {
@@ -237,6 +248,9 @@ public class ItemDetailActivity extends Activity {
                     throwable.printStackTrace();
             }
         }
+
+        itemCursor.close();
+        priceCursor.close();
     }
 
     private void setIconImage(Context context, ImageView icon, int defindex, int index, int quality, boolean isAustralium) {

@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 
 import com.tlongdev.bktf.adapter.BackpackSectionHeaderAdapter;
+import com.tlongdev.bktf.data.ItemSchemaDbHelper;
 import com.tlongdev.bktf.data.UserBackpackContract;
 
 
@@ -57,9 +58,10 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
     public static final String EXTRA_GUEST = "guest";
 
     private BackpackSectionHeaderAdapter adapter;
-    private RecyclerView listView;
 
     private boolean isGuest;
+
+    private ItemSchemaDbHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,7 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
 
         isGuest = getIntent().getBooleanExtra(EXTRA_GUEST, false);
 
-        listView = (RecyclerView)findViewById(R.id.list_view_backpack);
+        RecyclerView listView = (RecyclerView) findViewById(R.id.list_view_backpack);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
