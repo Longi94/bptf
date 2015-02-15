@@ -8,6 +8,7 @@ import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
@@ -33,8 +34,12 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
     public static final int VIEW_TYPE_HEADER = 1;
 
     private Cursor mDataSet;
+    private Cursor mDataSetNew;
+
     private Context mContext;
     private boolean isGuest = false;
+    private boolean hasNewItems = false;
+    private int newRows = 0;
     private ItemSchemaDbHelper mDbHelper;
 
     public BackpackSectionHeaderAdapter(Context mContext, boolean isGuest) {
@@ -45,9 +50,7 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View v;
-
         switch (viewType){
             case VIEW_TYPE_ITEM_ROW:
                 v = LayoutInflater.from(parent.getContext())
@@ -69,40 +72,55 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
     public void onBindViewHolder(final ViewHolder holder, int position) {
         switch (getItemViewType(position)){
             case VIEW_TYPE_HEADER:
-                holder.header.setText("Page " + (position / 11 + 1));
+                if (hasNewItems){
+                    if (position == 0){
+                        holder.header.setText("New items");
+                    } else {
+                        holder.header.setText("Page " + ((position - newRows) / 11 + 1));
+                    }
+                } else {
+                    holder.header.setText("Page " + (position / 11 + 1));
+                }
                 break;
             case VIEW_TYPE_ITEM_ROW:
-                int cursorPosition = (position - (position / 11) - 1) * 5;
-                if (mDataSet.moveToPosition(cursorPosition)){
-                    for (int i = 0; i < 5; i++){
+                Cursor currentCursor;
+                int cursorPosition;
+                if (hasNewItems){
+                    if (position < newRows) {
+                        currentCursor = mDataSetNew;
+                        cursorPosition = (position - 1) * 5;
+                    } else {
+                        currentCursor = mDataSet;
+                        cursorPosition = ((position - newRows) - ((position - newRows) / 11) - 1) * 5;
+                    }
+                } else {
+                    currentCursor = mDataSet;
+                    cursorPosition = (position - (position / 11) - 1) * 5;
+                }
+
+                if (currentCursor.moveToPosition(cursorPosition)){
+                    int i = 0;
+                    do {
                         final int i2 = i;
-                        final int id = mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_ID);
-                        final int defindex = mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_DEFI);
-                        int quality = mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_QUAL);
-                        int tradable = Math.abs(mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_TRAD) - 1);
-                        int craftable = Math.abs(mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_CRAF) - 1);
-                        int itemIndex = mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_INDE);
-                        int paint = mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_PAIN);
-                        int australium = mDataSet.getInt(UserBackpackActivity.COL_BACKPACK_AUS);
+                        final int id = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_ID);
+                        final int defindex = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_DEFI);
+                        int quality = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_QUAL);
+                        int tradable = Math.abs(currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_TRAD) - 1);
+                        int craftable = Math.abs(currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_CRAF) - 1);
+                        int itemIndex = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_INDE);
+                        int paint = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_PAIN);
+                        int australium = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_AUS);
 
-                        if (defindex == 0) {
-                            holder.icon[i].setImageDrawable(null);
-                            holder.icon[i].setBackgroundDrawable(null);
-                            holder.background[i].setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.item_background_blank));
-                            holder.parent[i].setOnClickListener(null);
-                        } else {
-                            setIconImage(mContext, holder.icon[i], defindex, itemIndex, quality, australium == 1);
-                            holder.background[i].setBackgroundDrawable(Utility.getItemBackground(mContext,
-                                    quality, tradable, craftable));
+                        holder.icon[i].setImageDrawable(null);
+                        holder.icon[i].setBackgroundDrawable(null);
+                        holder.background[i].setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.item_background_blank));
+                        holder.parent[i].setOnClickListener(null);
 
-                            if (paint != 0){
-                                int dotId = Utility.getPaintDrawableId(paint);
-                                if (dotId != 0)
-                                    holder.icon[i].setImageDrawable(mContext.getResources().getDrawable(dotId));
-                            } else {
-                                holder.icon[i].setImageDrawable(null);
-                            }
+                        if (defindex != 0) {
 
+                            holder.icon[i].setTag("" + id);
+                            new ImageLoader(mContext, holder.icon[i], holder.background[i]).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                                    defindex, quality, tradable, craftable, itemIndex, paint, australium);
                             holder.parent[i].setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -124,8 +142,7 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                                         ActivityOptions options = ActivityOptions
                                                 .makeSceneTransitionAnimation((Activity) mContext,
                                                         Pair.create((View) holder.icon[i2], "icon_transition"),
-                                                        Pair.create((View) holder.background[i2], "background_transition")/*,
-                                                        Pair.create((View) holder.paintIndicator[i2].getParent(), "paint_transition")*/);
+                                                        Pair.create((View) holder.background[i2], "background_transition"));
                                         mContext.startActivity(i, options.toBundle());
                                     } else {
                                         mContext.startActivity(i);
@@ -133,61 +150,68 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                                 }
                             });
                         }
-                        mDataSet.moveToNext();
+                        i++;
+                    } while (currentCursor.moveToNext() && i < 5);
+
+                    while (i < 5){
+                        holder.icon[i].setImageDrawable(null);
+                        holder.icon[i].setBackgroundDrawable(null);
+                        holder.background[i].setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.item_background_blank));
+                        holder.parent[i].setOnClickListener(null);
+                        i++;
                     }
                 }
                 break;
         }
     }
 
-    private void setIconImage(Context context, ImageView icon, int defindex, int index, int quality, boolean isAustralium) {
-        try {
-            InputStream ims;
-            AssetManager assetManager = context.getAssets();
-            Drawable d;
-
-            if (isAustralium) {
-                ims = assetManager.open("items/" + defindex + "aus.png");
-            } else {
-                ims = assetManager.open("items/" + defindex + ".png");
-            }
-
-            Drawable iconDrawable = Drawable.createFromStream(ims, null);
-            if (index != 0 && (quality == 5 || quality == 7 || quality == 9)) {
-                ims = assetManager.open("effects/" + index + "_188x188.png");
-                Drawable effectDrawable = Drawable.createFromStream(ims, null);
-                d = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
-            } else {
-                d = iconDrawable;
-            }
-            // set image to ImageView
-            icon.setBackgroundDrawable(d);
-        } catch (IOException e) {
-            Toast.makeText(context, "bptf: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            if (Utility.isDebugging(context))
-                e.printStackTrace();
-        }
-    }
-
     @Override
     public int getItemCount() {
-        if (mDataSet == null){
-            return 0;
+        int rows = 0;
+        if (mDataSet != null) {
+            rows += mDataSet.getCount() / 5;
+            rows += rows / 10;
         }
-        int rows = mDataSet.getCount() / 5;
-        return rows + rows / 10;
+        rows += newRows;
+        return rows;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position % 11 == 0)
+        if (hasNewItems){
+            if (position < newRows){
+                if (position == 0)
+                    return VIEW_TYPE_HEADER;
+                else
+                    return VIEW_TYPE_ITEM_ROW;
+            } else {
+                if ((position - newRows) % 11 == 0)
+                    return VIEW_TYPE_HEADER;
+                else
+                    return VIEW_TYPE_ITEM_ROW;
+            }
+        }
+        else if (position % 11 == 0)
             return VIEW_TYPE_HEADER;
         else
             return VIEW_TYPE_ITEM_ROW;
     }
 
-    public void swapCursor(Cursor cursor){
+    public void swapCursor(Cursor cursor, Cursor cursorNew){
         mDataSet = cursor;
+        mDataSetNew = cursorNew;
+        if (mDataSetNew != null) {
+            hasNewItems = mDataSetNew.getCount() > 0;
+            if (hasNewItems) {
+                newRows = 1 + mDataSetNew.getCount() / 5;
+                if (mDataSetNew.getCount() % 5 != 0) {
+                    newRows++;
+                }
+            } else {
+                newRows = 0;
+            }
+        }
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -220,6 +244,83 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                     icon[4] = (ImageView)view.findViewById(R.id.image_view_item_icon_5);
                     parent[4] = view.findViewById(R.id.relative_layout_5);
                     break;
+            }
+        }
+    }
+
+    private class ImageLoader extends AsyncTask<Integer, Void, Drawable[]>{
+
+        private ImageView icon;
+        private ImageView background;
+        private Context mContext;
+
+        private String errorMessage;
+        private String tag;
+
+        private ImageLoader(Context context, ImageView icon, ImageView background) {
+            this.mContext = context;
+            this.icon = icon;
+            this.background = background;
+            tag = icon.getTag().toString();
+        }
+
+        @Override
+        protected Drawable[] doInBackground(Integer... params) {
+            Drawable[] drawables = new Drawable[3];
+
+            try {
+                InputStream ims;
+                AssetManager assetManager = mContext.getAssets();
+                Drawable d;
+
+                if (params[6] == 1) {
+                    ims = assetManager.open("items/" + params[0] + "aus.png");
+                } else {
+                    ims = assetManager.open("items/" + params[0] + ".png");
+                }
+
+                Drawable iconDrawable = Drawable.createFromStream(ims, null);
+                if (params[4] != 0 && (params[1] == 5 || params[1] == 7 || params[1] == 9)) {
+                    ims = assetManager.open("effects/" + params[4] + "_188x188.png");
+                    Drawable effectDrawable = Drawable.createFromStream(ims, null);
+                    d = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
+                } else {
+                    d = iconDrawable;
+                }
+                drawables[0] = d;
+
+            } catch (IOException e) {
+                errorMessage = e.getMessage();
+                publishProgress();
+                if (Utility.isDebugging(mContext))
+                    e.printStackTrace();
+            }
+
+            drawables[1] = Utility.getItemBackground(mContext, params[1], params[2], params[3]);
+
+            if (params[5] != 0){
+                int dotId = Utility.getPaintDrawableId(params[5]);
+                if (dotId != 0)
+                    drawables[2] = mContext.getResources().getDrawable(dotId);
+            } else {
+                drawables[2] = null;
+            }
+
+            return drawables;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_LONG).show();
+
+        }
+
+        @Override
+        protected void onPostExecute(Drawable[] drawables) {
+            if (icon.getTag().toString().equals(tag)) {
+                icon.setBackgroundDrawable(drawables[0]);
+                background.setBackgroundDrawable(drawables[1]);
+                icon.setImageDrawable(drawables[2]);
             }
         }
     }
