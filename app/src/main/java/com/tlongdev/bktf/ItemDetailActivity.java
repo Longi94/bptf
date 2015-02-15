@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.text.Html;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -72,14 +73,13 @@ public class ItemDetailActivity extends Activity {
     };
 
     //Indexes for the columns above
-    public static final int COL_BACKPACK_ID = 0;
     public static final int COL_BACKPACK_DEFI = 1;
     public static final int COL_BACKPACK_QUAL = 2;
     public static final int COL_BACKPACK_CRFN = 3;
     public static final int COL_BACKPACK_TRAD = 4;
     public static final int COL_BACKPACK_CRAF = 5;
     public static final int COL_BACKPACK_INDE = 6;
-    public static final int COL_BACKPACK_PAIN = 7;
+    public static final int COL_BACKPACK_PAINT = 7;
     public static final int COL_BACKPACK_AUS = 8;
     public static final int COL_BACKPACK_CRAFTER = 9;
     public static final int COL_BACKPACK_GIFTER = 10;
@@ -103,12 +103,6 @@ public class ItemDetailActivity extends Activity {
 
     private boolean isGuest;
     private int id;
-    
-    private int defindex;
-    private int priceIndex;
-    private int tradable;
-    private int craftable;
-    private int quality;
 
     private TextView name;
     private TextView level;
@@ -196,12 +190,23 @@ public class ItemDetailActivity extends Activity {
                 null
         );
 
+        int defindex;
+        int priceIndex;
+        int tradable;
+        int craftable;
+        int quality;
         if (itemCursor.moveToFirst()){
             defindex = itemCursor.getInt(COL_BACKPACK_DEFI);
             priceIndex = itemCursor.getInt(COL_BACKPACK_INDE);
             tradable = Math.abs(itemCursor.getInt(COL_BACKPACK_TRAD) - 1);
             craftable = Math.abs(itemCursor.getInt(COL_BACKPACK_CRAF) - 1);
             quality = itemCursor.getInt(COL_BACKPACK_QUAL);
+
+            String customName = itemCursor.getString(COL_BACKPACK_CUSTOM_NAME);
+            String customDescription = itemCursor.getString(COL_BACKPACK_CUSTOM_DESC);
+            String crafter = itemCursor.getString(COL_BACKPACK_CRAFTER);
+            String gifter = itemCursor.getString(COL_BACKPACK_GIFTER);
+            int paintNumber = itemCursor.getInt(COL_BACKPACK_PAINT);
 
             name.setText(Utility.formatSimpleItemName(
                     mIntent.getStringExtra(EXTRA_ITEM_NAME),
@@ -212,6 +217,37 @@ public class ItemDetailActivity extends Activity {
             level.setText("Level " + itemCursor.getInt(COL_BACKPACK_LEVEL) + " " + mIntent.getStringExtra(EXTRA_ITEM_TYPE));
 
             origin.setText("Origin: " + getResources().getStringArray(R.array.origins)[itemCursor.getInt(COL_BACKPACK_ORIGIN)]);
+
+            if (priceIndex != 0 && (quality == 5 || quality == 7 || quality == 9)){
+                effect.setText("Effect: " + Utility.getUnusualEffectName(priceIndex));
+                effect.setVisibility(View.VISIBLE);
+            }
+
+            if (customName != null){
+                this.customName.setText(Html.fromHtml("Custom name: <i>" + customName + "</i>"));
+                this.customName.setVisibility(View.VISIBLE);
+            }
+
+            if (customDescription != null){
+                customDesc.setText(Html.fromHtml("Custom description: <i>" + customDescription + "</i>"));
+                customDesc.setVisibility(View.VISIBLE);
+            }
+
+            if (crafter != null){
+                crafterName.setText(Html.fromHtml("Crafted by: <i>" + crafter + "</i>"));
+                crafterName.setVisibility(View.VISIBLE);
+            }
+
+            if (gifter != null){
+                gifterName.setText(Html.fromHtml("Gifted by: <i>" + gifter + "</i>"));
+                gifterName.setVisibility(View.VISIBLE);
+            }
+
+            if (paintNumber != 0){
+                paint.setText("Paint: " + Utility.getPaintName(paintNumber));
+                paint.setVisibility(View.VISIBLE);
+                icon.setImageDrawable(getResources().getDrawable(Utility.getPaintDrawableId(paintNumber)));
+            }
 
             setIconImage(this, icon, defindex, priceIndex, quality, itemCursor.getInt(COL_BACKPACK_AUS) == 1);
             background.setBackgroundDrawable(Utility.getItemBackground(this,
@@ -266,7 +302,7 @@ public class ItemDetailActivity extends Activity {
             }
 
             Drawable iconDrawable = Drawable.createFromStream(ims, null);
-            if (index != 0 && quality == 5) {
+            if (index != 0 && (quality == 5 || quality == 7 || quality == 9)) {
                 ims = assetManager.open("effects/" + index + "_188x188.png");
                 Drawable effectDrawable = Drawable.createFromStream(ims, null);
                 d = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
@@ -274,7 +310,7 @@ public class ItemDetailActivity extends Activity {
                 d = iconDrawable;
             }
             // set image to ImageView
-            icon.setImageDrawable(d);
+            icon.setBackgroundDrawable(d);
         } catch (IOException e) {
             Toast.makeText(context, "bptf: " + e.getMessage(), Toast.LENGTH_LONG).show();
             if (Utility.isDebugging(context))

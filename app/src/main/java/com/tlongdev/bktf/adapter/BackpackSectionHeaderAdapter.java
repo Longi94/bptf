@@ -9,8 +9,8 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
-import android.util.Pair;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,12 +87,22 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
 
                         if (defindex == 0) {
                             holder.icon[i].setImageDrawable(null);
+                            holder.icon[i].setBackgroundDrawable(null);
                             holder.background[i].setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.item_background_blank));
                             holder.parent[i].setOnClickListener(null);
                         } else {
                             setIconImage(mContext, holder.icon[i], defindex, itemIndex, quality, australium == 1);
                             holder.background[i].setBackgroundDrawable(Utility.getItemBackground(mContext,
                                     quality, tradable, craftable));
+
+                            if (paint != 0){
+                                int dotId = Utility.getPaintDrawableId(paint);
+                                if (dotId != 0)
+                                    holder.icon[i].setImageDrawable(mContext.getResources().getDrawable(dotId));
+                            } else {
+                                holder.icon[i].setImageDrawable(null);
+                            }
+
                             holder.parent[i].setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -100,7 +110,7 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                                     i.putExtra(ItemDetailActivity.EXTRA_ITEM_ID, id);
                                     i.putExtra(ItemDetailActivity.EXTRA_GUEST, isGuest);
                                     Cursor itemCursor = mDbHelper.getItem(defindex);
-                                    if (itemCursor.moveToFirst()){
+                                    if (itemCursor.moveToFirst()) {
                                         i.putExtra(ItemDetailActivity.EXTRA_ITEM_NAME,
                                                 itemCursor.getString(0));
                                         i.putExtra(ItemDetailActivity.EXTRA_ITEM_TYPE,
@@ -112,9 +122,10 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
 
                                     if (Build.VERSION.SDK_INT >= 21) {
                                         ActivityOptions options = ActivityOptions
-                                                .makeSceneTransitionAnimation((Activity)mContext,
-                                                        Pair.create((View)holder.icon[i2], "icon_transition"),
-                                                        Pair.create((View)holder.background[i2], "background_transition"));
+                                                .makeSceneTransitionAnimation((Activity) mContext,
+                                                        Pair.create((View) holder.icon[i2], "icon_transition"),
+                                                        Pair.create((View) holder.background[i2], "background_transition")/*,
+                                                        Pair.create((View) holder.paintIndicator[i2].getParent(), "paint_transition")*/);
                                         mContext.startActivity(i, options.toBundle());
                                     } else {
                                         mContext.startActivity(i);
@@ -142,7 +153,7 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
             }
 
             Drawable iconDrawable = Drawable.createFromStream(ims, null);
-            if (index != 0 && quality == 5) {
+            if (index != 0 && (quality == 5 || quality == 7 || quality == 9)) {
                 ims = assetManager.open("effects/" + index + "_188x188.png");
                 Drawable effectDrawable = Drawable.createFromStream(ims, null);
                 d = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
@@ -150,7 +161,7 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                 d = iconDrawable;
             }
             // set image to ImageView
-            icon.setImageDrawable(d);
+            icon.setBackgroundDrawable(d);
         } catch (IOException e) {
             Toast.makeText(context, "bptf: " + e.getMessage(), Toast.LENGTH_LONG).show();
             if (Utility.isDebugging(context))

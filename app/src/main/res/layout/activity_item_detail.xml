@@ -24,8 +24,8 @@
 
             <com.tlongdev.bktf.view.SquareFrameLayout
                 android:id="@+id/relative_layout_image"
-                android:layout_width="0dp"
-                android:layout_height="0dp" >
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
 
                 <com.tlongdev.bktf.view.SquareImageView
                     android:layout_width="match_parent"
@@ -48,9 +48,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:id="@+id/text_view_name"
                 android:gravity="center"
-                android:text="Modest Pile of Hats"
                 android:textSize="20sp"
                 android:textStyle="bold"/>
 
@@ -58,14 +59,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_level"
-                android:gravity="center"
-                android:text="Level 1 Hat"/>
+                android:gravity="center"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_effect_name"
-                android:text="Effect: Terror-Watt"
                 android:gravity="center"
                 android:visibility="gone"/>
 
@@ -74,7 +73,6 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_custom_name"
                 android:gravity="center"
-                android:text="Custom name"
                 android:visibility="gone"/>
 
             <TextView
@@ -82,7 +80,6 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_custom_desc"
                 android:gravity="center"
-                android:text="Custom description"
                 android:visibility="gone"/>
 
             <TextView
@@ -90,7 +87,6 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_crafted"
                 android:gravity="center"
-                android:text="Crafted by Drop"
                 android:visibility="gone"/>
 
             <TextView
@@ -98,30 +94,27 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_gifted"
                 android:gravity="center"
-                android:text="Gifted by Drop"
                 android:visibility="gone"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_origin"
-                android:gravity="center"
-                android:text="Origin: Drop"/>
+                android:gravity="center"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_paint"
-                android:text="Paint: Pink as Hell"
                 android:gravity="center"
                 android:visibility="gone"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingTop="8dp"
                 android:id="@+id/text_view_price"
                 android:gravity="center"
-                android:text="1 Earbuds"
                 android:visibility="gone"/>
 
         </LinearLayout>
