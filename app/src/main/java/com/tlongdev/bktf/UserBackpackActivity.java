@@ -12,11 +12,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 
 import com.tlongdev.bktf.adapter.BackpackSectionHeaderAdapter;
-import com.tlongdev.bktf.data.ItemSchemaDbHelper;
 import com.tlongdev.bktf.data.UserBackpackContract;
 
 
 public class UserBackpackActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+
+    public static final int LOADER_NORMAL = 0;
+    public static final int LOADER_NEW = 1;
 
     //Query columns
     private static final String[] QUERY_COLUMNS = {
@@ -61,7 +63,8 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
 
     private boolean isGuest;
 
-    private ItemSchemaDbHelper mDbHelper;
+    private Cursor normalCursor;
+    private Cursor newCursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +87,8 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
         adapter = new BackpackSectionHeaderAdapter(this, isGuest);
         listView.setAdapter(adapter);
 
-        getSupportLoaderManager().initLoader(0, null, this);
+        getSupportLoaderManager().initLoader(LOADER_NORMAL, null, this);
+        getSupportLoaderManager().initLoader(LOADER_NEW, null, this);
     }
 
     @Override
@@ -109,13 +113,32 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
         if (isGuest){
             uri = UserBackpackContract.UserBackpackEntry.CONTENT_URI_GUEST;
             columns = QUERY_COLUMNS_GUEST;
-            selection = UserBackpackContract.UserBackpackEntry.TABLE_NAME_GUEST + "." +
-                    UserBackpackContract.UserBackpackEntry.COLUMN_POSITION + " >= 1";
         } else {
             uri = UserBackpackContract.UserBackpackEntry.CONTENT_URI;
             columns = QUERY_COLUMNS;
-            selection = UserBackpackContract.UserBackpackEntry.TABLE_NAME + "." +
-                    UserBackpackContract.UserBackpackEntry.COLUMN_POSITION + " >= 1";
+        }
+
+        switch (id){
+            case LOADER_NORMAL:
+                if (isGuest){
+                    selection = UserBackpackContract.UserBackpackEntry.TABLE_NAME_GUEST + "." +
+                            UserBackpackContract.UserBackpackEntry.COLUMN_POSITION + " >= 1";
+                } else {
+                    selection = UserBackpackContract.UserBackpackEntry.TABLE_NAME + "." +
+                            UserBackpackContract.UserBackpackEntry.COLUMN_POSITION + " >= 1";
+                }
+                break;
+            case LOADER_NEW:
+                if (isGuest){
+                    selection = UserBackpackContract.UserBackpackEntry.TABLE_NAME_GUEST + "." +
+                            UserBackpackContract.UserBackpackEntry.COLUMN_POSITION + " = -1";
+                } else {
+                    selection = UserBackpackContract.UserBackpackEntry.TABLE_NAME + "." +
+                            UserBackpackContract.UserBackpackEntry.COLUMN_POSITION + " = -1";
+                }
+                break;
+            default:
+                return null;
         }
 
         return new CursorLoader(
@@ -130,13 +153,24 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        adapter.swapCursor(data);
-        adapter.notifyDataSetChanged();
+        switch (loader.getId()){
+            case LOADER_NORMAL:
+                normalCursor = data;
+                if (newCursor != null){
+                    adapter.swapCursor(normalCursor, newCursor);
+                }
+                break;
+            case LOADER_NEW:
+                newCursor = data;
+                if (normalCursor != null){
+                    adapter.swapCursor(normalCursor, newCursor);
+                }
+                break;
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.swapCursor(null);
-        adapter.notifyDataSetChanged();
+        adapter.swapCursor(null, null);
     }
 }
