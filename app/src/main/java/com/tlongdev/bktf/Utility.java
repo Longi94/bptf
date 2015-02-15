@@ -164,6 +164,10 @@ public class Utility {
      */
     public static String getUnusualEffectName(int index) {
         switch (index) {
+            case 4:
+                return "Community Sparkle";
+            case 5:
+                return "Holy Glow";
             case 6:
                 return "Green Confetti";
             case 7:
@@ -676,69 +680,78 @@ public class Utility {
         return bd.doubleValue();
     }
 
-    public static int getPaintDefindex(int value) {
-        switch (value){
-            case 7511618: //Indubitably Green
-                return 0;
-            case 4345659: //Zepheniah's Greed
-                return 0;
-            case 5322826: //Noble Hatter's Violet
-                return 0;
-            case 14204632: //Color No. 216-190-216
-                return 0;
-            case 8208497: //Deep Commitment to Purple
-                return 0;
-            case 13595446: //Mann Co. Orange
-                return 0;
-            case 10843461: //Muskelmannbraun
-                return 0;
-            case 12955537: //Peculiarly Drab Tincture
-                return 0;
-            case 6901050: //Radigan Conagher Brown
-                return 0;
-            case 8154199: //Ye Olde Rustic Color
-                return 0;
-            case 15185211: //Australium Gold
-                return 0;
-            case 8289918: //Aged Moustache Grey
-                return 0;
-            case 15132390: //An Extraordinary Abundance of Tinge
-                return 0;
-            case 1315860: //A Distinctive Lack of Hue
-                return 0;
-            case 16738740: //Pink as Hell
-                return 0;
-            case 3100495: //Color Similar to Slate
-                return 0;
-            case 8421376: //Drably Olive
-                return 0;
-            case 3329330: //The Bitter Taste of Defeat and Lime
-                return 0;
-            case 15787660: //The Color of a Gentlemann's Business Pants
-                return 0;
-            case 15308410: //Salmon Injustice
-                return 0;
-            case 12073019: //Team Spirit (RED)
-                return 0;
-            case 4732984: //Operator's Overalls (RED)
-                return 0;
-            case 11049612: //Waterlogged Lab Coat (RED)
-                return 0;
-            case 3874595: //Balaclava's Are Forever (RED)
-                return 0;
-            case 6637376: //Air of Debonair (RED)
-                return 0;
-            case 8400928: //The Value of Teamwork (RED)
-                return 0;
-            case 12807213: //Cream Spirit (RED)
-                return 0;
-            default:
-                return 0;
+    public static double getRawMetal(int rawRef, int rawRec, int rawScraps) {
+        return (1.0/9.0 * rawScraps) + (1.0/3.0 * rawRec) + rawRef;
+    }
+
+    public static String getPaintName(int index){
+        switch (index){
+            case 7511618: return "Indubitably Green";
+            case 4345659: return "Zepheniah's Greed";
+            case 5322826: return "Noble Hatter's Violet";
+            case 14204632: return "Color No. 216-190-216";
+            case 8208497: return "Deep Commitment to Purple";
+            case 13595446: return "Mann Co. Orange";
+            case 10843461: return "Muskelmannbraun";
+            case 12955537: return "Peculiarly Drab Tincture";
+            case 6901050: return "Radigan Conagher Brown";
+            case 8154199: return "Ye Olde Rustic Color";
+            case 15185211: return "Australium Gold";
+            case 8289918: return "Aged Moustache Grey";
+            case 15132390: return "An Extraordinary Abundance of Tinge";
+            case 1315860: return "A Distinctive Lack of Hue";
+            case 16738740: return "Pink as Hell";
+            case 3100495: return "Color Similar to Slate";
+            case 8421376: return "Drably Olive";
+            case 3329330: return "The Bitter Taste of Defeat and Lime";
+            case 15787660: return "The Color of a Gentlemann's Business Pants";
+            case 15308410: return "Salmon Injustice";
+            case 12073019: return "Team Spirit";
+            case 4732984: return "Operator's Overalls";
+            case 11049612: return "Waterlogged Lab Coat";
+            case 3874595: return "Balaclava's Are Forever";
+            case 6637376: return "Air of Debonair";
+            case 8400928: return "The Value of Teamwork";
+            case 12807213: return "Cream Spirit";
+            case 2960676: return "After Eight";
+            case 12377523: return "A Mann's Mint";
+            default: return null;
         }
     }
 
-    public static double getRawMetal(int rawRef, int rawRec, int rawScraps) {
-        return (1.0/9.0 * rawScraps) + (1.0/3.0 * rawRec) + rawRef;
+    public static int getPaintDrawableId(int index){
+        switch (index){
+            case 7511618: return R.drawable.paint_indicator_green;
+            case 4345659: return R.drawable.paint_indicator_greed;
+            case 5322826: return R.drawable.paint_indicator_violet;
+            case 14204632: return R.drawable.paint_indicator_216;
+            case 8208497: return R.drawable.paint_indicator_purple;
+            case 13595446: return R.drawable.paint_indicator_orange;
+            case 10843461: return R.drawable.paint_indicator_braun;
+            case 12955537: return R.drawable.paint_indicator_drab;
+            case 6901050: return R.drawable.paint_indicator_brown;
+            case 8154199: return R.drawable.paint_indicator_rustic;
+            case 15185211: return R.drawable.paint_indicator_gold;
+            case 8289918: return R.drawable.paint_indicator_grey;
+            case 15132390: return R.drawable.paint_indicator_white;
+            case 1315860: return R.drawable.paint_indicator_black;
+            case 16738740: return R.drawable.paint_indicator_pink;
+            case 3100495: return R.drawable.paint_indicator_slate;
+            case 8421376: return R.drawable.paint_indicator_olive;
+            case 3329330: return R.drawable.paint_indicator_lime;
+            case 15787660: return R.drawable.paint_indicator_pants;
+            case 15308410: return R.drawable.paint_indicator_salmon;
+            case 12073019: return R.drawable.paint_indicator_team;
+            case 4732984: return R.drawable.paint_indicator_overalls;
+            case 11049612: return R.drawable.paint_indicator_coat;
+            case 3874595: return R.drawable.paint_indicator_balaclavas;
+            case 6637376: return R.drawable.paint_indicator_debonair;
+            case 8400928: return R.drawable.paint_indicator_teamwork;
+            case 12807213: return R.drawable.paint_indicator_cream;
+            case 2960676: return R.drawable.paint_indicator_eight;
+            case 12377523: return R.drawable.paint_indicator_mint;
+            default: return 0;
+        }
     }
 
     public static class IntegerPair{
