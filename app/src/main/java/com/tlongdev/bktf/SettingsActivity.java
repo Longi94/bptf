@@ -281,6 +281,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             editor.remove(getString(R.string.pref_user_raw_metal));
             editor.remove(getString(R.string.pref_user_slots));
             editor.remove(getString(R.string.pref_user_items));
+            editor.remove(getString(R.string.pref_last_backpack_update));
 
             editor.apply();
 
