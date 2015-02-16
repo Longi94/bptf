@@ -22,11 +22,13 @@ import java.io.InputStream;
 
 public class SearchCursorAdapter extends CursorAdapter {
 
-    private static final int VIEW_TYPE_COUNT = 2;
+    private static final int VIEW_TYPE_COUNT = 3;
     private static final int VIEW_TYPE_PRICE = 0;
     private static final int VIEW_TYPE_USER = 1;
+    private static final int VIEW_TYPE_LOADING = 2;
 
     private boolean userFound = false;
+    private boolean loading;
 
     public SearchCursorAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
@@ -39,6 +41,10 @@ public class SearchCursorAdapter extends CursorAdapter {
         switch (viewType) {
             case VIEW_TYPE_USER: {
                 view = LayoutInflater.from(context).inflate(R.layout.list_search_user, parent, false);
+                break;
+            }
+            case VIEW_TYPE_LOADING: {
+                view = LayoutInflater.from(context).inflate(R.layout.list_search_loading, parent, false);
                 break;
             }
             default: {
@@ -99,11 +105,16 @@ public class SearchCursorAdapter extends CursorAdapter {
                         throwable.printStackTrace();
                 }
                 break;
+            case VIEW_TYPE_LOADING:
+                break;
         }
     }
 
     @Override
     public int getItemViewType(int position) {
+        if (loading){
+            return position == 0 ? VIEW_TYPE_LOADING : VIEW_TYPE_PRICE;
+        }
         return userFound && position == 0 ? VIEW_TYPE_USER : VIEW_TYPE_PRICE;
     }
 
@@ -117,8 +128,18 @@ public class SearchCursorAdapter extends CursorAdapter {
         return userFound && position == 0;
     }
 
+    public void setLoading(boolean loading) {
+        this.loading = loading;
+        if (loading){
+            userFound = false;
+        }
+    }
+
     public void setUserFound(boolean userFound) {
         this.userFound = userFound;
+        if (userFound){
+            loading = false;
+        }
     }
 
     private void setIconImage(Context context, ImageView icon, int defindex, boolean isAustralium) {

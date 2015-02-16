@@ -86,6 +86,8 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     private String searchQuery;
     private SearchForUserTask searchTask;
 
+    private Cursor adapterCursor;
+
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -141,21 +143,40 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         cursorAdapter.setUserFound(false);
         cursorAdapter.swapCursor(data);
+        adapterCursor = data;
         //Cancel the user search task when query is updated and running
         if (searchTask  != null){
             searchTask.cancel(true);
         }
-        if (Utility.isNetworkAvailable(getActivity()) && searchQuery != null)
+        if (Utility.isNetworkAvailable(getActivity()) && searchQuery != null && !searchQuery.equals(""))
         {
             //Search for user
             searchTask = new SearchForUserTask(getActivity());
             searchTask.execute(searchQuery);
+
+            MatrixCursor extras = new MatrixCursor(new String[] {
+                    PriceListContract.PriceEntry._ID,
+                    PriceListContract.PriceEntry.COLUMN_DEFINDEX,
+                    PriceListContract.PriceEntry.COLUMN_ITEM_NAME,
+                    PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY,
+                    PriceListContract.PriceEntry.COLUMN_ITEM_TRADABLE,
+                    PriceListContract.PriceEntry.COLUMN_ITEM_CRAFTABLE,
+                    PriceListContract.PriceEntry.COLUMN_PRICE_INDEX,
+                    PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
+                    PriceListContract.PriceEntry.COLUMN_ITEM_PRICE,
+                    PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_MAX, });
+            extras.addRow(new String[] { "-1", null, null, null, null, null, null, null, null, null});
+            Cursor[] cursors = { extras, adapterCursor };
+            Cursor extendedCursor = new MergeCursor(cursors);
+            cursorAdapter.setLoading(true);
+            cursorAdapter.swapCursor(extendedCursor);
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         cursorAdapter.swapCursor(null);
+        adapterCursor = null;
     }
 
     public void restartLoader(String query) {
@@ -287,37 +308,41 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
 
         @Override
         protected void onPostExecute(final String[] s) {
-            if (isAdded() && s != null && s[0] != null) {
-                //Insert an extra row to the cursor
-                Cursor cursor = cursorAdapter.getCursor();
-                MatrixCursor extras = new MatrixCursor(new String[] {
-                        PriceListContract.PriceEntry._ID,
-                        PriceListContract.PriceEntry.COLUMN_DEFINDEX,
-                        PriceListContract.PriceEntry.COLUMN_ITEM_NAME,
-                        PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY,
-                        PriceListContract.PriceEntry.COLUMN_ITEM_TRADABLE,
-                        PriceListContract.PriceEntry.COLUMN_ITEM_CRAFTABLE,
-                        PriceListContract.PriceEntry.COLUMN_PRICE_INDEX,
-                        PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
-                        PriceListContract.PriceEntry.COLUMN_ITEM_PRICE,
-                        PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_MAX, });
-                extras.addRow(new String[] { "-1", null, s[0], null, null, null, null, null, null, null});
-                Cursor[] cursors = { extras, cursor };
-                Cursor extendedCursor = new MergeCursor(cursors);
-                cursorAdapter.setUserFound(true);
-                cursorAdapter.swapCursor(extendedCursor);
-                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        //Open user page if user clicks on the user name
-                        if (position == 0){
-                            Intent intent = new Intent(getActivity(), UserInfoActivity.class);
-                            intent.putExtra(UserInfoActivity.STEAM_ID_KEY, s[1]);
-                            intent.putExtra(UserInfoActivity.JSON_USER_SUMMARIES_KEY, s[2]);
-                            startActivity(intent);
+            if (isAdded()) {
+                if (s != null && s[0] != null) {
+                    //Insert an extra row to the cursor
+                    MatrixCursor extras = new MatrixCursor(new String[]{
+                            PriceListContract.PriceEntry._ID,
+                            PriceListContract.PriceEntry.COLUMN_DEFINDEX,
+                            PriceListContract.PriceEntry.COLUMN_ITEM_NAME,
+                            PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY,
+                            PriceListContract.PriceEntry.COLUMN_ITEM_TRADABLE,
+                            PriceListContract.PriceEntry.COLUMN_ITEM_CRAFTABLE,
+                            PriceListContract.PriceEntry.COLUMN_PRICE_INDEX,
+                            PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
+                            PriceListContract.PriceEntry.COLUMN_ITEM_PRICE,
+                            PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_MAX,});
+                    extras.addRow(new String[]{"-1", null, s[0], null, null, null, null, null, null, null});
+                    Cursor[] cursors = {extras, adapterCursor};
+                    Cursor extendedCursor = new MergeCursor(cursors);
+                    cursorAdapter.setUserFound(true);
+                    cursorAdapter.swapCursor(extendedCursor);
+                    mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            //Open user page if user clicks on the user name
+                            if (position == 0) {
+                                Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+                                intent.putExtra(UserInfoActivity.STEAM_ID_KEY, s[1]);
+                                intent.putExtra(UserInfoActivity.JSON_USER_SUMMARIES_KEY, s[2]);
+                                startActivity(intent);
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+                    cursorAdapter.swapCursor(adapterCursor);
+                    cursorAdapter.setLoading(false);
+                }
             }
         }
 

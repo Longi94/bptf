@@ -1,5 +1,6 @@
 package com.tlongdev.bktf.adapter;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
@@ -322,6 +323,8 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                 background.setBackgroundDrawable(drawables[1]);
                 icon.setImageDrawable(drawables[2]);
             }
+
+            ObjectAnimator anim = ObjectAnimator.ofFloat()
         }
     }
 }

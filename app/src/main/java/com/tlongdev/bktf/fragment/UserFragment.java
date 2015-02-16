@@ -41,6 +41,7 @@ import java.text.DecimalFormat;
 public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener,
         FetchUserInfo.OnFetchUserInfoListener {
 
+    private static final String LOG_TAG = UserFragment.class.getSimpleName();
     private TextView playerName;
     private TextView playerReputation;
     private TextView trustStatus;
@@ -49,7 +50,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private TextView tradeStatus;
     private TextView communityStatus;
     private TextView backpackValueRefined;
-    private TextView backpackRawMetal; //TODO fix raw items after implementing backpack viewer
+    private TextView backpackRawMetal;
     private TextView backpackRawKeys;
     private TextView backpackValueUsd;
     private TextView backpackSlots;
