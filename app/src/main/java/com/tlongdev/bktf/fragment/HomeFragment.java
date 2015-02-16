@@ -1,7 +1,6 @@
 package com.tlongdev.bktf.fragment;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -16,7 +15,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -38,7 +36,7 @@ import com.tlongdev.bktf.task.FetchPriceList;
  * Main fragment the shows the latest price changes.
  */
 public class HomeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
-        SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener {
+        SwipeRefreshLayout.OnRefreshListener {
 
     private static final String LOG_TAG = HomeFragment.class.getSimpleName();
 
@@ -80,8 +78,6 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     private PriceListCursorAdapter cursorAdapter;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private int currentPage = 1;
-    private View footerView;
 
     public HomeFragment() {
         //Required empty constructor
@@ -132,10 +128,6 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
         // Get a reference to the ListView, and attach this adapter to it.
         ListView mListView = (ListView) rootView.findViewById(R.id.list_view_changes);
-        footerView =  ((LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                .inflate(R.layout.list_view_footer, null, false);
-        footerView.setVisibility(View.INVISIBLE);
-        mListView.addFooterView(footerView);
 
         //Set up the swipe refresh layout (color and listener)
         mSwipeRefreshLayout = (SwipeRefreshLayout)rootView.findViewById(R.id.swipe_refresh);
@@ -155,7 +147,6 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
                 (AbsListViewQuickReturnAttacher)QuickReturnAttacher.forView(mListView);
         quickReturnAttacher.addTargetView(header, QuickReturnTargetView.POSITION_TOP,
                 (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 42, getResources().getDisplayMetrics()));
-        quickReturnAttacher.addOnScrollListener(this);
 
         progressBar = (ProgressBar)rootView.findViewById(R.id.progress_bar);
 
@@ -198,7 +189,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        String sortOrder = PriceEntry.COLUMN_LAST_UPDATE + " DESC LIMIT " + currentPage * 10;
+        String sortOrder = PriceEntry.COLUMN_LAST_UPDATE + " DESC";
 
         return new CursorLoader(
                 getActivity(),
@@ -215,7 +206,6 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         cursorAdapter.swapCursor(data);
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
-        footerView.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -233,23 +223,5 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             Toast.makeText(getActivity(), "bptf: no connection", Toast.LENGTH_SHORT).show();
             mSwipeRefreshLayout.setRefreshing(false);
         }
-    }
-
-    @Override
-    public void onScrollStateChanged(AbsListView listView, int scrollState) {
-        if (scrollState == SCROLL_STATE_IDLE) {
-            int threshold = 1;
-            if (listView.getLastVisiblePosition() >= listView.getCount() - 1 - threshold) {
-                currentPage++;
-                //load more list items
-                footerView.setVisibility(View.VISIBLE);
-                getLoaderManager().restartLoader(PRICE_LIST_LOADER, null, this);
-            }
-        }
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
     }
 }

@@ -49,7 +49,7 @@ public class UnusualActivity extends ActionBarActivity implements LoaderManager.
     public static final int COL_PRICE_LIST_PRIC = 4;
     public static final int COL_PRICE_LIST_PMAX = 5;
     public static final int COL_PRICE_LIST_PRAW = 6;
-    public static final int COL_PRICE_LIST_UPDA = 7; // TODO color code prices
+    public static final int COL_PRICE_LIST_UPDA = 7;
     public static final int COL_PRICE_LIST_DIFF = 8;
 
     private UnusualPricesCursorAdapter cursorAdapter;

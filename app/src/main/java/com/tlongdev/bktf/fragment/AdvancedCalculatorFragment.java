@@ -28,7 +28,7 @@ import com.tlongdev.bktf.data.PriceListContract;
 import java.util.ArrayList;
 
 /**
- * Fragment for calculator TODO finish
+ * Fragment for calculator
  */
 public class AdvancedCalculatorFragment extends Fragment {
 

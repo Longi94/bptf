@@ -124,7 +124,7 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> implements Fetc
                 return null;
             }
 
-            fetchTask = new FetchUserBackpack(mContext, manualSync);
+            fetchTask = new FetchUserBackpack(mContext);
             fetchTask.registerOnFetchUserBackpackListener(this);
             backpackFetching = true;
             fetchTask.execute(steamId);

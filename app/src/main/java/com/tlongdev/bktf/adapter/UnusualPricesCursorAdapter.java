@@ -50,14 +50,18 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
         viewHolder.icon.setImageDrawable(null);
-        viewHolder.icon.setTag(cursor.getInt(UnusualActivity.COL_PRICE_LIST_INDE));
 
-        new LoadImagesTask(context, viewHolder.icon).
-                executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                        (double)cursor.getInt(UnusualActivity.COL_PRICE_LIST_DEFI),
-                        (double)cursor.getInt(UnusualActivity.COL_PRICE_LIST_INDE),
-                        cursor.getDouble(UnusualActivity.COL_PRICE_LIST_DIFF),
-                        cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRAW));
+        LoadImagesTask task = (LoadImagesTask)viewHolder.icon.getTag();
+        if (task != null){
+            task.cancel(true);
+        }
+        task = new LoadImagesTask(context, viewHolder.icon);
+        viewHolder.icon.setTag(task);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                (double)cursor.getInt(UnusualActivity.COL_PRICE_LIST_DEFI),
+                (double)cursor.getInt(UnusualActivity.COL_PRICE_LIST_INDE),
+                cursor.getDouble(UnusualActivity.COL_PRICE_LIST_DIFF),
+                cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRAW));
 
         try {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -115,13 +119,11 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
     private class LoadImagesTask extends AsyncTask<Double, Void, Drawable> {
         private Context mContext;
         private ImageView icon;
-        private String path;
         private String errorMessage;
 
         private LoadImagesTask(Context context, ImageView icon) {
             mContext = context;
             this.icon = icon;
-            path = icon.getTag().toString();
         }
 
         @Override
@@ -152,9 +154,7 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
 
         @Override
         protected void onPostExecute(Drawable drawable) {
-            if (icon.getTag().toString().equals(path)) {
-                icon.setImageDrawable(drawable);
-            }
+            icon.setImageDrawable(drawable);
         }
     }
 }

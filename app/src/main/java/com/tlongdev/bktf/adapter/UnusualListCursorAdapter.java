@@ -66,10 +66,14 @@ public class UnusualListCursorAdapter extends CursorAdapter {
 
         final int defindex = cursor.getInt(UnusualPriceListFragment.COL_PRICE_LIST_DEFI);
         final String name = cursor.getString(UnusualPriceListFragment.COL_PRICE_LIST_NAME);
-        viewHolder.icon.setTag("" + defindex);
 
-        new LoadImagesTask(context, viewHolder.icon).
-                executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, defindex);
+        LoadImagesTask task = (LoadImagesTask)viewHolder.icon.getTag();
+        if (task != null){
+            task.cancel(true);
+        }
+        task = new LoadImagesTask(context, viewHolder.icon);
+        viewHolder.icon.setTag(task);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, defindex);
 
         viewHolder.icon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,13 +104,11 @@ public class UnusualListCursorAdapter extends CursorAdapter {
     private class LoadImagesTask extends AsyncTask<Integer, Void, Drawable> {
         private Context mContext;
         private ImageView icon;
-        private String path;
         private String errorMessage;
 
         private LoadImagesTask(Context context, ImageView icon) {
             mContext = context;
             this.icon = icon;
-            path = icon.getTag().toString();
         }
 
         @Override
@@ -130,9 +132,7 @@ public class UnusualListCursorAdapter extends CursorAdapter {
 
         @Override
         protected void onPostExecute(Drawable drawable) {
-            if (icon.getTag().toString().equals(path)) {
-                icon.setImageDrawable(drawable);
-            }
+            icon.setImageDrawable(drawable);
         }
     }
 }
