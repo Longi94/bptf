@@ -2,7 +2,6 @@ package com.tlongdev.bktf.task;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -50,7 +49,6 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Void> {
     private static final String OWM_VALUE = "value";
 
     private Context mContext;
-    private boolean manualSync;
     private boolean isGuest;
 
     private String errorMessage;
@@ -65,21 +63,14 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Void> {
     private int backpackSlots = 0;
     private int itemNumber = 0;
 
-    public FetchUserBackpack(Context context, boolean manualSync) {
+    public FetchUserBackpack(Context context) {
         mContext = context;
-        this.manualSync = manualSync;
     }
 
     @Override
     protected Void doInBackground(String... params) {
         isGuest = !params[0].equals(PreferenceManager.getDefaultSharedPreferences(mContext)
                 .getString(mContext.getString(R.string.pref_resolved_steam_id), ""));
-
-        if (!isGuest && System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(mContext)
-                .getLong(mContext.getString(R.string.pref_last_backpack_update), 0) < 3600000L && !manualSync){
-            //This task ran less than an hour ago and wasn't a manual sync, nothing to do.
-            return null;
-        }
 
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
@@ -155,14 +146,6 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Void> {
         try {
 
             getItemsFromJson(jsonStr, params[0]);
-
-            if (!isGuest) {
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
-
-                //Save when the update finished
-                editor.putLong(mContext.getString(R.string.pref_last_backpack_update), System.currentTimeMillis()).apply();
-            }
-
 
         } catch (JSONException e) {
             errorMessage = "error while parsing data";

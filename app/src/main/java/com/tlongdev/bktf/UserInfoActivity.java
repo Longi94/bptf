@@ -50,7 +50,6 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
     private TextView tradeStatus;
     private TextView communityStatus;
     private TextView backpackValueRefined;
-    //TODO fix these after implementing backpack viewer.
     private TextView backpackRawMetal;
     private TextView backpackRawKeys;
     private TextView backpackValueUsd;
@@ -78,7 +77,6 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
     private int rawKeys;
     private double rawMetal;
 
-    private FetchUserBackpack fetchTask;
     private boolean backpackFetching = false;
     private boolean userFetching = false;
 
@@ -96,7 +94,7 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         //Start downloading remaining info if the user.
         new FetchUserInfoTask().execute(i.getStringExtra(JSON_USER_SUMMARIES_KEY));
         userFetching = true;
-        fetchTask = new FetchUserBackpack(this, false);
+        FetchUserBackpack fetchTask = new FetchUserBackpack(this);
         fetchTask.registerOnFetchUserBackpackListener(this);
         fetchTask.execute(steamId);
         backpackFetching = true;
@@ -184,7 +182,6 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         final String OWM_BACKPACK_VALUE_TF2 = "440";
         final String OWM_PLAYER_NAME = "name";
         final String OWM_PLAYER_REPUTATION = "backpack_tf_reputation";
-        final String OWM_PLAYER_GROUP = "backpack_tf_group";
         final String OWM_PLAYER_BANNED = "backpack_tf_banned";
         final String OWM_PLAYER_TRUST = "backpack_tf_trust";
         final String OWM_PLAYER_TRUST_FOR = "for";

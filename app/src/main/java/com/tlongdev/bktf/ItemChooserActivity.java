@@ -21,7 +21,6 @@ import android.widget.TextView;
 import com.tlongdev.bktf.adapter.ItemChooserAdapter;
 import com.tlongdev.bktf.data.PriceListContract;
 
-//TODO implement item chooser for calculator
 public class ItemChooserActivity extends FragmentActivity implements
         TextWatcher, LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener, View.OnFocusChangeListener {
 

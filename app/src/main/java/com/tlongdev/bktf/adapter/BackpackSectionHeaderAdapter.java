@@ -1,6 +1,5 @@
 package com.tlongdev.bktf.adapter;
 
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
@@ -119,9 +118,15 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
 
                         if (defindex != 0) {
 
-                            holder.icon[i].setTag("" + id);
-                            new ImageLoader(mContext, holder.icon[i], holder.background[i]).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                            ImageLoader task = (ImageLoader)holder.icon[i].getTag();
+                            if (task != null) {
+                                task.cancel(true);
+                            }
+                            task = new ImageLoader(mContext, holder.icon[i], holder.background[i]);
+                            holder.icon[i].setTag(task);
+                            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
                                     defindex, quality, tradable, craftable, itemIndex, paint, australium);
+
                             holder.parent[i].setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -256,13 +261,11 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
         private Context mContext;
 
         private String errorMessage;
-        private String tag;
 
         private ImageLoader(Context context, ImageView icon, ImageView background) {
             this.mContext = context;
             this.icon = icon;
             this.background = background;
-            tag = icon.getTag().toString();
         }
 
         @Override
@@ -318,13 +321,9 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
 
         @Override
         protected void onPostExecute(Drawable[] drawables) {
-            if (icon.getTag().toString().equals(tag)) {
-                icon.setBackgroundDrawable(drawables[0]);
-                background.setBackgroundDrawable(drawables[1]);
-                icon.setImageDrawable(drawables[2]);
-            }
-
-            ObjectAnimator anim = ObjectAnimator.ofFloat()
+            icon.setBackgroundDrawable(drawables[0]);
+            background.setBackgroundDrawable(drawables[1]);
+            icon.setImageDrawable(drawables[2]);
         }
     }
 }
