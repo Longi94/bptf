@@ -3,9 +3,11 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
+        <item name="actionBarStyle">@style/bptfActionBar</item>
+        <item name="searchViewStyle">@style/bptfSearchView</item>
     </style>
 
-    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Dialog"/>
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog"/>
 
     <style name="DividerHorizontal">
         <item name="android:layout_width">match_parent</item>
@@ -21,4 +23,24 @@
         <item name="android:layout_width">1dp</item>
         <item name="android:layout_height">match_parent</item>
     </style>
+
+    <style name="AppTheme.Transparent" parent="AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <!-- ActionBar styles -->
+    <style name="bptfActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
+        <item name="background">@color/bktf_main_blue</item>
+        <item name="elevation">3dp</item>
+    </style>
+
+    <style name="bptfSearchView" parent="Widget.AppCompat.Light.SearchView">
+        <item name="colorControlActivated">@android:color/white</item>
+        <item name="colorAccent">@android:color/white</item>
+    </style>
+
 </resources>

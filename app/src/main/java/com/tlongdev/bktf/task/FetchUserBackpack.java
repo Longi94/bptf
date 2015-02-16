@@ -217,13 +217,13 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Void> {
                         Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
                 }
                 break;
-            case 8: //Invalid ID
+            case 8: //TODO Invalid ID
                 break;
-            case 15: //Private
+            case 15: //TODO Private
                 break;
-            case 18: //ID doesn't exist
+            case 18: //TODO ID doesn't exist
                 break;
-            default: //Shouldn't reach
+            default: //TODO Shouldn't reach
                 break;
         }
     }
