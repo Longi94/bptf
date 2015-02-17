@@ -408,7 +408,7 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> implements Fetc
         }
     }
 
-    public interface OnFetchUserInfoListener {
+    public static interface OnFetchUserInfoListener {
         public void onFetchFinished(boolean privateBackpack);
     }
 }

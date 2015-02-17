@@ -22,7 +22,7 @@
     <!-- ActionBar styles -->
     <style name="bptfActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
         <item name="background">@color/bktf_main_blue</item>
-        <item name="elevation">3dp</item>
+        <item name="elevation">0dp</item>
     </style>
 
     <style name="bptfSearchView" parent="Widget.AppCompat.Light.SearchView">

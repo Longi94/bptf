@@ -15,7 +15,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -36,7 +35,7 @@ import com.tlongdev.bktf.task.FetchPriceList;
  * Main fragment the shows the latest price changes.
  */
 public class HomeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
-        SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener, FetchPriceList.OnPriceListFetchListener {
 
     private static final String LOG_TAG = HomeFragment.class.getSimpleName();
 
@@ -71,13 +70,17 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     public static final int COL_PRICE_LIST_PRAW = 10;
     public static final int COL_PRICE_LIST_DIFF = 11;
 
-    private LinearLayout header;
-
     private ProgressBar progressBar;
 
     private PriceListCursorAdapter cursorAdapter;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private TextView metalPrice;
+    private TextView keyPrice;
+    private TextView budsPrice;
+    private View metalPriceImage;
+    private View keyPriceImage;
+    private View budsPriceImage;
 
     public HomeFragment() {
         //Required empty constructor
@@ -96,13 +99,13 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        TextView metalPrice = (TextView) rootView.findViewById(R.id.text_view_metal_price);
-        TextView keyPrice = (TextView) rootView.findViewById(R.id.text_view_key_price);
-        TextView budsPrice = (TextView) rootView.findViewById(R.id.text_view_buds_price);
+        metalPrice = (TextView) rootView.findViewById(R.id.text_view_metal_price);
+        keyPrice = (TextView) rootView.findViewById(R.id.text_view_key_price);
+        budsPrice = (TextView) rootView.findViewById(R.id.text_view_buds_price);
 
-        ImageView metalPriceImage = (ImageView) rootView.findViewById(R.id.image_view_metal_price);
-        ImageView keyPriceImage = (ImageView) rootView.findViewById(R.id.image_view_key_price);
-        ImageView budsPriceImage = (ImageView) rootView.findViewById(R.id.image_view_buds_price);
+        metalPriceImage = rootView.findViewById(R.id.image_view_metal_price);
+        keyPriceImage = rootView.findViewById(R.id.image_view_key_price);
+        budsPriceImage = rootView.findViewById(R.id.image_view_buds_price);
 
         metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
         keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
@@ -139,7 +142,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
                 (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, -15, getResources().getDisplayMetrics()),
                 (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 65, getResources().getDisplayMetrics()));
 
-        header = (LinearLayout) rootView.findViewById(R.id.list_changes_header);
+        LinearLayout header = (LinearLayout) rootView.findViewById(R.id.list_changes_header);
 
         //Set up quick return
         mListView.setAdapter(new QuickReturnAdapter(cursorAdapter));
@@ -161,7 +164,9 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         //Download whole database when the app is first opened.
         if (prefs.getBoolean(getString(R.string.pref_initial_load), true)){
             if (Utility.isNetworkAvailable(getActivity())) {
-                new FetchPriceList(getActivity(), false, false, null, header).execute(getResources().getString(R.string.backpack_tf_api_key));
+                FetchPriceList task = new FetchPriceList(getActivity(), false, false);
+                task.setOnPriceListFetchListener(this);
+                task.execute(getResources().getString(R.string.backpack_tf_api_key));
             } else {
                 //Quit the app if the download failed.
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -180,8 +185,9 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         else if (prefs.getBoolean(getString(R.string.pref_auto_sync), false) &&
                 System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_price_list_update), 0) >= 3600000L
                 && Utility.isNetworkAvailable(getActivity())) {
-            new FetchPriceList(getActivity(), true, false, mSwipeRefreshLayout, header).execute(getResources()
-                    .getString(R.string.backpack_tf_api_key));
+            FetchPriceList task = new FetchPriceList(getActivity(), true, false);
+            task.setOnPriceListFetchListener(this);
+            task.execute(getResources().getString(R.string.backpack_tf_api_key));
             mSwipeRefreshLayout.setRefreshing(true);
         }
     }
@@ -217,11 +223,43 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onRefresh() {
         //Manual update
         if (Utility.isNetworkAvailable(getActivity())) {
-            new FetchPriceList(getActivity(), true, true, mSwipeRefreshLayout, header)
-                    .execute(getResources().getString(R.string.backpack_tf_api_key));
+            FetchPriceList task = new FetchPriceList(getActivity(), true, true);
+            task.setOnPriceListFetchListener(this);
+            task.execute(getResources().getString(R.string.backpack_tf_api_key));
         } else {
             Toast.makeText(getActivity(), "bptf: no connection", Toast.LENGTH_SHORT).show();
             mSwipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    @Override
+    public void onPriceListFetchFinished() {
+        if (isAdded()) {
+            //Stop animation
+            mSwipeRefreshLayout.setRefreshing(false);
+
+            //Update the header with currency prices
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+            metalPrice.setText(prefs.getString(getActivity().getString(R.string.pref_metal_price), ""));
+            keyPrice.setText(prefs.getString(getActivity().getString(R.string.pref_key_price), ""));
+            budsPrice.setText(prefs.getString(getActivity().getString(R.string.pref_buds_price), ""));
+
+            if (Utility.getDouble(prefs, getActivity().getString(R.string.pref_metal_diff), 0.0) > 0.0) {
+                metalPriceImage.setBackgroundColor(0xff008504);
+            } else {
+                metalPriceImage.setBackgroundColor(0xff850000);
+            }
+            if (Utility.getDouble(prefs, getActivity().getString(R.string.pref_key_diff), 0.0) > 0.0) {
+                keyPriceImage.setBackgroundColor(0xff008504);
+            } else {
+                keyPriceImage.setBackgroundColor(0xff850000);
+            }
+            if (Utility.getDouble(prefs, getActivity().getString(R.string.pref_buds_diff), 0.0) > 0) {
+                budsPriceImage.setBackgroundColor(0xff008504);
+            } else {
+                budsPriceImage.setBackgroundColor(0xff850000);
+            }
         }
     }
 }

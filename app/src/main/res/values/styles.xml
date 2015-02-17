@@ -5,6 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="actionBarStyle">@style/bptfActionBar</item>
         <item name="searchViewStyle">@style/bptfSearchView</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog"/>
@@ -35,7 +36,6 @@
     <!-- ActionBar styles -->
     <style name="bptfActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
         <item name="background">@color/bktf_main_blue</item>
-        <item name="elevation">3dp</item>
     </style>
 
     <style name="bptfSearchView" parent="Widget.AppCompat.Light.SearchView">
