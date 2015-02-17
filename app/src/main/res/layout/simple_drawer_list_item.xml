@@ -20,4 +20,5 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="#000"/>
+
 </LinearLayout>

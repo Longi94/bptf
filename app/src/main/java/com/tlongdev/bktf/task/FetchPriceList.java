@@ -11,10 +11,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
@@ -51,17 +48,12 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
     private boolean manualSync;
     private ProgressDialog loadingDialog;
 
-    //Stored for stopping the animation.
-    private SwipeRefreshLayout swipeRefreshLayout;
-    //Stored for updating the currency prices on UI
-    private LinearLayout header;
-
     private String errorMessage;
 
-    public FetchPriceList(Context context, boolean updateDatabase, boolean manualSync, SwipeRefreshLayout swipeRefreshLayout, LinearLayout header) {
+    private OnPriceListFetchListener listener;
+
+    public FetchPriceList(Context context, boolean updateDatabase, boolean manualSync) {
         mContext = context;
-        this.swipeRefreshLayout = swipeRefreshLayout;
-        this.header = header;
         this.updateDatabase = updateDatabase;
         this.manualSync = manualSync;
     }
@@ -226,37 +218,13 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
         if (loadingDialog != null && !updateDatabase)
             loadingDialog.dismiss();
 
-        //Stop animation
-        else if (swipeRefreshLayout != null)
-            swipeRefreshLayout.setRefreshing(false);
-
-        //Update the header with currency prices
-        if (header != null) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-
-            ((TextView) header.findViewById(R.id.text_view_metal_price))
-                    .setText(prefs.getString(mContext.getString(R.string.pref_metal_price), ""));
-            ((TextView) header.findViewById(R.id.text_view_key_price))
-                    .setText(prefs.getString(mContext.getString(R.string.pref_key_price), ""));
-            ((TextView) header.findViewById(R.id.text_view_buds_price))
-                    .setText(prefs.getString(mContext.getString(R.string.pref_buds_price), ""));
-
-            if (Utility.getDouble(prefs, mContext.getString(R.string.pref_metal_diff), 0.0) > 0.0) {
-                header.findViewById(R.id.image_view_metal_price).setBackgroundColor(0xff008504);
-            } else {
-                header.findViewById(R.id.image_view_metal_price).setBackgroundColor(0xff850000);
-            }
-            if (Utility.getDouble(prefs, mContext.getString(R.string.pref_key_diff), 0.0) > 0.0) {
-                header.findViewById(R.id.image_view_key_price).setBackgroundColor(0xff008504);
-            } else {
-                header.findViewById(R.id.image_view_key_price).setBackgroundColor(0xff850000);
-            }
-            if (Utility.getDouble(prefs, mContext.getString(R.string.pref_buds_diff), 0.0) > 0) {
-                header.findViewById(R.id.image_view_buds_price).setBackgroundColor(0xff008504);
-            } else {
-                header.findViewById(R.id.image_view_buds_price).setBackgroundColor(0xff850000);
-            }
+        if (listener != null){
+            listener.onPriceListFetchFinished();
         }
+    }
+
+    public void setOnPriceListFetchListener(OnPriceListFetchListener listener) {
+        this.listener = listener;
     }
 
     //Parse all the items from the JSON string.
@@ -545,5 +513,9 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
         itemValues.put(PriceEntry.COLUMN_DIFFERENCE, difference);
 
         return itemValues;
+    }
+
+    public static interface OnPriceListFetchListener{
+        public void onPriceListFetchFinished();
     }
 }
