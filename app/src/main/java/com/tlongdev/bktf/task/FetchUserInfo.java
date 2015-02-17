@@ -36,6 +36,7 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> implements Fetc
     private FetchUserBackpack fetchTask;
     private boolean backpackFetching = false;
     private boolean isRunning = true;
+    private boolean privateBackpack = false;
 
     public FetchUserInfo(Context mContext, boolean manualSync) {
         this.mContext = mContext;
@@ -240,7 +241,7 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> implements Fetc
     protected void onPostExecute(Void param) {
         isRunning = false;
         if (!backpackFetching && listener != null){
-            listener.onFetchFinished();
+            listener.onFetchFinished(privateBackpack);
         }
     }
 
@@ -325,8 +326,10 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> implements Fetc
             if (current_user.has(OWM_PLAYER_REPUTATION)) {
                 editor.putInt(mContext.getString(R.string.pref_player_reputation), current_user.getInt(OWM_PLAYER_REPUTATION));
             }
-            Utility.putDouble(editor, mContext.getString(R.string.pref_player_backpack_value_tf2),
-                    current_user.getJSONObject(OWM_BACKPACK_VALUE).getDouble(OWM_BACKPACK_VALUE_TF2));
+            if (!privateBackpack) {
+                Utility.putDouble(editor, mContext.getString(R.string.pref_player_backpack_value_tf2),
+                        current_user.getJSONObject(OWM_BACKPACK_VALUE).getDouble(OWM_BACKPACK_VALUE_TF2));
+            }
 
             if (current_user.has(OWM_PLAYER_GROUP)) {
                 editor.putInt(mContext.getString(R.string.pref_player_group), 1);
@@ -375,6 +378,7 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> implements Fetc
     @Override
     public void onFetchFinished(int rawKeys, double rawMetal, int backpackSlots, int itemNumber) {
         backpackFetching = false;
+        privateBackpack = false;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt(mContext.getString(R.string.pref_user_slots), backpackSlots);
@@ -383,11 +387,28 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> implements Fetc
         Utility.putDouble(editor, mContext.getString(R.string.pref_user_raw_metal), rawMetal);
         editor.apply();
         if (!isRunning && listener != null) {
-            listener.onFetchFinished();
+            listener.onFetchFinished(false);
+        }
+    }
+
+    @Override
+    public void onPrivateBackpack() {
+        backpackFetching = false;
+        privateBackpack = true;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(mContext.getString(R.string.pref_user_slots), -1);
+        editor.putInt(mContext.getString(R.string.pref_user_items), -1);
+        editor.putInt(mContext.getString(R.string.pref_user_raw_key), -1);
+        Utility.putDouble(editor, mContext.getString(R.string.pref_user_raw_metal), -1);
+        Utility.putDouble(editor, mContext.getString(R.string.pref_player_backpack_value_tf2), -1);
+        editor.apply();
+        if (!isRunning && listener != null) {
+            listener.onFetchFinished(true);
         }
     }
 
     public interface OnFetchUserInfoListener {
-        public void onFetchFinished();
+        public void onFetchFinished(boolean privateBackpack);
     }
 }

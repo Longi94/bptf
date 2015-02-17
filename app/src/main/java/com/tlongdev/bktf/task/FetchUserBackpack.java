@@ -25,7 +25,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Vector;
 
-public class FetchUserBackpack extends AsyncTask<String, Void, Void> {
+public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
     
     public static final String LOG_TAG = FetchUserBackpack.class.getSimpleName();
 
@@ -68,7 +68,7 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(String... params) {
+    protected Boolean doInBackground(String... params) {
         isGuest = !params[0].equals(PreferenceManager.getDefaultSharedPreferences(mContext)
                 .getString(mContext.getString(R.string.pref_resolved_steam_id), ""));
 
@@ -104,7 +104,7 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Void> {
 
             if (inputStream == null) {
                 // Stream was empty. Nothing to do.
-                return null;
+                return false;
             }
 
             reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -117,7 +117,7 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Void> {
 
             if (buffer.length() == 0) {
                 //Stream was empty, nothing to do.
-                return null;
+                return false;
             }
             jsonStr = buffer.toString();
 
@@ -126,7 +126,7 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Void> {
             publishProgress();
             if (Utility.isDebugging(mContext))
                 e.printStackTrace();
-            return null;
+            return false;
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -144,27 +144,28 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Void> {
             }
         }
         try {
-
-            getItemsFromJson(jsonStr, params[0]);
-
+            return getItemsFromJson(jsonStr, params[0]);
         } catch (JSONException e) {
             errorMessage = "error while parsing data";
             publishProgress();
             if (Utility.isDebugging(mContext))
                 e.printStackTrace();
-            return null;
+            return false;
         }
-        return null;
     }
 
     @Override
-    protected void onPostExecute(Void aVoid) {
+    protected void onPostExecute(Boolean isPrivate) {
         if (listener!= null){
-            listener.onFetchFinished(rawKeys, Utility.getRawMetal(rawRef, rawRec, rawScraps), backpackSlots, itemNumber);
+            if (isPrivate){
+                listener.onPrivateBackpack();
+            } else {
+                listener.onFetchFinished(rawKeys, Utility.getRawMetal(rawRef, rawRec, rawScraps), backpackSlots, itemNumber);
+            }
         }
     }
 
-    private void getItemsFromJson(String jsonStr, String steamId) throws JSONException {
+    private boolean getItemsFromJson(String jsonStr, String steamId) throws JSONException {
         final String OWM_RESULT = "result";
         final String OWM_STATUS = "status";
         final String OWM_SLOTS = "num_backpack_slots";
@@ -216,15 +217,15 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Void> {
                     if (Utility.isDebugging(mContext))
                         Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
                 }
-                break;
-            case 8: //TODO Invalid ID
-                break;
-            case 15: //TODO Private
-                break;
-            case 18: //TODO ID doesn't exist
-                break;
-            default: //TODO Shouldn't reach
-                break;
+                return false;
+            case 8: //Invalid ID, shouldn't reach
+                throw new IllegalStateException("Steam ID provided for backpack fetching was invalid: " + steamId);
+            case 15:
+                return true;
+            case 18: //ID doesn't exist, shouldn't reach
+                throw new IllegalStateException("Steam ID provided for backpack fetching doesn't exist: " + steamId);
+            default: //Shouldn't reach
+                throw new IllegalStateException("Unknown status returned by GetPlayerItems api: " + response.getInt(OWM_STATUS));
         }
     }
 
@@ -385,5 +386,6 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Void> {
 
     public static interface OnFetchUserBackpackListener{
         public void onFetchFinished(int rawKeys, double rawMetal, int backpackSlots, int itemNumber);
+        public void onPrivateBackpack();
     }
 }

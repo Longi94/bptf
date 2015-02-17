@@ -136,7 +136,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
                 }
 
                 Drawable iconDrawable = Drawable.createFromStream(ims, null);
-                if (params[1] != 0 && !name.contains("Crate")) {
+                if (params[1] != 0 && (params[4] == 5 || params[4] == 7 || params[4] == 9)) {
                     ims = assetManager.open("effects/" + params[1].intValue() + "_188x188.png");
                     Drawable effectDrawable = Drawable.createFromStream(ims, null);
                     returnVal[0] = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});

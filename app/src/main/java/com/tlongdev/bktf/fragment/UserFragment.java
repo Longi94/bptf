@@ -63,6 +63,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private ProgressBar progressBar;
 
     private FetchUserInfo fetchTask;
+    private boolean privateBackpack = false;
 
     public UserFragment() {
     }
@@ -182,10 +183,14 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 startActivity(intent);
             }
         } else {
-            Intent i = new Intent(getActivity(), UserBackpackActivity.class);
-            i.putExtra(UserBackpackActivity.EXTRA_NAME, playerName.getText());
-            i.putExtra(UserBackpackActivity.EXTRA_GUEST, false);
-            startActivity(i);
+            if (privateBackpack){
+                Toast.makeText(getActivity(),"Your backpack is private", Toast.LENGTH_SHORT).show();
+            } else {
+                Intent i = new Intent(getActivity(), UserBackpackActivity.class);
+                i.putExtra(UserBackpackActivity.EXTRA_NAME, playerName.getText());
+                i.putExtra(UserBackpackActivity.EXTRA_GUEST, false);
+                startActivity(i);
+            }
         }
     }
 
@@ -362,15 +367,28 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             trustStatus.setBackgroundDrawable(getResources().getDrawable(R.drawable.status_background_neutral));
         }
 
-        backpackRawKeys.setText("" + prefs.getInt(getString(R.string.pref_user_raw_key), 0));
-        backpackRawMetal.setText("" + Utility.roundDouble(Utility.getDouble(prefs, getString(R.string.pref_user_raw_metal), 0.0), 2));
+        int rawKeys = prefs.getInt(getString(R.string.pref_user_raw_key), -1);
+        if (rawKeys >= 0)
+            backpackRawKeys.setText("" + rawKeys);
+        else
+            backpackRawKeys.setText("?");
+        double rawMetal = Utility.roundDouble(Utility.getDouble(prefs, getString(R.string.pref_user_raw_metal), -1), 2);
+        if (rawMetal >= 0)
+            backpackRawMetal.setText("" + Utility.roundDouble(rawMetal, 2));
+        else
+            backpackRawMetal.setText("?");
 
-        backpackSlots.setText("" + prefs.getInt(getString(R.string.pref_user_items), 0) + "/" +
-                prefs.getInt(getString(R.string.pref_user_slots), 0));
+        int itemNumber = prefs.getInt(getString(R.string.pref_user_items), -1);
+        int backpackSlotNumber = prefs.getInt(getString(R.string.pref_user_slots), -1);
+        if (itemNumber >= 0 && backpackSlotNumber >= 0)
+            backpackSlots.setText("" + itemNumber + "/" + backpackSlotNumber);
+        else
+            backpackSlots.setText("?/?");
     }
 
     @Override
-    public void onFetchFinished() {
+    public void onFetchFinished(boolean privateBackpack) {
+        this.privateBackpack = privateBackpack;
         //Stop the refreshing animation and update the UI
         if(isAdded()){
             updateUserPage();

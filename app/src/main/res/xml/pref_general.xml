@@ -3,15 +3,9 @@
 
     <PreferenceCategory
         android:title="@string/pref_category_steam">
-        <EditTextPreference
+        <com.tlongdev.bktf.preference.SteamIdPreference
             android:key="@string/pref_steam_id"
-            android:title="@string/pref_steam_id"
-            android:defaultValue="@string/pref_steam_id_default"
-            android:selectAllOnFocus="true"
-            android:inputType="textCapWords"
-            android:hint="@string/pref_steam_id_hint"
-            android:singleLine="true"
-            android:maxLines="1" />
+            android:title="@string/pref_steam_id" />
     </PreferenceCategory>
 
     <PreferenceCategory

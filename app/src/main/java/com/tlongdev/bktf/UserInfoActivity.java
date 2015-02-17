@@ -61,7 +61,7 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
     private String steamId;
     private String playerNameString;
     private int playerReputationValue = 0;
-    private double backpackValue = 0;
+    private double backpackValue = -1;
     private boolean isBanned = false;
     private boolean isScammer = false;
     private boolean isCommunityBanned = false;
@@ -79,6 +79,7 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
 
     private boolean backpackFetching = false;
     private boolean userFetching = false;
+    private boolean privateBackpack = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,12 +161,15 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
                 startActivity(intent);
             }
         } else {
-
-            Intent i = new Intent(this, UserBackpackActivity.class);
-            i.putExtra(UserBackpackActivity.EXTRA_NAME, playerNameString);
-            i.putExtra(UserBackpackActivity.EXTRA_GUEST, !steamId.equals(PreferenceManager.getDefaultSharedPreferences(this)
-                    .getString(getString(R.string.pref_resolved_steam_id), "")));
-            startActivity(i);
+            if (privateBackpack){
+                Toast.makeText(this, playerNameString + "'s backpack is private", Toast.LENGTH_SHORT).show();
+            } else {
+                Intent i = new Intent(this, UserBackpackActivity.class);
+                i.putExtra(UserBackpackActivity.EXTRA_NAME, playerNameString);
+                i.putExtra(UserBackpackActivity.EXTRA_GUEST, !steamId.equals(PreferenceManager.getDefaultSharedPreferences(this)
+                        .getString(getString(R.string.pref_resolved_steam_id), "")));
+                startActivity(i);
+            }
         }
     }
 
@@ -361,7 +365,7 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         if (backpackValue == -1) {
             backpackValueRefined.setText("?");
             backpackValueUsd.setText("?");
-        } else {
+        } else if (!privateBackpack) {
             //Properly format the backpack value (is it int, does it have a fraction smaller than 0.01)
             if ((int) backpackValue == backpackValue)
                 backpackValueRefined.setText("" + (int) backpackValue);
@@ -406,10 +410,20 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         //Image should be available in data folder by the time this method is called.
         avatar.setImageDrawable(Drawable.createFromPath(getFilesDir().toString() + "/avatar_search.png"));
 
-        backpackRawKeys.setText("" + rawKeys);
-        backpackRawMetal.setText("" + Utility.roundDouble(rawMetal, 2));
+        if (rawKeys >= 0)
+            backpackRawKeys.setText("" + rawKeys);
+        else
+            backpackRawKeys.setText("?");
 
-        backpackSlots.setText("" + itemNumber + "/" + backpackSlotNumber);
+        if (rawMetal >= 0)
+            backpackRawMetal.setText("" + Utility.roundDouble(rawMetal, 2));
+        else
+            backpackRawMetal.setText("?");
+
+        if (itemNumber >= 0 && backpackSlotNumber >= 0)
+            backpackSlots.setText("" + itemNumber + "/" + backpackSlotNumber);
+        else
+            backpackSlots.setText("?/?");
 
         //Reveal all the info and remove the progress bar.
         findViewById(R.id.scroll_view).setVisibility(View.VISIBLE);
@@ -423,6 +437,20 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         this.backpackSlotNumber = backpackSlots;
         this.itemNumber = itemNumber;
         backpackFetching = false;
+        if (!userFetching){
+            updateUI();
+        }
+    }
+
+    @Override
+    public void onPrivateBackpack() {
+        rawKeys = -1;
+        rawMetal = -1;
+        backpackSlotNumber = -1;
+        itemNumber = -1;
+        backpackValue = -1;
+        backpackFetching = false;
+        privateBackpack = true;
         if (!userFetching){
             updateUI();
         }
