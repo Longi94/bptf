@@ -55,7 +55,7 @@
     <string name="pref_notification_title">backpack.tf Notifications</string>
     <string name="pref_notification_interval">pref_notification_interval</string>
     <string name="pref_notification_interval_title">Check for notifications</string>
-    <string name="pref_steam_id_hint">64bit SteamID or vanity name</string>
+    <string name="pref_steam_id_hint">Steam ID</string>
     <string name="pref_last_price_list_update">pref_last_price_list_update</string>
     <string name="pref_last_user_data_update">pref_last_user_data_update</string>
     <string name="pref_resolved_steam_id">pref_resolved_steam_id</string>

@@ -70,8 +70,10 @@ public class SearchCursorAdapter extends CursorAdapter {
             case VIEW_TYPE_PRICE:
                 ViewHolder viewHolder = (ViewHolder) view.getTag();
 
+                int quality = cursor.getInt(SearchFragment.COL_PRICE_LIST_QUAL);
+
                 viewHolder.background.setBackgroundDrawable(Utility.getItemBackground(context,
-                        cursor.getInt(SearchFragment.COL_PRICE_LIST_QUAL),
+                        quality,
                         cursor.getInt(SearchFragment.COL_PRICE_LIST_TRAD),
                         cursor.getInt(SearchFragment.COL_PRICE_LIST_CRAF)));
 
@@ -79,16 +81,16 @@ public class SearchCursorAdapter extends CursorAdapter {
                         cursor.getString(SearchFragment.COL_PRICE_LIST_NAME),
                         cursor.getInt(SearchFragment.COL_PRICE_LIST_TRAD),
                         cursor.getInt(SearchFragment.COL_PRICE_LIST_CRAF),
-                        cursor.getInt(SearchFragment.COL_PRICE_LIST_QUAL),
+                        quality,
                         cursor.getInt(SearchFragment.COL_PRICE_LIST_INDE)));
 
                 if (cursor.getInt(SearchFragment.COL_PRICE_LIST_INDE) == 0) {
                     setIconImage(context, viewHolder.icon, cursor.getInt(SearchFragment.COL_PRICE_LIST_DEFI),
                             viewHolder.nameView.getText().toString().contains("Australium"));
-                } else if (!cursor.getString(SearchFragment.COL_PRICE_LIST_NAME).contains("Crate")) {
+                } else {
                     setIconImageWithIndex(context, viewHolder.icon, cursor.getInt(SearchFragment.COL_PRICE_LIST_DEFI),
                             cursor.getInt(SearchFragment.COL_PRICE_LIST_INDE),
-                            viewHolder.nameView.getText().toString().contains("Australium"));
+                            viewHolder.nameView.getText().toString().contains("Australium"), quality);
                 }
 
                 try {
@@ -163,7 +165,7 @@ public class SearchCursorAdapter extends CursorAdapter {
         }
     }
 
-    private void setIconImageWithIndex(Context context, ImageView icon, int defindex, int priceIndex, boolean isAustralium) {
+    private void setIconImageWithIndex(Context context, ImageView icon, int defindex, int priceIndex, boolean isAustralium, int quality) {
         try {
             InputStream ims;
             AssetManager assetManager = context.getAssets();
@@ -176,10 +178,14 @@ public class SearchCursorAdapter extends CursorAdapter {
             // load image as Drawable
             Drawable iconDrawable = Drawable.createFromStream(ims, null);
 
-            ims = assetManager.open("effects/" + priceIndex + "_188x188.png");
-            Drawable effectDrawable = Drawable.createFromStream(ims, null);
-            // set image to ImageView
-            icon.setImageDrawable(new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable}));
+            if (quality == 5 || quality == 7 || quality == 9) {
+                ims = assetManager.open("effects/" + priceIndex + "_188x188.png");
+                Drawable effectDrawable = Drawable.createFromStream(ims, null);
+                // set image to ImageView
+                icon.setImageDrawable(new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable}));
+            } else {
+                icon.setImageDrawable(iconDrawable);
+            }
         } catch (IOException e) {
             Toast.makeText(context, "bptf: " + e.getMessage(), Toast.LENGTH_LONG).show();
             if (Utility.isDebugging(context))
