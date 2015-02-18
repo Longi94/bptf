@@ -30,7 +30,9 @@ ADDED from AndroidManifest.xml:9:5
 MERGED from com.android.support:appcompat-v7:21.0.3:16:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
-MERGED from com.android.support:cardview-v7:21.0.2:16:5
+MERGED from com.android.support:cardview-v7:21.0.3:16:5
+MERGED from com.android.support:recyclerview-v7:21.0.3:17:5
+MERGED from com.android.support:support-v4:21.0.3:16:5
 	android:label
 		ADDED from AndroidManifest.xml:12:9
 	android:allowBackup
@@ -137,7 +139,7 @@ ADDED from AndroidManifest.xml:73:9
 		ADDED from AndroidManifest.xml:76:13
 	android:name
 		ADDED from AndroidManifest.xml:74:13
-activity#com.tlongdev.bktf.AboutActivity
+activity#com.tlongdev.bktf.UserInfoActivity
 ADDED from AndroidManifest.xml:79:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:83:13
@@ -147,25 +149,81 @@ ADDED from AndroidManifest.xml:79:9
 		ADDED from AndroidManifest.xml:82:13
 	android:name
 		ADDED from AndroidManifest.xml:80:13
-activity#com.tlongdev.bktf.UserInfoActivity
+activity#com.tlongdev.bktf.ItemChooserActivity
 ADDED from AndroidManifest.xml:88:9
 	android:screenOrientation
-		ADDED from AndroidManifest.xml:92:13
+		ADDED from AndroidManifest.xml:93:13
 	android:label
-		ADDED from AndroidManifest.xml:90:13
-	android:parentActivityName
 		ADDED from AndroidManifest.xml:91:13
+	android:parentActivityName
+		ADDED from AndroidManifest.xml:92:13
+	android:excludeFromRecents
+		ADDED from AndroidManifest.xml:90:13
+	android:theme
+		ADDED from AndroidManifest.xml:94:13
 	android:name
 		ADDED from AndroidManifest.xml:89:13
+activity#com.tlongdev.bktf.CreditsActivity
+ADDED from AndroidManifest.xml:99:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:104:13
+	android:label
+		ADDED from AndroidManifest.xml:102:13
+	android:parentActivityName
+		ADDED from AndroidManifest.xml:103:13
+	android:excludeFromRecents
+		ADDED from AndroidManifest.xml:101:13
+	android:theme
+		ADDED from AndroidManifest.xml:105:13
+	android:name
+		ADDED from AndroidManifest.xml:100:13
+provider#com.tlongdev.bktf.data.UserBackpackProvider
+ADDED from AndroidManifest.xml:111:9
+	android:authorities
+		ADDED from AndroidManifest.xml:113:13
+	android:enabled
+		ADDED from AndroidManifest.xml:114:13
+	android:exported
+		ADDED from AndroidManifest.xml:115:13
+	android:name
+		ADDED from AndroidManifest.xml:112:13
+activity#com.tlongdev.bktf.UserBackpackActivity
+ADDED from AndroidManifest.xml:118:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:121:13
+	android:label
+		ADDED from AndroidManifest.xml:120:13
+	android:name
+		ADDED from AndroidManifest.xml:119:13
+activity#com.tlongdev.bktf.ItemDetailActivity
+ADDED from AndroidManifest.xml:122:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:127:13
+	android:label
+		ADDED from AndroidManifest.xml:124:13
+	android:parentActivityName
+		ADDED from AndroidManifest.xml:125:13
+	android:theme
+		ADDED from AndroidManifest.xml:126:13
+	android:name
+		ADDED from AndroidManifest.xml:123:13
 uses-sdk
 INJECTED from AndroidManifest.xml:0:0 reason: use-sdk injection requested
 MERGED from com.android.support:appcompat-v7:21.0.3:15:5
 MERGED from com.android.support:support-v4:21.0.3:15:5
 MERGED from com.android.support:support-v4:21.0.3:15:5
-MERGED from com.android.support:cardview-v7:21.0.2:15:5
+MERGED from com.android.support:cardview-v7:21.0.3:15:5
+MERGED from com.android.support:recyclerview-v7:21.0.3:15:5
+MERGED from com.android.support:support-v4:21.0.3:15:5
 	android:targetSdkVersion
 		INJECTED from AndroidManifest.xml:0:0
 		INJECTED from AndroidManifest.xml:0:0
 	android:minSdkVersion
 		INJECTED from AndroidManifest.xml:0:0
 		INJECTED from AndroidManifest.xml:0:0
+activity#android.support.v7.widget.TestActivity
+ADDED from com.android.support:recyclerview-v7:21.0.3:18:9
+	android:label
+		ADDED from com.android.support:recyclerview-v7:21.0.3:18:19
+	android:name
+		ADDED from com.android.support:recyclerview-v7:21.0.3:18:60

@@ -284,12 +284,18 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                 }
 
                 Drawable iconDrawable = Drawable.createFromStream(ims, null);
-                if (params[4] != 0 && (params[1] == 5 || params[1] == 7 || params[1] == 9)) {
+                if (params[4] != 0 && Utility.canHaveEffects(params[0], params[1])) {
                     ims = assetManager.open("effects/" + params[4] + "_188x188.png");
                     Drawable effectDrawable = Drawable.createFromStream(ims, null);
                     d = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
                 } else {
                     d = iconDrawable;
+                }
+
+                if (Utility.isPaint(params[5])){
+                    ims = assetManager.open("paint/" + params[5] + ".png");
+                    Drawable paintDrawable = Drawable.createFromStream(ims, null);
+                    d = new LayerDrawable(new Drawable[]{d, paintDrawable});
                 }
                 drawables[0] = d;
 
@@ -302,13 +308,13 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
 
             drawables[1] = Utility.getItemBackground(mContext, params[1], params[2], params[3]);
 
-            if (params[5] != 0){
+            /*if (params[5] != 0){
                 int dotId = Utility.getPaintDrawableId(params[5]);
                 if (dotId != 0)
                     drawables[2] = mContext.getResources().getDrawable(dotId);
             } else {
                 drawables[2] = null;
-            }
+            }*/
 
             return drawables;
         }

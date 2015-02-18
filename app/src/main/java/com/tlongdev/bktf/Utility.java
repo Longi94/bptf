@@ -719,39 +719,48 @@ public class Utility {
         }
     }
 
-    public static int getPaintDrawableId(int index){
+    public static boolean isPaint(int index){
         switch (index){
-            case 7511618: return R.drawable.paint_indicator_green;
-            case 4345659: return R.drawable.paint_indicator_greed;
-            case 5322826: return R.drawable.paint_indicator_violet;
-            case 14204632: return R.drawable.paint_indicator_216;
-            case 8208497: return R.drawable.paint_indicator_purple;
-            case 13595446: return R.drawable.paint_indicator_orange;
-            case 10843461: return R.drawable.paint_indicator_braun;
-            case 12955537: return R.drawable.paint_indicator_drab;
-            case 6901050: return R.drawable.paint_indicator_brown;
-            case 8154199: return R.drawable.paint_indicator_rustic;
-            case 15185211: return R.drawable.paint_indicator_gold;
-            case 8289918: return R.drawable.paint_indicator_grey;
-            case 15132390: return R.drawable.paint_indicator_white;
-            case 1315860: return R.drawable.paint_indicator_black;
-            case 16738740: return R.drawable.paint_indicator_pink;
-            case 3100495: return R.drawable.paint_indicator_slate;
-            case 8421376: return R.drawable.paint_indicator_olive;
-            case 3329330: return R.drawable.paint_indicator_lime;
-            case 15787660: return R.drawable.paint_indicator_pants;
-            case 15308410: return R.drawable.paint_indicator_salmon;
-            case 12073019: return R.drawable.paint_indicator_team;
-            case 4732984: return R.drawable.paint_indicator_overalls;
-            case 11049612: return R.drawable.paint_indicator_coat;
-            case 3874595: return R.drawable.paint_indicator_balaclavas;
-            case 6637376: return R.drawable.paint_indicator_debonair;
-            case 8400928: return R.drawable.paint_indicator_teamwork;
-            case 12807213: return R.drawable.paint_indicator_cream;
-            case 2960676: return R.drawable.paint_indicator_eight;
-            case 12377523: return R.drawable.paint_indicator_mint;
-            default: return 0;
+            case 7511618: return true;
+            case 4345659: return true;
+            case 5322826: return true;
+            case 14204632: return true;
+            case 8208497: return true;
+            case 13595446: return true;
+            case 10843461: return true;
+            case 12955537: return true;
+            case 6901050: return true;
+            case 8154199: return true;
+            case 15185211: return true;
+            case 8289918: return true;
+            case 15132390: return true;
+            case 1315860: return true;
+            case 16738740: return true;
+            case 3100495: return true;
+            case 8421376: return true;
+            case 3329330: return true;
+            case 15787660: return true;
+            case 15308410: return true;
+            case 12073019: return true;
+            case 4732984: return true;
+            case 11049612: return true;
+            case 3874595: return true;
+            case 6637376: return true;
+            case 8400928: return true;
+            case 12807213: return true;
+            case 2960676: return true;
+            case 12377523: return true;
+            default: return false;
         }
+    }
+
+    public static boolean canHaveEffects(int defindex, int quality){
+        if (quality == 5 || quality == 7 || quality == 9) {
+            return defindex != 267 && defindex != 266;
+        } else if (defindex == 1899 || defindex == 125){
+            return true;
+        }
+        return false;
     }
 
     public static class IntegerPair{
