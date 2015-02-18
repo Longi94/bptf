@@ -246,10 +246,9 @@ public class ItemDetailActivity extends Activity {
             if (paintNumber != 0){
                 paint.setText("Paint: " + Utility.getPaintName(paintNumber));
                 paint.setVisibility(View.VISIBLE);
-                icon.setImageDrawable(getResources().getDrawable(Utility.getPaintDrawableId(paintNumber)));
             }
 
-            setIconImage(this, icon, defindex, priceIndex, quality, itemCursor.getInt(COL_BACKPACK_AUS) == 1);
+            setIconImage(this, icon, defindex, priceIndex, quality, paintNumber, itemCursor.getInt(COL_BACKPACK_AUS) == 1);
             background.setBackgroundDrawable(Utility.getItemBackground(this,
                     quality, tradable, craftable));
         } else {
@@ -289,7 +288,7 @@ public class ItemDetailActivity extends Activity {
         priceCursor.close();
     }
 
-    private void setIconImage(Context context, ImageView icon, int defindex, int index, int quality, boolean isAustralium) {
+    private void setIconImage(Context context, ImageView icon, int defindex, int index, int quality, int paint, boolean isAustralium) {
         try {
             InputStream ims;
             AssetManager assetManager = context.getAssets();
@@ -302,15 +301,21 @@ public class ItemDetailActivity extends Activity {
             }
 
             Drawable iconDrawable = Drawable.createFromStream(ims, null);
-            if (index != 0 && (quality == 5 || quality == 7 || quality == 9)) {
+            if (index != 0 && Utility.canHaveEffects(defindex, quality)) {
                 ims = assetManager.open("effects/" + index + "_188x188.png");
                 Drawable effectDrawable = Drawable.createFromStream(ims, null);
                 d = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
             } else {
                 d = iconDrawable;
             }
+
+            if (Utility.isPaint(paint)){
+                ims = assetManager.open("paint/" + paint + ".png");
+                Drawable paintDrawable = Drawable.createFromStream(ims, null);
+                d = new LayerDrawable(new Drawable[]{d, paintDrawable});
+            }
             // set image to ImageView
-            icon.setBackgroundDrawable(d);
+            icon.setImageDrawable(d);
         } catch (IOException e) {
             Toast.makeText(context, "bptf: " + e.getMessage(), Toast.LENGTH_LONG).show();
             if (Utility.isDebugging(context))

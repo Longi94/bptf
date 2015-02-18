@@ -178,7 +178,7 @@ public class SearchCursorAdapter extends CursorAdapter {
             // load image as Drawable
             Drawable iconDrawable = Drawable.createFromStream(ims, null);
 
-            if (quality == 5 || quality == 7 || quality == 9) {
+            if (Utility.canHaveEffects(defindex, quality)) {
                 ims = assetManager.open("effects/" + priceIndex + "_188x188.png");
                 Drawable effectDrawable = Drawable.createFromStream(ims, null);
                 // set image to ImageView
