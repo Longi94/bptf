@@ -139,10 +139,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tlongdev.bktf.MainActivity" />
         </activity>
-        <activity
-            android:name=".SteamLoginActivity"
-            android:label="@string/title_activity_steam_login" >
-        </activity>
     </application>
 
 </manifest>
