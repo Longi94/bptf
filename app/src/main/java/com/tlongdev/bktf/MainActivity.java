@@ -78,7 +78,7 @@ public class MainActivity extends ActionBarActivity
             startService(new Intent(this, UpdateDatabaseService.class));
         }
 
-        startActivity(new Intent(this, WelcomeActivity.class));
+        //startActivity(new Intent(this, WelcomeActivity.class));
     }
 
     @Override

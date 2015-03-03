@@ -129,6 +129,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tlongdev.bktf.UserBackpackActivity" />
         </activity>
+
         <activity
             android:name=".WelcomeActivity"
             android:label="@string/title_activity_welcome"
@@ -139,6 +140,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tlongdev.bktf.MainActivity" />
         </activity>
+
     </application>
 
 </manifest>

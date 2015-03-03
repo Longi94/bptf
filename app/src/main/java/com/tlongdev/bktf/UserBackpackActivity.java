@@ -14,9 +14,12 @@ import android.view.MenuItem;
 import com.tlongdev.bktf.adapter.BackpackSectionHeaderAdapter;
 import com.tlongdev.bktf.data.UserBackpackContract;
 
-
+/**
+ * Activity for viewing user backpacks.
+ */
 public class UserBackpackActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
+    //Loader types
     public static final int LOADER_NORMAL = 0;
     public static final int LOADER_NEW = 1;
 

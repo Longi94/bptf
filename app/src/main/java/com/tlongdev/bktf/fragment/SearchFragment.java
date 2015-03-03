@@ -121,10 +121,10 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
             if (query.length() > 0)
                 selectionArgs = new String[] {"%" + query + "%"};
             else
-                selectionArgs = new String[] {"%" + "there is no such itme like thisasd" + "%"};
+                selectionArgs = new String[] {"there is no such itme like thisasd"};
         }
         else {
-            selectionArgs = new String[] {"%" + "there is no such itme like thisasd" + "%"};
+            selectionArgs = new String[] {"there is no such itme like thisasd"};
         }
         if (Utility.isDebugging(getActivity())){
             Log.d(LOG_TAG, "selection: " + sNameSearch + ", arguments: " + Arrays.toString(selectionArgs));
