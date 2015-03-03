@@ -59,4 +59,5 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.3'
     compile 'com.android.support:cardview-v7:21.0.3'
     compile 'com.android.support:recyclerview-v7:21.0.3'
+    compile 'com.google.oauth-client:google-oauth-client:1.19.0'
 }
