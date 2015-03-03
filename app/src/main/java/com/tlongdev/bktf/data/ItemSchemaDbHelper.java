@@ -60,7 +60,7 @@ public class ItemSchemaDbHelper extends SQLiteOpenHelper {
     public void openDatabase() throws SQLException {
         //Open the database
         String path =mContext.getApplicationInfo().dataDir + "/databases/" + DATABASE_NAME;
-        mDatabase = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY);
+        mDatabase = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.NO_LOCALIZED_COLLATORS);
     }
 
     private void copyDatabase() throws IOException {
