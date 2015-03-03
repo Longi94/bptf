@@ -102,5 +102,6 @@
     <string name="pref_user_raw_key">pref_user_raw_key</string>
     <string name="pref_user_raw_metal">pref_user_raw_metal</string>
     <string name="title_activity_item_detail">ItemDetailActivity</string>
+    <string name="title_activity_welcome">WelcomeActivity</string>
 
 </resources>

@@ -77,6 +77,8 @@ public class MainActivity extends ActionBarActivity
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_background_sync), false)){
             startService(new Intent(this, UpdateDatabaseService.class));
         }
+
+        startActivity(new Intent(this, WelcomeActivity.class));
     }
 
     @Override

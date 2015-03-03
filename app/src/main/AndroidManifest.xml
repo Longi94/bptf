@@ -123,11 +123,21 @@
             android:name=".ItemDetailActivity"
             android:label="@string/title_activity_item_detail"
             android:parentActivityName=".UserBackpackActivity"
-            android:theme="@style/AppTheme.Transparent"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Transparent" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tlongdev.bktf.UserBackpackActivity" />
+        </activity>
+        <activity
+            android:name=".WelcomeActivity"
+            android:label="@string/title_activity_welcome"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tlongdev.bktf.MainActivity" />
         </activity>
     </application>
 
