@@ -103,5 +103,6 @@
     <string name="pref_user_raw_metal">pref_user_raw_metal</string>
     <string name="title_activity_item_detail">ItemDetailActivity</string>
     <string name="title_activity_welcome">WelcomeActivity</string>
+    <string name="title_activity_steam_login">SteamLoginActivity</string>
 
 </resources>

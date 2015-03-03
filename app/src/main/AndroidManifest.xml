@@ -134,10 +134,14 @@
             android:label="@string/title_activity_welcome"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tlongdev.bktf.MainActivity" />
+        </activity>
+        <activity
+            android:name=".SteamLoginActivity"
+            android:label="@string/title_activity_steam_login" >
         </activity>
     </application>
 
