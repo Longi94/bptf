@@ -195,12 +195,14 @@ public class ItemDetailActivity extends Activity {
         int tradable;
         int craftable;
         int quality;
+        int isAus;
         if (itemCursor.moveToFirst()){
             defindex = itemCursor.getInt(COL_BACKPACK_DEFI);
             priceIndex = itemCursor.getInt(COL_BACKPACK_INDE);
             tradable = Math.abs(itemCursor.getInt(COL_BACKPACK_TRAD) - 1);
             craftable = Math.abs(itemCursor.getInt(COL_BACKPACK_CRAF) - 1);
             quality = itemCursor.getInt(COL_BACKPACK_QUAL);
+            isAus = itemCursor.getInt(COL_BACKPACK_AUS);
 
             String customName = itemCursor.getString(COL_BACKPACK_CUSTOM_NAME);
             String customDescription = itemCursor.getString(COL_BACKPACK_CUSTOM_DESC);
@@ -248,7 +250,7 @@ public class ItemDetailActivity extends Activity {
                 paint.setVisibility(View.VISIBLE);
             }
 
-            setIconImage(this, icon, defindex, priceIndex, quality, paintNumber, itemCursor.getInt(COL_BACKPACK_AUS) == 1);
+            setIconImage(this, icon, defindex, priceIndex, quality, paintNumber, isAus == 1);
             background.setBackgroundDrawable(Utility.getItemBackground(this,
                     quality, tradable, craftable));
         } else {
@@ -257,18 +259,26 @@ public class ItemDetailActivity extends Activity {
 
         uri = PriceEntry.CONTENT_URI;
         columns = QUERY_COLUMNS_PRICE;
+        String ausCondition;
+        if (isAus == 1) {
+            ausCondition = PriceEntry.COLUMN_ITEM_NAME + " LIKE ?";
+        } else {
+            ausCondition = PriceEntry.COLUMN_ITEM_NAME + " NOT LIKE ?";
+        }
+
         selection = PriceEntry.TABLE_NAME + "." +
                 PriceEntry.COLUMN_DEFINDEX + " = ? AND " +
                 PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
                 PriceEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
                 PriceEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
-                PriceEntry.COLUMN_PRICE_INDEX + " = ?";
+                PriceEntry.COLUMN_PRICE_INDEX + " = ? AND " +
+                ausCondition;
 
         Cursor priceCursor = getContentResolver().query(
                 uri,
                 columns,
                 selection,
-                new String[]{"" + defindex, "" + quality, "" + tradable, "" + craftable, "" + priceIndex},
+                new String[]{"" + defindex, "" + quality, "" + tradable, "" + craftable, "" + priceIndex, "%australium%"},
                 null
         );
 
