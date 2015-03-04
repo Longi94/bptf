@@ -260,7 +260,7 @@ public class ItemDetailActivity extends Activity {
         uri = PriceEntry.CONTENT_URI;
         columns = QUERY_COLUMNS_PRICE;
         String ausCondition;
-        if (isAus == 1) {
+        if (isAus == 1 || defindex == 5037) {
             ausCondition = PriceEntry.COLUMN_ITEM_NAME + " LIKE ?";
         } else {
             ausCondition = PriceEntry.COLUMN_ITEM_NAME + " NOT LIKE ?";
