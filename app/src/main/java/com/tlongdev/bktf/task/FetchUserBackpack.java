@@ -276,6 +276,17 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
                 break;
         }
 
+        //Check if the defindex is of a duplicate defindex to provide the proper price for it.
+        if (defindex >= 190 && defindex <= 199) {
+            defindex -= 190;
+        } else if (defindex >= 200 && defindex <= 209) {
+            defindex -= 187;
+        } else if (defindex == 210) {
+            defindex -= 186;
+        } else if (defindex == 211 || defindex == 212) {
+            defindex -= 182;
+        }
+
         values.put(UserBackpackEntry.COLUMN_UNIQUE_ID, item.getLong(OWM_UNIQUE_ID));
         values.put(UserBackpackEntry.COLUMN_ORIGINAL_ID, item.getLong(OWM_ORIGINAL_ID));
         values.put(UserBackpackEntry.COLUMN_DEFINDEX, defindex);
