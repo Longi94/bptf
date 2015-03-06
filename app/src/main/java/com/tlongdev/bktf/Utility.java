@@ -779,6 +779,10 @@ public class Utility {
             defindex -= 186;
         } else if (defindex == 211 || defindex == 212) {
             defindex -= 182;
+        } else if (defindex == 736) { //duplicate sapper
+            defindex = 735;
+        } else if (defindex == 737) { //duplicate construction pda
+            defindex = 25;
         }
 
         return defindex;
