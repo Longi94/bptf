@@ -763,6 +763,27 @@ public class Utility {
         return false;
     }
 
+    public static int fixDefindex(int defindex) {
+        //Check if the defindex is of a duplicate defindex to provide the proper price for it.
+        if (defindex >= 9 && defindex <= 12) { //duplicate shotguns
+            defindex = 9;
+        } else if (defindex == 23) {//duplicate pistol
+            defindex = 22;
+        } else if (defindex == 28) {//duplicate destruction tool
+            defindex = 26;
+        } else if (defindex >= 190 && defindex <= 199) { //duplicate stock weapons
+            defindex -= 190;
+        } else if (defindex >= 200 && defindex <= 209) {
+            defindex -= 187;
+        } else if (defindex == 210) {
+            defindex -= 186;
+        } else if (defindex == 211 || defindex == 212) {
+            defindex -= 182;
+        }
+
+        return defindex;
+    }
+
     public static class IntegerPair{
         int x;
         int y;

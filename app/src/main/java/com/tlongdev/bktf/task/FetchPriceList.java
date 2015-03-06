@@ -495,6 +495,8 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
         else
             itemCraftable = 0;
 
+        defindex = Utility.fixDefindex(defindex);
+
         ContentValues itemValues = new ContentValues();
 
         itemValues.put(PriceEntry.COLUMN_DEFINDEX, defindex);
