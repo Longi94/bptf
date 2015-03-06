@@ -783,6 +783,11 @@ public class Utility {
             defindex = 735;
         } else if (defindex == 737) { //duplicate construction pda
             defindex = 25;
+        } else if (defindex == 5041 || defindex == 5045) { //duplicate crates
+            defindex = 5022;
+        } else if (defindex == 5735 || defindex == 5742 //duplicate munitions
+                || defindex == 5752 || defindex == 5781 || defindex == 5802) {
+            defindex = 5734;
         }
 
         return defindex;
