@@ -9,7 +9,7 @@ import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
 
 public class PriceListDbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "pricelist.db";
 
     public PriceListDbHelper(Context context) {
