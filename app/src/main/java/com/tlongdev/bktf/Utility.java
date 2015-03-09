@@ -765,7 +765,7 @@ public class Utility {
 
     public static int fixDefindex(int defindex) {
         //Check if the defindex is of a duplicate defindex to provide the proper price for it.
-        if (defindex >= 9 && defindex <= 12) { //duplicate shotguns
+        /*if (defindex >= 9 && defindex <= 12) { //duplicate shotguns
             defindex = 9;
         } else if (defindex == 23) {//duplicate pistol
             defindex = 22;
@@ -788,6 +788,86 @@ public class Utility {
         } else if (defindex == 5735 || defindex == 5742 //duplicate munitions
                 || defindex == 5752 || defindex == 5781 || defindex == 5802) {
             defindex = 5734;
+        }*/
+        switch (defindex){
+            case 9: case 10: case 11: case 12: //duplicate shotguns
+                defindex = 9;
+                break;
+            case 23: //duplicate pistol
+                defindex = 22;
+                break;
+            case 28: //duplicate destruction tool
+                defindex = 26;
+                break;
+            case 190: case 191: case 192: case 193: case 194: //duplicate stock weapons
+            case 195: case 196: case 197: case 198: case 199:
+                defindex -= 190;
+                break;
+            case 200: case 201: case 202: case 203: case 204: //duplicate stock weapons
+            case 205: case 206: case 207: case 208: case 209:
+                defindex -= 187;
+                break;
+            case 210:
+                defindex -= 186;
+                break;
+            case 211: case 212:
+                defindex -= 182;
+                break;
+            case 736: //duplicate sapper
+                defindex = 735;
+                break;
+            case 737: //duplicate construction pda
+                defindex = 25;
+                break;
+            case 5041: case 5045: //duplicate crates
+                defindex = 5022;
+                break;
+            case 5735: case 5742: case 5752: case 5781: case 5802: //duplicate munitions
+                defindex = 5734;
+                break;
+        }
+
+        return defindex;
+    }
+
+    public static int getIconIndex(int defindex) {
+        //Check if the defindex is of a duplicate defindex to provide the proper price for it.
+        switch (defindex){
+            case 9: case 10: case 11: case 12: //duplicate shotguns
+                defindex = 9;
+                break;
+            case 23: //duplicate pistol
+                defindex = 22;
+                break;
+            case 28: //duplicate destruction tool
+                defindex = 26;
+                break;
+            case 190: case 191: case 192: case 193: case 194: //duplicate stock weapons
+            case 195: case 196: case 197: case 198: case 199:
+                defindex -= 190;
+                break;
+            case 200: case 201: case 202: case 203: case 204: //duplicate stock weapons
+            case 205: case 206: case 207: case 208: case 209:
+                defindex -= 187;
+                break;
+            case 210:
+                defindex -= 186;
+                break;
+            case 211: case 212:
+                defindex -= 182;
+                break;
+            case 736: //duplicate sapper
+                defindex = 735;
+                break;
+            case 737: //duplicate construction pda
+                defindex = 25;
+                break;
+            case 5041: case 5045: //duplicate crates
+                defindex = 5022;
+                break;
+            case 5735: case 5742: case 5752: case 5781: case 5802: //duplicate munitions
+                defindex = 5734;
+                break;
         }
 
         return defindex;
