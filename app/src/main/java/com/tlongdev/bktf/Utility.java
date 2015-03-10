@@ -842,6 +842,12 @@ public class Utility {
                 return 160;
             case 422: //companion cube pin
                 return 299;
+            case 681: case 682: case 683: case 684: //gold cup medal
+                return 680;
+            case 686: case 687: case 688: case 689: //silver cup medal
+                return 685;
+            case 691: case 692: case 693: case 694 case 695: case 696: case 697: case 698: //bronze cup medal
+                return 690;
             case 736: //duplicate sapper
                 return 735;
             case 737: //duplicate construction pda
