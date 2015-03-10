@@ -791,86 +791,66 @@ public class Utility {
         }*/
         switch (defindex){
             case 9: case 10: case 11: case 12: //duplicate shotguns
-                defindex = 9;
-                break;
+                return 9;
             case 23: //duplicate pistol
-                defindex = 22;
-                break;
+                return  22;
             case 28: //duplicate destruction tool
-                defindex = 26;
-                break;
+                return 26;
             case 190: case 191: case 192: case 193: case 194: //duplicate stock weapons
             case 195: case 196: case 197: case 198: case 199:
-                defindex -= 190;
-                break;
+                return defindex - 190;
             case 200: case 201: case 202: case 203: case 204: //duplicate stock weapons
             case 205: case 206: case 207: case 208: case 209:
-                defindex -= 187;
-                break;
+                return defindex - 187;
             case 210:
-                defindex -= 186;
-                break;
+                return defindex - 186;
             case 211: case 212:
-                defindex -= 182;
-                break;
+                return defindex - 182;
             case 736: //duplicate sapper
-                defindex = 735;
-                break;
+                return 735;
             case 737: //duplicate construction pda
-                defindex = 25;
-                break;
+                return 25;
             case 5041: case 5045: //duplicate crates
-                defindex = 5022;
-                break;
+                return 5022;
             case 5735: case 5742: case 5752: case 5781: case 5802: //duplicate munitions
-                defindex = 5734;
-                break;
+                return 5734;
+            default:
+                return defindex;
         }
-
-        return defindex;
     }
 
     public static int getIconIndex(int defindex) {
         //Check if the defindex is of a duplicate defindex to provide the proper price for it.
         switch (defindex){
             case 9: case 10: case 11: case 12: //duplicate shotguns
-                defindex = 9;
-                break;
+                return 9;
             case 23: //duplicate pistol
-                defindex = 22;
-                break;
+                return  22;
             case 28: //duplicate destruction tool
-                defindex = 26;
-                break;
+                return 26;
             case 190: case 191: case 192: case 193: case 194: //duplicate stock weapons
             case 195: case 196: case 197: case 198: case 199:
-                defindex -= 190;
-                break;
+                return defindex - 190;
             case 200: case 201: case 202: case 203: case 204: //duplicate stock weapons
             case 205: case 206: case 207: case 208: case 209:
-                defindex -= 187;
-                break;
+                return defindex - 187;
             case 210:
-                defindex -= 186;
-                break;
+                return defindex - 186;
             case 211: case 212:
-                defindex -= 182;
-                break;
+                return defindex - 182;
             case 736: //duplicate sapper
-                defindex = 735;
-                break;
+                return 735;
             case 737: //duplicate construction pda
-                defindex = 25;
-                break;
+                return 25;
             case 5041: case 5045: //duplicate crates
-                defindex = 5022;
-                break;
+                return 5022;
             case 5735: case 5742: case 5752: case 5781: case 5802: //duplicate munitions
-                defindex = 5734;
-                break;
+                return 5734;
+            case 8223: //duplicate soldier medal
+                return 121;
+            default:
+                return defindex;
         }
-
-        return defindex;
     }
 
     public static class IntegerPair{
