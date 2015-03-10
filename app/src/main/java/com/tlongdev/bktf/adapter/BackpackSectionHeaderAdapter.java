@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tlongdev.bktf.ItemDetailActivity;
 import com.tlongdev.bktf.R;
@@ -260,8 +259,6 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
         private ImageView background;
         private Context mContext;
 
-        private String errorMessage;
-
         private ImageLoader(Context context, ImageView icon, ImageView background) {
             this.mContext = context;
             this.icon = icon;
@@ -300,29 +297,13 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                 drawables[0] = d;
 
             } catch (IOException e) {
-                errorMessage = e.getMessage();
-                publishProgress();
                 if (Utility.isDebugging(mContext))
                     e.printStackTrace();
             }
 
             drawables[1] = Utility.getItemBackground(mContext, params[1], params[2], params[3]);
 
-            /*if (params[5] != 0){
-                int dotId = Utility.getPaintDrawableId(params[5]);
-                if (dotId != 0)
-                    drawables[2] = mContext.getResources().getDrawable(dotId);
-            } else {
-                drawables[2] = null;
-            }*/
-
             return drawables;
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_LONG).show();
-
         }
 
         @Override

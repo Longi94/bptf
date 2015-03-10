@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
@@ -90,6 +89,7 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
                 if (Utility.isDebugging(mContext)) {
                     e.printStackTrace();
                 }
+                holder.icon.setImageDrawable(null);
             }
 
             holder.name.setText(Utility.formatItemName(cursor.getString(COL_PRICE_LIST_NAME),
@@ -130,7 +130,6 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
                             currency, false));
                 }
             } catch (Throwable throwable) {
-                Toast.makeText(mContext, "bptf: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
                 if (Utility.isDebugging(mContext))
                     throwable.printStackTrace();
             }
