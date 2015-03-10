@@ -964,8 +964,20 @@ public class Utility {
             case 8303: case 8304: case 8305: case 8306: case 8422: case 8423: case 8424:
             case 8425: case 8426: case 8427: case 8428: //etf2lry bottle cap
                 return 8193;
+            case 8213: case 8214: case 8215: //soldier medal
+                return 8212;
+            case 8217: case 8218: case 8219: case 8220: case 8221: case 8222: //soldier medal2
+                return 8216;
             case 8223: //duplicate soldier medal
                 return 121;
+            case 8236: //horseshoe medal 1st
+                return 8224;
+            case 8237: //horseshoe medal 2st
+                return 8225;
+            case 8238: //horseshoe medal 3st
+                return 8226;
+            case 8244: case 8245: case 8246: case 8247: //ready steady pan s2
+                return 8243;
             default: //don't change
                 return defindex;
         }
