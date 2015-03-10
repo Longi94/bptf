@@ -1024,6 +1024,22 @@ public class Utility {
                 return 8383;
             case 8394: //shooting star darkest metal
                 return 8387;
+            case 8433: case 8437: case 8441: //africa gold
+                return 8429;
+            case 8434: case 8438: case 8442: //africa silver
+                return 8430;
+            case 8435: case 8439: case 8443: //africa bronze
+                return 8431;
+            case 8436: case 8440: case 8444: //africa green
+                return 8432;
+            case 8446: case 8447: //tiger gold
+                return 8445;
+            case 8450: case 8451: //tiger silver
+                return 8449;
+            case 8452: case 8456: //snake black
+                return 8448;
+            case 8454: case 8455: //tiger gold
+                return 8453;
             default: //don't change
                 return defindex;
         }
