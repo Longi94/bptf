@@ -926,6 +926,27 @@ public class Utility {
             case 8077: case 8080: case 8083: case 8086: case 8089: case 8277: case 8309:
             case 8325: case 8399: //start medal bronze
                 return 8074;
+            case 8091: case 8092: case 8093: case 8094: case 8095: case 8096: case 8097:
+            case 8098: case 8099: case 8100: case 8101: case 8102: case 8103: case 8104:
+            case 8105: case 8106: case 8107: case 8108: case 8109: case 8110: case 8111:
+            case 8112: case 8113: case 8114: case 8115: case 8116: case 8117: case 8118:
+            case 8119: case 8120: case 8121: case 8122: case 8123: case 8124: case 8125:
+            case 8278: case 8279: case 8280: case 8281: case 8282: case 8283: case 8310:
+            case 8311: case 8312: case 8313: case 8314: case 8315: case 8326: case 8327:
+            case 8328: case 8329: case 8330: case 8331: case 8400: case 8401: case 8402:
+            case 8403: case 8404: //star medal participant
+                return 8090;
+            case 8127: case 8128: case 8129: case 8130: case 8131: case 8132: case 8133:
+            case 8134: case 8135: case 8136: case 8137: case 8138: case 8139: case 8140:
+            case 8141: case 8142: case 8143: case 8144: case 8145: case 8146: case 8147:
+            case 8148: case 8149: case 8150: case 8151: case 8152: case 8153: case 8154:
+            case 8155: case 8156: case 8157: case 8158: case 8159: case 8160: case 8161:
+            case 8162: case 8163: case 8164: case 8165: case 8166: case 8167: case 8284:
+            case 8285: case 8286: case 8287: case 8288: case 8289: case 8290: case 8316:
+            case 8317: case 8318: case 8319: case 8320: case 8321: case 8322: case 8332:
+            case 8333: case 8334: case 8335: case 8336: case 8337: case 8338: case 8406:
+            case 8407: case 8408: case 8409: case 8410: case 8411: case 8412: //star bottle cap
+                return 8126;
             case 8223: //duplicate soldier medal
                 return 121;
             default: //don't change
