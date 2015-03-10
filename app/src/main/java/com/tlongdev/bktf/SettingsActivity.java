@@ -106,6 +106,14 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
+        findPreference(getString(R.string.pref_changelog_title)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Longi94/bptf/wiki/Changelog")));
+                return true;
+            }
+        });
+
         //Set the version name to the summary, so I don't have to change it manually every goddamn
         //update
         findPreference(getString(R.string.pref_version_title)).setSummary(BuildConfig.VERSION_NAME);
