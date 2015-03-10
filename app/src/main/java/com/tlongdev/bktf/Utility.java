@@ -1040,6 +1040,42 @@ public class Utility {
                 return 8448;
             case 8454: case 8455: //tiger gold
                 return 8453;
+            case 8534: //tf2 medal gold
+                return 8502;
+            case 8535: //tf2 medal silver
+                return 8503;
+            case 8536: //tf2 medal bronze
+                return 8504;
+            case 8506: case 8507: case 8508: case 8509: case 8510: case 8537: case 8538:
+            case 8539: case 8540: case 8541: case 8542: //tf2 medal star
+                return 8505;
+            case 8512: case 8513: case 8514: case 8515: case 8516: case 8517: case 8543:
+            case 8544: case 8545: case 8546: case 8547: case 8548: case 8549: //tf2 medal participant
+                return 8511;
+            case 8550: //tf2 medal gold_
+                return 8518;
+            case 8551: //tf2 medal silver_
+                return 8519;
+            case 8552: //tf2 medal bronze_
+                return 8520;
+            case 8522: case 8523: case 8524: case 8525: case 8526: case 8553: case 8554:
+            case 8555: case 8556: case 8557: case 8558: //tf2 medal star_
+                return 8521;
+            case 8528: case 8529: case 8530: case 8531: case 8532: case 8533: case 8559:
+            case 8560: case 8561: case 8562: case 8563: case 8564: case 8565: //tf2 medal participant_
+                return 8527;
+            case 8568: case 8570: case 8572: //bear medal
+                return 8566;
+            case 8569: case 8571: case 8573: case 8574: //bear paw
+                return 8567;
+            case 8589: case 8593: case 8597: //esl like medal gold
+                return 8585;
+            case 8590: case 8594: case 8598: //esl like medal silver
+                return 8586;
+            case 8591: case 8595: case 8599: //esl like medal bronze
+                return 8587;
+            case 8592: case 8596: case 8600: //esl like badge grey
+                return 8588;
             default: //don't change
                 return defindex;
         }
