@@ -881,6 +881,16 @@ public class Utility {
                 return 5726;
             case 5735: case 5742: case 5752: case 5781: case 5802: //duplicate munitions
                 return 5734;
+            case 5738: //sombrero crate
+                return 5737;
+            case 5773: //halloween cauldron
+                return 5772;
+            case 8003: case 8006: //ugc medal
+                return 8000;
+            case 8004: case 8007: //ugc medal
+                return 8001;
+            case 8005: case 8008: //ugc medal
+                return 8002;
             case 8223: //duplicate soldier medal
                 return 121;
             default: //don't change
