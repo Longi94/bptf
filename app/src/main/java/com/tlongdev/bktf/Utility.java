@@ -899,6 +899,24 @@ public class Utility {
                 return 8011;
             case 8018: case 8021: //ugc medal
                 return 8015;
+            case 8019: case 8022: //ugc medal
+                return 8016;
+            case 8020: case 8023: //ugc medal
+                return 8017;
+            case 8031: case 8035: case 8039: case 8043: case 8047: case 8051: case 8055:
+            case 8058: case 8062: case 8066: //esl gold medal
+                return 8027;
+            case 8032: case 8036: case 8040: case 8044: case 8048: case 8052: case 8056:
+            case 8059: case 8063: case 8067: //esl silver medal
+                return 8028;
+            case 8033: case 8037: case 8041: case 8045: case 8049: case 8053: case 8057:
+            case 8064: case 8068: //esl bronze medal
+                return 8029;
+            case 8034: case 8038: case 8042: case 8046: case 8050: case 8054: case 8060:
+            case 8061: case 8065: case 8069: //esl platinum medal
+                return 8030;
+            case 8071: //ready steady pan s1 medal
+                return 8070;
             case 8223: //duplicate soldier medal
                 return 121;
             default: //don't change
