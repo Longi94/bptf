@@ -104,5 +104,6 @@
     <string name="title_activity_item_detail">ItemDetailActivity</string>
     <string name="title_activity_welcome">WelcomeActivity</string>
     <string name="title_activity_steam_login">SteamLoginActivity</string>
+    <string name="pref_changelog_title">Changelog</string>
 
 </resources>
