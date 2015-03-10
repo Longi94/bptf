@@ -84,7 +84,8 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
         if (cursor.moveToFirst()){
             try {
                 holder.icon.setImageDrawable(Drawable.createFromStream(
-                        mContext.getAssets().open("items/" + cursor.getInt(COL_PRICE_LIST_DEFI) + ".png"), null));
+                        mContext.getAssets().open("items/" + Utility.getIconIndex(cursor.getInt(COL_PRICE_LIST_DEFI))
+                                + ".png"), null));
             } catch (IOException e) {
                 if (Utility.isDebugging(mContext)) {
                     e.printStackTrace();
