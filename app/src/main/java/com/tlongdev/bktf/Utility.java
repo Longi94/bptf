@@ -841,10 +841,21 @@ public class Utility {
                 return 1070;
             case 2015: case 2049: case 2079: case 2123: case 2125: //map stamps packs
                 return 2007;
+            case 2035: case 2036: case 2037: case 2038: case 2039: //dr gorbort pack
+                return 2034;
+            case 2041: case 2045: case 2047: case 2048: //deus ex pack
+                return 2040;
+            case 2042: case 2095: //soldier pack
+                return 2019;
+            case 2043: case 2044: //more soldier packs
+                return 2042;
             case 2046: //shogun pack
                 return 2016;
             case 2070: //promo chicken hat
                 return 785;
+            case 2094: case 2096: case 2097: case 2098: case 2099:
+            case 2100: case 2101: case 2102: //class packs
+                return defindex - 76;
             case 2103: //Deus Ex arm
                 return 524;
             case 5041: case 5045: //duplicate crates
