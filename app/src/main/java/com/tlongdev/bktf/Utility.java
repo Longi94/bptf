@@ -838,16 +838,23 @@ public class Utility {
                 return defindex - 186;
             case 211: case 212:
                 return defindex - 182;
+            case 294: //lugermorph
+                return 160;
+            case 422: //companion cube pin
+                return 299;
             case 736: //duplicate sapper
                 return 735;
             case 737: //duplicate construction pda
                 return 25;
+            case 2103: //Deus Ex arm
+                return 524;
             case 5041: case 5045: //duplicate crates
                 return 5022;
             case 5735: case 5742: case 5752: case 5781: case 5802: //duplicate munitions
                 return 5734;
             case 8223: //duplicate soldier medal
                 return 121;
+
             default:
                 return defindex;
         }
