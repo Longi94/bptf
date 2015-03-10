@@ -837,6 +837,8 @@ public class Utility {
                 return defindex - 21;
             case 839: //gift bag
                 return 729;
+            case 850: //Minigun
+                return 15;
             case 1132: //spell magazine
                 return 1070;
             case 2015: case 2049: case 2079: case 2123: case 2125: //map stamps packs
@@ -1076,6 +1078,39 @@ public class Utility {
                 return 8587;
             case 8592: case 8596: case 8600: //esl like badge grey
                 return 8588;
+            case 8609: case 8613: case 8617: case 8621: case 8625: case 8629: //olympic medal gold
+                return 8605;
+            case 8610: case 8614: case 8618: case 8622: case 8626: case 8630: //olympic medal silver
+                return 8606;
+            case 8611: case 8615: case 8619: case 8623: case 8627: case 8631: //olympic medal bronze
+                return 8607;
+            case 8612: case 8616: case 8620: case 8624: case 8628: case 8632: //olympic medal participant
+                return 8608;
+            case 8638: case 8642: case 8646: //hexagon medal gold
+                return 8634;
+            case 8639: case 8643: case 8647: //hexagon medal silver
+                return 8635;
+            case 8640: case 8644: case 8648: //hexagon medal bronze
+                return 8636;
+            case 8641: case 8645: case 8649: //hexagon medal participant
+                return 8637;
+            case 8901: case 8902: case 8903: case 8904: //spell exorcism
+                return 8900;
+            case 8906: case 8907: case 8908: case 8909: case 8910: case 8911: case 8912:
+            case 8913: //spell voices
+                return 8905;
+            case 8915: case 8916: case 8917: case 8918: case 8919: case 8920://spell spectrum paint
+                return 8914;
+            case 8923: case 8924: //spell pumpkin projectiles
+                return 8922;
+            case 8936: //spell book page
+                return 8935;
+            case 20001: case 20005: case 20006: case 20007: case 20008: case 20009://chemistry sets
+                return 20000;
+            case 30144: case 30145: case 30146: case 30147: case 30149: case 30150:
+            case 30151: case 30152: case 30153: case 30154: case 30155: case 30156:
+            case 30157: case 30158: case 30159: case 30160: case 30161: //white circles
+                return 30143;
             default: //don't change
                 return defindex;
         }
