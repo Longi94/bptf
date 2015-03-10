@@ -278,9 +278,9 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                 Drawable d;
 
                 if (params[6] == 1) {
-                    ims = assetManager.open("items/" + params[0] + "aus.png");
+                    ims = assetManager.open("items/" + Utility.getIconIndex(params[0]) + "aus.png");
                 } else {
-                    ims = assetManager.open("items/" + params[0] + ".png");
+                    ims = assetManager.open("items/" + Utility.getIconIndex(params[0]) + ".png");
                 }
 
                 Drawable iconDrawable = Drawable.createFromStream(ims, null);

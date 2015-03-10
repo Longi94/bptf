@@ -130,9 +130,9 @@ public class PriceListCursorAdapter extends CursorAdapter {
 
                 InputStream ims;
                 if (name.contains("Australium") && params[0] != 5037) {
-                    ims = assetManager.open("items/" + params[0].intValue() + "aus.png");
+                    ims = assetManager.open("items/" + Utility.getIconIndex(params[0].intValue()) + "aus.png");
                 } else {
-                    ims = assetManager.open("items/" + params[0].intValue() + ".png");
+                    ims = assetManager.open("items/" + Utility.getIconIndex(params[0].intValue()) + ".png");
                 }
 
                 Drawable iconDrawable = Drawable.createFromStream(ims, null);

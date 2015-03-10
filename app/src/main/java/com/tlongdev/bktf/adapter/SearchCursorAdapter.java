@@ -149,9 +149,9 @@ public class SearchCursorAdapter extends CursorAdapter {
             InputStream ims;
             AssetManager assetManager = context.getAssets();
             if (isAustralium && defindex != 5037) {
-                ims = assetManager.open("items/" + defindex + "aus.png");
+                ims = assetManager.open("items/" + Utility.getIconIndex(defindex) + "aus.png");
             } else {
-                ims = assetManager.open("items/" + defindex + ".png");
+                ims = assetManager.open("items/" + Utility.getIconIndex(defindex) + ".png");
             }
 
             // load image as Drawable
@@ -170,9 +170,9 @@ public class SearchCursorAdapter extends CursorAdapter {
             InputStream ims;
             AssetManager assetManager = context.getAssets();
             if (isAustralium && defindex != 5037) {
-                ims = assetManager.open("items/" + defindex + "aus.png");
+                ims = assetManager.open("items/" + Utility.getIconIndex(defindex) + "aus.png");
             } else {
-                ims = assetManager.open("items/" + defindex + ".png");
+                ims = assetManager.open("items/" + Utility.getIconIndex(defindex) + ".png");
             }
 
             // load image as Drawable

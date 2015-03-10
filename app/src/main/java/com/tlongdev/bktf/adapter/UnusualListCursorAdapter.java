@@ -114,7 +114,7 @@ public class UnusualListCursorAdapter extends CursorAdapter {
         @Override
         protected Drawable doInBackground(Integer... params) {
             try {
-                InputStream ims = mContext.getAssets().open("items/" + params[0] + ".png");
+                InputStream ims = mContext.getAssets().open("items/" + Utility.getIconIndex(params[0]) + ".png");
                 return Drawable.createFromStream(ims, null);
             } catch (IOException e) {
                 errorMessage = e.getMessage();
