@@ -837,6 +837,12 @@ public class Utility {
                 return defindex - 21;
             case 839: //gift bag
                 return 729;
+            case 1132: //spell magazine
+                return 1070;
+            case 2015: case 2049: case 2079: case 2123: case 2125: //map stamps packs
+                return 2007;
+            case 2046: //shogun pack
+                return 2016;
             case 2070: //promo chicken hat
                 return 785;
             case 2103: //Deus Ex arm
@@ -849,8 +855,7 @@ public class Utility {
                 return 5734;
             case 8223: //duplicate soldier medal
                 return 121;
-
-            default:
+            default: //don't change
                 return defindex;
         }
     }
