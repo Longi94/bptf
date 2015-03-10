@@ -765,30 +765,6 @@ public class Utility {
 
     public static int fixDefindex(int defindex) {
         //Check if the defindex is of a duplicate defindex to provide the proper price for it.
-        /*if (defindex >= 9 && defindex <= 12) { //duplicate shotguns
-            defindex = 9;
-        } else if (defindex == 23) {//duplicate pistol
-            defindex = 22;
-        } else if (defindex == 28) {//duplicate destruction tool
-            defindex = 26;
-        } else if (defindex >= 190 && defindex <= 199) { //duplicate stock weapons
-            defindex -= 190;
-        } else if (defindex >= 200 && defindex <= 209) {
-            defindex -= 187;
-        } else if (defindex == 210) {
-            defindex -= 186;
-        } else if (defindex == 211 || defindex == 212) {
-            defindex -= 182;
-        } else if (defindex == 736) { //duplicate sapper
-            defindex = 735;
-        } else if (defindex == 737) { //duplicate construction pda
-            defindex = 25;
-        } else if (defindex == 5041 || defindex == 5045) { //duplicate crates
-            defindex = 5022;
-        } else if (defindex == 5735 || defindex == 5742 //duplicate munitions
-                || defindex == 5752 || defindex == 5781 || defindex == 5802) {
-            defindex = 5734;
-        }*/
         switch (defindex){
             case 9: case 10: case 11: case 12: //duplicate shotguns
                 return 9;
@@ -846,16 +822,22 @@ public class Utility {
                 return 680;
             case 686: case 687: case 688: case 689: //silver cup medal
                 return 685;
-            case 691: case 692: case 693: case 694 case 695: case 696: case 697: case 698: //bronze cup medal
+            case 691: case 692: case 693: case 694: case 695: case 696: case 697: case 698: //bronze cup medal
                 return 690;
             case 736: //duplicate sapper
                 return 735;
             case 737: //duplicate construction pda
                 return 25;
+            case 744: //pyrovision goggles
+                return 743;
+            case 839: //gift bag
+                return 729;
             case 2103: //Deus Ex arm
                 return 524;
             case 5041: case 5045: //duplicate crates
                 return 5022;
+            case 5074: //something special for someone special
+                return 699;
             case 5735: case 5742: case 5752: case 5781: case 5802: //duplicate munitions
                 return 5734;
             case 8223: //duplicate soldier medal
