@@ -978,6 +978,18 @@ public class Utility {
                 return 8226;
             case 8244: case 8245: case 8246: case 8247: //ready steady pan s2
                 return 8243;
+            case 8263: //wings medal first
+                return 8248;
+            case 8264: //wings medal second
+                return 8249;
+            case 8265: //wings medal third
+                return 8250;
+            case 8271: //ugc wings gold
+                return 8267;
+            case 8272: case 8274: //ugc wings silver
+                return 8268;
+            case 8273: //ugc wings bronze
+                return 8269;
             default: //don't change
                 return defindex;
         }
