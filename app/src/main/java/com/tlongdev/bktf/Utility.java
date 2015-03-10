@@ -891,6 +891,14 @@ public class Utility {
                 return 8001;
             case 8005: case 8008: //ugc medal
                 return 8002;
+            case 8012: //ugc medal
+                return 8009;
+            case 8013: //ugc medal
+                return 8010;
+            case 8014: //ugc medal
+                return 8011;
+            case 8018: case 8021: //ugc medal
+                return 8015;
             case 8223: //duplicate soldier medal
                 return 121;
             default: //don't change
