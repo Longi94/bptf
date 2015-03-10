@@ -918,13 +918,13 @@ public class Utility {
             case 8071: //ready steady pan s1 medal
                 return 8070;
             case 8075: case 8078: case 8081: case 8084: case 8087: case 8275: case 8307:
-            case 8323: case 8397: //star medal gold
+            case 8323: case 8397: //etf2l medal gold
                 return 8072;
             case 8076: case 8079: case 8082: case 8085: case 8088: case 8276: case 8308:
-            case 8324: case 8398: //star medal silver
+            case 8324: case 8398: //etf2l medal silver
                 return 8073;
             case 8077: case 8080: case 8083: case 8086: case 8089: case 8277: case 8309:
-            case 8325: case 8399: //start medal bronze
+            case 8325: case 8399: //etf2l medal bronze
                 return 8074;
             case 8091: case 8092: case 8093: case 8094: case 8095: case 8096: case 8097:
             case 8098: case 8099: case 8100: case 8101: case 8102: case 8103: case 8104:
@@ -934,7 +934,7 @@ public class Utility {
             case 8278: case 8279: case 8280: case 8281: case 8282: case 8283: case 8310:
             case 8311: case 8312: case 8313: case 8314: case 8315: case 8326: case 8327:
             case 8328: case 8329: case 8330: case 8331: case 8400: case 8401: case 8402:
-            case 8403: case 8404: //star medal participant
+            case 8403: case 8404: //etf2l medal participant
                 return 8090;
             case 8127: case 8128: case 8129: case 8130: case 8131: case 8132: case 8133:
             case 8134: case 8135: case 8136: case 8137: case 8138: case 8139: case 8140:
@@ -945,8 +945,25 @@ public class Utility {
             case 8285: case 8286: case 8287: case 8288: case 8289: case 8290: case 8316:
             case 8317: case 8318: case 8319: case 8320: case 8321: case 8322: case 8332:
             case 8333: case 8334: case 8335: case 8336: case 8337: case 8338: case 8406:
-            case 8407: case 8408: case 8409: case 8410: case 8411: case 8412: //star bottle cap
+            case 8407: case 8408: case 8409: case 8410: case 8411: case 8412: //etf2l bottle cap
                 return 8126;
+            case 8171: case 8174: case 8291: case 8413: //etf2lry medal gold
+                return 8168;
+            case 8172: case 8175: case 8292: case 8414: //etf2lry medal silver
+                return 8169;
+            case 8173: case 8176: case 8293: case 8415: //etf2lry medal bronze
+                return 8170;
+            case 8178: case 8179: case 8180: case 8181: case 8182: case 8183: case 8184:
+            case 8185: case 8186: case 8187: case 8188: case 8189: case 8190: case 8191:
+            case 8192: case 8294: case 8295: case 8296: case 8297: case 8298: case 8299:
+            case 8416: case 8417: case 8418: case 8419: case 8420: case 8421: //etf2lry medal participant
+                return 8177;
+            case 8194: case 8195: case 8196: case 8197: case 8198: case 8199: case 8200:
+            case 8201: case 8202: case 8203: case 8204: case 8205: case 8206: case 8207:
+            case 8208: case 8209: case 8210: case 8211: case 8300: case 8301: case 8302:
+            case 8303: case 8304: case 8305: case 8306: case 8422: case 8423: case 8424:
+            case 8425: case 8426: case 8427: case 8428: //etf2lry bottle cap
+                return 8193;
             case 8223: //duplicate soldier medal
                 return 121;
             default: //don't change
