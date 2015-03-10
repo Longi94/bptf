@@ -1,7 +1,9 @@
 package com.tlongdev.bktf.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -100,6 +102,19 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 ((MainActivity)getActivity()).startSettingsActivity();
+            }
+        });
+        rootView.findViewById(R.id.text_view_help).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Uri webPage = Uri.parse("https://github.com/Longi94/bptf/wiki/Help");
+
+                //Open link in the device default web browser
+                Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
+                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(intent);
+                }
             }
         });
         return rootView;

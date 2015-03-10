@@ -17,6 +17,29 @@
         android:dividerHeight="0dp"/>
 
     <LinearLayout
+        android:id="@+id/text_view_help"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:background="@drawable/simple_drawer_item_background" >
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_help_black_24dp"/>
+
+        <TextView
+            android:layout_marginLeft="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Help"
+            android:textColor="#000"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/text_view_settings"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/listPreferredItemHeightSmall"
@@ -37,5 +60,5 @@
             android:text="@string/action_settings"
             android:textColor="#000"/>
 
-        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

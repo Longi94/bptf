@@ -72,6 +72,10 @@
         </PreferenceScreen>
 
         <Preference
+            android:title="@string/pref_changelog_title"
+            android:key="@string/pref_changelog_title"/>
+
+        <Preference
             android:title="@string/pref_feedback_title"
             android:key="@string/pref_feedback_title"/>
 
