@@ -112,7 +112,6 @@ public class PriceListCursorAdapter extends CursorAdapter {
         private ImageView background;
         private ImageView change;
         private String name;
-        private String errorMessage;
 
         private LoadImagesTask(Context context, ImageView icon, ImageView background, ImageView change) {
             mContext = context;
@@ -163,18 +162,10 @@ public class PriceListCursorAdapter extends CursorAdapter {
 
                 return returnVal;
             } catch (IOException e) {
-                errorMessage = e.getMessage();
-                publishProgress();
                 if (Utility.isDebugging(mContext))
                     e.printStackTrace();
                 return null;
             }
-        }
-
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_LONG).show();
         }
 
         @Override
@@ -183,6 +174,10 @@ public class PriceListCursorAdapter extends CursorAdapter {
                 icon.setImageDrawable(drawable[0]);
                 background.setBackgroundDrawable(drawable[1]);
                 change.setImageDrawable(drawable[2]);
+            } else {
+                icon.setImageDrawable(null);
+                background.setBackgroundDrawable(null);
+                change.setImageDrawable(null);
             }
         }
     }

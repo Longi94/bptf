@@ -187,9 +187,9 @@ public class SearchCursorAdapter extends CursorAdapter {
                 icon.setImageDrawable(iconDrawable);
             }
         } catch (IOException e) {
-            Toast.makeText(context, "bptf: " + e.getMessage(), Toast.LENGTH_LONG).show();
             if (Utility.isDebugging(context))
                 e.printStackTrace();
+            icon.setImageDrawable(null);
         }
     }
 
