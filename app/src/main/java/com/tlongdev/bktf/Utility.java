@@ -917,6 +917,15 @@ public class Utility {
                 return 8030;
             case 8071: //ready steady pan s1 medal
                 return 8070;
+            case 8075: case 8078: case 8081: case 8084: case 8087: case 8275: case 8307:
+            case 8323: case 8397: //star medal gold
+                return 8072;
+            case 8076: case 8079: case 8082: case 8085: case 8088: case 8276: case 8308:
+            case 8324: case 8398: //star medal silver
+                return 8073;
+            case 8077: case 8080: case 8083: case 8086: case 8089: case 8277: case 8309:
+            case 8325: case 8399: //start medal bronze
+                return 8074;
             case 8223: //duplicate soldier medal
                 return 121;
             default: //don't change
