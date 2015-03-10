@@ -998,14 +998,32 @@ public class Utility {
                 return 8341;
             case 8460: case 8653: //grey shield participant
                 return 8342;
-            case 8347: case 8351: case 8355: case 8359: case 8461: case 8465: case 8469: case 8473: case 8654: case 8658: case 8662: case 8666: //gold shield first
+            case 8347: case 8351: case 8355: case 8359: case 8461: case 8465: case 8469:
+            case 8473: case 8654: case 8658: case 8662: case 8666: //gold shield first
                 return 8343;
-            case 8348: case 8352: case 8356: case 8360: case 8462: case 8466: case 8470: case 8474: case 8655: case 8659: case 8663: case 8667: //gold shield second
+            case 8348: case 8352: case 8356: case 8360: case 8462: case 8466: case 8470:
+            case 8474: case 8655: case 8659: case 8663: case 8667: //gold shield second
                 return 8344;
-            case 8349: case 8353: case 8357: case 8361: case 8463: case 8467: case 8471: case 8475: case 8656: case 8660: case 8664: case 8668: //gold shield third
+            case 8349: case 8353: case 8357: case 8361: case 8463: case 8467: case 8471:
+            case 8475: case 8656: case 8660: case 8664: case 8668: //gold shield third
                 return 8345;
-            case 8350: case 8354: case 8358: case 8362: case 8464: case 8468: case 8472: case 8476: case 8657: case 8661: case 8665: case 8669: //gold shield participant
+            case 8350: case 8354: case 8358: case 8362: case 8464: case 8468: case 8472:
+            case 8476: case 8657: case 8661: case 8665: case 8669: //gold shield participant
                 return 8346;
+            case 8388: //silver shooting star first
+                return 8368;
+            case 8389: //silver shooting star first
+                return 8369;
+            case 8390: //silver shooting star first
+                return 8370;
+            case 8391: //silver shooting star first
+                return 8371;
+            case 8392: //shooting star metal
+                return 8379;
+            case 8393: //shooting star dark metal
+                return 8383;
+            case 8394: //shooting star darkest metal
+                return 8387;
             default: //don't change
                 return defindex;
         }
