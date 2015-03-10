@@ -990,6 +990,14 @@ public class Utility {
                 return 8268;
             case 8273: //ugc wings bronze
                 return 8269;
+            case 8457: case 8650: //grey shield first
+                return 8339;
+            case 8458: case 8651: //grey shield second
+                return 8340;
+            case 8459: case 8652: //grey shield third
+                return 8341;
+            case 8460: case 8653: //grey shield participant
+                return 8342;
             default: //don't change
                 return defindex;
         }
