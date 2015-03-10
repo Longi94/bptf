@@ -830,8 +830,15 @@ public class Utility {
                 return 25;
             case 744: //pyrovision goggles
                 return 743;
+            case 791: case 928://pink promo gifts
+                return 790;
+            case 831: case 832: case 833: case 834: // promoasian items
+            case 835: case 836: case 837: case 838:
+                return defindex - 21;
             case 839: //gift bag
                 return 729;
+            case 2070: //promo chicken hat
+                return 785;
             case 2103: //Deus Ex arm
                 return 524;
             case 5041: case 5045: //duplicate crates
