@@ -853,15 +853,32 @@ public class Utility {
                 return 2016;
             case 2070: //promo chicken hat
                 return 785;
+            case 2081: //hong kong pac
+                return 2076;
             case 2094: case 2096: case 2097: case 2098: case 2099:
             case 2100: case 2101: case 2102: //class packs
                 return defindex - 76;
-            case 2103: //Deus Ex arm
+            case 2103: //deus Ex arm
                 return 524;
+            case 5020: //desc tag
+                return 2093;
             case 5041: case 5045: //duplicate crates
                 return 5022;
+            case 5049: case 5067: case 5072: case 5073: case 5079: case 5081: case 5628: case 5631:
+            case 5632: case 5713: case 5716: case 5717: case 5762: case 5791: case 5792:
+                return 5021; //mann co supply crate key
             case 5074: //something special for someone special
                 return 699;
+            case 5601: case 5602: case 5603: case 5604: //pyro dusts
+                return 5600;
+            case 5721: case 5722: case 5723: case 5724: case 5725: case 5753: case 5754: case 5755:
+            case 5756: case 5757: case 5758: case 5759: case 5783: case 5784: case 6522:
+                return 5661; //strangifiers
+            case 5727: case 5728: case 5729: case 5730: case 5731: case 5732: case 5733:
+            case 5743: case 5744: case 5745: case 5746: case 5747: case 5748: case 5749: case 5750:
+            case 5751: case 5793: case 5794: case 5795: case 5796: case 5797: case 5798: case 5799:
+            case 5800: case 5801: case 6527: //killstreak kits
+                return 5726;
             case 5735: case 5742: case 5752: case 5781: case 5802: //duplicate munitions
                 return 5734;
             case 8223: //duplicate soldier medal
