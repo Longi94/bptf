@@ -1,11 +1,13 @@
 package com.tlongdev.bktf.data;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.preference.PreferenceManager;
 
 import com.tlongdev.bktf.Utility;
 
@@ -18,7 +20,7 @@ import java.io.OutputStream;
 public class ItemSchemaDbHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "items.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
 
     public static final String TABLE_NAME = "itemschema";
@@ -33,12 +35,18 @@ public class ItemSchemaDbHelper extends SQLiteOpenHelper {
     public ItemSchemaDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.mContext = context;
-        if (doesDbExist()) {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        int oldVersion = prefs.getInt("pref_itemschema_database_version", 0);
+
+        if (oldVersion == DATABASE_VERSION && doesDbExist()) {
             openDatabase();
         } else {
             try {
                 copyDatabase();
                 openDatabase();
+
+                prefs.edit().putInt("pref_itemschema_database_version", DATABASE_VERSION).apply();
             } catch (IOException e) {
                 if (Utility.isDebugging(mContext))
                     e.printStackTrace();
