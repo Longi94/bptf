@@ -19,6 +19,13 @@
             android:defaultValue="true" />
 
         <SwitchPreference
+            android:key="@string/pref_use_wifi_only"
+            android:title="@string/pref_use_wifi_only_title"
+            android:summaryOff="@string/pref_use_wifi_only_summary_off"
+            android:summaryOn="@string/pref_use_wifi_only_summary_on"
+            android:defaultValue="true" />
+
+        <SwitchPreference
             android:key="@string/pref_background_sync"
             android:title="@string/pref_background_sync_title"
             android:defaultValue="false"/>
