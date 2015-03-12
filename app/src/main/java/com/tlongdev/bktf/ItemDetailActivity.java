@@ -250,7 +250,7 @@ public class ItemDetailActivity extends Activity {
                 paint.setVisibility(View.VISIBLE);
             }
 
-            setIconImage(this, icon, defindex, priceIndex, quality, paintNumber, isAus == 1);
+            setIconImage(this, icon, Utility.getIconIndex(defindex), priceIndex, quality, paintNumber, isAus == 1);
             background.setBackgroundDrawable(Utility.getItemBackground(this,
                     quality, tradable, craftable));
         } else {
