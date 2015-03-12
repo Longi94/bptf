@@ -48,7 +48,7 @@ public class ItemSchemaDbHelper extends SQLiteOpenHelper {
 
     private boolean doesDbExist() {
         try {
-            String path = mContext.getApplicationContext().getFilesDir() + "/databases/" + DATABASE_NAME;
+            String path = mContext.getApplicationInfo().dataDir + "/databases/" + DATABASE_NAME;
             File file = new File(path);
             return file.exists();
         } catch(SQLiteException e) {
@@ -59,7 +59,7 @@ public class ItemSchemaDbHelper extends SQLiteOpenHelper {
 
     public void openDatabase() throws SQLException {
         //Open the database
-        String path =mContext.getApplicationInfo().dataDir + "/databases/" + DATABASE_NAME;
+        String path = mContext.getApplicationInfo().dataDir + "/databases/" + DATABASE_NAME;
         mDatabase = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.NO_LOCALIZED_COLLATORS);
     }
 
