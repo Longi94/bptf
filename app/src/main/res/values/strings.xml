@@ -104,7 +104,7 @@
     <string name="title_activity_item_detail">ItemDetailActivity</string>
     <string name="title_activity_welcome">WelcomeActivity</string>
     <string name="title_activity_steam_login">SteamLoginActivity</string>
-    <string name="pref_changelog_title">Changelog</string>
+    <string name="pref_changelog_title">Changelogs</string>
     <string name="pref_use_wifi_only">pref_use_wifi_only</string>
     <string name="pref_use_wifi_only_title">Update over Wi-Fi only</string>
     <string name="pref_use_wifi_only_summary_off">Update database anytime. Data charges may apply.</string>
