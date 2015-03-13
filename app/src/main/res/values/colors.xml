@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="white_ripple">#99ffffff</color>
-    <color name="bktf_main_blue_dark">#ff5179b2</color>
+    <color name="bktf_main_blue_dark">#ff5074ac</color>
     <color name="bktf_main_blue">#ff5787c5</color>
     <color name="bktf_main_blue_light">#ff60a2e8</color>
 

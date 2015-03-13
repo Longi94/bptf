@@ -874,14 +874,14 @@ public class Utility {
             case 5601: case 5602: case 5603: case 5604: //pyro dusts
                 return 5600;
             case 5721: case 5722: case 5723: case 5724: case 5725: case 5753: case 5754: case 5755:
-            case 5756: case 5757: case 5758: case 5759: case 5783: case 5784: case 6522:
-                return 5661; //strangifiers
+            case 5756: case 5757: case 5758: case 5759: case 5783: case 5784: case 5804: case 6522: //strangifiers
+                return 5661;
             case 5727: case 5728: case 5729: case 5730: case 5731: case 5732: case 5733:
             case 5743: case 5744: case 5745: case 5746: case 5747: case 5748: case 5749: case 5750:
             case 5751: case 5793: case 5794: case 5795: case 5796: case 5797: case 5798: case 5799:
             case 5800: case 5801: case 6527: //killstreak kits
                 return 5726;
-            case 5735: case 5742: case 5752: case 5781: case 5802: //duplicate munitions
+            case 5735: case 5742: case 5752: case 5781: case 5802: case 5803: //duplicate munitions
                 return 5734;
             case 5738: //sombrero crate
                 return 5737;
