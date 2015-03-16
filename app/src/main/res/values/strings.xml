@@ -142,5 +142,10 @@
     <string name="calculator_metal">Refined Metal</string>
     <string name="calculator_usd">USD</string>
     <string name="navigation_drawer_help">Help</string>
+    <string name="calculator_placeholder_metal">0 ref</string>
+    <string name="calculator_placeholder_buds">0 buds</string>
+    <string name="calculator_placeholder_keys">0 keys</string>
+    <string name="calculator_placeholder_usd">$0</string>
+    <string name="calculator_add">Add new item</string>
 
 </resources>
