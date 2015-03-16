@@ -112,5 +112,6 @@
     <string name="navigation_drawer_open" translatable="true">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="true">Close navigation drawer</string>
     <string name="placeholder_slots_used" trasnlatable="false">\?/?</string>
+    <string name="description_navigation_drawer_icon">Icon</string>
 
 </resources>
