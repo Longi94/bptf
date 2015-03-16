@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.tlongdev.bktf.UserInfoActivity">
@@ -12,38 +11,36 @@
         style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center" />
 
     <ScrollView
-        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="8dp"
             android:clipChildren="false"
-            android:clipToPadding="false">
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:padding="8dp">
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:baselineAligned="false"
                     android:orientation="horizontal"
-                    android:padding="4dp"
-                    android:baselineAligned="false">
+                    android:padding="4dp">
 
                     <FrameLayout
                         android:layout_width="128dp"
                         android:layout_height="128dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginEnd="16dp">
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginRight="16dp">
 
                         <ImageView
                             android:id="@+id/player_avatar"
@@ -64,37 +61,38 @@
                             android:id="@+id/text_view_player_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="28sp"
-                            android:singleLine="true"/>
+                            android:singleLine="true"
+                            android:textSize="28sp" />
 
                         <TextView
                             android:id="@+id/text_view_player_reputation"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Reputation: "/>
+                            android:text="@string/user_page_reputation" />
 
                         <TextView
                             android:id="@+id/text_view_user_since"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Steam user since: \n2008"/>
+                            android:text="@string/user_page_user_since" />
 
                         <TextView
                             android:id="@+id/text_view_user_last_online"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Last online: "/>
-
+                            android:text="@string/user_page_last_online" />
 
                     </LinearLayout>
+
                 </LinearLayout>
+
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="6dp">
+                android:layout_marginBottom="6dp"
+                android:layout_marginTop="6dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -114,7 +112,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:clickable="true"
-                            android:text="Bazaar.tf"/>
+                            android:text="@string/user_page_link_bazaar" />
 
                         <Button
                             android:id="@+id/button_tf2op"
@@ -122,7 +120,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:clickable="true"
-                            android:text="TF2Outpost"/>
+                            android:text="@string/user_page_link_tf2op" />
 
                     </LinearLayout>
 
@@ -137,7 +135,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:clickable="true"
-                            android:text="TF2TP"/>
+                            android:text="@string/user_page_link_tf2tp" />
 
                         <Button
                             android:id="@+id/button_steamrep"
@@ -145,7 +143,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:clickable="true"
-                            android:text="Steamrep"/>
+                            android:text="@string/user_page_link_steamrep" />
 
                     </LinearLayout>
 
@@ -160,7 +158,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:clickable="true"
-                            android:text="Community"/>
+                            android:text="@string/user_page_link_community" />
 
                         <Button
                             android:id="@+id/button_backpack"
@@ -168,21 +166,23 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:clickable="true"
-                            android:text="Backpack"/>
+                            android:text="@string/user_page_link_backpack" />
 
                     </LinearLayout>
+
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:baselineAligned="false"
+                    android:orientation="horizontal"
                     android:padding="4dp">
 
                     <LinearLayout
@@ -190,16 +190,17 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
+                        android:paddingEnd="4dp"
+                        android:paddingLeft="0dp"
                         android:paddingRight="4dp"
-                        android:paddingEnd="4dp">
+                        android:paddingStart="0dp">
 
                         <TextView
-
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Status"
+                            android:text="@string/user_page_status"
                             android:textSize="16sp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -210,26 +211,26 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="TRUST"
-                                android:textSize="16sp"/>
+                                android:text="@string/user_page_trust"
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:id="@+id/text_view_trust_status"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="\?"
-                                android:textSize="16sp"
-                                android:textColor="#fff"
+                                android:background="@drawable/status_background_neutral"
+                                android:paddingEnd="3dp"
                                 android:paddingLeft="3dp"
                                 android:paddingRight="3dp"
-                                android:paddingEnd="3dp"
-                                android:background="@drawable/status_background_neutral"/>
+                                android:text="@string/placeholder_unknown"
+                                android:textColor="#fff"
+                                android:textSize="16sp" />
 
                         </LinearLayout>
 
                         <View
                             style="@style/DividerHorizontal.Margins"
-                            android:background="#555"/>
+                            android:background="#555" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -240,27 +241,26 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="STEAMREP"
-                                android:singleLine="true"
-                                android:textSize="16sp"/>
+                                android:text="@string/user_page_link_steamrep"
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:id="@+id/text_view_steamrep_status"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="\?"
-                                android:textSize="16sp"
-                                android:textColor="#fff"
+                                android:background="@drawable/status_background_neutral"
+                                android:paddingEnd="3dp"
                                 android:paddingLeft="3dp"
                                 android:paddingRight="3dp"
-                                android:paddingEnd="3dp"
-                                android:background="@drawable/status_background_neutral"/>
+                                android:text="@string/placeholder_unknown"
+                                android:textColor="#fff"
+                                android:textSize="16sp" />
 
                         </LinearLayout>
 
                         <View
                             style="@style/DividerHorizontal.Margins"
-                            android:background="#555"/>
+                            android:background="#555" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -271,26 +271,26 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="TRADE"
-                                android:textSize="16sp"/>
+                                android:text="@string/user_page_trade_status"
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:id="@+id/text_view_trade_status"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="\?"
-                                android:textSize="16sp"
-                                android:textColor="#fff"
+                                android:background="@drawable/status_background_neutral"
+                                android:paddingEnd="3dp"
                                 android:paddingLeft="3dp"
                                 android:paddingRight="3dp"
-                                android:paddingEnd="3dp"
-                                android:background="@drawable/status_background_neutral"/>
+                                android:text="@string/placeholder_unknown"
+                                android:textColor="#fff"
+                                android:textSize="16sp" />
 
                         </LinearLayout>
 
                         <View
                             style="@style/DividerHorizontal.Margins"
-                            android:background="#555"/>
+                            android:background="#555" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -301,26 +301,26 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="VAC"
-                                android:textSize="16sp"/>
+                                android:text="@string/user_page_vac"
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:id="@+id/text_view_vac_status"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="\?"
-                                android:textSize="16sp"
-                                android:textColor="#fff"
+                                android:background="@drawable/status_background_neutral"
+                                android:paddingEnd="3dp"
                                 android:paddingLeft="3dp"
                                 android:paddingRight="3dp"
-                                android:paddingEnd="3dp"
-                                android:background="@drawable/status_background_neutral"/>
+                                android:text="@string/placeholder_unknown"
+                                android:textColor="#fff"
+                                android:textSize="16sp" />
 
                         </LinearLayout>
 
                         <View
                             style="@style/DividerHorizontal.Margins"
-                            android:background="#555"/>
+                            android:background="#555" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -331,20 +331,20 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="COMMUNITY"
-                                android:textSize="16sp"/>
+                                android:text="@string/user_page_link_community"
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:id="@+id/text_view_community_status"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="\?"
-                                android:textSize="16sp"
-                                android:textColor="#fff"
+                                android:background="@drawable/status_background_neutral"
+                                android:paddingEnd="3dp"
                                 android:paddingLeft="3dp"
                                 android:paddingRight="3dp"
-                                android:paddingEnd="3dp"
-                                android:background="@drawable/status_background_neutral"/>
+                                android:text="@string/placeholder_unknown"
+                                android:textColor="#fff"
+                                android:textSize="16sp" />
 
                         </LinearLayout>
 
@@ -355,16 +355,18 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
+                        android:paddingEnd="4dp"
                         android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
                         android:paddingStart="4dp">
 
                         <TextView
 
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Backpack"
+                            android:text="@string/user_page_link_backpack"
                             android:textSize="16sp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -375,22 +377,22 @@
                                 android:id="@+id/text_view_bp_refined"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="\?"
+                                android:text="@string/placeholder_unknown"
+                                android:textColor="#000"
                                 android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:textColor="#000"/>
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text=" REFINED"
-                                android:textSize="16sp"/>
+                                android:text="@string/user_page_refined"
+                                android:textSize="16sp" />
 
                         </LinearLayout>
 
                         <View
                             style="@style/DividerHorizontal.Margins"
-                            android:background="#555"/>
+                            android:background="#555" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -401,22 +403,22 @@
                                 android:id="@+id/text_view_bp_raw_metal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="\?"
+                                android:text="@string/placeholder_unknown"
+                                android:textColor="#000"
                                 android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:textColor="#000"/>
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text=" RAW METAL"
-                                android:textSize="16sp"/>
+                                android:text="@string/user_page_metal"
+                                android:textSize="16sp" />
 
                         </LinearLayout>
 
                         <View
                             style="@style/DividerHorizontal.Margins"
-                            android:background="#555"/>
+                            android:background="#555" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -427,22 +429,22 @@
                                 android:id="@+id/text_view_bp_raw_keys"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="\?"
+                                android:text="@string/placeholder_unknown"
+                                android:textColor="#000"
                                 android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:textColor="#000"/>
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text=" RAW KEYS"
-                                android:textSize="16sp"/>
+                                android:text="@string/user_page_keys"
+                                android:textSize="16sp" />
 
                         </LinearLayout>
 
                         <View
                             style="@style/DividerHorizontal.Margins"
-                            android:background="#555"/>
+                            android:background="#555" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -453,22 +455,22 @@
                                 android:id="@+id/text_view_bp_usd"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="\?"
+                                android:text="@string/placeholder_unknown"
+                                android:textColor="#000"
                                 android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:textColor="#000"/>
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text=" USD"
-                                android:textSize="16sp"/>
+                                android:text="@string/user_page_usd"
+                                android:textSize="16sp" />
 
                         </LinearLayout>
 
                         <View
                             style="@style/DividerHorizontal.Margins"
-                            android:background="#555"/>
+                            android:background="#555" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -479,54 +481,27 @@
                                 android:id="@+id/text_view_bp_slots"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="\?/\?"
+                                android:text="@string/placeholder_slots_used"
+                                android:textColor="#000"
                                 android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:textColor="#000"/>
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text=" SLOTS"
-                                android:textSize="16sp"/>
+                                android:text="@string/user_page_slots"
+                                android:textSize="16sp" />
 
                         </LinearLayout>
 
                     </LinearLayout>
+
                 </LinearLayout>
+
             </android.support.v7.widget.CardView>
 
-            <!--<android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Classified listings"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:padding="4dp"/>
-
-                    <View
-                        style="@style/DividerHorizontal"
-                        android:background="#555"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Nothing to see here yet..."
-                        android:padding="8dp"/>
-
-                </LinearLayout>
-            </android.support.v7.widget.CardView>-->
         </LinearLayout>
+
     </ScrollView>
+
 </FrameLayout>
