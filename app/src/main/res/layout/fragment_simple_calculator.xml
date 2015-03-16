@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Earbuds"
+        android:text="@string/calculator_earbuds"
         android:textColor="@color/bptf_main_blue"
         android:textStyle="bold" />
 
@@ -23,7 +23,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Keys"
+        android:text="@string/calculator_keys"
         android:textColor="@color/bptf_main_blue"
         android:textStyle="bold" />
 
@@ -37,7 +37,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Refined Metal"
+        android:text="@string/calculator_metal"
         android:textColor="@color/bptf_main_blue"
         android:textStyle="bold" />
 
@@ -51,7 +51,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="USD"
+        android:text="@string/calculator_usd"
         android:textColor="@color/bptf_main_blue"
         android:textStyle="bold" />
 
