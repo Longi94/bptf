@@ -2,7 +2,7 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+
         <item name="colorPrimary">@color/bktf_main_blue</item>
         <item name="colorPrimaryDark">@color/bktf_main_blue_dark</item>
         <item name="colorAccent">@color/bktf_main_blue</item>
@@ -14,22 +14,23 @@
 
         <!-- specify shared element transitions -->
         <item name="android:windowSharedElementEnterTransition">
-            @transition/change_image_transform</item>
+            @transition/change_image_transform
+        </item>
         <item name="android:windowSharedElementExitTransition">
-            @transition/change_image_transform</item>
+            @transition/change_image_transform
+        </item>
+
     </style>
 
     <!-- ActionBar styles -->
     <style name="bptfActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
+
         <item name="background">@color/bktf_main_blue</item>
         <item name="elevation">0dp</item>
+
     </style>
 
-    <style name="bptfSearchView" parent="Widget.AppCompat.Light.SearchView">
-        <item name="colorControlActivated">@android:color/white</item>
-        <item name="colorAccent">@android:color/white</item>
-    </style>
-
+    <!--Dialog style-->
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorPrimary">@color/bktf_main_blue</item>
         <item name="colorPrimaryDark">@color/bktf_main_blue_dark</item>
@@ -37,11 +38,16 @@
         <item name="actionBarStyle">@style/bptfActionBar</item>
     </style>
 
+    <!--Style for simulating dialogs. This is needed for shared elements transition to work with
+    dialogs-->
     <style name="AppTheme.Transparent" parent="AppTheme">
+
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:backgroundDimEnabled">true</item>
+
     </style>
+
 </resources>
