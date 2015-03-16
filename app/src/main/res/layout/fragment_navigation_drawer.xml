@@ -1,11 +1,10 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#fff"
-    tools:context=".NavigationDrawerFragment" >
+    android:orientation="vertical"
+    tools:context=".NavigationDrawerFragment">
 
     <ListView
         android:id="@+id/list_view_drawer"
@@ -14,28 +13,33 @@
         android:layout_weight="1"
         android:choiceMode="singleChoice"
         android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"/>
+        android:dividerHeight="0dp" />
 
     <LinearLayout
         android:id="@+id/text_view_help"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/listPreferredItemHeightSmall"
-        android:orientation="horizontal"
+        android:background="@drawable/simple_drawer_item_background"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingEnd="16dp"
         android:paddingLeft="16dp"
-        android:background="@drawable/simple_drawer_item_background" >
+        android:paddingRight="16dp"
+        android:paddingStart="16dp">
 
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_help_black_24dp"/>
+            android:contentDescription="@string/navigation_drawer_help"
+            android:src="@drawable/ic_help_black_24dp" />
 
         <TextView
-            android:layout_marginLeft="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Help"
-            android:textColor="#000"/>
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:text="@string/navigation_drawer_help"
+            android:textColor="#000" />
 
     </LinearLayout>
 
@@ -43,22 +47,27 @@
         android:id="@+id/text_view_settings"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/listPreferredItemHeightSmall"
-        android:orientation="horizontal"
+        android:background="@drawable/simple_drawer_item_background"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingEnd="16dp"
         android:paddingLeft="16dp"
-        android:background="@drawable/simple_drawer_item_background" >
+        android:paddingRight="16dp"
+        android:paddingStart="16dp">
 
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_settings_black_24dp"/>
+            android:contentDescription="@string/action_settings"
+            android:src="@drawable/ic_settings_black_24dp" />
 
         <TextView
-            android:layout_marginLeft="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:text="@string/action_settings"
-            android:textColor="#000"/>
+            android:textColor="#000" />
 
     </LinearLayout>
 </LinearLayout>
