@@ -2,24 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
     android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingBottom="2dp"
     android:paddingLeft="4dp"
     android:paddingRight="4dp"
-    android:paddingTop="2dp"
-    android:paddingBottom="2dp">
+    android:paddingTop="2dp">
 
     <ImageView
         android:id="@+id/image_view_avatar"
         android:layout_width="64dp"
-        android:layout_height="64dp"/>
+        android:layout_height="64dp"
+        android:contentDescription="@string/description_player_avatar" />
 
     <TextView
-        android:layout_marginLeft="16dp"
         android:id="@+id/text_view_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textColor="#000"/>
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:textColor="#000"
+        android:textSize="16sp" />
 
 </LinearLayout>
