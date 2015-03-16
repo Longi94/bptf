@@ -137,5 +137,9 @@
     <string name="user_page_keys">\ RAW KEYS</string>
     <string name="user_page_usd">\ USD</string>
     <string name="user_page_slots">\ SLOTS</string>
+    <string name="calculator_earbuds">Earbuds</string>
+    <string name="calculator_keys">Keys</string>
+    <string name="calculator_metal">Refined Metal</string>
+    <string name="calculator_usd">USD</string>
 
 </resources>
