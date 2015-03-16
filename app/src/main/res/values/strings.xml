@@ -114,5 +114,7 @@
     <string name="navigation_drawer_open" translatable="true">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="true">Close navigation drawer</string>
     <string name="placeholder_slots_used" trasnlatable="false">\?/?</string>
+    <string name="preference_dialog_steam_id">64bit SteamId:</string>
+    <string name="preference_dialog_vanity_name">Vanity name:</string>
 
 </resources>

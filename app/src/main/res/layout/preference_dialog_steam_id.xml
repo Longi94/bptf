@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
-    android:paddingTop="24dp"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:paddingTop="24dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:text="64bit SteamId:"/>
+        android:text="@string/preference_dialog_steam_id"
+        android:textColor="@android:color/black" />
 
     <TextView
         android:id="@+id/steam_id_64_bit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"/>
+        android:textColor="@android:color/black" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
-        android:textColor="@android:color/black"
-        android:text="Vanity name:"/>
+        android:text="@string/preference_dialog_vanity_name"
+        android:textColor="@android:color/black" />
 
     <TextView
         android:id="@+id/steam_id_vanity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"/>
+        android:textColor="@android:color/black" />
 
     <EditText
         android:id="@+id/edit_text_steam_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="16dp"
-        android:inputType="textNoSuggestions"
-        android:selectAllOnFocus="true"
         android:hint="@string/pref_hint_steam_id"
-        android:singleLine="true"
-        android:maxLines="1"/>
+        android:inputType="textNoSuggestions"
+        android:maxLines="1"
+        android:paddingTop="16dp"
+        android:selectAllOnFocus="true"
+        android:singleLine="true" />
 
 </LinearLayout>
