@@ -50,7 +50,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@drawable/frame_user_state_offline"
-                            android:contentDescription="@string/player_avatar_description" />
+                            android:contentDescription="@string/description_player_avatar" />
 
                     </FrameLayout>
 

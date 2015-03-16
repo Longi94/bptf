@@ -4,7 +4,7 @@
     tools:context="com.tlongdev.bktf.UnusualActivity">
 
     <item android:id="@+id/action_sort"
-        android:title="@string/sort_title"
+        android:title="@string/action_sort"
         android:orderInCategory="90"
         android:icon="@drawable/ic_sort_white_24dp"
         app:showAsAction="ifRoom|collapseActionView">
@@ -19,7 +19,7 @@
     </item>
 
     <item android:id="@+id/action_effect"
-        android:title="@string/browse_effect"
+        android:title="@string/action_browse_effect"
         android:orderInCategory="80"
         android:icon="@drawable/ic_star_outline_white_24dp"
         app:showAsAction="ifRoom|collapseActionView">
