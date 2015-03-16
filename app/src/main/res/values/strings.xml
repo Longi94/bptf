@@ -141,5 +141,6 @@
     <string name="calculator_keys">Keys</string>
     <string name="calculator_metal">Refined Metal</string>
     <string name="calculator_usd">USD</string>
+    <string name="navigation_drawer_help">Help</string>
 
 </resources>
