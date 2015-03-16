@@ -218,7 +218,7 @@ public class ItemDetailActivity extends Activity {
 
             level.setText("Level " + itemCursor.getInt(COL_BACKPACK_LEVEL) + " " + mIntent.getStringExtra(EXTRA_ITEM_TYPE));
 
-            origin.setText("Origin: " + getResources().getStringArray(R.array.origins)[itemCursor.getInt(COL_BACKPACK_ORIGIN)]);
+            origin.setText("Origin: " + getResources().getStringArray(R.array.array_origins)[itemCursor.getInt(COL_BACKPACK_ORIGIN)]);
 
             if (priceIndex != 0 && (quality == 5 || quality == 7 || quality == 9)){
                 effect.setText("Effect: " + Utility.getUnusualEffectName(priceIndex));

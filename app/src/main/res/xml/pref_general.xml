@@ -26,8 +26,8 @@
         <ListPreference
             android:defaultValue="3600000"
             android:dependency="@string/pref_background_sync"
-            android:entries="@array/pref_sync_interval_titles"
-            android:entryValues="@array/pref_sync_interval_values"
+            android:entries="@array/array_pref_sync_interval_titles"
+            android:entryValues="@array/array_pref_sync_interval_values"
             android:key="@string/pref_sync_interval"
             android:title="@string/pref_title_sync_interval" />
 
@@ -43,8 +43,8 @@
         <ListPreference
             android:defaultValue="3600000"
             android:dependency="@string/pref_notification"
-            android:entries="@array/pref_notification_interval_titles"
-            android:entryValues="@array/pref_notification_interval_values"
+            android:entries="@array/array_pref_notification_interval_titles"
+            android:entryValues="@array/array_pref_notification_interval_values"
             android:key="@string/pref_notification_interval"
             android:title="@string/pref_title_notification_interval" />
 

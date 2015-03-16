@@ -166,7 +166,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             if (Utility.isNetworkAvailable(getActivity())) {
                 FetchPriceList task = new FetchPriceList(getActivity(), false, false);
                 task.setOnPriceListFetchListener(this);
-                task.execute(getResources().getString(R.string.backpack_tf_api_key));
+                task.execute(getResources().getString(R.string.api_key_backpack_tf));
             } else {
                 //Quit the app if the download failed.
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -187,7 +187,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
                 && Utility.isNetworkAvailable(getActivity())) {
             FetchPriceList task = new FetchPriceList(getActivity(), true, false);
             task.setOnPriceListFetchListener(this);
-            task.execute(getResources().getString(R.string.backpack_tf_api_key));
+            task.execute(getResources().getString(R.string.api_key_backpack_tf));
             mSwipeRefreshLayout.setRefreshing(true);
         }
     }
@@ -225,7 +225,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         if (Utility.isNetworkAvailable(getActivity())) {
             FetchPriceList task = new FetchPriceList(getActivity(), true, true);
             task.setOnPriceListFetchListener(this);
-            task.execute(getResources().getString(R.string.backpack_tf_api_key));
+            task.execute(getResources().getString(R.string.api_key_backpack_tf));
         } else {
             Toast.makeText(getActivity(), "bptf: no connection", Toast.LENGTH_SHORT).show();
             mSwipeRefreshLayout.setRefreshing(false);

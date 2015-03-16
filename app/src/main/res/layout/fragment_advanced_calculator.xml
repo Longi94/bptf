@@ -13,7 +13,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="@color/bktf_main_blue"
+            android:background="@color/bptf_main_blue"
             android:layout_gravity="top">
 
             <LinearLayout

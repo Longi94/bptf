@@ -23,7 +23,7 @@ public class UpdateDatabaseService extends Service {
                 PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_notification), false)
                 && Utility.isNetworkAvailable(this)) {
 
-            new FetchPriceList(this, true, true).execute(getResources().getString(R.string.backpack_tf_api_key));
+            new FetchPriceList(this, true, true).execute(getResources().getString(R.string.api_key_backpack_tf));
         }
 
         stopSelf();
