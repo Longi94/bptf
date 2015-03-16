@@ -2,30 +2,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:gravity="center_vertical"
     android:orientation="horizontal"
+    android:paddingBottom="2dp"
     android:paddingLeft="4dp"
     android:paddingRight="4dp"
-    android:paddingTop="2dp"
-    android:paddingBottom="2dp"
-    android:gravity="center_vertical"
-    android:baselineAligned="false">
+    android:paddingTop="2dp">
 
     <FrameLayout
         android:layout_width="84dp"
         android:layout_height="72dp">
 
         <ImageView
+            android:id="@+id/image_view_item_background"
             android:layout_width="84dp"
             android:layout_height="72dp"
-            android:id="@+id/image_view_item_background"
-            android:contentDescription="Item icon" />
+            android:contentDescription="@string/description_background" />
 
         <ImageView
+            android:id="@+id/image_view_item_icon"
             android:layout_width="84dp"
             android:layout_height="72dp"
-            android:id="@+id/image_view_item_icon"
-            android:scaleType="centerCrop"
-            android:contentDescription="Item icon" />
+            android:contentDescription="@string/description_icon"
+            android:scaleType="centerCrop" />
 
     </FrameLayout>
 
@@ -36,29 +36,30 @@
         android:orientation="vertical"
         android:padding="4dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:id="@+id/item_name"
-        android:paddingRight="2dp"
-        android:textSize="16sp"
-        android:textColor="#000"/>
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingEnd="2dp"
+            android:paddingRight="2dp"
+            android:textColor="#000"
+            android:textSize="16sp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:id="@+id/item_price"/>
+        <TextView
+            android:id="@+id/item_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical" />
 
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/image_view_change"
         android:layout_width="52dp"
         android:layout_height="52dp"
-        android:id="@+id/image_view_change"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:contentDescription="Change icon" />
+        android:contentDescription="@string/description_change" />
 
 </LinearLayout>
