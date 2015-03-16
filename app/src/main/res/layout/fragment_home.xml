@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.tlongdev.bktf.fragment.HomeFragment">
 
     <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/swipe_refresh"
         android:clipChildren="false">
 
         <ListView
             android:id="@+id/list_view_changes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="none"
-            android:divider="@android:color/transparent"/>
+            android:divider="@android:color/transparent"
+            android:scrollbars="none" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -26,8 +25,8 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@color/bptf_main_blue"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
 
         <LinearLayout
@@ -43,15 +42,16 @@
                 android:layout_height="36dp"
                 android:drawableLeft="@drawable/ic_metal_white_18dp"
                 android:drawablePadding="2dp"
+                android:drawableStart="@drawable/ic_metal_white_18dp"
                 android:gravity="center"
                 android:textColor="#fff"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <View
                 android:id="@+id/image_view_metal_price"
                 android:layout_width="match_parent"
                 android:layout_height="4dp"
-                android:background="#ff850000"/>
+                android:background="#ff850000" />
 
         </LinearLayout>
 
@@ -68,15 +68,16 @@
                 android:layout_height="36dp"
                 android:drawableLeft="@drawable/ic_vpn_key_white_18dp"
                 android:drawablePadding="2dp"
-                android:textColor="#fff"
+                android:drawableStart="@drawable/ic_vpn_key_white_18dp"
                 android:gravity="center"
-                android:textSize="14sp"/>
+                android:textColor="#fff"
+                android:textSize="14sp" />
 
             <View
                 android:id="@+id/image_view_key_price"
                 android:layout_width="match_parent"
                 android:layout_height="4dp"
-                android:background="#ff850000"/>
+                android:background="#ff850000" />
 
         </LinearLayout>
 
@@ -93,15 +94,16 @@
                 android:layout_height="36dp"
                 android:drawableLeft="@drawable/ic_earbuds_18dp"
                 android:drawablePadding="2dp"
-                android:textColor="#fff"
+                android:drawableStart="@drawable/ic_earbuds_18dp"
                 android:gravity="center"
-                android:textSize="14sp"/>
+                android:textColor="#fff"
+                android:textSize="14sp" />
 
             <View
                 android:id="@+id/image_view_buds_price"
                 android:layout_width="match_parent"
                 android:layout_height="4dp"
-                android:background="#ff850000"/>
+                android:background="#ff850000" />
 
         </LinearLayout>
 
@@ -112,5 +114,6 @@
         style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center" />
+
 </FrameLayout>
