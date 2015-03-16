@@ -128,7 +128,7 @@ public class AdvancedCalculatorFragment extends Fragment {
         switch (itemId){
             case R.id.action_show_simple:
                 PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
-                        .putBoolean(getString(R.string.pref_prefered_advanced_calculator), false).apply();
+                        .putBoolean(getString(R.string.pref_preferred_advanced_calculator), false).apply();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.beginTransaction()
                         .setCustomAnimations(R.anim.simple_fade_in, R.anim.simple_fade_out)

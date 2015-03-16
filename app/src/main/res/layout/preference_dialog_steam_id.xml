@@ -39,7 +39,7 @@
         android:paddingTop="16dp"
         android:inputType="textNoSuggestions"
         android:selectAllOnFocus="true"
-        android:hint="@string/pref_steam_id_hint"
+        android:hint="@string/pref_hint_steam_id"
         android:singleLine="true"
         android:maxLines="1"/>
 

@@ -81,7 +81,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_notification_interval)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_sync_interval)));
 
-        findPreference(getString(R.string.pref_feedback_title)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        findPreference(getString(R.string.pref_title_feedback)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
@@ -93,7 +93,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        findPreference(getString(R.string.pref_rate_title)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        findPreference(getString(R.string.pref_title_rate)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 final String appPackageName = getPackageName();
@@ -106,7 +106,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        findPreference(getString(R.string.pref_changelog_title)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        findPreference(getString(R.string.pref_title_changelog)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Longi94/bptf/wiki/Changelog")));
@@ -116,11 +116,11 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         //Set the version name to the summary, so I don't have to change it manually every goddamn
         //update
-        findPreference(getString(R.string.pref_version_title)).setSummary(BuildConfig.VERSION_NAME);
+        findPreference(getString(R.string.pref_title_version)).setSummary(BuildConfig.VERSION_NAME);
 
 
         if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_user_developer), false)) {
-            findPreference(getString(R.string.pref_version_title)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            findPreference(getString(R.string.pref_title_version)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     if (secretSwitch) {
@@ -131,7 +131,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 }
             });
 
-            findPreference(getString(R.string.pref_developer_title)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            findPreference(getString(R.string.pref_title_developer)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     if (!secretSwitch) {
@@ -139,8 +139,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                         secretSwitch = true;
                         if (secretCounter == 6){
                             Toast.makeText(SettingsActivity.this, "You're now the developer of this app!", Toast.LENGTH_SHORT).show();
-                            findPreference(getString(R.string.pref_developer_title)).setOnPreferenceClickListener(null);
-                            findPreference(getString(R.string.pref_version_title)).setOnPreferenceClickListener(null);
+                            findPreference(getString(R.string.pref_title_developer)).setOnPreferenceClickListener(null);
+                            findPreference(getString(R.string.pref_title_version)).setOnPreferenceClickListener(null);
                             PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this).
                                     edit().putBoolean(getString(R.string.pref_user_developer), true).apply();
                         }

@@ -7,7 +7,6 @@
         <item name="colorPrimaryDark">@color/bktf_main_blue_dark</item>
         <item name="colorAccent">@color/bktf_main_blue</item>
         <item name="actionBarStyle">@style/bptfActionBar</item>
-        <item name="searchViewStyle">@style/bptfSearchView</item>
 
         <!-- enable window content transitions -->
         <item name="android:windowContentTransitions">true</item>

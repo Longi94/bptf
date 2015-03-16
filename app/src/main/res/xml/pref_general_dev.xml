@@ -1,5 +1,5 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    android:key="@string/main_preference_screen">
+    android:key="@string/pref_main_preference_screen">
 
     <PreferenceCategory android:title="@string/pref_category_steam">
 
@@ -14,14 +14,14 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/pref_auto_sync"
-            android:summaryOff="@string/pref_auto_sync_summary_off"
-            android:summaryOn="@string/pref_auto_sync_summary_on"
-            android:title="@string/pref_auto_sync_title" />
+            android:summaryOff="@string/pref_summary_off_auto_sync"
+            android:summaryOn="@string/pref_summary_on_auto_sync"
+            android:title="@string/pref_title_auto_sync" />
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/pref_background_sync"
-            android:title="@string/pref_background_sync_title" />
+            android:title="@string/pref_title_background_sync" />
 
         <ListPreference
             android:defaultValue="3600000"
@@ -29,7 +29,7 @@
             android:entries="@array/pref_sync_interval_titles"
             android:entryValues="@array/pref_sync_interval_values"
             android:key="@string/pref_sync_interval"
-            android:title="@string/pref_sync_interval_title" />
+            android:title="@string/pref_title_sync_interval" />
 
     </PreferenceCategory>
 
@@ -38,7 +38,7 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/pref_notification"
-            android:title="@string/pref_notification_title" />
+            android:title="@string/pref_title_notification" />
 
         <ListPreference
             android:defaultValue="3600000"
@@ -46,24 +46,24 @@
             android:entries="@array/pref_notification_interval_titles"
             android:entryValues="@array/pref_notification_interval_values"
             android:key="@string/pref_notification_interval"
-            android:title="@string/pref_notification_interval_title" />
+            android:title="@string/pref_title_notification_interval" />
 
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_category_about">
 
         <Preference
-            android:key="@string/pref_developer_title"
-            android:summary="@string/pref_developer_summary"
-            android:title="@string/pref_developer_title" />
+            android:key="@string/pref_title_developer"
+            android:summary="@string/pref_summary_developer"
+            android:title="@string/pref_title_developer" />
 
         <Preference
-            android:key="@string/pref_version_title"
-            android:title="@string/pref_version_title" />
+            android:key="@string/pref_title_version"
+            android:title="@string/pref_title_version" />
 
         <PreferenceScreen
-            android:key="@string/pref_credits_title"
-            android:title="@string/pref_credits_title">
+            android:key="@string/pref_title_credits"
+            android:title="@string/pref_title_credits">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:targetClass="com.tlongdev.bktf.CreditsActivity"
@@ -71,16 +71,16 @@
         </PreferenceScreen>
 
         <Preference
-            android:key="@string/pref_changelog_title"
-            android:title="@string/pref_changelog_title" />
+            android:key="@string/pref_title_changelog"
+            android:title="@string/pref_title_changelog" />
 
         <Preference
-            android:key="@string/pref_feedback_title"
-            android:title="@string/pref_feedback_title" />
+            android:key="@string/pref_title_feedback"
+            android:title="@string/pref_title_feedback" />
 
         <Preference
-            android:key="@string/pref_rate_title"
-            android:title="@string/pref_rate_title" />
+            android:key="@string/pref_title_rate"
+            android:title="@string/pref_title_rate" />
 
     </PreferenceCategory>
 
@@ -91,7 +91,7 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/pref_debug"
-            android:title="@string/pref_debug_logs" />
+            android:title="@string/pref_title_debug_logs" />
 
     </PreferenceCategory>
 

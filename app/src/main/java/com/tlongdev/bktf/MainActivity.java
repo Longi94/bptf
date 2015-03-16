@@ -113,7 +113,7 @@ public class MainActivity extends ActionBarActivity
             transaction.replace(R.id.container, new UnusualPriceListFragment());
         }
         else if (position == 3  && currentFragment != 3) {
-            if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_prefered_advanced_calculator), false)){
+            if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_preferred_advanced_calculator), false)){
                 transaction.replace(R.id.container, new SimpleCalculatorFragment());
             } else {
                 transaction.replace(R.id.container, new AdvancedCalculatorFragment());
