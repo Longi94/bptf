@@ -51,65 +51,65 @@
     <string name="pref_user_slots" trasnlatable="false">pref_user_slots</string>
 
     <!--Action Bar icons-->
-    <string name="action_browse_effect">Browse by effect</string>
-    <string name="action_clear">Clear items</string>
-    <string name="action_refresh">Refresh</string>
-    <string name="action_settings">Settings</string>
-    <string name="action_show_advanced">Advanced mode</string>
-    <string name="action_show_simple">Simple mode</string>
-    <string name="action_sort">Sort</string>
+    <string name="action_browse_effect" translatable="true">Browse by effect</string>
+    <string name="action_clear" translatable="true">Clear items</string>
+    <string name="action_refresh" translatable="true">Refresh</string>
+    <string name="action_settings" translatable="true">Settings</string>
+    <string name="action_show_advanced" translatable="true">Advanced mode</string>
+    <string name="action_show_simple" translatable="true">Simple mode</string>
+    <string name="action_sort" translatable="true">Sort</string>
 
     <!--Searchview-->
-    <string name="search_title">Search</string>
-    <string name="search_hint">Search</string>
+    <string name="search_title" translatable="true">Search</string>
+    <string name="search_hint" translatable="true">Search</string>
 
     <!--Activity/Fragment titles-->
-    <string name="title_activity_credits">Credits</string>
-    <string name="title_activity_item_chooser">ItemChooserActivity</string>
-    <string name="title_activity_item_detail">ItemDetailActivity</string>
-    <string name="title_activity_search">SearchActivity</string>
-    <string name="title_activity_settings">Settings</string>
-    <string name="title_activity_steam_login">SteamLoginActivity</string>
-    <string name="title_activity_unusual">UnusualActivity</string>
-    <string name="title_activity_user_backpack">UserBackpackActivity</string>
-    <string name="title_activity_user_info">UserInfoActivity</string>
-    <string name="title_activity_welcome">WelcomeActivity</string>
-    <string name="title_calculator">Calculator</string>
-    <string name="title_home">Latest Changes</string>
-    <string name="title_prices">Unusual Prices</string>
-    <string name="title_user_profile">User Profile</string>
+    <string name="title_activity_credits" translatable="true">Credits</string>
+    <string name="title_activity_item_chooser" translatable="true">ItemChooserActivity</string>
+    <string name="title_activity_item_detail" translatable="true">ItemDetailActivity</string>
+    <string name="title_activity_search" translatable="true">SearchActivity</string>
+    <string name="title_activity_settings" translatable="true">Settings</string>
+    <string name="title_activity_steam_login" translatable="true">SteamLoginActivity</string>
+    <string name="title_activity_unusual" translatable="true">UnusualActivity</string>
+    <string name="title_activity_user_backpack" translatable="true">UserBackpackActivity</string>
+    <string name="title_activity_user_info" translatable="true">UserInfoActivity</string>
+    <string name="title_activity_welcome" translatable="true">WelcomeActivity</string>
+    <string name="title_calculator" translatable="true">Calculator</string>
+    <string name="title_home" translatable="true">Latest Changes</string>
+    <string name="title_prices" translatable="true">Unusual Prices</string>
+    <string name="title_user_profile" translatable="true">User Profile</string>
 
     <!--Preference titles and summaries-->
-    <string name="pref_category_about">About</string>
-    <string name="pref_category_dev">Developer</string>
-    <string name="pref_category_notification">Notifications</string>
-    <string name="pref_category_steam">Steam</string>
-    <string name="pref_category_sync">Syncing</string>
-    <string name="pref_hint_steam_id">Steam ID</string>
-    <string name="pref_summary_developer">Long Tran</string>
-    <string name="pref_summary_off_auto_sync">Manual refresh</string>
-    <string name="pref_summary_on_auto_sync">Auto-update database</string>
-    <string name="pref_summary_particles">provided by backpack.tf</string>
-    <string name="pref_summary_quick_return">by felipecsl</string>
-    <string name="pref_title_auto_sync">Auto-update database</string>
-    <string name="pref_title_background_sync">Sync in the background</string>
-    <string name="pref_title_changelog">Changelogs</string>
-    <string name="pref_title_credits">Credits</string>
-    <string name="pref_title_debug_logs">Enable debug logs</string>
-    <string name="pref_title_developer">Developer</string>
-    <string name="pref_title_feedback">Send feedback or bug report</string>
-    <string name="pref_title_notification">backpack.tf Notifications</string>
-    <string name="pref_title_notification_interval">Check for notifications</string>
-    <string name="pref_title_particles">Particle effect images</string>
-    <string name="pref_title_quick_return">QuickReturn</string>
-    <string name="pref_title_rate">Rate the app on Google Play</string>
-    <string name="pref_title_sync_interval">Sync frequency</string>
-    <string name="pref_title_version">Version</string>
+    <string name="pref_category_about" translatable="true">About</string>
+    <string name="pref_category_dev" translatable="true">Developer</string>
+    <string name="pref_category_notification" translatable="true">Notifications</string>
+    <string name="pref_category_steam" translatable="false">Steam</string>
+    <string name="pref_category_sync" translatable="true">Syncing</string>
+    <string name="pref_hint_steam_id" translatable="true">Steam ID</string>
+    <string name="pref_summary_developer" translatable="false">Long Tran</string>
+    <string name="pref_summary_off_auto_sync" translatable="true">Manual refresh</string>
+    <string name="pref_summary_on_auto_sync" translatable="true">Auto-update database</string>
+    <string name="pref_summary_particles" translatable="true">provided by backpack.tf</string>
+    <string name="pref_summary_quick_return" translatable="true">by felipecsl</string>
+    <string name="pref_title_auto_sync" translatable="true">Auto-update database</string>
+    <string name="pref_title_background_sync" translatable="true">Sync in the background</string>
+    <string name="pref_title_changelog" translatable="true">Changelogs</string>
+    <string name="pref_title_credits" translatable="true">Credits</string>
+    <string name="pref_title_debug_logs" translatable="true">Enable debug logs</string>
+    <string name="pref_title_developer" translatable="true">Developer</string>
+    <string name="pref_title_feedback" translatable="true">Send feedback or bug report</string>
+    <string name="pref_title_notification" translatable="true">backpack.tf Notifications</string>
+    <string name="pref_title_notification_interval" translatable="true">Check for notifications</string>
+    <string name="pref_title_particles" translatable="true">Particle effect images</string>
+    <string name="pref_title_quick_return" trasnlatable="false">QuickReturn</string>
+    <string name="pref_title_rate" translatable="true">Rate the app on Google Play</string>
+    <string name="pref_title_sync_interval" translatable="true">Sync frequency</string>
+    <string name="pref_title_version" translatable="true">Version</string>
 
     <!--Other string resources-->
-    <string name="description_player_avatar">Player Avatar</string>
+    <string name="description_player_avatar" translatable="true">Player Avatar</string>
     <string name="navigation_drawer_open" translatable="true">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="true">Close navigation drawer</string>
-    <string name="placeholder_slots_used">\?/?</string>
+    <string name="placeholder_slots_used" trasnlatable="false">\?/?</string>
 
 </resources>
