@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tlongdev.bktf" >
+    package="com.tlongdev.bktf">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -10,12 +10,12 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,7 +33,7 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tlongdev.bktf.MainActivity" />
@@ -49,7 +49,7 @@
             android:name=".UnusualActivity"
             android:label="@string/title_activity_unusual"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tlongdev.bktf.MainActivity" />
@@ -58,13 +58,12 @@
         <service
             android:name=".service.NotificationsService"
             android:enabled="true"
-            android:exported="false" >
-        </service>
+            android:exported="false"/>
 
         <receiver
             android:name=".broadcastreceiver.BootBroadcastReceiver"
             android:enabled="true"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -73,14 +72,13 @@
         <service
             android:name=".service.UpdateDatabaseService"
             android:enabled="true"
-            android:exported="false" >
-        </service>
+            android:exported="false"/>
 
         <activity
             android:name=".UserInfoActivity"
             android:label=""
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tlongdev.bktf.MainActivity" />
@@ -91,7 +89,7 @@
             android:label="@string/title_activity_item_chooser"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dialog" >
+            android:theme="@style/AppTheme.Dialog">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tlongdev.bktf.MainActivity" />
@@ -102,7 +100,7 @@
             android:label="@string/title_activity_credits"
             android:parentActivityName=".SettingsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dialog" >
+            android:theme="@style/AppTheme.Dialog">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tlongdev.bktf.SettingsActivity" />
@@ -112,8 +110,7 @@
             android:name=".data.UserBackpackProvider"
             android:authorities="com.tlongdev.bktf.backpack"
             android:enabled="true"
-            android:exported="false" >
-        </provider>
+            android:exported="false"/>
 
         <activity
             android:name=".UserBackpackActivity"
@@ -124,21 +121,10 @@
             android:label="@string/title_activity_item_detail"
             android:parentActivityName=".UserBackpackActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Transparent" >
+            android:theme="@style/AppTheme.Transparent">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tlongdev.bktf.UserBackpackActivity" />
-        </activity>
-
-        <activity
-            android:name=".WelcomeActivity"
-            android:label="@string/title_activity_welcome"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.tlongdev.bktf.MainActivity" />
         </activity>
 
     </application>
