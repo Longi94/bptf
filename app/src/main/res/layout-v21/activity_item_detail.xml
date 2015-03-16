@@ -31,14 +31,16 @@
                     android:id="@+id/image_view_item_background"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/item_background_blank" />
+                    android:background="@drawable/item_background_blank"
+                    android:transitionName="background_transition" />
 
                 <com.tlongdev.bktf.view.SquareImageView
                     android:id="@+id/image_view_item_icon"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    android:transitionName="icon_transition" />
 
             </com.tlongdev.bktf.view.SquareFrameLayout>
 
