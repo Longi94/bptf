@@ -90,7 +90,7 @@ public class ItemChooserActivity extends FragmentActivity implements
         effectTypeSpinner.setEnabled(false);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> effectsAdapter = ArrayAdapter.createFromResource(this,
-                R.array.effects, android.R.layout.simple_spinner_item);
+                R.array.array_effects, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         effectsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
@@ -138,7 +138,7 @@ public class ItemChooserActivity extends FragmentActivity implements
         });
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> typeAdapter = ArrayAdapter.createFromResource(this,
-                R.array.item_chooser_spinner, android.R.layout.simple_spinner_item);
+                R.array.array_item_chooser_spinner, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
@@ -195,7 +195,7 @@ public class ItemChooserActivity extends FragmentActivity implements
             if (itemTypeSpinner.getSelectedItemPosition() == 0) {
                 selectionArgs = new String[]{"%" + query + "%"};
             } else {
-                int[] indexes = getResources().getIntArray(R.array.effects_indexes);
+                int[] indexes = getResources().getIntArray(R.array.array_effects_indexes);
                 selectionArgs = new String[]{"%" + query + "%", "" + indexes[effectTypeSpinner.getSelectedItemPosition()]};
             }
         }

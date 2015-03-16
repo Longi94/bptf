@@ -78,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cancel"
-            android:textColor="@color/bktf_main_blue"
+            android:textColor="@color/bptf_main_blue"
             style="?android:attr/buttonBarButtonStyle"/>
 
         <Button
@@ -86,7 +86,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add"
-            android:textColor="@color/bktf_main_blue"
+            android:textColor="@color/bptf_main_blue"
             android:enabled="false"
             style="?android:attr/buttonBarButtonStyle"/>
 

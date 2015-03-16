@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="backpack_tf_api_key">549b3e46b88d8847188b48aa</string>
+
+    <string name="api_key_backpack_tf">549b3e46b88d8847188b48aa</string>
     <string name="steam_web_api_key">AA4BE494541ACA43379ADD02957B9F0E</string>
-    
+
     <string name="steam_get_schema_url">http://api.steampowered.com/IEconItems_440/GetSchema/v0001/</string>
     <string name="steam_get_player_items_url">http://api.steampowered.com/IEconItems_440/GetPlayerItems/v0001/</string>
+
 </resources>

@@ -91,6 +91,7 @@
     <string name="pref_summary_on_auto_sync" translatable="true">Auto-update database</string>
     <string name="pref_summary_particles" translatable="true">provided by backpack.tf</string>
     <string name="pref_summary_quick_return" translatable="true">by felipecsl</string>
+    <string name="pref_summary_ringtone_silent" translatable="true">Silent</string>
     <string name="pref_title_auto_sync" translatable="true">Auto-update database</string>
     <string name="pref_title_background_sync" translatable="true">Sync in the background</string>
     <string name="pref_title_changelog" translatable="true">Changelogs</string>

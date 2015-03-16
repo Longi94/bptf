@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="pref_sync_interval_titles" >
+
+    <string-array name="array_pref_sync_interval_titles">
         <item>Every 30 minutes</item>
         <item>Every hour</item>
         <item>Every 3 hours</item>
         <item>Every 6 hours</item>
         <item>Daily</item>
     </string-array>
-    <string-array name="pref_sync_interval_values" >
+
+    <string-array name="array_pref_sync_interval_values">
         <item>1800000</item>
         <item>3600000</item>
         <item>10800000</item>
@@ -15,7 +17,7 @@
         <item>86400000</item>
     </string-array>
 
-    <string-array name="pref_notification_interval_titles" >
+    <string-array name="array_pref_notification_interval_titles">
         <item>Every 5 minutes</item>
         <item>Every 15 minutes</item>
         <item>Every 30 minutes</item>
@@ -24,7 +26,8 @@
         <item>Every 6 hours</item>
         <item>Daily</item>
     </string-array>
-    <string-array name="pref_notification_interval_values" >
+
+    <string-array name="array_pref_notification_interval_values">
         <item>300000</item>
         <item>900000</item>
         <item>1800000</item>
@@ -34,7 +37,7 @@
         <item>86400000</item>
     </string-array>
 
-    <string-array name="origins">
+    <string-array name="array_origins">
         <item>Timed Drop</item>
         <item>Achievement</item>
         <item>Purchased</item>
@@ -59,13 +62,14 @@
         <item>MvM Squad surplus reward</item>
         <item>Recipe output</item>
     </string-array>
-    
-    <string-array name="item_chooser_spinner">
+
+    <string-array name="array_item_chooser_spinner">
         <item>Regular items</item>
         <item>Unusuals</item>
     </string-array>
-    
-    <string-array name="effects">
+
+    <!--Alphabetical order-->
+    <string-array name="array_effects">
         <item>Aces High</item>
         <item>Amaranthine</item>
         <item>Anti-Freeze</item>
@@ -145,7 +149,8 @@
         <item>\'72</item>
     </string-array>
 
-    <integer-array name="effects_indexes">
+    <!--Must match the array above-->
+    <integer-array name="array_effects_indexes">
         <item>59</item>
         <item>82</item>
         <item>69</item>
@@ -224,4 +229,5 @@
         <item>16</item>
         <item>3004</item>
     </integer-array>
+
 </resources>

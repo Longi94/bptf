@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!--Slightly transparent colors for white ripples-->
     <color name="white_ripple">#99ffffff</color>
-    <color name="bktf_main_blue_dark">#ff5074ac</color>
-    <color name="bktf_main_blue">#ff5787c5</color>
+
+    <!--Main colors-->
+    <color name="bptf_main_blue_dark">#ff5074ac</color>
+    <color name="bptf_main_blue">#ff5787c5</color>
     <color name="bktf_main_blue_light">#ff60a2e8</color>
 
+    <!--Main item quality colors-->
     <color name="tf2_unusual_color">#8650AC</color>
     <color name="tf2_unique_color">#FFD700</color>
     <color name="tf2_strange_color">#CF6A32</color>
@@ -16,6 +21,7 @@
     <color name="tf2_vintage_color">#476291</color>
     <color name="tf2_genuine_color">#4D7455</color>
 
+    <!--Dark quality colors-->
     <color name="tf2_unusual_color_dark">#ff4f3469</color>
     <color name="tf2_unique_color_dark">#ffc5a800</color>
     <color name="tf2_strange_color_dark">#ffa8542a</color>
@@ -26,4 +32,5 @@
     <color name="tf2_community_color_dark">#ff5a903b</color>
     <color name="tf2_vintage_color_dark">#ff37496e</color>
     <color name="tf2_genuine_color_dark">#ff36583d</color>
+
 </resources>
