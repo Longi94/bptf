@@ -1,41 +1,40 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
     android:orientation="vertical"
+    android:padding="16dp"
     tools:context="com.tlongdev.bktf.ItemChooserActivity">
 
     <Spinner
         android:id="@+id/spinner_item"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <Spinner
         android:id="@+id/spinner_effect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="false"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"/>
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp" />
 
     <ListView
         android:id="@+id/list_view_item_chooser"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:scrollbars="none"/>
+        android:scrollbars="none" />
 
     <TextView
         android:id="@+id/text_view_no_match"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
+        android:gravity="center"
         android:paddingBottom="8dp"
-        android:text="No match or item has no price"
-        android:gravity="center"/>
+        android:paddingTop="8dp"
+        android:text="@string/item_chooser_no_match" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,53 +43,50 @@
 
         <EditText
             android:id="@+id/edit_text_search"
-            android:layout_weight="3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:hint="@string/item_chooser_hint"
             android:inputType="text"
-            android:hint="Start typing..."
             android:textColorHighlight="@color/bktf_main_blue_light"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/edit_text_count"
-            android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:inputType="number"
+            android:layout_weight="1"
             android:gravity="center"
-            android:text="1"
+            android:inputType="number"
+            android:text="@string/item_chooser_count"
             android:textColorHighlight="@color/bktf_main_blue_light"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
     </LinearLayout>
-
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="end">
+        android:gravity="end"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/button_cancel"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"
-            android:textColor="@color/bptf_main_blue"
-            style="?android:attr/buttonBarButtonStyle"/>
+            android:text="@string/action_cancel"
+            android:textColor="@color/bptf_main_blue" />
 
         <Button
             android:id="@+id/button_add"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add"
-            android:textColor="@color/bptf_main_blue"
             android:enabled="false"
-            style="?android:attr/buttonBarButtonStyle"/>
+            android:text="@string/action_add"
+            android:textColor="@color/bptf_main_blue" />
 
     </LinearLayout>
-
 
 </LinearLayout>
