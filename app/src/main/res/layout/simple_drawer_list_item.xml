@@ -12,7 +12,7 @@
         android:id="@+id/navigation_drawer_icon"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:contentDescription="@string/description_navigation_drawer_icon" />
+        android:contentDescription="@string/description_icon" />
 
     <TextView
         android:id="@+id/text"

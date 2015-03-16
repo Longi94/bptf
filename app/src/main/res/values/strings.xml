@@ -108,10 +108,11 @@
     <string name="pref_title_version" translatable="true">Version</string>
 
     <!--Other string resources-->
+    <string name="description_delete" translatable="true">Delete</string>
+    <string name="description_icon" translatable="true">Icon</string>
     <string name="description_player_avatar" translatable="true">Player Avatar</string>
     <string name="navigation_drawer_open" translatable="true">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="true">Close navigation drawer</string>
     <string name="placeholder_slots_used" trasnlatable="false">\?/?</string>
-    <string name="description_navigation_drawer_icon">Icon</string>
 
 </resources>
