@@ -116,5 +116,6 @@
     <string name="placeholder_slots_used" trasnlatable="false">\?/?</string>
     <string name="preference_dialog_steam_id">64bit SteamId:</string>
     <string name="preference_dialog_vanity_name">Vanity name:</string>
+    <string name="description_background">Background</string>
 
 </resources>
