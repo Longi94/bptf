@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Empty (for now) menu resource. Should be used as a global menu item.-->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
