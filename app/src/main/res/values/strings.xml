@@ -51,7 +51,9 @@
     <string name="pref_user_slots" trasnlatable="false">pref_user_slots</string>
 
     <!--Action Bar icons-->
+    <string name="action_add" translatable="true">Add</string>
     <string name="action_browse_effect" translatable="true">Browse by effect</string>
+    <string name="action_cancel" translatable="true">Cancel</string>
     <string name="action_clear" translatable="true">Clear items</string>
     <string name="action_refresh" translatable="true">Refresh</string>
     <string name="action_settings" translatable="true">Settings</string>
@@ -107,50 +109,54 @@
     <string name="pref_title_sync_interval" translatable="true">Sync frequency</string>
     <string name="pref_title_version" translatable="true">Version</string>
 
-    <!--Other string resources-->
+    <!--Content descriptions-->
+    <string name="description_background" translatable="true">Background</string>
+    <string name="description_change" translatable="true">Change</string>
     <string name="description_delete" translatable="true">Delete</string>
     <string name="description_icon" translatable="true">Icon</string>
     <string name="description_player_avatar" translatable="true">Player Avatar</string>
-    <string name="navigation_drawer_open" translatable="true">Open navigation drawer</string>
+
+    <!--Resources for user page-->
+    <string name="user_page_keys" translatable="true">\ RAW KEYS</string>
+    <string name="user_page_last_online" translatable="true">Last online:</string>
+    <string name="user_page_link_backpack" translatable="true">BACKPACK</string>
+    <string name="user_page_link_bazaar" translatable="false">Bazaar.tf</string>
+    <string name="user_page_link_community" translatable="true">COMMUNITY</string>
+    <string name="user_page_link_steamrep" translatable="false">STEAMREP</string>
+    <string name="user_page_link_tf2op" translatable="false">TF2Outpost</string>
+    <string name="user_page_link_tf2tp" translatable="false">TF2TP</string>
+    <string name="user_page_metal" translatable="true">\ RAW METAL</string>
+    <string name="user_page_refined" translatable="true">\ REFINED</string>
+    <string name="user_page_reputation" translatable="true">Reputation:</string>
+    <string name="user_page_slots" translatable="true">\ SLOTS</string>
+    <string name="user_page_status" translatable="true">Status</string>
+    <string name="user_page_trade_status" translatable="true">TRADE</string>
+    <string name="user_page_trust" translatable="true">TRUST</string>
+    <string name="user_page_usd" translatable="false">\ USD</string>
+    <string name="user_page_user_since" translatable="true">Steam user since: \n</string>
+    <string name="user_page_vac" translatable="false">VAC</string>
+
+    <!--Resources for calculator-->
+    <string name="calculator_add" translatable="true">Add new item</string>
+    <string name="calculator_earbuds" translatable="true">Earbuds</string>
+    <string name="calculator_keys" translatable="true">Keys</string>
+    <string name="calculator_metal" translatable="true">Refined Metal</string>
+    <string name="calculator_placeholder_buds" translatable="false">0 buds</string>
+    <string name="calculator_placeholder_keys" translatable="false">0 keys</string>
+    <string name="calculator_placeholder_metal" translatable="false">0 ref</string>
+    <string name="calculator_placeholder_usd" translatable="false">$0</string>
+    <string name="calculator_usd" translatable="false">USD</string>
+    <string name="item_chooser_count" translatable="false">1</string>
+    <string name="item_chooser_hint" translatable="true">Start typing…</string>
+    <string name="item_chooser_no_match" translatable="true">No match or item has no price</string>
+
+    <!--Other string resources-->
     <string name="navigation_drawer_close" translatable="true">Close navigation drawer</string>
+    <string name="navigation_drawer_help" translatable="true">Help</string>
+    <string name="navigation_drawer_open" translatable="true">Open navigation drawer</string>
     <string name="placeholder_slots_used" trasnlatable="false">\?/?</string>
-    <string name="preference_dialog_steam_id">64bit SteamId:</string>
-    <string name="preference_dialog_vanity_name">Vanity name:</string>
-    <string name="description_background">Background</string>
-    <string name="description_change">Change</string>
-    <string name="user_page_reputation">Reputation:</string>
-    <string name="user_page_user_since">Steam user since: \n</string>
-    <string name="user_page_last_online">Last online:</string>
-    <string name="user_page_link_bazaar">Bazaar.tf</string>
-    <string name="user_page_link_tf2op">TF2Outpost</string>
-    <string name="user_page_link_tf2tp">TF2TP</string>
-    <string name="user_page_link_steamrep">STEAMREP</string>
-    <string name="user_page_link_community">COMMUNITY</string>
-    <string name="user_page_link_backpack">BACKPACK</string>
-    <string name="user_page_status">Status</string>
-    <string name="user_page_trust">TRUST</string>
-    <string name="placeholder_unknown">\?</string>
-    <string name="user_page_trade_status">TRADE</string>
-    <string name="user_page_vac">VAC</string>
-    <string name="user_page_refined">\ REFINED</string>
-    <string name="user_page_metal">\ RAW METAL</string>
-    <string name="user_page_keys">\ RAW KEYS</string>
-    <string name="user_page_usd">\ USD</string>
-    <string name="user_page_slots">\ SLOTS</string>
-    <string name="calculator_earbuds">Earbuds</string>
-    <string name="calculator_keys">Keys</string>
-    <string name="calculator_metal">Refined Metal</string>
-    <string name="calculator_usd">USD</string>
-    <string name="navigation_drawer_help">Help</string>
-    <string name="calculator_placeholder_metal">0 ref</string>
-    <string name="calculator_placeholder_buds">0 buds</string>
-    <string name="calculator_placeholder_keys">0 keys</string>
-    <string name="calculator_placeholder_usd">$0</string>
-    <string name="calculator_add">Add new item</string>
-    <string name="item_chooser_no_match">No match or item has no price</string>
-    <string name="item_chooser_hint">Start typing...</string>
-    <string name="item_chooser_count">1</string>
-    <string name="action_cancel">Cancel</string>
-    <string name="action_add">Add</string>
+    <string name="placeholder_unknown" translatable="false">\?</string>
+    <string name="preference_dialog_steam_id" translatable="true">64bit SteamId:</string>
+    <string name="preference_dialog_vanity_name" translatable="true">Vanity name:</string>
 
 </resources>
