@@ -3,7 +3,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <stroke
         android:width="2dp"
-        android:color="#24a9de" />
+        android:color="@color/player_online" />
     <corners android:radius="2dp" />
     <padding
         android:bottom="2dp"

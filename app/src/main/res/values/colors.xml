@@ -33,4 +33,9 @@
     <color name="tf2_vintage_color_dark">#ff37496e</color>
     <color name="tf2_genuine_color_dark">#ff36583d</color>
 
+    <!--Player state colors-->
+    <color name="player_online">#ff24a9de</color>
+    <color name="player_offline">#ff6E6E6E</color>
+    <color name="player_in_game">#ff8fb93b</color>
+
 </resources>
