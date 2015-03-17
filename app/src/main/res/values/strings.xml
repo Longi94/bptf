@@ -150,6 +150,10 @@
     <string name="item_chooser_hint" translatable="true">Start typing…</string>
     <string name="item_chooser_no_match" translatable="true">No match or item has no price</string>
 
+    <!--Menu resources-->
+    <string name="menu_name" translatable="true">Name</string>
+    <string name="menu_average_price" translatable="true">Average price</string>
+
     <!--Other string resources-->
     <string name="navigation_drawer_close" translatable="true">Close navigation drawer</string>
     <string name="navigation_drawer_help" translatable="true">Help</string>
