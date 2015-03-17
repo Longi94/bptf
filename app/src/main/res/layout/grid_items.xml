@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Layout resources for grid items with prices-->
 <com.tlongdev.bktf.view.CustomLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/item_background_unusual">
 
+    <!--Icon of the item-->
     <com.tlongdev.bktf.view.CustomImageView
         android:id="@+id/image_view_item_icon"
         android:layout_width="match_parent"
@@ -13,6 +15,7 @@
         android:padding="3dp"
         android:scaleType="centerCrop" />
 
+    <!--Price of the item-->
     <TextView
         android:id="@+id/grid_item_price"
         android:layout_width="match_parent"

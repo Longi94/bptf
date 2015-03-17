@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Layout resource fo user page layout.-->
 <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,6 +8,7 @@
     android:layout_height="match_parent"
     tools:context="com.tlongdev.bktf.fragment.UserFragment">
 
+    <!--Scrollview is needed for the SwipeRefreshLayout to work.-->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -35,6 +38,7 @@
                         android:layout_marginEnd="16dp"
                         android:layout_marginRight="16dp">
 
+                        <!--Progress bar indicating the downloading of the avatar-->
                         <ProgressBar
                             android:id="@+id/progress_bar"
                             style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
@@ -43,6 +47,7 @@
                             android:layout_gravity="center"
                             android:visibility="invisible" />
 
+                        <!--Avatar-->
                         <ImageView
                             android:id="@+id/player_avatar"
                             android:layout_width="match_parent"
@@ -58,6 +63,7 @@
                         android:layout_weight="1"
                         android:orientation="vertical">
 
+                        <!--Name of the user-->
                         <TextView
                             android:id="@+id/text_view_player_name"
                             android:layout_width="wrap_content"
@@ -65,18 +71,21 @@
                             android:singleLine="true"
                             android:textSize="28sp" />
 
+                        <!--Reputation of the player-->
                         <TextView
                             android:id="@+id/text_view_player_reputation"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/user_page_reputation" />
 
+                        <!--Age of the user's steam account-->
                         <TextView
                             android:id="@+id/text_view_user_since"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/user_page_user_since" />
 
+                        <!--How long was it since the user was last online-->
                         <TextView
                             android:id="@+id/text_view_user_last_online"
                             android:layout_width="wrap_content"
@@ -107,6 +116,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
+                        <!--Bazaar.tf-->
                         <Button
                             android:id="@+id/button_bazaar_tf"
                             android:layout_width="0dp"
@@ -115,6 +125,7 @@
                             android:clickable="true"
                             android:text="@string/user_page_link_bazaar" />
 
+                        <!--Tf2Outpost-->
                         <Button
                             android:id="@+id/button_tf2op"
                             android:layout_width="0dp"
@@ -130,6 +141,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
+                        <!--Tf2TradePost-->
                         <Button
                             android:id="@+id/button_tf2tp"
                             android:layout_width="0dp"
@@ -138,6 +150,7 @@
                             android:clickable="true"
                             android:text="@string/user_page_link_tf2tp" />
 
+                        <!--SteamRep-->
                         <Button
                             android:id="@+id/button_steamrep"
                             android:layout_width="0dp"
@@ -153,6 +166,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
+                        <!--Steam account-->
                         <Button
                             android:id="@+id/button_steam_community"
                             android:layout_width="0dp"
@@ -161,6 +175,7 @@
                             android:clickable="true"
                             android:text="@string/user_page_link_community" />
 
+                        <!--Backpack-->
                         <Button
                             android:id="@+id/button_backpack"
                             android:layout_width="0dp"
@@ -208,6 +223,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
+                            <!--Trust score of the user-->
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -238,6 +254,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
+                            <!--Steamrep status-->
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -268,6 +285,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
+                            <!--Steam trade status-->
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -298,6 +316,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
+                            <!--VAC satus-->
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -328,6 +347,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
+                            <!--Community status-->
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -374,6 +394,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
+                            <!--Backpack value in refined metal-->
                             <TextView
                                 android:id="@+id/text_view_bp_refined"
                                 android:layout_width="wrap_content"
@@ -400,6 +421,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
+                            <!--Number of raw metal in backpack.-->
                             <TextView
                                 android:id="@+id/text_view_bp_raw_metal"
                                 android:layout_width="wrap_content"
@@ -426,6 +448,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
+                            <!--Number of raw keys in backpack-->
                             <TextView
                                 android:id="@+id/text_view_bp_raw_keys"
                                 android:layout_width="wrap_content"
@@ -452,6 +475,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
+                            <!--Backpack value in usd-->
                             <TextView
                                 android:id="@+id/text_view_bp_usd"
                                 android:layout_width="wrap_content"
@@ -478,6 +502,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
+                            <!--Number of used and all slots in backpack-->
                             <TextView
                                 android:id="@+id/text_view_bp_slots"
                                 android:layout_width="wrap_content"

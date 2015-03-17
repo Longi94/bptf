@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Layout resource for showing results in the search fragment.-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,12 +15,14 @@
         android:layout_width="64dp"
         android:layout_height="55dp">
 
+        <!--Background of the item icon-->
         <ImageView
             android:id="@+id/image_view_item_background"
             android:layout_width="64dp"
             android:layout_height="55dp"
             android:contentDescription="@string/description_background" />
 
+        <!--Icon of the item-->
         <ImageView
             android:id="@+id/image_view_item_icon"
             android:layout_width="64dp"
@@ -29,6 +32,7 @@
 
     </FrameLayout>
 
+    <!--Name of the item-->
     <TextView
         android:id="@+id/item_name"
         android:layout_width="0dp"
@@ -40,6 +44,7 @@
         android:paddingRight="8dp"
         android:textSize="16sp" />
 
+    <!--Price of the item-->
     <TextView
         android:id="@+id/item_price"
         android:layout_width="wrap_content"

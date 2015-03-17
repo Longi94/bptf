@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Layout resource for the latest changes fragment-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,6 +12,7 @@
         android:layout_height="match_parent"
         android:clipChildren="false">
 
+        <!--Listview containing the latest changes-->
         <ListView
             android:id="@+id/list_view_changes"
             android:layout_width="match_parent"
@@ -20,6 +22,7 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <!--Header used as a quickreturn header.-->
     <LinearLayout
         android:id="@+id/list_changes_header"
         android:layout_width="match_parent"
@@ -28,7 +31,6 @@
         android:baselineAligned="false"
         android:orientation="horizontal">
 
-
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -36,6 +38,7 @@
             android:gravity="center"
             android:orientation="vertical">
 
+            <!--Metal price-->
             <TextView
                 android:id="@+id/text_view_metal_price"
                 android:layout_width="wrap_content"
@@ -62,6 +65,7 @@
             android:gravity="center"
             android:orientation="vertical">
 
+            <!--Key price-->
             <TextView
                 android:id="@+id/text_view_key_price"
                 android:layout_width="wrap_content"
@@ -88,6 +92,7 @@
             android:gravity="center"
             android:orientation="vertical">
 
+            <!--Buds price-->
             <TextView
                 android:id="@+id/text_view_buds_price"
                 android:layout_width="wrap_content"
@@ -109,6 +114,7 @@
 
     </LinearLayout>
 
+    <!--Progress bar fro indicating loading-->
     <ProgressBar
         android:id="@+id/progress_bar"
         style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
