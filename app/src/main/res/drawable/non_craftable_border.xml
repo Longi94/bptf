@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Dashed border indicating an item's uncraftability.-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-
     <stroke
         android:width="3dp"
+        android:color="#000"
         android:dashGap="3dp"
-        android:dashWidth="3dp"
-        android:color="#000"/>
-
-    <corners
-        android:radius="3dp"/>
-
+        android:dashWidth="3dp" />
+    <corners android:radius="3dp" />
 </shape>

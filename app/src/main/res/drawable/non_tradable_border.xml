@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+<!--A layer drawable for simulating the gradient border. Indicates the item's untradability.-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
             <padding
@@ -16,10 +17,10 @@
                 android:left="0.5dp"
                 android:right="0.5dp"
                 android:top="0.5dp" />
-            <stroke android:color="#99ff0000"
-                android:width="0.5dp" />
-            <corners
-                android:radius="2dp" />
+            <stroke
+                android:width="0.5dp"
+                android:color="#99ff0000" />
+            <corners android:radius="2dp" />
         </shape>
     </item>
     <item>
@@ -29,10 +30,10 @@
                 android:left="0.5dp"
                 android:right="0.5dp"
                 android:top="0.5dp" />
-            <stroke android:color="#88ff0000"
-                android:width="0.5dp" />
-            <corners
-                android:radius="1dp" />
+            <stroke
+                android:width="0.5dp"
+                android:color="#88ff0000" />
+            <corners android:radius="1dp" />
         </shape>
     </item>
     <item>
@@ -42,8 +43,9 @@
                 android:left="0.5dp"
                 android:right="0.5dp"
                 android:top="0.5dp" />
-            <stroke android:color="#77ff0000"
-                android:width="0.5dp"/>
+            <stroke
+                android:width="0.5dp"
+                android:color="#77ff0000" />
         </shape>
     </item>
     <item>
@@ -53,8 +55,9 @@
                 android:left="0.5dp"
                 android:right="0.5dp"
                 android:top="0.5dp" />
-            <stroke android:color="#66ff0000"
-                android:width="0.5dp" />
+            <stroke
+                android:width="0.5dp"
+                android:color="#66ff0000" />
         </shape>
     </item>
 
@@ -65,8 +68,9 @@
                 android:left="0.5dp"
                 android:right="0.5dp"
                 android:top="0.5dp" />
-            <stroke android:color="#55ff0000"
-                android:width="0.5dp" />
+            <stroke
+                android:width="0.5dp"
+                android:color="#55ff0000" />
         </shape>
     </item>
     <item>
@@ -76,8 +80,9 @@
                 android:left="0.5dp"
                 android:right="0.5dp"
                 android:top="0.5dp" />
-            <stroke android:color="#44ff0000"
-                android:width="0.5dp"/>
+            <stroke
+                android:width="0.5dp"
+                android:color="#44ff0000" />
         </shape>
     </item>
     <item>
@@ -87,8 +92,9 @@
                 android:left="0.5dp"
                 android:right="0.5dp"
                 android:top="0.5dp" />
-            <stroke android:color="#33ff0000"
-                android:width="0.5dp" />
+            <stroke
+                android:width="0.5dp"
+                android:color="#33ff0000" />
         </shape>
     </item>
     <item>
@@ -98,8 +104,9 @@
                 android:left="0.5dp"
                 android:right="0.5dp"
                 android:top="0.5dp" />
-            <stroke android:color="#22ff0000"
-                android:width="0.5dp" />
+            <stroke
+                android:width="0.5dp"
+                android:color="#22ff0000" />
         </shape>
     </item>
     <item>
@@ -109,14 +116,16 @@
                 android:left="0.5dp"
                 android:right="0.5dp"
                 android:top="0.5dp" />
-            <stroke android:color="#11ff0000"
-                android:width="0.5dp"/>
+            <stroke
+                android:width="0.5dp"
+                android:color="#11ff0000" />
         </shape>
     </item>
     <item>
         <shape>
-            <stroke android:color="#00ff0000"
-                android:width="0.5dp"/>
+            <stroke
+                android:width="0.5dp"
+                android:color="#00ff0000" />
         </shape>
     </item>
 </layer-list>

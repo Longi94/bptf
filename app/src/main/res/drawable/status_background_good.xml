@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Status background used for good statuses-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="#ff4ebf53"/>
-    <corners android:radius="4dp"/>
+    <solid android:color="#ff4ebf53" />
+    <corners android:radius="4dp" />
 </shape>

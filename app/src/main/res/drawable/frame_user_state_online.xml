@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Frame indicating the users online state around the avatar.-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <stroke android:color="#24a9de"
-        android:width="2dp"/>
-    <corners android:radius="2dp"/>
-    <padding android:bottom="2dp"
+    <stroke
+        android:width="2dp"
+        android:color="#24a9de" />
+    <corners android:radius="2dp" />
+    <padding
+        android:bottom="2dp"
         android:left="2dp"
         android:right="2dp"
-        android:top="2dp"/>
+        android:top="2dp" />
 </shape>
