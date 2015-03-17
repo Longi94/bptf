@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Open animation for the item shooter dialog. Make it look like it comes from the FAB.-->
 <set xmlns:android="http://schemas.android.com/apk/res/android"
-    android:interpolator="@android:interpolator/decelerate_quad"
-    android:duration="250">
+    android:duration="250"
+    android:interpolator="@android:interpolator/decelerate_quad">
     <alpha
         android:fromAlpha="0"
-        android:toAlpha="1"
-        android:interpolator="@android:interpolator/accelerate_cubic"/>
+        android:interpolator="@android:interpolator/accelerate_cubic"
+        android:toAlpha="1" />
     <scale
         android:fromXScale="50%"
         android:fromYScale="50%"
         android:toXScale="100%"
-        android:toYScale="100%"/>
+        android:toYScale="100%" />
     <translate
         android:fromXDelta="70%p"
-        android:fromYDelta="80%p"/>
+        android:fromYDelta="80%p" />
 </set>
