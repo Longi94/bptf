@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--Titles for the sync interval preference-->
     <string-array name="array_pref_sync_interval_titles">
         <item>Every 30 minutes</item>
         <item>Every hour</item>
@@ -9,6 +10,7 @@
         <item>Daily</item>
     </string-array>
 
+    <!--Values for the sync interval preference-->
     <string-array name="array_pref_sync_interval_values">
         <item>1800000</item>
         <item>3600000</item>
@@ -17,6 +19,7 @@
         <item>86400000</item>
     </string-array>
 
+    <!--Titles for the notification interval preference-->
     <string-array name="array_pref_notification_interval_titles">
         <item>Every 5 minutes</item>
         <item>Every 15 minutes</item>
@@ -27,6 +30,7 @@
         <item>Daily</item>
     </string-array>
 
+    <!--Values for the notification interval preference-->
     <string-array name="array_pref_notification_interval_values">
         <item>300000</item>
         <item>900000</item>
@@ -37,6 +41,7 @@
         <item>86400000</item>
     </string-array>
 
+    <!--Array containing item origines at their correct indexes-->
     <string-array name="array_origins">
         <item>Timed Drop</item>
         <item>Achievement</item>
@@ -63,6 +68,7 @@
         <item>Recipe output</item>
     </string-array>
 
+    <!--Simple array for the spinner in the item chooser dialog-->
     <string-array name="array_item_chooser_spinner">
         <item>Regular items</item>
         <item>Unusuals</item>
