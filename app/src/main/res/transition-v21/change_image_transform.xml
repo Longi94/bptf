@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Transition resource for shared elements transitions-->
 <transitionSet xmlns:android="http://schemas.android.com/apk/res/android">
     <changeImageTransform
         android:duration="400"

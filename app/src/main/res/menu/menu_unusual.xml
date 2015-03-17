@@ -3,26 +3,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.tlongdev.bktf.UnusualActivity">
 
-    <item android:id="@+id/action_sort"
-        android:title="@string/action_sort"
-        android:orderInCategory="90"
+    <item
+        android:id="@+id/action_sort"
         android:icon="@drawable/ic_sort_white_24dp"
+        android:orderInCategory="90"
+        android:title="@string/action_sort"
         app:showAsAction="ifRoom|collapseActionView">
         <menu>
             <item
                 android:id="@+id/menu_sort_name"
-                android:title="Name" />
+                android:title="@string/menu_name" />
             <item
                 android:id="@+id/menu_sort_price"
-                android:title="Average price" />
+                android:title="@string/menu_average_price" />
         </menu>
     </item>
 
-    <item android:id="@+id/action_effect"
-        android:title="@string/action_browse_effect"
-        android:orderInCategory="80"
+    <item
+        android:id="@+id/action_effect"
         android:icon="@drawable/ic_star_outline_white_24dp"
-        app:showAsAction="ifRoom|collapseActionView">
+        android:orderInCategory="80"
+        android:title="@string/action_browse_effect"
+        app:showAsAction="ifRoom|collapseActionView" />
 
-    </item>
 </menu>
