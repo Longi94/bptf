@@ -1,8 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Menu resource used in the unusual fragment.-->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.tlongdev.bktf.UnusualActivity">
 
+    <!--Spinner used for sorting the items.-->
     <item
         android:id="@+id/action_sort"
         android:icon="@drawable/ic_sort_white_24dp"
@@ -19,6 +22,7 @@
         </menu>
     </item>
 
+    <!--Button used for switching between hat and effect view.-->
     <item
         android:id="@+id/action_effect"
         android:icon="@drawable/ic_star_outline_white_24dp"
