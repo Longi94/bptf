@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Layout resource used in the backpack view for showing items. Simulates gridview by showing
+multiple items in a row. Needed for headers.-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:baselineAligned="false"
     android:orientation="horizontal">
 
+    <!--A single item. Square shaped.-->
     <com.tlongdev.bktf.view.SquareFrameLayout
         android:id="@+id/relative_layout_1"
         android:layout_width="0dp"
@@ -13,12 +16,14 @@
         android:foreground="@drawable/simple_grid_item_background"
         android:padding="1dp">
 
+        <!--Background of the item.-->
         <com.tlongdev.bktf.view.SquareImageView
             android:id="@+id/image_view_item_background_1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/item_background_blank" />
 
+        <!--Icon of the item.-->
         <com.tlongdev.bktf.view.SquareImageView
             android:id="@+id/image_view_item_icon_1"
             android:layout_width="match_parent"
