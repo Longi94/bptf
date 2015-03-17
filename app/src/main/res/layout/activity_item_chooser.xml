@@ -32,7 +32,7 @@
         android:layout_weight="1"
         android:scrollbars="none" />
 
-    <!--SHows if there is not match-->
+    <!--Shows if there is not match-->
     <TextView
         android:id="@+id/text_view_no_match"
         android:layout_width="match_parent"
