@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Layout resource for the item chooser dialog activity.-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list_view"
@@ -7,11 +9,13 @@
     android:padding="16dp"
     tools:context="com.tlongdev.bktf.ItemChooserActivity">
 
+    <!--Spinner for switching between normal and unusual items-->
     <Spinner
         android:id="@+id/spinner_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <!--Spinner for choosing an effect-->
     <Spinner
         android:id="@+id/spinner_effect"
         android:layout_width="match_parent"
@@ -20,6 +24,7 @@
         android:paddingBottom="8dp"
         android:paddingTop="8dp" />
 
+    <!--Listview containing the matches-->
     <ListView
         android:id="@+id/list_view_item_chooser"
         android:layout_width="wrap_content"
@@ -27,6 +32,7 @@
         android:layout_weight="1"
         android:scrollbars="none" />
 
+    <!--SHows if there is not match-->
     <TextView
         android:id="@+id/text_view_no_match"
         android:layout_width="match_parent"
@@ -41,6 +47,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <!--Input for searching-->
         <EditText
             android:id="@+id/edit_text_search"
             android:layout_width="0dp"
@@ -51,6 +58,7 @@
             android:textColorHighlight="@color/bktf_main_blue_light"
             android:textSize="16sp" />
 
+        <!--Number of items to be added-->
         <EditText
             android:id="@+id/edit_text_count"
             android:layout_width="0dp"
@@ -70,6 +78,7 @@
         android:gravity="end"
         android:orientation="horizontal">
 
+        <!--Cancel button-->
         <Button
             android:id="@+id/button_cancel"
             style="?android:attr/buttonBarButtonStyle"
@@ -78,6 +87,7 @@
             android:text="@string/action_cancel"
             android:textColor="@color/bptf_main_blue" />
 
+        <!--Add button-->
         <Button
             android:id="@+id/button_add"
             style="?android:attr/buttonBarButtonStyle"
