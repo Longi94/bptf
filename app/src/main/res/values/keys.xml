@@ -2,11 +2,19 @@
 <resources>
 
     <!--API Keys-->
-    <string name="api_key_backpack_tf">549b3e46b88d8847188b48aa</string>
-    <string name="steam_web_api_key">AA4BE494541ACA43379ADD02957B9F0E</string>
+    <string name="api_key_backpack_tf" translatable="false">549b3e46b88d8847188b48aa</string>
+    <string name="steam_web_api_key" translatable="false">AA4BE494541ACA43379ADD02957B9F0E</string>
 
     <!--API URLs-->
-    <string name="steam_get_schema_url">http://api.steampowered.com/IEconItems_440/GetSchema/v0001/</string>
-    <string name="steam_get_player_items_url">http://api.steampowered.com/IEconItems_440/GetPlayerItems/v0001/</string>
+    <string name="backpack_tf_get_users" translatable="false">http://backpack.tf/api/IGetUsers/v3/</string>
+    <string name="steam_get_schema_url" translatable="false">http://api.steampowered.com/IEconItems_440/GetSchema/v0001/</string>
+    <string name="steam_get_player_items_url" translatable="false">http://api.steampowered.com/IEconItems_440/GetPlayerItems/v0001/</string>
+
+    <!--URLs-->
+    <string name="link_bazaar_tf" translatable="false">http://bazaar.tf/profiles/</string>
+    <string name="link_steamrep" translatable="false">http://steamrep.com/profiles/</string>
+    <string name="link_tf2op" translatable="false">http://www.tf2outpost.com/user/</string>
+    <string name="link_tf2tp" translatable="false">http://tf2tp.com/user/</string>
+    <string name="link_steam_community" translatable="false">http://steamcommunity.com/profiles/</string>
 
 </resources>
