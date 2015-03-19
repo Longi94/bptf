@@ -11,6 +11,38 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+
+        <provider
+            android:name=".data.PriceListProvider"
+            android:authorities="com.tlongdev.bktf"
+            android:enabled="true"
+            android:exported="false" />
+
+        <provider
+            android:name=".data.UserBackpackProvider"
+            android:authorities="com.tlongdev.bktf.backpack"
+            android:enabled="true"
+            android:exported="false" />
+
+        <service
+            android:name=".service.NotificationsService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <service
+            android:name=".service.UpdateDatabaseService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <receiver
+            android:name=".broadcastreceiver.BootBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -18,7 +50,6 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
@@ -29,6 +60,7 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -38,12 +70,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tlongdev.bktf.MainActivity" />
         </activity>
-
-        <provider
-            android:name=".data.PriceListProvider"
-            android:authorities="com.tlongdev.bktf"
-            android:enabled="true"
-            android:exported="false" />
 
         <activity
             android:name=".UnusualActivity"
@@ -55,25 +81,6 @@
                 android:value="com.tlongdev.bktf.MainActivity" />
         </activity>
 
-        <service
-            android:name=".service.NotificationsService"
-            android:enabled="true"
-            android:exported="false"/>
-
-        <receiver
-            android:name=".broadcastreceiver.BootBroadcastReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name=".service.UpdateDatabaseService"
-            android:enabled="true"
-            android:exported="false"/>
-
         <activity
             android:name=".UserInfoActivity"
             android:label=""
@@ -83,6 +90,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tlongdev.bktf.MainActivity" />
         </activity>
+
         <activity
             android:name=".ItemChooserActivity"
             android:excludeFromRecents="true"
@@ -94,6 +102,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tlongdev.bktf.MainActivity" />
         </activity>
+
         <activity
             android:name=".CreditsActivity"
             android:excludeFromRecents="true"
@@ -106,16 +115,11 @@
                 android:value="com.tlongdev.bktf.SettingsActivity" />
         </activity>
 
-        <provider
-            android:name=".data.UserBackpackProvider"
-            android:authorities="com.tlongdev.bktf.backpack"
-            android:enabled="true"
-            android:exported="false"/>
-
         <activity
             android:name=".UserBackpackActivity"
             android:label="@string/title_activity_user_backpack"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".ItemDetailActivity"
             android:label="@string/title_activity_item_detail"
