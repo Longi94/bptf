@@ -23,7 +23,7 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
     public static final int LOADER_NORMAL = 0;
     public static final int LOADER_NEW = 1;
 
-    //Query columns
+    //Query columns for local user
     private static final String[] QUERY_COLUMNS = {
             UserBackpackContract.UserBackpackEntry.TABLE_NAME + "." + UserBackpackContract.UserBackpackEntry._ID,
             UserBackpackContract.UserBackpackEntry.COLUMN_DEFINDEX,
@@ -36,6 +36,7 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
             UserBackpackContract.UserBackpackEntry.COLUMN_AUSTRALIUM
     };
 
+    //Query columns for s guest user
     private static final String[] QUERY_COLUMNS_GUEST = {
             UserBackpackContract.UserBackpackEntry.TABLE_NAME_GUEST + "." + UserBackpackContract.UserBackpackEntry._ID,
             UserBackpackContract.UserBackpackEntry.COLUMN_DEFINDEX,
