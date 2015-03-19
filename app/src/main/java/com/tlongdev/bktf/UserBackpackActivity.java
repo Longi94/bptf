@@ -19,6 +19,8 @@ import com.tlongdev.bktf.data.UserBackpackContract;
  */
 public class UserBackpackActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final String LOG_TAG = UserBackpackActivity.class.getSimpleName();
+
     //Loader types
     public static final int LOADER_NORMAL = 0;
     public static final int LOADER_NEW = 1;
