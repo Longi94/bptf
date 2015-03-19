@@ -40,6 +40,7 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
     public static final String STEAM_ID_KEY = "steamid";
     public static final String JSON_USER_SUMMARIES_KEY = "json_user_summaries";
     private static final String LOG_TAG = UserInfoActivity.class.getSimpleName();
+
     //Progress bar that indicates donwloading user data.
     private ProgressBar progressBar;
 
@@ -190,7 +191,8 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
             if (privateBackpack) {
 
                 //If the backpack is private, show a toast and do nothing.
-                Toast.makeText(this, playerNameString + "'s backpack is private", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, playerNameString + "'s backpack is private",
+                        Toast.LENGTH_SHORT).show();
 
             } else {
 
@@ -198,7 +200,8 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
                 //the steamId and whether it's the user's backpack or not
                 Intent i = new Intent(this, UserBackpackActivity.class);
                 i.putExtra(UserBackpackActivity.EXTRA_NAME, playerNameString);
-                i.putExtra(UserBackpackActivity.EXTRA_GUEST, !steamId.equals(PreferenceManager.getDefaultSharedPreferences(this)
+                i.putExtra(UserBackpackActivity.EXTRA_GUEST, !steamId.equals(PreferenceManager
+                        .getDefaultSharedPreferences(this)
                         .getString(getString(R.string.pref_resolved_steam_id), "")));
                 startActivity(i);
 
@@ -286,11 +289,11 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
     }
 
     /**
-     * Get all relevant info from properly formatted JSON string returned by the GetSUerSummaries api.
+     * Get all relevant info from properly formatted JSON string returned by the GetSUerSummaries
+     * api.
      *
      * @param jsonString json string
      * @throws JSONException
-     * @see <a href="https://wiki.teamfortress.com/wiki/WebAPI/GetPlayerSummaries">GetUserSummaries API</a>
      */
     private void parseUserSummariesJson(String jsonString) throws JSONException {
 
@@ -353,7 +356,8 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         if (profileCreated == -1) {
             userSinceText.setText("Steam user since:\nunknown");
         } else {
-            userSinceText.setText("Steam user since:\n" + Utility.formatUnixTimeStamp(profileCreated));
+            userSinceText.setText("Steam user since:\n" + Utility
+                    .formatUnixTimeStamp(profileCreated));
         }
 
         //Switch for the player's state
@@ -364,7 +368,8 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
                     lastOnlineText.setText("Last online: unknown");
                 } else {
                     //Player is offline, show how long was it since the player was last online
-                    lastOnlineText.setText("Last online: " + Utility.formatLastOnlineTime(System.currentTimeMillis() - lastOnline * 1000L));
+                    lastOnlineText.setText("Last online: " + Utility.formatLastOnlineTime(
+                            System.currentTimeMillis() - lastOnline * 1000L));
                 }
                 lastOnlineText.setTextColor(getResources().getColor(R.color.player_offline));
                 break;
@@ -401,37 +406,45 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         //Steamremp information
         if (!isScammer) {
             steamRepStatus.setText("NORMAL");
-            steamRepStatus.setBackgroundDrawable(getResources().getDrawable(R.drawable.status_background_neutral));
+            steamRepStatus.setBackgroundDrawable(getResources()
+                    .getDrawable(R.drawable.status_background_neutral));
         } else {
             steamRepStatus.setText("SCAMMER");
-            steamRepStatus.setBackgroundDrawable(getResources().getDrawable(R.drawable.status_background_bad));
+            steamRepStatus.setBackgroundDrawable(getResources()
+                    .getDrawable(R.drawable.status_background_bad));
         }
 
         //Trade status
         if (!isTradeBanned) {
             tradeStatus.setText("OK");
-            tradeStatus.setBackgroundDrawable(getResources().getDrawable(R.drawable.status_background_good));
+            tradeStatus.setBackgroundDrawable(getResources()
+                    .getDrawable(R.drawable.status_background_good));
         } else {
             tradeStatus.setText("BAN");
-            tradeStatus.setBackgroundDrawable(getResources().getDrawable(R.drawable.status_background_bad));
+            tradeStatus.setBackgroundDrawable(getResources()
+                    .getDrawable(R.drawable.status_background_bad));
         }
 
         //VAC status
         if (!isVacBanned) {
             vacStatus.setText("OK");
-            vacStatus.setBackgroundDrawable(getResources().getDrawable(R.drawable.status_background_good));
+            vacStatus.setBackgroundDrawable(getResources()
+                    .getDrawable(R.drawable.status_background_good));
         } else {
             vacStatus.setText("BAN");
-            vacStatus.setBackgroundDrawable(getResources().getDrawable(R.drawable.status_background_bad));
+            vacStatus.setBackgroundDrawable(getResources()
+                    .getDrawable(R.drawable.status_background_bad));
         }
 
         //Community staus
         if (!isCommunityBanned) {
             communityStatus.setText("OK");
-            communityStatus.setBackgroundDrawable(getResources().getDrawable(R.drawable.status_background_good));
+            communityStatus.setBackgroundDrawable(getResources()
+                    .getDrawable(R.drawable.status_background_good));
         } else {
             communityStatus.setText("BAN");
-            communityStatus.setBackgroundDrawable(getResources().getDrawable(R.drawable.status_background_bad));
+            communityStatus.setBackgroundDrawable(getResources()
+                    .getDrawable(R.drawable.status_background_bad));
         }
 
         //Backpack value
@@ -443,10 +456,11 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
 
         } else if (!privateBackpack) {
 
-            //Properly format the backpack value (is it int, does it have a fraction smaller than 0.01)
+            //Properly format the backpack value (is int, does it have a fraction smaller than 0.01)
             if ((int) backpackValue == backpackValue)
                 backpackValueRefined.setText("" + (int) backpackValue);
-            else if (("" + backpackValue).substring(("" + backpackValue).indexOf('.') + 1).length() > 2)
+            else if (("" + backpackValue).substring(("" + backpackValue).indexOf('.') + 1)
+                    .length() > 2)
                 backpackValueRefined.setText("" + new DecimalFormat("#0.00").format(backpackValue));
             else
                 backpackValueRefined.setText("" + backpackValue);
@@ -465,30 +479,38 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         //Set the border of the avatar according to the player's state
         switch (playerState) {
             case 0:
-                avatar.setBackgroundDrawable(getResources().getDrawable(R.drawable.frame_user_state_offline));
+                avatar.setBackgroundDrawable(getResources()
+                        .getDrawable(R.drawable.frame_user_state_offline));
                 break;
             case 7:
-                avatar.setBackgroundDrawable(getResources().getDrawable(R.drawable.frame_user_state_in_game));
+                avatar.setBackgroundDrawable(getResources()
+                        .getDrawable(R.drawable.frame_user_state_in_game));
                 break;
             default:
-                avatar.setBackgroundDrawable(getResources().getDrawable(R.drawable.frame_user_state_online));
+                avatar.setBackgroundDrawable(getResources()
+                        .getDrawable(R.drawable.frame_user_state_online));
                 break;
         }
 
         //Set the trust score and color the background according to it.
         trustStatus.setText("" + (ratingPositive - ratingNegative));
         if (ratingNegative > ratingPositive) {
-            trustStatus.setBackgroundDrawable(getResources().getDrawable(R.drawable.status_background_bad));
+            trustStatus.setBackgroundDrawable(getResources()
+                    .getDrawable(R.drawable.status_background_bad));
         } else if (ratingPositive > ratingNegative && ratingNegative == 0) {
-            trustStatus.setBackgroundDrawable(getResources().getDrawable(R.drawable.status_background_good));
+            trustStatus.setBackgroundDrawable(getResources()
+                    .getDrawable(R.drawable.status_background_good));
         } else if (ratingPositive > ratingNegative && ratingNegative >= 0) {
-            trustStatus.setBackgroundDrawable(getResources().getDrawable(R.drawable.status_background_caution));
+            trustStatus.setBackgroundDrawable(getResources()
+                    .getDrawable(R.drawable.status_background_caution));
         } else {
-            trustStatus.setBackgroundDrawable(getResources().getDrawable(R.drawable.status_background_neutral));
+            trustStatus.setBackgroundDrawable(getResources()
+                    .getDrawable(R.drawable.status_background_neutral));
         }
 
         //Image should be available in data folder by the time this method is called.
-        avatar.setImageDrawable(Drawable.createFromPath(getFilesDir().toString() + "/avatar_search.png"));
+        avatar.setImageDrawable(Drawable.createFromPath(getFilesDir().toString() +
+                "/avatar_search.png"));
 
         //Raw keys
         if (rawKeys >= 0)
@@ -667,7 +689,8 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         protected void onProgressUpdate(String... values) {
             //only used for showing error messages to the user.
             if (values.length > 0) {
-                Toast.makeText(UserInfoActivity.this, "bptf: " + values[0], Toast.LENGTH_SHORT).show();
+                Toast.makeText(UserInfoActivity.this, "bptf: " + values[0], Toast.LENGTH_SHORT)
+                        .show();
             }
         }
 
