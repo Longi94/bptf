@@ -36,10 +36,11 @@ import java.text.DecimalFormat;
 public class UserInfoActivity extends ActionBarActivity implements View.OnClickListener,
         FetchUserBackpack.OnFetchUserBackpackListener {
 
+    private static final String LOG_TAG = UserInfoActivity.class.getSimpleName();
+
     //Keys for extra data in the intent.
     public static final String STEAM_ID_KEY = "steamid";
     public static final String JSON_USER_SUMMARIES_KEY = "json_user_summaries";
-    private static final String LOG_TAG = UserInfoActivity.class.getSimpleName();
 
     //Progress bar that indicates donwloading user data.
     private ProgressBar progressBar;
