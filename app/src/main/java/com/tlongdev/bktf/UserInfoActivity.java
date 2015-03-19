@@ -628,7 +628,7 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
                 }
             } catch (IOException e) {
                 //There was a network error
-                //TODO disguinguish all network errors: timeout, connectionrefused, api down, etc.
+                //TODO distuinguish all network errors: timeout, connectionrefused, api down, etc.
                 publishProgress("network error");
                 if (Utility.isDebugging(UserInfoActivity.this))
                     e.printStackTrace();
