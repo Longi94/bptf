@@ -1,9 +1,7 @@
 package com.tlongdev.bktf;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -11,7 +9,6 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.support.v7.widget.Toolbar;
@@ -35,155 +32,15 @@ import com.tlongdev.bktf.service.UpdateDatabaseService;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
-
-    private boolean secretSwitch = true;
-    private int secretCounter = 0;
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        setupSimplePreferencesScreen();
-
-        //Re-add actionbar that was removed in recent build tools.
-        LinearLayout root = (LinearLayout)findViewById(android.R.id.list).getParent().getParent().getParent();
-        Toolbar bar = (Toolbar) LayoutInflater.from(this).inflate(R.layout.settings_toolbar, root, false);
-        root.addView(bar, 0); // insert at top
-        bar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-    }
-
-    /**
-     * Shows the simplified settings UI if the device configuration if the
-     * device configuration dictates that a simplified, single-pane UI should be
-     * shown.
-     */
-    private void setupSimplePreferencesScreen() {
-        // In the simplified UI, fragments are not used at all and we instead
-        // use the older PreferenceActivity APIs.
-
-        // Add 'general' preferences.
-        if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_user_developer), false)) {
-            addPreferencesFromResource(R.xml.pref_general);
-        } else {
-            addPreferencesFromResource(R.xml.pref_general_dev);
-        }
-        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
-
-        // Bind the summaries of EditText/List/Dialog/Ringtone preferences to
-        // their values. When their values change, their summaries are updated
-        // to reflect the new value, per the Android Design guidelines.
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_notification_interval)));
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_sync_interval)));
-
-        findPreference(getString(R.string.pref_title_feedback)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto","tlongdev@gmail.com", null));
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(Intent.createChooser(intent, "Send email..."));
-                }
-                return true;
-            }
-        });
-
-        findPreference(getString(R.string.pref_title_rate)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                final String appPackageName = getPackageName();
-                try {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-                } catch (android.content.ActivityNotFoundException e) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-                }
-                return true;
-            }
-        });
-
-        findPreference(getString(R.string.pref_title_changelog)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Longi94/bptf/wiki/Changelog")));
-                return true;
-            }
-        });
-
-        //Set the version name to the summary, so I don't have to change it manually every goddamn
-        //update
-        findPreference(getString(R.string.pref_title_version)).setSummary(BuildConfig.VERSION_NAME);
-
-
-        if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_user_developer), false)) {
-            findPreference(getString(R.string.pref_title_version)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    if (secretSwitch) {
-                        secretCounter++;
-                        secretSwitch = false;
-                    }
-                    return true;
-                }
-            });
-
-            findPreference(getString(R.string.pref_title_developer)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    if (!secretSwitch) {
-                        secretCounter++;
-                        secretSwitch = true;
-                        if (secretCounter == 6){
-                            Toast.makeText(SettingsActivity.this, "You're now the developer of this app!", Toast.LENGTH_SHORT).show();
-                            findPreference(getString(R.string.pref_title_developer)).setOnPreferenceClickListener(null);
-                            findPreference(getString(R.string.pref_title_version)).setOnPreferenceClickListener(null);
-                            PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this).
-                                    edit().putBoolean(getString(R.string.pref_user_developer), true).apply();
-                        }
-                    }
-                    return true;
-                }
-            });
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean onIsMultiPane() {
-        return isXLargeTablet(this) && !isSimplePreferences(this);
-    }
-
-    /**
-     * Helper method to determine if the device has an extra-large screen. For
-     * example, 10" tablets are extra-large.
-     */
-    private static boolean isXLargeTablet(Context context) {
-        return (context.getResources().getConfiguration().screenLayout
-                & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
-    }
-
-    /**
-     * Determines whether the simplified settings UI should be shown. This is
-     * true if this is forced via or the device
-     * doesn't have newer APIs like {@link PreferenceFragment}, or the device
-     * doesn't have an extra-large screen. In these cases, a single-pane
-     * "simplified" settings UI should be shown.
-     */
-    private static boolean isSimplePreferences(Context context) {
-        return true;
-    }
+public class SettingsActivity extends PreferenceActivity implements
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
+    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener
+            = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();
@@ -230,6 +87,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             return true;
         }
     };
+    //These variables are used for the hidden developer options
+    private boolean secretSwitch = true;
+    private int secretCounter = 0;
 
     /**
      * Binds a preference's summary to its value. More specifically, when the
@@ -253,6 +113,141 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     }
 
     @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        setupSimplePreferencesScreen();
+
+        //Re-add actionbar that was removed in recent build tools.
+        LinearLayout root = (LinearLayout) findViewById(android.R.id.list)
+                .getParent().getParent().getParent();
+        Toolbar bar = (Toolbar) LayoutInflater.from(this)
+                .inflate(R.layout.settings_toolbar, root, false);
+        // insert at top
+        root.addView(bar, 0);
+        //finish the activity when the user clicks on the back button in the navigation bar
+        bar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    /**
+     * Shows the simplified settings UI if the device configuration if the
+     * device configuration dictates that a simplified, single-pane UI should be
+     * shown.
+     */
+    private void setupSimplePreferencesScreen() {
+        // In the simplified UI, fragments are not used at all and we instead
+        // use the older PreferenceActivity APIs.
+
+        // Add 'general' preferences.
+        if (!PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean(getString(R.string.pref_user_developer), false)) {
+            addPreferencesFromResource(R.xml.pref_general);
+        } else {
+            addPreferencesFromResource(R.xml.pref_general_dev);
+        }
+
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
+
+        // Bind the summaries of EditText/List/Dialog/Ringtone preferences to
+        // their values. When their values change, their summaries are updated
+        // to reflect the new value, per the Android Design guidelines.
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_notification_interval)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_sync_interval)));
+
+        findPreference(getString(R.string.pref_title_feedback)).setOnPreferenceClickListener(
+                new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        //Start an email intent with my email as the target
+                        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                                "mailto", "tlongdev@gmail.com", null));
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            startActivity(Intent.createChooser(intent, "Send email..."));
+                        }
+                        return true;
+                    }
+                });
+
+        findPreference(getString(R.string.pref_title_rate)).setOnPreferenceClickListener(
+                new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        //Open the Play Store page of the app
+                        final String appPackageName = getPackageName();
+                        try {
+                            startActivity(new Intent(Intent.ACTION_VIEW,
+                                    Uri.parse("market://details?id=" + appPackageName)));
+                        } catch (android.content.ActivityNotFoundException e) {
+                            //Play store is not present on the phone. Open the browser
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
+                                    "https://play.google.com/store/apps/details?id=" +
+                                            appPackageName)));
+                        }
+                        return true;
+                    }
+                });
+
+        findPreference(getString(R.string.pref_title_changelog)).setOnPreferenceClickListener(
+                new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        //Open the GitHub changelog page in the browser
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
+                                "https://github.com/Longi94/bptf/wiki/Changelog")));
+                        return true;
+                    }
+                });
+
+        //Set the version name to the summary, so I don't have to change it manually every goddamn
+        //update
+        findPreference(getString(R.string.pref_title_version)).setSummary(BuildConfig.VERSION_NAME);
+
+        //Show the developer options when activated
+        if (!PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean(getString(R.string.pref_user_developer), false)) {
+            findPreference(getString(R.string.pref_title_version)).setOnPreferenceClickListener(
+                    new Preference.OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            if (secretSwitch) {
+                                secretCounter++;
+                                secretSwitch = false;
+                            }
+                            return true;
+                        }
+                    });
+
+            findPreference(getString(R.string.pref_title_developer)).setOnPreferenceClickListener(
+                    new Preference.OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            if (!secretSwitch) {
+                                secretCounter++;
+                                secretSwitch = true;
+                                if (secretCounter == 6) {
+                                    //Show a toast that the user revealed the developer options.
+                                    Toast.makeText(SettingsActivity.this,
+                                            "You're now the developer of this app!", Toast.LENGTH_SHORT)
+                                            .show();
+                                    findPreference(getString(R.string.pref_title_developer)).setOnPreferenceClickListener(null);
+                                    findPreference(getString(R.string.pref_title_version)).setOnPreferenceClickListener(null);
+                                    PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this).
+                                            edit().putBoolean(getString(R.string.pref_user_developer), true).apply();
+                                }
+                            }
+                            return true;
+                        }
+                    });
+        }
+    }
+
+    @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
         if (key.equals(getString(R.string.pref_steam_id))) {
@@ -260,10 +255,12 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
             if (Utility.isSteamId(sharedPreferences.getString(key, ""))) {
+                //If the user entered the 64bit steamId, save it
                 editor.putString(getString(R.string.pref_resolved_steam_id),
                         sharedPreferences.getString(key, ""));
             }
 
+            //Remove all data assosiaged with the previous id
             editor.remove(getString(R.string.pref_player_avatar_url));
             editor.remove(getString(R.string.pref_player_name));
             editor.remove(getString(R.string.pref_player_reputation));
@@ -288,26 +285,26 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
             editor.apply();
 
+            //Inform the main activity, that the steam is has been changed
             Intent i = new Intent();
             i.putExtra("preference_changed", true);
             setResult(RESULT_OK, i);
         }
-        else if (key.equals(getString(R.string.pref_notification))){
+
+        //Start the appropiate services if these settings have been changed
+        else if (key.equals(getString(R.string.pref_notification))) {
             if (sharedPreferences.getBoolean(key, false)) {
                 startService(new Intent(this, NotificationsService.class));
             }
-        }
-        else if (key.equals(getString(R.string.pref_notification_interval))){
+        } else if (key.equals(getString(R.string.pref_notification_interval))) {
             if (sharedPreferences.getBoolean(getString(R.string.pref_notification), false)) {
                 startService(new Intent(this, NotificationsService.class));
             }
-        }
-        else if (key.equals(getString(R.string.pref_background_sync))){
+        } else if (key.equals(getString(R.string.pref_background_sync))) {
             if (sharedPreferences.getBoolean(key, false)) {
                 startService(new Intent(this, UpdateDatabaseService.class));
             }
-        }
-        else if (key.equals(getString(R.string.pref_notification_interval))){
+        } else if (key.equals(getString(R.string.pref_notification_interval))) {
             if (sharedPreferences.getBoolean(getString(R.string.pref_background_sync), false)) {
                 startService(new Intent(this, UpdateDatabaseService.class));
             }
