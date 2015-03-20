@@ -87,6 +87,7 @@ public class SettingsActivity extends PreferenceActivity implements
             return true;
         }
     };
+
     //These variables are used for the hidden developer options
     private boolean secretSwitch = true;
     private int secretCounter = 0;
@@ -112,6 +113,9 @@ public class SettingsActivity extends PreferenceActivity implements
                         .getString(preference.getKey(), ""));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -247,6 +251,9 @@ public class SettingsActivity extends PreferenceActivity implements
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 

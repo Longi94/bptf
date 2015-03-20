@@ -26,11 +26,13 @@ import com.tlongdev.bktf.service.NotificationsService;
 import com.tlongdev.bktf.service.UpdateDatabaseService;
 
 /**
- * Tha main activity if the application. Navigation drawer is used.
+ * Tha main activity if the application. Navigation drawer is used. This is where most of the
+ * fragments are shown.
  */
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
+    //Request codes for onActivityResult
     public static final int REQUEST_SETTINGS = 100;
     public static final int REQUEST_NEW_ITEM = 101;
 
@@ -52,6 +54,9 @@ public class MainActivity extends ActionBarActivity
     private int currentFragment = -1;
     private boolean restartUserFragment = false;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,21 +76,24 @@ public class MainActivity extends ActionBarActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
         //Start services if option is on
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_notification), false)){
+        if (PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean(getString(R.string.pref_notification), false)) {
             startService(new Intent(this, NotificationsService.class));
         }
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_background_sync), false)){
+        if (PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean(getString(R.string.pref_background_sync), false)) {
             startService(new Intent(this, UpdateDatabaseService.class));
         }
-
-        //startActivity(new Intent(this, WelcomeActivity.class));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onResume() {
 
         //If needed (mostly when the steamId was changed) reload a new instance of the UserFragment
-        if (restartUserFragment){
+        if (restartUserFragment) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.container, new UserFragment())
@@ -96,46 +104,62 @@ public class MainActivity extends ActionBarActivity
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onNavigationDrawerItemSelected(int position) {
+
+        //Start handling fragment transactions
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
+
         if (currentFragment != -1) {
+            //Simple fade animation for switching between fragments
             transaction.setCustomAnimations(R.anim.simple_fade_in, R.anim.simple_fade_out);
         }
         if (position == 0 && currentFragment != 0) {
+            //Home fragment
             transaction.replace(R.id.container, new HomeFragment());
-        }
-        else if (position == 1 && currentFragment != 1) {
+        } else if (position == 1 && currentFragment != 1) {
+            //User fragment
             transaction.replace(R.id.container, new UserFragment());
-        }
-        else if (position == 2  && currentFragment != 2) {
+        } else if (position == 2 && currentFragment != 2) {
+            //Unusual prices fragment
             transaction.replace(R.id.container, new UnusualPriceListFragment());
-        }
-        else if (position == 3  && currentFragment != 3) {
-            if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_preferred_advanced_calculator), false)){
+        } else if (position == 3 && currentFragment != 3) {
+            if (!PreferenceManager.getDefaultSharedPreferences(this)
+                    .getBoolean(getString(R.string.pref_preferred_advanced_calculator), false)) {
+                //Simple calculatior fragment
                 transaction.replace(R.id.container, new SimpleCalculatorFragment());
             } else {
+                //Advanced caltulator fragment
                 transaction.replace(R.id.container, new AdvancedCalculatorFragment());
             }
         }
         transaction.commit();
-
         currentFragment = position;
         onSectionAttached(position);
     }
 
-    public void startSettingsActivity(){
+    /**
+     * Convenience activity to start the settings activity
+     */
+    public void startSettingsActivity() {
         Intent settingsIntent = new Intent(this, SettingsActivity.class);
         startActivityForResult(settingsIntent, REQUEST_SETTINGS);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SETTINGS){
-            if (resultCode == RESULT_OK){
-                if (currentFragment == 1){
-                    if (data != null && data.getBooleanExtra("preference_changed", false)){
+        if (requestCode == REQUEST_SETTINGS) {
+            //User returned from the settings activity
+            if (resultCode == RESULT_OK) {
+                if (currentFragment == 1) {
+                    if (data != null && data.getBooleanExtra("preference_changed", false)) {
                         //User fragment needs to be reloaded if the steamId was changed
                         restartUserFragment = true;
                     }
@@ -143,9 +167,14 @@ public class MainActivity extends ActionBarActivity
             }
             return;
         }
+        //super call is needed to pass the result to the fragments
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * This sets the title according to the fragments. I have no idea why this was generated.
+     * @param number index of the fragment
+     */
     public void onSectionAttached(int number) {
         switch (number) {
             case 0:
@@ -162,6 +191,9 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
+    /**
+     * Restores action bar I assume. It was auto generated.
+     */
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
@@ -169,10 +201,13 @@ public class MainActivity extends ActionBarActivity
         actionBar.setTitle(mTitle);
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
+        //Inflate the action bar menu
         getMenuInflater().inflate(R.menu.menu_main, menu);
         restoreActionBar();
 
@@ -181,8 +216,10 @@ public class MainActivity extends ActionBarActivity
         MenuItem menuItem = menu.findItem(R.id.action_search);
         SearchView mSearchView = (SearchView) menuItem.getActionView();
 
+        //Set the searchable info
         mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
+        //Start a new query everytime the text is edited and when the player taps on submit.
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -201,17 +238,23 @@ public class MainActivity extends ActionBarActivity
             }
         });
 
+        //Switch to the search fragment when the searchview is expanded and switch back when
+        //collapsed.
         MenuItemCompat.setOnActionExpandListener(menuItem,
                 new MenuItemCompat.OnActionExpandListener() {
                     @Override
                     public boolean onMenuItemActionExpand(MenuItem item) {
-                        if (mNavigationDrawerFragment.isDrawerOpen()){
+                        //Close the drawer if it was open
+                        if (mNavigationDrawerFragment.isDrawerOpen()) {
                             mNavigationDrawerFragment.closeDrawer();
                         }
+                        //Lock the drawer. Prevents the user from opening it while searching.
                         mNavigationDrawerFragment.lockDrawer();
 
+                        //Store the index of the previous fragment.
                         previousFragment = mNavigationDrawerFragment.getCheckedItemPosition();
 
+                        //Switch to the search fragment
                         mSearchFragment = new SearchFragment();
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         fragmentManager.beginTransaction()
@@ -220,18 +263,17 @@ public class MainActivity extends ActionBarActivity
                                 .commit();
 
                         currentFragment = -2;
-
                         return true;
                     }
 
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item) {
+                        //Unlock the drawer and switch back to the previous fragment
                         mNavigationDrawerFragment.unlockDrawer();
                         onNavigationDrawerItemSelected(previousFragment);
                         return true;
                     }
-                })
-        ;
+                });
 
         return super.onCreateOptionsMenu(menu);
     }
