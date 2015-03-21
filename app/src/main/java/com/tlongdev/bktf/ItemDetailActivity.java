@@ -271,7 +271,8 @@ public class ItemDetailActivity extends Activity {
 
             //Set the custom description of the item (if any)
             if (customDescription != null) {
-                customDesc.setText(Html.fromHtml("Custom description: <i>" + customDescription + "</i>"));
+                customDesc.setText(Html
+                        .fromHtml("Custom description: <i>" + customDescription + "</i>"));
                 customDesc.setVisibility(View.VISIBLE);
             }
 
@@ -300,7 +301,8 @@ public class ItemDetailActivity extends Activity {
                     quality, tradable, craftable));
         } else {
             //Crash the app if there is no item with the id (should never happen)
-            throw new RuntimeException("Item with id " + id + " not found (selection: " + selection + ")");
+            throw new RuntimeException("Item with id " + id + " not found (selection: "
+                    + selection + ")");
         }
 
         //Start querying the price
@@ -329,15 +331,18 @@ public class ItemDetailActivity extends Activity {
                 uri,
                 columns,
                 selection,
-                new String[]{"" + defindex, "" + quality, "" + tradable, "" + craftable, "" + priceIndex, "%australium%"},
+                new String[]{"" + defindex, "" + quality, "" + tradable, "" + craftable, ""
+                        + priceIndex, "%australium%"},
                 null
         );
 
         if (priceCursor.moveToFirst()) {
             //Show the price
             price.setVisibility(View.VISIBLE);
-            price.setText("Suggested price: " + Utility.formatPrice(this, priceCursor.getDouble(COL_PRICE_LIST_PRICE),
-                    priceCursor.getDouble(COL_PRICE_LIST_PMAX), priceCursor.getString(COL_PRICE_LIST_CURRENCY),
+            price.setText("Suggested price: " + Utility
+                    .formatPrice(this, priceCursor.getDouble(COL_PRICE_LIST_PRICE),
+                    priceCursor.getDouble(COL_PRICE_LIST_PMAX),
+                            priceCursor.getString(COL_PRICE_LIST_CURRENCY),
                     priceCursor.getString(COL_PRICE_LIST_CURRENCY), false));
         }
 
@@ -357,7 +362,8 @@ public class ItemDetailActivity extends Activity {
      * @param paint        paint index of the item
      * @param isAustralium whether the item is australium or not
      */
-    private void setIconImage(Context context, ImageView icon, int defindex, int index, int quality, int paint, boolean isAustralium) {
+    private void setIconImage(Context context, ImageView icon, int defindex, int index, int quality,
+                              int paint, boolean isAustralium) {
         try {
             InputStream ims;
             AssetManager assetManager = context.getAssets();
