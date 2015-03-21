@@ -24,16 +24,51 @@ import com.tlongdev.bktf.data.UserBackpackContract.UserBackpackEntry;
 import java.io.IOException;
 import java.io.InputStream;
 
-
+/**
+ * The (dialog) activity for showing info about an item in a backpack.
+ */
 public class ItemDetailActivity extends Activity {
 
+    public static final String LOG_TAG = ItemDetailActivity.class.getSimpleName();
+
+    //Keys for the extra data in the intent
     public static final String EXTRA_ITEM_ID = "id";
     public static final String EXTRA_GUEST = "guest";
     public static final String EXTRA_ITEM_NAME = "name";
     public static final String EXTRA_ITEM_TYPE = "type";
     public static final String EXTRA_PROPER_NAME = "proper";
 
-    //Query columns
+    //Indexes for the columns below
+    public static final int COL_BACKPACK_DEFI = 1;
+    public static final int COL_BACKPACK_QUAL = 2;
+    public static final int COL_BACKPACK_CRFN = 3; // TODO
+    public static final int COL_BACKPACK_TRAD = 4;
+    public static final int COL_BACKPACK_CRAF = 5;
+    public static final int COL_BACKPACK_INDE = 6;
+    public static final int COL_BACKPACK_PAINT = 7;
+    public static final int COL_BACKPACK_AUS = 8;
+    public static final int COL_BACKPACK_CRAFTER = 9;
+    public static final int COL_BACKPACK_GIFTER = 10;
+    public static final int COL_BACKPACK_CUSTOM_NAME = 11;
+    public static final int COL_BACKPACK_CUSTOM_DESC = 12;
+    public static final int COL_BACKPACK_LEVEL = 13;
+    public static final int COL_BACKPACK_EQUIP = 14; // TODO
+    public static final int COL_BACKPACK_ORIGIN = 15;
+
+    //Query columns for querying the price
+    public static final String[] QUERY_COLUMNS_PRICE = {
+            PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
+            PriceEntry.COLUMN_ITEM_PRICE,
+            PriceEntry.COLUMN_ITEM_PRICE_MAX,
+            PriceEntry.COLUMN_ITEM_PRICE_CURRENCY
+    };
+
+    //Indexes for the columns above
+    public static final int COL_PRICE_LIST_PRICE = 1;
+    public static final int COL_PRICE_LIST_PMAX = 2;
+    public static final int COL_PRICE_LIST_CURRENCY = 3;
+
+    //Query columns for querying info of the item
     private static final String[] QUERY_COLUMNS = {
             UserBackpackEntry.TABLE_NAME + "." + UserBackpackEntry._ID,
             UserBackpackEntry.COLUMN_DEFINDEX,
@@ -52,7 +87,6 @@ public class ItemDetailActivity extends Activity {
             UserBackpackEntry.COLUMN_EQUIPPED,
             UserBackpackEntry.COLUMN_ORIGIN
     };
-
     private static final String[] QUERY_COLUMNS_GUEST = {
             UserBackpackEntry.TABLE_NAME_GUEST + "." + UserBackpackEntry._ID,
             UserBackpackEntry.COLUMN_DEFINDEX,
@@ -72,38 +106,13 @@ public class ItemDetailActivity extends Activity {
             UserBackpackEntry.COLUMN_ORIGIN
     };
 
-    //Indexes for the columns above
-    public static final int COL_BACKPACK_DEFI = 1;
-    public static final int COL_BACKPACK_QUAL = 2;
-    public static final int COL_BACKPACK_CRFN = 3;
-    public static final int COL_BACKPACK_TRAD = 4;
-    public static final int COL_BACKPACK_CRAF = 5;
-    public static final int COL_BACKPACK_INDE = 6;
-    public static final int COL_BACKPACK_PAINT = 7;
-    public static final int COL_BACKPACK_AUS = 8;
-    public static final int COL_BACKPACK_CRAFTER = 9;
-    public static final int COL_BACKPACK_GIFTER = 10;
-    public static final int COL_BACKPACK_CUSTOM_NAME = 11;
-    public static final int COL_BACKPACK_CUSTOM_DESC = 12;
-    public static final int COL_BACKPACK_LEVEL = 13;
-    public static final int COL_BACKPACK_EQUIP = 14;
-    public static final int COL_BACKPACK_ORIGIN = 15;
-
-    public static final String[] QUERY_COLUMNS_PRICE = {
-            PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
-            PriceEntry.COLUMN_ITEM_PRICE,
-            PriceEntry.COLUMN_ITEM_PRICE_MAX,
-            PriceEntry.COLUMN_ITEM_PRICE_CURRENCY
-    };
-
-    //Indexes for the columns above
-    public static final int COL_PRICE_LIST_PRICE = 1;
-    public static final int COL_PRICE_LIST_PMAX = 2;
-    public static final int COL_PRICE_LIST_CURRENCY = 3;
-
+    //This decides which table to load data from.
     private boolean isGuest;
+
+    //This is the id of the item in the database table
     private int id;
 
+    //Rerefernces to all the textviews in the view
     private TextView name;
     private TextView level;
     private TextView effect;
@@ -115,30 +124,40 @@ public class ItemDetailActivity extends Activity {
     private TextView paint;
     private TextView price;
 
+    //References to the imageview
     private ImageView icon;
     private ImageView background;
 
+    //Store the intent that came
     private Intent mIntent;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
 
+        //Store the intent
         mIntent = getIntent();
 
+        //Get extra data
         isGuest = mIntent.getBooleanExtra(EXTRA_GUEST, false);
         id = mIntent.getIntExtra(EXTRA_ITEM_ID, 0);
 
+        //Scale the icon, so the width of the image view is on third of the screen's width
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
-        FrameLayout layout = (FrameLayout)findViewById(R.id.relative_layout_image);
+        FrameLayout layout = (FrameLayout) findViewById(R.id.relative_layout_image);
         layout.getLayoutParams().width = screenWidth / 3;
         layout.getLayoutParams().height = screenWidth / 3;
         layout.requestLayout();
 
-        final CardView cardView = (CardView)findViewById(R.id.card_view);
+        //Cardview which makes it look like a dialog
+        final CardView cardView = (CardView) findViewById(R.id.card_view);
 
-        ((View)cardView.getParent()).setOnClickListener(new View.OnClickListener() {
+        //Return to the previous activity if the user taps utside te dialog.
+        ((View) cardView.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= 21)
@@ -147,41 +166,51 @@ public class ItemDetailActivity extends Activity {
                     finish();
             }
         });
+        //Do nathing if the user taps on the cardview itself
         cardView.setOnClickListener(null);
 
-        name = (TextView)findViewById(R.id.text_view_name);
-        level = (TextView)findViewById(R.id.text_view_level);
-        effect = (TextView)findViewById(R.id.text_view_effect_name);
-        customName = (TextView)findViewById(R.id.text_view_custom_name);
-        customDesc = (TextView)findViewById(R.id.text_view_custom_desc);
-        crafterName = (TextView)findViewById(R.id.text_view_crafted);
-        gifterName = (TextView)findViewById(R.id.text_view_gifted);
-        origin = (TextView)findViewById(R.id.text_view_origin);
-        paint = (TextView)findViewById(R.id.text_view_paint);
-        price = (TextView)findViewById(R.id.text_view_price);
+        //Find all the views
+        name = (TextView) findViewById(R.id.text_view_name);
+        level = (TextView) findViewById(R.id.text_view_level);
+        effect = (TextView) findViewById(R.id.text_view_effect_name);
+        customName = (TextView) findViewById(R.id.text_view_custom_name);
+        customDesc = (TextView) findViewById(R.id.text_view_custom_desc);
+        crafterName = (TextView) findViewById(R.id.text_view_crafted);
+        gifterName = (TextView) findViewById(R.id.text_view_gifted);
+        origin = (TextView) findViewById(R.id.text_view_origin);
+        paint = (TextView) findViewById(R.id.text_view_paint);
+        price = (TextView) findViewById(R.id.text_view_price);
 
-        icon = (ImageView)findViewById(R.id.image_view_item_icon);
-        background = (ImageView)findViewById(R.id.image_view_item_background);
+        icon = (ImageView) findViewById(R.id.image_view_item_icon);
+        background = (ImageView) findViewById(R.id.image_view_item_background);
 
         queryItemDetails();
     }
 
+    /**
+     * Query all the necessary data out of the database and show them to de user.
+     */
     private void queryItemDetails() {
+        //Variables needed for querying
         Uri uri;
         String[] columns;
         String selection;
+
         if (isGuest) {
+            //The user is a guest user
             uri = UserBackpackEntry.CONTENT_URI_GUEST;
             columns = QUERY_COLUMNS_GUEST;
             selection = UserBackpackEntry.TABLE_NAME_GUEST + "." +
                     UserBackpackEntry._ID + " = ?";
         } else {
+            //The user is the main user
             uri = UserBackpackEntry.CONTENT_URI;
             columns = QUERY_COLUMNS;
             selection = UserBackpackEntry.TABLE_NAME + "." +
                     UserBackpackEntry._ID + " = ?";
         }
 
+        //Query
         Cursor itemCursor = getContentResolver().query(
                 uri,
                 columns,
@@ -196,7 +225,9 @@ public class ItemDetailActivity extends Activity {
         int craftable;
         int quality;
         int isAus;
-        if (itemCursor.moveToFirst()){
+
+        if (itemCursor.moveToFirst()) {
+            //Store all the data
             defindex = itemCursor.getInt(COL_BACKPACK_DEFI);
             priceIndex = itemCursor.getInt(COL_BACKPACK_INDE);
             tradable = Math.abs(itemCursor.getInt(COL_BACKPACK_TRAD) - 1);
@@ -208,57 +239,75 @@ public class ItemDetailActivity extends Activity {
             String customDescription = itemCursor.getString(COL_BACKPACK_CUSTOM_DESC);
             String crafter = itemCursor.getString(COL_BACKPACK_CRAFTER);
             String gifter = itemCursor.getString(COL_BACKPACK_GIFTER);
+
             int paintNumber = itemCursor.getInt(COL_BACKPACK_PAINT);
 
+            //Set the name of the item
             name.setText(Utility.formatSimpleItemName(
                     mIntent.getStringExtra(EXTRA_ITEM_NAME),
                     quality,
                     priceIndex,
                     mIntent.getIntExtra(EXTRA_PROPER_NAME, 0) == 1));
 
-            level.setText("Level " + itemCursor.getInt(COL_BACKPACK_LEVEL) + " " + mIntent.getStringExtra(EXTRA_ITEM_TYPE));
+            //Set the level of the item, get the type from the intent
+            level.setText("Level " + itemCursor.getInt(COL_BACKPACK_LEVEL) + " " +
+                    mIntent.getStringExtra(EXTRA_ITEM_TYPE));
 
-            origin.setText("Origin: " + getResources().getStringArray(R.array.array_origins)[itemCursor.getInt(COL_BACKPACK_ORIGIN)]);
+            //Set the origin of the item. Get the origin from the string array resource
+            origin.setText("Origin: " + getResources().getStringArray(R.array.array_origins)
+                    [itemCursor.getInt(COL_BACKPACK_ORIGIN)]);
 
-            if (priceIndex != 0 && (quality == 5 || quality == 7 || quality == 9)){
+            //Set the effect of the item (if any)
+            if (priceIndex != 0 && (quality == 5 || quality == 7 || quality == 9)) {
                 effect.setText("Effect: " + Utility.getUnusualEffectName(priceIndex));
                 effect.setVisibility(View.VISIBLE);
             }
 
-            if (customName != null){
+            //set the custom name of the item (if any)
+            if (customName != null) {
                 this.customName.setText(Html.fromHtml("Custom name: <i>" + customName + "</i>"));
                 this.customName.setVisibility(View.VISIBLE);
             }
 
-            if (customDescription != null){
+            //Set the custom description of the item (if any)
+            if (customDescription != null) {
                 customDesc.setText(Html.fromHtml("Custom description: <i>" + customDescription + "</i>"));
                 customDesc.setVisibility(View.VISIBLE);
             }
 
-            if (crafter != null){
+            //Set the crafter's name (if any)
+            if (crafter != null) {
                 crafterName.setText(Html.fromHtml("Crafted by: <i>" + crafter + "</i>"));
                 crafterName.setVisibility(View.VISIBLE);
             }
 
-            if (gifter != null){
+            //Set the gifter's name (if any)
+            if (gifter != null) {
                 gifterName.setText(Html.fromHtml("Gifted by: <i>" + gifter + "</i>"));
                 gifterName.setVisibility(View.VISIBLE);
             }
 
-            if (paintNumber != 0){
+            //Set the paint text (if any)
+            if (paintNumber != 0) {
                 paint.setText("Paint: " + Utility.getPaintName(paintNumber));
                 paint.setVisibility(View.VISIBLE);
             }
 
-            setIconImage(this, icon, Utility.getIconIndex(defindex), priceIndex, quality, paintNumber, isAus == 1);
+            //Set the icon and the background
+            setIconImage(this, icon, Utility.getIconIndex(defindex), priceIndex,
+                    quality, paintNumber, isAus == 1);
             background.setBackgroundDrawable(Utility.getItemBackground(this,
                     quality, tradable, craftable));
         } else {
+            //Crash the app if there is no item with the id (should never happen)
             throw new RuntimeException("Item with id " + id + " not found (selection: " + selection + ")");
         }
 
+        //Start querying the price
         uri = PriceEntry.CONTENT_URI;
         columns = QUERY_COLUMNS_PRICE;
+
+        //Proper condition for searching for australum items.
         String ausCondition;
         if (isAus == 1 || defindex == 5037) {
             ausCondition = PriceEntry.COLUMN_ITEM_NAME + " LIKE ?";
@@ -266,6 +315,7 @@ public class ItemDetailActivity extends Activity {
             ausCondition = PriceEntry.COLUMN_ITEM_NAME + " NOT LIKE ?";
         }
 
+        //Exact selection, should return only one match
         selection = PriceEntry.TABLE_NAME + "." +
                 PriceEntry.COLUMN_DEFINDEX + " = ? AND " +
                 PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
@@ -274,6 +324,7 @@ public class ItemDetailActivity extends Activity {
                 PriceEntry.COLUMN_PRICE_INDEX + " = ? AND " +
                 ausCondition;
 
+        //Query
         Cursor priceCursor = getContentResolver().query(
                 uri,
                 columns,
@@ -283,48 +334,65 @@ public class ItemDetailActivity extends Activity {
         );
 
         if (priceCursor.moveToFirst()) {
-            try {
-                price.setVisibility(View.VISIBLE);
-                price.setText("Suggested price: " + Utility.formatPrice(this, priceCursor.getDouble(COL_PRICE_LIST_PRICE),
-                        priceCursor.getDouble(COL_PRICE_LIST_PMAX), priceCursor.getString(COL_PRICE_LIST_CURRENCY),
-                        priceCursor.getString(COL_PRICE_LIST_CURRENCY), false));
-            } catch (Throwable throwable) {
-                if (Utility.isDebugging(this))
-                    throwable.printStackTrace();
-            }
+            //Show the price
+            price.setVisibility(View.VISIBLE);
+            price.setText("Suggested price: " + Utility.formatPrice(this, priceCursor.getDouble(COL_PRICE_LIST_PRICE),
+                    priceCursor.getDouble(COL_PRICE_LIST_PMAX), priceCursor.getString(COL_PRICE_LIST_CURRENCY),
+                    priceCursor.getString(COL_PRICE_LIST_CURRENCY), false));
         }
 
+        //Close the cursors
         itemCursor.close();
         priceCursor.close();
     }
 
+    /**
+     * Create and set the items icon according to it's properties
+     *
+     * @param context      context for accessing assets
+     * @param icon         the ImageView to set the drawable to
+     * @param defindex     defindex of the item
+     * @param index        price index of the item
+     * @param quality      quality of the item
+     * @param paint        paint index of the item
+     * @param isAustralium whether the item is australium or not
+     */
     private void setIconImage(Context context, ImageView icon, int defindex, int index, int quality, int paint, boolean isAustralium) {
         try {
             InputStream ims;
             AssetManager assetManager = context.getAssets();
             Drawable d;
 
+            //Load the item icon
             if (isAustralium) {
                 ims = assetManager.open("items/" + defindex + "aus.png");
             } else {
                 ims = assetManager.open("items/" + defindex + ".png");
             }
-
             Drawable iconDrawable = Drawable.createFromStream(ims, null);
+
             if (index != 0 && Utility.canHaveEffects(defindex, quality)) {
+                //Load the effect image
                 ims = assetManager.open("effects/" + index + "_188x188.png");
                 Drawable effectDrawable = Drawable.createFromStream(ims, null);
+
+                //Layer the two drawables on top of each other
                 d = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
             } else {
+                //No effects
                 d = iconDrawable;
             }
 
-            if (Utility.isPaint(paint)){
+            if (Utility.isPaint(paint)) {
+                //Load the paint indicator dot
                 ims = assetManager.open("paint/" + paint + ".png");
                 Drawable paintDrawable = Drawable.createFromStream(ims, null);
+
+                //Layer the two drawables on top of each other
                 d = new LayerDrawable(new Drawable[]{d, paintDrawable});
             }
-            // set image to ImageView
+
+            // set the drawable to ImageView
             icon.setImageDrawable(d);
         } catch (IOException e) {
             Toast.makeText(context, "bptf: " + e.getMessage(), Toast.LENGTH_LONG).show();
