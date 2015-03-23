@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 22
+    buildToolsVersion '22.0.0'
 
     def versionPropsFile = file('version.properties')
 
@@ -19,7 +19,7 @@ android {
 
         def versionMajor = 1
         def versionMinor = 1
-        def versionPatch = 1/*versionProps['VERSION_PATCH'].toInteger() + value*/
+        def versionPatch = 2/*versionProps['VERSION_PATCH'].toInteger() + value*/
         def versionBuild = versionProps['VERSION_BUILD'].toInteger() + 1
         /*def version_Code = versionProps['VERSION_CODE'].toInteger() + value*/
 
@@ -32,8 +32,8 @@ android {
         defaultConfig {
             applicationId "com.tlongdev.bktf"
             minSdkVersion 14
-            targetSdkVersion 21
-            versionCode 8
+            targetSdkVersion 22
+            versionCode 9
             versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         }
 
