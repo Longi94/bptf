@@ -263,7 +263,7 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> implements
                 e.printStackTrace();
             return null;
         } finally {
-            //Cloase the connection
+            //Close the connection
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }

@@ -35,10 +35,11 @@ import java.util.Vector;
 /**
  * Task for fetching all data for prices database and updating it in the background.
  */
-public class FetchPriceList extends AsyncTask<String, Integer, Void>{
+public class FetchPriceList extends AsyncTask<String, Integer, Void> {
 
     private static final String LOG_TAG = FetchPriceList.class.getSimpleName();
 
+    //The context the task runs in
     private final Context mContext;
 
     //Whether it's an update or full database download
@@ -46,29 +47,48 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
 
     //Whether it was a user initiated update
     private boolean manualSync;
+
+    //Dialog to indicate the download progress
     private ProgressDialog loadingDialog;
 
+    //Error message to be displayed to the user
     private String errorMessage;
 
+    //The listener that will be notified when the fetching finishes
     private OnPriceListFetchListener listener;
 
+    /**
+     * Constructor
+     *
+     * @param context        the context the task was launched in
+     * @param updateDatabase whether the database only needs an update
+     * @param manualSync     whether this task was user initiated
+     */
     public FetchPriceList(Context context, boolean updateDatabase, boolean manualSync) {
-        mContext = context;
+        this.mContext = context;
         this.updateDatabase = updateDatabase;
         this.manualSync = manualSync;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onPreExecute() {
         if (!updateDatabase)
+            //Show the progress dialog
             loadingDialog = ProgressDialog.show(mContext, null, "Downloading data...", true);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Void doInBackground(String... params) {
 
         if (System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(mContext)
-                .getLong(mContext.getString(R.string.pref_last_price_list_update), 0) < 3600000L && !manualSync){
+                .getLong(mContext.getString(R.string.pref_last_price_list_update), 0) < 3600000L
+                && !manualSync) {
             //This task ran less than an hour ago and wasn't a manual sync, nothing to do.
             return null;
         }
@@ -82,13 +102,15 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
         String itemsJsonStr = null;
 
         try {
-            final String PRICES_BASE_URL = "http://backpack.tf/api/IGetPrices/v4/";
+            //The prices api and input keys
+            final String PRICES_BASE_URL = mContext.getString(R.string.backpack_tf_get_prices);
             final String KEY_PARAM = "key";
             final String KEY_COMPRESS = "compress";
             final String KEY_APP_ID = "app_id";
             final String KEY_FORMAT = "format";
             final String KEY_RAW = "raw";
 
+            //Build the URI
             Uri uri = Uri.parse(PRICES_BASE_URL).buildUpon()
                     .appendQueryParameter(KEY_PARAM, params[0])
                     .appendQueryParameter(KEY_COMPRESS, "1")
@@ -97,6 +119,7 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
                     .appendQueryParameter(KEY_RAW, "1")
                     .build();
 
+            //Initialize the URL
             URL url = new URL(uri.toString());
 
             if (Utility.isDebugging(mContext))
@@ -107,6 +130,7 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
 
+            //Get the input stream
             InputStream inputStream = urlConnection.getInputStream();
             StringBuilder buffer = new StringBuilder();
 
@@ -127,22 +151,27 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
                 //Stream was empty, nothing to do.
                 return null;
             }
+            //Get the jason string
             itemsJsonStr = buffer.toString();
 
         } catch (IOException e) {
+            //There was a network error
             errorMessage = "network error";
             publishProgress(-1);
             if (Utility.isDebugging(mContext))
                 e.printStackTrace();
             return null;
         } finally {
+            //Close the connection
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
             if (reader != null) {
                 try {
+                    //Close the reader
                     reader.close();
                 } catch (final IOException e) {
+                    //This should never be reached
                     errorMessage = e.getMessage();
                     publishProgress(-1);
                     if (Utility.isDebugging(mContext))
@@ -153,17 +182,22 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
         }
         try {
 
+            //Get all the items from the JSON string
             getItemsFromJson(itemsJsonStr);
 
-            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+            //Get the shared preferences
+            SharedPreferences.Editor editor = PreferenceManager
+                    .getDefaultSharedPreferences(mContext).edit();
 
             //Save when the update finished
-            editor.putLong(mContext.getString(R.string.pref_last_price_list_update), System.currentTimeMillis());
+            editor.putLong(mContext.getString(R.string.pref_last_price_list_update),
+                    System.currentTimeMillis());
             editor.putBoolean(mContext.getString(R.string.pref_initial_load), false);
             editor.apply();
 
 
         } catch (JSONException e) {
+            //There was an error parsing data
             errorMessage = "error while parsing data";
             publishProgress(-1);
             if (Utility.isDebugging(mContext))
@@ -173,6 +207,9 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onProgressUpdate(Integer... values) {
         if (loadingDialog != null) {
@@ -180,7 +217,8 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
                 //Download finished. Replace dialog.
                 case 0:
                     loadingDialog.dismiss();
-                    loadingDialog = new ProgressDialog(mContext, ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT);
+                    loadingDialog = new ProgressDialog(mContext,
+                            ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT);
                     loadingDialog.setIndeterminate(false);
                     loadingDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                     loadingDialog.setMessage("Creating database...");
@@ -191,14 +229,17 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
                 case 1:
                     loadingDialog.incrementProgressBy(1);
                     break;
-                //There was an error (exception) while trying to create initial database
+                //There was an error (exception) while trying to create initial database.
+                //Show a dialog that the download failed.
                 case -1:
                     AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                    builder.setMessage("Failed to download database. Check your internet connection and try again.").setCancelable(false).
+                    builder.setMessage("Failed to download database. " +
+                            "Check your internet connection and try again.").setCancelable(false).
                             setPositiveButton("Close", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    ((Activity)mContext).finish();
+                                    //Close app
+                                    ((Activity) mContext).finish();
                                 }
                             });
                     AlertDialog alertDialog = builder.create();
@@ -206,30 +247,45 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
                     alertDialog.show();
                     break;
             }
-        } else if (values[0] == -1){
+        } else if (values[0] == -1) {
             //There was an error while trying to update database
             Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onPostExecute(Void pVoid) {
         //Dismiss loading dialog
         if (loadingDialog != null && !updateDatabase)
             loadingDialog.dismiss();
 
-        if (listener != null){
+        if (listener != null) {
+            //Notify the listener that the update finished
             listener.onPriceListFetchFinished();
         }
     }
 
+    /**
+     * Register a listener which will be notified when the fetching finishes.
+     *
+     * @param listener the listener to be notified
+     */
     public void setOnPriceListFetchListener(OnPriceListFetchListener listener) {
         this.listener = listener;
     }
 
-    //Parse all the items from the JSON string.
+    /**
+     * Parse all the items from the JSON string.
+     *
+     * @param jsonString the string to parse from
+     * @throws JSONException
+     */
     private void getItemsFromJson(String jsonString) throws JSONException {
 
+        //All the JSON keys needed to parse
         final String OWM_RESPONSE = "response";
         final String OWM_SUCCESS = "success";
         final String OWM_MESSAGE = "message";
@@ -243,21 +299,24 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
         final String OWM_LAST_UPDATE = "last_update";
         final String OWM_DIFFERENCE = "difference";
 
-		int latestUpdate = 0;
-		if (updateDatabase) {
-			String[] columns = {PriceListContract.PriceEntry.COLUMN_LAST_UPDATE};
-			Cursor cursor = mContext.getContentResolver().query(
-					PriceListContract.PriceEntry.CONTENT_URI,
-					columns,
-					null,
-					null,
-					PriceListContract.PriceEntry.COLUMN_LAST_UPDATE + " DESC LIMIT 1"
-			);
-			if (cursor.moveToFirst())
-				latestUpdate = cursor.getInt(0);
+        //Get the youngest price from the database. If it's an update only prices newer than this
+        //will be updated to speed up the update.
+        int latestUpdate = 0;
+        if (updateDatabase) {
+            String[] columns = {PriceListContract.PriceEntry.COLUMN_LAST_UPDATE};
+            Cursor cursor = mContext.getContentResolver().query(
+                    PriceListContract.PriceEntry.CONTENT_URI,
+                    columns,
+                    null,
+                    null,
+                    PriceListContract.PriceEntry.COLUMN_LAST_UPDATE + " DESC LIMIT 1"
+            );
+            if (cursor.moveToFirst())
+                latestUpdate = cursor.getInt(0);
             cursor.close();
-		}
-		
+        }
+
+        //Get the response JSON
         JSONObject jsonObject = new JSONObject(jsonString);
         JSONObject response = jsonObject.getJSONObject(OWM_RESPONSE);
 
@@ -268,26 +327,38 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
             return;
         }
 
+        //Get the items
         JSONObject items = response.getJSONObject(OWM_ITEMS);
+
+        //Notify the task that the download finished and the processing begins
         publishProgress(0, items.length());
+
+        //Iterator that will iterate through the items
         Iterator<String> i = items.keys();
         Vector<ContentValues> cVVector = new Vector<>();
 
         // If any of the currencies was updated, the whole database needs to be updated.
         if (updateDatabase &&
-                (items.getJSONObject("Mann Co. Supply Crate Key").getJSONObject("prices").getJSONObject("6").getJSONObject("Tradable")
-                .getJSONArray("Craftable").getJSONObject(0).getInt(OWM_LAST_UPDATE) > latestUpdate ||
-                items.getJSONObject("Earbuds").getJSONObject("prices").getJSONObject("6").getJSONObject("Tradable")
-                        .getJSONArray("Craftable").getJSONObject(0).getInt(OWM_LAST_UPDATE) > latestUpdate ||
-                items.getJSONObject("Refined Metal").getJSONObject("prices").getJSONObject("6").getJSONObject("Tradable")
-                        .getJSONArray("Craftable").getJSONObject(0).getInt(OWM_LAST_UPDATE) > latestUpdate)) {
+                (items.getJSONObject("Mann Co. Supply Crate Key").getJSONObject("prices")
+                        .getJSONObject("6").getJSONObject("Tradable").getJSONArray("Craftable")
+                        .getJSONObject(0).getInt(OWM_LAST_UPDATE) > latestUpdate ||
+                        items.getJSONObject("Earbuds").getJSONObject("prices").getJSONObject("6")
+                                .getJSONObject("Tradable").getJSONArray("Craftable").getJSONObject(0)
+                                .getInt(OWM_LAST_UPDATE) > latestUpdate ||
+                        items.getJSONObject("Refined Metal").getJSONObject("prices").getJSONObject("6")
+                                .getJSONObject("Tradable").getJSONArray("Craftable").getJSONObject(0)
+                                .getInt(OWM_LAST_UPDATE) > latestUpdate)) {
             updateDatabase = false;
             latestUpdate = 0;
         }
 
+        //Start iterating
         while (i.hasNext()) {
-            String name = (String)i.next();
 
+            //Casting is redundant, but or some reason it doesn't work without it
+            String name = (String) i.next();
+
+            //Get the prices of the item
             JSONObject prices = items.getJSONObject(name).getJSONObject(OWM_PRICES);
             JSONArray defindexes = items.getJSONObject(name).getJSONArray(OWM_DEFINDEX);
 
@@ -302,158 +373,195 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
                 defindex = 6055;
             }
 
+            //Iterate through the qualities
             Iterator<String> qualityIterator = prices.keys();
+            while (qualityIterator.hasNext()) {
 
-            while (qualityIterator.hasNext()){
-
-                String quality = (String)qualityIterator.next();
+                //Casting is redundant, but or some reason it doesn't work without it
+                String quality = (String) qualityIterator.next();
                 JSONObject tradability = prices.getJSONObject(quality);
-                Iterator<String> tradableIterator = tradability.keys();
 
+                //Iterate through tradability
+                Iterator<String> tradableIterator = tradability.keys();
                 while (tradableIterator.hasNext()) {
 
-                    String tradable = (String)tradableIterator.next();
+                    //Casting is redundant, but or some reason it doesn't work without it
+                    String tradable = (String) tradableIterator.next();
                     JSONObject craftability = tradability.getJSONObject(tradable);
+
+                    //Iterate through craftability
                     Iterator<String> craftableIterator = craftability.keys();
+                    while (craftableIterator.hasNext()) {
 
-                    while (craftableIterator.hasNext()){
-
-                        String craftable = (String)craftableIterator.next();
+                        //Casting is redundant, but or some reason it doesn't work without it
+                        String craftable = (String) craftableIterator.next();
 
                         //If there are multiple price indexes the api return a JSONObject, if there
                         //is only one (0) the api returns a JSONArray (great...)
                         if (craftability.get(craftable) instanceof JSONObject) {
-                            JSONObject priceIndexes = craftability.getJSONObject(craftable);
-                            Iterator<String> priceIndexIterator = priceIndexes.keys();
 
+                            JSONObject priceIndexes = craftability.getJSONObject(craftable);
+
+                            //Iterate through the price indexes
+                            Iterator<String> priceIndexIterator = priceIndexes.keys();
                             while (priceIndexIterator.hasNext()) {
 
+                                //Casting is redundant but or some reason it doesn't work without it
                                 String priceIndex = (String) priceIndexIterator.next();
+
+                                //Get the price
                                 JSONObject price = priceIndexes.getJSONObject(priceIndex);
 
                                 //Check whether the price is new
-								if (latestUpdate < price.getInt(OWM_LAST_UPDATE)) {
+                                if (latestUpdate < price.getInt(OWM_LAST_UPDATE)) {
 
-									Double high = null;
-									if (price.has(OWM_VALUE_HIGH))
-										high = price.getDouble(OWM_VALUE_HIGH);
+                                    //Check if the price has a range
+                                    Double high = null;
+                                    if (price.has(OWM_VALUE_HIGH))
+                                        high = price.getDouble(OWM_VALUE_HIGH);
 
-									cVVector.add(buildContentValues(defindex,
-											name, quality, tradable, craftable, priceIndex, price.getString(OWM_CURRENCY),
-											price.getDouble(OWM_VALUE), high,
-											price.getDouble(OWM_VALUE_RAW), price.getInt(OWM_LAST_UPDATE),
-											price.getDouble(OWM_DIFFERENCE)
-									));
-								}
+                                    //Add the price to the CV vector
+                                    cVVector.add(buildContentValues(defindex,
+                                            name, quality, tradable, craftable, priceIndex,
+                                            price.getString(OWM_CURRENCY),
+                                            price.getDouble(OWM_VALUE), high,
+                                            price.getDouble(OWM_VALUE_RAW),
+                                            price.getInt(OWM_LAST_UPDATE),
+                                            price.getDouble(OWM_DIFFERENCE)
+                                    ));
+                                }
                             }
-                        }
-                        else {
+                        } else {
                             JSONArray priceIndexes = craftability.getJSONArray(craftable);
 
+                            //The array has only one element
                             JSONObject price = priceIndexes.getJSONObject(0);
 
                             //Check whether the price is new
-							if (latestUpdate < price.getInt(OWM_LAST_UPDATE)) {
-								Double high = null;
-								if (price.has(OWM_VALUE_HIGH))
-									high = price.getDouble(OWM_VALUE_HIGH);
+                            if (latestUpdate < price.getInt(OWM_LAST_UPDATE)) {
 
-								cVVector.add(buildContentValues(defindex,
-										name, quality, tradable, craftable, "0", price.getString(OWM_CURRENCY),
-										price.getDouble(OWM_VALUE), high,
-										price.getDouble(OWM_VALUE_RAW), price.getInt(OWM_LAST_UPDATE),
-										price.getDouble(OWM_DIFFERENCE)
-								));
-							}
+                                //Check if the price has a range
+                                Double high = null;
+                                if (price.has(OWM_VALUE_HIGH))
+                                    high = price.getDouble(OWM_VALUE_HIGH);
+
+                                //Add the price to the CV vector
+                                cVVector.add(buildContentValues(defindex,
+                                        name, quality, tradable, craftable, "0",
+                                        price.getString(OWM_CURRENCY),
+                                        price.getDouble(OWM_VALUE), high,
+                                        price.getDouble(OWM_VALUE_RAW),
+                                        price.getInt(OWM_LAST_UPDATE),
+                                        price.getDouble(OWM_DIFFERENCE)
+                                ));
+                            }
 
                             //Currency prices a processed slightly differently, some more info is
                             //saved to the default shared preferences
-                            if (quality.equals("6") && tradable.equals("Tradable") && craftable.equals("Craftable"))  {
+                            if (quality.equals("6") && tradable.equals("Tradable") &&
+                                    craftable.equals("Craftable")) {
+                                //Save extra info about the buds price
                                 if (defindex == 143) {
-                                    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
 
-                                    String priceString = "";
-                                    double itemPrice = price.getDouble(OWM_VALUE);
+                                    //Get the sharedpreferences
+                                    SharedPreferences.Editor editor = PreferenceManager
+                                            .getDefaultSharedPreferences(mContext).edit();
 
-                                    if ((int)itemPrice == itemPrice)
-                                        priceString = priceString + (int)itemPrice;
-                                    else
-                                        priceString = priceString + itemPrice;
-
+                                    //Store the price in a string so it can be displayed in the
+                                    //header in the latest changes page
+                                    double highPrice;
                                     if (price.has(OWM_VALUE_HIGH)) {
-                                        itemPrice = price.getDouble(OWM_VALUE_HIGH);
-
-                                        if ((int)itemPrice == itemPrice)
-                                            priceString = priceString + "-" + (int)itemPrice;
-                                        else
-                                            priceString = priceString + "-" + itemPrice;
+                                        highPrice = price.getDouble(OWM_VALUE_HIGH);
+                                    } else {
+                                        highPrice = 0;
                                     }
+                                    String priceString = Utility.formatPrice(
+                                            mContext, price.getDouble(OWM_VALUE), highPrice,
+                                            Utility.CURRENCY_KEY, Utility.CURRENCY_KEY, false
+                                    );
+                                    editor.putString(mContext.getString(R.string.pref_buds_price),
+                                            priceString);
 
-                                    priceString = priceString + " keys";
-
-                                    editor.putString(mContext.getString(R.string.pref_buds_price), priceString);
-                                    Utility.putDouble(editor, mContext.getString(R.string.pref_buds_diff), price.getDouble(OWM_DIFFERENCE));
-                                    Utility.putDouble(editor, mContext.getString(R.string.pref_buds_raw), price.getDouble(OWM_VALUE_RAW));
+                                    //Save the difference
+                                    Utility.putDouble(editor,
+                                            mContext.getString(R.string.pref_buds_diff),
+                                            price.getDouble(OWM_DIFFERENCE));
+                                    //Save the raw price
+                                    Utility.putDouble(editor,
+                                            mContext.getString(R.string.pref_buds_raw),
+                                            price.getDouble(OWM_VALUE_RAW));
 
                                     editor.apply();
-                                } else if (defindex == 5002) {
-                                    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
 
-                                    String priceString = "$";
-                                    double itemPrice = price.getDouble(OWM_VALUE);
+                                } else if (defindex == 5002) {//Save extra info about the refined price
 
-                                    if ((int)itemPrice == itemPrice)
-                                        priceString = priceString + (int)itemPrice;
-                                    else
-                                        priceString = priceString + itemPrice;
+                                    //Get the sharedpreferences
+                                    SharedPreferences.Editor editor = PreferenceManager
+                                            .getDefaultSharedPreferences(mContext).edit();
+
+                                    //Store the price in a string so it can be displayed in the
+                                    //header in the latest changes page
+                                    double highPrice;
+                                    if (price.has(OWM_VALUE_HIGH)) {
+                                        highPrice = price.getDouble(OWM_VALUE_HIGH);
+                                    } else {
+                                        highPrice = 0;
+                                    }
+                                    String priceString = Utility.formatPrice(
+                                            mContext, price.getDouble(OWM_VALUE), highPrice,
+                                            Utility.CURRENCY_USD, Utility.CURRENCY_USD, false
+                                    );
+                                    editor.putString(mContext.getString(R.string.pref_metal_price),
+                                            priceString);
+
+                                    //Save the difference
+                                    Utility.putDouble(editor,
+                                            mContext.getString(R.string.pref_metal_diff),
+                                            price.getDouble(OWM_DIFFERENCE));
 
                                     if (price.has(OWM_VALUE_HIGH)) {
-                                        itemPrice = price.getDouble(OWM_VALUE_HIGH);
-
-                                        if ((int)itemPrice == itemPrice)
-                                            priceString = priceString + "-" + (int)itemPrice;
-                                        else
-                                            priceString = priceString + "-" + itemPrice;
-                                    }
-
-                                    editor.putString(mContext.getString(R.string.pref_metal_price), priceString);
-                                    Utility.putDouble(editor, mContext.getString(R.string.pref_metal_diff), price.getDouble(OWM_DIFFERENCE));
-
-                                    if (price.has(OWM_VALUE_HIGH)){
-                                        Utility.putDouble(editor, mContext.getString(R.string.pref_metal_raw_usd),
-                                                ((price.getDouble(OWM_VALUE) + price.getDouble(OWM_VALUE_HIGH)) / 2));
+                                        //If the metal has a high price, save the average as raw.
+                                        Utility.putDouble(editor,
+                                                mContext.getString(R.string.pref_metal_raw_usd),
+                                                ((price.getDouble(OWM_VALUE) +
+                                                        price.getDouble(OWM_VALUE_HIGH)) / 2));
                                     } else {
-
-                                        Utility.putDouble(editor, mContext.getString(R.string.pref_metal_raw_usd),
+                                        //save as raw price
+                                        Utility.putDouble(editor,
+                                                mContext.getString(R.string.pref_metal_raw_usd),
                                                 price.getDouble(OWM_VALUE));
                                     }
 
                                     editor.apply();
-                                } else if (defindex == 5021) {
-                                    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+                                } else if (defindex == 5021) {//Save extra info about the key price
 
-                                    String priceString = "";
-                                    double itemPrice = price.getDouble(OWM_VALUE);
+                                    //Get the sharedpreferences
+                                    SharedPreferences.Editor editor = PreferenceManager
+                                            .getDefaultSharedPreferences(mContext).edit();
 
-                                    if ((int)itemPrice == itemPrice)
-                                        priceString = priceString + (int)itemPrice;
-                                    else
-                                        priceString = priceString + itemPrice;
-
+                                    //Store the price in a string so it can be displayed in the
+                                    //header in the latest changes page
+                                    double highPrice;
                                     if (price.has(OWM_VALUE_HIGH)) {
-                                        itemPrice = price.getDouble(OWM_VALUE_HIGH);
-
-                                        if ((int)itemPrice == itemPrice)
-                                            priceString = priceString + "-" + (int)itemPrice;
-                                        else
-                                            priceString = priceString + "-" + itemPrice;
+                                        highPrice = price.getDouble(OWM_VALUE_HIGH);
+                                    } else {
+                                        highPrice = 0;
                                     }
+                                    String priceString = Utility.formatPrice(
+                                            mContext, price.getDouble(OWM_VALUE), highPrice,
+                                            Utility.CURRENCY_METAL, Utility.CURRENCY_METAL, false
+                                    );
+                                    editor.putString(mContext.getString(R.string.pref_key_price),
+                                            priceString);
 
-                                    priceString = priceString + " ref";
-
-                                    editor.putString(mContext.getString(R.string.pref_key_price), priceString);
-                                    Utility.putDouble(editor, mContext.getString(R.string.pref_key_diff), price.getDouble(OWM_DIFFERENCE));
-                                    Utility.putDouble(editor, mContext.getString(R.string.pref_key_raw), price.getDouble(OWM_VALUE_RAW));
+                                    //Save the difference
+                                    Utility.putDouble(editor,
+                                            mContext.getString(R.string.pref_key_diff),
+                                            price.getDouble(OWM_DIFFERENCE));
+                                    //Save the raw price
+                                    Utility.putDouble(editor,
+                                            mContext.getString(R.string.pref_key_raw),
+                                            price.getDouble(OWM_VALUE_RAW));
 
                                     editor.apply();
                                 }
@@ -463,6 +571,7 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
                 }
             }
 
+            //Notify the UI that we finished.
             publishProgress(1);
         }
 
@@ -477,28 +586,49 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
         }
     }
 
-    //Convenient method for building content values which are to be inserted into the database
-    private ContentValues buildContentValues(int defindex, String name, String quality, String tradable,
-                                             String craftable, String priceIndex, String currency,
-                                             double value, Double valueHigh, double valueRaw,
-                                             int update, double difference){
+    /**
+     * Convenient method for building content values which are to be inserted into the database
+     *
+     * @param defindex   defindex of the item
+     * @param name       name of the item
+     * @param quality    quality of the item
+     * @param tradable   tradability if the item
+     * @param craftable  craftability of the item
+     * @param priceIndex price index of the item
+     * @param currency   currency of the price
+     * @param value      price of the item
+     * @param valueHigh  higher price of the item
+     * @param valueRaw   raw price of the item
+     * @param update     time of the update
+     * @param difference difference of the the new and old price
+     * @return the ContentValues object containing the data
+     */
+    private ContentValues buildContentValues(int defindex, String name, String quality,
+                                             String tradable, String craftable, String priceIndex,
+                                             String currency, double value, Double valueHigh,
+                                             double valueRaw, int update, double difference) {
         int itemTradable;
         int itemCraftable;
 
+        //Tradability
         if (tradable.equals("Tradable"))
             itemTradable = 1;
         else
             itemTradable = 0;
 
+        //Craftability
         if (craftable.equals("Craftable"))
             itemCraftable = 1;
         else
             itemCraftable = 0;
 
+        //Fix the defindex for pricing
         defindex = Utility.fixDefindex(defindex);
 
+        //The DV that will contain all the data
         ContentValues itemValues = new ContentValues();
 
+        //Put all the data into the content values
         itemValues.put(PriceEntry.COLUMN_DEFINDEX, defindex);
         itemValues.put(PriceEntry.COLUMN_ITEM_NAME, name);
         itemValues.put(PriceEntry.COLUMN_ITEM_QUALITY, Integer.parseInt(quality));
@@ -517,7 +647,14 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void>{
         return itemValues;
     }
 
-    public static interface OnPriceListFetchListener{
-        public void onPriceListFetchFinished();
+    /**
+     * Listener interface for listening for the end of the fetch.
+     */
+    public interface OnPriceListFetchListener {
+
+        /**
+         * Notify the listener, that the fetching has stopped.
+         */
+        void onPriceListFetchFinished();
     }
 }

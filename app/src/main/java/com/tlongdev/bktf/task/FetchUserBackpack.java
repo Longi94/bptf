@@ -75,7 +75,7 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
     private int backpackSlots = 0;
     private int itemNumber = 0;
 
-    //The listenere that will be notified when the fetching finishes
+    //The listener that will be notified when the fetching finishes
     private OnFetchUserBackpackListener listener = null;
 
     /**
@@ -124,7 +124,8 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
      * @return the extended contentvalues
      * @throws JSONException
      */
-    private static ContentValues addAttributes(ContentValues values, JSONObject item) throws JSONException {
+    private static ContentValues addAttributes(ContentValues values, JSONObject item)
+            throws JSONException {
         if (item.has(OWM_ATTRIBUTES)) {
             //Get the attributes from the json
             JSONArray attributes = item.getJSONArray(OWM_ATTRIBUTES);
@@ -134,27 +135,34 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
                 JSONObject attribute = attributes.getJSONObject(i);
                 switch (attribute.getInt(OWM_DEFINDEX)) {
                     case 133://Medal number
-                        values.put(UserBackpackEntry.COLUMN_ITEM_INDEX, attribute.getInt(OWM_FLOAT_VALUE));
+                        values.put(UserBackpackEntry.COLUMN_ITEM_INDEX,
+                                attribute.getInt(OWM_FLOAT_VALUE));
                         break;
                     case 134://Particle effect
-                        values.put(UserBackpackEntry.COLUMN_ITEM_INDEX, attribute.getInt(OWM_FLOAT_VALUE));
+                        values.put(UserBackpackEntry.COLUMN_ITEM_INDEX,
+                                attribute.getInt(OWM_FLOAT_VALUE));
                         break;
                     case 142://Painted
-                        values.put(UserBackpackEntry.COLUMN_PAINT, attribute.getInt(OWM_FLOAT_VALUE));
+                        values.put(UserBackpackEntry.COLUMN_PAINT,
+                                attribute.getInt(OWM_FLOAT_VALUE));
                         break;
                     case 186://Gifted by
                         values.put(UserBackpackEntry.COLUMN_GIFTER_NAME,
-                                attribute.getJSONObject(OWM_ACCOUNT_INFO).getString(OWM_PERSONA_NAME));
+                                attribute.getJSONObject(OWM_ACCOUNT_INFO)
+                                        .getString(OWM_PERSONA_NAME));
                         break;
                     case 187://Crate series
-                        values.put(UserBackpackEntry.COLUMN_ITEM_INDEX, attribute.getInt(OWM_FLOAT_VALUE));
+                        values.put(UserBackpackEntry.COLUMN_ITEM_INDEX,
+                                attribute.getInt(OWM_FLOAT_VALUE));
                         break;
                     case 228://Crafted by
                         values.put(UserBackpackEntry.COLUMN_CREATOR_NAME,
-                                attribute.getJSONObject(OWM_ACCOUNT_INFO).getString(OWM_PERSONA_NAME));
+                                attribute.getJSONObject(OWM_ACCOUNT_INFO)
+                                        .getString(OWM_PERSONA_NAME));
                         break;
                     case 229://Craft number
-                        values.put(UserBackpackEntry.COLUMN_CRAFT_NUMBER, attribute.getInt(OWM_VALUE));
+                        values.put(UserBackpackEntry.COLUMN_CRAFT_NUMBER,
+                                attribute.getInt(OWM_VALUE));
                         break;
                     case 2013://TODO Killstreaker
                         break;
@@ -163,7 +171,8 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
                     case 2025://TODO Killstreak tier
                         break;
                     case 2027://Is australium
-                        values.put(UserBackpackEntry.COLUMN_AUSTRALIUM, attribute.getInt(OWM_FLOAT_VALUE));
+                        values.put(UserBackpackEntry.COLUMN_AUSTRALIUM,
+                                attribute.getInt(OWM_FLOAT_VALUE));
                         break;
                     default:
                         //Unused attribute
@@ -198,7 +207,8 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
             final String ID_PARAM = "SteamID";
 
             //Build the URI
-            Uri uri = Uri.parse(mContext.getString(R.string.steam_get_player_items_url)).buildUpon()
+            Uri uri = Uri.parse(mContext.getString(R.string.steam_get_player_items_url))
+                    .buildUpon()
                     .appendQueryParameter(KEY_PARAM, mContext.getString(R.string.steam_web_api_key))
                     .appendQueryParameter(ID_PARAM, params[0])
                     .build();
@@ -239,7 +249,7 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
             jsonStr = buffer.toString();
 
         } catch (IOException e) {
-            //There was a network error, notifiy the user TODO, proper error handling
+            //There was a network error, notify the user TODO, proper error handling
             errorMessage = "network error";
             publishProgress();
             if (Utility.isDebugging(mContext))
@@ -379,13 +389,16 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
                 }
                 return false;
             case 8: //Invalid ID, shouldn't reach
-                throw new IllegalStateException("Steam ID provided for backpack fetching was invalid: " + steamId);
+                throw new IllegalStateException(
+                        "Steam ID provided for backpack fetching was invalid: " + steamId);
             case 15: //Backpack is private
                 return true;
             case 18: //ID doesn't exist, shouldn't reach
-                throw new IllegalStateException("Steam ID provided for backpack fetching doesn't exist: " + steamId);
+                throw new IllegalStateException(
+                        "Steam ID provided for backpack fetching doesn't exist: " + steamId);
             default: //Shouldn't reach
-                throw new IllegalStateException("Unknown status returned by GetPlayerItems api: " + response.getInt(OWM_STATUS));
+                throw new IllegalStateException("Unknown status returned by GetPlayerItems api: "
+                        + response.getInt(OWM_STATUS));
         }
     }
 
@@ -481,11 +494,13 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
 
         //Save the custom description of the item
         if (item.has(OWM_CUSTOM_DESCRIPTION))
-            values.put(UserBackpackEntry.COLUMN_CUSTOM_DESCRIPTION, item.getString(OWM_CUSTOM_DESCRIPTION));
+            values.put(UserBackpackEntry.COLUMN_CUSTOM_DESCRIPTION,
+                    item.getString(OWM_CUSTOM_DESCRIPTION));
 
         //Save the content of the item TODO show the content of a gift
         if (item.has(OWM_CONTENT))
-            values.put(UserBackpackEntry.COLUMN_CONTAINED_ITEM, item.getJSONObject(OWM_CONTENT).toString());
+            values.put(UserBackpackEntry.COLUMN_CONTAINED_ITEM,
+                    item.getJSONObject(OWM_CONTENT).toString());
 
         //Save the index of the item
         values.put(UserBackpackEntry.COLUMN_ITEM_INDEX, 0);
@@ -509,7 +524,7 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
     }
 
     /**
-     * Register a listener that will be noified
+     * Register a listener that will be notified
      *
      * @param listener the listener to be notified
      */
