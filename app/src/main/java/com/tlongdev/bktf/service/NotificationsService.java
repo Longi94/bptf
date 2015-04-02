@@ -28,38 +28,60 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Service for checking for notifications in the background
+ * Service for checking for notifications in the background.
  */
 public class NotificationsService extends Service {
 
+    //Intent extra keys for indicating the need for the notification check
     private static final String CHECK_FOR_NOTIFICATIONS = "notification";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         //Only check for notifications if the service was started by scheduling itself
         if (intent.hasExtra(CHECK_FOR_NOTIFICATIONS) &&
-                PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_notification), false)
+                PreferenceManager.getDefaultSharedPreferences(this)
+                        .getBoolean(getString(R.string.pref_notification), false)
                 && Utility.isNetworkAvailable(this)) {
+
+            //Start checking for notifications
             new CheckNotificationTask(this).execute();
         }
         return START_NOT_STICKY;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IBinder onBind(Intent intent) {
+        //It's a started service, so this is unused
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onDestroy() {
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_notification), false)) {
+        //When the service stops schedule the service to start after the set time
+        if (PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean(getString(R.string.pref_notification), false)) {
             //Schedule the service to run again after a given time
             AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+            //The amount of tiem to wait
             long delay = Long.parseLong(PreferenceManager.getDefaultSharedPreferences(this)
                     .getString(getString(R.string.pref_notification_interval), "86400000"));
+
+            //The intent that will be given to the service
             Intent intent = new Intent(this, NotificationsService.class);
             intent.putExtra(CHECK_FOR_NOTIFICATIONS, true);
+
+            //Schedule
             alarm.set(
                     AlarmManager.RTC_WAKEUP,
                     System.currentTimeMillis() + delay,
@@ -71,27 +93,45 @@ public class NotificationsService extends Service {
     /**
      * Task the actually checks for notifications.
      */
-    private class CheckNotificationTask extends AsyncTask<Void, Void, Integer>{
+    private class CheckNotificationTask extends AsyncTask<Void, Void, Integer> {
 
-        Context mContext;
+        //The context the task runs in
+        private Context mContext;
 
-        private CheckNotificationTask(Context mContext) {
-            this.mContext = mContext;
+        /**
+         * Constructor
+         *
+         * @param context the context the task runs in
+         */
+        private CheckNotificationTask(Context context) {
+            mContext = context;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         protected Integer doInBackground(Void... params) {
+            //Return the number of new notifications
             return checkForNotifications();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         protected void onPostExecute(Integer aInt) {
             //Show notification if there is a new notifications on backpack.tf
             if (aInt > 0) {
+                //The link to open when the user taps on the notification
                 Uri webPage = Uri.parse("http://backpack.tf/notifications");
-                Intent i = new Intent(Intent.ACTION_VIEW, webPage);
-                PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
 
+                //The intent to be used when the user taps on the notification
+                Intent i = new Intent(Intent.ACTION_VIEW, webPage);
+                PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, i,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+                //Build the notification
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(mContext)
                                 .setSmallIcon(R.drawable.ic_notification)
@@ -101,11 +141,13 @@ public class NotificationsService extends Service {
                                 .setAutoCancel(true)
                                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
+                //Show the noitification
                 NotificationManager notificationManager =
                         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.notify(1, mBuilder.build());
             }
 
+            //Stop the service
             stopSelf();
         }
 
@@ -122,44 +164,57 @@ public class NotificationsService extends Service {
             String jsonString;
 
             try {
-                final String USER_INFO_BASE_URL = "http://backpack.tf/api/IGetUsers/v3/";
+                //The GetUsers api and input keys
+                final String USER_INFO_BASE_URL = mContext.getString(R.string.backpack_tf_get_users);
                 final String KEY_STEAM_ID = "steamids";
                 final String KEY_COMPRESS = "compress";
 
+                //Get the resolved steamid
                 String steamId = Utility.getResolvedSteamId(mContext);
+
                 if (steamId == null) {
+                    //Thre is no resolved steamid, no ontifications
                     return 0;
                 }
 
+                //Build the URI
                 Uri uri = Uri.parse(USER_INFO_BASE_URL).buildUpon()
                         .appendQueryParameter(KEY_STEAM_ID, steamId)
                         .appendQueryParameter(KEY_COMPRESS, "1")
                         .build();
 
+                //Initialize the URL
                 URL url = new URL(uri.toString());
 
+                //Open connection
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
 
+                //Get the input stream
                 InputStream inputStream = urlConnection.getInputStream();
                 StringBuilder buffer = new StringBuilder();
 
-                String line;
+                // Nothing to do if the stream was empty.
                 if (inputStream != null) {
 
                     reader = new BufferedReader(new InputStreamReader(inputStream));
 
+                    //Read the input
+                    String line;
                     while ((line = reader.readLine()) != null) {
                         buffer.append(line);
                     }
 
                     if (buffer.length() > 0) {
+                        // If the stream was empty there is no point in parsing.
                         jsonString = buffer.toString();
-                        return parseUserInfoJson(jsonString, steamId);
+                        //Get the number of new notifications
+                        return getNotificationCount(jsonString, steamId);
                     }
                 }
             } catch (IOException | JSONException e) {
+                //There was an error, notify the user
                 Toast.makeText(mContext, "bptf: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 if (Utility.isDebugging(mContext))
                     e.printStackTrace();
@@ -169,26 +224,35 @@ public class NotificationsService extends Service {
 
         /**
          * Get the number of new notification from the JSON.
+         *
+         * @param jsonString the JSON string to parse from
+         * @param steamId    the steamid of the user
+         * @return the number of new notifications
+         * @throws JSONException
          */
-        private int parseUserInfoJson(String jsonString, String steamId) throws JSONException {
+        private int getNotificationCount(String jsonString, String steamId) throws JSONException {
 
+            //All the JSON keys needed to parse
             final String OWM_RESPONSE = "response";
             final String OWM_SUCCESS = "success";
             final String OWM_PLAYERS = "players";
             final String OWM_PLAYER_NOTIFICATION = "notification";
 
+            //Get the response JSON
             JSONObject jsonObject = new JSONObject(jsonString);
             JSONObject response = jsonObject.getJSONObject(OWM_RESPONSE);
 
             if (response.getInt(OWM_SUCCESS) == 0) {
+                //Query unsuccessful
                 return 0;
             }
 
+            //Get the player JSON object
             JSONObject players = response.getJSONObject(OWM_PLAYERS);
-
             JSONObject current_user = players.getJSONObject(steamId);
 
             if (current_user.getInt(OWM_SUCCESS) == 1) {
+                //Return the number of new notifications
                 return current_user.getInt(OWM_PLAYER_NOTIFICATION);
             }
 
