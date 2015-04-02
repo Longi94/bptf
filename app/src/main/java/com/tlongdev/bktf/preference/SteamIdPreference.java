@@ -12,36 +12,62 @@ import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
 
+/**
+ * Custom dialog preference for entering the steam id. Contains brief instructions on how to find
+ * the user's steam id.
+ */
 public class SteamIdPreference extends DialogPreference {
 
+    //The input field
     private EditText steamIdInput;
 
+    /**
+     * Constructor
+     *
+     * @param context context
+     * @param attrs   attributes
+     */
     public SteamIdPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
+        //Value will be saved manually
         setPersistent(false);
+
+        //The layout resource for the dialog
         setDialogLayoutResource(R.layout.preference_dialog_steam_id);
+
+        //Set the summary to the saved value
         setSummary(PreferenceManager.getDefaultSharedPreferences(context).getString("Steam ID", ""));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onDialogClosed(boolean positiveResult) {
         super.onDialogClosed(positiveResult);
         if (positiveResult) {
+            //Save the input value to the preferences
             getEditor().putString("Steam ID", steamIdInput.getText().toString()).apply();
             setSummary(steamIdInput.getText().toString());
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onBindDialogView(@NonNull View view) {
         super.onBindDialogView(view);
-        steamIdInput = (EditText)view.findViewById(R.id.edit_text_steam_id);
+
+        //The input field
+        steamIdInput = (EditText) view.findViewById(R.id.edit_text_steam_id);
         steamIdInput.setText(getSharedPreferences().getString("Steam ID", ""));
 
-        ((TextView)view.findViewById(R.id.steam_id_64_bit)).setText(
+        //Format the instructions.
+        ((TextView) view.findViewById(R.id.steam_id_64_bit)).setText(
                 Html.fromHtml("steamcommunity.com/profiles/<b>id</b>")/*7656119XXXXXXXXXX*/
         );
-        ((TextView)view.findViewById(R.id.steam_id_vanity)).setText(
+        ((TextView) view.findViewById(R.id.steam_id_vanity)).setText(
                 Html.fromHtml("steamcommunity.com/id/<b>name</b>/")
         );
     }
