@@ -169,8 +169,9 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> implements
             backpackFetching = true;
 
             //Save the resolved steamId
-            PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString(mContext
-                    .getString(R.string.pref_resolved_steam_id), steamId).apply();
+            PreferenceManager.getDefaultSharedPreferences(mContext).edit()
+                    .putString(mContext
+                            .getString(R.string.pref_resolved_steam_id), steamId).apply();
 
             //Build user info uri
             uri = Uri.parse(USER_INFO_BASE_URL).buildUpon()
