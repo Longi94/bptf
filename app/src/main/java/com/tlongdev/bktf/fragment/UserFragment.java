@@ -38,10 +38,9 @@ import java.text.DecimalFormat;
 /**
  * Fragment for displaying the user profile.
  */
-public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener,
-        FetchUserInfo.OnFetchUserInfoListener {
+public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
+        View.OnClickListener, FetchUserInfo.OnFetchUserInfoListener {
 
-    private static final String LOG_TAG = UserFragment.class.getSimpleName();
     private TextView playerName;
     private TextView playerReputation;
     private TextView trustStatus;
@@ -148,7 +147,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         //Handle all the buttons here
         String steamId = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(
                 getString(R.string.pref_resolved_steam_id), "");
-        if (steamId.equals("")){
+        if (steamId != null && steamId.equals("")){
             Toast.makeText(getActivity(), "bptf: no steamID provided", Toast.LENGTH_SHORT).show();
             return;
         }
