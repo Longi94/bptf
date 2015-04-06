@@ -45,7 +45,7 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
     //Progress bar that indicates donwloading user data.
     private ProgressBar progressBar;
 
-    //Reference too all the views that need to be updated
+    //Reference too all the views that needs to be updated
     private TextView playerName;
     private TextView playerReputation;
     private TextView trustStatus;
@@ -186,17 +186,12 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
             if (intent.resolveActivity(getPackageManager()) != null) {
                 startActivity(intent);
             }
-
         } else {
-
             if (privateBackpack) {
-
                 //If the backpack is private, show a toast and do nothing.
                 Toast.makeText(this, playerNameString + "'s backpack is private",
                         Toast.LENGTH_SHORT).show();
-
             } else {
-
                 //Else the user clicked on the backpack button. Start the backpack activity. Pass
                 //the steamId and whether it's the user's backpack or not
                 Intent i = new Intent(this, UserBackpackActivity.class);
@@ -205,7 +200,6 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
                         .getDefaultSharedPreferences(this)
                         .getString(getString(R.string.pref_resolved_steam_id), "")));
                 startActivity(i);
-
             }
         }
     }
@@ -342,6 +336,8 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
 
         //Set the title to X's profile
         getSupportActionBar().setTitle(playerNameString + "'s profile");
+
+        //Set the player name
         playerName.setText(playerNameString);
 
         if (isBanned) {
@@ -404,7 +400,7 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
                 break;
         }
 
-        //Steamremp information
+        //Steamrep information
         if (!isScammer) {
             steamRepStatus.setText("NORMAL");
             steamRepStatus.setBackgroundDrawable(getResources()
@@ -437,7 +433,7 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
                     .getDrawable(R.drawable.status_background_bad));
         }
 
-        //Community staus
+        //Community status
         if (!isCommunityBanned) {
             communityStatus.setText("OK");
             communityStatus.setBackgroundDrawable(getResources()
@@ -450,13 +446,10 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
 
         //Backpack value
         if (backpackValue == -1) {
-
             //Value is unknown (probably private)
             backpackValueRefined.setText("?");
             backpackValueUsd.setText("?");
-
         } else if (!privateBackpack) {
-
             //Properly format the backpack value (is int, does it have a fraction smaller than 0.01)
             if ((int) backpackValue == backpackValue)
                 backpackValueRefined.setText("" + (int) backpackValue);
@@ -525,7 +518,7 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         else
             backpackRawMetal.setText("?");
 
-        //Numbor of slots and slots used
+        //Number of slots and slots used
         if (itemNumber >= 0 && backpackSlotNumber >= 0)
             backpackSlots.setText("" + itemNumber + "/" + backpackSlotNumber);
         else
@@ -651,13 +644,13 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
                 }
             } catch (IOException e) {
                 //There was a network error
-                //TODO distuinguish all network errors: timeout, connectionrefused, api down, etc.
+                //TODO distinguish all network errors: timeout, connectionrefused, api down, etc.
                 publishProgress("network error");
                 if (Utility.isDebugging(UserInfoActivity.this))
                     e.printStackTrace();
                 return null;
             } catch (JSONException e) {
-                //JSON was unproperly formatted, pls no
+                //JSON was improperly formatted, pls no
                 publishProgress("error while parsing data");
                 if (Utility.isDebugging(UserInfoActivity.this))
                     e.printStackTrace();
