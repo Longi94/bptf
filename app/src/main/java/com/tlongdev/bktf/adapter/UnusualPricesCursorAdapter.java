@@ -1,13 +1,11 @@
 package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,20 +61,11 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
                 cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRAW));
 
         try {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            if (cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRAW) >= Utility.getDouble(prefs, context.getString(R.string.pref_buds_raw), 0)) {
-                viewHolder.priceView.setText(Utility.formatPrice(context,
-                        cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRIC),
-                        cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PMAX),
-                        cursor.getString(UnusualActivity.COL_PRICE_LIST_CURR),
-                        Utility.CURRENCY_BUD, false));
-            } else {
-                viewHolder.priceView.setText(Utility.formatPrice(context,
-                        cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRIC),
-                        cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PMAX),
-                        cursor.getString(UnusualActivity.COL_PRICE_LIST_CURR),
-                        Utility.CURRENCY_KEY, false));
-            }
+            viewHolder.priceView.setText(Utility.formatPrice(context,
+                    cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRIC),
+                    cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PMAX),
+                    cursor.getString(UnusualActivity.COL_PRICE_LIST_CURR),
+                    Utility.CURRENCY_KEY, false));
         } catch (Throwable throwable) {
             if (Utility.isDebugging(context))
                 throwable.printStackTrace();
