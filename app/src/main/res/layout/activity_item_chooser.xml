@@ -40,7 +40,8 @@
         android:gravity="center"
         android:paddingBottom="8dp"
         android:paddingTop="8dp"
-        android:text="@string/item_chooser_no_match" />
+        android:text="@string/item_chooser_no_match"
+        android:textColor="@color/text_view_default" />
 
     <LinearLayout
         android:layout_width="match_parent"

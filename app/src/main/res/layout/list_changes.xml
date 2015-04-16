@@ -56,7 +56,8 @@
             android:id="@+id/item_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textColor="@color/text_view_default"/>
 
     </LinearLayout>
 

@@ -31,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
+            android:textColor="@color/text_view_default"
             android:textSize="16sp" />
 
         <!--Price of the item-->
@@ -38,6 +39,7 @@
             android:id="@+id/text_view_item_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/text_view_default"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -47,6 +49,7 @@
         android:id="@+id/text_view_item_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/text_view_default"
         android:textSize="20sp" />
 
     <!--Image used as a button for removing the item-->
