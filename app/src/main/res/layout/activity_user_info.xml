@@ -64,25 +64,29 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:singleLine="true"
+                            android:textColor="@color/text_view_default"
                             android:textSize="28sp" />
 
                         <TextView
                             android:id="@+id/text_view_player_reputation"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/user_page_reputation" />
+                            android:text="@string/user_page_reputation"
+                            android:textColor="@color/text_view_default" />
 
                         <TextView
                             android:id="@+id/text_view_user_since"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/user_page_user_since" />
+                            android:text="@string/user_page_user_since"
+                            android:textColor="@color/text_view_default" />
 
                         <TextView
                             android:id="@+id/text_view_user_last_online"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/user_page_last_online" />
+                            android:text="@string/user_page_last_online"
+                            android:textColor="@color/text_view_default" />
 
                     </LinearLayout>
 
@@ -201,6 +205,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/user_page_status"
+                            android:textColor="@color/text_view_default"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -214,6 +219,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/user_page_trust"
+                                android:textColor="@color/text_view_default"
                                 android:textSize="16sp" />
 
                             <TextView
@@ -244,6 +250,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/user_page_link_steamrep"
+                                android:textColor="@color/text_view_default"
                                 android:textSize="16sp" />
 
                             <TextView
@@ -274,6 +281,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/user_page_trade_status"
+                                android:textColor="@color/text_view_default"
                                 android:textSize="16sp" />
 
                             <TextView
@@ -304,6 +312,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/user_page_vac"
+                                android:textColor="@color/text_view_default"
                                 android:textSize="16sp" />
 
                             <TextView
@@ -334,6 +343,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/user_page_link_community"
+                                android:textColor="@color/text_view_default"
                                 android:textSize="16sp" />
 
                             <TextView
@@ -367,6 +377,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/user_page_link_backpack"
+                            android:textColor="@color/text_view_default"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -388,6 +399,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/user_page_refined"
+                                android:textColor="@color/text_view_default"
                                 android:textSize="16sp" />
 
                         </LinearLayout>
@@ -414,6 +426,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/user_page_metal"
+                                android:textColor="@color/text_view_default"
                                 android:textSize="16sp" />
 
                         </LinearLayout>
@@ -440,6 +453,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/user_page_keys"
+                                android:textColor="@color/text_view_default"
                                 android:textSize="16sp" />
 
                         </LinearLayout>
@@ -466,6 +480,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/user_page_usd"
+                                android:textColor="@color/text_view_default"
                                 android:textSize="16sp" />
 
                         </LinearLayout>
@@ -492,6 +507,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/user_page_slots"
+                                android:textColor="@color/text_view_default"
                                 android:textSize="16sp" />
 
                         </LinearLayout>

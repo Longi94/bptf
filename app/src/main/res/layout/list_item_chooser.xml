@@ -4,4 +4,5 @@
     android:id="@+id/text_view_item_name"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp" />
+    android:padding="8dp"
+    android:textColor="@color/text_view_default" />

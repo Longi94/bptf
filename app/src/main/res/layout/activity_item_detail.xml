@@ -54,6 +54,7 @@
                 android:gravity="center"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
+                android:textColor="@color/text_view_default"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -70,6 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:textColor="@color/text_view_default"
                 android:visibility="gone" />
 
             <!--Custom name of the item-->
@@ -78,6 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:textColor="@color/text_view_default"
                 android:visibility="gone" />
 
             <!--Custom description of the item-->
@@ -86,6 +89,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:textColor="@color/text_view_default"
                 android:visibility="gone" />
 
             <!--Name of the crafter-->
@@ -94,6 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:textColor="@color/text_view_default"
                 android:visibility="gone" />
 
             <!--Name of the gifter-->
@@ -102,6 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:textColor="@color/text_view_default"
                 android:visibility="gone" />
 
             <!--The item's origin-->
@@ -109,7 +115,8 @@
                 android:id="@+id/text_view_origin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center" />
+                android:gravity="center"
+                android:textColor="@color/text_view_default" />
 
             <!--Name of the paint-->
             <TextView
@@ -117,6 +124,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:textColor="@color/text_view_default"
                 android:visibility="gone" />
 
             <!--Price of the item-->
@@ -126,6 +134,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingTop="8dp"
+                android:textColor="@color/text_view_default"
                 android:visibility="gone" />
 
         </LinearLayout>
