@@ -580,7 +580,7 @@ public class Utility {
                         return price / getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1)
                                 / getDouble(prefs, context.getString(R.string.pref_buds_raw), 1);
                     case CURRENCY_KEY:
-                        return price * getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1)
+                        return price / getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1)
                                 / getDouble(prefs, context.getString(R.string.pref_key_raw), 1);
                 }
             default:

@@ -66,7 +66,7 @@ public class ItemChooserAdapter extends CursorAdapter {
     public void setSelectedIndex(int index){
         selectedIndex = index;
         Cursor cursor = getCursor();
-        if (cursor.moveToPosition(index)){
+        if (cursor != null && cursor.moveToPosition(index)){
             itemId = cursor.getInt(ItemChooserActivity.COL_PRICE_LIST_ID);
         }
     }
