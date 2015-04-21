@@ -1705,6 +1705,88 @@ public class Utility {
             case 8454:
             case 8455: //tiger gold
                 return 8453;
+            case 8492:
+            case 8675:
+            case 8689:
+            case 8704:
+            case 8718://Fiery medal 1
+                return 8478;
+            case 8493:
+            case 8676:
+            case 8690:
+            case 8705:
+            case 8719: //Fiery medal 2
+                return 8479;
+            case 8494:
+            case 8677:
+            case 8691:
+            case 8706:
+            case 8720: //Fiery medal 3
+                return 8480;
+            case 8495:
+            case 8678:
+            case 8692:
+            case 8707:
+            case 8721: //Fiery medal star
+                return 8481;
+            case 8679:
+            case 8697:
+            case 8708:
+            case 8726: //gold eagle medal 1
+                return 8482;
+            case 8680:
+            case 8698:
+            case 8709:
+            case 8727: //gold eagle medal 2
+                return 8483;
+            case 8681:
+            case 8699:
+            case 8710:
+            case 8728: //gold eagle medal 3
+                return 8484;
+            case 8496:
+            case 8682:
+            case 8693:
+            case 8700:
+            case 8711:
+            case 8722:
+            case 8729: //gold eagle medal star
+                return 8485;
+            case 8683:
+            case 8712: //silver eagle medal 1
+                return 8486;
+            case 8684:
+            case 8713: //silver eagle medal 2
+                return 8487;
+            case 8685:
+            case 8714: //silver eagle medal 3
+                return 8488;
+            case 8497:
+            case 8500:
+            case 8686:
+            case 8694:
+            case 8701:
+            case 8715:
+            case 8723:
+            case 8730: //silver eagle medal star
+                return 8489;
+            case 8498:
+            case 8501:
+            case 8687:
+            case 8695:
+            case 8702:
+            case 8716:
+            case 8724:
+            case 8731: //iron eagle medal star
+                return 8490;
+            case 8499:
+            case 8688:
+            case 8696:
+            case 8703:
+            case 8717:
+            case 8725:
+            case 8732: //rust eagle medal star
+                return 8490;
             case 8534: //tf2 medal gold
                 return 8502;
             case 8535: //tf2 medal silver
@@ -1780,19 +1862,23 @@ public class Utility {
                 return 8567;
             case 8589:
             case 8593:
-            case 8597: //esl like medal gold
+            case 8597:
+            case 8733://esl like medal gold
                 return 8585;
             case 8590:
             case 8594:
-            case 8598: //esl like medal silver
+            case 8598:
+            case 8734: //esl like medal silver
                 return 8586;
             case 8591:
             case 8595:
-            case 8599: //esl like medal bronze
+            case 8599:
+            case 8735: //esl like medal bronze
                 return 8587;
             case 8592:
             case 8596:
-            case 8600: //esl like badge grey
+            case 8600:
+            case 8736://esl like badge grey
                 return 8588;
             case 8609:
             case 8613:
