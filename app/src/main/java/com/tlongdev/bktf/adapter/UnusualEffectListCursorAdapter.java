@@ -2,9 +2,11 @@ package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,6 @@ import android.widget.TextView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.UnusualActivity;
 import com.tlongdev.bktf.Utility;
-import com.tlongdev.bktf.data.PriceListContract;
 import com.tlongdev.bktf.fragment.UnusualPriceListFragment;
 
 import java.io.IOException;
@@ -24,29 +25,8 @@ import java.text.DecimalFormat;
 
 public class UnusualEffectListCursorAdapter extends CursorAdapter {
 
-    private double rawBudsPrice;
-
     public UnusualEffectListCursorAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
-        String[] columns = {PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW};
-        Cursor cursor = context.getContentResolver().query(
-                PriceListContract.PriceEntry.buildPriceListUriWithNameSpecific(
-                        "Earbuds",
-                        6,
-                        1,
-                        1,
-                        0
-                ),
-                columns,
-                null,
-                null,
-                null
-        );
-
-        if (cursor.moveToFirst()) {
-            rawBudsPrice = cursor.getDouble(0);
-        }
-        cursor.close();
     }
 
     @Override
@@ -83,9 +63,11 @@ public class UnusualEffectListCursorAdapter extends CursorAdapter {
             }
         });
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        double rawKeyPrice = Utility.getDouble(prefs, context.getString(R.string.pref_key_raw), 1);
         viewHolder.priceView.setText("" +
-                new DecimalFormat("#0.00").format(cursor.getDouble(UnusualPriceListFragment.COL_PRICE_LIST_AVG_PRICE) / rawBudsPrice)
-                + " buds");
+                new DecimalFormat("#0.00").format(cursor.getDouble(UnusualPriceListFragment.COL_PRICE_LIST_AVG_PRICE) / rawKeyPrice)
+                + " keys");
     }
 
     public static class ViewHolder {
