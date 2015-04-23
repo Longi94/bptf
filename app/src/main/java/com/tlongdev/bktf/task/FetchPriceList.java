@@ -356,7 +356,7 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
         while (i.hasNext()) {
 
             //Casting is redundant, but or some reason it doesn't work without it
-            String name = (String) i.next();
+            String name = i.next();
 
             //Get the prices of the item
             JSONObject prices = items.getJSONObject(name).getJSONObject(OWM_PRICES);
@@ -378,7 +378,7 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
             while (qualityIterator.hasNext()) {
 
                 //Casting is redundant, but or some reason it doesn't work without it
-                String quality = (String) qualityIterator.next();
+                String quality = qualityIterator.next();
                 JSONObject tradability = prices.getJSONObject(quality);
 
                 //Iterate through tradability
@@ -386,7 +386,7 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
                 while (tradableIterator.hasNext()) {
 
                     //Casting is redundant, but or some reason it doesn't work without it
-                    String tradable = (String) tradableIterator.next();
+                    String tradable = tradableIterator.next();
                     JSONObject craftability = tradability.getJSONObject(tradable);
 
                     //Iterate through craftability
@@ -407,7 +407,7 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
                             while (priceIndexIterator.hasNext()) {
 
                                 //Casting is redundant but or some reason it doesn't work without it
-                                String priceIndex = (String) priceIndexIterator.next();
+                                String priceIndex = priceIndexIterator.next();
 
                                 //Get the price
                                 JSONObject price = priceIndexes.getJSONObject(priceIndex);
