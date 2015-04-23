@@ -359,8 +359,16 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
             String name = i.next();
 
             //Get the prices of the item
-            JSONObject prices = items.getJSONObject(name).getJSONObject(OWM_PRICES);
-            JSONArray defindexes = items.getJSONObject(name).getJSONArray(OWM_DEFINDEX);
+            JSONObject item = items.getJSONObject(name);
+
+            //Check if the item has a price (fucking :weed:)
+            if (!item.has(OWM_PRICES))
+                continue;
+            JSONObject prices = item.getJSONObject(OWM_PRICES);
+
+            if (!item.has(OWM_DEFINDEX))
+                continue;
+            JSONArray defindexes = item.getJSONArray(OWM_DEFINDEX);
 
             int defindex = 0;
 
@@ -394,7 +402,7 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
                     while (craftableIterator.hasNext()) {
 
                         //Casting is redundant, but or some reason it doesn't work without it
-                        String craftable = (String) craftableIterator.next();
+                        String craftable = craftableIterator.next();
 
                         //If there are multiple price indexes the api return a JSONObject, if there
                         //is only one (0) the api returns a JSONArray (great...)
@@ -415,19 +423,37 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
                                 //Check whether the price is new
                                 if (latestUpdate < price.getInt(OWM_LAST_UPDATE)) {
 
-                                    //Check if the price has a range
+                                    //Temporary variables so we can check if they even exist
                                     Double high = null;
+                                    String currency = null;
+                                    double value = 0;
+                                    double rawValue = 0;
+                                    int lastUpdate = 0;
+                                    double difference = 0;
+
                                     if (price.has(OWM_VALUE_HIGH))
                                         high = price.getDouble(OWM_VALUE_HIGH);
+
+                                    if (price.has(OWM_CURRENCY))
+                                        currency = price.getString(OWM_CURRENCY);
+
+                                    if (price.has(OWM_VALUE))
+                                        value = price.getDouble(OWM_VALUE);
+
+                                    if (price.has(OWM_VALUE_RAW))
+                                        rawValue = price.getDouble(OWM_VALUE_RAW);
+
+                                    if (price.has(OWM_LAST_UPDATE))
+                                        lastUpdate = price.getInt(OWM_LAST_UPDATE);
+
+                                    if (price.has(OWM_DIFFERENCE))
+                                        difference = price.getDouble(OWM_DIFFERENCE);
 
                                     //Add the price to the CV vector
                                     cVVector.add(buildContentValues(defindex,
                                             name, quality, tradable, craftable, priceIndex,
-                                            price.getString(OWM_CURRENCY),
-                                            price.getDouble(OWM_VALUE), high,
-                                            price.getDouble(OWM_VALUE_RAW),
-                                            price.getInt(OWM_LAST_UPDATE),
-                                            price.getDouble(OWM_DIFFERENCE)
+                                            currency, value, high, rawValue, lastUpdate,
+                                            difference
                                     ));
                                 }
                             }
@@ -440,19 +466,37 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
                             //Check whether the price is new
                             if (latestUpdate < price.getInt(OWM_LAST_UPDATE)) {
 
-                                //Check if the price has a range
+                                //Temporary variables so we can check if they even exist
                                 Double high = null;
+                                String currency = null;
+                                double value = 0;
+                                double rawValue = 0;
+                                int lastUpdate = 0;
+                                double difference = 0;
+
                                 if (price.has(OWM_VALUE_HIGH))
                                     high = price.getDouble(OWM_VALUE_HIGH);
+
+                                if (price.has(OWM_CURRENCY))
+                                    currency = price.getString(OWM_CURRENCY);
+
+                                if (price.has(OWM_VALUE))
+                                    value = price.getDouble(OWM_VALUE);
+
+                                if (price.has(OWM_VALUE_RAW))
+                                    rawValue = price.getDouble(OWM_VALUE_RAW);
+
+                                if (price.has(OWM_LAST_UPDATE))
+                                    lastUpdate = price.getInt(OWM_LAST_UPDATE);
+
+                                if (price.has(OWM_DIFFERENCE))
+                                    difference = price.getDouble(OWM_DIFFERENCE);
 
                                 //Add the price to the CV vector
                                 cVVector.add(buildContentValues(defindex,
                                         name, quality, tradable, craftable, "0",
-                                        price.getString(OWM_CURRENCY),
-                                        price.getDouble(OWM_VALUE), high,
-                                        price.getDouble(OWM_VALUE_RAW),
-                                        price.getInt(OWM_LAST_UPDATE),
-                                        price.getDouble(OWM_DIFFERENCE)
+                                        currency, value, high, rawValue, lastUpdate,
+                                        difference
                                 ));
                             }
 
