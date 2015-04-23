@@ -183,17 +183,18 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
         try {
 
             //Get all the items from the JSON string
-            getItemsFromJson(itemsJsonStr);
+            if (getItemsFromJson(itemsJsonStr)) {
 
-            //Get the shared preferences
-            SharedPreferences.Editor editor = PreferenceManager
-                    .getDefaultSharedPreferences(mContext).edit();
+                //Get the shared preferences
+                SharedPreferences.Editor editor = PreferenceManager
+                        .getDefaultSharedPreferences(mContext).edit();
 
-            //Save when the update finished
-            editor.putLong(mContext.getString(R.string.pref_last_price_list_update),
-                    System.currentTimeMillis());
-            editor.putBoolean(mContext.getString(R.string.pref_initial_load), false);
-            editor.apply();
+                //Save when the update finished
+                editor.putLong(mContext.getString(R.string.pref_last_price_list_update),
+                        System.currentTimeMillis());
+                editor.putBoolean(mContext.getString(R.string.pref_initial_load), false);
+                editor.apply();
+            }
 
 
         } catch (JSONException e) {
@@ -213,6 +214,8 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
     @Override
     protected void onProgressUpdate(Integer... values) {
         if (loadingDialog != null) {
+            AlertDialog.Builder builder;
+            AlertDialog alertDialog;
             switch (values[0]) {
                 //Download finished. Replace dialog.
                 case 0:
@@ -232,7 +235,7 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
                 //There was an error (exception) while trying to create initial database.
                 //Show a dialog that the download failed.
                 case -1:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    builder = new AlertDialog.Builder(mContext);
                     builder.setMessage("Failed to download database. " +
                             "Check your internet connection and try again.").setCancelable(false).
                             setPositiveButton("Close", new DialogInterface.OnClickListener() {
@@ -242,7 +245,23 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
                                     ((Activity) mContext).finish();
                                 }
                             });
-                    AlertDialog alertDialog = builder.create();
+                    alertDialog = builder.create();
+                    loadingDialog.dismiss();
+                    alertDialog.show();
+                    break;
+                //Api returned 0, unsuccessful
+                case -2:
+                    builder = new AlertDialog.Builder(mContext);
+                    builder.setMessage("Failed to download database. " +
+                            "Negative response from API. Try again shortly.").setCancelable(false).
+                            setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Close app
+                                    ((Activity) mContext).finish();
+                                }
+                            });
+                    alertDialog = builder.create();
                     loadingDialog.dismiss();
                     alertDialog.show();
                     break;
@@ -281,9 +300,10 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
      * Parse all the items from the JSON string.
      *
      * @param jsonString the string to parse from
+     * @return whether the query was successful or not
      * @throws JSONException
      */
-    private void getItemsFromJson(String jsonString) throws JSONException {
+    private boolean getItemsFromJson(String jsonString) throws JSONException {
 
         //All the JSON keys needed to parse
         final String OWM_RESPONSE = "response";
@@ -321,10 +341,11 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
         JSONObject response = jsonObject.getJSONObject(OWM_RESPONSE);
 
         if (response.getInt(OWM_SUCCESS) == 0) {
+            publishProgress(-2);
             //Unsuccessful query, nothing to do
             if (Utility.isDebugging(mContext))
                 Log.e(LOG_TAG, response.getString(OWM_MESSAGE));
-            return;
+            return false;
         }
 
         //Get the items
@@ -628,6 +649,8 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
             if (Utility.isDebugging(mContext))
                 Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
         }
+
+        return true;
     }
 
     /**
