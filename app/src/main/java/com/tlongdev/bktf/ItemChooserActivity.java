@@ -39,6 +39,7 @@ public class ItemChooserActivity extends FragmentActivity implements
     public static final int COL_PRICE_LIST_TRAD = 3;
     public static final int COL_PRICE_LIST_CRAF = 4;
     public static final int COL_PRICE_LIST_INDE = 5;
+    public static final int COL_PRICE_LIST_DEFINDEX = 5;
 
     //The columns we need
     private static final String[] PRICE_LIST_COLUMNS = {
@@ -47,7 +48,8 @@ public class ItemChooserActivity extends FragmentActivity implements
             PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY,
             PriceListContract.PriceEntry.COLUMN_ITEM_TRADABLE,
             PriceListContract.PriceEntry.COLUMN_ITEM_CRAFTABLE,
-            PriceListContract.PriceEntry.COLUMN_PRICE_INDEX
+            PriceListContract.PriceEntry.COLUMN_PRICE_INDEX,
+            PriceListContract.PriceEntry.COLUMN_DEFINDEX
     };
 
     //Selection

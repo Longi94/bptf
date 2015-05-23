@@ -21,7 +21,7 @@ import com.tlongdev.bktf.enums.Quality;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalculatorAdapter.ViewHolder>{
+public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalculatorAdapter.ViewHolder> {
 
     private ArrayList<Utility.IntegerPair> ids;
     private Context mContext;
@@ -52,8 +52,8 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
     public static final int COL_PRICE_LIST_PMAX = 9;
     public static final int COL_PRICE_LIST_PRAW = 10;
 
-    public static final String mSelection = PriceListContract.PriceEntry.TABLE_NAME+
-                    "." + PriceListContract.PriceEntry._ID + " = ?";
+    public static final String mSelection = PriceListContract.PriceEntry.TABLE_NAME +
+            "." + PriceListContract.PriceEntry._ID + " = ?";
 
     private OnItemEditListener listener;
 
@@ -80,7 +80,7 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
                 null
         );
 
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             try {
                 holder.icon.setImageDrawable(Drawable.createFromStream(
                         mContext.getAssets().open("items/" + Utility
@@ -92,7 +92,9 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
                 holder.icon.setImageDrawable(null);
             }
 
-            holder.name.setText(Utility.formatItemName(cursor.getString(COL_PRICE_LIST_NAME),
+            holder.name.setText(Utility.formatItemName(mContext,
+                    cursor.getInt(COL_PRICE_LIST_DEFI),
+                    cursor.getString(COL_PRICE_LIST_NAME),
                     cursor.getInt(COL_PRICE_LIST_TRAD),
                     cursor.getInt(COL_PRICE_LIST_CRAF),
                     cursor.getInt(COL_PRICE_LIST_QUAL),
@@ -109,7 +111,7 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
                                 cursor.getDouble(COL_PRICE_LIST_PMAX),
                                 currency,
                                 Utility.CURRENCY_BUD, false));
-                    } else if (priceRaw >= Utility.getDouble(prefs, mContext.getString(R.string.pref_key_raw), 0)){
+                    } else if (priceRaw >= Utility.getDouble(prefs, mContext.getString(R.string.pref_key_raw), 0)) {
                         holder.price.setText(Utility.formatPrice(mContext,
                                 cursor.getDouble(COL_PRICE_LIST_PRIC),
                                 cursor.getDouble(COL_PRICE_LIST_PMAX),
@@ -140,7 +142,7 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
             holder.delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (listener != null){
+                    if (listener != null) {
                         listener.onItemDeleted(ids.get(position).getX(), ids.get(position).getY());
                     }
                     ids.remove(position);
@@ -200,11 +202,11 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
         return ids.size();
     }
 
-    public void setOnItemDeletedListener(OnItemEditListener listener){
+    public void setOnItemDeletedListener(OnItemEditListener listener) {
         this.listener = listener;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView icon;
         TextView name;
@@ -214,11 +216,11 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
 
         public ViewHolder(View itemView) {
             super(itemView);
-            icon = (ImageView)itemView.findViewById(R.id.image_view_item_icon);
-            name = (TextView)itemView.findViewById(R.id.text_view_item_name);
-            price = (TextView)itemView.findViewById(R.id.text_view_item_price);
-            count = (TextView)itemView.findViewById(R.id.text_view_item_count);
-            delete = (ImageView)itemView.findViewById(R.id.image_view_delete);
+            icon = (ImageView) itemView.findViewById(R.id.image_view_item_icon);
+            name = (TextView) itemView.findViewById(R.id.text_view_item_name);
+            price = (TextView) itemView.findViewById(R.id.text_view_item_price);
+            count = (TextView) itemView.findViewById(R.id.text_view_item_count);
+            delete = (ImageView) itemView.findViewById(R.id.image_view_delete);
         }
     }
 

@@ -42,7 +42,9 @@ public class PriceListCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        String itemTag = Utility.formatItemName(cursor.getString(HomeFragment.COL_PRICE_LIST_NAME),
+        String itemTag = Utility.formatItemName(context,
+                cursor.getInt(HomeFragment.COL_PRICE_LIST_DEFI),
+                cursor.getString(HomeFragment.COL_PRICE_LIST_NAME),
                 cursor.getInt(HomeFragment.COL_PRICE_LIST_TRAD),
                 cursor.getInt(HomeFragment.COL_PRICE_LIST_CRAF),
                 cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL),
@@ -55,8 +57,8 @@ public class PriceListCursorAdapter extends CursorAdapter {
         viewHolder.background.setBackgroundDrawable(null);
         viewHolder.change.setImageDrawable(null);
 
-        LoadImagesTask task = (LoadImagesTask)viewHolder.icon.getTag();
-        if (task != null){
+        LoadImagesTask task = (LoadImagesTask) viewHolder.icon.getTag();
+        if (task != null) {
             task.cancel(true);
         }
         task = new LoadImagesTask(context, viewHolder.icon, viewHolder.background, viewHolder.change);
@@ -106,7 +108,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
         }
     }
 
-    private class LoadImagesTask extends AsyncTask<Double, Void, Drawable[]>{
+    private class LoadImagesTask extends AsyncTask<Double, Void, Drawable[]> {
         private Context mContext;
         private ImageView icon;
         private ImageView background;
@@ -118,7 +120,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
             this.icon = icon;
             this.change = change;
             this.background = background;
-            name = (String)background.getTag();
+            name = (String) background.getTag();
         }
 
         @Override
@@ -145,14 +147,11 @@ public class PriceListCursorAdapter extends CursorAdapter {
 
                 if (params[2].equals(params[3])) {
                     ims = mContext.getAssets().open("changes/new.png");
-                }
-                else if (params[2] == 0.0) {
+                } else if (params[2] == 0.0) {
                     ims = mContext.getAssets().open("changes/refresh.png");
-                }
-                else if (params[2] > 0.0) {
+                } else if (params[2] > 0.0) {
                     ims = mContext.getAssets().open("changes/up.png");
-                }
-                else {
+                } else {
                     ims = mContext.getAssets().open("changes/down.png");
                 }
 
