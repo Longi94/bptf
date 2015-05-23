@@ -46,7 +46,11 @@ public class PriceListDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + PriceEntry.TABLE_NAME);
+        if (oldVersion <= 3 && newVersion > 3) {
+            //TODO update price index column type from INTEGER to TEXT
+        } else {
+            db.execSQL("DROP TABLE IF EXISTS " + PriceEntry.TABLE_NAME);
+        }
         onCreate(db);
     }
 }
