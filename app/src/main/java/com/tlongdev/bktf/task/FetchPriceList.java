@@ -57,6 +57,9 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
     //The listener that will be notified when the fetching finishes
     private OnPriceListFetchListener listener;
 
+    //the variable that contains the birth time of the youngest price
+    private int latestUpdate = 0;
+
     /**
      * Constructor
      *
@@ -109,15 +112,35 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
             final String KEY_APP_ID = "app_id";
             final String KEY_FORMAT = "format";
             final String KEY_RAW = "raw";
+            final String KEY_SINCE = "since";
 
             //Build the URI
-            Uri uri = Uri.parse(PRICES_BASE_URL).buildUpon()
+            Uri.Builder builder = Uri.parse(PRICES_BASE_URL).buildUpon()
                     .appendQueryParameter(KEY_PARAM, params[0])
                     .appendQueryParameter(KEY_COMPRESS, "1")
                     .appendQueryParameter(KEY_APP_ID, "440")
                     .appendQueryParameter(KEY_FORMAT, "json")
-                    .appendQueryParameter(KEY_RAW, "1")
-                    .build();
+                    .appendQueryParameter(KEY_RAW, "1");
+
+            //Get the youngest price from the database. If it's an update only prices newer than this
+            //will be updated to speed up the update and reduce data usage.
+            if (updateDatabase) {
+                String[] columns = {PriceListContract.PriceEntry.COLUMN_LAST_UPDATE};
+                Cursor cursor = mContext.getContentResolver().query(
+                        PriceListContract.PriceEntry.CONTENT_URI,
+                        columns,
+                        null,
+                        null,
+                        PriceListContract.PriceEntry.COLUMN_LAST_UPDATE + " DESC LIMIT 1"
+                );
+                if (cursor.moveToFirst())
+                    latestUpdate = cursor.getInt(0);
+                cursor.close();
+
+                builder.appendQueryParameter(KEY_SINCE, String.valueOf(latestUpdate));
+            }
+
+            Uri uri = builder.build();
 
             //Initialize the URL
             URL url = new URL(uri.toString());
@@ -195,7 +218,6 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
                 editor.putBoolean(mContext.getString(R.string.pref_initial_load), false);
                 editor.apply();
             }
-
 
         } catch (JSONException e) {
             //There was an error parsing data
@@ -319,23 +341,6 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
         final String OWM_LAST_UPDATE = "last_update";
         final String OWM_DIFFERENCE = "difference";
 
-        //Get the youngest price from the database. If it's an update only prices newer than this
-        //will be updated to speed up the update.
-        int latestUpdate = 0;
-        if (updateDatabase) {
-            String[] columns = {PriceListContract.PriceEntry.COLUMN_LAST_UPDATE};
-            Cursor cursor = mContext.getContentResolver().query(
-                    PriceListContract.PriceEntry.CONTENT_URI,
-                    columns,
-                    null,
-                    null,
-                    PriceListContract.PriceEntry.COLUMN_LAST_UPDATE + " DESC LIMIT 1"
-            );
-            if (cursor.moveToFirst())
-                latestUpdate = cursor.getInt(0);
-            cursor.close();
-        }
-
         //Get the response JSON
         JSONObject jsonObject = new JSONObject(jsonString);
         JSONObject response = jsonObject.getJSONObject(OWM_RESPONSE);
@@ -360,17 +365,16 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
 
         // If any of the currencies was updated, the whole database needs to be updated.
         if (updateDatabase &&
-                (items.getJSONObject("Mann Co. Supply Crate Key").getJSONObject("prices")
-                        .getJSONObject("6").getJSONObject("Tradable").getJSONArray("Craftable")
-                        .getJSONObject(0).getInt(OWM_LAST_UPDATE) > latestUpdate ||
-                        items.getJSONObject("Earbuds").getJSONObject("prices").getJSONObject("6")
-                                .getJSONObject("Tradable").getJSONArray("Craftable").getJSONObject(0)
-                                .getInt(OWM_LAST_UPDATE) > latestUpdate ||
-                        items.getJSONObject("Refined Metal").getJSONObject("prices").getJSONObject("6")
-                                .getJSONObject("Tradable").getJSONArray("Craftable").getJSONObject(0)
-                                .getInt(OWM_LAST_UPDATE) > latestUpdate)) {
-            updateDatabase = false;
-            latestUpdate = 0;
+                (items.has("Mann Co. Supply Crate Key") || items.has("Earbuds")
+                        || items.has("Refined Metal"))) {
+            //TODO redownload JSON, update database
+            FetchPriceList task = new FetchPriceList(mContext, false, false);
+            task.setOnPriceListFetchListener(listener);
+            task.execute();
+
+            //Don't notify the listener cuz we didn't finish
+            listener = null;
+            return false;
         }
 
         //Start iterating
@@ -441,52 +445,6 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
                                 //Get the price
                                 JSONObject price = priceIndexes.getJSONObject(priceIndex);
 
-                                //Check whether the price is new
-                                if (latestUpdate < price.getInt(OWM_LAST_UPDATE)) {
-
-                                    //Temporary variables so we can check if they even exist
-                                    Double high = null;
-                                    String currency = null;
-                                    double value = 0;
-                                    double rawValue = 0;
-                                    int lastUpdate = 0;
-                                    double difference = 0;
-
-                                    if (price.has(OWM_VALUE_HIGH))
-                                        high = price.getDouble(OWM_VALUE_HIGH);
-
-                                    if (price.has(OWM_CURRENCY))
-                                        currency = price.getString(OWM_CURRENCY);
-
-                                    if (price.has(OWM_VALUE))
-                                        value = price.getDouble(OWM_VALUE);
-
-                                    if (price.has(OWM_VALUE_RAW))
-                                        rawValue = price.getDouble(OWM_VALUE_RAW);
-
-                                    if (price.has(OWM_LAST_UPDATE))
-                                        lastUpdate = price.getInt(OWM_LAST_UPDATE);
-
-                                    if (price.has(OWM_DIFFERENCE))
-                                        difference = price.getDouble(OWM_DIFFERENCE);
-
-                                    //Add the price to the CV vector
-                                    cVVector.add(buildContentValues(defindex,
-                                            name, quality, tradable, craftable, priceIndex,
-                                            currency, value, high, rawValue, lastUpdate,
-                                            difference
-                                    ));
-                                }
-                            }
-                        } else {
-                            JSONArray priceIndexes = craftability.getJSONArray(craftable);
-
-                            //The array has only one element
-                            JSONObject price = priceIndexes.getJSONObject(0);
-
-                            //Check whether the price is new
-                            if (latestUpdate < price.getInt(OWM_LAST_UPDATE)) {
-
                                 //Temporary variables so we can check if they even exist
                                 Double high = null;
                                 String currency = null;
@@ -515,11 +473,49 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
 
                                 //Add the price to the CV vector
                                 cVVector.add(buildContentValues(defindex,
-                                        name, quality, tradable, craftable, "0",
+                                        name, quality, tradable, craftable, priceIndex,
                                         currency, value, high, rawValue, lastUpdate,
                                         difference
                                 ));
                             }
+                        } else {
+                            JSONArray priceIndexes = craftability.getJSONArray(craftable);
+
+                            //The array has only one element
+                            JSONObject price = priceIndexes.getJSONObject(0);
+
+                            //Temporary variables so we can check if they even exist
+                            Double high = null;
+                            String currency = null;
+                            double value = 0;
+                            double rawValue = 0;
+                            int lastUpdate = 0;
+                            double difference = 0;
+
+                            if (price.has(OWM_VALUE_HIGH))
+                                high = price.getDouble(OWM_VALUE_HIGH);
+
+                            if (price.has(OWM_CURRENCY))
+                                currency = price.getString(OWM_CURRENCY);
+
+                            if (price.has(OWM_VALUE))
+                                value = price.getDouble(OWM_VALUE);
+
+                            if (price.has(OWM_VALUE_RAW))
+                                rawValue = price.getDouble(OWM_VALUE_RAW);
+
+                            if (price.has(OWM_LAST_UPDATE))
+                                lastUpdate = price.getInt(OWM_LAST_UPDATE);
+
+                            if (price.has(OWM_DIFFERENCE))
+                                difference = price.getDouble(OWM_DIFFERENCE);
+
+                            //Add the price to the CV vector
+                            cVVector.add(buildContentValues(defindex,
+                                    name, quality, tradable, craftable, "0",
+                                    currency, value, high, rawValue, lastUpdate,
+                                    difference
+                            ));
 
                             //Currency prices a processed slightly differently, some more info is
                             //saved to the default shared preferences
