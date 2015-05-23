@@ -133,15 +133,15 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                                     i.putExtra(ItemDetailActivity.EXTRA_ITEM_ID, id);
                                     i.putExtra(ItemDetailActivity.EXTRA_GUEST, isGuest);
                                     Cursor itemCursor = mDbHelper.getItem(defindex);
-                                    if (itemCursor.moveToFirst()) {
+                                    if (itemCursor != null && itemCursor.moveToFirst()) {
                                         i.putExtra(ItemDetailActivity.EXTRA_ITEM_NAME,
                                                 itemCursor.getString(0));
                                         i.putExtra(ItemDetailActivity.EXTRA_ITEM_TYPE,
                                                 itemCursor.getString(1));
                                         i.putExtra(ItemDetailActivity.EXTRA_PROPER_NAME,
                                                 itemCursor.getInt(2));
+                                        itemCursor.close();
                                     }
-                                    itemCursor.close();
 
                                     if (Build.VERSION.SDK_INT >= 21) {
                                         ActivityOptions options = ActivityOptions

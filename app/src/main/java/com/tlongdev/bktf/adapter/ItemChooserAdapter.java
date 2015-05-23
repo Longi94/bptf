@@ -43,35 +43,35 @@ public class ItemChooserAdapter extends CursorAdapter {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
         int quality = cursor.getInt(ItemChooserActivity.COL_PRICE_LIST_QUAL);
         int index = cursor.getInt(ItemChooserActivity.COL_PRICE_LIST_INDE);
-        if (quality == 5 && index != 0){
+        if (quality == 5 && index != 0) {
             viewHolder.nameView.setText(cursor.getString(ItemChooserActivity.COL_PRICE_LIST_NAME));
         } else {
-            viewHolder.nameView.setText(Utility.formatItemName(
+            viewHolder.nameView.setText(Utility.formatItemName(context,
+                    cursor.getInt(ItemChooserActivity.COL_PRICE_LIST_DEFINDEX),
                     cursor.getString(ItemChooserActivity.COL_PRICE_LIST_NAME),
                     cursor.getInt(ItemChooserActivity.COL_PRICE_LIST_TRAD),
                     cursor.getInt(ItemChooserActivity.COL_PRICE_LIST_CRAF),
                     quality, index));
         }
 
-        if(selectedIndex == cursor.getPosition()){
+        if (selectedIndex == cursor.getPosition()) {
             viewHolder.nameView.setTypeface(normalTypeface, Typeface.BOLD);
             viewHolder.nameView.setTextColor(context.getResources().getColor(R.color.bptf_main_blue_dark));
-        }
-        else{
+        } else {
             viewHolder.nameView.setTypeface(normalTypeface, Typeface.NORMAL);
             viewHolder.nameView.setTextColor(mainColor);
         }
     }
 
-    public void setSelectedIndex(int index){
+    public void setSelectedIndex(int index) {
         selectedIndex = index;
         Cursor cursor = getCursor();
-        if (cursor != null && cursor.moveToPosition(index)){
+        if (cursor != null && cursor.moveToPosition(index)) {
             itemId = cursor.getInt(ItemChooserActivity.COL_PRICE_LIST_ID);
         }
     }
 
-    public int getItemId(){
+    public int getItemId() {
         return itemId;
     }
 

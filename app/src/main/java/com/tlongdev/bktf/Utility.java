@@ -3,6 +3,7 @@ package com.tlongdev.bktf;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.ConnectivityManager;
@@ -10,6 +11,7 @@ import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.tlongdev.bktf.data.ItemSchemaDbHelper;
 import com.tlongdev.bktf.enums.Quality;
 
 import org.json.JSONArray;
@@ -65,16 +67,18 @@ public class Utility {
     /**
      * Properly formats the item name according to its properties.
      *
+     * @param context   context for accessing database
+     * @param defindex  defindex of the item
      * @param name      name of the item
      * @param tradable  whether the item is tradable (1-true, 0-false)
-     * @param craftable whether the item is craftabe (1-true, 0-false)
+     * @param craftable whether the item is craftable (1-true, 0-false)
      * @param quality   the quality of the item
      * @param index     the index of the item
      * @return the formatted name
      * @see Quality
      */
-    public static String formatItemName(String name, int tradable, int craftable, int quality,
-                                        int index) {
+    public static String formatItemName(Context context, int defindex, String name, int tradable,
+                                        int craftable, int quality, int index) {
         //Empty string that will be appended.
         String formattedName = "";
 
@@ -86,6 +90,19 @@ public class Utility {
         if (craftable == 0) {
             formattedName += "Non-Craftable ";
         }
+
+        //Handle strangifier names differently
+        if (defindex == 6522) {
+            ItemSchemaDbHelper dbHelper = new ItemSchemaDbHelper(context);
+            Cursor itemCursor = dbHelper.getItem(index);
+            if (itemCursor != null && itemCursor.moveToFirst()) {
+                return itemCursor.getString(0) + " " + name;
+            }
+        } else
+            //Handle chemistry set names differently
+            if (defindex == 20001) {
+
+            }
 
         //Convert the quality int to enum for better readability
         Quality q = Quality.values()[quality];
@@ -136,17 +153,32 @@ public class Utility {
     /**
      * Properly formats the item name according to its properties. Simple version.
      *
+     * @param context  context for accessing database
+     * @param defindex defindex of the item
      * @param name     name of the item
      * @param quality  the quality of the item
-     * @param index    the quality of the item
+     * @param index    the index of the item
      * @param isProper whether the name needs the definite article (The)
      * @return the formatted name
      * @see Quality
      */
-    public static String formatSimpleItemName(String name, int quality, int index,
-                                              boolean isProper) {
+    public static String formatSimpleItemName(Context context, int defindex, String name,
+                                              int quality, int index, boolean isProper) {
         //Empty string that will be appended.
         String formattedName = "";
+
+        //Handle strangifier names differently
+        if (defindex == 6522) {
+            ItemSchemaDbHelper dbHelper = new ItemSchemaDbHelper(context);
+            Cursor itemCursor = dbHelper.getItem(index);
+            if (itemCursor != null && itemCursor.moveToFirst()) {
+                return itemCursor.getString(0) + " " + name;
+            }
+        } else
+            //Handle chemistry set names differently
+            if (defindex == 20001) {
+
+            }
 
         //Convert the quality int to enum for better readability
         Quality q = Quality.values()[quality];

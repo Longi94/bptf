@@ -243,7 +243,8 @@ public class ItemDetailActivity extends Activity {
             int paintNumber = itemCursor.getInt(COL_BACKPACK_PAINT);
 
             //Set the name of the item
-            name.setText(Utility.formatSimpleItemName(
+            name.setText(Utility.formatSimpleItemName(this,
+                    defindex,
                     mIntent.getStringExtra(EXTRA_ITEM_NAME),
                     quality,
                     priceIndex,
@@ -341,9 +342,9 @@ public class ItemDetailActivity extends Activity {
             price.setVisibility(View.VISIBLE);
             price.setText("Suggested price: " + Utility
                     .formatPrice(this, priceCursor.getDouble(COL_PRICE_LIST_PRICE),
-                    priceCursor.getDouble(COL_PRICE_LIST_PMAX),
+                            priceCursor.getDouble(COL_PRICE_LIST_PMAX),
                             priceCursor.getString(COL_PRICE_LIST_CURRENCY),
-                    priceCursor.getString(COL_PRICE_LIST_CURRENCY), false));
+                            priceCursor.getString(COL_PRICE_LIST_CURRENCY), false));
         }
 
         //Close the cursors

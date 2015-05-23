@@ -61,10 +61,10 @@ public class SearchCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         int viewType = getItemViewType(cursor.getPosition());
-        switch (viewType){
+        switch (viewType) {
             case VIEW_TYPE_USER:
-                ((TextView)view.findViewById(R.id.text_view_user_name)).setText(cursor.getString(SearchFragment.COL_PRICE_LIST_NAME));
-                ((ImageView)view.findViewById(R.id.image_view_avatar)).setImageDrawable(Drawable.
+                ((TextView) view.findViewById(R.id.text_view_user_name)).setText(cursor.getString(SearchFragment.COL_PRICE_LIST_NAME));
+                ((ImageView) view.findViewById(R.id.image_view_avatar)).setImageDrawable(Drawable.
                         createFromPath(context.getFilesDir().toString() + "/avatar_search.png"));
                 break;
             case VIEW_TYPE_PRICE:
@@ -77,7 +77,8 @@ public class SearchCursorAdapter extends CursorAdapter {
                         cursor.getInt(SearchFragment.COL_PRICE_LIST_TRAD),
                         cursor.getInt(SearchFragment.COL_PRICE_LIST_CRAF)));
 
-                viewHolder.nameView.setText(Utility.formatItemName(
+                viewHolder.nameView.setText(Utility.formatItemName(context,
+                        cursor.getInt(SearchFragment.COL_PRICE_LIST_DEFI),
                         cursor.getString(SearchFragment.COL_PRICE_LIST_NAME),
                         cursor.getInt(SearchFragment.COL_PRICE_LIST_TRAD),
                         cursor.getInt(SearchFragment.COL_PRICE_LIST_CRAF),
@@ -114,7 +115,7 @@ public class SearchCursorAdapter extends CursorAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        if (loading){
+        if (loading) {
             return position == 0 ? VIEW_TYPE_LOADING : VIEW_TYPE_PRICE;
         }
         return userFound && position == 0 ? VIEW_TYPE_USER : VIEW_TYPE_PRICE;
@@ -132,14 +133,14 @@ public class SearchCursorAdapter extends CursorAdapter {
 
     public void setLoading(boolean loading) {
         this.loading = loading;
-        if (loading){
+        if (loading) {
             userFound = false;
         }
     }
 
     public void setUserFound(boolean userFound) {
         this.userFound = userFound;
-        if (userFound){
+        if (userFound) {
             loading = false;
         }
     }
