@@ -70,9 +70,9 @@ public class DeveloperKeyPreference extends DialogPreference {
 
         //Set the summary depending on the new value
         if (newKey.equals("")) {
-            setSummary("Using the default key.");
+            setSummary("Using the default key");
         } else {
-            setSummary("Using a custom key.");
+            setSummary("Using a custom key");
         }
     }
 }
