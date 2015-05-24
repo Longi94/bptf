@@ -35,7 +35,7 @@ import java.util.Vector;
 /**
  * Task for fetching all data for prices database and updating it in the background.
  */
-public class FetchPriceList extends AsyncTask<String, Integer, Void> {
+public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
 
     private static final String LOG_TAG = FetchPriceList.class.getSimpleName();
 
@@ -54,6 +54,9 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
     //Error message to be displayed to the user
     private String errorMessage;
 
+    //The developer api key used for querying
+    private String apiKey;
+
     //The listener that will be notified when the fetching finishes
     private OnPriceListFetchListener listener;
 
@@ -71,6 +74,8 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
         this.mContext = context;
         this.updateDatabase = updateDatabase;
         this.manualSync = manualSync;
+
+        apiKey = context.getString(R.string.api_key_backpack_tf);
     }
 
     /**
@@ -87,7 +92,7 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
      * {@inheritDoc}
      */
     @Override
-    protected Void doInBackground(String... params) {
+    protected Void doInBackground(Void... params) {
 
         if (System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(mContext)
                 .getLong(mContext.getString(R.string.pref_last_price_list_update), 0) < 3600000L
@@ -116,7 +121,7 @@ public class FetchPriceList extends AsyncTask<String, Integer, Void> {
 
             //Build the URI
             Uri.Builder builder = Uri.parse(PRICES_BASE_URL).buildUpon()
-                    .appendQueryParameter(KEY_PARAM, params[0])
+                    .appendQueryParameter(KEY_PARAM, apiKey)
                     .appendQueryParameter(KEY_COMPRESS, "1")
                     .appendQueryParameter(KEY_APP_ID, "440")
                     .appendQueryParameter(KEY_FORMAT, "json")

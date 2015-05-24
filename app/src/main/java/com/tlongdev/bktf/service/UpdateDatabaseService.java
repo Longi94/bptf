@@ -32,8 +32,7 @@ public class UpdateDatabaseService extends Service {
                 && Utility.isNetworkAvailable(this)) {
 
             //Start updating the database
-            new FetchPriceList(this, true, true).execute(getResources()
-                    .getString(R.string.api_key_backpack_tf));
+            new FetchPriceList(this, true, true).execute();
         }
 
         //Stop the service
