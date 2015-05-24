@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -385,10 +386,24 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
                 (items.has("Mann Co. Supply Crate Key") || items.has("Earbuds")
                         || items.has("Refined Metal"))) {
 
+            Toast.makeText(mContext, "Currency price updated. Updating whole database.",
+                    Toast.LENGTH_LONG).show();
+
             //relaunch the task with the intent
-            FetchPriceList task = new FetchPriceList(mContext, false, false);
+            final FetchPriceList task = new FetchPriceList(mContext, false, false);
             task.setOnPriceListFetchListener(listener);
-            task.execute();
+
+            Handler handler = new Handler();
+
+            final Runnable r = new Runnable() {
+                @Override
+                public void run() {
+                    task.execute();
+                }
+            };
+
+            //Delay the update by 5 seconds so the requests are not too frequent.
+            handler.postDelayed(r, 5000);
 
             //Don't notify the listener cuz we didn't finish
             listener = null;
