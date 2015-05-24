@@ -75,7 +75,15 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
         this.updateDatabase = updateDatabase;
         this.manualSync = manualSync;
 
-        apiKey = context.getString(R.string.api_key_backpack_tf);
+        //Load the api key from the preferences if set
+        String savedKey = PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(context.getString(R.string.pref_developer_key), "");
+
+        if (savedKey != null && !savedKey.equals("")) {
+            apiKey = savedKey;
+        } else {
+            apiKey = context.getString(R.string.api_key_backpack_tf);
+        }
     }
 
     /**
@@ -296,6 +304,8 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
         } else if (values[0] == -1) {
             //There was an error while trying to update database
             Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
+        } else if (values[0] == -2) {
+            Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -353,8 +363,10 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
         if (response.getInt(OWM_SUCCESS) == 0) {
             publishProgress(-2);
             //Unsuccessful query, nothing to do
+
+            errorMessage = response.getString(OWM_MESSAGE);
             if (Utility.isDebugging(mContext))
-                Log.e(LOG_TAG, response.getString(OWM_MESSAGE));
+                Log.e(LOG_TAG, errorMessage);
             return false;
         }
 
@@ -372,7 +384,8 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
         if (updateDatabase &&
                 (items.has("Mann Co. Supply Crate Key") || items.has("Earbuds")
                         || items.has("Refined Metal"))) {
-            //TODO redownload JSON, update database
+
+            //relaunch the task with the intent
             FetchPriceList task = new FetchPriceList(mContext, false, false);
             task.setOnPriceListFetchListener(listener);
             task.execute();
