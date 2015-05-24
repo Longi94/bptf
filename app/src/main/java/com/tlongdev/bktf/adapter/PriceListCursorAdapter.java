@@ -9,6 +9,8 @@ import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -42,6 +44,10 @@ public class PriceListCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
+        view.setVisibility(View.INVISIBLE);
+        viewHolder.nameView.setVisibility(View.INVISIBLE);
+        viewHolder.priceView.setVisibility(View.INVISIBLE);
+
         String itemTag = Utility.formatItemName(context,
                 cursor.getInt(HomeFragment.COL_PRICE_LIST_DEFI),
                 cursor.getString(HomeFragment.COL_PRICE_LIST_NAME),
@@ -61,7 +67,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
         if (task != null) {
             task.cancel(true);
         }
-        task = new LoadImagesTask(context, viewHolder.icon, viewHolder.background, viewHolder.change);
+        task = new LoadImagesTask(context, view, viewHolder);
         viewHolder.icon.setTag(task);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
                 (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_DEFI),
@@ -110,17 +116,15 @@ public class PriceListCursorAdapter extends CursorAdapter {
 
     private class LoadImagesTask extends AsyncTask<Double, Void, Drawable[]> {
         private Context mContext;
-        private ImageView icon;
-        private ImageView background;
-        private ImageView change;
+        private View rootView;
+        private ViewHolder viewHolder;
         private String name;
 
-        private LoadImagesTask(Context context, ImageView icon, ImageView background, ImageView change) {
+        private LoadImagesTask(Context context, View rootView, ViewHolder viewHolder) {
             mContext = context;
-            this.icon = icon;
-            this.change = change;
-            this.background = background;
-            name = (String) background.getTag();
+            this.rootView = rootView;
+            this.viewHolder = viewHolder;
+            name = (String) viewHolder.background.getTag();
         }
 
         @Override
@@ -170,14 +174,19 @@ public class PriceListCursorAdapter extends CursorAdapter {
         @Override
         protected void onPostExecute(Drawable[] drawable) {
             if (drawable != null) {
-                icon.setImageDrawable(drawable[0]);
-                background.setBackgroundDrawable(drawable[1]);
-                change.setImageDrawable(drawable[2]);
+                viewHolder.icon.setImageDrawable(drawable[0]);
+                viewHolder.background.setBackgroundDrawable(drawable[1]);
+                viewHolder.change.setImageDrawable(drawable[2]);
             } else {
-                icon.setImageDrawable(null);
-                background.setBackgroundDrawable(null);
-                change.setImageDrawable(null);
+                viewHolder.icon.setImageDrawable(null);
+                viewHolder.background.setBackgroundDrawable(null);
+                viewHolder.change.setImageDrawable(null);
             }
+            Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.simple_fade_in);
+            rootView.startAnimation(fadeIn);
+            rootView.setVisibility(View.VISIBLE);
+            viewHolder.nameView.setVisibility(View.VISIBLE);
+            viewHolder.priceView.setVisibility(View.VISIBLE);
         }
     }
 }
