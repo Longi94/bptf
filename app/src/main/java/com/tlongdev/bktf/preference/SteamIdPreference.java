@@ -21,6 +21,9 @@ public class SteamIdPreference extends DialogPreference {
     //The input field
     private EditText steamIdInput;
 
+    //Context for getting resources
+    private Context mContext;
+
     /**
      * Constructor
      *
@@ -29,6 +32,9 @@ public class SteamIdPreference extends DialogPreference {
      */
     public SteamIdPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        mContext = context;
+
         //Value will be saved manually
         setPersistent(false);
 
@@ -36,7 +42,8 @@ public class SteamIdPreference extends DialogPreference {
         setDialogLayoutResource(R.layout.preference_dialog_steam_id);
 
         //Set the summary to the saved value
-        setSummary(PreferenceManager.getDefaultSharedPreferences(context).getString("Steam ID", ""));
+        setSummary(PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(context.getString(R.string.pref_steam_id), ""));
     }
 
     /**
@@ -47,7 +54,8 @@ public class SteamIdPreference extends DialogPreference {
         super.onDialogClosed(positiveResult);
         if (positiveResult) {
             //Save the input value to the preferences
-            getEditor().putString("Steam ID", steamIdInput.getText().toString()).apply();
+            getEditor().putString(mContext.getString(R.string.pref_steam_id),
+                    steamIdInput.getText().toString()).apply();
             setSummary(steamIdInput.getText().toString());
         }
     }
@@ -61,7 +69,8 @@ public class SteamIdPreference extends DialogPreference {
 
         //The input field
         steamIdInput = (EditText) view.findViewById(R.id.edit_text_steam_id);
-        steamIdInput.setText(getSharedPreferences().getString("Steam ID", ""));
+        steamIdInput.setText(getSharedPreferences()
+                .getString(mContext.getString(R.string.pref_steam_id), ""));
 
         //Format the instructions.
         ((TextView) view.findViewById(R.id.steam_id_64_bit)).setText(

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp"
+    android:paddingTop="24dp">
+
+    <!--TODO instructions on finding the api key-->
+
+    <!--Input for preference-->
+    <EditText
+        android:id="@+id/edit_text_dev_key"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/pref_hint_dev_key"
+        android:inputType="textWebPassword"
+        android:maxLines="1"
+        android:paddingTop="16dp"
+        android:selectAllOnFocus="true"
+        android:singleLine="true" />
+
+</LinearLayout>
