@@ -90,116 +90,116 @@
     <string name="preference_dialog_vanity_name" translatable="true">Vanity name:</string>
 
     <!--Strings for the arrays-->
-    <string name="array_sync_interval_5_minutes">Every 5 minutes</string>
-    <string name="array_sync_interval_15_minutes">Every 15 minutes</string>
-    <string name="array_sync_interval_30_minutes">Every 30 minutes</string>
-    <string name="array_sync_interval_hourly">Every hour</string>
-    <string name="array_sync_interval_3_hours">Every 3 hours</string>
-    <string name="array_sync_interval_6_hours">Every 6 hours</string>
-    <string name="array_sync_interval_daily">Daily</string>
+    <string name="array_sync_interval_5_minutes" translatable="true">Every 5 minutes</string>
+    <string name="array_sync_interval_15_minutes" translatable="true">Every 15 minutes</string>
+    <string name="array_sync_interval_30_minutes" translatable="true">Every 30 minutes</string>
+    <string name="array_sync_interval_hourly" translatable="true">Every hour</string>
+    <string name="array_sync_interval_3_hours" translatable="true">Every 3 hours</string>
+    <string name="array_sync_interval_6_hours" translatable="true">Every 6 hours</string>
+    <string name="array_sync_interval_daily" translatable="true">Daily</string>
 
-    <string name="array_origin_drop">Timed Drop</string>
-    <string name="array_origin_achievement">Achievement</string>
-    <string name="array_origin_purchased">Purchased</string>
-    <string name="array_origin_traded">Traded</string>
-    <string name="array_origin_crafted">Crafted</string>
-    <string name="array_origin_promotion">Store Promotion</string>
-    <string name="array_origin_gifted">Gifted</string>
-    <string name="array_origin_support">Support Granted</string>
-    <string name="array_origin_crate">Found in Crate</string>
-    <string name="array_origin_earned">Earned</string>
-    <string name="array_origin_3rd_party">Third-Party Promotion</string>
-    <string name="array_origin_wrapped_gift">Wrapped Gift</string>
-    <string name="array_origin_halloween">Halloween Drop</string>
-    <string name="array_origin_steam_purchase">Steam Purchase</string>
-    <string name="array_origin_foreign">Foreign string</string>
-    <string name="array_origin_cd">CD Key</string>
-    <string name="array_origin_collection_reward">Collection Reward</string>
-    <string name="array_origin_preview">Preview string</string>
-    <string name="array_origin_contribution">Steam Workshop Contribution</string>
-    <string name="array_origin_periodic_reward">Periodic score reward</string>
-    <string name="array_origin_mvm_completion">MvM Badge completion reward</string>
-    <string name="array_origin_surplus">MvM Squad surplus reward</string>
-    <string name="array_origin_recipe">Recipe output</string>
+    <string name="array_origin_drop" translatable="true">Timed Drop</string>
+    <string name="array_origin_achievement" translatable="true">Achievement</string>
+    <string name="array_origin_purchased" translatable="true">Purchased</string>
+    <string name="array_origin_traded" translatable="true">Traded</string>
+    <string name="array_origin_crafted" translatable="true">Crafted</string>
+    <string name="array_origin_promotion" translatable="true">Store Promotion</string>
+    <string name="array_origin_gifted" translatable="true">Gifted</string>
+    <string name="array_origin_support" translatable="true">Support Granted</string>
+    <string name="array_origin_crate" translatable="true">Found in Crate</string>
+    <string name="array_origin_earned" translatable="true">Earned</string>
+    <string name="array_origin_3rd_party" translatable="true">Third-Party Promotion</string>
+    <string name="array_origin_wrapped_gift" translatable="true">Wrapped Gift</string>
+    <string name="array_origin_halloween" translatable="true">Halloween Drop</string>
+    <string name="array_origin_steam_purchase" translatable="true">Steam Purchase</string>
+    <string name="array_origin_foreign" translatable="true">Foreign string</string>
+    <string name="array_origin_cd" translatable="true">CD Key</string>
+    <string name="array_origin_collection_reward" translatable="true">Collection Reward</string>
+    <string name="array_origin_preview" translatable="true">Preview string</string>
+    <string name="array_origin_contribution" translatable="true">Steam Workshop Contribution</string>
+    <string name="array_origin_periodic_reward" translatable="true">Periodic score reward</string>
+    <string name="array_origin_mvm_completion" translatable="true">MvM Badge completion reward</string>
+    <string name="array_origin_surplus" translatable="true">MvM Squad surplus reward</string>
+    <string name="array_origin_recipe" translatable="true">Recipe output</string>
 
-    <string name="array_item_chooser_spinner_regular">Regular items</string>
-    <string name="array_item_chooser_spinner_unusual">Unusuals</string>
+    <string name="array_item_chooser_spinner_regular" translatable="true">Regular items</string>
+    <string name="array_item_chooser_spinner_unusual" translatable="true">Unusuals</string>
 
-    <string name="array_effects_aces_high">Aces High</string>
-    <string name="array_effects_amaranthine">Amaranthine</string>
-    <string name="array_effects_anti_freeze">Anti-Freeze</string>
-    <string name="array_effects_arcana">Arcana</string>
-    <string name="array_effects_blizzardy_storm">Blizzardy Storm</string>
-    <string name="array_effects_bonzo">Bonzo The All-Gnawing</string>
-    <string name="array_effects_bubbling">Bubbling</string>
-    <string name="array_effects_burning_flames">Burning Flames</string>
-    <string name="array_effects_cauldron_bubbles">Cauldron Bubbles</string>
-    <string name="array_effects_chiroptera_venenata">Chiroptera Venenata</string>
-    <string name="array_effects_circling_heart">Circling Heart</string>
-    <string name="array_effects_circling_peace_sign">Circling Peace Sign</string>
-    <string name="array_effects_circling_tf_logo">Circling TF Logo</string>
-    <string name="array_effects_cloiud_9">Cloud 9</string>
-    <string name="array_effects_cloudy_moon">Cloudy Moon</string>
-    <string name="array_effects_darkblaze">Darkblaze</string>
-    <string name="array_effects_dead_presidents">Dead Presidents</string>
-    <string name="array_effects_death_at_dusk">Death at Dusk</string>
-    <string name="array_effects_demonflame">Demonflame</string>
-    <string name="array_effects_disco_beat_down">Disco Beat Down</string>
-    <string name="array_effects_eerie_orbiting_fire">Eerie Orbiting Fire</string>
-    <string name="array_effects_electrostatic">Electrostatic</string>
-    <string name="array_effects_flaming_lantern">Flaming Lantern</string>
-    <string name="array_effects_fountain_of_delight">Fountain of Delight</string>
-    <string name="array_effects_frostbite">Frostbite</string>
-    <string name="array_effects_ghastly_ghosts">Ghastly Ghosts</string>
-    <string name="array_effects_ghastly_ghosts_jr">Ghastly Ghosts Jr</string>
-    <string name="array_effects_green_confetti">Green Confetti</string>
-    <string name="array_effects_green_black_hole">Green Black Hole</string>
-    <string name="array_effects_green_energy">Green Energy</string>
-    <string name="array_effects_harvest_moon">Harvest Moon</string>
-    <string name="array_effects_haunted_ghosts">Haunted Ghosts</string>
-    <string name="array_effects_haunted_phantasm">Haunted Phantasm</string>
-    <string name="array_effects_haunted_phantasm_jr">Haunted Phantasm Jr</string>
-    <string name="array_effects_hellfire">Hellfire</string>
-    <string name="array_effects_holy_grail">Holy Grail</string>
-    <string name="array_effects_secret">It\'s A Secret To Everybody</string>
-    <string name="array_effects_kill_a_watt">Kill-a-Watt</string>
-    <string name="array_effects_knifestorm">Knifestorm</string>
-    <string name="array_effects_massed_flies">Massed Flies</string>
-    <string name="array_effects_mega_strike">Mega Strike</string>
-    <string name="array_effects_memory_leak">Memory Leak</string>
-    <string name="array_effects_miami_nights">Miami Nights</string>
-    <string name="array_effects_midnight_whirlwind">Midnight Whirlwind</string>
-    <string name="array_effects_misty_skull">Misty Skull</string>
-    <string name="array_effects_molten_mallard">Molten Mallard</string>
-    <string name="array_effects_morning_glory">Morning Glory</string>
-    <string name="array_effects_nuts_n_bolts">Nuts n\' Bolts</string>
-    <string name="array_effects_orbiting_fire">Orbiting Fire</string>
-    <string name="array_effects_orbiting_planets">Orbiting Planets</string>
-    <string name="array_effects_overclocked">Overclocked</string>
-    <string name="array_effects_phosphorous">Phosphorous</string>
-    <string name="array_effects_poisoned_shadows">Poisoned Shadows</string>
-    <string name="array_effects_power_surge">Power Surge</string>
-    <string name="array_effects_purple_confetti">Purple Confetti</string>
-    <string name="array_effects_purple_energy">Purple Energy</string>
-    <string name="array_effects_roboactive">Roboactive</string>
-    <string name="array_effects_scorching_flames">Scorching Flames</string>
-    <string name="array_effects_screaming_tiger">Screaming Tiger</string>
-    <string name="array_effects_searing_plasma">Searing Plasma</string>
-    <string name="array_effects_silver_cyclone">Silver Cyclone</string>
-    <string name="array_effects_skill_gotten_gains">Skill Gotten Gains</string>
-    <string name="array_effects_showstopper">Showstopper</string>
-    <string name="array_effects_smoking">Smoking</string>
-    <string name="array_effects_something_burning">Something Burning This Way Comes</string>
-    <string name="array_effects_spellbound">Spellbound</string>
-    <string name="array_effects_stare_from_beyond">Stare From Beyond</string>
-    <string name="array_effects_steaming">Steaming</string>
-    <string name="array_effects_stormy_13th_hour">Stormy 13th Hour</string>
-    <string name="array_effects_stormy_storm">Stormy Storm</string>
-    <string name="array_effects_sulphurous">Sulphurous</string>
-    <string name="array_effects_sunbeams">Sunbeams</string>
-    <string name="array_effects_terror_watt">Terror-Watt</string>
-    <string name="array_effects_the_ooze">The Ooze</string>
-    <string name="array_effects_time_warp">Time Warp</string>
-    <string name="array_effects_vivid_plasma">Vivid Plasma</string>
-    <string name="array_effects_72">\'72</string>
+    <string name="array_effects_aces_high" translatable="true">Aces High</string>
+    <string name="array_effects_amaranthine" translatable="true">Amaranthine</string>
+    <string name="array_effects_anti_freeze" translatable="true">Anti-Freeze</string>
+    <string name="array_effects_arcana" translatable="true">Arcana</string>
+    <string name="array_effects_blizzardy_storm" translatable="true">Blizzardy Storm</string>
+    <string name="array_effects_bonzo" translatable="true">Bonzo The All-Gnawing</string>
+    <string name="array_effects_bubbling" translatable="true">Bubbling</string>
+    <string name="array_effects_burning_flames" translatable="true">Burning Flames</string>
+    <string name="array_effects_cauldron_bubbles" translatable="true">Cauldron Bubbles</string>
+    <string name="array_effects_chiroptera_venenata" translatable="true">Chiroptera Venenata</string>
+    <string name="array_effects_circling_heart" translatable="true">Circling Heart</string>
+    <string name="array_effects_circling_peace_sign" translatable="true">Circling Peace Sign</string>
+    <string name="array_effects_circling_tf_logo" translatable="true">Circling TF Logo</string>
+    <string name="array_effects_cloiud_9" translatable="true">Cloud 9</string>
+    <string name="array_effects_cloudy_moon" translatable="true">Cloudy Moon</string>
+    <string name="array_effects_darkblaze" translatable="true">Darkblaze</string>
+    <string name="array_effects_dead_presidents" translatable="true">Dead Presidents</string>
+    <string name="array_effects_death_at_dusk" translatable="true">Death at Dusk</string>
+    <string name="array_effects_demonflame" translatable="true">Demonflame</string>
+    <string name="array_effects_disco_beat_down" translatable="true">Disco Beat Down</string>
+    <string name="array_effects_eerie_orbiting_fire" translatable="true">Eerie Orbiting Fire</string>
+    <string name="array_effects_electrostatic" translatable="true">Electrostatic</string>
+    <string name="array_effects_flaming_lantern" translatable="true">Flaming Lantern</string>
+    <string name="array_effects_fountain_of_delight" translatable="true">Fountain of Delight</string>
+    <string name="array_effects_frostbite" translatable="true">Frostbite</string>
+    <string name="array_effects_ghastly_ghosts" translatable="true">Ghastly Ghosts</string>
+    <string name="array_effects_ghastly_ghosts_jr" translatable="true">Ghastly Ghosts Jr</string>
+    <string name="array_effects_green_confetti" translatable="true">Green Confetti</string>
+    <string name="array_effects_green_black_hole" translatable="true">Green Black Hole</string>
+    <string name="array_effects_green_energy" translatable="true">Green Energy</string>
+    <string name="array_effects_harvest_moon" translatable="true">Harvest Moon</string>
+    <string name="array_effects_haunted_ghosts" translatable="true">Haunted Ghosts</string>
+    <string name="array_effects_haunted_phantasm" translatable="true">Haunted Phantasm</string>
+    <string name="array_effects_haunted_phantasm_jr" translatable="true">Haunted Phantasm Jr</string>
+    <string name="array_effects_hellfire" translatable="true">Hellfire</string>
+    <string name="array_effects_holy_grail" translatable="true">Holy Grail</string>
+    <string name="array_effects_secret" translatable="true">It\'s A Secret To Everybody</string>
+    <string name="array_effects_kill_a_watt" translatable="true">Kill-a-Watt</string>
+    <string name="array_effects_knifestorm" translatable="true">Knifestorm</string>
+    <string name="array_effects_massed_flies" translatable="true">Massed Flies</string>
+    <string name="array_effects_mega_strike" translatable="true">Mega Strike</string>
+    <string name="array_effects_memory_leak" translatable="true">Memory Leak</string>
+    <string name="array_effects_miami_nights" translatable="true">Miami Nights</string>
+    <string name="array_effects_midnight_whirlwind" translatable="true">Midnight Whirlwind</string>
+    <string name="array_effects_misty_skull" translatable="true">Misty Skull</string>
+    <string name="array_effects_molten_mallard" translatable="true">Molten Mallard</string>
+    <string name="array_effects_morning_glory" translatable="true">Morning Glory</string>
+    <string name="array_effects_nuts_n_bolts" translatable="true">Nuts n\' Bolts</string>
+    <string name="array_effects_orbiting_fire" translatable="true">Orbiting Fire</string>
+    <string name="array_effects_orbiting_planets" translatable="true">Orbiting Planets</string>
+    <string name="array_effects_overclocked" translatable="true">Overclocked</string>
+    <string name="array_effects_phosphorous" translatable="true">Phosphorous</string>
+    <string name="array_effects_poisoned_shadows" translatable="true">Poisoned Shadows</string>
+    <string name="array_effects_power_surge" translatable="true">Power Surge</string>
+    <string name="array_effects_purple_confetti" translatable="true">Purple Confetti</string>
+    <string name="array_effects_purple_energy" translatable="true">Purple Energy</string>
+    <string name="array_effects_roboactive" translatable="true">Roboactive</string>
+    <string name="array_effects_scorching_flames" translatable="true">Scorching Flames</string>
+    <string name="array_effects_screaming_tiger" translatable="true">Screaming Tiger</string>
+    <string name="array_effects_searing_plasma" translatable="true">Searing Plasma</string>
+    <string name="array_effects_silver_cyclone" translatable="true">Silver Cyclone</string>
+    <string name="array_effects_skill_gotten_gains" translatable="true">Skill Gotten Gains</string>
+    <string name="array_effects_showstopper" translatable="true">Showstopper</string>
+    <string name="array_effects_smoking" translatable="true">Smoking</string>
+    <string name="array_effects_something_burning" translatable="true">Something Burning This Way Comes</string>
+    <string name="array_effects_spellbound" translatable="true">Spellbound</string>
+    <string name="array_effects_stare_from_beyond" translatable="true">Stare From Beyond</string>
+    <string name="array_effects_steaming" translatable="true">Steaming</string>
+    <string name="array_effects_stormy_13th_hour" translatable="true">Stormy 13th Hour</string>
+    <string name="array_effects_stormy_storm" translatable="true">Stormy Storm</string>
+    <string name="array_effects_sulphurous" translatable="true">Sulphurous</string>
+    <string name="array_effects_sunbeams" translatable="true">Sunbeams</string>
+    <string name="array_effects_terror_watt" translatable="true">Terror-Watt</string>
+    <string name="array_effects_the_ooze" translatable="true">The Ooze</string>
+    <string name="array_effects_time_warp" translatable="true">Time Warp</string>
+    <string name="array_effects_vivid_plasma" translatable="true">Vivid Plasma</string>
+    <string name="array_effects_72" translatable="true">\'72</string>
 </resources>
