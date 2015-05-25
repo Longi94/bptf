@@ -4,6 +4,7 @@
     <string name="app_name" translatable="false">bptf</string>
 
     <!--Preference keys-->
+
     <string name="pref_auto_sync" translatable="false">pref_auto_sync</string>
     <string name="pref_background_sync" translatable="false">pref_background_sync</string>
     <string name="pref_buds_diff" translatable="false">pref_buds_diff_v2</string>
@@ -46,12 +47,30 @@
     <string name="pref_steam_id" translatable="false">Steam ID</string>
     <string name="pref_sync_interval" translatable="false">pref_sync_interval</string>
     <string name="pref_user_developer" translatable="false">pref_user_developer</string>
-    <string name="pref_user_items" trasnlatable="false">pref_user_items</string>
+    <string name="pref_user_items" translatable="false">pref_user_items</string>
     <string name="pref_user_raw_key" translatable="false">pref_user_raw_key</string>
     <string name="pref_user_raw_metal" translatable="false">pref_user_raw_metal</string>
-    <string name="pref_user_slots" trasnlatable="false">pref_user_slots</string>
+    <string name="pref_user_slots" translatable="false">pref_user_slots</string>
+
+    <!--Action Bar icons-->
+
+    <string name="action_add" translatable="true">Add</string>
+    <string name="action_browse_effect" translatable="true">Browse by effect</string>
+    <string name="action_cancel" translatable="true">Cancel</string>
+    <string name="action_clear" translatable="true">Clear items</string>
+    <string name="action_refresh" translatable="true">Refresh</string>
+    <string name="action_settings" translatable="true">Settings</string>
+    <string name="action_show_advanced" translatable="true">Advanced mode</string>
+    <string name="action_show_simple" translatable="true">Simple mode</string>
+    <string name="action_sort" translatable="true">Sort</string>
+
+    <!--Searchview-->
+
+    <string name="search_title" translatable="true">Search</string>
+    <string name="search_hint" translatable="true">Item name or steam ID</string>
 
     <!--Activity/Fragment titles-->
+
     <string name="title_activity_credits" translatable="false">Credits</string>
     <string name="title_activity_item_chooser" translatable="false">ItemChooserActivity</string>
     <string name="title_activity_item_detail" translatable="false">ItemDetailActivity</string>
@@ -62,29 +81,213 @@
     <string name="title_activity_user_backpack" translatable="false">UserBackpackActivity</string>
     <string name="title_activity_user_info" translatable="false">UserInfoActivity</string>
     <string name="title_activity_welcome" translatable="false">WelcomeActivity</string>
+    <string name="title_calculator" translatable="true">Calculator</string>
+    <string name="title_home" translatable="true">Latest Changes</string>
+    <string name="title_prices" translatable="true">Unusual Prices</string>
+    <string name="title_user_profile" translatable="true">User Profile</string>
 
     <!--Preference titles and summaries-->
+
     <string name="pref_title_quick_return" trasnlatable="false">QuickReturn</string>
     <string name="pref_summary_developer" translatable="false">Long Tran</string>
+    <string name="pref_category_about" translatable="true">About</string>
+    <string name="pref_category_account" translatable="true">Account</string>
+    <string name="pref_category_dev" translatable="true">Developer</string>
+    <string name="pref_category_notification" translatable="true">Notifications</string>
+    <string name="pref_category_sync" translatable="true">Syncing</string>
+    <string name="pref_hint_dev_key" translatable="true">API key</string>
+    <string name="pref_hint_steam_id" translatable="true">Steam ID</string>
+    <string name="pref_summary_off_auto_sync" translatable="true">Manual refresh</string>
+    <string name="pref_summary_on_auto_sync" translatable="true">Auto-update database</string>
+    <string name="pref_summary_particles" translatable="true">provided by backpack.tf</string>
+    <string name="pref_summary_quick_return" translatable="true">by felipecsl</string>
+    <string name="pref_title_auto_sync" translatable="true">Auto-update database</string>
+    <string name="pref_title_background_sync" translatable="true">Sync in the background</string>
+    <string name="pref_title_changelog" translatable="true">Changelogs</string>
+    <string name="pref_title_credits" translatable="true">Credits</string>
+    <string name="pref_title_debug_logs" translatable="true">Enable debug logs</string>
+    <string name="pref_title_developer" translatable="true">Developer</string>
+    <string name="pref_title_developer_key" translatable="true">Custom API key</string>
+    <string name="pref_title_feedback" translatable="true">Send feedback or bug report</string>
+    <string name="pref_title_notification" translatable="true">backpack.tf Notifications</string>
+    <string name="pref_title_notification_interval" translatable="true">Check for notifications</string>
+    <string name="pref_title_particles" translatable="true">Particle effect images</string>
+    <string name="pref_title_rate" translatable="true">Rate the app on Google Play</string>
+    <string name="pref_title_sync_interval" translatable="true">Sync frequency</string>
+    <string name="pref_title_version" translatable="true">Version</string>
+
+    <!--Content descriptions-->
+
+    <string name="description_background" translatable="true">Background</string>
+    <string name="description_change" translatable="true">Change</string>
+    <string name="description_delete" translatable="true">Delete</string>
+    <string name="description_icon" translatable="true">Icon</string>
+    <string name="description_player_avatar" translatable="true">Player Avatar</string>
 
     <!--Resources for user page-->
+
     <string name="user_page_link_bazaar" translatable="false">Bazaar.tf</string>
     <string name="user_page_link_steamrep" translatable="false">STEAMREP</string>
     <string name="user_page_link_tf2op" translatable="false">TF2Outpost</string>
     <string name="user_page_link_tf2tp" translatable="false">TF2TP</string>
     <string name="user_page_usd" translatable="false">\ USD</string>
     <string name="user_page_vac" translatable="false">VAC</string>
+    <string name="user_page_keys" translatable="true">\ RAW KEYS</string>
+    <string name="user_page_last_online" translatable="true">Last online:</string>
+    <string name="user_page_link_backpack" translatable="true">BACKPACK</string>
+    <string name="user_page_link_community" translatable="true">COMMUNITY</string>
+    <string name="user_page_metal" translatable="true">\ RAW METAL</string>
+    <string name="user_page_refined" translatable="true">\ REFINED</string>
+    <string name="user_page_reputation" translatable="true">Reputation:</string>
+    <string name="user_page_slots" translatable="true">\ SLOTS</string>
+    <string name="user_page_status" translatable="true">Status</string>
+    <string name="user_page_trade_status" translatable="true">TRADE</string>
+    <string name="user_page_trust" translatable="true">TRUST</string>
+    <string name="user_page_user_since" translatable="true">Steam user since: \n</string>
 
     <!--Resources for calculator-->
+
     <string name="calculator_placeholder_buds" translatable="false">0 buds</string>
     <string name="calculator_placeholder_keys" translatable="false">0 keys</string>
     <string name="calculator_placeholder_metal" translatable="false">0 ref</string>
     <string name="calculator_placeholder_usd" translatable="false">$0</string>
     <string name="calculator_usd" translatable="false">USD</string>
     <string name="item_chooser_count" translatable="false">1</string>
+    <string name="calculator_add" translatable="true">Add new item</string>
+    <string name="calculator_earbuds" translatable="true">Earbuds</string>
+    <string name="calculator_keys" translatable="true">Keys</string>
+    <string name="calculator_metal" translatable="true">Refined Metal</string>
+    <string name="item_chooser_hint" translatable="true">Start typing…</string>
+    <string name="item_chooser_no_match" translatable="true">No match or string has no price</string>
+
+    <!--Menu resources-->
+
+    <string name="menu_name" translatable="true">Name</string>
+    <string name="menu_average_price" translatable="true">Average price</string>
 
     <!--Other string resources-->
-    <string name="placeholder_slots_used" trasnlatable="false">\?/?</string>
+
+    <string name="navigation_drawer_close" translatable="true">Close navigation drawer</string>
+    <string name="navigation_drawer_help" translatable="true">Help</string>
+    <string name="navigation_drawer_open" translatable="true">Open navigation drawer</string>
+    <string name="placeholder_slots_used" translatable="false">\?/?</string>
     <string name="placeholder_unknown" translatable="false">\?</string>
+    <string name="preference_dialog_steam_id" translatable="true">64bit SteamId:</string>
+    <string name="preference_dialog_vanity_name" translatable="true">Vanity name:</string>
+
+    <!--Strings for the arrays-->
+    
+    <string name="array_sync_interval_5_minutes" translatable="true">Every 5 minutes</string>
+    <string name="array_sync_interval_15_minutes" translatable="true">Every 15 minutes</string>
+    <string name="array_sync_interval_30_minutes" translatable="true">Every 30 minutes</string>
+    <string name="array_sync_interval_hourly" translatable="true">Every hour</string>
+    <string name="array_sync_interval_3_hours" translatable="true">Every 3 hours</string>
+    <string name="array_sync_interval_6_hours" translatable="true">Every 6 hours</string>
+    <string name="array_sync_interval_daily" translatable="true">Daily</string>
+
+    <string name="array_origin_drop" translatable="true">Timed Drop</string>
+    <string name="array_origin_achievement" translatable="true">Achievement</string>
+    <string name="array_origin_purchased" translatable="true">Purchased</string>
+    <string name="array_origin_traded" translatable="true">Traded</string>
+    <string name="array_origin_crafted" translatable="true">Crafted</string>
+    <string name="array_origin_promotion" translatable="true">Store Promotion</string>
+    <string name="array_origin_gifted" translatable="true">Gifted</string>
+    <string name="array_origin_support" translatable="true">Support Granted</string>
+    <string name="array_origin_crate" translatable="true">Found in Crate</string>
+    <string name="array_origin_earned" translatable="true">Earned</string>
+    <string name="array_origin_3rd_party" translatable="true">Third-Party Promotion</string>
+    <string name="array_origin_wrapped_gift" translatable="true">Wrapped Gift</string>
+    <string name="array_origin_halloween" translatable="true">Halloween Drop</string>
+    <string name="array_origin_steam_purchase" translatable="true">Steam Purchase</string>
+    <string name="array_origin_foreign" translatable="true">Foreign string</string>
+    <string name="array_origin_cd" translatable="true">CD Key</string>
+    <string name="array_origin_collection_reward" translatable="true">Collection Reward</string>
+    <string name="array_origin_preview" translatable="true">Preview string</string>
+    <string name="array_origin_contribution" translatable="true">Steam Workshop Contribution</string>
+    <string name="array_origin_periodic_reward" translatable="true">Periodic score reward</string>
+    <string name="array_origin_mvm_completion" translatable="true">MvM Badge completion reward</string>
+    <string name="array_origin_surplus" translatable="true">MvM Squad surplus reward</string>
+    <string name="array_origin_recipe" translatable="true">Recipe output</string>
+
+    <string name="array_item_chooser_spinner_regular" translatable="true">Regular items</string>
+    <string name="array_item_chooser_spinner_unusual" translatable="true">Unusuals</string>
+
+    <string name="array_effects_aces_high" translatable="true">Aces High</string>
+    <string name="array_effects_amaranthine" translatable="true">Amaranthine</string>
+    <string name="array_effects_anti_freeze" translatable="true">Anti-Freeze</string>
+    <string name="array_effects_arcana" translatable="true">Arcana</string>
+    <string name="array_effects_blizzardy_storm" translatable="true">Blizzardy Storm</string>
+    <string name="array_effects_bonzo" translatable="true">Bonzo The All-Gnawing</string>
+    <string name="array_effects_bubbling" translatable="true">Bubbling</string>
+    <string name="array_effects_burning_flames" translatable="true">Burning Flames</string>
+    <string name="array_effects_cauldron_bubbles" translatable="true">Cauldron Bubbles</string>
+    <string name="array_effects_chiroptera_venenata" translatable="true">Chiroptera Venenata</string>
+    <string name="array_effects_circling_heart" translatable="true">Circling Heart</string>
+    <string name="array_effects_circling_peace_sign" translatable="true">Circling Peace Sign</string>
+    <string name="array_effects_circling_tf_logo" translatable="true">Circling TF Logo</string>
+    <string name="array_effects_cloiud_9" translatable="true">Cloud 9</string>
+    <string name="array_effects_cloudy_moon" translatable="true">Cloudy Moon</string>
+    <string name="array_effects_darkblaze" translatable="true">Darkblaze</string>
+    <string name="array_effects_dead_presidents" translatable="true">Dead Presidents</string>
+    <string name="array_effects_death_at_dusk" translatable="true">Death at Dusk</string>
+    <string name="array_effects_demonflame" translatable="true">Demonflame</string>
+    <string name="array_effects_disco_beat_down" translatable="true">Disco Beat Down</string>
+    <string name="array_effects_eerie_orbiting_fire" translatable="true">Eerie Orbiting Fire</string>
+    <string name="array_effects_electrostatic" translatable="true">Electrostatic</string>
+    <string name="array_effects_flaming_lantern" translatable="true">Flaming Lantern</string>
+    <string name="array_effects_fountain_of_delight" translatable="true">Fountain of Delight</string>
+    <string name="array_effects_frostbite" translatable="true">Frostbite</string>
+    <string name="array_effects_ghastly_ghosts" translatable="true">Ghastly Ghosts</string>
+    <string name="array_effects_ghastly_ghosts_jr" translatable="true">Ghastly Ghosts Jr</string>
+    <string name="array_effects_green_confetti" translatable="true">Green Confetti</string>
+    <string name="array_effects_green_black_hole" translatable="true">Green Black Hole</string>
+    <string name="array_effects_green_energy" translatable="true">Green Energy</string>
+    <string name="array_effects_harvest_moon" translatable="true">Harvest Moon</string>
+    <string name="array_effects_haunted_ghosts" translatable="true">Haunted Ghosts</string>
+    <string name="array_effects_haunted_phantasm" translatable="true">Haunted Phantasm</string>
+    <string name="array_effects_haunted_phantasm_jr" translatable="true">Haunted Phantasm Jr</string>
+    <string name="array_effects_hellfire" translatable="true">Hellfire</string>
+    <string name="array_effects_holy_grail" translatable="true">Holy Grail</string>
+    <string name="array_effects_secret" translatable="true">It\'s A Secret To Everybody</string>
+    <string name="array_effects_kill_a_watt" translatable="true">Kill-a-Watt</string>
+    <string name="array_effects_knifestorm" translatable="true">Knifestorm</string>
+    <string name="array_effects_massed_flies" translatable="true">Massed Flies</string>
+    <string name="array_effects_mega_strike" translatable="true">Mega Strike</string>
+    <string name="array_effects_memory_leak" translatable="true">Memory Leak</string>
+    <string name="array_effects_miami_nights" translatable="true">Miami Nights</string>
+    <string name="array_effects_midnight_whirlwind" translatable="true">Midnight Whirlwind</string>
+    <string name="array_effects_misty_skull" translatable="true">Misty Skull</string>
+    <string name="array_effects_molten_mallard" translatable="true">Molten Mallard</string>
+    <string name="array_effects_morning_glory" translatable="true">Morning Glory</string>
+    <string name="array_effects_nuts_n_bolts" translatable="true">Nuts n\' Bolts</string>
+    <string name="array_effects_orbiting_fire" translatable="true">Orbiting Fire</string>
+    <string name="array_effects_orbiting_planets" translatable="true">Orbiting Planets</string>
+    <string name="array_effects_overclocked" translatable="true">Overclocked</string>
+    <string name="array_effects_phosphorous" translatable="true">Phosphorous</string>
+    <string name="array_effects_poisoned_shadows" translatable="true">Poisoned Shadows</string>
+    <string name="array_effects_power_surge" translatable="true">Power Surge</string>
+    <string name="array_effects_purple_confetti" translatable="true">Purple Confetti</string>
+    <string name="array_effects_purple_energy" translatable="true">Purple Energy</string>
+    <string name="array_effects_roboactive" translatable="true">Roboactive</string>
+    <string name="array_effects_scorching_flames" translatable="true">Scorching Flames</string>
+    <string name="array_effects_screaming_tiger" translatable="true">Screaming Tiger</string>
+    <string name="array_effects_searing_plasma" translatable="true">Searing Plasma</string>
+    <string name="array_effects_silver_cyclone" translatable="true">Silver Cyclone</string>
+    <string name="array_effects_skill_gotten_gains" translatable="true">Skill Gotten Gains</string>
+    <string name="array_effects_showstopper" translatable="true">Showstopper</string>
+    <string name="array_effects_smoking" translatable="true">Smoking</string>
+    <string name="array_effects_something_burning" translatable="true">Something Burning This Way Comes</string>
+    <string name="array_effects_spellbound" translatable="true">Spellbound</string>
+    <string name="array_effects_stare_from_beyond" translatable="true">Stare From Beyond</string>
+    <string name="array_effects_steaming" translatable="true">Steaming</string>
+    <string name="array_effects_stormy_13th_hour" translatable="true">Stormy 13th Hour</string>
+    <string name="array_effects_stormy_storm" translatable="true">Stormy Storm</string>
+    <string name="array_effects_sulphurous" translatable="true">Sulphurous</string>
+    <string name="array_effects_sunbeams" translatable="true">Sunbeams</string>
+    <string name="array_effects_terror_watt" translatable="true">Terror-Watt</string>
+    <string name="array_effects_the_ooze" translatable="true">The Ooze</string>
+    <string name="array_effects_time_warp" translatable="true">Time Warp</string>
+    <string name="array_effects_vivid_plasma" translatable="true">Vivid Plasma</string>
+    <string name="array_effects_72" translatable="true">\'72</string>
 
 </resources>
