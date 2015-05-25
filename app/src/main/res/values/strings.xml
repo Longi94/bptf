@@ -51,119 +51,36 @@
     <string name="pref_user_raw_metal" translatable="false">pref_user_raw_metal</string>
     <string name="pref_user_slots" trasnlatable="false">pref_user_slots</string>
 
-    <!--Action Bar icons-->
-    <string name="action_add" translatable="true">Add</string>
-    <string name="action_browse_effect" translatable="true">Browse by effect</string>
-    <string name="action_cancel" translatable="true">Cancel</string>
-    <string name="action_clear" translatable="true">Clear items</string>
-    <string name="action_refresh" translatable="true">Refresh</string>
-    <string name="action_settings" translatable="true">Settings</string>
-    <string name="action_show_advanced" translatable="true">Advanced mode</string>
-    <string name="action_show_simple" translatable="true">Simple mode</string>
-    <string name="action_sort" translatable="true">Sort</string>
-
-    <!--Searchview-->
-    <string name="search_title" translatable="true">Search</string>
-    <string name="search_hint" translatable="true">Search</string>
-
     <!--Activity/Fragment titles-->
-    <string name="title_activity_credits" translatable="true">Credits</string>
-    <string name="title_activity_item_chooser" translatable="true">ItemChooserActivity</string>
-    <string name="title_activity_item_detail" translatable="true">ItemDetailActivity</string>
-    <string name="title_activity_search" translatable="true">SearchActivity</string>
-    <string name="title_activity_settings" translatable="true">Settings</string>
-    <string name="title_activity_steam_login" translatable="true">SteamLoginActivity</string>
-    <string name="title_activity_unusual" translatable="true">UnusualActivity</string>
-    <string name="title_activity_user_backpack" translatable="true">UserBackpackActivity</string>
-    <string name="title_activity_user_info" translatable="true">UserInfoActivity</string>
-    <string name="title_activity_welcome" translatable="true">WelcomeActivity</string>
-    <string name="title_calculator" translatable="true">Calculator</string>
-    <string name="title_home" translatable="true">Latest Changes</string>
-    <string name="title_prices" translatable="true">Unusual Prices</string>
-    <string name="title_user_profile" translatable="true">User Profile</string>
-
-    <!--Preference titles and summaries-->
-    <string name="pref_category_about" translatable="true">About</string>
-    <string name="pref_category_account" translatable="false">Account</string>
-    <string name="pref_category_dev" translatable="true">Developer</string>
-    <string name="pref_category_notification" translatable="true">Notifications</string>
-    <string name="pref_category_sync" translatable="true">Syncing</string>
-    <string name="pref_hint_dev_key" translatable="true">API key</string>
-    <string name="pref_hint_steam_id" translatable="true">Steam ID</string>
-    <string name="pref_summary_developer" translatable="false">Long Tran</string>
-    <string name="pref_summary_off_auto_sync" translatable="true">Manual refresh</string>
-    <string name="pref_summary_on_auto_sync" translatable="true">Auto-update database</string>
-    <string name="pref_summary_particles" translatable="true">provided by backpack.tf</string>
-    <string name="pref_summary_quick_return" translatable="true">by felipecsl</string>
-    <string name="pref_summary_ringtone_silent" translatable="true">Silent</string>
-    <string name="pref_title_auto_sync" translatable="true">Auto-update database</string>
-    <string name="pref_title_background_sync" translatable="true">Sync in the background</string>
-    <string name="pref_title_changelog" translatable="true">Changelogs</string>
-    <string name="pref_title_credits" translatable="true">Credits</string>
-    <string name="pref_title_debug_logs" translatable="true">Enable debug logs</string>
-    <string name="pref_title_developer" translatable="true">Developer</string>
-    <string name="pref_title_developer_key" translatable="true">Custom API key</string>
-    <string name="pref_title_feedback" translatable="true">Send feedback or bug report</string>
-    <string name="pref_title_notification" translatable="true">backpack.tf Notifications</string>
-    <string name="pref_title_notification_interval" translatable="true">Check for notifications</string>
-    <string name="pref_title_particles" translatable="true">Particle effect images</string>
-    <string name="pref_title_quick_return" trasnlatable="false">QuickReturn</string>
-    <string name="pref_title_rate" translatable="true">Rate the app on Google Play</string>
-    <string name="pref_title_sync_interval" translatable="true">Sync frequency</string>
-    <string name="pref_title_version" translatable="true">Version</string>
-
-    <!--Content descriptions-->
-    <string name="description_background" translatable="true">Background</string>
-    <string name="description_change" translatable="true">Change</string>
-    <string name="description_delete" translatable="true">Delete</string>
-    <string name="description_icon" translatable="true">Icon</string>
-    <string name="description_player_avatar" translatable="true">Player Avatar</string>
+    <string name="title_activity_credits" translatable="false">Credits</string>
+    <string name="title_activity_item_chooser" translatable="false">ItemChooserActivity</string>
+    <string name="title_activity_item_detail" translatable="false">ItemDetailActivity</string>
+    <string name="title_activity_search" translatable="false">SearchActivity</string>
+    <string name="title_activity_settings" translatable="false">Settings</string>
+    <string name="title_activity_steam_login" translatable="false">SteamLoginActivity</string>
+    <string name="title_activity_unusual" translatable="false">UnusualActivity</string>
+    <string name="title_activity_user_backpack" translatable="false">UserBackpackActivity</string>
+    <string name="title_activity_user_info" translatable="false">UserInfoActivity</string>
+    <string name="title_activity_welcome" translatable="false">WelcomeActivity</string>
 
     <!--Resources for user page-->
-    <string name="user_page_keys" translatable="true">\ RAW KEYS</string>
-    <string name="user_page_last_online" translatable="true">Last online:</string>
-    <string name="user_page_link_backpack" translatable="true">BACKPACK</string>
     <string name="user_page_link_bazaar" translatable="false">Bazaar.tf</string>
-    <string name="user_page_link_community" translatable="true">COMMUNITY</string>
     <string name="user_page_link_steamrep" translatable="false">STEAMREP</string>
     <string name="user_page_link_tf2op" translatable="false">TF2Outpost</string>
     <string name="user_page_link_tf2tp" translatable="false">TF2TP</string>
-    <string name="user_page_metal" translatable="true">\ RAW METAL</string>
-    <string name="user_page_refined" translatable="true">\ REFINED</string>
-    <string name="user_page_reputation" translatable="true">Reputation:</string>
-    <string name="user_page_slots" translatable="true">\ SLOTS</string>
-    <string name="user_page_status" translatable="true">Status</string>
-    <string name="user_page_trade_status" translatable="true">TRADE</string>
-    <string name="user_page_trust" translatable="true">TRUST</string>
     <string name="user_page_usd" translatable="false">\ USD</string>
-    <string name="user_page_user_since" translatable="true">Steam user since: \n</string>
     <string name="user_page_vac" translatable="false">VAC</string>
 
     <!--Resources for calculator-->
-    <string name="calculator_add" translatable="true">Add new item</string>
-    <string name="calculator_earbuds" translatable="true">Earbuds</string>
-    <string name="calculator_keys" translatable="true">Keys</string>
-    <string name="calculator_metal" translatable="true">Refined Metal</string>
     <string name="calculator_placeholder_buds" translatable="false">0 buds</string>
     <string name="calculator_placeholder_keys" translatable="false">0 keys</string>
     <string name="calculator_placeholder_metal" translatable="false">0 ref</string>
     <string name="calculator_placeholder_usd" translatable="false">$0</string>
     <string name="calculator_usd" translatable="false">USD</string>
     <string name="item_chooser_count" translatable="false">1</string>
-    <string name="item_chooser_hint" translatable="true">Start typing…</string>
-    <string name="item_chooser_no_match" translatable="true">No match or item has no price</string>
-
-    <!--Menu resources-->
-    <string name="menu_name" translatable="true">Name</string>
-    <string name="menu_average_price" translatable="true">Average price</string>
 
     <!--Other string resources-->
-    <string name="navigation_drawer_close" translatable="true">Close navigation drawer</string>
-    <string name="navigation_drawer_help" translatable="true">Help</string>
-    <string name="navigation_drawer_open" translatable="true">Open navigation drawer</string>
     <string name="placeholder_slots_used" trasnlatable="false">\?/?</string>
     <string name="placeholder_unknown" translatable="false">\?</string>
-    <string name="preference_dialog_steam_id" translatable="true">64bit SteamId:</string>
-    <string name="preference_dialog_vanity_name" translatable="true">Vanity name:</string>
 
 </resources>
