@@ -96,10 +96,13 @@ public class Utility {
             ItemSchemaDbHelper dbHelper = new ItemSchemaDbHelper(context);
             Cursor itemCursor = dbHelper.getItem(index);
             if (itemCursor != null && itemCursor.moveToFirst()) {
-                return itemCursor.getString(0) + " " + name;
+                formattedName += " " + itemCursor.getString(0) + " " + name;
+                itemCursor.close();
             }
+            dbHelper.close();
+            return formattedName;
         } else
-            //Handle chemistry set names differently
+            //TODO Handle chemistry set names differently
             if (defindex == 20001) {
 
             }
@@ -172,8 +175,11 @@ public class Utility {
             ItemSchemaDbHelper dbHelper = new ItemSchemaDbHelper(context);
             Cursor itemCursor = dbHelper.getItem(index);
             if (itemCursor != null && itemCursor.moveToFirst()) {
-                return itemCursor.getString(0) + " " + name;
+                formattedName += " " + itemCursor.getString(0) + " " + name;
+                itemCursor.close();
             }
+            dbHelper.close();
+            return formattedName;
         } else
             //Handle chemistry set names differently
             if (defindex == 20001) {
