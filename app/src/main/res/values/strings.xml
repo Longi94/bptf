@@ -63,6 +63,10 @@
     <string name="title_activity_user_info" translatable="false">UserInfoActivity</string>
     <string name="title_activity_welcome" translatable="false">WelcomeActivity</string>
 
+    <!--Preference titles and summaries-->
+    <string name="pref_title_quick_return" trasnlatable="false">QuickReturn</string>
+    <string name="pref_summary_developer" translatable="false">Long Tran</string>
+
     <!--Resources for user page-->
     <string name="user_page_link_bazaar" translatable="false">Bazaar.tf</string>
     <string name="user_page_link_steamrep" translatable="false">STEAMREP</string>

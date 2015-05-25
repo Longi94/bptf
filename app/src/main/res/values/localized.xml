@@ -5,7 +5,7 @@
     <string name="action_add" translatable="true">Add</string>
     <string name="action_browse_effect" translatable="true">Browse by effect</string>
     <string name="action_cancel" translatable="true">Cancel</string>
-    <string name="action_clear" translatable="true">Clear strings</string>
+    <string name="action_clear" translatable="true">Clear items</string>
     <string name="action_refresh" translatable="true">Refresh</string>
     <string name="action_settings" translatable="true">Settings</string>
     <string name="action_show_advanced" translatable="true">Advanced mode</string>
@@ -14,7 +14,7 @@
 
     <!--Searchview-->
     <string name="search_title" translatable="true">Search</string>
-    <string name="search_hint" translatable="true">string name or steam ID</string>
+    <string name="search_hint" translatable="true">Item name or steam ID</string>
 
     <!--Activity/Fragment titles-->
     <string name="title_calculator" translatable="true">Calculator</string>
@@ -30,12 +30,10 @@
     <string name="pref_category_sync" translatable="true">Syncing</string>
     <string name="pref_hint_dev_key" translatable="true">API key</string>
     <string name="pref_hint_steam_id" translatable="true">Steam ID</string>
-    <string name="pref_summary_developer" translatable="false">Long Tran</string>
     <string name="pref_summary_off_auto_sync" translatable="true">Manual refresh</string>
     <string name="pref_summary_on_auto_sync" translatable="true">Auto-update database</string>
     <string name="pref_summary_particles" translatable="true">provided by backpack.tf</string>
     <string name="pref_summary_quick_return" translatable="true">by felipecsl</string>
-    <string name="pref_summary_ringtone_silent" translatable="true">Silent</string>
     <string name="pref_title_auto_sync" translatable="true">Auto-update database</string>
     <string name="pref_title_background_sync" translatable="true">Sync in the background</string>
     <string name="pref_title_changelog" translatable="true">Changelogs</string>
@@ -47,7 +45,6 @@
     <string name="pref_title_notification" translatable="true">backpack.tf Notifications</string>
     <string name="pref_title_notification_interval" translatable="true">Check for notifications</string>
     <string name="pref_title_particles" translatable="true">Particle effect images</string>
-    <string name="pref_title_quick_return" trasnlatable="false">QuickReturn</string>
     <string name="pref_title_rate" translatable="true">Rate the app on Google Play</string>
     <string name="pref_title_sync_interval" translatable="true">Sync frequency</string>
     <string name="pref_title_version" translatable="true">Version</string>
@@ -74,12 +71,12 @@
     <string name="user_page_user_since" translatable="true">Steam user since: \n</string>
 
     <!--Resources for calculator-->
-    <string name="calculator_add" translatable="true">Add new string</string>
+    <string name="calculator_add" translatable="true">Add new item</string>
     <string name="calculator_earbuds" translatable="true">Earbuds</string>
     <string name="calculator_keys" translatable="true">Keys</string>
     <string name="calculator_metal" translatable="true">Refined Metal</string>
-    <string name="string_chooser_hint" translatable="true">Start typing…</string>
-    <string name="string_chooser_no_match" translatable="true">No match or string has no price</string>
+    <string name="item_chooser_hint" translatable="true">Start typing…</string>
+    <string name="item_chooser_no_match" translatable="true">No match or string has no price</string>
 
     <!--Menu resources-->
     <string name="menu_name" translatable="true">Name</string>
