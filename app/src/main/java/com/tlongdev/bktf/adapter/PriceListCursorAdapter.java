@@ -183,6 +183,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
                 viewHolder.change.setImageDrawable(null);
             }
             Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.simple_fade_in);
+            fadeIn.setDuration(100);
             rootView.startAnimation(fadeIn);
             rootView.setVisibility(View.VISIBLE);
             viewHolder.nameView.setVisibility(View.VISIBLE);
