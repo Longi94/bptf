@@ -3,11 +3,11 @@
 
     <!--Titles for the sync interval preference-->
     <string-array name="array_pref_sync_interval_titles">
-        <item>Every 30 minutes</item>
-        <item>Every hour</item>
-        <item>Every 3 hours</item>
-        <item>Every 6 hours</item>
-        <item>Daily</item>
+        <item>@string/array_sync_interval_30_minutes</item>
+        <item>@string/array_sync_interval_hourly</item>
+        <item>@string/array_sync_interval_3_hours</item>
+        <item>@string/array_sync_interval_6_hours</item>
+        <item>@string/array_sync_interval_daily</item>
     </string-array>
 
     <!--Values for the sync interval preference-->
@@ -21,13 +21,13 @@
 
     <!--Titles for the notification interval preference-->
     <string-array name="array_pref_notification_interval_titles">
-        <item>Every 5 minutes</item>
-        <item>Every 15 minutes</item>
-        <item>Every 30 minutes</item>
-        <item>Every hour</item>
-        <item>Every 3 hours</item>
-        <item>Every 6 hours</item>
-        <item>Daily</item>
+        <item>@string/array_sync_interval_5_minutes</item>
+        <item>@string/array_sync_interval_15_minutes</item>
+        <item>@string/array_sync_interval_30_minutes</item>
+        <item>@string/array_sync_interval_hourly</item>
+        <item>@string/array_sync_interval_3_hours</item>
+        <item>@string/array_sync_interval_6_hours</item>
+        <item>@string/array_sync_interval_daily</item>
     </string-array>
 
     <!--Values for the notification interval preference-->
@@ -43,116 +43,116 @@
 
     <!--Array containing item origines at their correct indexes-->
     <string-array name="array_origins">
-        <item>Timed Drop</item>
-        <item>Achievement</item>
-        <item>Purchased</item>
-        <item>Traded</item>
-        <item>Crafted</item>
-        <item>Store Promotion</item>
-        <item>Gifted</item>
-        <item>Support Granted</item>
-        <item>Found in Crate</item>
-        <item>Earned</item>
-        <item>Third-Party Promotion</item>
-        <item>Wrapped Gift</item>
-        <item>Halloween Drop</item>
-        <item>Steam Purchase</item>
-        <item>Foreign Item</item>
-        <item>CD Key</item>
-        <item>Collection Reward</item>
-        <item>Preview Item</item>
-        <item>Steam Workshop Contribution</item>
-        <item>Periodic score reward</item>
-        <item>MvM Badge completion reward</item>
-        <item>MvM Squad surplus reward</item>
-        <item>Recipe output</item>
+        <item>@string/array_origin_drop</item>
+        <item>@string/array_origin_achievement</item>
+        <item>@string/array_origin_purchased</item>
+        <item>@string/array_origin_traded</item>
+        <item>@string/array_origin_crafted</item>
+        <item>@string/array_origin_promotion</item>
+        <item>@string/array_origin_gifted</item>
+        <item>@string/array_origin_support</item>
+        <item>@string/array_origin_crate</item>
+        <item>@string/array_origin_earned</item>
+        <item>@string/array_origin_3rd_party</item>
+        <item>@string/array_origin_wrapped_gift</item>
+        <item>@string/array_origin_halloween</item>
+        <item>@string/array_origin_steam_purchase</item>
+        <item>@string/array_origin_foreign</item>
+        <item>@string/array_origin_cd</item>
+        <item>@string/array_origin_collection_reward</item>
+        <item>@string/array_origin_preview</item>
+        <item>@string/array_origin_contribution</item>
+        <item>@string/array_origin_periodic_reward</item>
+        <item>@string/array_origin_mvm_completion</item>
+        <item>@string/array_origin_surplus</item>
+        <item>@string/array_origin_recipe</item>
     </string-array>
 
     <!--Simple array for the spinner in the item chooser dialog-->
     <string-array name="array_item_chooser_spinner">
-        <item>Regular items</item>
-        <item>Unusuals</item>
+        <item>@string/array_item_chooser_spinner_regular</item>
+        <item>@string/array_item_chooser_spinner_unusual</item>
     </string-array>
 
     <!--Alphabetical order-->
     <string-array name="array_effects">
-        <item>Aces High</item>
-        <item>Amaranthine</item>
-        <item>Anti-Freeze</item>
-        <item>Arcana</item>
-        <item>Blizzardy Storm</item>
-        <item>Bonzo The All-Gnawing</item>
-        <item>Bubbling</item>
-        <item>Burning Flames</item>
-        <item>Cauldron Bubbles</item>
-        <item>Chiroptera Venenata</item>
-        <item>Circling Heart</item>
-        <item>Circling Peace Sign</item>
-        <item>Circling TF Logo</item>
-        <item>Cloud 9</item>
-        <item>Cloudy Moon</item>
-        <item>Darkblaze</item>
-        <item>Dead Presidents</item>
-        <item>Death at Dusk</item>
-        <item>Demonflame</item>
-        <item>Disco Beat Down</item>
-        <item>Eerie Orbiting Fire</item>
-        <item>Electrostatic</item>
-        <item>Flaming Lantern</item>
-        <item>Fountain of Delight</item>
-        <item>Frostbite</item>
-        <item>Ghastly Ghosts</item>
-        <item>Ghastly Ghosts Jr</item>
-        <item>Green Confetti</item>
-        <item>Green Black Hole</item>
-        <item>Green Energy</item>
-        <item>Harvest Moon</item>
-        <item>Haunted Ghosts</item>
-        <item>Haunted Phantasm</item>
-        <item>Haunted Phantasm Jr</item>
-        <item>Hellfire</item>
-        <item>Holy Grail</item>
-        <item>It\'s A Secret To Everybody</item>
-        <item>Kill-a-Watt</item>
-        <item>Knifestorm</item>
-        <item>Massed Flies</item>
-        <item>Mega Strike</item>
-        <item>Memory Leak</item>
-        <item>Miami Nights</item>
-        <item>Midnight Whirlwind</item>
-        <item>Misty Skull</item>
-        <item>Molten Mallard</item>
-        <item>Morning Glory</item>
-        <item>Nuts n\' Bolts</item>
-        <item>Orbiting Fire</item>
-        <item>Orbiting Planets</item>
-        <item>Overclocked</item>
-        <item>Phosphorous</item>
-        <item>Poisoned Shadows</item>
-        <item>Power Surge</item>
-        <item>Purple Confetti</item>
-        <item>Purple Energy</item>
-        <item>Roboactive</item>
-        <item>Scorching Flames</item>
-        <item>Screaming Tiger</item>
-        <item>Searing Plasma</item>
-        <item>Silver Cyclone</item>
-        <item>Skill Gotten Gains</item>
-        <item>Showstopper</item>
-        <item>Smoking</item>
-        <item>Something Burning This Way Comes</item>
-        <item>Spellbound</item>
-        <item>Stare From Beyond</item>
-        <item>Steaming</item>
-        <item>Stormy 13th Hour</item>
-        <item>Stormy Storm</item>
-        <item>Sulphurous</item>
-        <item>Sunbeams</item>
-        <item>Terror-Watt</item>
-        <item>The Ooze</item>
-        <item>Time Warp</item>
-        <item>Vivid Plasma</item>
-        <item>\'72</item>
+        <item>@string/array_effects_aces_high</item>
+        <item>@string/array_effects_amaranthine</item>
+        <item>@string/array_effects_anti_freeze</item>
+        <item>@string/array_effects_arcana</item>
+        <item>@string/array_effects_blizzardy_storm</item>
+        <item>@string/array_effects_bonzo</item>
+        <item>@string/array_effects_bubbling</item>
+        <item>@string/array_effects_burning_flames</item>
+        <item>@string/array_effects_cauldron_bubbles</item>
+        <item>@string/array_effects_chiroptera_venenata</item>
+        <item>@string/array_effects_circling_heart</item>
+        <item>@string/array_effects_circling_peace_sign</item>
+        <item>@string/array_effects_circling_tf_logo</item>
+        <item>@string/array_effects_cloiud_9</item>
+        <item>@string/array_effects_cloudy_moon</item>
+        <item>@string/array_effects_darkblaze</item>
+        <item>@string/array_effects_dead_presidents</item>
+        <item>@string/array_effects_death_at_dusk</item>
+        <item>@string/array_effects_demonflame</item>
+        <item>@string/array_effects_disco_beat_down</item>
+        <item>@string/array_effects_eerie_orbiting_fire</item>
+        <item>@string/array_effects_electrostatic</item>
+        <item>@string/array_effects_flaming_lantern</item>
+        <item>@string/array_effects_fountain_of_delight</item>
+        <item>@string/array_effects_frostbite</item>
+        <item>@string/array_effects_ghastly_ghosts</item>
+        <item>@string/array_effects_ghastly_ghosts_jr</item>
+        <item>@string/array_effects_green_confetti</item>
+        <item>@string/array_effects_green_black_hole</item>
+        <item>@string/array_effects_green_energy</item>
+        <item>@string/array_effects_harvest_moon</item>
+        <item>@string/array_effects_haunted_ghosts</item>
+        <item>@string/array_effects_haunted_phantasm</item>
+        <item>@string/array_effects_haunted_phantasm_jr</item>
+        <item>@string/array_effects_hellfire</item>
+        <item>@string/array_effects_holy_grail</item>
+        <item>@string/array_effects_secret</item>
+        <item>@string/array_effects_kill_a_watt</item>
+        <item>@string/array_effects_knifestorm</item>
+        <item>@string/array_effects_massed_flies</item>
+        <item>@string/array_effects_mega_strike</item>
+        <item>@string/array_effects_memory_leak</item>
+        <item>@string/array_effects_miami_nights</item>
+        <item>@string/array_effects_midnight_whirlwind</item>
+        <item>@string/array_effects_misty_skull</item>
+        <item>@string/array_effects_molten_mallard</item>
+        <item>@string/array_effects_morning_glory</item>
+        <item>@string/array_effects_nuts_n_bolts</item>
+        <item>@string/array_effects_orbiting_fire</item>
+        <item>@string/array_effects_orbiting_planets</item>
+        <item>@string/array_effects_overclocked</item>
+        <item>@string/array_effects_phosphorous</item>
+        <item>@string/array_effects_poisoned_shadows</item>
+        <item>@string/array_effects_power_surge</item>
+        <item>@string/array_effects_purple_confetti</item>
+        <item>@string/array_effects_purple_energy</item>
+        <item>@string/array_effects_roboactive</item>
+        <item>@string/array_effects_scorching_flames</item>
+        <item>@string/array_effects_screaming_tiger</item>
+        <item>@string/array_effects_searing_plasma</item>
+        <item>@string/array_effects_silver_cyclone</item>
+        <item>@string/array_effects_skill_gotten_gains</item>
+        <item>@string/array_effects_showstopper</item>
+        <item>@string/array_effects_smoking</item>
+        <item>@string/array_effects_something_burning</item>
+        <item>@string/array_effects_spellbound</item>
+        <item>@string/array_effects_stare_from_beyond</item>
+        <item>@string/array_effects_steaming</item>
+        <item>@string/array_effects_stormy_13th_hour</item>
+        <item>@string/array_effects_stormy_storm</item>
+        <item>@string/array_effects_sulphurous</item>
+        <item>@string/array_effects_sunbeams</item>
+        <item>@string/array_effects_terror_watt</item>
+        <item>@string/array_effects_the_ooze</item>
+        <item>@string/array_effects_time_warp</item>
+        <item>@string/array_effects_vivid_plasma</item>
+        <item>@string/array_effects_72</item>
     </string-array>
 
     <!--Must match the array above-->
