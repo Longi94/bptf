@@ -82,7 +82,7 @@ public class NavigationDrawerFragment extends Fragment {
         View rootView = inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
 
-        mDrawerListView = (ListView)rootView.findViewById(R.id.list_view_drawer);
+        mDrawerListView = (ListView) rootView.findViewById(R.id.list_view_drawer);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -101,7 +101,7 @@ public class NavigationDrawerFragment extends Fragment {
         rootView.findViewById(R.id.text_view_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).startSettingsActivity();
+                ((MainActivity) getActivity()).startSettingsActivity();
             }
         });
         rootView.findViewById(R.id.text_view_help).setOnClickListener(new View.OnClickListener() {

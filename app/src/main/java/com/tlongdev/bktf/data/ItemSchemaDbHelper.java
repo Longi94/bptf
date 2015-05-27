@@ -58,7 +58,7 @@ public class ItemSchemaDbHelper extends SQLiteOpenHelper {
             String path = mContext.getApplicationInfo().dataDir + "/databases/" + DATABASE_NAME;
             File file = new File(path);
             return file.exists();
-        } catch(SQLiteException e) {
+        } catch (SQLiteException e) {
             System.out.println("Database doesn't exist");
         }
         return false;
@@ -80,7 +80,7 @@ public class ItemSchemaDbHelper extends SQLiteOpenHelper {
         // transfer byte to inputfile to outputfile
         byte[] buffer = new byte[1024];
         int length;
-        while ((length = input.read(buffer))>0) {
+        while ((length = input.read(buffer)) > 0) {
             output.write(buffer, 0, length);
         }
 
@@ -91,7 +91,8 @@ public class ItemSchemaDbHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {}
+    public void onCreate(SQLiteDatabase db) {
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -103,8 +104,8 @@ public class ItemSchemaDbHelper extends SQLiteOpenHelper {
         }
     }
 
-    public Cursor getItem(int defindex){
-        if (mDatabase != null){
+    public Cursor getItem(int defindex) {
+        if (mDatabase != null) {
             Cursor item = mDatabase.query(
                     TABLE_NAME,
                     new String[]{COLUMN_NAME, COLUMN_TYPE, COLUMN_PROPER_NAME},
@@ -114,7 +115,7 @@ public class ItemSchemaDbHelper extends SQLiteOpenHelper {
                     null,
                     null
             );
-            if (item.moveToFirst()){
+            if (item.moveToFirst()) {
                 return item;
             }
         }

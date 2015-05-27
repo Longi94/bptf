@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.tlongdev.bktf.data.UserBackpackContract.UserBackpackEntry;
 
-public class UserBackpackDbHelper extends SQLiteOpenHelper{
+public class UserBackpackDbHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "backpack.db";

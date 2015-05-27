@@ -50,7 +50,7 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v;
-        switch (viewType){
+        switch (viewType) {
             case VIEW_TYPE_ITEM_ROW:
                 v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.recycler_backpack, parent, false);
@@ -69,22 +69,24 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        switch (getItemViewType(position)){
+        switch (getItemViewType(position)) {
             case VIEW_TYPE_HEADER:
-                if (hasNewItems){
-                    if (position == 0){
-                        holder.header.setText("New items");
+                if (hasNewItems) {
+                    if (position == 0) {
+                        holder.header.setText(mContext.getString(R.string.header_new_items));
                     } else {
-                        holder.header.setText("Page " + ((position - newRows) / 11 + 1));
+                        holder.header.setText(mContext.getString(R.string.header_page,
+                                (position - newRows) / 11 + 1));
                     }
                 } else {
-                    holder.header.setText("Page " + (position / 11 + 1));
+                    holder.header.setText(mContext.getString(R.string.header_page,
+                            position / 11 + 1));
                 }
                 break;
             case VIEW_TYPE_ITEM_ROW:
                 Cursor currentCursor;
                 int cursorPosition;
-                if (hasNewItems){
+                if (hasNewItems) {
                     if (position < newRows) {
                         currentCursor = mDataSetNew;
                         cursorPosition = (position - 1) * 5;
@@ -97,7 +99,7 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                     cursorPosition = (position - (position / 11) - 1) * 5;
                 }
 
-                if (currentCursor.moveToPosition(cursorPosition)){
+                if (currentCursor.moveToPosition(cursorPosition)) {
                     int i = 0;
                     do {
                         final int i2 = i;
@@ -117,7 +119,7 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
 
                         if (defindex != 0) {
 
-                            ImageLoader task = (ImageLoader)holder.icon[i].getTag();
+                            ImageLoader task = (ImageLoader) holder.icon[i].getTag();
                             if (task != null) {
                                 task.cancel(true);
                             }
@@ -158,7 +160,7 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                         i++;
                     } while (currentCursor.moveToNext() && i < 5);
 
-                    while (i < 5){
+                    while (i < 5) {
                         holder.icon[i].setImageDrawable(null);
                         holder.icon[i].setBackgroundDrawable(null);
                         holder.background[i].setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.item_background_blank));
@@ -183,8 +185,8 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
 
     @Override
     public int getItemViewType(int position) {
-        if (hasNewItems){
-            if (position < newRows){
+        if (hasNewItems) {
+            if (position < newRows) {
                 if (position == 0)
                     return VIEW_TYPE_HEADER;
                 else
@@ -195,14 +197,13 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                 else
                     return VIEW_TYPE_ITEM_ROW;
             }
-        }
-        else if (position % 11 == 0)
+        } else if (position % 11 == 0)
             return VIEW_TYPE_HEADER;
         else
             return VIEW_TYPE_ITEM_ROW;
     }
 
-    public void swapCursor(Cursor cursor, Cursor cursorNew){
+    public void swapCursor(Cursor cursor, Cursor cursorNew) {
         mDataSet = cursor;
         mDataSetNew = cursorNew;
         if (mDataSetNew != null) {
@@ -228,32 +229,32 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
 
         public ViewHolder(View view, int viewType) {
             super(view);
-            switch (viewType){
+            switch (viewType) {
                 case VIEW_TYPE_HEADER:
-                    header = (TextView)view.findViewById(R.id.text_view_header);
+                    header = (TextView) view.findViewById(R.id.text_view_header);
                     break;
                 case VIEW_TYPE_ITEM_ROW:
-                    background[0] = (ImageView)view.findViewById(R.id.image_view_item_background_1);
-                    icon[0] = (ImageView)view.findViewById(R.id.image_view_item_icon_1);
+                    background[0] = (ImageView) view.findViewById(R.id.image_view_item_background_1);
+                    icon[0] = (ImageView) view.findViewById(R.id.image_view_item_icon_1);
                     parent[0] = view.findViewById(R.id.relative_layout_1);
-                    background[1] = (ImageView)view.findViewById(R.id.image_view_item_background_2);
-                    icon[1] = (ImageView)view.findViewById(R.id.image_view_item_icon_2);
+                    background[1] = (ImageView) view.findViewById(R.id.image_view_item_background_2);
+                    icon[1] = (ImageView) view.findViewById(R.id.image_view_item_icon_2);
                     parent[1] = view.findViewById(R.id.relative_layout_2);
-                    background[2] = (ImageView)view.findViewById(R.id.image_view_item_background_3);
-                    icon[2] = (ImageView)view.findViewById(R.id.image_view_item_icon_3);
+                    background[2] = (ImageView) view.findViewById(R.id.image_view_item_background_3);
+                    icon[2] = (ImageView) view.findViewById(R.id.image_view_item_icon_3);
                     parent[2] = view.findViewById(R.id.relative_layout_3);
-                    background[3] = (ImageView)view.findViewById(R.id.image_view_item_background_4);
-                    icon[3] = (ImageView)view.findViewById(R.id.image_view_item_icon_4);
+                    background[3] = (ImageView) view.findViewById(R.id.image_view_item_background_4);
+                    icon[3] = (ImageView) view.findViewById(R.id.image_view_item_icon_4);
                     parent[3] = view.findViewById(R.id.relative_layout_4);
-                    background[4] = (ImageView)view.findViewById(R.id.image_view_item_background_5);
-                    icon[4] = (ImageView)view.findViewById(R.id.image_view_item_icon_5);
+                    background[4] = (ImageView) view.findViewById(R.id.image_view_item_background_5);
+                    icon[4] = (ImageView) view.findViewById(R.id.image_view_item_icon_5);
                     parent[4] = view.findViewById(R.id.relative_layout_5);
                     break;
             }
         }
     }
 
-    private class ImageLoader extends AsyncTask<Integer, Void, Drawable[]>{
+    private class ImageLoader extends AsyncTask<Integer, Void, Drawable[]> {
 
         private ImageView icon;
         private ImageView background;
@@ -289,7 +290,7 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                     d = iconDrawable;
                 }
 
-                if (Utility.isPaint(params[5])){
+                if (Utility.isPaint(params[5])) {
                     ims = assetManager.open("paint/" + params[5] + ".png");
                     Drawable paintDrawable = Drawable.createFromStream(ims, null);
                     d = new LayerDrawable(new Drawable[]{d, paintDrawable});

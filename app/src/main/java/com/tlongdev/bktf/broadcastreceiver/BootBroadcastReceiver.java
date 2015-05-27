@@ -18,10 +18,10 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_notification), false)){
+        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_notification), false)) {
             context.startService(new Intent(context, NotificationsService.class));
         }
-        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_background_sync), false)){
+        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_background_sync), false)) {
             context.startService(new Intent(context, UpdateDatabaseService.class));
         }
     }

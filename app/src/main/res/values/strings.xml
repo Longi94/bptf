@@ -62,11 +62,13 @@
     <string name="action_cancel" translatable="true">Cancel</string>
     <string name="action_close" translatable="true">Close</string>
     <string name="action_clear" translatable="true">Clear items</string>
+    <string name="action_later" translatable="true">Maybe later</string>
     <string name="action_refresh" translatable="true">Refresh</string>
     <string name="action_settings" translatable="true">Settings</string>
     <string name="action_show_advanced" translatable="true">Advanced mode</string>
     <string name="action_show_simple" translatable="true">Simple mode</string>
     <string name="action_sort" translatable="true">Sort</string>
+    <string name="action_yes" translatable="true">Yes</string>
 
     <!--Searchview-->
 
@@ -322,7 +324,6 @@
     <string name="array_effects_vivid_plasma" translatable="true">Vivid Plasma</string>
     <string name="array_effects_72" translatable="true">\'72</string>
 
-
     <string name="currency_bud" translatable="true">%s bud</string>
     <string name="currency_bud_plural" translatable="true">%s buds</string>
     <string name="currency_metal" translatable="true">%s ref</string>
@@ -373,7 +374,9 @@
     <string name="paint_mint" translatable="true">A Mann\'s Mint</string>
 
     <string name="message_private_backpack" translatable="true">%s\'s backpack is private</string>
+    <string name="message_private_backpack_own" translatable="true">Your backpack is private</string>
     <string name="message_send_email" translatable="true">Send email…</string>
+    <string name="message_developer_api" translatable="true">Due to limitations, a single API key must wait at least 5 seconds to make a new API request. Since the app uses a single key, everyone using this app will use the same API key, which can result in a failure when trying to update prices. You can fix this by providing your own API key. Would you like to do that now?</string>
     <string name="message_database_create" translatable="true">Creating database…</string>
     <string name="message_database_fail_network" translatable="true">Failed to download database. Check your internet connection and try again.</string>
     <string name="message_database_fail_overload" translatable="true">Failed to download database. Negative response from API. Try again shortly.</string>
@@ -381,10 +384,14 @@
 
     <string name="error_no_steam_id" translatable="true">no steamID provided</string>
     <string name="error_network" translatable="true">network error</string>
+    <string name="error_no_network" translatable="true">no connection</string>
     <string name="error_data_parse" translatable="true">error while parsing data</string>
 
     <string name="notification_unread_title" translatable="true">%d unread notifications on bp.tf</string>
     <string name="notification_unread_description" translatable="true">Tap to open in browser.</string>
+
+    <string name="header_new_items" translatable="true">New items</string>
+    <string name="header_page" translatable="true">Page %d</string>
 
     <string name="pref_dev_key_notfication" translatable="false">pref_dev_key_notfication</string>
     <string name="pref_title_translate" translatable="true">Would you like to help translate the app?</string>
@@ -404,5 +411,6 @@
     <string name="quality_non_tradable" translatable="true">Non-Tradable</string>
     <string name="quality_non_craftable" translatable="true">Non-Craftable</string>
     <string name="quality_unusual" translatable="true">Unusual</string>
+    <string name="title_effects">Effects</string>
 
 </resources>

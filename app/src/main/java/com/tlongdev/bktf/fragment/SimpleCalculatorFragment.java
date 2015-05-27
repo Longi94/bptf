@@ -40,20 +40,21 @@ public class SimpleCalculatorFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_simple_calculator, container, false);
-        inputEarbuds = (EditText)rootView.findViewById(R.id.edit_text_earbuds);
-        inputKeys = (EditText)rootView.findViewById(R.id.edit_text_keys);
-        inputMetal = (EditText)rootView.findViewById(R.id.edit_text_metal);
-        inputUsd = (EditText)rootView.findViewById(R.id.edit_text_usd);
+        inputEarbuds = (EditText) rootView.findViewById(R.id.edit_text_earbuds);
+        inputKeys = (EditText) rootView.findViewById(R.id.edit_text_keys);
+        inputMetal = (EditText) rootView.findViewById(R.id.edit_text_metal);
+        inputUsd = (EditText) rootView.findViewById(R.id.edit_text_usd);
 
         inputEarbuds.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     if (inputEarbuds.isFocused()) {
-                        if (s.toString().equals("")){
+                        if (s.toString().equals("")) {
                             inputKeys.setText(null);
                             inputMetal.setText(null);
                             inputUsd.setText(null);
@@ -73,17 +74,19 @@ public class SimpleCalculatorFragment extends Fragment {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
         inputKeys.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     if (inputKeys.isFocused()) {
-                        if (s.toString().equals("")){
+                        if (s.toString().equals("")) {
                             inputEarbuds.setText(null);
                             inputMetal.setText(null);
                             inputUsd.setText(null);
@@ -103,17 +106,19 @@ public class SimpleCalculatorFragment extends Fragment {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
         inputMetal.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     if (inputMetal.isFocused()) {
-                        if (s.toString().equals("")){
+                        if (s.toString().equals("")) {
                             inputKeys.setText(null);
                             inputEarbuds.setText(null);
                             inputUsd.setText(null);
@@ -133,17 +138,19 @@ public class SimpleCalculatorFragment extends Fragment {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
         inputUsd.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     if (inputUsd.isFocused()) {
-                        if (s.toString().equals("")){
+                        if (s.toString().equals("")) {
                             inputKeys.setText(null);
                             inputMetal.setText(null);
                             inputEarbuds.setText(null);
@@ -163,7 +170,8 @@ public class SimpleCalculatorFragment extends Fragment {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
 
         inputEarbuds.setText("1");
@@ -190,7 +198,7 @@ public class SimpleCalculatorFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-        switch (itemId){
+        switch (itemId) {
             case R.id.action_show_advanced:
                 PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
                         .putBoolean(getString(R.string.pref_preferred_advanced_calculator), true).apply();

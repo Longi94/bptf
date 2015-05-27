@@ -56,24 +56,24 @@ public final class PriceListContract {
             return CONTENT_URI.buildUpon().appendPath("id").appendPath("" + id).build();
         }
 
-        public static Uri buildPriceListUriWithName(String name){
+        public static Uri buildPriceListUriWithName(String name) {
             return CONTENT_URI.buildUpon().appendPath("name").appendPath(name).build();
         }
 
-        public static Uri buildPriceListUriWithNameSpecific(String name, int quality, int tradable, int craftable, int index){
+        public static Uri buildPriceListUriWithNameSpecific(String name, int quality, int tradable, int craftable, int index) {
             return CONTENT_URI.buildUpon().appendPath("name").appendPath(name)
                     .appendPath("" + quality + "-" + tradable + "-" + craftable + "-" + index).build();
         }
 
-        public static Uri buildPriceListSearchUri(String name){
+        public static Uri buildPriceListSearchUri(String name) {
             return CONTENT_URI.buildUpon().appendPath(SearchManager.SUGGEST_URI_PATH_QUERY).appendPath(name).build();
         }
 
-        public static String getNameFromUri(Uri uri){
+        public static String getNameFromUri(Uri uri) {
             return uri.getPathSegments().get(2);
         }
 
-        public static String getSpecificationFromUri(Uri uri){
+        public static String getSpecificationFromUri(Uri uri) {
             return uri.getPathSegments().get(3);
         }
     }

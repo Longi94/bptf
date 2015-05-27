@@ -19,7 +19,7 @@ public class PriceListProvider extends ContentProvider {
     public static final int PRICE_WITH_NAME_SPECIFIC = 102;
     public static final int PRICE_LIST_ID = 103;
 
-    private static UriMatcher buildUriMatcher(){
+    private static UriMatcher buildUriMatcher() {
         // I know what you're thinking.  Why create a UriMatcher when you can use regular
         // expressions instead?  Because you're not crazy, that's why.
 
@@ -39,7 +39,7 @@ public class PriceListProvider extends ContentProvider {
     }
 
     private static final String sNameSelection =
-            PriceListContract.PriceEntry.TABLE_NAME+
+            PriceListContract.PriceEntry.TABLE_NAME +
                     "." + PriceListContract.PriceEntry.COLUMN_ITEM_NAME + " = ? ";
 
     private static final String sNameSpecificSelection =
@@ -63,8 +63,7 @@ public class PriceListProvider extends ContentProvider {
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
             // "pricelist"
-            case PRICE_LIST:
-            {
+            case PRICE_LIST: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         PriceListContract.PriceEntry.TABLE_NAME,
                         projection,
@@ -135,7 +134,7 @@ public class PriceListProvider extends ContentProvider {
         switch (match) {
             case PRICE_LIST:
                 long _id = db.insert(PriceListContract.PriceEntry.TABLE_NAME, null, values);
-                if ( _id > 0 )
+                if (_id > 0)
                     returnUri = PriceListContract.PriceEntry.buildPriceListUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
@@ -246,7 +245,7 @@ public class PriceListProvider extends ContentProvider {
     public String[] concatenate(String[] a, String[] b) {
         int aLen = a.length;
         int bLen = b.length;
-        String[] c= new String[aLen+bLen];
+        String[] c = new String[aLen + bLen];
         System.arraycopy(a, 0, c, 0, aLen);
         System.arraycopy(b, 0, c, aLen, bLen);
         return c;

@@ -23,7 +23,7 @@ import java.io.InputStream;
 /**
  * Adapter to be used in the UnusualActivity.
  */
-public class UnusualPricesCursorAdapter extends CursorAdapter{
+public class UnusualPricesCursorAdapter extends CursorAdapter {
 
     int defindex;
 
@@ -48,15 +48,15 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
 
         viewHolder.icon.setImageDrawable(null);
 
-        LoadImagesTask task = (LoadImagesTask)viewHolder.icon.getTag();
-        if (task != null){
+        LoadImagesTask task = (LoadImagesTask) viewHolder.icon.getTag();
+        if (task != null) {
             task.cancel(true);
         }
         task = new LoadImagesTask(context, viewHolder.icon);
         viewHolder.icon.setTag(task);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                (double)cursor.getInt(UnusualActivity.COL_PRICE_LIST_DEFI),
-                (double)cursor.getInt(UnusualActivity.COL_PRICE_LIST_INDE),
+                (double) cursor.getInt(UnusualActivity.COL_PRICE_LIST_DEFI),
+                (double) cursor.getInt(UnusualActivity.COL_PRICE_LIST_INDE),
                 cursor.getDouble(UnusualActivity.COL_PRICE_LIST_DIFF),
                 cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRAW));
 
@@ -71,11 +71,11 @@ public class UnusualPricesCursorAdapter extends CursorAdapter{
                 throwable.printStackTrace();
         }
 
-        if (!Utility.isPriceOld(cursor.getInt(UnusualActivity.COL_PRICE_LIST_UPDA))){
+        if (!Utility.isPriceOld(cursor.getInt(UnusualActivity.COL_PRICE_LIST_UPDA))) {
             int difference = cursor.getInt(UnusualActivity.COL_PRICE_LIST_DIFF);
-            if (difference > 0){
+            if (difference > 0) {
                 viewHolder.priceView.setBackgroundColor(0x44008504);
-            } else if (difference < 0){
+            } else if (difference < 0) {
                 viewHolder.priceView.setBackgroundColor(0x44850000);
             } else {
                 viewHolder.priceView.setBackgroundColor(0x44f2ee11);
