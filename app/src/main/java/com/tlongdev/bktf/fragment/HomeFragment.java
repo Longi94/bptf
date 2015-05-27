@@ -2,6 +2,7 @@ package com.tlongdev.bktf.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.SettingsActivity;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.adapter.PriceListCursorAdapter;
 import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
@@ -180,15 +182,41 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
             }
-        }
-        //Update database if the last update happened more than an hour ago
-        else if (prefs.getBoolean(getString(R.string.pref_auto_sync), false) &&
-                System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_price_list_update), 0) >= 3600000L
-                && Utility.isNetworkAvailable(getActivity())) {
-            FetchPriceList task = new FetchPriceList(getActivity(), true, false);
-            task.setOnPriceListFetchListener(this);
-            task.execute();
-            mSwipeRefreshLayout.setRefreshing(true);
+        } else {
+
+            //Update database if the last update happened more than an hour ago
+            if (prefs.getBoolean(getString(R.string.pref_auto_sync), false) &&
+                    System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_price_list_update), 0) >= 3600000L
+                    && Utility.isNetworkAvailable(getActivity())) {
+                FetchPriceList task = new FetchPriceList(getActivity(), true, false);
+                task.setOnPriceListFetchListener(this);
+                task.execute();
+                mSwipeRefreshLayout.setRefreshing(true);
+            }
+
+            if (prefs.getBoolean(getString(R.string.pref_dev_key_notfication), true)) {
+                //Quit the app if the download failed.
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Due to limitations, a single API key must wait at least 5 seconds " +
+                        "to make a new API request. Since the app uses a single key, everyone using this " +
+                        "app will use the same API key, which can result in a failure when trying to update" +
+                        " prices. You can fix this by providing your own API key. Would you like to do that now?").setCancelable(false).
+                        setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                            }
+                        }).
+                        setNegativeButton("Maybe later", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+
+                prefs.edit().putBoolean(getString(R.string.pref_dev_key_notfication), false).apply();
+            }
         }
     }
 
@@ -259,6 +287,30 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
                 budsPriceImage.setBackgroundColor(0xff008504);
             } else {
                 budsPriceImage.setBackgroundColor(0xff850000);
+            }
+
+            if (prefs.getBoolean(getString(R.string.pref_dev_key_notfication), true)) {
+                //Quit the app if the download failed.
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Due to limitations, a single API key must wait at least 5 seconds " +
+                        "to make a new API request. Since the app uses a single key, everyone using this " +
+                        "app will use the same API key, which can result in a failure when trying to update" +
+                        " prices. You can fix this by providing your own API key. Would you like to do that now?").setCancelable(false).
+                        setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                            }
+                        }).
+                        setNegativeButton("Maybe later", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+
+                prefs.edit().putBoolean(getString(R.string.pref_dev_key_notfication), false).apply();
             }
         }
     }

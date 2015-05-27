@@ -290,5 +290,6 @@
     <string name="array_effects_time_warp" translatable="true">Time Warp</string>
     <string name="array_effects_vivid_plasma" translatable="true">Vivid Plasma</string>
     <string name="array_effects_72" translatable="true">\'72</string>
+    <string name="pref_dev_key_notfication">pref_dev_key_notfication</string>
 
 </resources>
