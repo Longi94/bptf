@@ -276,7 +276,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     lastOnlineText.setText("Last online: unknown");
                 } else {
                     //Player is offline, show how long was it since the player was last online
-                    lastOnlineText.setText("Last online: " + Utility.formatLastOnlineTime(
+                    lastOnlineText.setText("Last online: " + Utility.formatLastOnlineTime(getActivity(),
                             System.currentTimeMillis() - lastOnline * 1000L));
                 }
                 lastOnlineText.setTextColor(getResources().getColor(R.color.player_offline));

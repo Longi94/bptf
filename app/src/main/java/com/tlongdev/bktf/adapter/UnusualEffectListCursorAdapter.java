@@ -58,7 +58,7 @@ public class UnusualEffectListCursorAdapter extends CursorAdapter {
             public void onClick(View v) {
                 Intent i = new Intent(context, UnusualActivity.class);
                 i.putExtra(UnusualActivity.PRICE_INDEX_KEY, index);
-                i.putExtra(UnusualActivity.NAME_KEY, Utility.getUnusualEffectName(index));
+                i.putExtra(UnusualActivity.NAME_KEY, Utility.getUnusualEffectName(context, index));
                 context.startActivity(i);
             }
         });

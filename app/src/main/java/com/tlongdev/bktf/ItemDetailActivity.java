@@ -260,7 +260,7 @@ public class ItemDetailActivity extends Activity {
 
             //Set the effect of the item (if any)
             if (priceIndex != 0 && (quality == 5 || quality == 7 || quality == 9)) {
-                effect.setText("Effect: " + Utility.getUnusualEffectName(priceIndex));
+                effect.setText("Effect: " + Utility.getUnusualEffectName(this, priceIndex));
                 effect.setVisibility(View.VISIBLE);
             }
 
@@ -291,7 +291,7 @@ public class ItemDetailActivity extends Activity {
 
             //Set the paint text (if any)
             if (paintNumber != 0) {
-                paint.setText("Paint: " + Utility.getPaintName(paintNumber));
+                paint.setText("Paint: " + Utility.getPaintName(this, paintNumber));
                 paint.setVisibility(View.VISIBLE);
             }
 

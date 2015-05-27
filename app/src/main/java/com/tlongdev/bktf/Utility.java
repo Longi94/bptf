@@ -127,7 +127,7 @@ public class Utility {
                 break;
             case UNUSUAL:
                 //Get the unusual effect name by its index
-                formattedName += getUnusualEffectName(index) + " ";
+                formattedName += getUnusualEffectName(context, index) + " ";
                 break;
             case COMMUNITY:
                 formattedName += context.getString(R.string.quality_community) +  " ";
@@ -180,167 +180,167 @@ public class Utility {
      * @param index index corresponding to the effect
      * @return the name of the unusual effect
      */
-    public static String getUnusualEffectName(int index) {
+    public static String getUnusualEffectName(Context context, int index) {
         //Just a huge switch-case that needs to be extended everytime a new effect is added.
         switch (index) {
             case 4:
-                return "Community Sparkle";
+                return context.getString(R.string.array_effects_community_sparkle);
             case 5:
-                return "Holy Glow";
+                return context.getString(R.string.array_effects_holy_glow);
             case 6:
-                return "Green Confetti";
+                return context.getString(R.string.array_effects_green_confetti);
             case 7:
-                return "Purple Confetti";
+                return context.getString(R.string.array_effects_purple_confetti);
             case 8:
-                return "Haunted Ghosts";
+                return context.getString(R.string.array_effects_haunted_ghosts);
             case 9:
-                return "Green Energy";
+                return context.getString(R.string.array_effects_green_energy);
             case 10:
-                return "Purple Energy";
+                return context.getString(R.string.array_effects_purple_energy);
             case 11:
-                return "Circling TF Logo";
+                return context.getString(R.string.array_effects_circling_tf_logo);
             case 12:
-                return "Massed Flies";
+                return context.getString(R.string.array_effects_massed_flies);
             case 13:
-                return "Burning Flames";
+                return context.getString(R.string.array_effects_burning_flames);
             case 14:
-                return "Scorching Flames";
+                return context.getString(R.string.array_effects_scorching_flames);
             case 15:
-                return "Searing Plasma";
+                return context.getString(R.string.array_effects_searing_plasma);
             case 16:
-                return "Vivid Plasma";
+                return context.getString(R.string.array_effects_vivid_plasma);
             case 17:
-                return "Sunbeams";
+                return context.getString(R.string.array_effects_sunbeams);
             case 18:
-                return "Circling Peace Sign";
+                return context.getString(R.string.array_effects_circling_peace_sign);
             case 19:
-                return "Circling Heart";
+                return context.getString(R.string.array_effects_circling_heart);
             case 29:
-                return "Stormy Storm";
+                return context.getString(R.string.array_effects_stormy_storm);
             case 30:
-                return "Blizzardy Storm";
+                return context.getString(R.string.array_effects_blizzardy_storm);
             case 31:
-                return "Nuts n' Bolts";
+                return context.getString(R.string.array_effects_nuts_n_bolts);
             case 32:
-                return "Orbiting Planets";
+                return context.getString(R.string.array_effects_orbiting_planets);
             case 33:
-                return "Orbiting Fire";
+                return context.getString(R.string.array_effects_orbiting_fire);
             case 34:
-                return "Bubbling";
+                return context.getString(R.string.array_effects_bubbling);
             case 35:
-                return "Smoking";
+                return context.getString(R.string.array_effects_smoking);
             case 36:
-                return "Steaming";
+                return context.getString(R.string.array_effects_steaming);
             case 37:
-                return "Flaming Lantern";
+                return context.getString(R.string.array_effects_flaming_lantern);
             case 38:
-                return "Cloudy Moon";
+                return context.getString(R.string.array_effects_cloudy_moon);
             case 39:
-                return "Cauldron Bubbles";
+                return context.getString(R.string.array_effects_cauldron_bubbles);
             case 40:
-                return "Eerie Orbiting Fire";
+                return context.getString(R.string.array_effects_eerie_orbiting_fire);
             case 43:
-                return "Knifestorm";
+                return context.getString(R.string.array_effects_knifestorm);
             case 44:
-                return "Misty Skull";
+                return context.getString(R.string.array_effects_misty_skull);
             case 45:
-                return "Harvest Moon";
+                return context.getString(R.string.array_effects_harvest_moon);
             case 46:
-                return "It's A Secret To Everybody";
+                return context.getString(R.string.array_effects_secret);
             case 47:
-                return "Stormy 13th Hour";
+                return context.getString(R.string.array_effects_stormy_13th_hour);
             case 56:
-                return "Kill-a-Watt";
+                return context.getString(R.string.array_effects_kill_a_watt);
             case 57:
-                return "Terror-Watt";
+                return context.getString(R.string.array_effects_terror_watt);
             case 58:
-                return "Cloud 9";
+                return context.getString(R.string.array_effects_cloud_9);
             case 59:
-                return "Aces High";
+                return context.getString(R.string.array_effects_aces_high);
             case 60:
-                return "Dead Presidents";
+                return context.getString(R.string.array_effects_dead_presidents);
             case 61:
-                return "Miami Nights";
+                return context.getString(R.string.array_effects_miami_nights);
             case 62:
-                return "Disco Beat Down";
+                return context.getString(R.string.array_effects_disco_beat_down);
             case 63:
-                return "Phosphorous";
+                return context.getString(R.string.array_effects_phosphorous);
             case 64:
-                return "Sulphurous";
+                return context.getString(R.string.array_effects_sulphurous);
             case 65:
-                return "Memory Leak";
+                return context.getString(R.string.array_effects_memory_leak);
             case 66:
-                return "Overclocked";
+                return context.getString(R.string.array_effects_overclocked);
             case 67:
-                return "Electrostatic";
+                return context.getString(R.string.array_effects_electrostatic);
             case 68:
-                return "Power Surge";
+                return context.getString(R.string.array_effects_power_surge);
             case 69:
-                return "Anti-Freeze";
+                return context.getString(R.string.array_effects_anti_freeze);
             case 70:
-                return "Time Warp";
+                return context.getString(R.string.array_effects_time_warp);
             case 71:
-                return "Green Black Hole";
+                return context.getString(R.string.array_effects_green_black_hole);
             case 72:
-                return "Roboactive";
+                return context.getString(R.string.array_effects_roboactive);
             case 73:
-                return "Arcana";
+                return context.getString(R.string.array_effects_arcana);
             case 74:
-                return "Spellbound";
+                return context.getString(R.string.array_effects_spellbound);
             case 75:
-                return "Chiroptera Venenata";
+                return context.getString(R.string.array_effects_chiroptera_venenata);
             case 76:
-                return "Poisoned Shadows";
+                return context.getString(R.string.array_effects_poisoned_shadows);
             case 77:
-                return "Something Burning This Way Comes";
+                return context.getString(R.string.array_effects_something_burning);
             case 78:
-                return "Hellfire";
+                return context.getString(R.string.array_effects_hellfire);
             case 79:
-                return "Darkblaze";
+                return context.getString(R.string.array_effects_darkblaze);
             case 80:
-                return "Demonflame";
+                return context.getString(R.string.array_effects_demonflame);
             case 81:
-                return "Bonzo The All-Gnawing";
+                return context.getString(R.string.array_effects_bonzo);
             case 82:
-                return "Amaranthine";
+                return context.getString(R.string.array_effects_amaranthine);
             case 83:
-                return "Stare From Beyond";
+                return context.getString(R.string.array_effects_stare_from_beyond);
             case 84:
-                return "The Ooze";
+                return context.getString(R.string.array_effects_the_ooze);
             case 85:
-                return "Ghastly Ghosts Jr";
+                return context.getString(R.string.array_effects_ghastly_ghosts_jr);
             case 86:
-                return "Haunted Phantasm Jr";
+                return context.getString(R.string.array_effects_haunted_phantasm_jr);
             case 87:
-                return "Frostbite";
+                return context.getString(R.string.array_effects_frostbite);
             case 88:
-                return "Molten Mallard";
+                return context.getString(R.string.array_effects_molten_mallard);
             case 89:
-                return "Morning Glory";
+                return context.getString(R.string.array_effects_morning_glory);
             case 90:
-                return "Death at Dusk";
+                return context.getString(R.string.array_effects_death_at_dusk);
             case 3001:
-                return "Showstopper";
+                return context.getString(R.string.array_effects_showstopper);
             case 3003:
-                return "Holy Grail";
+                return context.getString(R.string.array_effects_holy_grail);
             case 3004:
-                return "'72";
+                return context.getString(R.string.array_effects_72);
             case 3005:
-                return "Fountain of Delight";
+                return context.getString(R.string.array_effects_fountain_of_delight);
             case 3006:
-                return "Screaming Tiger";
+                return context.getString(R.string.array_effects_screaming_tiger);
             case 3007:
-                return "Skill Gotten Gains";
+                return context.getString(R.string.array_effects_skill_gotten_gains);
             case 3008:
-                return "Midnight Whirlwind";
+                return context.getString(R.string.array_effects_midnight_whirlwind);
             case 3009:
-                return "Silver Cyclone";
+                return context.getString(R.string.array_effects_silver_cyclone);
             case 3010:
-                return "Mega Strike";
+                return context.getString(R.string.array_effects_mega_strike);
             case 3011:
-                return "Haunted Phantasm";
+                return context.getString(R.string.array_effects_haunted_phantasm);
             case 3012:
-                return "Ghastly Ghosts";
+                return context.getString(R.string.array_effects_ghastly_ghosts);
             default:
                 return "";
         }
@@ -476,16 +476,16 @@ public class Utility {
         switch (targetCurrency) {
             case CURRENCY_BUD:
                 if (low == 1.0 && high == 0.0)
-                    return product + " bud";
+                    return product + " " + context.getString(R.string.currency_bud);
                 else
-                    return product + " buds";
+                    return product + " " + context.getString(R.string.currency_bud_plural);
             case CURRENCY_METAL:
-                return product + " ref";
+                return product + " " + context.getString(R.string.currency_metal);
             case CURRENCY_KEY:
                 if (low == 1.0 && high == 0.0)
-                    return product + " key";
+                    return product + " " + context.getString(R.string.currency_key);
                 else
-                    return product + " keys";
+                    return product + " " + context.getString(R.string.currency_key_plural);
             case CURRENCY_USD:
                 return "$" + product;
             default:
@@ -597,35 +597,39 @@ public class Utility {
      * Format the timestamp to a user friendly string that is the same as on steam profile pages.
      *
      * @param time timestamp to be formatted
-     * @return fromatted string
+     * @return formatted string
      */
-    public static String formatLastOnlineTime(long time) {
+    public static String formatLastOnlineTime(Context context, long time) {
         //If the time is longer than 2 days tho format is X days ago.
         if (time >= 172800000L) {
             long days = time / 86400000;
-            return "" + days + " days ago";
+            return "" + days + " " + context.getString(R.string.time_passed_day);
         }
         //If the time is longer than an hour, the format is X hour(s) Y minute(s) ago.
         if (time >= 3600000L) {
             long hours = time / 3600000;
             if (time % 3600000L == 0) {
                 if (hours == 1)
-                    return "" + hours + " hour ago";
+                    return "" + hours + " " + context.getString(R.string.time_passed_hour);
                 else {
-                    return "" + hours + " hours ago";
+                    return "" + hours + " " + context.getString(R.string.time_passed_hour_plural);
                 }
             } else {
                 long minutes = (time % 3600000L) / 60000;
                 if (hours == 1)
                     if (minutes == 1)
-                        return "" + hours + " hour " + minutes + " minute ago";
+                        return "" + hours + " " + context.getString(R.string.time_measure_hour) + " " + minutes + " "
+                                + context.getString(R.string.time_passed_minute);
                     else
-                        return "" + hours + " hour " + minutes + " minutes ago";
+                        return "" + hours + " " + context.getString(R.string.time_measure_hour) + " " + minutes + " "
+                                + context.getString(R.string.time_passed_minute_plural);
                 else {
                     if (minutes == 1)
-                        return "" + hours + " hours " + minutes + " minute ago";
+                        return "" + hours + " " + context.getString(R.string.time_measure_hour_plural) + " " + minutes + " "
+                                + context.getString(R.string.time_passed_minute);
                     else
-                        return "" + hours + " hours " + minutes + " minutes ago";
+                        return "" + hours + " " + context.getString(R.string.time_measure_hour_plural) + " " + minutes + " "
+                                + context.getString(R.string.time_passed_minute_plural);
                 }
             }
         }
@@ -633,11 +637,11 @@ public class Utility {
         else {
             long minutes = time / 60000;
             if (minutes == 0) {
-                return "Just now";
+                return context.getString(R.string.time_measure_just_now);
             } else if (minutes == 1) {
-                return "1 minute ago";
+                return "1 " + context.getString(R.string.time_passed_minute);
             } else {
-                return "" + minutes + " minutes ago";
+                return "" + minutes + " " + context.getString(R.string.time_passed_minute_plural);
             }
         }
     }
@@ -802,66 +806,66 @@ public class Utility {
      * @param index index returned by the api
      * @return paint name
      */
-    public static String getPaintName(int index) {
+    public static String getPaintName(Context context, int index) {
         switch (index) {
             case 7511618:
-                return "Indubitably Green";
+                return context.getString(R.string.paint_green);
             case 4345659:
-                return "Zepheniah's Greed";
+                return context.getString(R.string.paint_greed);
             case 5322826:
-                return "Noble Hatter's Violet";
+                return context.getString(R.string.paint_violet);
             case 14204632:
-                return "Color No. 216-190-216";
+                return context.getString(R.string.paint_216);
             case 8208497:
-                return "Deep Commitment to Purple";
+                return context.getString(R.string.paint_purple);
             case 13595446:
-                return "Mann Co. Orange";
+                return context.getString(R.string.paint_orange);
             case 10843461:
-                return "Muskelmannbraun";
+                return context.getString(R.string.paint_braun);
             case 12955537:
-                return "Peculiarly Drab Tincture";
+                return context.getString(R.string.paint_drab);
             case 6901050:
-                return "Radigan Conagher Brown";
+                return context.getString(R.string.paint_brown);
             case 8154199:
-                return "Ye Olde Rustic Color";
+                return context.getString(R.string.paint_rustic);
             case 15185211:
-                return "Australium Gold";
+                return context.getString(R.string.paint_australium);
             case 8289918:
-                return "Aged Moustache Grey";
+                return context.getString(R.string.paint_grey);
             case 15132390:
-                return "An Extraordinary Abundance of Tinge";
+                return context.getString(R.string.paint_white);
             case 1315860:
-                return "A Distinctive Lack of Hue";
+                return context.getString(R.string.paint_black);
             case 16738740:
-                return "Pink as Hell";
+                return context.getString(R.string.paint_pink);
             case 3100495:
-                return "Color Similar to Slate";
+                return context.getString(R.string.paint_slate);
             case 8421376:
-                return "Drably Olive";
+                return context.getString(R.string.paint_olive);
             case 3329330:
-                return "The Bitter Taste of Defeat and Lime";
+                return context.getString(R.string.paint_lime);
             case 15787660:
-                return "The Color of a Gentlemann's Business Pants";
+                return context.getString(R.string.paint_business);
             case 15308410:
-                return "Salmon Injustice";
+                return context.getString(R.string.paint_salmon);
             case 12073019:
-                return "Team Spirit";
+                return context.getString(R.string.paint_team);
             case 4732984:
-                return "Operator's Overalls";
+                return context.getString(R.string.paint_overalls);
             case 11049612:
-                return "Waterlogged Lab Coat";
+                return context.getString(R.string.paint_lab);
             case 3874595:
-                return "Balaclava's Are Forever";
+                return context.getString(R.string.paint_balaclava);
             case 6637376:
-                return "Air of Debonair";
+                return context.getString(R.string.paint_dabonair);
             case 8400928:
-                return "The Value of Teamwork";
+                return context.getString(R.string.paint_teamwork);
             case 12807213:
-                return "Cream Spirit";
+                return context.getString(R.string.paint_cream);
             case 2960676:
-                return "After Eight";
+                return context.getString(R.string.paint_eight);
             case 12377523:
-                return "A Mann's Mint";
+                return context.getString(R.string.paint_mint);
             default:
                 return null;
         }
@@ -876,61 +880,33 @@ public class Utility {
     public static boolean isPaint(int index) {
         switch (index) {
             case 7511618:
-                return true;
             case 4345659:
-                return true;
             case 5322826:
-                return true;
             case 14204632:
-                return true;
             case 8208497:
-                return true;
             case 13595446:
-                return true;
             case 10843461:
-                return true;
             case 12955537:
-                return true;
             case 6901050:
-                return true;
             case 8154199:
-                return true;
             case 15185211:
-                return true;
             case 8289918:
-                return true;
             case 15132390:
-                return true;
             case 1315860:
-                return true;
             case 16738740:
-                return true;
             case 3100495:
-                return true;
             case 8421376:
-                return true;
             case 3329330:
-                return true;
             case 15787660:
-                return true;
             case 15308410:
-                return true;
             case 12073019:
-                return true;
             case 4732984:
-                return true;
             case 11049612:
-                return true;
             case 3874595:
-                return true;
             case 6637376:
-                return true;
             case 8400928:
-                return true;
             case 12807213:
-                return true;
             case 2960676:
-                return true;
             case 12377523:
                 return true;
             default:
