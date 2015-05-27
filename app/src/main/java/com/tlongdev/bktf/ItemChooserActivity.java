@@ -280,7 +280,7 @@ public class ItemChooserActivity extends FragmentActivity implements
             } else {
                 //Searching for unusual items, get the unusual index from the array resource
                 int[] indexes = getResources().getIntArray(R.array.array_effects_indexes);
-                selectionArgs = new String[]{"%" + query + "%", "" + indexes[effectTypeSpinner.getSelectedItemPosition()]};
+                selectionArgs = new String[]{"%" + query + "%", String.valueOf(indexes[effectTypeSpinner.getSelectedItemPosition()])};
             }
         }
 

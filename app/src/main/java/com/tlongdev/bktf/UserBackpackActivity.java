@@ -89,7 +89,8 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Set the actionbar title to xyz's backpack
-        getSupportActionBar().setTitle(getIntent().getStringExtra(EXTRA_NAME) + "'s backpack");
+        getSupportActionBar().setTitle(getString(R.string.title_custom_backpack,
+                getIntent().getStringExtra(EXTRA_NAME)));
 
         //Decide which table to load data from according to the extra data from the intent
         isGuest = getIntent().getBooleanExtra(EXTRA_GUEST, false);

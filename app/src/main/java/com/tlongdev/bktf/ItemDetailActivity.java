@@ -215,7 +215,7 @@ public class ItemDetailActivity extends Activity {
                 uri,
                 columns,
                 selection,
-                new String[]{"" + id},
+                new String[]{String.valueOf(id)},
                 null
         );
 
@@ -251,47 +251,53 @@ public class ItemDetailActivity extends Activity {
                     mIntent.getIntExtra(EXTRA_PROPER_NAME, 0) == 1));
 
             //Set the level of the item, get the type from the intent
-            level.setText("Level " + itemCursor.getInt(COL_BACKPACK_LEVEL) + " " +
-                    mIntent.getStringExtra(EXTRA_ITEM_TYPE));
+            level.setText(getString(R.string.item_detail_level, itemCursor.getInt(COL_BACKPACK_LEVEL)
+                    , mIntent.getStringExtra(EXTRA_ITEM_TYPE)));
 
             //Set the origin of the item. Get the origin from the string array resource
-            origin.setText("Origin: " + getResources().getStringArray(R.array.array_origins)
-                    [itemCursor.getInt(COL_BACKPACK_ORIGIN)]);
+            origin.setText(getString(R.string.item_detail_origin) + ": " +
+                    getResources().getStringArray(R.array.array_origins)
+                            [itemCursor.getInt(COL_BACKPACK_ORIGIN)]);
 
             //Set the effect of the item (if any)
             if (priceIndex != 0 && (quality == 5 || quality == 7 || quality == 9)) {
-                effect.setText("Effect: " + Utility.getUnusualEffectName(this, priceIndex));
+                effect.setText(getString(R.string.item_detail_effect) + ": " +
+                        Utility.getUnusualEffectName(this, priceIndex));
                 effect.setVisibility(View.VISIBLE);
             }
 
             //set the custom name of the item (if any)
             if (customName != null) {
-                this.customName.setText(Html.fromHtml("Custom name: <i>" + customName + "</i>"));
+                this.customName.setText(Html.fromHtml(getString(R.string.item_detail_custom_name) +
+                        ": <i>" + customName + "</i>"));
                 this.customName.setVisibility(View.VISIBLE);
             }
 
             //Set the custom description of the item (if any)
             if (customDescription != null) {
-                customDesc.setText(Html
-                        .fromHtml("Custom description: <i>" + customDescription + "</i>"));
+                customDesc.setText(Html.fromHtml(getString(R.string.item_detail_custom_description) +
+                        ": <i>" + customDescription + "</i>"));
                 customDesc.setVisibility(View.VISIBLE);
             }
 
             //Set the crafter's name (if any)
             if (crafter != null) {
-                crafterName.setText(Html.fromHtml("Crafted by: <i>" + crafter + "</i>"));
+                crafterName.setText(Html.fromHtml(getString(R.string.item_detail_craft) +
+                        ": <i>" + crafter + "</i>"));
                 crafterName.setVisibility(View.VISIBLE);
             }
 
             //Set the gifter's name (if any)
             if (gifter != null) {
-                gifterName.setText(Html.fromHtml("Gifted by: <i>" + gifter + "</i>"));
+                gifterName.setText(Html.fromHtml(getString(R.string.item_detail_gift) +
+                        ": <i>" + gifter + "</i>"));
                 gifterName.setVisibility(View.VISIBLE);
             }
 
             //Set the paint text (if any)
             if (paintNumber != 0) {
-                paint.setText("Paint: " + Utility.getPaintName(this, paintNumber));
+                paint.setText(getString(R.string.item_detail_paint) +
+                        ": " + Utility.getPaintName(this, paintNumber));
                 paint.setVisibility(View.VISIBLE);
             }
 
@@ -332,15 +338,16 @@ public class ItemDetailActivity extends Activity {
                 uri,
                 columns,
                 selection,
-                new String[]{"" + defindex, "" + quality, "" + tradable, "" + craftable, ""
-                        + priceIndex, "%australium%"},
+                new String[]{String.valueOf(defindex), String.valueOf(quality),
+                        String.valueOf(tradable), String.valueOf(craftable),
+                        String.valueOf(priceIndex), "%australium%"},
                 null
         );
 
         if (priceCursor.moveToFirst()) {
             //Show the price
             price.setVisibility(View.VISIBLE);
-            price.setText("Suggested price: " + Utility
+            price.setText(getString(R.string.item_detail_suggested_price) + ": " + Utility
                     .formatPrice(this, priceCursor.getDouble(COL_PRICE_LIST_PRICE),
                             priceCursor.getDouble(COL_PRICE_LIST_PMAX),
                             priceCursor.getString(COL_PRICE_LIST_CURRENCY),

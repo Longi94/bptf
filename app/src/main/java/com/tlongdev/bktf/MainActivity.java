@@ -173,6 +173,7 @@ public class MainActivity extends ActionBarActivity
 
     /**
      * This sets the title according to the fragments. I have no idea why this was generated.
+     *
      * @param number index of the fragment
      */
     public void onSectionAttached(int number) {
@@ -184,7 +185,7 @@ public class MainActivity extends ActionBarActivity
                 mTitle = getString(R.string.title_user_profile);
                 break;
             case 2:
-                mTitle = "Unusuals";
+                mTitle = getString(R.string.title_unusuals);
                 break;
             case 3:
                 mTitle = getString(R.string.title_calculator);

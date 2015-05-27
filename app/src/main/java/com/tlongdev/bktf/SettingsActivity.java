@@ -146,7 +146,7 @@ public class SettingsActivity extends PreferenceActivity implements
                         Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                                 "mailto", "tlongdev@gmail.com", null));
                         if (intent.resolveActivity(getPackageManager()) != null) {
-                            startActivity(Intent.createChooser(intent, "Send email..."));
+                            startActivity(Intent.createChooser(intent, getString(R.string.message_send_email)));
                         }
                         return true;
                     }

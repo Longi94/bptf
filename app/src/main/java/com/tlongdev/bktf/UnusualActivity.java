@@ -98,10 +98,10 @@ public class UnusualActivity extends ActionBarActivity implements LoaderManager.
         //If defindex is -1, user is browsing by effects
         if (defindex != -1) {
             selection = selection + " AND " + PriceListContract.PriceEntry.COLUMN_DEFINDEX + " = ?";
-            selectionArgs = new String[]{"5", "" + defindex};
+            selectionArgs = new String[]{"5", String.valueOf(defindex)};
         } else {
             selection = selection + " AND " + PriceListContract.PriceEntry.COLUMN_PRICE_INDEX + " = ?";
-            selectionArgs = new String[]{"5", "" + index};
+            selectionArgs = new String[]{"5", String.valueOf(index)};
         }
 
         //Load
