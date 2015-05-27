@@ -189,7 +189,7 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         } else {
             if (privateBackpack) {
                 //If the backpack is private, show a toast and do nothing.
-                Toast.makeText(this, playerNameString + "'s backpack is private",
+                Toast.makeText(this, getString(R.string.message_private_backpack, playerNameString),
                         Toast.LENGTH_SHORT).show();
             } else {
                 //Else the user clicked on the backpack button. Start the backpack activity. Pass
@@ -335,7 +335,7 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
     private void updateUI() {
 
         //Set the title to X's profile
-        getSupportActionBar().setTitle(playerNameString + "'s profile");
+        getSupportActionBar().setTitle(getString(R.string.title_custom_profile, playerNameString));
 
         //Set the player name
         playerName.setText(playerNameString);
@@ -347,13 +347,15 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         }
 
         //Set the player reputation. Reputation: X
-        playerReputation.setText("Reputation: " + playerReputationValue);
+        playerReputation.setText(getString(R.string.user_page_reputation) + " "
+                + playerReputationValue);
 
         //Set the 'user since' text
         if (profileCreated == -1) {
-            userSinceText.setText("Steam user since:\nunknown");
+            userSinceText.setText(getString(R.string.user_page_user_since)
+                    + getString(R.string.filler_unknown));
         } else {
-            userSinceText.setText("Steam user since:\n" + Utility
+            userSinceText.setText(getString(R.string.user_page_user_since) + Utility
                     .formatUnixTimeStamp(profileCreated));
         }
 
@@ -362,84 +364,86 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
             case 0:
                 if (lastOnline == -1) {
                     //Weird
-                    lastOnlineText.setText("Last online: unknown");
+                    lastOnlineText.setText(getString(R.string.user_page_last_online) + " "
+                            + getString(R.string.filler_unknown));
                 } else {
                     //Player is offline, show how long was it since the player was last online
-                    lastOnlineText.setText("Last online: " + Utility.formatLastOnlineTime(this,
+                    lastOnlineText.setText(getString(R.string.user_page_last_online) + " "
+                            + Utility.formatLastOnlineTime(this,
                             System.currentTimeMillis() - lastOnline * 1000L));
                 }
                 lastOnlineText.setTextColor(getResources().getColor(R.color.player_offline));
                 break;
             case 1:
-                lastOnlineText.setText("Online");
+                lastOnlineText.setText(getString(R.string.user_page_status_online));
                 lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
                 break;
             case 2:
-                lastOnlineText.setText("Busy");
+                lastOnlineText.setText(getString(R.string.user_page_status_busy));
                 lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
                 break;
             case 3:
-                lastOnlineText.setText("Away");
+                lastOnlineText.setText(getString(R.string.user_page_status_away));
                 lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
                 break;
             case 4:
-                lastOnlineText.setText("Snooze");
+                lastOnlineText.setText(getString(R.string.user_page_status_snooze));
                 lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
                 break;
             case 5:
-                lastOnlineText.setText("Looking to trade");
+                lastOnlineText.setText(getString(R.string.user_page_status_trade));
                 lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
                 break;
             case 6:
-                lastOnlineText.setText("Looking to play");
+                lastOnlineText.setText(getString(R.string.user_page_status_play));
                 lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
                 break;
             case 7:
-                lastOnlineText.setText("In-Game");
+                lastOnlineText.setText(getString(R.string.user_page_status_in_game));
                 lastOnlineText.setTextColor(getResources().getColor(R.color.player_in_game));
                 break;
         }
 
         //Steamrep information
         if (!isScammer) {
-            steamRepStatus.setText("NORMAL");
+            steamRepStatus.setText(getString(R.string.user_page_status_normal));
             steamRepStatus.setBackgroundDrawable(getResources()
                     .getDrawable(R.drawable.status_background_neutral));
         } else {
-            steamRepStatus.setText("SCAMMER");
+            steamRepStatus.setText(getString(R.string.user_page_status_scammer));
             steamRepStatus.setBackgroundDrawable(getResources()
                     .getDrawable(R.drawable.status_background_bad));
         }
 
         //Trade status
         if (!isTradeBanned) {
-            tradeStatus.setText("OK");
+            tradeStatus.setText(getString(R.string.user_page_status_ok));
             tradeStatus.setBackgroundDrawable(getResources()
                     .getDrawable(R.drawable.status_background_good));
         } else {
-            tradeStatus.setText("BAN");
+            tradeStatus.setText(getString(R.string.user_page_status_ban));
             tradeStatus.setBackgroundDrawable(getResources()
                     .getDrawable(R.drawable.status_background_bad));
         }
 
         //VAC status
         if (!isVacBanned) {
-            vacStatus.setText("OK");
+            vacStatus.setText(getString(R.string.user_page_status_ok));
             vacStatus.setBackgroundDrawable(getResources()
                     .getDrawable(R.drawable.status_background_good));
         } else {
-            vacStatus.setText("BAN");
+            vacStatus.setText(getString(R.string.user_page_status_ban));
             vacStatus.setBackgroundDrawable(getResources()
                     .getDrawable(R.drawable.status_background_bad));
         }
 
         //Community status
         if (!isCommunityBanned) {
-            communityStatus.setText("OK");
+            communityStatus.setText(getString(R.string.user_page_status_ok));
             communityStatus.setBackgroundDrawable(getResources()
                     .getDrawable(R.drawable.status_background_good));
         } else {
-            communityStatus.setText("BAN");
+            communityStatus.setText(getString(R.string.user_page_status_ban));
             communityStatus.setBackgroundDrawable(getResources()
                     .getDrawable(R.drawable.status_background_bad));
         }
@@ -452,22 +456,22 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         } else if (!privateBackpack) {
             //Properly format the backpack value (is int, does it have a fraction smaller than 0.01)
             if ((int) backpackValue == backpackValue)
-                backpackValueRefined.setText("" + (int) backpackValue);
-            else if (("" + backpackValue).substring(("" + backpackValue).indexOf('.') + 1)
+                backpackValueRefined.setText(String.valueOf((int) backpackValue));
+            else if ((String.valueOf(backpackValue)).substring((String.valueOf(backpackValue)).indexOf('.') + 1)
                     .length() > 2)
-                backpackValueRefined.setText("" + new DecimalFormat("#0.00").format(backpackValue));
+                backpackValueRefined.setText(String.valueOf(new DecimalFormat("#0.00").format(backpackValue)));
             else
-                backpackValueRefined.setText("" + backpackValue);
+                backpackValueRefined.setText(String.valueOf(backpackValue));
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
             //Convert the value into USD and format it like above
             double bpValueUsd = backpackValue * Utility.getDouble(prefs, getString(R.string.pref_metal_raw_usd), 1);
             if ((int) bpValueUsd == bpValueUsd)
-                backpackValueUsd.setText("" + (int) bpValueUsd);
-            else if (("" + bpValueUsd).substring(("" + bpValueUsd).indexOf('.') + 1).length() > 2)
-                backpackValueUsd.setText("" + new DecimalFormat("#0.00").format(bpValueUsd));
+                backpackValueUsd.setText(String.valueOf((int) bpValueUsd));
+            else if ((String.valueOf(bpValueUsd).substring((String.valueOf(bpValueUsd).indexOf('.') + 1)).length() > 2))
+                backpackValueUsd.setText(String.valueOf(new DecimalFormat("#0.00").format(bpValueUsd)));
             else
-                backpackValueUsd.setText("" + bpValueUsd);
+                backpackValueUsd.setText(String.valueOf(bpValueUsd));
         }
 
         //Set the border of the avatar according to the player's state
@@ -487,7 +491,7 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         }
 
         //Set the trust score and color the background according to it.
-        trustStatus.setText("" + (ratingPositive - ratingNegative));
+        trustStatus.setText(String.valueOf((ratingPositive - ratingNegative)));
         if (ratingNegative > ratingPositive) {
             trustStatus.setBackgroundDrawable(getResources()
                     .getDrawable(R.drawable.status_background_bad));
@@ -508,19 +512,19 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
 
         //Raw keys
         if (rawKeys >= 0)
-            backpackRawKeys.setText("" + rawKeys);
+            backpackRawKeys.setText(String.valueOf(rawKeys));
         else
             backpackRawKeys.setText("?");
 
         //Raw metal
         if (rawMetal >= 0)
-            backpackRawMetal.setText("" + Utility.roundDouble(rawMetal, 2));
+            backpackRawMetal.setText(String.valueOf(Utility.roundDouble(rawMetal, 2)));
         else
             backpackRawMetal.setText("?");
 
         //Number of slots and slots used
         if (itemNumber >= 0 && backpackSlotNumber >= 0)
-            backpackSlots.setText("" + itemNumber + "/" + backpackSlotNumber);
+            backpackSlots.setText(String.valueOf(itemNumber + "/" + backpackSlotNumber));
         else
             backpackSlots.setText("?/?");
 
@@ -540,7 +544,7 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         this.backpackSlotNumber = backpackSlots;
         this.itemNumber = itemNumber;
 
-        //Backpack fetshing finished
+        //Backpack fetching finished
         backpackFetching = false;
 
         //Update the UI if both tasks have stopped
@@ -564,7 +568,7 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
         //Backpack fetshing finished
         backpackFetching = false;
 
-        //Backpackmis private
+        //Backpack is private
         privateBackpack = true;
 
         //Update the UI if both tasks have stopped
@@ -645,13 +649,13 @@ public class UserInfoActivity extends ActionBarActivity implements View.OnClickL
             } catch (IOException e) {
                 //There was a network error
                 //TODO distinguish all network errors: timeout, connection refused, api down, etc.
-                publishProgress("network error");
+                publishProgress(getString(R.string.error_network));
                 if (Utility.isDebugging(UserInfoActivity.this))
                     e.printStackTrace();
                 return null;
             } catch (JSONException e) {
                 //JSON was improperly formatted, pls no
-                publishProgress("error while parsing data");
+                publishProgress(getString(R.string.error_data_parse));
                 if (Utility.isDebugging(UserInfoActivity.this))
                     e.printStackTrace();
                 return null;

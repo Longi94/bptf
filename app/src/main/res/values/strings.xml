@@ -3,6 +3,8 @@
 
     <string name="app_name" translatable="false">bptf</string>
 
+    <string name="filler_unknown" translatable="true">unknown</string>
+
     <!--Preference keys-->
 
     <string name="pref_auto_sync" translatable="false">pref_auto_sync</string>
@@ -84,8 +86,11 @@
     <string name="title_activity_welcome" translatable="false">WelcomeActivity</string>
     <string name="title_calculator" translatable="true">Calculator</string>
     <string name="title_home" translatable="true">Latest Changes</string>
+    <string name="title_unusuals" translatable="true">Unusuals</string>
     <string name="title_prices" translatable="true">Unusual Prices</string>
     <string name="title_user_profile" translatable="true">User Profile</string>
+    <string name="title_custom_profile" translatable="true">%s\'s profile</string>
+    <string name="title_custom_backpack" translatable="true">%s\'s backpack</string>
 
     <!--Preference titles and summaries-->
 
@@ -145,6 +150,29 @@
     <string name="user_page_trade_status" translatable="true">TRADE</string>
     <string name="user_page_trust" translatable="true">TRUST</string>
     <string name="user_page_user_since" translatable="true">Steam user since: \n</string>
+    <string name="user_page_status_online" translatable="true">Online</string>
+    <string name="user_page_status_busy" translatable="true">Busy</string>
+    <string name="user_page_status_away" translatable="true">Away</string>
+    <string name="user_page_status_snooze" translatable="true">Snooze</string>
+    <string name="user_page_status_trade" translatable="true">Looking to trade</string>
+    <string name="user_page_status_play" translatable="true">Looking to play</string>
+    <string name="user_page_status_in_game" translatable="true">In-Game</string>
+    <string name="user_page_status_normal" translatable="true">NORMAL</string>
+    <string name="user_page_status_scammer" translatable="true">SCAMMER</string>
+    <string name="user_page_status_ok" translatable="true">OK</string>
+    <string name="user_page_status_ban" translatable="true">BAN</string>
+
+    <!--Resources for item details-->
+
+    <string name="item_detail_level" translatable="false">Level %d %s</string>
+    <string name="item_detail_origin" translatable="false">Origin</string>
+    <string name="item_detail_effect" translatable="false">Effect</string>
+    <string name="item_detail_custom_name" translatable="false">Custom name</string>
+    <string name="item_detail_custom_description" translatable="false">Custom description</string>
+    <string name="item_detail_craft" translatable="false">Crafted by</string>
+    <string name="item_detail_gift" translatable="false">Gifted by</string>
+    <string name="item_detail_paint" translatable="false">Paint</string>
+    <string name="item_detail_suggested_price" translatable="false">Suggested price</string>
 
     <!--Resources for calculator-->
 
@@ -343,6 +371,12 @@
     <string name="paint_eight" translatable="true">After Eight</string>
     <string name="paint_mint" translatable="true">A Mann\'s Mint</string>
 
+    <string name="message_private_backpack" translatable="true">%s\'s backpack is private</string>
+    <string name="message_send_email" translatable="true">Send email…</string>
+
+
+    <string name="error_network" translatable="true">network error</string>
+    <string name="error_data_parse" translatable="true">error while parsing data</string>
 
     <string name="pref_dev_key_notfication">pref_dev_key_notfication</string>
     <string name="pref_title_translate">Would you like to help translate the app?</string>

@@ -453,7 +453,7 @@ public class Utility {
         if ((int) low == low)
             product += (int) low;
             //Check if the double has fraction smaller than 0.01, if so we need to format the double
-        else if (("" + low).substring(("" + low).indexOf('.') + 1).length() > 2)
+        else if ((String.valueOf(low)).substring((String.valueOf(low)).indexOf('.') + 1).length() > 2)
             product += new DecimalFormat("#0.00").format(low);
         else
             product += low;
@@ -463,7 +463,7 @@ public class Utility {
             if ((int) high == high)
                 product += "-" + (int) high;
                 //Check if the double has fraction smaller than 0.01, if so we need to format the double
-            else if (("" + high).substring(("" + high).indexOf('.') + 1).length() > 2)
+            else if ((String.valueOf(high)).substring((String.valueOf(high)).indexOf('.') + 1).length() > 2)
                 product += "-" + new DecimalFormat("#0.00").format(high);
             else
                 product += "-" + high;
