@@ -43,6 +43,7 @@
     <string name="pref_player_trust_positive" translatable="false">pref_player_trust_positive</string>
     <string name="pref_player_vac_banned" translatable="false">pref_player_vac_banned</string>
     <string name="pref_preferred_advanced_calculator" translatable="false">pref_preferred_advanced_calculator</string>
+    <string name="pref_refresh_database" translatable="false">pref_refresh_database</string>
     <string name="pref_resolved_steam_id" translatable="false">pref_resolved_steam_id</string>
     <string name="pref_steam_id" translatable="false">Steam ID</string>
     <string name="pref_sync_interval" translatable="false">pref_sync_interval</string>
