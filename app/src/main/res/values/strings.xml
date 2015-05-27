@@ -291,5 +291,6 @@
     <string name="array_effects_vivid_plasma" translatable="true">Vivid Plasma</string>
     <string name="array_effects_72" translatable="true">\'72</string>
     <string name="pref_dev_key_notfication">pref_dev_key_notfication</string>
+    <string name="pref_title_translate">Would you like to help translate the app?</string>
 
 </resources>
