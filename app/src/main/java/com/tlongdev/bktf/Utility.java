@@ -84,11 +84,11 @@ public class Utility {
 
         //Check tradability
         if (tradable == 0) {
-            formattedName += "Non-Tradable ";
+            formattedName += context.getString(R.string.quality_non_tradable) + " ";
         }
         //Check craftability
         if (craftable == 0) {
-            formattedName += "Non-Craftable ";
+            formattedName += context.getString(R.string.quality_non_craftable) + " ";
         }
 
         //Handle strangifier names differently
@@ -113,13 +113,13 @@ public class Utility {
         //Switch case for the quality
         switch (q) {
             case NORMAL:
-                formattedName += "Normal ";
+                formattedName += context.getString(R.string.quality_normal) + " ";
                 break;
             case GENUINE:
-                formattedName += "Genuine ";
+                formattedName += context.getString(R.string.quality_genuine) +  " ";
                 break;
             case VINTAGE:
-                formattedName += "Vintage ";
+                formattedName += context.getString(R.string.quality_vintage) +  " ";
                 break;
             case UNIQUE:
                 if (index > 0) //A unique item with a number
@@ -130,22 +130,22 @@ public class Utility {
                 formattedName += getUnusualEffectName(index) + " ";
                 break;
             case COMMUNITY:
-                formattedName += "Community ";
+                formattedName += context.getString(R.string.quality_community) +  " ";
                 break;
             case VALVE:
-                formattedName += "Valve ";
+                formattedName += context.getString(R.string.quality_valve) +  " ";
                 break;
             case SELF_MADE:
-                formattedName += "Self-made ";
+                formattedName += context.getString(R.string.quality_self_made) +  " ";
                 break;
             case STRANGE:
-                formattedName += "Strange ";
+                formattedName += context.getString(R.string.quality_strange) +  " ";
                 break;
             case HAUNTED:
-                formattedName += "Haunted ";
+                formattedName += context.getString(R.string.quality_haunted) +  " ";
                 break;
             case COLLECTORS:
-                formattedName += "Collector's ";
+                formattedName += context.getString(R.string.quality_collectors) +  " ";
                 break;
         }
 
@@ -167,72 +167,11 @@ public class Utility {
      */
     public static String formatSimpleItemName(Context context, int defindex, String name,
                                               int quality, int index, boolean isProper) {
-        //Empty string that will be appended.
-        String formattedName = "";
-
-        //Handle strangifier names differently
-        if (defindex == 6522) {
-            ItemSchemaDbHelper dbHelper = new ItemSchemaDbHelper(context);
-            Cursor itemCursor = dbHelper.getItem(index);
-            if (itemCursor != null && itemCursor.moveToFirst()) {
-                formattedName += " " + itemCursor.getString(0) + " " + name;
-                itemCursor.close();
-            }
-            dbHelper.close();
-            return formattedName;
-        } else
-            //Handle chemistry set names differently
-            if (defindex == 20001) {
-
-            }
-
-        //Convert the quality int to enum for better readability
-        Quality q = Quality.values()[quality];
-
-        //Switch case for the quality
-        switch (q) {
-            case NORMAL:
-                formattedName += "Normal ";
-                break;
-            case GENUINE:
-                formattedName += "Genuine ";
-                break;
-            case VINTAGE:
-                formattedName += "Vintage ";
-                break;
-            case UNIQUE:
-                if (index > 0) //A unique item with a number
-                    name = name + " #" + index;
-
-                if (isProper) { //Needs the definite article
-                    name = "The " + name;
-                }
-                break;
-            case UNUSUAL:
-                formattedName += "Unusual ";
-                break;
-            case COMMUNITY:
-                formattedName += "Community ";
-                break;
-            case VALVE:
-                formattedName += "Valve ";
-                break;
-            case SELF_MADE:
-                formattedName += "Self-made ";
-                break;
-            case STRANGE:
-                formattedName += "Strange ";
-                break;
-            case HAUNTED:
-                formattedName += "Haunted ";
-                break;
-            case COLLECTORS:
-                formattedName += "Collector's ";
-                break;
+        if (Quality.values()[quality] == Quality.UNUSUAL) {
+            return context.getString(R.string.quality_unusual) + " " + name;
+        } else {
+            return formatItemName(context, defindex, name, 1, 1, quality, index);
         }
-
-        //Append the item name to the end.
-        return formattedName + name;
     }
 
     /**

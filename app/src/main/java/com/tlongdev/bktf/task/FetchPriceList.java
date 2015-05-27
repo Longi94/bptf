@@ -114,7 +114,6 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Integer> {
 
         if (prefs.getBoolean(mContext.getString(R.string.pref_refresh_database), false)) {
             updateDatabase = false;
-            prefs.edit().putBoolean(mContext.getString(R.string.pref_refresh_database), false).apply();
         }
 
         // These two need to be declared outside the try/catch
@@ -229,13 +228,15 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Integer> {
             //Get the shared preferences
             SharedPreferences.Editor editor = prefs.edit();
 
+            //Save when the update finished
+            editor.putLong(mContext.getString(R.string.pref_last_price_list_update),
+                    System.currentTimeMillis());
+            editor.putBoolean(mContext.getString(R.string.pref_initial_load), false);
+
             //Get all the items from the JSON string
             switch (getItemsFromJson(itemsJsonStr)) {
                 case 0:
-                    //Save when the update finished
-                    editor.putLong(mContext.getString(R.string.pref_last_price_list_update),
-                            System.currentTimeMillis());
-                    editor.putBoolean(mContext.getString(R.string.pref_initial_load), false);
+                    editor.putBoolean(mContext.getString(R.string.pref_refresh_database), false);
                     editor.apply();
                     break;
                 case 1:
