@@ -194,9 +194,9 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
                 mSwipeRefreshLayout.setRefreshing(true);
             }
 
-            if (prefs.getBoolean(getString(R.string.pref_dev_key_notfication), true)) {
+            if (prefs.getBoolean(getString(R.string.pref_dev_key_notification), true)) {
                 showDeveloperKeyNotifications();
-                prefs.edit().putBoolean(getString(R.string.pref_dev_key_notfication), false).apply();
+                prefs.edit().putBoolean(getString(R.string.pref_dev_key_notification), false).apply();
             }
         }
     }
@@ -271,9 +271,9 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
                 budsPriceImage.setBackgroundColor(0xff850000);
             }
 
-            if (prefs.getBoolean(getString(R.string.pref_dev_key_notfication), true)) {
+            if (prefs.getBoolean(getString(R.string.pref_dev_key_notification), true)) {
                 showDeveloperKeyNotifications();
-                prefs.edit().putBoolean(getString(R.string.pref_dev_key_notfication), false).apply();
+                prefs.edit().putBoolean(getString(R.string.pref_dev_key_notification), false).apply();
             }
         }
     }
