@@ -39,9 +39,9 @@ public class DeveloperKeyPreference extends DialogPreference {
         String original = PreferenceManager.getDefaultSharedPreferences(context)
                 .getString(context.getString(R.string.pref_developer_key), "");
         if (original == null || original.equals("")) {
-            setSummary("Using the default key");
+            setSummary(mContext.getString(R.string.pref_description_api_key_default));
         } else {
-            setSummary("Using a custom key");
+            setSummary(mContext.getString(R.string.pref_description_api_key_custom));
         }
     }
 
@@ -86,9 +86,9 @@ public class DeveloperKeyPreference extends DialogPreference {
 
         //Set the summary depending on the new value
         if (newKey.equals("")) {
-            setSummary("Using the default key");
+            setSummary(mContext.getString(R.string.pref_description_api_key_default));
         } else {
-            setSummary("Using a custom key");
+            setSummary(mContext.getString(R.string.pref_description_api_key_custom));
         }
     }
 }

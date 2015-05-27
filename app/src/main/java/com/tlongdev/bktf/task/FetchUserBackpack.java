@@ -250,7 +250,7 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
 
         } catch (IOException e) {
             //There was a network error, notify the user TODO, proper error handling
-            errorMessage = "network error";
+            errorMessage = mContext.getString(R.string.error_network);
             publishProgress();
             if (Utility.isDebugging(mContext))
                 e.printStackTrace();
@@ -279,7 +279,7 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
             return getItemsFromJson(jsonStr, params[0]);
         } catch (JSONException e) {
             //Something went wrong while parsing the data
-            errorMessage = "error while parsing data";
+            errorMessage = mContext.getString(R.string.error_data_parse);
             publishProgress();
             if (Utility.isDebugging(mContext))
                 e.printStackTrace();
