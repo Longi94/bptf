@@ -9,6 +9,19 @@
 
     <!--TODO instructions on finding the api key-->
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Providing your own API key fixes the issue, where sometimes you wouldn't be able to refresh. To register your own API key go to:"/>
+
+    <Button
+        android:layout_marginTop="16dp"
+        android:id="@+id/button_register"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="backpack.tf/api/register"/>
+
     <!--Input for preference-->
     <EditText
         android:id="@+id/edit_text_dev_key"
