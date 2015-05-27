@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -36,7 +35,7 @@ import java.util.Vector;
 /**
  * Task for fetching all data for prices database and updating it in the background.
  */
-public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
+public class FetchPriceList extends AsyncTask<Void, Integer, Integer> {
 
     private static final String LOG_TAG = FetchPriceList.class.getSimpleName();
 
@@ -95,19 +94,27 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
         if (!updateDatabase)
             //Show the progress dialog
             loadingDialog = ProgressDialog.show(mContext, null, "Downloading data...", true);
+
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected Void doInBackground(Void... params) {
+    protected Integer doInBackground(Void... params) {
 
-        if (System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(mContext)
-                .getLong(mContext.getString(R.string.pref_last_price_list_update), 0) < 3600000L
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+        if (System.currentTimeMillis() - prefs.getLong(mContext
+                .getString(R.string.pref_last_price_list_update), 0) < 3600000L
                 && !manualSync) {
             //This task ran less than an hour ago and wasn't a manual sync, nothing to do.
             return null;
+        }
+
+        if (prefs.getBoolean(mContext.getString(R.string.pref_refresh_database), false)) {
+            updateDatabase = false;
+            prefs.edit().putBoolean(mContext.getString(R.string.pref_refresh_database), false).apply();
         }
 
         // These two need to be declared outside the try/catch
@@ -173,7 +180,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
 
             if (inputStream == null) {
                 // Stream was empty. Nothing to do.
-                return null;
+                return 0;
             }
 
             reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -186,7 +193,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
 
             if (buffer.length() == 0) {
                 //Stream was empty, nothing to do.
-                return null;
+                return 0;
             }
             //Get the jason string
             itemsJsonStr = buffer.toString();
@@ -197,7 +204,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
             publishProgress(-1);
             if (Utility.isDebugging(mContext))
                 e.printStackTrace();
-            return null;
+            return 0;
         } finally {
             //Close the connection
             if (urlConnection != null) {
@@ -219,18 +226,24 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
         }
         try {
 
+            //Get the shared preferences
+            SharedPreferences.Editor editor = prefs.edit();
+
             //Get all the items from the JSON string
-            if (getItemsFromJson(itemsJsonStr)) {
-
-                //Get the shared preferences
-                SharedPreferences.Editor editor = PreferenceManager
-                        .getDefaultSharedPreferences(mContext).edit();
-
-                //Save when the update finished
-                editor.putLong(mContext.getString(R.string.pref_last_price_list_update),
-                        System.currentTimeMillis());
-                editor.putBoolean(mContext.getString(R.string.pref_initial_load), false);
-                editor.apply();
+            switch (getItemsFromJson(itemsJsonStr)) {
+                case 0:
+                    //Save when the update finished
+                    editor.putLong(mContext.getString(R.string.pref_last_price_list_update),
+                            System.currentTimeMillis());
+                    editor.putBoolean(mContext.getString(R.string.pref_initial_load), false);
+                    editor.apply();
+                    break;
+                case 1:
+                    editor.putBoolean(mContext.getString(R.string.pref_refresh_database), true);
+                    editor.apply();
+                    return 1;
+                default:
+                    break;
             }
 
         } catch (JSONException e) {
@@ -239,9 +252,9 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
             publishProgress(-1);
             if (Utility.isDebugging(mContext))
                 e.printStackTrace();
-            return null;
+            return 0;
         }
-        return null;
+        return 0;
     }
 
     /**
@@ -314,7 +327,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
      * {@inheritDoc}
      */
     @Override
-    protected void onPostExecute(Void pVoid) {
+    protected void onPostExecute(Integer result) {
         //Dismiss loading dialog
         if (loadingDialog != null && !updateDatabase)
             loadingDialog.dismiss();
@@ -322,6 +335,11 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
         if (listener != null) {
             //Notify the listener that the update finished
             listener.onPriceListFetchFinished();
+        }
+
+        if (result != null && result == 1) {
+            Toast.makeText(mContext, "Currency price updated. The whole database will be updated on the next refresh.",
+                    Toast.LENGTH_LONG).show();
         }
     }
 
@@ -341,7 +359,9 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
      * @return whether the query was successful or not
      * @throws JSONException
      */
-    private boolean getItemsFromJson(String jsonString) throws JSONException {
+    private int getItemsFromJson(String jsonString) throws JSONException {
+
+        int result = 0;
 
         //All the JSON keys needed to parse
         final String OWM_RESPONSE = "response";
@@ -368,7 +388,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
             errorMessage = response.getString(OWM_MESSAGE);
             if (Utility.isDebugging(mContext))
                 Log.e(LOG_TAG, errorMessage);
-            return false;
+            return -1;
         }
 
         //Get the items
@@ -385,29 +405,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
         if (updateDatabase &&
                 (items.has("Mann Co. Supply Crate Key") || items.has("Earbuds")
                         || items.has("Refined Metal"))) {
-
-            Toast.makeText(mContext, "Currency price updated. Updating whole database.",
-                    Toast.LENGTH_LONG).show();
-
-            //relaunch the task with the intent
-            final FetchPriceList task = new FetchPriceList(mContext, false, false);
-            task.setOnPriceListFetchListener(listener);
-
-            Handler handler = new Handler();
-
-            final Runnable r = new Runnable() {
-                @Override
-                public void run() {
-                    task.execute();
-                }
-            };
-
-            //Delay the update by 5 seconds so the requests are not too frequent.
-            handler.postDelayed(r, 5000);
-
-            //Don't notify the listener cuz we didn't finish
-            listener = null;
-            return false;
+            result = 1;
         }
 
         //Start iterating
@@ -679,7 +677,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
                 Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
         }
 
-        return true;
+        return result;
     }
 
     /**
