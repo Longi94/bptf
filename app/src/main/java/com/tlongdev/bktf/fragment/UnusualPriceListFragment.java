@@ -20,7 +20,7 @@ import com.tlongdev.bktf.adapter.UnusualEffectListCursorAdapter;
 import com.tlongdev.bktf.adapter.UnusualListCursorAdapter;
 import com.tlongdev.bktf.data.PriceListContract;
 
-public class UnusualPriceListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class UnusualPriceListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String LOG_TAG = UnusualPriceListFragment.class.getSimpleName();
 
@@ -96,11 +96,11 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
         String selection;
-        String[] selectionArgs ={"5"};
+        String[] selectionArgs = {"5"};
 
-        switch (id){
+        switch (id) {
             case PRICE_LIST_LOADER:
-                selection = PriceListContract.PriceEntry.TABLE_NAME+
+                selection = PriceListContract.PriceEntry.TABLE_NAME +
                         "." + PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
                         PriceListContract.PriceEntry.COLUMN_PRICE_INDEX + " != 0 GROUP BY " +
                         PriceListContract.PriceEntry.COLUMN_DEFINDEX;
@@ -114,7 +114,7 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
                         args.getString(QUERY_KEY)
                 );
             case EFFECT_LIST_LOADER:
-                selection = PriceListContract.PriceEntry.TABLE_NAME+
+                selection = PriceListContract.PriceEntry.TABLE_NAME +
                         "." + PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
                         PriceListContract.PriceEntry.COLUMN_PRICE_INDEX + " != 0 GROUP BY " +
                         PriceListContract.PriceEntry.COLUMN_PRICE_INDEX;
@@ -143,7 +143,7 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        if (loader.getId() == EFFECT_LIST_LOADER){
+        if (loader.getId() == EFFECT_LIST_LOADER) {
             effectCursorAdapter.swapCursor(null);
         } else {
             cursorAdapter.swapCursor(null);
@@ -160,28 +160,27 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.menu_sort_name && currentSort != 1){
+        if (id == R.id.menu_sort_name && currentSort != 1) {
             Bundle args = new Bundle();
             args.putString(QUERY_KEY, PriceListContract.PriceEntry.COLUMN_ITEM_NAME + " ASC");
             getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
             currentSort = 1;
-        }
-        else if (id == R.id.menu_sort_price && currentSort != 0){
+        } else if (id == R.id.menu_sort_price && currentSort != 0) {
             Bundle args = new Bundle();
             args.putString(QUERY_KEY, "AVG(" + PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW + ") DESC");
             getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
             currentSort = 0;
         } else if (id == R.id.action_effect) {
-            if (showEffect){
+            if (showEffect) {
                 showEffect = false;
                 effectMenuItem.setIcon(R.drawable.ic_star_outline_white_24dp);
                 mGridView.setAdapter(cursorAdapter);
-                ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("Unusuals");
+                ((ActionBarActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_unusuals));
             } else {
                 showEffect = true;
                 effectMenuItem.setIcon(R.drawable.ic_star_white_24dp);
                 mGridView.setAdapter(effectCursorAdapter);
-                ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("Effects");
+                ((ActionBarActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_effects));
             }
         }
         return super.onOptionsItemSelected(item);

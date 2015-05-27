@@ -41,7 +41,7 @@ import java.util.Arrays;
 /**
  * Fragment for searching for prices.
  */
-public class SearchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class SearchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String LOG_TAG = SearchFragment.class.getSimpleName();
 
@@ -102,7 +102,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mListView = (ListView)inflater.inflate(R.layout.fragment_search, container, false);
+        mListView = (ListView) inflater.inflate(R.layout.fragment_search, container, false);
 
         cursorAdapter = new SearchCursorAdapter(getActivity(), null, 0);
         mListView.setAdapter(cursorAdapter);
@@ -116,17 +116,16 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
         String query;
         String[] selectionArgs;
 
-        if (args != null){
+        if (args != null) {
             query = args.getString(QUERY_KEY);
             if (query.length() > 0)
-                selectionArgs = new String[] {"%" + query + "%"};
+                selectionArgs = new String[]{"%" + query + "%"};
             else
-                selectionArgs = new String[] {"there is no such itme like thisasd"};
+                selectionArgs = new String[]{"there is no such itme like thisasd"};
+        } else {
+            selectionArgs = new String[]{"there is no such itme like thisasd"};
         }
-        else {
-            selectionArgs = new String[] {"there is no such itme like thisasd"};
-        }
-        if (Utility.isDebugging(getActivity())){
+        if (Utility.isDebugging(getActivity())) {
             Log.d(LOG_TAG, "selection: " + sNameSearch + ", arguments: " + Arrays.toString(selectionArgs));
         }
         return new CursorLoader(
@@ -145,16 +144,15 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
         cursorAdapter.swapCursor(data);
         adapterCursor = data;
         //Cancel the user search task when query is updated and running
-        if (searchTask  != null){
+        if (searchTask != null) {
             searchTask.cancel(true);
         }
-        if (Utility.isNetworkAvailable(getActivity()) && searchQuery != null && !searchQuery.equals(""))
-        {
+        if (Utility.isNetworkAvailable(getActivity()) && searchQuery != null && !searchQuery.equals("")) {
             //Search for user
             searchTask = new SearchForUserTask(getActivity());
             searchTask.execute(searchQuery);
 
-            MatrixCursor extras = new MatrixCursor(new String[] {
+            MatrixCursor extras = new MatrixCursor(new String[]{
                     PriceListContract.PriceEntry._ID,
                     PriceListContract.PriceEntry.COLUMN_DEFINDEX,
                     PriceListContract.PriceEntry.COLUMN_ITEM_NAME,
@@ -164,9 +162,9 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
                     PriceListContract.PriceEntry.COLUMN_PRICE_INDEX,
                     PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
                     PriceListContract.PriceEntry.COLUMN_ITEM_PRICE,
-                    PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_MAX, });
-            extras.addRow(new String[] { "-1", null, null, null, null, null, null, null, null, null});
-            Cursor[] cursors = { extras, adapterCursor };
+                    PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_MAX,});
+            extras.addRow(new String[]{"-1", null, null, null, null, null, null, null, null, null});
+            Cursor[] cursors = {extras, adapterCursor};
             Cursor extendedCursor = new MergeCursor(cursors);
             cursorAdapter.setLoading(true);
             cursorAdapter.swapCursor(extendedCursor);
@@ -186,7 +184,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
         getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
     }
 
-    private class SearchForUserTask extends AsyncTask<String, Void, String[]>{
+    private class SearchForUserTask extends AsyncTask<String, Void, String[]> {
 
         private final String VANITY_BASE_URL = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/";
         private final String KEY_API = "key";
@@ -290,7 +288,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
                             bmp = getBitmapFromURL(Utility.parseAvatarUrlFromJson(jsonString));
                         }
 
-                        if (bmp != null){
+                        if (bmp != null) {
                             FileOutputStream fos = mContext.openFileOutput("avatar_search.png", Context.MODE_PRIVATE);
                             bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
                             fos.close();

@@ -46,8 +46,8 @@ public class UnusualListCursorAdapter extends CursorAdapter {
         final int defindex = cursor.getInt(UnusualPriceListFragment.COL_PRICE_LIST_DEFI);
         final String name = cursor.getString(UnusualPriceListFragment.COL_PRICE_LIST_NAME);
 
-        LoadImagesTask task = (LoadImagesTask)viewHolder.icon.getTag();
-        if (task != null){
+        LoadImagesTask task = (LoadImagesTask) viewHolder.icon.getTag();
+        if (task != null) {
             task.cancel(true);
         }
         task = new LoadImagesTask(context, viewHolder.icon);
@@ -66,9 +66,9 @@ public class UnusualListCursorAdapter extends CursorAdapter {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         double rawKeyPrice = Utility.getDouble(prefs, context.getString(R.string.pref_key_raw), 1);
-        viewHolder.priceView.setText("" +
-                new DecimalFormat("#0.00").format(cursor.getDouble(UnusualPriceListFragment.COL_PRICE_LIST_AVG_PRICE) / rawKeyPrice)
-                + " keys");
+        viewHolder.priceView.setText(context.getString(R.string.currency_key_plural,
+                new DecimalFormat("#0.00").format(cursor.getDouble(
+                        UnusualPriceListFragment.COL_PRICE_LIST_AVG_PRICE) / rawKeyPrice)));
     }
 
     public static class ViewHolder {

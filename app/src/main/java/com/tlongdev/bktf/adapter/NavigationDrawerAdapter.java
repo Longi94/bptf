@@ -28,17 +28,17 @@ public class NavigationDrawerAdapter extends ArrayAdapter<String> {
             v = vi.inflate(R.layout.simple_drawer_list_item, null);
 
             holder = new ViewHolder();
-            holder.icon = (ImageView)v.findViewById(R.id.navigation_drawer_icon);
-            holder.text = (TextView)v.findViewById(R.id.text);
+            holder.icon = (ImageView) v.findViewById(R.id.navigation_drawer_icon);
+            holder.text = (TextView) v.findViewById(R.id.text);
 
             v.setTag(holder);
         } else {
-            holder = (ViewHolder)v.getTag();
+            holder = (ViewHolder) v.getTag();
         }
 
         holder.text.setText(getItem(position));
 
-        switch (position){
+        switch (position) {
             case 0:
                 holder.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_new_releases_black_24dp));
                 break;

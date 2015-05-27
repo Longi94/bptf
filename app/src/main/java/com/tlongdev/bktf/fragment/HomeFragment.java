@@ -135,25 +135,25 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         ListView mListView = (ListView) rootView.findViewById(R.id.list_view_changes);
 
         //Set up the swipe refresh layout (color and listener)
-        mSwipeRefreshLayout = (SwipeRefreshLayout)rootView.findViewById(R.id.swipe_refresh);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
         mSwipeRefreshLayout.setColorSchemeColors(0xff5787c5);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         //Offset, so the header isn't in the way
         mSwipeRefreshLayout.setProgressViewOffset(false,
-                (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, -15, getResources().getDisplayMetrics()),
-                (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 65, getResources().getDisplayMetrics()));
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, -15, getResources().getDisplayMetrics()),
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 65, getResources().getDisplayMetrics()));
 
         LinearLayout header = (LinearLayout) rootView.findViewById(R.id.list_changes_header);
 
         //Set up quick return
         mListView.setAdapter(new QuickReturnAdapter(cursorAdapter));
         AbsListViewQuickReturnAttacher quickReturnAttacher =
-                (AbsListViewQuickReturnAttacher)QuickReturnAttacher.forView(mListView);
+                (AbsListViewQuickReturnAttacher) QuickReturnAttacher.forView(mListView);
         quickReturnAttacher.addTargetView(header, QuickReturnTargetView.POSITION_TOP,
-                (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 42, getResources().getDisplayMetrics()));
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 42, getResources().getDisplayMetrics()));
 
-        progressBar = (ProgressBar)rootView.findViewById(R.id.progress_bar);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
 
         return rootView;
     }
@@ -164,7 +164,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         //Download whole database when the app is first opened.
-        if (prefs.getBoolean(getString(R.string.pref_initial_load), true)){
+        if (prefs.getBoolean(getString(R.string.pref_initial_load), true)) {
             if (Utility.isNetworkAvailable(getActivity())) {
                 FetchPriceList task = new FetchPriceList(getActivity(), false, false);
                 task.setOnPriceListFetchListener(this);
@@ -172,8 +172,8 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             } else {
                 //Quit the app if the download failed.
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage("Failed to download database. Check your internet connection and try again.").setCancelable(false).
-                        setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                builder.setMessage(getString(R.string.message_database_fail_network)).setCancelable(false).
+                        setPositiveButton(getString(R.string.action_close), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 getActivity().finish();
@@ -236,7 +236,8 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             task.setOnPriceListFetchListener(this);
             task.execute();
         } else {
-            Toast.makeText(getActivity(), "bptf: no connection", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "bptf: " + getString(R.string.error_no_network),
+                    Toast.LENGTH_SHORT).show();
             mSwipeRefreshLayout.setRefreshing(false);
         }
     }
@@ -277,24 +278,17 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         }
     }
 
-    private void showDeveloperKeyNotifications(){
+    private void showDeveloperKeyNotifications() {
         //Quit the app if the download failed.
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Due to limitations, a single API key must wait at least 5 seconds " +
-                "to make a new API request. Since the app uses a single key, everyone using this " +
-                "app will use the same API key, which can result in a failure when trying to update" +
-                " prices. You can fix this by providing your own API key. Would you like to do that now?").setCancelable(false).
-                setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        builder.setMessage(getString(R.string.message_developer_api)).setCancelable(false).
+                setPositiveButton(getString(R.string.action_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         startActivity(new Intent(getActivity(), SettingsActivity.class));
                     }
                 }).
-                setNegativeButton("Maybe later", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
+                setNegativeButton(getString(R.string.action_later), null);
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }

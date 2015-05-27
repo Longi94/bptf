@@ -162,7 +162,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             fetchTask.execute();
         } else {
             //There is no internet connection, notify the user
-            Toast.makeText(getActivity(), "bptf: no connection", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "bptf: " + getString(R.string.error_no_network),
+                    Toast.LENGTH_SHORT).show();
             mLayout.setRefreshing(false);
         }
     }
@@ -178,7 +179,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         String steamId = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(
                 getString(R.string.pref_resolved_steam_id), "");
         if (steamId != null && steamId.equals("")) {
-            Toast.makeText(getActivity(), "bptf: no steamID provided", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "bptf: " + getString(R.string.error_no_steam_id),
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -217,7 +219,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         } else {
             if (privateBackpack) {
                 //The backpack is private, do nothing
-                Toast.makeText(getActivity(), "Your backpack is private", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.message_private_backpack_own),
+                        Toast.LENGTH_SHORT).show();
             } else {
                 //Else the user clicked on the backpack button. Start the backpack activity. Pass
                 //the steamId and whether it's the user's backpack or not
@@ -255,15 +258,16 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         //Set the player reputation. Reputation: X
-        playerReputation.setText("Reputation: " +
+        playerReputation.setText(getString(R.string.user_page_reputation) + " " +
                 prefs.getInt(getString(R.string.pref_player_reputation), 0));
 
         //Set the 'user since' text
         long profileCreated = prefs.getLong(getString(R.string.pref_player_profile_created), -1L);
         if (profileCreated == -1) {
-            userSinceText.setText("Steam user since:\nunknown");
+            userSinceText.setText(getString(R.string.user_page_user_since)
+                    + getString(R.string.filler_unknown));
         } else {
-            userSinceText.setText("Steam user since:\n" +
+            userSinceText.setText(getString(R.string.user_page_user_since) +
                     Utility.formatUnixTimeStamp(profileCreated));
         }
 
@@ -273,40 +277,42 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 long lastOnline = prefs.getLong(getString(R.string.pref_player_last_online), -1L);
                 if (lastOnline == -1) {
                     //Weird
-                    lastOnlineText.setText("Last online: unknown");
+                    lastOnlineText.setText(getString(R.string.user_page_last_online) + " "
+                            + getString(R.string.filler_unknown));
                 } else {
                     //Player is offline, show how long was it since the player was last online
-                    lastOnlineText.setText("Last online: " + Utility.formatLastOnlineTime(getActivity(),
+                    lastOnlineText.setText(getString(R.string.user_page_last_online) + " "
+                            + Utility.formatLastOnlineTime(getActivity(),
                             System.currentTimeMillis() - lastOnline * 1000L));
                 }
                 lastOnlineText.setTextColor(getResources().getColor(R.color.player_offline));
                 break;
             case 1:
-                lastOnlineText.setText("Online");
+                lastOnlineText.setText(getString(R.string.user_page_status_online));
                 lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
                 break;
             case 2:
-                lastOnlineText.setText("Busy");
+                lastOnlineText.setText(getString(R.string.user_page_status_busy));
                 lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
                 break;
             case 3:
-                lastOnlineText.setText("Away");
+                lastOnlineText.setText(getString(R.string.user_page_status_away));
                 lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
                 break;
             case 4:
-                lastOnlineText.setText("Snooze");
+                lastOnlineText.setText(getString(R.string.user_page_status_snooze));
                 lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
                 break;
             case 5:
-                lastOnlineText.setText("Looking to trade");
+                lastOnlineText.setText(getString(R.string.user_page_status_trade));
                 lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
                 break;
             case 6:
-                lastOnlineText.setText("Looking to play");
+                lastOnlineText.setText(getString(R.string.user_page_status_play));
                 lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
                 break;
             case 7:
-                lastOnlineText.setText("In-Game");
+                lastOnlineText.setText(getString(R.string.user_page_status_in_game));
                 lastOnlineText.setTextColor(getResources().getColor(R.color.player_in_game));
                 break;
         }
@@ -319,12 +325,12 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         .getDrawable(R.drawable.status_background_neutral));
                 break;
             case 0:
-                steamRepStatus.setText("NORMAL");
+                steamRepStatus.setText(getString(R.string.user_page_status_normal));
                 steamRepStatus.setBackgroundDrawable(getResources()
                         .getDrawable(R.drawable.status_background_neutral));
                 break;
             case 1:
-                steamRepStatus.setText("SCAMMER");
+                steamRepStatus.setText(getString(R.string.user_page_status_scammer));
                 steamRepStatus.setBackgroundDrawable(getResources()
                         .getDrawable(R.drawable.status_background_bad));
                 break;
@@ -338,12 +344,12 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         .getDrawable(R.drawable.status_background_neutral));
                 break;
             case 0:
-                tradeStatus.setText("OK");
+                tradeStatus.setText(getString(R.string.user_page_status_ok));
                 tradeStatus.setBackgroundDrawable(getResources()
                         .getDrawable(R.drawable.status_background_good));
                 break;
             case 1:
-                tradeStatus.setText("BAN");
+                tradeStatus.setText(getString(R.string.user_page_status_ban));
                 tradeStatus.setBackgroundDrawable(getResources()
                         .getDrawable(R.drawable.status_background_bad));
                 break;
@@ -357,12 +363,12 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         .getDrawable(R.drawable.status_background_neutral));
                 break;
             case 0:
-                vacStatus.setText("OK");
+                vacStatus.setText(getString(R.string.user_page_status_ok));
                 vacStatus.setBackgroundDrawable(getResources()
                         .getDrawable(R.drawable.status_background_good));
                 break;
             case 1:
-                vacStatus.setText("BAN");
+                vacStatus.setText(getString(R.string.user_page_status_ban));
                 vacStatus.setBackgroundDrawable(getResources()
                         .getDrawable(R.drawable.status_background_bad));
                 break;
@@ -376,12 +382,12 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         .getDrawable(R.drawable.status_background_neutral));
                 break;
             case 0:
-                communityStatus.setText("OK");
+                communityStatus.setText(getString(R.string.user_page_status_ok));
                 communityStatus.setBackgroundDrawable(getResources()
                         .getDrawable(R.drawable.status_background_good));
                 break;
             case 1:
-                communityStatus.setText("BAN");
+                communityStatus.setText(getString(R.string.user_page_status_ban));
                 communityStatus.setBackgroundDrawable(getResources()
                         .getDrawable(R.drawable.status_background_bad));
                 break;
@@ -394,24 +400,24 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             //Value is unknown (probably private)
             backpackValueRefined.setText("?");
             backpackValueUsd.setText("?");
-        } else {
+        } else if (!privateBackpack) {
             //Properly format the backpack value (is int, does it have a fraction smaller than 0.01)
             if ((int) bpValue == bpValue)
-                backpackValueRefined.setText("" + (int) bpValue);
-            else if (("" + bpValue).substring(("" + bpValue).indexOf('.') + 1).length() > 2)
-                backpackValueRefined.setText("" + new DecimalFormat("#0.00").format(bpValue));
+                backpackValueRefined.setText(String.valueOf((int) bpValue));
+            else if ((String.valueOf(bpValue)).substring((String.valueOf(bpValue)).indexOf('.') + 1)
+                    .length() > 2)
+                backpackValueRefined.setText(String.valueOf(new DecimalFormat("#0.00").format(bpValue)));
             else
-                backpackValueRefined.setText("" + bpValue);
+                backpackValueRefined.setText(String.valueOf(bpValue));
 
-            double bpValueUsd = bpValue * Utility.getDouble(prefs,
-                    getString(R.string.pref_metal_raw_usd), 1);
             //Convert the value into USD and format it like above
+            double bpValueUsd = bpValue * Utility.getDouble(prefs, getString(R.string.pref_metal_raw_usd), 1);
             if ((int) bpValueUsd == bpValueUsd)
-                backpackValueUsd.setText("" + (int) bpValueUsd);
-            else if (("" + bpValueUsd).substring(("" + bpValueUsd).indexOf('.') + 1).length() > 2)
-                backpackValueUsd.setText("" + new DecimalFormat("#0.00").format(bpValueUsd));
+                backpackValueUsd.setText(String.valueOf((int) bpValueUsd));
+            else if ((String.valueOf(bpValueUsd).substring((String.valueOf(bpValueUsd).indexOf('.') + 1)).length() > 2))
+                backpackValueUsd.setText(String.valueOf(new DecimalFormat("#0.00").format(bpValueUsd)));
             else
-                backpackValueUsd.setText("" + bpValueUsd);
+                backpackValueUsd.setText(String.valueOf(bpValueUsd));
         }
 
         //Set the border of the avatar according to the player's state
@@ -433,7 +439,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         //Set the trust score and color the background according to it.
         int positiveScore = prefs.getInt(getString(R.string.pref_player_trust_positive), 0);
         int negativeScore = prefs.getInt(getString(R.string.pref_player_trust_negative), 0);
-        trustStatus.setText("" + (positiveScore - negativeScore));
+        trustStatus.setText(String.valueOf(positiveScore - negativeScore));
         if (negativeScore > positiveScore) {
             trustStatus.setBackgroundDrawable(getResources()
                     .getDrawable(R.drawable.status_background_bad));
@@ -451,7 +457,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         //Raw keys
         int rawKeys = prefs.getInt(getString(R.string.pref_user_raw_key), -1);
         if (rawKeys >= 0)
-            backpackRawKeys.setText("" + rawKeys);
+            backpackRawKeys.setText(String.valueOf(rawKeys));
         else
             backpackRawKeys.setText("?");
 
@@ -459,7 +465,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         double rawMetal = Utility.roundDouble(Utility.getDouble(prefs,
                 getString(R.string.pref_user_raw_metal), -1), 2);
         if (rawMetal >= 0)
-            backpackRawMetal.setText("" + Utility.roundDouble(rawMetal, 2));
+            backpackRawMetal.setText(String.valueOf(Utility.roundDouble(rawMetal, 2)));
         else
             backpackRawMetal.setText("?");
 
@@ -467,7 +473,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         int itemNumber = prefs.getInt(getString(R.string.pref_user_items), -1);
         int backpackSlotNumber = prefs.getInt(getString(R.string.pref_user_slots), -1);
         if (itemNumber >= 0 && backpackSlotNumber >= 0)
-            backpackSlots.setText("" + itemNumber + "/" + backpackSlotNumber);
+            backpackSlots.setText(String.valueOf(itemNumber) + "/" + backpackSlotNumber);
         else
             backpackSlots.setText("?/?");
     }

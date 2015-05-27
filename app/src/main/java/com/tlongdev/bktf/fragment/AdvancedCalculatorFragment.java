@@ -40,7 +40,7 @@ public class AdvancedCalculatorFragment extends Fragment {
     //Indexes for the columns above
     public static final int COL_PRICE_LIST_PRAW = 1;
 
-    public static final String mSelection = PriceListContract.PriceEntry.TABLE_NAME+
+    public static final String mSelection = PriceListContract.PriceEntry.TABLE_NAME +
             "." + PriceListContract.PriceEntry._ID + " = ?";
 
     private AdvancedCalculatorAdapter mAdapter;
@@ -92,10 +92,10 @@ public class AdvancedCalculatorFragment extends Fragment {
             }
         });
 
-        priceMetal = (TextView)rootView.findViewById(R.id.text_view_price_metal);
-        priceKeys = (TextView)rootView.findViewById(R.id.text_view_price_keys);
-        priceBuds = (TextView)rootView.findViewById(R.id.text_view_price_buds);
-        priceUsd = (TextView)rootView.findViewById(R.id.text_view_price_usd);
+        priceMetal = (TextView) rootView.findViewById(R.id.text_view_price_metal);
+        priceKeys = (TextView) rootView.findViewById(R.id.text_view_price_keys);
+        priceBuds = (TextView) rootView.findViewById(R.id.text_view_price_buds);
+        priceUsd = (TextView) rootView.findViewById(R.id.text_view_price_usd);
 
         return rootView;
     }
@@ -125,7 +125,7 @@ public class AdvancedCalculatorFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-        switch (itemId){
+        switch (itemId) {
             case R.id.action_show_simple:
                 PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
                         .putBoolean(getString(R.string.pref_preferred_advanced_calculator), false).apply();
@@ -162,7 +162,7 @@ public class AdvancedCalculatorFragment extends Fragment {
         }
     }
 
-    private void addItem(int id, int count){
+    private void addItem(int id, int count) {
         Cursor cursor = getActivity().getContentResolver().query(
                 PriceListContract.PriceEntry.CONTENT_URI,
                 PRICE_LIST_COLUMNS,
@@ -171,7 +171,7 @@ public class AdvancedCalculatorFragment extends Fragment {
                 null
         );
 
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             totalPrice += cursor.getDouble(COL_PRICE_LIST_PRAW) * count;
         }
         cursor.close();
@@ -201,7 +201,7 @@ public class AdvancedCalculatorFragment extends Fragment {
                 null
         );
 
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             totalPrice -= cursor.getDouble(COL_PRICE_LIST_PRAW) * count;
         }
         cursor.close();

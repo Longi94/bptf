@@ -15,7 +15,7 @@ public class UserBackpackProvider extends ContentProvider {
     public static final int BACKPACK = 100;
     public static final int BACKPACK_GUEST = 101;
 
-    private static UriMatcher buildUriMatcher(){
+    private static UriMatcher buildUriMatcher() {
         // I know what you're thinking.  Why create a UriMatcher when you can use regular
         // expressions instead?  Because you're not crazy, that's why.
 
@@ -87,14 +87,14 @@ public class UserBackpackProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
             case BACKPACK:
                 _id = db.insert(UserBackpackContract.UserBackpackEntry.TABLE_NAME, null, values);
-                if ( _id > 0 )
+                if (_id > 0)
                     returnUri = UserBackpackContract.UserBackpackEntry.CONTENT_URI;
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
             case BACKPACK_GUEST:
                 _id = db.insert(UserBackpackContract.UserBackpackEntry.TABLE_NAME_GUEST, null, values);
-                if ( _id > 0 )
+                if (_id > 0)
                     returnUri = UserBackpackContract.UserBackpackEntry.CONTENT_URI;
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);

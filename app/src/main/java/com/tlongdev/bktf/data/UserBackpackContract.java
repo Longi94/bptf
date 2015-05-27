@@ -22,7 +22,7 @@ public class UserBackpackContract {
     // At least, let's hope not.  Don't be that dev, reader.  Don't be that dev.
     public static final String PATH_BACKPACK = "backpack";
 
-    public static final class UserBackpackEntry implements BaseColumns{
+    public static final class UserBackpackEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_BACKPACK).build();
