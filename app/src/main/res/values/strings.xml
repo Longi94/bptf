@@ -213,6 +213,8 @@
     <string name="array_item_chooser_spinner_regular" translatable="true">Regular items</string>
     <string name="array_item_chooser_spinner_unusual" translatable="true">Unusuals</string>
 
+    <string name="array_effects_community_sparkle" translatable="true">Community Sparkle</string>
+    <string name="array_effects_holy_glow" translatable="true">Holy Glow</string>
     <string name="array_effects_aces_high" translatable="true">Aces High</string>
     <string name="array_effects_amaranthine" translatable="true">Amaranthine</string>
     <string name="array_effects_anti_freeze" translatable="true">Anti-Freeze</string>
@@ -226,7 +228,7 @@
     <string name="array_effects_circling_heart" translatable="true">Circling Heart</string>
     <string name="array_effects_circling_peace_sign" translatable="true">Circling Peace Sign</string>
     <string name="array_effects_circling_tf_logo" translatable="true">Circling TF Logo</string>
-    <string name="array_effects_cloiud_9" translatable="true">Cloud 9</string>
+    <string name="array_effects_cloud_9" translatable="true">Cloud 9</string>
     <string name="array_effects_cloudy_moon" translatable="true">Cloudy Moon</string>
     <string name="array_effects_darkblaze" translatable="true">Darkblaze</string>
     <string name="array_effects_dead_presidents" translatable="true">Dead Presidents</string>
@@ -290,6 +292,56 @@
     <string name="array_effects_time_warp" translatable="true">Time Warp</string>
     <string name="array_effects_vivid_plasma" translatable="true">Vivid Plasma</string>
     <string name="array_effects_72" translatable="true">\'72</string>
+
+
+    <string name="currency_bud" translatable="true">bud</string>
+    <string name="currency_bud_plural" translatable="true">buds</string>
+    <string name="currency_metal" translatable="true">ref</string>
+    <string name="currency_metal_plural" translatable="true">ref</string>
+    <string name="currency_key" translatable="true">key</string>
+    <string name="currency_key_plural" translatable="true">keys</string>
+
+    <string name="time_measure_hour"  translatable="true">hour</string>
+    <string name="time_measure_hour_plural" translatable="true">hours</string>
+    <string name="time_measure_just_now" translatable="true">Just now</string>
+    <string name="time_passed_day" translatable="true">day ago</string>
+    <string name="time_passed_day_plural" translatable="true">days ago</string>
+    <string name="time_passed_hour" translatable="true">hour ago</string>
+    <string name="time_passed_hour_plural" translatable="true">hours ago</string>
+    <string name="time_passed_minute" translatable="true">minute ago</string>
+    <string name="time_passed_minute_plural" translatable="true">minutes ago</string>
+
+    <string name="paint_green" translatable="true">Indubitably Green</string>
+    <string name="paint_greed" translatable="true">Zepheniah\'s Greed</string>
+    <string name="paint_violet" translatable="true">Noble Hatter\'s Violet</string>
+    <string name="paint_216" translatable="true">Color No. 216–190–216</string>
+    <string name="paint_purple" translatable="true">Deep Commitment to Purple</string>
+    <string name="paint_orange" translatable="true">Mann Co. Orange</string>
+    <string name="paint_braun" translatable="true">Muskelmannbraun</string>
+    <string name="paint_drab" translatable="true">Peculiarly Drab Tincture</string>
+    <string name="paint_brown" translatable="true">Radigan Conagher Brown</string>
+    <string name="paint_rustic" translatable="true">Ye Olde Rustic Color</string>
+    <string name="paint_australium" translatable="true">Australium Gold</string>
+    <string name="paint_grey" translatable="true">Aged Moustache Grey</string>
+    <string name="paint_white" translatable="true">An Extraordinary Abundance of Tinge</string>
+    <string name="paint_black" translatable="true">A Distinctive Lack of Hue</string>
+    <string name="paint_pink" translatable="true">Pink as Hell</string>
+    <string name="paint_slate" translatable="true">Color Similar to Slate</string>
+    <string name="paint_olive" translatable="true">Drably Olive</string>
+    <string name="paint_lime" translatable="true">The Bitter Taste of Defeat and Lime</string>
+    <string name="paint_business" translatable="true">The Color of a Gentlemann\'s Business Pants</string>
+    <string name="paint_salmon" translatable="true">Salmon Injustice</string>
+    <string name="paint_team" translatable="true">Team Spirit</string>
+    <string name="paint_overalls" translatable="true">Operator\'s Overalls</string>
+    <string name="paint_lab" translatable="true">Waterlogged Lab Coat</string>
+    <string name="paint_balaclava" translatable="true">Balaclava\'s Are Forever</string>
+    <string name="paint_dabonair" translatable="true">Air of Debonair</string>
+    <string name="paint_teamwork" translatable="true">The Value of Teamwork</string>
+    <string name="paint_cream" translatable="true">Cream Spirit</string>
+    <string name="paint_eight" translatable="true">After Eight</string>
+    <string name="paint_mint" translatable="true">A Mann\'s Mint</string>
+
+
     <string name="pref_dev_key_notfication">pref_dev_key_notfication</string>
     <string name="pref_title_translate">Would you like to help translate the app?</string>
     <string name="pref_description_api_key">Providing your own API key fixes the issue, where sometimes you wouldn\'t be able to refresh. To register your own API key go to:</string>
