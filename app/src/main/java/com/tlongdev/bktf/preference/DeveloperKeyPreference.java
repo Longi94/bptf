@@ -1,6 +1,8 @@
 package com.tlongdev.bktf.preference;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.preference.DialogPreference;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -53,6 +55,20 @@ public class DeveloperKeyPreference extends DialogPreference {
         //The input field
         keyInput = (EditText) view.findViewById(R.id.edit_text_dev_key);
         keyInput.setText(getSharedPreferences().getString(mContext.getString(R.string.pref_developer_key), ""));
+
+        view.findViewById(R.id.button_register).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Create an URI for the intent.
+                Uri webPage = Uri.parse("http://backpack.tf/api/register");
+
+                //Open the link using the device default web browser.
+                Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
+                if (intent.resolveActivity(mContext.getPackageManager()) != null) {
+                    mContext.startActivity(intent);
+                }
+            }
+        });
     }
 
     /**
