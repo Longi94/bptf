@@ -97,6 +97,11 @@ public class AdvancedCalculatorFragment extends Fragment {
         priceBuds = (TextView) rootView.findViewById(R.id.text_view_price_buds);
         priceUsd = (TextView) rootView.findViewById(R.id.text_view_price_usd);
 
+        priceMetal.setText(getString(R.string.currency_metal, "0"));
+        priceKeys.setText(getString(R.string.currency_key_plural, "0"));
+        priceBuds.setText(getString(R.string.currency_bud_plural, "0"));
+        priceUsd.setText("$0");
+
         return rootView;
     }
 
