@@ -116,10 +116,10 @@ public class Utility {
                 formattedName += context.getString(R.string.quality_normal) + " ";
                 break;
             case GENUINE:
-                formattedName += context.getString(R.string.quality_genuine) +  " ";
+                formattedName += context.getString(R.string.quality_genuine) + " ";
                 break;
             case VINTAGE:
-                formattedName += context.getString(R.string.quality_vintage) +  " ";
+                formattedName += context.getString(R.string.quality_vintage) + " ";
                 break;
             case UNIQUE:
                 if (index > 0) //A unique item with a number
@@ -130,22 +130,22 @@ public class Utility {
                 formattedName += getUnusualEffectName(context, index) + " ";
                 break;
             case COMMUNITY:
-                formattedName += context.getString(R.string.quality_community) +  " ";
+                formattedName += context.getString(R.string.quality_community) + " ";
                 break;
             case VALVE:
-                formattedName += context.getString(R.string.quality_valve) +  " ";
+                formattedName += context.getString(R.string.quality_valve) + " ";
                 break;
             case SELF_MADE:
-                formattedName += context.getString(R.string.quality_self_made) +  " ";
+                formattedName += context.getString(R.string.quality_self_made) + " ";
                 break;
             case STRANGE:
-                formattedName += context.getString(R.string.quality_strange) +  " ";
+                formattedName += context.getString(R.string.quality_strange) + " ";
                 break;
             case HAUNTED:
-                formattedName += context.getString(R.string.quality_haunted) +  " ";
+                formattedName += context.getString(R.string.quality_haunted) + " ";
                 break;
             case COLLECTORS:
-                formattedName += context.getString(R.string.quality_collectors) +  " ";
+                formattedName += context.getString(R.string.quality_collectors) + " ";
                 break;
         }
 
@@ -169,6 +169,8 @@ public class Utility {
                                               int quality, int index, boolean isProper) {
         if (Quality.values()[quality] == Quality.UNUSUAL) {
             return context.getString(R.string.quality_unusual) + " " + name;
+        } else if (isProper && Quality.values()[quality] == Quality.UNIQUE) {
+            return formatItemName(context, defindex, "The " + name, 1, 1, quality, index);
         } else {
             return formatItemName(context, defindex, name, 1, 1, quality, index);
         }
@@ -476,16 +478,16 @@ public class Utility {
         switch (targetCurrency) {
             case CURRENCY_BUD:
                 if (low == 1.0 && high == 0.0)
-                    return product + " " + context.getString(R.string.currency_bud);
+                    return context.getString(R.string.currency_bud, product);
                 else
-                    return product + " " + context.getString(R.string.currency_bud_plural);
+                    return context.getString(R.string.currency_bud_plural, product);
             case CURRENCY_METAL:
-                return product + " " + context.getString(R.string.currency_metal);
+                return context.getString(R.string.currency_metal, product);
             case CURRENCY_KEY:
                 if (low == 1.0 && high == 0.0)
-                    return product + " " + context.getString(R.string.currency_key);
+                    return context.getString(R.string.currency_key, product);
                 else
-                    return product + " " + context.getString(R.string.currency_key_plural);
+                    return context.getString(R.string.currency_key_plural, product);
             case CURRENCY_USD:
                 return "$" + product;
             default:
@@ -603,33 +605,29 @@ public class Utility {
         //If the time is longer than 2 days tho format is X days ago.
         if (time >= 172800000L) {
             long days = time / 86400000;
-            return "" + days + " " + context.getString(R.string.time_passed_day);
+            return context.getString(R.string.time_passed_day_plural, days);
         }
         //If the time is longer than an hour, the format is X hour(s) Y minute(s) ago.
         if (time >= 3600000L) {
             long hours = time / 3600000;
             if (time % 3600000L == 0) {
                 if (hours == 1)
-                    return "" + hours + " " + context.getString(R.string.time_passed_hour);
+                    return context.getString(R.string.time_passed_hour, hours);
                 else {
-                    return "" + hours + " " + context.getString(R.string.time_passed_hour_plural);
+                    return context.getString(R.string.time_passed_hour_plural, hours);
                 }
             } else {
                 long minutes = (time % 3600000L) / 60000;
                 if (hours == 1)
                     if (minutes == 1)
-                        return "" + hours + " " + context.getString(R.string.time_measure_hour) + " " + minutes + " "
-                                + context.getString(R.string.time_passed_minute);
+                        return context.getString(R.string.time_measure_hour_minute, hours, minutes);
                     else
-                        return "" + hours + " " + context.getString(R.string.time_measure_hour) + " " + minutes + " "
-                                + context.getString(R.string.time_passed_minute_plural);
+                        return context.getString(R.string.time_measure_hour_minute_p, hours, minutes);
                 else {
                     if (minutes == 1)
-                        return "" + hours + " " + context.getString(R.string.time_measure_hour_plural) + " " + minutes + " "
-                                + context.getString(R.string.time_passed_minute);
+                        return context.getString(R.string.time_measure_hour_p_minute, hours, minutes);
                     else
-                        return "" + hours + " " + context.getString(R.string.time_measure_hour_plural) + " " + minutes + " "
-                                + context.getString(R.string.time_passed_minute_plural);
+                        return context.getString(R.string.time_measure_hour_p_minute_p, hours, minutes);
                 }
             }
         }
@@ -639,9 +637,9 @@ public class Utility {
             if (minutes == 0) {
                 return context.getString(R.string.time_measure_just_now);
             } else if (minutes == 1) {
-                return "1 " + context.getString(R.string.time_passed_minute);
+                return context.getString(R.string.time_passed_minute, 1);
             } else {
-                return "" + minutes + " " + context.getString(R.string.time_passed_minute_plural);
+                return context.getString(R.string.time_passed_minute_plural, minutes);
             }
         }
     }

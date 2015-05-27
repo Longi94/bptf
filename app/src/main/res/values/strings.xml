@@ -177,7 +177,7 @@
     <string name="preference_dialog_vanity_name" translatable="true">Vanity name:</string>
 
     <!--Strings for the arrays-->
-    
+
     <string name="array_sync_interval_5_minutes" translatable="true">Every 5 minutes</string>
     <string name="array_sync_interval_15_minutes" translatable="true">Every 15 minutes</string>
     <string name="array_sync_interval_30_minutes" translatable="true">Every 30 minutes</string>
@@ -294,22 +294,24 @@
     <string name="array_effects_72" translatable="true">\'72</string>
 
 
-    <string name="currency_bud" translatable="true">bud</string>
-    <string name="currency_bud_plural" translatable="true">buds</string>
-    <string name="currency_metal" translatable="true">ref</string>
-    <string name="currency_metal_plural" translatable="true">ref</string>
-    <string name="currency_key" translatable="true">key</string>
-    <string name="currency_key_plural" translatable="true">keys</string>
+    <string name="currency_bud" translatable="true">%s bud</string>
+    <string name="currency_bud_plural" translatable="true">%s buds</string>
+    <string name="currency_metal" translatable="true">%s ref</string>
+    <string name="currency_metal_plural" translatable="true">%s ref</string>
+    <string name="currency_key" translatable="true">%s key</string>
+    <string name="currency_key_plural" translatable="true">%s keys</string>
 
-    <string name="time_measure_hour"  translatable="true">hour</string>
-    <string name="time_measure_hour_plural" translatable="true">hours</string>
+    <string name="time_measure_hour_minute" translatable="true">%d hour %d minute ago</string>
+    <string name="time_measure_hour_p_minute" translatable="true">%d hours %d minute ago</string>
+    <string name="time_measure_hour_minute_p" translatable="true">%d hour %d minutes ago</string>
+    <string name="time_measure_hour_p_minute_p" translatable="true">%d hours %d minutes ago</string>
     <string name="time_measure_just_now" translatable="true">Just now</string>
-    <string name="time_passed_day" translatable="true">day ago</string>
-    <string name="time_passed_day_plural" translatable="true">days ago</string>
-    <string name="time_passed_hour" translatable="true">hour ago</string>
-    <string name="time_passed_hour_plural" translatable="true">hours ago</string>
-    <string name="time_passed_minute" translatable="true">minute ago</string>
-    <string name="time_passed_minute_plural" translatable="true">minutes ago</string>
+    <string name="time_passed_day" translatable="true">%d day ago</string>
+    <string name="time_passed_day_plural" translatable="true">%d days ago</string>
+    <string name="time_passed_hour" translatable="true">%d hour ago</string>
+    <string name="time_passed_hour_plural" translatable="true">%d hours ago</string>
+    <string name="time_passed_minute" translatable="true">%d minute ago</string>
+    <string name="time_passed_minute_plural" translatable="true">%d minutes ago</string>
 
     <string name="paint_green" translatable="true">Indubitably Green</string>
     <string name="paint_greed" translatable="true">Zepheniah\'s Greed</string>
