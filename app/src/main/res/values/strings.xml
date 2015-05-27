@@ -292,5 +292,19 @@
     <string name="array_effects_72" translatable="true">\'72</string>
     <string name="pref_dev_key_notfication">pref_dev_key_notfication</string>
     <string name="pref_title_translate">Would you like to help translate the app?</string>
+    <string name="pref_description_api_key">Providing your own API key fixes the issue, where sometimes you wouldn\'t be able to refresh. To register your own API key go to:</string>
+    <string name="pref_button_api_key">backpack.tf/api/register</string>
+    <string name="quality_normal">Normal</string>
+    <string name="quality_genuine">Genuine</string>
+    <string name="quality_vintage">Vintage</string>
+    <string name="quality_community">Community</string>
+    <string name="quality_valve">Valve</string>
+    <string name="quality_self_made">Self-made</string>
+    <string name="quality_strange">Strange</string>
+    <string name="quality_haunted">Haunted</string>
+    <string name="quality_collectors">Collector\'s</string>
+    <string name="quality_non_tradable">Non-Tradable</string>
+    <string name="quality_non_craftable">Non-Craftable</string>
+    <string name="quality_unusual">Unusual</string>
 
 </resources>

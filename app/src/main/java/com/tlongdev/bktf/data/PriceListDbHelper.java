@@ -20,22 +20,22 @@ public class PriceListDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         final String SQL_CREATE_PRICE_LIST_TABLE =
                 "CREATE TABLE " + PriceEntry.TABLE_NAME + " (" +
-                PriceEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        PriceEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
-                PriceEntry.COLUMN_DEFINDEX + " INTEGER NOT NULL, " +
-                PriceEntry.COLUMN_ITEM_NAME + " TEXT NOT NULL, " +
-                PriceEntry.COLUMN_ITEM_QUALITY + " INTEGER NOT NULL, " +
-                PriceEntry.COLUMN_ITEM_TRADABLE + " INTEGER NOT NULL, " +
-                PriceEntry.COLUMN_ITEM_CRAFTABLE + " INTEGER NOT NULL, " +
-                PriceEntry.COLUMN_PRICE_INDEX + " INTEGER NOT NULL, " +
-                PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " TEXT NOT NULL, " +
-                PriceEntry.COLUMN_ITEM_PRICE + " REAL NOT NULL, " +
-                PriceEntry.COLUMN_ITEM_PRICE_MAX + " REAL, " +
-                PriceEntry.COLUMN_ITEM_PRICE_RAW + " REAL NOT NULL, " +
-                PriceEntry.COLUMN_LAST_UPDATE + " INTEGER NOT NULL, " +
-                PriceEntry.COLUMN_DIFFERENCE + " REAL NOT NULL, " +
+                        PriceEntry.COLUMN_DEFINDEX + " INTEGER NOT NULL, " +
+                        PriceEntry.COLUMN_ITEM_NAME + " TEXT NOT NULL, " +
+                        PriceEntry.COLUMN_ITEM_QUALITY + " INTEGER NOT NULL, " +
+                        PriceEntry.COLUMN_ITEM_TRADABLE + " INTEGER NOT NULL, " +
+                        PriceEntry.COLUMN_ITEM_CRAFTABLE + " INTEGER NOT NULL, " +
+                        PriceEntry.COLUMN_PRICE_INDEX + " INTEGER NOT NULL, " +
+                        PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " TEXT NOT NULL, " +
+                        PriceEntry.COLUMN_ITEM_PRICE + " REAL NOT NULL, " +
+                        PriceEntry.COLUMN_ITEM_PRICE_MAX + " REAL, " +
+                        PriceEntry.COLUMN_ITEM_PRICE_RAW + " REAL NOT NULL, " +
+                        PriceEntry.COLUMN_LAST_UPDATE + " INTEGER NOT NULL, " +
+                        PriceEntry.COLUMN_DIFFERENCE + " REAL NOT NULL, " +
 
-                " UNIQUE (" + PriceEntry.COLUMN_ITEM_NAME + ", " +
+                        " UNIQUE (" + PriceEntry.COLUMN_ITEM_NAME + ", " +
                         PriceEntry.COLUMN_ITEM_QUALITY + ", " +
                         PriceEntry.COLUMN_ITEM_TRADABLE + ", " +
                         PriceEntry.COLUMN_ITEM_CRAFTABLE + ", " +
@@ -49,8 +49,8 @@ public class PriceListDbHelper extends SQLiteOpenHelper {
         if (oldVersion <= 3 && newVersion > 3) {
             //TODO update price index column type from INTEGER to TEXT
         } else {
-            db.execSQL("DROP TABLE IF EXISTS " + PriceEntry.TABLE_NAME);
         }
+        db.execSQL("DROP TABLE IF EXISTS " + PriceEntry.TABLE_NAME);
         onCreate(db);
     }
 }
