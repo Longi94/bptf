@@ -102,7 +102,7 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> implements
                 steamId = Utility.getSteamId(mContext);
                 if (steamId == null) {
                     //There is no steam id saved
-                    errorMessage = "no steamID provided";
+                    errorMessage = mContext.getString(R.string.error_no_steam_id);
                     publishProgress();
                     return null;
                 }
@@ -251,14 +251,14 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> implements
 
         } catch (IOException e) {
             //There was a network error
-            errorMessage = "network error";
+            errorMessage = mContext.getString(R.string.error_network);
             publishProgress();
             if (Utility.isDebugging(mContext))
                 e.printStackTrace();
             return null;
         } catch (JSONException e) {
             //The JSON string was incorrectly formatted
-            errorMessage = "error while parsing data";
+            errorMessage = mContext.getString(R.string.error_data_parse);
             publishProgress();
             if (Utility.isDebugging(mContext))
                 e.printStackTrace();

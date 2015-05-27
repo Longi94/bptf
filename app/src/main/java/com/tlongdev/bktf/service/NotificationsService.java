@@ -135,8 +135,8 @@ public class NotificationsService extends Service {
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(mContext)
                                 .setSmallIcon(R.drawable.ic_notification)
-                                .setContentTitle("" + aInt + " unread notificaions on bp.tf")
-                                .setContentText("Tap to open in browser.")
+                                .setContentTitle(getString(R.string.notification_unread_title, aInt))
+                                .setContentText(getString(R.string.notification_unread_description))
                                 .setContentIntent(pendingIntent)
                                 .setAutoCancel(true)
                                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));

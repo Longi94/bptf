@@ -60,6 +60,7 @@
     <string name="action_add" translatable="true">Add</string>
     <string name="action_browse_effect" translatable="true">Browse by effect</string>
     <string name="action_cancel" translatable="true">Cancel</string>
+    <string name="action_close" translatable="true">Close</string>
     <string name="action_clear" translatable="true">Clear items</string>
     <string name="action_refresh" translatable="true">Refresh</string>
     <string name="action_settings" translatable="true">Settings</string>
@@ -373,26 +374,35 @@
 
     <string name="message_private_backpack" translatable="true">%s\'s backpack is private</string>
     <string name="message_send_email" translatable="true">Send email…</string>
+    <string name="message_database_create" translatable="true">Creating database…</string>
+    <string name="message_database_fail_network" translatable="true">Failed to download database. Check your internet connection and try again.</string>
+    <string name="message_database_fail_overload" translatable="true">Failed to download database. Negative response from API. Try again shortly.</string>
+    <string name="message_database_full_update_pending" translatable="true">Currency price updated. The whole database will be updated on the next refresh.</string>
 
-
+    <string name="error_no_steam_id" translatable="true">no steamID provided</string>
     <string name="error_network" translatable="true">network error</string>
     <string name="error_data_parse" translatable="true">error while parsing data</string>
 
-    <string name="pref_dev_key_notfication">pref_dev_key_notfication</string>
-    <string name="pref_title_translate">Would you like to help translate the app?</string>
-    <string name="pref_description_api_key">Providing your own API key fixes the issue, where sometimes you wouldn\'t be able to refresh. To register your own API key go to:</string>
-    <string name="pref_button_api_key">backpack.tf/api/register</string>
-    <string name="quality_normal">Normal</string>
-    <string name="quality_genuine">Genuine</string>
-    <string name="quality_vintage">Vintage</string>
-    <string name="quality_community">Community</string>
-    <string name="quality_valve">Valve</string>
-    <string name="quality_self_made">Self-made</string>
-    <string name="quality_strange">Strange</string>
-    <string name="quality_haunted">Haunted</string>
-    <string name="quality_collectors">Collector\'s</string>
-    <string name="quality_non_tradable">Non-Tradable</string>
-    <string name="quality_non_craftable">Non-Craftable</string>
-    <string name="quality_unusual">Unusual</string>
+    <string name="notification_unread_title" translatable="true">%d unread notifications on bp.tf</string>
+    <string name="notification_unread_description" translatable="true">Tap to open in browser.</string>
+
+    <string name="pref_dev_key_notfication" translatable="false">pref_dev_key_notfication</string>
+    <string name="pref_title_translate" translatable="true">Would you like to help translate the app?</string>
+    <string name="pref_description_api_key" translatable="true">Providing your own API key fixes the issue, where sometimes you wouldn\'t be able to refresh. To register your own API key go to:</string>
+    <string name="pref_button_api_key" translatable="false">backpack.tf/api/register</string>
+    <string name="pref_description_api_key_default" translatable="false">Using the default key</string>
+    <string name="pref_description_api_key_custom" translatable="false">Using a custom key</string>
+    <string name="quality_normal" translatable="true">Normal</string>
+    <string name="quality_genuine" translatable="true">Genuine</string>
+    <string name="quality_vintage" translatable="true">Vintage</string>
+    <string name="quality_community" translatable="true">Community</string>
+    <string name="quality_valve" translatable="true">Valve</string>
+    <string name="quality_self_made" translatable="true">Self-made</string>
+    <string name="quality_strange" translatable="true">Strange</string>
+    <string name="quality_haunted" translatable="true">Haunted</string>
+    <string name="quality_collectors" translatable="true">Collector\'s</string>
+    <string name="quality_non_tradable" translatable="true">Non-Tradable</string>
+    <string name="quality_non_craftable" translatable="true">Non-Craftable</string>
+    <string name="quality_unusual" translatable="true">Unusual</string>
 
 </resources>

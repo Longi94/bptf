@@ -199,7 +199,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Integer> {
 
         } catch (IOException e) {
             //There was a network error
-            errorMessage = "network error";
+            errorMessage = mContext.getString(R.string.error_network);
             publishProgress(-1);
             if (Utility.isDebugging(mContext))
                 e.printStackTrace();
@@ -274,7 +274,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Integer> {
                             ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT);
                     loadingDialog.setIndeterminate(false);
                     loadingDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    loadingDialog.setMessage("Creating database...");
+                    loadingDialog.setMessage(mContext.getString(R.string.message_database_create));
                     loadingDialog.setMax(values[1]);
                     loadingDialog.show();
                     break;
@@ -286,9 +286,9 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Integer> {
                 //Show a dialog that the download failed.
                 case -1:
                     builder = new AlertDialog.Builder(mContext);
-                    builder.setMessage("Failed to download database. " +
-                            "Check your internet connection and try again.").setCancelable(false).
-                            setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                    builder.setMessage(mContext.getString(R.string.message_database_fail_network))
+                            .setCancelable(false)
+                            .setPositiveButton(mContext.getString(R.string.action_close), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     //Close app
@@ -302,9 +302,9 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Integer> {
                 //Api returned 0, unsuccessful
                 case -2:
                     builder = new AlertDialog.Builder(mContext);
-                    builder.setMessage("Failed to download database. " +
-                            "Negative response from API. Try again shortly.").setCancelable(false).
-                            setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                    builder.setMessage(mContext.getString(R.string.message_database_fail_network))
+                            .setCancelable(false)
+                            .setPositiveButton(mContext.getString(R.string.action_close), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     //Close app
@@ -339,7 +339,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Integer> {
         }
 
         if (result != null && result == 1) {
-            Toast.makeText(mContext, "Currency price updated. The whole database will be updated on the next refresh.",
+            Toast.makeText(mContext, mContext.getString(R.string.message_database_full_update_pending),
                     Toast.LENGTH_LONG).show();
         }
     }
