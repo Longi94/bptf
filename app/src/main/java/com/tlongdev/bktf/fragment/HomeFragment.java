@@ -195,26 +195,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             }
 
             if (prefs.getBoolean(getString(R.string.pref_dev_key_notfication), true)) {
-                //Quit the app if the download failed.
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage("Due to limitations, a single API key must wait at least 5 seconds " +
-                        "to make a new API request. Since the app uses a single key, everyone using this " +
-                        "app will use the same API key, which can result in a failure when trying to update" +
-                        " prices. You can fix this by providing your own API key. Would you like to do that now?").setCancelable(false).
-                        setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                            }
-                        }).
-                        setNegativeButton("Maybe later", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-
+                showDeveloperKeyNotifications();
                 prefs.edit().putBoolean(getString(R.string.pref_dev_key_notfication), false).apply();
             }
         }
@@ -290,28 +271,31 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             }
 
             if (prefs.getBoolean(getString(R.string.pref_dev_key_notfication), true)) {
-                //Quit the app if the download failed.
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage("Due to limitations, a single API key must wait at least 5 seconds " +
-                        "to make a new API request. Since the app uses a single key, everyone using this " +
-                        "app will use the same API key, which can result in a failure when trying to update" +
-                        " prices. You can fix this by providing your own API key. Would you like to do that now?").setCancelable(false).
-                        setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                            }
-                        }).
-                        setNegativeButton("Maybe later", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-
+                showDeveloperKeyNotifications();
                 prefs.edit().putBoolean(getString(R.string.pref_dev_key_notfication), false).apply();
             }
         }
+    }
+
+    private void showDeveloperKeyNotifications(){
+        //Quit the app if the download failed.
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Due to limitations, a single API key must wait at least 5 seconds " +
+                "to make a new API request. Since the app uses a single key, everyone using this " +
+                "app will use the same API key, which can result in a failure when trying to update" +
+                " prices. You can fix this by providing your own API key. Would you like to do that now?").setCancelable(false).
+                setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(getActivity(), SettingsActivity.class));
+                    }
+                }).
+                setNegativeButton("Maybe later", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

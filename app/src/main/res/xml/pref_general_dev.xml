@@ -86,6 +86,10 @@
             android:key="@string/pref_title_rate"
             android:title="@string/pref_title_rate" />
 
+        <Preference
+            android:key="@string/pref_title_translate"
+            android:title="@string/pref_title_translate" />
+
     </PreferenceCategory>
 
     <PreferenceCategory
