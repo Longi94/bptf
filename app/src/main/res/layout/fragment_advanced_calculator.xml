@@ -30,7 +30,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="29.5dp"
                     android:gravity="center"
-                    android:text="@string/calculator_placeholder_metal"
                     android:textColor="@android:color/white" />
 
                 <View
@@ -45,7 +44,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="29.5dp"
                     android:gravity="center"
-                    android:text="@string/calculator_placeholder_buds"
                     android:textColor="@android:color/white" />
 
             </LinearLayout>
@@ -67,7 +65,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="29.5dp"
                     android:gravity="center"
-                    android:text="@string/calculator_placeholder_keys"
                     android:textColor="@android:color/white" />
 
                 <View
@@ -82,7 +79,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="29.5dp"
                     android:gravity="center"
-                    android:text="@string/calculator_placeholder_usd"
                     android:textColor="@android:color/white" />
 
             </LinearLayout>
