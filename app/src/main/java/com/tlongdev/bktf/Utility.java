@@ -1517,6 +1517,10 @@ public class Utility {
             case 8213:
             case 8214:
             case 8215: //soldier medal
+            case 8775:
+            case 8776:
+            case 8777:
+            case 8778:
                 return 8212;
             case 8217:
             case 8218:
@@ -1740,10 +1744,22 @@ public class Utility {
             case 8732: //rust eagle medal star
                 return 8490;
             case 8534: //tf2 medal gold
+            case 8737:
+            case 8741:
+            case 8746:
+            case 8751:
                 return 8502;
             case 8535: //tf2 medal silver
+            case 8738:
+            case 8742:
+            case 8747:
+            case 8752:
                 return 8503;
             case 8536: //tf2 medal bronze
+            case 8739:
+            case 8743:
+            case 8748:
+            case 8753:
                 return 8504;
             case 8506:
             case 8507:
@@ -1756,6 +1772,9 @@ public class Utility {
             case 8540:
             case 8541:
             case 8542: //tf2 medal star
+            case 8744:
+            case 8749:
+            case 8754:
                 return 8505;
             case 8512:
             case 8513:
@@ -1770,12 +1789,28 @@ public class Utility {
             case 8547:
             case 8548:
             case 8549: //tf2 medal participant
+            case 8740:
+            case 8745:
+            case 8750:
+            case 8755:
                 return 8511;
             case 8550: //tf2 medal gold_
+            case 8756:
+            case 8760:
+            case 8765:
+            case 8770:
                 return 8518;
             case 8551: //tf2 medal silver_
+            case 8757:
+            case 8761:
+            case 8766:
+            case 8771:
                 return 8519;
             case 8552: //tf2 medal bronze_
+            case 8758:
+            case 8762:
+            case 8767:
+            case 8772:
                 return 8520;
             case 8522:
             case 8523:
@@ -1788,6 +1823,9 @@ public class Utility {
             case 8556:
             case 8557:
             case 8558: //tf2 medal star_
+            case 8763:
+            case 8768:
+            case 8773:
                 return 8521;
             case 8528:
             case 8529:
@@ -1802,6 +1840,10 @@ public class Utility {
             case 8563:
             case 8564:
             case 8565: //tf2 medal participant_
+            case 8759:
+            case 8764:
+            case 8769:
+            case 8774:
                 return 8527;
             case 8568:
             case 8570:
