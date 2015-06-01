@@ -175,7 +175,7 @@ public class SettingsActivity extends PreferenceActivity implements
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 startActivity(new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("" /*TODO*/)));
+                        Uri.parse(getString(R.string.link_one_sky))));
                 return true;
             }
         });
@@ -186,7 +186,7 @@ public class SettingsActivity extends PreferenceActivity implements
                     public boolean onPreferenceClick(Preference preference) {
                         //Open the GitHub changelog page in the browser
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
-                                "https://github.com/Longi94/bptf/wiki/Changelog")));
+                                getString(R.string.link_github_help))));
                         return true;
                     }
                 });
