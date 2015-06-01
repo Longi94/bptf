@@ -8,7 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -33,7 +33,7 @@ import java.text.DecimalFormat;
 /**
  * Profile page activity.
  */
-public class UserInfoActivity extends ActionBarActivity implements View.OnClickListener,
+public class UserInfoActivity extends AppCompatActivity implements View.OnClickListener,
         FetchUserBackpack.OnFetchUserBackpackListener {
 
     private static final String LOG_TAG = UserInfoActivity.class.getSimpleName();

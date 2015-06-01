@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -178,12 +178,12 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
                 showEffect = false;
                 effectMenuItem.setIcon(R.drawable.ic_star_outline_white_24dp);
                 mGridView.setAdapter(cursorAdapter);
-                ((ActionBarActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_unusuals));
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_unusuals));
             } else {
                 showEffect = true;
                 effectMenuItem.setIcon(R.drawable.ic_star_white_24dp);
                 mGridView.setAdapter(effectCursorAdapter);
-                ((ActionBarActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_effects));
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_effects));
             }
         }
         return super.onOptionsItemSelected(item);
