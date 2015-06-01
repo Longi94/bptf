@@ -13,6 +13,7 @@ import android.view.MenuItem;
 
 import com.tlongdev.bktf.adapter.BackpackSectionHeaderAdapter;
 import com.tlongdev.bktf.data.UserBackpackContract;
+import com.tlongdev.bktf.data.UserBackpackContract.UserBackpackEntry;
 
 /**
  * Activity for viewing user backpacks.
@@ -42,30 +43,30 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
 
     //Query columns for local user
     private static final String[] QUERY_COLUMNS = {
-            UserBackpackContract.UserBackpackEntry.TABLE_NAME + "." +
-                    UserBackpackContract.UserBackpackEntry._ID,
-            UserBackpackContract.UserBackpackEntry.COLUMN_DEFINDEX,
-            UserBackpackContract.UserBackpackEntry.COLUMN_QUALITY,
-            UserBackpackContract.UserBackpackEntry.COLUMN_CRAFT_NUMBER,
-            UserBackpackContract.UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE,
-            UserBackpackContract.UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT,
-            UserBackpackContract.UserBackpackEntry.COLUMN_ITEM_INDEX,
-            UserBackpackContract.UserBackpackEntry.COLUMN_PAINT,
-            UserBackpackContract.UserBackpackEntry.COLUMN_AUSTRALIUM
+            UserBackpackEntry.TABLE_NAME + "." +
+                    UserBackpackEntry._ID,
+            UserBackpackEntry.COLUMN_DEFINDEX,
+            UserBackpackEntry.COLUMN_QUALITY,
+            UserBackpackEntry.COLUMN_CRAFT_NUMBER,
+            UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE,
+            UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT,
+            UserBackpackEntry.COLUMN_ITEM_INDEX,
+            UserBackpackEntry.COLUMN_PAINT,
+            UserBackpackEntry.COLUMN_AUSTRALIUM
     };
 
     //Query columns for s guest user
     private static final String[] QUERY_COLUMNS_GUEST = {
-            UserBackpackContract.UserBackpackEntry.TABLE_NAME_GUEST + "." +
-                    UserBackpackContract.UserBackpackEntry._ID,
-            UserBackpackContract.UserBackpackEntry.COLUMN_DEFINDEX,
-            UserBackpackContract.UserBackpackEntry.COLUMN_QUALITY,
-            UserBackpackContract.UserBackpackEntry.COLUMN_CRAFT_NUMBER,
-            UserBackpackContract.UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE,
-            UserBackpackContract.UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT,
-            UserBackpackContract.UserBackpackEntry.COLUMN_ITEM_INDEX,
-            UserBackpackContract.UserBackpackEntry.COLUMN_PAINT,
-            UserBackpackContract.UserBackpackEntry.COLUMN_AUSTRALIUM
+            UserBackpackEntry.TABLE_NAME_GUEST + "." +
+                    UserBackpackEntry._ID,
+            UserBackpackEntry.COLUMN_DEFINDEX,
+            UserBackpackEntry.COLUMN_QUALITY,
+            UserBackpackEntry.COLUMN_CRAFT_NUMBER,
+            UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE,
+            UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT,
+            UserBackpackEntry.COLUMN_ITEM_INDEX,
+            UserBackpackEntry.COLUMN_PAINT,
+            UserBackpackEntry.COLUMN_AUSTRALIUM
     };
     //Adapters used for the listview
     private BackpackSectionHeaderAdapter adapter;
@@ -136,18 +137,18 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         //All the variables need for querying
         //Sort items by their position
-        String sortOrder = UserBackpackContract.UserBackpackEntry.COLUMN_POSITION + " ASC";
+        String sortOrder = UserBackpackEntry.COLUMN_POSITION + " ASC";
         Uri uri;
         String[] columns;
         String selection;
 
         if (isGuest) {
             //This user was searched for. Load from the second table
-            uri = UserBackpackContract.UserBackpackEntry.CONTENT_URI_GUEST;
+            uri = UserBackpackEntry.CONTENT_URI_GUEST;
             columns = QUERY_COLUMNS_GUEST;
         } else {
             //This is the current user. Load from the main table
-            uri = UserBackpackContract.UserBackpackEntry.CONTENT_URI;
+            uri = UserBackpackEntry.CONTENT_URI;
             columns = QUERY_COLUMNS;
         }
 
@@ -155,21 +156,21 @@ public class UserBackpackActivity extends ActionBarActivity implements LoaderMan
             case LOADER_NORMAL:
                 //Load the items, that have a plce in the backpack.
                 if (isGuest) {
-                    selection = UserBackpackContract.UserBackpackEntry.TABLE_NAME_GUEST + "." +
-                            UserBackpackContract.UserBackpackEntry.COLUMN_POSITION + " >= 1";
+                    selection = UserBackpackEntry.TABLE_NAME_GUEST + "." +
+                            UserBackpackEntry.COLUMN_POSITION + " >= 1";
                 } else {
-                    selection = UserBackpackContract.UserBackpackEntry.TABLE_NAME + "." +
-                            UserBackpackContract.UserBackpackEntry.COLUMN_POSITION + " >= 1";
+                    selection = UserBackpackEntry.TABLE_NAME + "." +
+                            UserBackpackEntry.COLUMN_POSITION + " >= 1";
                 }
                 break;
             case LOADER_NEW:
                 //Load the new items, position is -1
                 if (isGuest) {
-                    selection = UserBackpackContract.UserBackpackEntry.TABLE_NAME_GUEST + "." +
-                            UserBackpackContract.UserBackpackEntry.COLUMN_POSITION + " = -1";
+                    selection = UserBackpackEntry.TABLE_NAME_GUEST + "." +
+                            UserBackpackEntry.COLUMN_POSITION + " = -1";
                 } else {
-                    selection = UserBackpackContract.UserBackpackEntry.TABLE_NAME + "." +
-                            UserBackpackContract.UserBackpackEntry.COLUMN_POSITION + " = -1";
+                    selection = UserBackpackEntry.TABLE_NAME + "." +
+                            UserBackpackEntry.COLUMN_POSITION + " = -1";
                 }
                 break;
             default:

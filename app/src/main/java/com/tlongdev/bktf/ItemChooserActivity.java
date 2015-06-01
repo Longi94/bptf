@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.tlongdev.bktf.adapter.ItemChooserAdapter;
 import com.tlongdev.bktf.data.PriceListContract;
+import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
 
 /**
  *
@@ -43,26 +44,26 @@ public class ItemChooserActivity extends FragmentActivity implements
 
     //The columns we need
     private static final String[] PRICE_LIST_COLUMNS = {
-            PriceListContract.PriceEntry.TABLE_NAME + "." + PriceListContract.PriceEntry._ID,
-            PriceListContract.PriceEntry.COLUMN_ITEM_NAME,
-            PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY,
-            PriceListContract.PriceEntry.COLUMN_ITEM_TRADABLE,
-            PriceListContract.PriceEntry.COLUMN_ITEM_CRAFTABLE,
-            PriceListContract.PriceEntry.COLUMN_PRICE_INDEX,
-            PriceListContract.PriceEntry.COLUMN_DEFINDEX
+            PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
+            PriceEntry.COLUMN_ITEM_NAME,
+            PriceEntry.COLUMN_ITEM_QUALITY,
+            PriceEntry.COLUMN_ITEM_TRADABLE,
+            PriceEntry.COLUMN_ITEM_CRAFTABLE,
+            PriceEntry.COLUMN_PRICE_INDEX,
+            PriceEntry.COLUMN_DEFINDEX
     };
 
     //Selection
     private static final String sGeneralSearch =
-            PriceListContract.PriceEntry.TABLE_NAME +
-                    "." + PriceListContract.PriceEntry.COLUMN_ITEM_NAME + " LIKE ? AND NOT(" +
-                    PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY + " = 5 AND " +
-                    PriceListContract.PriceEntry.COLUMN_PRICE_INDEX + " != 0)";
+            PriceEntry.TABLE_NAME +
+                    "." + PriceEntry.COLUMN_ITEM_NAME + " LIKE ? AND NOT(" +
+                    PriceEntry.COLUMN_ITEM_QUALITY + " = 5 AND " +
+                    PriceEntry.COLUMN_PRICE_INDEX + " != 0)";
     private static final String sUnusualSearch =
-            PriceListContract.PriceEntry.TABLE_NAME +
-                    "." + PriceListContract.PriceEntry.COLUMN_ITEM_NAME + " LIKE ? AND " +
-                    PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY + " = 5 AND " +
-                    PriceListContract.PriceEntry.COLUMN_PRICE_INDEX + " = ?";
+            PriceEntry.TABLE_NAME +
+                    "." + PriceEntry.COLUMN_ITEM_NAME + " LIKE ? AND " +
+                    PriceEntry.COLUMN_ITEM_QUALITY + " = 5 AND " +
+                    PriceEntry.COLUMN_PRICE_INDEX + " = ?";
 
     //References to all the views in the activity
     private Button addButton;
@@ -287,7 +288,7 @@ public class ItemChooserActivity extends FragmentActivity implements
         //Query
         return new CursorLoader(
                 this,
-                PriceListContract.PriceEntry.CONTENT_URI,
+                PriceEntry.CONTENT_URI,
                 PRICE_LIST_COLUMNS,
                 selection,
                 selectionArgs,
