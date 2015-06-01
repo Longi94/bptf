@@ -7,6 +7,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.GridView;
 
 import com.tlongdev.bktf.adapter.UnusualPricesCursorAdapter;
@@ -16,7 +17,7 @@ import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
 /**
  * Activity for showing unusual prices for specific effects or hats.
  */
-public class UnusualActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class UnusualActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String LOG_TAG = UnusualActivity.class.getSimpleName();
 
