@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.tlongdev.bktf.data.ItemSchemaDbHelper;
+import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
 import com.tlongdev.bktf.enums.Quality;
 
 import org.json.JSONArray;
@@ -1929,6 +1930,40 @@ public class Utility {
             default: //don't change
                 return defindex;
         }
+    }
+
+    /**
+     * Return the complex query string for querying the raw price
+     * @param context context for converting prices
+     * @return the query string
+     */
+    public static String getRawPriceQueryString(Context context) {
+
+        double keyMultiplier = Utility.convertPrice(context, 1, Utility.CURRENCY_KEY, Utility.CURRENCY_METAL);
+        double usdMultiplier = Utility.convertPrice(context, 1, Utility.CURRENCY_USD, Utility.CURRENCY_METAL);
+        double budMultiplier = Utility.convertPrice(context, 1, Utility.CURRENCY_BUD, Utility.CURRENCY_METAL);
+
+        return " CASE WHEN " + PriceEntry.COLUMN_ITEM_PRICE_MAX + " IS NULL THEN ( " +
+                    " CASE WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'keys' THEN ( " +
+                        PriceEntry.COLUMN_ITEM_PRICE + " * " + keyMultiplier +
+                    " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'earbuds' THEN ( " +
+                        PriceEntry.COLUMN_ITEM_PRICE + " * " + budMultiplier +
+                    " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'usd' THEN ( " +
+                        PriceEntry.COLUMN_ITEM_PRICE + " * " + usdMultiplier +
+                    " ) ELSE ( " +
+                        PriceEntry.COLUMN_ITEM_PRICE +
+                    " ) END " +
+                " ) ELSE (" +
+                    " CASE WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'keys' THEN ( " +
+                        " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 * " + keyMultiplier +
+                    " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'earbuds' THEN ( " +
+                        " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 * " + budMultiplier +
+                    " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'usd' THEN ( " +
+                        " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 * " + usdMultiplier +
+                    " ) ELSE ( " +
+                        PriceEntry.COLUMN_ITEM_PRICE +
+                    " ) END " +
+                " ) END ";
     }
 
     /**
