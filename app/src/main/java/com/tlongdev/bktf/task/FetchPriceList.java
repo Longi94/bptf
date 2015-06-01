@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
-import com.tlongdev.bktf.data.PriceListContract;
 import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
 
 import org.json.JSONArray;
@@ -141,13 +140,13 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
             //Get the youngest price from the database. If it's an update only prices newer than this
             //will be updated to speed up the update and reduce data usage.
             if (updateDatabase) {
-                String[] columns = {PriceListContract.PriceEntry.COLUMN_LAST_UPDATE};
+                String[] columns = {PriceEntry.COLUMN_LAST_UPDATE};
                 Cursor cursor = mContext.getContentResolver().query(
-                        PriceListContract.PriceEntry.CONTENT_URI,
+                        PriceEntry.CONTENT_URI,
                         columns,
                         null,
                         null,
-                        PriceListContract.PriceEntry.COLUMN_LAST_UPDATE + " DESC LIMIT 1"
+                        PriceEntry.COLUMN_LAST_UPDATE + " DESC LIMIT 1"
                 );
                 if (cursor.moveToFirst())
                     latestUpdate = cursor.getInt(0);

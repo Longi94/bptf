@@ -25,7 +25,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.UserInfoActivity;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.adapter.SearchCursorAdapter;
-import com.tlongdev.bktf.data.PriceListContract;
+import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
 
 import org.json.JSONException;
 
@@ -50,16 +50,16 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
 
     //The columns we need
     private static final String[] PRICE_LIST_COLUMNS = {
-            PriceListContract.PriceEntry.TABLE_NAME + "." + PriceListContract.PriceEntry._ID,
-            PriceListContract.PriceEntry.COLUMN_DEFINDEX,
-            PriceListContract.PriceEntry.COLUMN_ITEM_NAME,
-            PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY,
-            PriceListContract.PriceEntry.COLUMN_ITEM_TRADABLE,
-            PriceListContract.PriceEntry.COLUMN_ITEM_CRAFTABLE,
-            PriceListContract.PriceEntry.COLUMN_PRICE_INDEX,
-            PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
-            PriceListContract.PriceEntry.COLUMN_ITEM_PRICE,
-            PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_MAX,
+            PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
+            PriceEntry.COLUMN_DEFINDEX,
+            PriceEntry.COLUMN_ITEM_NAME,
+            PriceEntry.COLUMN_ITEM_QUALITY,
+            PriceEntry.COLUMN_ITEM_TRADABLE,
+            PriceEntry.COLUMN_ITEM_CRAFTABLE,
+            PriceEntry.COLUMN_PRICE_INDEX,
+            PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
+            PriceEntry.COLUMN_ITEM_PRICE,
+            PriceEntry.COLUMN_ITEM_PRICE_MAX,
     };
 
     //Indexes of the columns above
@@ -75,10 +75,10 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
 
     //Selection
     private static final String sNameSearch =
-            PriceListContract.PriceEntry.TABLE_NAME +
-                    "." + PriceListContract.PriceEntry.COLUMN_ITEM_NAME + " LIKE ? AND NOT(" +
-                    PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY + " = 5 AND " +
-                    PriceListContract.PriceEntry.COLUMN_PRICE_INDEX + " != 0)";
+            PriceEntry.TABLE_NAME +
+                    "." + PriceEntry.COLUMN_ITEM_NAME + " LIKE ? AND NOT(" +
+                    PriceEntry.COLUMN_ITEM_QUALITY + " = 5 AND " +
+                    PriceEntry.COLUMN_PRICE_INDEX + " != 0)";
 
     private ListView mListView;
     private SearchCursorAdapter cursorAdapter;
@@ -130,7 +130,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
         }
         return new CursorLoader(
                 getActivity(),
-                PriceListContract.PriceEntry.CONTENT_URI,
+                PriceEntry.CONTENT_URI,
                 PRICE_LIST_COLUMNS,
                 sNameSearch,
                 selectionArgs,
@@ -153,16 +153,16 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
             searchTask.execute(searchQuery);
 
             MatrixCursor extras = new MatrixCursor(new String[]{
-                    PriceListContract.PriceEntry._ID,
-                    PriceListContract.PriceEntry.COLUMN_DEFINDEX,
-                    PriceListContract.PriceEntry.COLUMN_ITEM_NAME,
-                    PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY,
-                    PriceListContract.PriceEntry.COLUMN_ITEM_TRADABLE,
-                    PriceListContract.PriceEntry.COLUMN_ITEM_CRAFTABLE,
-                    PriceListContract.PriceEntry.COLUMN_PRICE_INDEX,
-                    PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
-                    PriceListContract.PriceEntry.COLUMN_ITEM_PRICE,
-                    PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_MAX,});
+                    PriceEntry._ID,
+                    PriceEntry.COLUMN_DEFINDEX,
+                    PriceEntry.COLUMN_ITEM_NAME,
+                    PriceEntry.COLUMN_ITEM_QUALITY,
+                    PriceEntry.COLUMN_ITEM_TRADABLE,
+                    PriceEntry.COLUMN_ITEM_CRAFTABLE,
+                    PriceEntry.COLUMN_PRICE_INDEX,
+                    PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
+                    PriceEntry.COLUMN_ITEM_PRICE,
+                    PriceEntry.COLUMN_ITEM_PRICE_MAX,});
             extras.addRow(new String[]{"-1", null, null, null, null, null, null, null, null, null});
             Cursor[] cursors = {extras, adapterCursor};
             Cursor extendedCursor = new MergeCursor(cursors);
@@ -310,16 +310,16 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
                 if (s != null && s[0] != null) {
                     //Insert an extra row to the cursor
                     MatrixCursor extras = new MatrixCursor(new String[]{
-                            PriceListContract.PriceEntry._ID,
-                            PriceListContract.PriceEntry.COLUMN_DEFINDEX,
-                            PriceListContract.PriceEntry.COLUMN_ITEM_NAME,
-                            PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY,
-                            PriceListContract.PriceEntry.COLUMN_ITEM_TRADABLE,
-                            PriceListContract.PriceEntry.COLUMN_ITEM_CRAFTABLE,
-                            PriceListContract.PriceEntry.COLUMN_PRICE_INDEX,
-                            PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
-                            PriceListContract.PriceEntry.COLUMN_ITEM_PRICE,
-                            PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_MAX,});
+                            PriceEntry._ID,
+                            PriceEntry.COLUMN_DEFINDEX,
+                            PriceEntry.COLUMN_ITEM_NAME,
+                            PriceEntry.COLUMN_ITEM_QUALITY,
+                            PriceEntry.COLUMN_ITEM_TRADABLE,
+                            PriceEntry.COLUMN_ITEM_CRAFTABLE,
+                            PriceEntry.COLUMN_PRICE_INDEX,
+                            PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
+                            PriceEntry.COLUMN_ITEM_PRICE,
+                            PriceEntry.COLUMN_ITEM_PRICE_MAX,});
                     extras.addRow(new String[]{"-1", null, s[0], null, null, null, null, null, null, null});
                     Cursor[] cursors = {extras, adapterCursor};
                     Cursor extendedCursor = new MergeCursor(cursors);

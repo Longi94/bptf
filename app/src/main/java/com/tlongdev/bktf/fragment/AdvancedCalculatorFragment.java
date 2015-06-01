@@ -23,7 +23,7 @@ import com.tlongdev.bktf.MainActivity;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.adapter.AdvancedCalculatorAdapter;
-import com.tlongdev.bktf.data.PriceListContract;
+import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
 
 import java.util.ArrayList;
 
@@ -33,15 +33,15 @@ import java.util.ArrayList;
 public class AdvancedCalculatorFragment extends Fragment {
 
     private static final String[] PRICE_LIST_COLUMNS = {
-            PriceListContract.PriceEntry.TABLE_NAME + "." + PriceListContract.PriceEntry._ID,
-            PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW,
+            PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
+            PriceEntry.COLUMN_ITEM_PRICE_RAW,
     };
 
     //Indexes for the columns above
     public static final int COL_PRICE_LIST_PRAW = 1;
 
-    public static final String mSelection = PriceListContract.PriceEntry.TABLE_NAME +
-            "." + PriceListContract.PriceEntry._ID + " = ?";
+    public static final String mSelection = PriceEntry.TABLE_NAME +
+            "." + PriceEntry._ID + " = ?";
 
     private AdvancedCalculatorAdapter mAdapter;
 
@@ -169,7 +169,7 @@ public class AdvancedCalculatorFragment extends Fragment {
 
     private void addItem(int id, int count) {
         Cursor cursor = getActivity().getContentResolver().query(
-                PriceListContract.PriceEntry.CONTENT_URI,
+                PriceEntry.CONTENT_URI,
                 PRICE_LIST_COLUMNS,
                 mSelection,
                 new String[]{"" + id},
@@ -199,7 +199,7 @@ public class AdvancedCalculatorFragment extends Fragment {
 
     private void deleteItem(int id, int count) {
         Cursor cursor = getActivity().getContentResolver().query(
-                PriceListContract.PriceEntry.CONTENT_URI,
+                PriceEntry.CONTENT_URI,
                 PRICE_LIST_COLUMNS,
                 mSelection,
                 new String[]{"" + id},

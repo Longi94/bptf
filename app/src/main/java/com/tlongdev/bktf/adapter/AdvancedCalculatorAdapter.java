@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
-import com.tlongdev.bktf.data.PriceListContract;
+import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
 import com.tlongdev.bktf.enums.Quality;
 
 import java.io.IOException;
@@ -27,16 +27,16 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
     private Context mContext;
 
     private static final String[] PRICE_LIST_COLUMNS = {
-            PriceListContract.PriceEntry.TABLE_NAME + "." + PriceListContract.PriceEntry._ID,
-            PriceListContract.PriceEntry.COLUMN_DEFINDEX,
-            PriceListContract.PriceEntry.COLUMN_ITEM_NAME,
-            PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY,
-            PriceListContract.PriceEntry.COLUMN_ITEM_TRADABLE,
-            PriceListContract.PriceEntry.COLUMN_ITEM_CRAFTABLE,
-            PriceListContract.PriceEntry.COLUMN_PRICE_INDEX,
-            PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
-            PriceListContract.PriceEntry.COLUMN_ITEM_PRICE,
-            PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_MAX,
+            PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
+            PriceEntry.COLUMN_DEFINDEX,
+            PriceEntry.COLUMN_ITEM_NAME,
+            PriceEntry.COLUMN_ITEM_QUALITY,
+            PriceEntry.COLUMN_ITEM_TRADABLE,
+            PriceEntry.COLUMN_ITEM_CRAFTABLE,
+            PriceEntry.COLUMN_PRICE_INDEX,
+            PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
+            PriceEntry.COLUMN_ITEM_PRICE,
+            PriceEntry.COLUMN_ITEM_PRICE_MAX,
             null
     };
 
@@ -52,8 +52,8 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
     public static final int COL_PRICE_LIST_PMAX = 9;
     public static final int COL_PRICE_LIST_PRAW = 10;
 
-    public static final String mSelection = PriceListContract.PriceEntry.TABLE_NAME +
-            "." + PriceListContract.PriceEntry._ID + " = ?";
+    public static final String mSelection = PriceEntry.TABLE_NAME +
+            "." + PriceEntry._ID + " = ?";
 
     private OnItemEditListener listener;
 
@@ -75,7 +75,7 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
         PRICE_LIST_COLUMNS[COL_PRICE_LIST_PRAW] = Utility.getRawPriceQueryString(mContext);
 
         Cursor cursor = mContext.getContentResolver().query(
-                PriceListContract.PriceEntry.CONTENT_URI,
+                PriceEntry.CONTENT_URI,
                 PRICE_LIST_COLUMNS,
                 mSelection,
                 new String[]{"" + ids.get(position).getX()},
