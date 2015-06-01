@@ -111,6 +111,8 @@
     <string name="pref_category_sync" translatable="true">Syncing</string>
     <string name="pref_hint_dev_key" translatable="true">API key</string>
     <string name="pref_hint_steam_id" translatable="true">Steam ID</string>
+    <string name="pref_policy_api_key" translatable="true">Your key will not be shared with anyone.</string>
+    <string name="pref_policy_steam_id" translatable="true">Your id will not be shared with anyone.</string>
     <string name="pref_summary_off_auto_sync" translatable="true">Manual refresh</string>
     <string name="pref_summary_on_auto_sync" translatable="true">Auto-update database</string>
     <string name="pref_summary_particles" translatable="true">provided by backpack.tf</string>
