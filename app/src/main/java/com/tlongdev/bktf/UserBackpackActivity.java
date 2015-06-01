@@ -6,19 +6,18 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 
 import com.tlongdev.bktf.adapter.BackpackSectionHeaderAdapter;
-import com.tlongdev.bktf.data.UserBackpackContract;
 import com.tlongdev.bktf.data.UserBackpackContract.UserBackpackEntry;
 
 /**
  * Activity for viewing user backpacks.
  */
-public class UserBackpackActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class UserBackpackActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String LOG_TAG = UserBackpackActivity.class.getSimpleName();
 

@@ -11,6 +11,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,7 +30,7 @@ import com.tlongdev.bktf.service.UpdateDatabaseService;
  * Tha main activity if the application. Navigation drawer is used. This is where most of the
  * fragments are shown.
  */
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     //Request codes for onActivityResult
