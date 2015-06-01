@@ -37,7 +37,7 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
     };
     private static final String[] EFFECT_LIST_COLUMNS = {
             PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
-            PriceEntry.COLUMN_DEFINDEX,
+            PriceEntry.COLUMN_PRICE_INDEX,
             PriceEntry.COLUMN_ITEM_NAME,
             null
     };
