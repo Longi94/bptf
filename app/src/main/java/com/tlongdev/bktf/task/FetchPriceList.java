@@ -380,13 +380,6 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
         Iterator<String> i = items.keys();
         Vector<ContentValues> cVVector = new Vector<>();
 
-        // If any of the currencies was updated, the whole database needs to be updated.
-        if (updateDatabase &&
-                (items.has("Mann Co. Supply Crate Key") || items.has("Earbuds")
-                        || items.has("Refined Metal"))) {
-            //TODO
-        }
-
         //Start iterating
         while (i.hasNext()) {
 
@@ -459,7 +452,6 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
                                 Double high = null;
                                 String currency = null;
                                 double value = 0;
-                                double rawValue = 0;
                                 int lastUpdate = 0;
                                 double difference = 0;
 
@@ -472,9 +464,6 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
                                 if (price.has(OWM_VALUE))
                                     value = price.getDouble(OWM_VALUE);
 
-                                if (price.has(OWM_VALUE_RAW))
-                                    rawValue = price.getDouble(OWM_VALUE_RAW);
-
                                 if (price.has(OWM_LAST_UPDATE))
                                     lastUpdate = price.getInt(OWM_LAST_UPDATE);
 
@@ -484,7 +473,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
                                 //Add the price to the CV vector
                                 cVVector.add(buildContentValues(defindex,
                                         name, quality, tradable, craftable, priceIndex,
-                                        currency, value, high, rawValue, lastUpdate,
+                                        currency, value, high, lastUpdate,
                                         difference
                                 ));
                             }
@@ -498,7 +487,6 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
                             Double high = null;
                             String currency = null;
                             double value = 0;
-                            double rawValue = 0;
                             int lastUpdate = 0;
                             double difference = 0;
 
@@ -511,9 +499,6 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
                             if (price.has(OWM_VALUE))
                                 value = price.getDouble(OWM_VALUE);
 
-                            if (price.has(OWM_VALUE_RAW))
-                                rawValue = price.getDouble(OWM_VALUE_RAW);
-
                             if (price.has(OWM_LAST_UPDATE))
                                 lastUpdate = price.getInt(OWM_LAST_UPDATE);
 
@@ -523,7 +508,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
                             //Add the price to the CV vector
                             cVVector.add(buildContentValues(defindex,
                                     name, quality, tradable, craftable, "0",
-                                    currency, value, high, rawValue, lastUpdate,
+                                    currency, value, high, lastUpdate,
                                     difference
                             ));
 
@@ -671,15 +656,13 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
      * @param currency   currency of the price
      * @param value      price of the item
      * @param valueHigh  higher price of the item
-     * @param valueRaw   raw price of the item
      * @param update     time of the update
      * @param difference difference of the the new and old price
      * @return the ContentValues object containing the data
      */
     private ContentValues buildContentValues(int defindex, String name, String quality,
                                              String tradable, String craftable, String priceIndex,
-                                             String currency, double value, Double valueHigh,
-                                             double valueRaw, int update, double difference) {
+                                             String currency, double value, Double valueHigh, int update, double difference) {
         int itemTradable;
         int itemCraftable;
 
@@ -713,7 +696,6 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
         if (valueHigh != null) {
             itemValues.put(PriceEntry.COLUMN_ITEM_PRICE_MAX, valueHigh);
         }
-        itemValues.put(PriceEntry.COLUMN_ITEM_PRICE_RAW, valueRaw);
         itemValues.put(PriceEntry.COLUMN_LAST_UPDATE, update);
         itemValues.put(PriceEntry.COLUMN_DIFFERENCE, difference);
 

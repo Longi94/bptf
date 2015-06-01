@@ -55,7 +55,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
             PriceEntry.COLUMN_ITEM_PRICE,
             PriceEntry.COLUMN_ITEM_PRICE_MAX,
-            PriceEntry.COLUMN_ITEM_PRICE_RAW,
+            null,
             PriceEntry.COLUMN_DIFFERENCE
     };
 
@@ -205,6 +205,8 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
         String sortOrder = PriceEntry.COLUMN_LAST_UPDATE + " DESC";
+
+        PRICE_LIST_COLUMNS[COL_PRICE_LIST_PRAW] = Utility.getRawPriceQueryString(getActivity());
 
         return new CursorLoader(
                 getActivity(),
