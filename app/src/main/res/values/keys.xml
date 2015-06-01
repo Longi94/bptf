@@ -20,6 +20,6 @@
     <string name="link_tf2tp" translatable="false">http://tf2tp.com/user/</string>
     <string name="link_steam_community" translatable="false">http://steamcommunity.com/profiles/</string>
     <string name="link_one_sky" translatable="false">https://tlongdev.oneskyapp.com/</string>
-    <string name="link_github_help">https://github.com/Longi94/bptf/wiki/Changelog</string>
+    <string name="link_github_help" translatable="false">https://github.com/Longi94/bptf/wiki/Changelog</string>
 
 </resources>
