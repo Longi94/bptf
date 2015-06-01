@@ -97,7 +97,7 @@ public class Utility {
             ItemSchemaDbHelper dbHelper = new ItemSchemaDbHelper(context);
             Cursor itemCursor = dbHelper.getItem(index);
             if (itemCursor != null && itemCursor.moveToFirst()) {
-                formattedName += " " + itemCursor.getString(0) + " " + name;
+                formattedName += itemCursor.getString(0) + " " + name;
                 itemCursor.close();
             }
             dbHelper.close();
