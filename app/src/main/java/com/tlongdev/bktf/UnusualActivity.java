@@ -11,6 +11,7 @@ import android.widget.GridView;
 
 import com.tlongdev.bktf.adapter.UnusualPricesCursorAdapter;
 import com.tlongdev.bktf.data.PriceListContract;
+import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
 
 /**
  * Activity for showing unusual prices for specific effects or hats.
@@ -39,15 +40,16 @@ public class UnusualActivity extends ActionBarActivity implements LoaderManager.
 
     //Columns to query from database
     private static final String[] PRICE_LIST_COLUMNS = {
-            PriceListContract.PriceEntry.TABLE_NAME + "." + PriceListContract.PriceEntry._ID,
-            PriceListContract.PriceEntry.COLUMN_DEFINDEX,
-            PriceListContract.PriceEntry.COLUMN_PRICE_INDEX,
-            PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
-            PriceListContract.PriceEntry.COLUMN_ITEM_PRICE,
-            PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_MAX,
-            PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW,
-            PriceListContract.PriceEntry.COLUMN_LAST_UPDATE,
-            PriceListContract.PriceEntry.COLUMN_DIFFERENCE
+            PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
+            PriceEntry.COLUMN_DEFINDEX,
+            PriceEntry.COLUMN_PRICE_INDEX,
+            PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
+            PriceEntry.COLUMN_ITEM_PRICE,
+            PriceEntry.COLUMN_ITEM_PRICE_MAX,
+            PriceEntry.COLUMN_ITEM_PRICE_RAW,
+            PriceEntry.COLUMN_LAST_UPDATE,
+            PriceEntry.COLUMN_DIFFERENCE,
+            null
     };
 
     //Adapter for the gridView
@@ -91,18 +93,21 @@ public class UnusualActivity extends ActionBarActivity implements LoaderManager.
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         //Select only items with unusual quelity
-        String selection = PriceListContract.PriceEntry.TABLE_NAME +
-                "." + PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY + " = ?";
+        String selection = PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + " = ?";
         String[] selectionArgs;
 
         //If defindex is -1, user is browsing by effects
         if (defindex != -1) {
-            selection = selection + " AND " + PriceListContract.PriceEntry.COLUMN_DEFINDEX + " = ?";
+            selection = selection + " AND " + PriceEntry.COLUMN_DEFINDEX + " = ?";
             selectionArgs = new String[]{"5", String.valueOf(defindex)};
         } else {
-            selection = selection + " AND " + PriceListContract.PriceEntry.COLUMN_PRICE_INDEX + " = ?";
+            selection = selection + " AND " + PriceEntry.COLUMN_PRICE_INDEX + " = ?";
             selectionArgs = new String[]{"5", String.valueOf(index)};
         }
+
+
+        PRICE_LIST_COLUMNS[9] = Utility.getRawPriceQueryString(this);
+
 
         //Load
         return new CursorLoader(
