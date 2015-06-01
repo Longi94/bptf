@@ -37,7 +37,7 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
             PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
             PriceListContract.PriceEntry.COLUMN_ITEM_PRICE,
             PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_MAX,
-            PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW,
+            null
     };
 
     //Indexes for the columns above
@@ -72,6 +72,8 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
+        PRICE_LIST_COLUMNS[COL_PRICE_LIST_PRAW] = Utility.getRawPriceQueryString(mContext);
+
         Cursor cursor = mContext.getContentResolver().query(
                 PriceListContract.PriceEntry.CONTENT_URI,
                 PRICE_LIST_COLUMNS,

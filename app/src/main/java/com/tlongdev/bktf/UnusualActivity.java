@@ -31,9 +31,8 @@ public class UnusualActivity extends ActionBarActivity implements LoaderManager.
     public static final int COL_PRICE_LIST_CURR = 3;
     public static final int COL_PRICE_LIST_PRIC = 4;
     public static final int COL_PRICE_LIST_PMAX = 5;
-    public static final int COL_PRICE_LIST_PRAW = 6;
-    public static final int COL_PRICE_LIST_UPDA = 7;
-    public static final int COL_PRICE_LIST_DIFF = 8;
+    public static final int COL_PRICE_LIST_UPDA = 6;
+    public static final int COL_PRICE_LIST_DIFF = 7;
 
     //Default loader id
     private static final int PRICE_LIST_LOADER = 0;
@@ -46,10 +45,8 @@ public class UnusualActivity extends ActionBarActivity implements LoaderManager.
             PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
             PriceEntry.COLUMN_ITEM_PRICE,
             PriceEntry.COLUMN_ITEM_PRICE_MAX,
-            PriceEntry.COLUMN_ITEM_PRICE_RAW,
             PriceEntry.COLUMN_LAST_UPDATE,
             PriceEntry.COLUMN_DIFFERENCE,
-            null
     };
 
     //Adapter for the gridView
@@ -105,10 +102,6 @@ public class UnusualActivity extends ActionBarActivity implements LoaderManager.
             selectionArgs = new String[]{"5", String.valueOf(index)};
         }
 
-
-        PRICE_LIST_COLUMNS[9] = Utility.getRawPriceQueryString(this);
-
-
         //Load
         return new CursorLoader(
                 this,
@@ -116,7 +109,7 @@ public class UnusualActivity extends ActionBarActivity implements LoaderManager.
                 PRICE_LIST_COLUMNS,
                 selection,
                 selectionArgs,
-                PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW + " DESC" //order by raw price
+                Utility.getRawPriceQueryString(this) + " DESC" //order by raw price
         );
     }
 

@@ -16,9 +16,10 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.adapter.UnusualEffectListCursorAdapter;
 import com.tlongdev.bktf.adapter.UnusualListCursorAdapter;
-import com.tlongdev.bktf.data.PriceListContract;
+import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
 
 public class UnusualPriceListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -29,19 +30,18 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
     private static final String QUERY_KEY = "query";
 
     private static final String[] PRICE_LIST_COLUMNS = {
-            PriceListContract.PriceEntry.TABLE_NAME + "." + PriceListContract.PriceEntry._ID,
-            PriceListContract.PriceEntry.COLUMN_DEFINDEX,
-            PriceListContract.PriceEntry.COLUMN_ITEM_NAME,
-            "AVG(" + PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW + ")"
+            PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
+            PriceEntry.COLUMN_DEFINDEX,
+            PriceEntry.COLUMN_ITEM_NAME,
+            null
     };
     private static final String[] EFFECT_LIST_COLUMNS = {
-            PriceListContract.PriceEntry.TABLE_NAME + "." + PriceListContract.PriceEntry._ID,
-            PriceListContract.PriceEntry.COLUMN_PRICE_INDEX,
-            PriceListContract.PriceEntry.COLUMN_ITEM_NAME,
-            "AVG(" + PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW + ")"
+            PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
+            PriceEntry.COLUMN_DEFINDEX,
+            PriceEntry.COLUMN_ITEM_NAME,
+            null
     };
 
-    public static final int COL_PRICE_LIST_ID = 0;
     public static final int COL_PRICE_LIST_INDE = 1;
     public static final int COL_PRICE_LIST_DEFI = 1;
     public static final int COL_PRICE_LIST_NAME = 2;
@@ -81,12 +81,10 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
-
         getLoaderManager().initLoader(EFFECT_LIST_LOADER, null, this);
 
         Bundle args = new Bundle();
-
-        args.putString(QUERY_KEY, "AVG(" + PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW + ") DESC");
+        args.putString(QUERY_KEY, "AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC");
         getLoaderManager().initLoader(PRICE_LIST_LOADER, args, this);
 
         super.onActivityCreated(savedInstanceState);
@@ -100,32 +98,37 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
 
         switch (id) {
             case PRICE_LIST_LOADER:
-                selection = PriceListContract.PriceEntry.TABLE_NAME +
-                        "." + PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
-                        PriceListContract.PriceEntry.COLUMN_PRICE_INDEX + " != 0 GROUP BY " +
-                        PriceListContract.PriceEntry.COLUMN_DEFINDEX;
+                PRICE_LIST_COLUMNS[COL_PRICE_LIST_AVG_PRICE] =
+                        "AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC";
+
+                selection = PriceEntry.TABLE_NAME +
+                        "." + PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
+                        PriceEntry.COLUMN_PRICE_INDEX + " != 0 GROUP BY " +
+                        PriceEntry.COLUMN_DEFINDEX;
 
                 return new CursorLoader(
                         getActivity(),
-                        PriceListContract.PriceEntry.CONTENT_URI,
+                        PriceEntry.CONTENT_URI,
                         PRICE_LIST_COLUMNS,
                         selection,
                         selectionArgs,
                         args.getString(QUERY_KEY)
                 );
             case EFFECT_LIST_LOADER:
-                selection = PriceListContract.PriceEntry.TABLE_NAME +
-                        "." + PriceListContract.PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
-                        PriceListContract.PriceEntry.COLUMN_PRICE_INDEX + " != 0 GROUP BY " +
-                        PriceListContract.PriceEntry.COLUMN_PRICE_INDEX;
+                EFFECT_LIST_COLUMNS[COL_PRICE_LIST_AVG_PRICE] =
+                        "AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC";
+                selection = PriceEntry.TABLE_NAME +
+                        "." + PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
+                        PriceEntry.COLUMN_PRICE_INDEX + " != 0 GROUP BY " +
+                        PriceEntry.COLUMN_PRICE_INDEX;
 
                 return new CursorLoader(
                         getActivity(),
-                        PriceListContract.PriceEntry.CONTENT_URI,
+                        PriceEntry.CONTENT_URI,
                         EFFECT_LIST_COLUMNS,
                         selection,
                         selectionArgs,
-                        "AVG(" + PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW + ") DESC"
+                        "AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC"
                 );
             default:
                 return null;
@@ -162,12 +165,12 @@ public class UnusualPriceListFragment extends Fragment implements LoaderManager.
         int id = item.getItemId();
         if (id == R.id.menu_sort_name && currentSort != 1) {
             Bundle args = new Bundle();
-            args.putString(QUERY_KEY, PriceListContract.PriceEntry.COLUMN_ITEM_NAME + " ASC");
+            args.putString(QUERY_KEY, PriceEntry.COLUMN_ITEM_NAME + " ASC");
             getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
             currentSort = 1;
         } else if (id == R.id.menu_sort_price && currentSort != 0) {
             Bundle args = new Bundle();
-            args.putString(QUERY_KEY, "AVG(" + PriceListContract.PriceEntry.COLUMN_ITEM_PRICE_RAW + ") DESC");
+            args.putString(QUERY_KEY, "AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC");
             getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
             currentSort = 0;
         } else if (id == R.id.action_effect) {

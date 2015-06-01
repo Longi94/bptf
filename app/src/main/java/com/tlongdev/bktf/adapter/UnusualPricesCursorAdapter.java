@@ -56,9 +56,7 @@ public class UnusualPricesCursorAdapter extends CursorAdapter {
         viewHolder.icon.setTag(task);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
                 (double) cursor.getInt(UnusualActivity.COL_PRICE_LIST_DEFI),
-                (double) cursor.getInt(UnusualActivity.COL_PRICE_LIST_INDE),
-                cursor.getDouble(UnusualActivity.COL_PRICE_LIST_DIFF),
-                cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRAW));
+                (double) cursor.getInt(UnusualActivity.COL_PRICE_LIST_INDE));
 
         try {
             viewHolder.priceView.setText(Utility.formatPrice(context,
@@ -66,8 +64,6 @@ public class UnusualPricesCursorAdapter extends CursorAdapter {
                     cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PMAX),
                     cursor.getString(UnusualActivity.COL_PRICE_LIST_CURR),
                     Utility.CURRENCY_KEY, false));
-            viewHolder.priceView.setText(String.valueOf(cursor.getInt(UnusualActivity.COL_PRICE_LIST_PRAW))
-                    + "/" + String.valueOf(cursor.getInt(9)));
         } catch (Throwable throwable) {
             if (Utility.isDebugging(context))
                 throwable.printStackTrace();
