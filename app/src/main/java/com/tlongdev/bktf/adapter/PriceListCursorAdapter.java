@@ -61,7 +61,6 @@ public class PriceListCursorAdapter extends CursorAdapter {
 
         viewHolder.icon.setImageDrawable(null);
         viewHolder.background.setBackgroundDrawable(null);
-        viewHolder.change.setImageDrawable(null);
 
         LoadImagesTask task = (LoadImagesTask) viewHolder.icon.getTag();
         if (task != null) {
@@ -98,7 +97,6 @@ public class PriceListCursorAdapter extends CursorAdapter {
     }
 
     public static class ViewHolder {
-        public final ImageView change;
         public final ImageView icon;
         public final ImageView background;
 
@@ -106,7 +104,6 @@ public class PriceListCursorAdapter extends CursorAdapter {
         public final TextView priceView;
 
         public ViewHolder(View view) {
-            change = (ImageView) view.findViewById(R.id.image_view_change);
             icon = (ImageView) view.findViewById(R.id.image_view_item_icon);
             background = (ImageView) view.findViewById(R.id.image_view_item_background);
             nameView = (TextView) view.findViewById(R.id.item_name);
@@ -149,18 +146,6 @@ public class PriceListCursorAdapter extends CursorAdapter {
                     returnVal[0] = iconDrawable;
                 }
 
-                if (params[2].equals(params[3])) {
-                    ims = mContext.getAssets().open("changes/new.png");
-                } else if (params[2] == 0.0) {
-                    ims = mContext.getAssets().open("changes/refresh.png");
-                } else if (params[2] > 0.0) {
-                    ims = mContext.getAssets().open("changes/up.png");
-                } else {
-                    ims = mContext.getAssets().open("changes/down.png");
-                }
-
-                returnVal[2] = Drawable.createFromStream(ims, null);
-
                 returnVal[1] = Utility.getItemBackground(mContext, params[4].intValue(), params[5].intValue(), params[6].intValue());
 
                 return returnVal;
@@ -176,11 +161,9 @@ public class PriceListCursorAdapter extends CursorAdapter {
             if (drawable != null) {
                 viewHolder.icon.setImageDrawable(drawable[0]);
                 viewHolder.background.setBackgroundDrawable(drawable[1]);
-                viewHolder.change.setImageDrawable(drawable[2]);
             } else {
                 viewHolder.icon.setImageDrawable(null);
                 viewHolder.background.setBackgroundDrawable(null);
-                viewHolder.change.setImageDrawable(null);
             }
             Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.simple_fade_in);
             fadeIn.setDuration(100);
