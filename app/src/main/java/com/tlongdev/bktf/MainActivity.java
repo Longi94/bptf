@@ -3,21 +3,28 @@ package com.tlongdev.bktf;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
+import com.tlongdev.bktf.adapter.NavigationDrawerAdapter;
 import com.tlongdev.bktf.fragment.AdvancedCalculatorFragment;
 import com.tlongdev.bktf.fragment.HomeFragment;
-import com.tlongdev.bktf.fragment.NavigationDrawerFragment;
 import com.tlongdev.bktf.fragment.SearchFragment;
 import com.tlongdev.bktf.fragment.SimpleCalculatorFragment;
 import com.tlongdev.bktf.fragment.UnusualPriceListFragment;
@@ -25,21 +32,17 @@ import com.tlongdev.bktf.fragment.UserFragment;
 import com.tlongdev.bktf.service.NotificationsService;
 import com.tlongdev.bktf.service.UpdateDatabaseService;
 
+import java.util.Arrays;
+
 /**
  * Tha main activity if the application. Navigation drawer is used. This is where most of the
  * fragments are shown.
  */
-public class MainActivity extends AppCompatActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class MainActivity extends AppCompatActivity {
 
     //Request codes for onActivityResult
     public static final int REQUEST_SETTINGS = 100;
     public static final int REQUEST_NEW_ITEM = 101;
-
-    /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
-    private NavigationDrawerFragment mNavigationDrawerFragment;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -55,6 +58,22 @@ public class MainActivity extends AppCompatActivity
     private boolean restartUserFragment = false;
 
     /**
+     * Remember the position of the selected item.
+     */
+    private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
+
+    /**
+     * Helper component that ties the action bar to the navigation drawer.
+     */
+    private ActionBarDrawerToggle mDrawerToggle;
+
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerListView;
+    private View mFragmentContainerView;
+
+    private int mCurrentSelectedPosition = 0;
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -65,13 +84,11 @@ public class MainActivity extends AppCompatActivity
         //Set the default values for all preferences when the app is first loaded
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
         onSectionAttached(0);
 
         // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
+        setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
@@ -84,6 +101,49 @@ public class MainActivity extends AppCompatActivity
                 .getBoolean(getString(R.string.pref_background_sync), false)) {
             startService(new Intent(this, UpdateDatabaseService.class));
         }
+
+        mDrawerListView = (ListView) findViewById(R.id.list_view_drawer);
+        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectItem(position);
+            }
+        });
+        mDrawerListView.setAdapter(new NavigationDrawerAdapter(
+                getSupportActionBar().getThemedContext(),
+                R.layout.simple_drawer_list_item,
+                Arrays.asList(getString(R.string.title_home),
+                        getString(R.string.title_user_profile),
+                        getString(R.string.title_prices),
+                        getString(R.string.title_calculator))));
+        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+
+        findViewById(R.id.text_view_settings).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startSettingsActivity();
+            }
+        });
+        findViewById(R.id.text_view_help).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Uri webPage = Uri.parse("https://github.com/Longi94/bptf/wiki/Help");
+
+                //Open link in the device default web browser
+                Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+            }
+        });
+
+        if (savedInstanceState != null) {
+            mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
+        }
+
+        // Select either the default item (0) or the last selected item.
+        selectItem(mCurrentSelectedPosition);
     }
 
     /**
@@ -105,9 +165,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * {@inheritDoc}
+     * Called when an item in the navigation drawer is selected.
      */
-    @Override
     public void onNavigationDrawerItemSelected(int position) {
 
         //Start handling fragment transactions
@@ -246,14 +305,14 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public boolean onMenuItemActionExpand(MenuItem item) {
                         //Close the drawer if it was open
-                        if (mNavigationDrawerFragment.isDrawerOpen()) {
-                            mNavigationDrawerFragment.closeDrawer();
+                        if (isDrawerOpen()) {
+                            closeDrawer();
                         }
                         //Lock the drawer. Prevents the user from opening it while searching.
-                        mNavigationDrawerFragment.lockDrawer();
+                        lockDrawer();
 
                         //Store the index of the previous fragment.
-                        previousFragment = mNavigationDrawerFragment.getCheckedItemPosition();
+                        previousFragment = getCheckedItemPosition();
 
                         //Switch to the search fragment
                         mSearchFragment = new SearchFragment();
@@ -270,12 +329,95 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item) {
                         //Unlock the drawer and switch back to the previous fragment
-                        mNavigationDrawerFragment.unlockDrawer();
+                        unlockDrawer();
                         onNavigationDrawerItemSelected(previousFragment);
                         return true;
                     }
                 });
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    public boolean isDrawerOpen() {
+        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
+    }
+
+    /**
+     * Users of this fragment must call this method to set up the navigation drawer interactions.
+     *
+     * @param fragmentId   The android:id of this fragment in its activity's layout.
+     * @param drawerLayout The DrawerLayout containing this fragment's UI.
+     */
+    public void setUp(int fragmentId, DrawerLayout drawerLayout) {
+        mFragmentContainerView = findViewById(fragmentId);
+        mDrawerLayout = drawerLayout;
+
+        // set a custom shadow that overlays the main content when the drawer opens
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        // set up the drawer's list view with items and click listener
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+
+        // ActionBarDrawerToggle ties together the the proper interactions
+        // between the navigation drawer and the action bar app icon.
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,                    /* host Activity */
+                mDrawerLayout,                    /* DrawerLayout object */
+                R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
+                R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
+        );
+
+        // Defer code dependent on restoration of previous instance state.
+        mDrawerLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mDrawerToggle.syncState();
+            }
+        });
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+    }
+
+    private void selectItem(int position) {
+        mCurrentSelectedPosition = position;
+        if (mDrawerListView != null) {
+            mDrawerListView.setItemChecked(position, true);
+        }
+        if (mDrawerLayout != null) {
+            mDrawerLayout.closeDrawer(mFragmentContainerView);
+        }
+        onNavigationDrawerItemSelected(position);
+    }
+
+    public void closeDrawer() {
+        if (mDrawerLayout != null)
+            mDrawerLayout.closeDrawers();
+    }
+
+    public void lockDrawer() {
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    }
+
+    public void unlockDrawer() {
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+    }
+
+    public int getCheckedItemPosition() {
+        return mDrawerListView.getCheckedItemPosition();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Forward the new configuration the drawer toggle component.
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
     }
 }
