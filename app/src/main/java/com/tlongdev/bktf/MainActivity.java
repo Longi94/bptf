@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,11 +44,6 @@ public class MainActivity extends AppCompatActivity {
     //Request codes for onActivityResult
     public static final int REQUEST_SETTINGS = 100;
     public static final int REQUEST_NEW_ITEM = 101;
-
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
-    private CharSequence mTitle;
 
     //Store reference to search fragment to pass search queries.
     private SearchFragment mSearchFragment;
@@ -84,11 +80,16 @@ public class MainActivity extends AppCompatActivity {
         //Set the default values for all preferences when the app is first loaded
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
 
-        mTitle = getTitle();
+        // As we're using a Toolbar, we should retrieve it and set it
+        // to be our ActionBar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         onSectionAttached(0);
 
         mFragmentContainerView = findViewById(R.id.navigation_drawer);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.bptf_main_blue_dark));
 
         // Set up the drawer.
         setUp();
