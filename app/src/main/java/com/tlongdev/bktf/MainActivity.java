@@ -84,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.bptf_main_blue_dark));
         mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
 
+        mNavigationView.getMenu().getItem(0).setChecked(true);
+
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {

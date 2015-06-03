@@ -2,6 +2,7 @@ package com.tlongdev.bktf;
 
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -89,6 +90,10 @@ public class UserBackpackActivity extends AppCompatActivity implements LoaderMan
         // As we're using a Toolbar, we should retrieve it and set it to be our ActionBar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.bptf_main_blue_dark));
+        }
 
         //Show the home button as back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

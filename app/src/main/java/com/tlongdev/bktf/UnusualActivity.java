@@ -2,6 +2,7 @@ package com.tlongdev.bktf;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -68,6 +69,10 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
         // As we're using a Toolbar, we should retrieve it and set it to be our ActionBar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.bptf_main_blue_dark));
+        }
 
         //Get necessary data from intent
         Intent i = getIntent();
