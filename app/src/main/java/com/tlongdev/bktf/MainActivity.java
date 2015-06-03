@@ -87,10 +87,11 @@ public class MainActivity extends AppCompatActivity {
         mTitle = getTitle();
         onSectionAttached(0);
 
+        mFragmentContainerView = findViewById(R.id.navigation_drawer);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         // Set up the drawer.
-        setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
+        setUp();
 
         //Start services if option is on
         if (PreferenceManager.getDefaultSharedPreferences(this)
@@ -121,9 +122,11 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.text_view_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startSettingsActivity();
+                Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivityForResult(settingsIntent, REQUEST_SETTINGS);
             }
         });
+
         findViewById(R.id.text_view_help).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
             restartUserFragment = false;
         }
+
         super.onResume();
 
     }
@@ -202,14 +206,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Convenience activity to start the settings activity
-     */
-    public void startSettingsActivity() {
-        Intent settingsIntent = new Intent(this, SettingsActivity.class);
-        startActivityForResult(settingsIntent, REQUEST_SETTINGS);
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -238,16 +234,16 @@ public class MainActivity extends AppCompatActivity {
     public void onSectionAttached(int number) {
         switch (number) {
             case 0:
-                mTitle = getString(R.string.title_home);
+                setTitle(getString(R.string.title_home));
                 break;
             case 1:
-                mTitle = getString(R.string.title_user_profile);
+                setTitle(getString(R.string.title_user_profile));
                 break;
             case 2:
-                mTitle = getString(R.string.title_unusuals);
+                setTitle(getString(R.string.title_unusuals));
                 break;
             case 3:
-                mTitle = getString(R.string.title_calculator);
+                setTitle(getString(R.string.title_calculator));
         }
     }
 
@@ -256,9 +252,10 @@ public class MainActivity extends AppCompatActivity {
      */
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        if (actionBar != null) {
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+            actionBar.setDisplayShowTitleEnabled(true);
+        }
     }
 
     /**
@@ -344,26 +341,23 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Users of this fragment must call this method to set up the navigation drawer interactions.
-     *
-     * @param fragmentId   The android:id of this fragment in its activity's layout.
-     * @param drawerLayout The DrawerLayout containing this fragment's UI.
      */
-    public void setUp(int fragmentId, DrawerLayout drawerLayout) {
-        mFragmentContainerView = findViewById(fragmentId);
-        mDrawerLayout = drawerLayout;
+    public void setUp() {
 
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
 
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the navigation drawer and the action bar app icon.
         mDrawerToggle = new ActionBarDrawerToggle(
-                this,                    /* host Activity */
+                this,                             /* host Activity */
                 mDrawerLayout,                    /* DrawerLayout object */
                 R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
                 R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
