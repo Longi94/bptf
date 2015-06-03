@@ -1,16 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Simple gridview layout for unusual activity.-->
-<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/grid_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clipToPadding="false"
-    android:gravity="center"
-    android:horizontalSpacing="4dp"
-    android:numColumns="3"
-    android:padding="4dp"
-    android:stretchMode="columnWidth"
-    android:verticalSpacing="4dp"
-    tools:context="com.tlongdev.bktf.UnusualActivity" />
+    android:orientation="vertical"
+    tools:context="com.tlongdev.bktf.UnusualActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/bptfActionBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:navigationContentDescription="@string/abc_action_bar_up_description"
+        app:navigationIcon="?attr/homeAsUpIndicator" />
+
+    <!--Simple gridview layout for unusual activity.-->
+    <GridView
+        android:id="@+id/grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:gravity="center"
+        android:horizontalSpacing="4dp"
+        android:numColumns="3"
+        android:padding="4dp"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="4dp" />
+
+</LinearLayout>
+
 

@@ -7,6 +7,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.widget.GridView;
 
 import com.tlongdev.bktf.adapter.UnusualPricesCursorAdapter;
@@ -63,6 +64,10 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unusual);
+
+        // As we're using a Toolbar, we should retrieve it and set it to be our ActionBar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         //Get necessary data from intent
         Intent i = getIntent();

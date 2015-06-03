@@ -1,18 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Simple layout resource containing a listview for backpack activity.-->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--Simple layout resource containing a listview for backpack activity.-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.tlongdev.bktf.UserBackpackActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/bptfActionBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:navigationContentDescription="@string/abc_action_bar_up_description"
+        app:navigationIcon="?attr/homeAsUpIndicator" />
 
     <!--Listview showing the headers and items-->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_view_backpack"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:clipToPadding="false"
         android:padding="2dp"
         android:scrollbars="none" />
 
-</RelativeLayout>
+</LinearLayout>

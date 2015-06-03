@@ -9,6 +9,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.tlongdev.bktf.adapter.BackpackSectionHeaderAdapter;
@@ -84,6 +85,10 @@ public class UserBackpackActivity extends AppCompatActivity implements LoaderMan
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_backpack);
+
+        // As we're using a Toolbar, we should retrieve it and set it to be our ActionBar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         //Show the home button as back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

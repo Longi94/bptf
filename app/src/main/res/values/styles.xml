@@ -39,8 +39,9 @@
     </style>
 
     <!--Main Action Bar style-->
-    <style name="bptfActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
-        <item name="background">@color/bptf_main_blue</item>
+    <style name="bptfActionBar" parent="">
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
 </resources>

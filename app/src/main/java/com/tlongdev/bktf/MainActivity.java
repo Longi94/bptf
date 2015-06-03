@@ -74,8 +74,7 @@ public class MainActivity extends AppCompatActivity {
         //Set the default values for all preferences when the app is first loaded
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
 
-        // As we're using a Toolbar, we should retrieve it and set it
-        // to be our ActionBar
+        // As we're using a Toolbar, we should retrieve it and set it to be our ActionBar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

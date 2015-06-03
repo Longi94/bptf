@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Almost identical to fragment_user.xml. The only difference is the progress bar.-->
+<?xml version="1.0" encoding="utf-8"?><!--Almost identical to fragment_user.xml. The only difference is the progress bar.-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,513 +14,530 @@
         android:layout_height="64dp"
         android:layout_gravity="center" />
 
-    <ScrollView
-        android:id="@+id/scroll_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/bptfActionBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:orientation="vertical"
-            android:padding="8dp">
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            app:navigationContentDescription="@string/abc_action_bar_up_description"
+            app:navigationIcon="?attr/homeAsUpIndicator" />
 
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        <ScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:visibility="invisible">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:baselineAligned="false"
-                    android:orientation="horizontal"
-                    android:padding="4dp">
-
-                    <FrameLayout
-                        android:layout_width="128dp"
-                        android:layout_height="128dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginRight="16dp">
-
-                        <ImageView
-                            android:id="@+id/player_avatar"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/frame_user_state_offline"
-                            android:contentDescription="@string/description_player_avatar" />
-
-                    </FrameLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/text_view_player_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:singleLine="true"
-                            android:textColor="@color/text_view_default"
-                            android:textSize="28sp" />
-
-                        <TextView
-                            android:id="@+id/text_view_player_reputation"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/user_page_reputation"
-                            android:textColor="@color/text_view_default" />
-
-                        <TextView
-                            android:id="@+id/text_view_user_since"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/user_page_user_since"
-                            android:textColor="@color/text_view_default" />
-
-                        <TextView
-                            android:id="@+id/text_view_user_last_online"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/user_page_last_online"
-                            android:textColor="@color/text_view_default" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:layout_marginTop="6dp">
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                android:padding="8dp">
 
-                <LinearLayout
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        android:padding="4dp">
+
+                        <FrameLayout
+                            android:layout_width="128dp"
+                            android:layout_height="128dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginRight="16dp">
+
+                            <ImageView
+                                android:id="@+id/player_avatar"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/frame_user_state_offline"
+                                android:contentDescription="@string/description_player_avatar" />
+
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/text_view_player_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:singleLine="true"
+                                android:textColor="@color/text_view_default"
+                                android:textSize="28sp" />
+
+                            <TextView
+                                android:id="@+id/text_view_player_reputation"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/user_page_reputation"
+                                android:textColor="@color/text_view_default" />
+
+                            <TextView
+                                android:id="@+id/text_view_user_since"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/user_page_user_since"
+                                android:textColor="@color/text_view_default" />
+
+                            <TextView
+                                android:id="@+id/text_view_user_last_online"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/user_page_last_online"
+                                android:textColor="@color/text_view_default" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="4dp"
-                    card_view:cardCornerRadius="4dp">
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginTop="6dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="vertical"
+                        android:padding="4dp"
+                        card_view:cardCornerRadius="4dp">
 
-                        <Button
-                            android:id="@+id/button_bazaar_tf"
-                            android:layout_width="0dp"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:clickable="true"
-                            android:text="@string/user_page_link_bazaar" />
+                            android:orientation="horizontal">
 
-                        <Button
-                            android:id="@+id/button_tf2op"
-                            android:layout_width="0dp"
+                            <Button
+                                android:id="@+id/button_bazaar_tf"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:clickable="true"
+                                android:text="@string/user_page_link_bazaar" />
+
+                            <Button
+                                android:id="@+id/button_tf2op"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:clickable="true"
+                                android:text="@string/user_page_link_tf2op" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:clickable="true"
-                            android:text="@string/user_page_link_tf2op" />
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/button_tf2tp"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:clickable="true"
+                                android:text="@string/user_page_link_tf2tp" />
+
+                            <Button
+                                android:id="@+id/button_steamrep"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:clickable="true"
+                                android:text="@string/user_page_link_steamrep" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/button_steam_community"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:clickable="true"
+                                android:text="@string/user_page_link_community" />
+
+                            <Button
+                                android:id="@+id/button_backpack"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:clickable="true"
+                                android:text="@string/user_page_link_backpack" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                </android.support.v7.widget.CardView>
 
-                        <Button
-                            android:id="@+id/button_tf2tp"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:clickable="true"
-                            android:text="@string/user_page_link_tf2tp" />
-
-                        <Button
-                            android:id="@+id/button_steamrep"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:clickable="true"
-                            android:text="@string/user_page_link_steamrep" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <Button
-                            android:id="@+id/button_steam_community"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:clickable="true"
-                            android:text="@string/user_page_link_community" />
-
-                        <Button
-                            android:id="@+id/button_backpack"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:clickable="true"
-                            android:text="@string/user_page_link_backpack" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
+                <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:baselineAligned="false"
-                    android:orientation="horizontal"
-                    android:padding="4dp">
+                    android:layout_height="wrap_content">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:paddingEnd="4dp"
-                        android:paddingLeft="0dp"
-                        android:paddingRight="4dp"
-                        android:paddingStart="0dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/user_page_status"
-                            android:textColor="@color/text_view_default"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        android:padding="4dp">
 
                         <LinearLayout
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:paddingEnd="4dp"
+                            android:paddingLeft="0dp"
+                            android:paddingRight="4dp"
+                            android:paddingStart="0dp">
 
                             <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/user_page_trust"
-                                android:textColor="@color/text_view_default"
-                                android:textSize="16sp" />
-
-                            <TextView
-                                android:id="@+id/text_view_trust_status"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/status_background_neutral"
-                                android:paddingEnd="3dp"
-                                android:paddingLeft="3dp"
-                                android:paddingRight="3dp"
-                                android:text="@string/placeholder_unknown"
-                                android:textColor="#fff"
-                                android:textSize="16sp" />
+                                android:text="@string/user_page_status"
+                                android:textColor="@color/text_view_default"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/user_page_trust"
+                                    android:textColor="@color/text_view_default"
+                                    android:textSize="16sp" />
+
+                                <TextView
+                                    android:id="@+id/text_view_trust_status"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/status_background_neutral"
+                                    android:paddingEnd="3dp"
+                                    android:paddingLeft="3dp"
+                                    android:paddingRight="3dp"
+                                    android:text="@string/placeholder_unknown"
+                                    android:textColor="#fff"
+                                    android:textSize="16sp" />
+
+                            </LinearLayout>
+
+                            <View
+                                style="@style/DividerHorizontal.Margins"
+                                android:background="#555" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/user_page_link_steamrep"
+                                    android:textColor="@color/text_view_default"
+                                    android:textSize="16sp" />
+
+                                <TextView
+                                    android:id="@+id/text_view_steamrep_status"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/status_background_neutral"
+                                    android:paddingEnd="3dp"
+                                    android:paddingLeft="3dp"
+                                    android:paddingRight="3dp"
+                                    android:text="@string/placeholder_unknown"
+                                    android:textColor="#fff"
+                                    android:textSize="16sp" />
+
+                            </LinearLayout>
+
+                            <View
+                                style="@style/DividerHorizontal.Margins"
+                                android:background="#555" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/user_page_trade_status"
+                                    android:textColor="@color/text_view_default"
+                                    android:textSize="16sp" />
+
+                                <TextView
+                                    android:id="@+id/text_view_trade_status"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/status_background_neutral"
+                                    android:paddingEnd="3dp"
+                                    android:paddingLeft="3dp"
+                                    android:paddingRight="3dp"
+                                    android:text="@string/placeholder_unknown"
+                                    android:textColor="#fff"
+                                    android:textSize="16sp" />
+
+                            </LinearLayout>
+
+                            <View
+                                style="@style/DividerHorizontal.Margins"
+                                android:background="#555" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/user_page_vac"
+                                    android:textColor="@color/text_view_default"
+                                    android:textSize="16sp" />
+
+                                <TextView
+                                    android:id="@+id/text_view_vac_status"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/status_background_neutral"
+                                    android:paddingEnd="3dp"
+                                    android:paddingLeft="3dp"
+                                    android:paddingRight="3dp"
+                                    android:text="@string/placeholder_unknown"
+                                    android:textColor="#fff"
+                                    android:textSize="16sp" />
+
+                            </LinearLayout>
+
+                            <View
+                                style="@style/DividerHorizontal.Margins"
+                                android:background="#555" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/user_page_link_community"
+                                    android:textColor="@color/text_view_default"
+                                    android:textSize="16sp" />
+
+                                <TextView
+                                    android:id="@+id/text_view_community_status"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/status_background_neutral"
+                                    android:paddingEnd="3dp"
+                                    android:paddingLeft="3dp"
+                                    android:paddingRight="3dp"
+                                    android:text="@string/placeholder_unknown"
+                                    android:textColor="#fff"
+                                    android:textSize="16sp" />
+
+                            </LinearLayout>
 
                         </LinearLayout>
 
-                        <View
-                            style="@style/DividerHorizontal.Margins"
-                            android:background="#555" />
-
                         <LinearLayout
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:paddingEnd="4dp"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:paddingStart="4dp">
 
                             <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/user_page_link_steamrep"
-                                android:textColor="@color/text_view_default"
-                                android:textSize="16sp" />
 
-                            <TextView
-                                android:id="@+id/text_view_steamrep_status"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/status_background_neutral"
-                                android:paddingEnd="3dp"
-                                android:paddingLeft="3dp"
-                                android:paddingRight="3dp"
-                                android:text="@string/placeholder_unknown"
-                                android:textColor="#fff"
-                                android:textSize="16sp" />
-
-                        </LinearLayout>
-
-                        <View
-                            style="@style/DividerHorizontal.Margins"
-                            android:background="#555" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/user_page_trade_status"
+                                android:text="@string/user_page_link_backpack"
                                 android:textColor="@color/text_view_default"
-                                android:textSize="16sp" />
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
 
-                            <TextView
-                                android:id="@+id/text_view_trade_status"
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/status_background_neutral"
-                                android:paddingEnd="3dp"
-                                android:paddingLeft="3dp"
-                                android:paddingRight="3dp"
-                                android:text="@string/placeholder_unknown"
-                                android:textColor="#fff"
-                                android:textSize="16sp" />
+                                android:orientation="horizontal">
 
-                        </LinearLayout>
+                                <TextView
+                                    android:id="@+id/text_view_bp_refined"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/placeholder_unknown"
+                                    android:textColor="#000"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
 
-                        <View
-                            style="@style/DividerHorizontal.Margins"
-                            android:background="#555" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/user_page_refined"
+                                    android:textColor="@color/text_view_default"
+                                    android:textSize="16sp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            </LinearLayout>
 
-                            <TextView
-                                android:layout_width="0dp"
+                            <View
+                                style="@style/DividerHorizontal.Margins"
+                                android:background="#555" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/user_page_vac"
-                                android:textColor="@color/text_view_default"
-                                android:textSize="16sp" />
+                                android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/text_view_vac_status"
-                                android:layout_width="wrap_content"
+                                <TextView
+                                    android:id="@+id/text_view_bp_raw_metal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/placeholder_unknown"
+                                    android:textColor="#000"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/user_page_metal"
+                                    android:textColor="@color/text_view_default"
+                                    android:textSize="16sp" />
+
+                            </LinearLayout>
+
+                            <View
+                                style="@style/DividerHorizontal.Margins"
+                                android:background="#555" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/status_background_neutral"
-                                android:paddingEnd="3dp"
-                                android:paddingLeft="3dp"
-                                android:paddingRight="3dp"
-                                android:text="@string/placeholder_unknown"
-                                android:textColor="#fff"
-                                android:textSize="16sp" />
+                                android:orientation="horizontal">
 
-                        </LinearLayout>
+                                <TextView
+                                    android:id="@+id/text_view_bp_raw_keys"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/placeholder_unknown"
+                                    android:textColor="#000"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
 
-                        <View
-                            style="@style/DividerHorizontal.Margins"
-                            android:background="#555" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/user_page_keys"
+                                    android:textColor="@color/text_view_default"
+                                    android:textSize="16sp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            </LinearLayout>
 
-                            <TextView
-                                android:layout_width="0dp"
+                            <View
+                                style="@style/DividerHorizontal.Margins"
+                                android:background="#555" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/user_page_link_community"
-                                android:textColor="@color/text_view_default"
-                                android:textSize="16sp" />
+                                android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/text_view_community_status"
-                                android:layout_width="wrap_content"
+                                <TextView
+                                    android:id="@+id/text_view_bp_usd"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/placeholder_unknown"
+                                    android:textColor="#000"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/user_page_usd"
+                                    android:textColor="@color/text_view_default"
+                                    android:textSize="16sp" />
+
+                            </LinearLayout>
+
+                            <View
+                                style="@style/DividerHorizontal.Margins"
+                                android:background="#555" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/status_background_neutral"
-                                android:paddingEnd="3dp"
-                                android:paddingLeft="3dp"
-                                android:paddingRight="3dp"
-                                android:text="@string/placeholder_unknown"
-                                android:textColor="#fff"
-                                android:textSize="16sp" />
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/text_view_bp_slots"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/placeholder_slots_used"
+                                    android:textColor="#000"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/user_page_slots"
+                                    android:textColor="@color/text_view_default"
+                                    android:textSize="16sp" />
+
+                            </LinearLayout>
 
                         </LinearLayout>
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:paddingEnd="4dp"
-                        android:paddingLeft="4dp"
-                        android:paddingRight="4dp"
-                        android:paddingStart="4dp">
+                </android.support.v7.widget.CardView>
 
-                        <TextView
+            </LinearLayout>
 
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/user_page_link_backpack"
-                            android:textColor="@color/text_view_default"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/text_view_bp_refined"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/placeholder_unknown"
-                                android:textColor="#000"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/user_page_refined"
-                                android:textColor="@color/text_view_default"
-                                android:textSize="16sp" />
-
-                        </LinearLayout>
-
-                        <View
-                            style="@style/DividerHorizontal.Margins"
-                            android:background="#555" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/text_view_bp_raw_metal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/placeholder_unknown"
-                                android:textColor="#000"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/user_page_metal"
-                                android:textColor="@color/text_view_default"
-                                android:textSize="16sp" />
-
-                        </LinearLayout>
-
-                        <View
-                            style="@style/DividerHorizontal.Margins"
-                            android:background="#555" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/text_view_bp_raw_keys"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/placeholder_unknown"
-                                android:textColor="#000"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/user_page_keys"
-                                android:textColor="@color/text_view_default"
-                                android:textSize="16sp" />
-
-                        </LinearLayout>
-
-                        <View
-                            style="@style/DividerHorizontal.Margins"
-                            android:background="#555" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/text_view_bp_usd"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/placeholder_unknown"
-                                android:textColor="#000"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/user_page_usd"
-                                android:textColor="@color/text_view_default"
-                                android:textSize="16sp" />
-
-                        </LinearLayout>
-
-                        <View
-                            style="@style/DividerHorizontal.Margins"
-                            android:background="#555" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/text_view_bp_slots"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/placeholder_slots_used"
-                                android:textColor="#000"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/user_page_slots"
-                                android:textColor="@color/text_view_default"
-                                android:textSize="16sp" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-        </LinearLayout>
-
-    </ScrollView>
+        </ScrollView>
+    </LinearLayout>
 
 </FrameLayout>
