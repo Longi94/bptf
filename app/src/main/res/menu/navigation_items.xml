@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single" android:id="@+id/primary_items">
+        <item
+            android:id="@+id/nav_recents"
+            android:icon="@drawable/ic_new_releases_black_24dp"
+            android:title="@string/title_home" />
+        <item
+            android:id="@+id/nav_unusuals"
+            android:icon="@drawable/ic_whatshot_black_24dp"
+            android:title="@string/title_unusuals" />
+        <item
+            android:id="@+id/nav_calculator"
+            android:icon="@drawable/ic_calculator_24dp"
+            android:title="@string/title_calculator" />
+    </group>
+
+    <group android:id="@+id/secondary_items">
+            <item
+                android:id="@+id/nav_help"
+                android:icon="@drawable/ic_help_black_24dp"
+                android:title="@string/navigation_drawer_help" />
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_settings_black_24dp"
+                android:title="@string/action_settings" />
+    </group>
+</menu>

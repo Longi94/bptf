@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -19,11 +20,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
-import com.tlongdev.bktf.adapter.NavigationDrawerAdapter;
 import com.tlongdev.bktf.fragment.AdvancedCalculatorFragment;
 import com.tlongdev.bktf.fragment.HomeFragment;
 import com.tlongdev.bktf.fragment.SearchFragment;
@@ -32,8 +29,6 @@ import com.tlongdev.bktf.fragment.UnusualPriceListFragment;
 import com.tlongdev.bktf.fragment.UserFragment;
 import com.tlongdev.bktf.service.NotificationsService;
 import com.tlongdev.bktf.service.UpdateDatabaseService;
-
-import java.util.Arrays;
 
 /**
  * Tha main activity if the application. Navigation drawer is used. This is where most of the
@@ -64,8 +59,7 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
 
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerListView;
-    private View mFragmentContainerView;
+    private NavigationView mNavigationView;
 
     private int mCurrentSelectedPosition = 0;
 
@@ -87,9 +81,42 @@ public class MainActivity extends AppCompatActivity {
 
         onSectionAttached(0);
 
-        mFragmentContainerView = findViewById(R.id.navigation_drawer);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.bptf_main_blue_dark));
+        mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
+
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                mDrawerLayout.closeDrawers();
+                menuItem.setChecked(true);
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_recents:
+                        onNavigationDrawerItemSelected(0);
+                        break;
+                    case R.id.nav_unusuals:
+                        onNavigationDrawerItemSelected(2);
+                        break;
+                    case R.id.nav_calculator:
+                        onNavigationDrawerItemSelected(3);
+                        break;
+                    case R.id.nav_help:
+                        Uri webPage = Uri.parse("https://github.com/Longi94/bptf/wiki/Help");
+
+                        //Open link in the device default web browser
+                        Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            startActivity(intent);
+                        }
+                        break;
+                    case R.id.nav_settings:
+                        Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                        startActivityForResult(settingsIntent, REQUEST_SETTINGS);
+                        break;
+                }
+                return true;
+            }
+        });
 
         // Set up the drawer.
         setUp();
@@ -103,44 +130,6 @@ public class MainActivity extends AppCompatActivity {
                 .getBoolean(getString(R.string.pref_background_sync), false)) {
             startService(new Intent(this, UpdateDatabaseService.class));
         }
-
-        mDrawerListView = (ListView) findViewById(R.id.list_view_drawer);
-        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
-            }
-        });
-        mDrawerListView.setAdapter(new NavigationDrawerAdapter(
-                getSupportActionBar().getThemedContext(),
-                R.layout.simple_drawer_list_item,
-                Arrays.asList(getString(R.string.title_home),
-                        getString(R.string.title_user_profile),
-                        getString(R.string.title_prices),
-                        getString(R.string.title_calculator))));
-        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
-
-        findViewById(R.id.text_view_settings).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivityForResult(settingsIntent, REQUEST_SETTINGS);
-            }
-        });
-
-        findViewById(R.id.text_view_help).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Uri webPage = Uri.parse("https://github.com/Longi94/bptf/wiki/Help");
-
-                //Open link in the device default web browser
-                Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(intent);
-                }
-            }
-        });
 
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
@@ -337,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean isDrawerOpen() {
-        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
+        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mNavigationView);
     }
 
     /**
@@ -377,11 +366,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void selectItem(int position) {
         mCurrentSelectedPosition = position;
-        if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, true);
-        }
         if (mDrawerLayout != null) {
-            mDrawerLayout.closeDrawer(mFragmentContainerView);
+            mDrawerLayout.closeDrawer(mNavigationView);
         }
         onNavigationDrawerItemSelected(position);
     }
@@ -400,7 +386,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public int getCheckedItemPosition() {
-        return mDrawerListView.getCheckedItemPosition();
+        return 0; //TODO
     }
 
     @Override
