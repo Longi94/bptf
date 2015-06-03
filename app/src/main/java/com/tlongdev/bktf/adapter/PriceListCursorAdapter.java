@@ -25,7 +25,6 @@ import java.io.InputStream;
 
 public class PriceListCursorAdapter extends CursorAdapter {
 
-
     public PriceListCursorAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }
@@ -44,9 +43,9 @@ public class PriceListCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        view.setVisibility(View.INVISIBLE);
-        viewHolder.nameView.setVisibility(View.INVISIBLE);
-        viewHolder.priceView.setVisibility(View.INVISIBLE);
+        viewHolder.icon.setVisibility(View.INVISIBLE);
+        viewHolder.background.setBackgroundColor(Utility.getBackgroundColor(context,
+                cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL)));
 
         String itemTag = Utility.formatItemName(context,
                 cursor.getInt(HomeFragment.COL_PRICE_LIST_DEFI),
@@ -57,16 +56,15 @@ public class PriceListCursorAdapter extends CursorAdapter {
                 cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE));
         viewHolder.nameView.setText(itemTag);
 
-        viewHolder.background.setTag(itemTag);
+        viewHolder.nameView.setTag(itemTag);
 
         viewHolder.icon.setImageDrawable(null);
-        viewHolder.background.setBackgroundDrawable(null);
 
         LoadImagesTask task = (LoadImagesTask) viewHolder.icon.getTag();
         if (task != null) {
             task.cancel(true);
         }
-        task = new LoadImagesTask(context, view, viewHolder);
+        task = new LoadImagesTask(context, viewHolder);
         viewHolder.icon.setTag(task);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
                 (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_DEFI),
@@ -97,37 +95,35 @@ public class PriceListCursorAdapter extends CursorAdapter {
     }
 
     public static class ViewHolder {
+        public final View background;
         public final ImageView icon;
-        public final ImageView background;
 
         public final TextView nameView;
         public final TextView priceView;
 
         public ViewHolder(View view) {
+            background = view.findViewById(R.id.view_background);
             icon = (ImageView) view.findViewById(R.id.image_view_item_icon);
-            background = (ImageView) view.findViewById(R.id.image_view_item_background);
             nameView = (TextView) view.findViewById(R.id.item_name);
             priceView = (TextView) view.findViewById(R.id.item_price);
         }
     }
 
-    private class LoadImagesTask extends AsyncTask<Double, Void, Drawable[]> {
+    private class LoadImagesTask extends AsyncTask<Double, Void, Drawable> {
         private Context mContext;
-        private View rootView;
         private ViewHolder viewHolder;
         private String name;
 
-        private LoadImagesTask(Context context, View rootView, ViewHolder viewHolder) {
+        private LoadImagesTask(Context context, ViewHolder viewHolder) {
             mContext = context;
-            this.rootView = rootView;
             this.viewHolder = viewHolder;
-            name = (String) viewHolder.background.getTag();
+            name = (String) viewHolder.nameView.getTag();
         }
 
         @Override
-        protected Drawable[] doInBackground(Double... params) {
+        protected Drawable doInBackground(Double... params) {
             try {
-                Drawable[] returnVal = new Drawable[3];
+                Drawable returnVal;
                 AssetManager assetManager = mContext.getAssets();
 
                 InputStream ims;
@@ -141,12 +137,10 @@ public class PriceListCursorAdapter extends CursorAdapter {
                 if (params[1] != 0 && Utility.canHaveEffects(params[0].intValue(), params[4].intValue())) {
                     ims = assetManager.open("effects/" + params[1].intValue() + "_188x188.png");
                     Drawable effectDrawable = Drawable.createFromStream(ims, null);
-                    returnVal[0] = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
+                    returnVal = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
                 } else {
-                    returnVal[0] = iconDrawable;
+                    returnVal = iconDrawable;
                 }
-
-                returnVal[1] = Utility.getItemBackground(mContext, params[4].intValue(), params[5].intValue(), params[6].intValue());
 
                 return returnVal;
             } catch (IOException e) {
@@ -157,20 +151,16 @@ public class PriceListCursorAdapter extends CursorAdapter {
         }
 
         @Override
-        protected void onPostExecute(Drawable[] drawable) {
+        protected void onPostExecute(Drawable drawable) {
             if (drawable != null) {
-                viewHolder.icon.setImageDrawable(drawable[0]);
-                viewHolder.background.setBackgroundDrawable(drawable[1]);
+                viewHolder.icon.setImageDrawable(drawable);
             } else {
                 viewHolder.icon.setImageDrawable(null);
-                viewHolder.background.setBackgroundDrawable(null);
             }
             Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.simple_fade_in);
             fadeIn.setDuration(100);
-            rootView.startAnimation(fadeIn);
-            rootView.setVisibility(View.VISIBLE);
-            viewHolder.nameView.setVisibility(View.VISIBLE);
-            viewHolder.priceView.setVisibility(View.VISIBLE);
+            viewHolder.icon.startAnimation(fadeIn);
+            viewHolder.icon.setVisibility(View.VISIBLE);
         }
     }
 }

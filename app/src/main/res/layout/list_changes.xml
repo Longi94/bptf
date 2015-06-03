@@ -12,20 +12,18 @@
 
         <FrameLayout
             android:layout_width="84dp"
-            android:layout_height="72dp">
+            android:layout_height="84dp">
 
-            <!--Background of the item-->
-            <ImageView
-                android:id="@+id/image_view_item_background"
-                android:layout_width="84dp"
-                android:layout_height="72dp"
-                android:contentDescription="@string/description_background" />
+            <View
+                android:id="@+id/view_background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
             <!--Icon of the item-->
             <ImageView
                 android:id="@+id/image_view_item_icon"
-                android:layout_width="84dp"
-                android:layout_height="72dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:contentDescription="@string/description_icon"
                 android:scaleType="centerCrop" />
 
@@ -36,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="4dp">
+            android:padding="8dp">
 
             <!--Name of the item-->
             <TextView
@@ -44,9 +42,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:paddingEnd="2dp"
-                android:paddingRight="2dp"
-                android:paddingLeft="2dp"
                 android:textColor="#000"
                 android:textSize="16sp" />
 

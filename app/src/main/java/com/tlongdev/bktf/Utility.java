@@ -2008,6 +2008,37 @@ public class Utility {
                 " ) END ";
     }
 
+    public static int getBackgroundColor(Context context, int quality) {
+        //Convert the quality int to enum for better readability
+        Quality q = Quality.values()[quality];
+
+        //Siple switch case for getting the drawable from the resources
+        switch (q) {
+            case GENUINE:
+                return context.getResources().getColor(R.color.tf2_genuine_color_dark);
+            case VINTAGE:
+                return context.getResources().getColor(R.color.tf2_vintage_color_dark);
+            case UNUSUAL:
+                return context.getResources().getColor(R.color.tf2_unusual_color_dark);
+            case UNIQUE:
+                return context.getResources().getColor(R.color.tf2_unique_color_dark);
+            case COMMUNITY:
+                return context.getResources().getColor(R.color.tf2_community_color_dark);
+            case VALVE:
+                return context.getResources().getColor(R.color.tf2_valve_color_dark);
+            case SELF_MADE:
+                return context.getResources().getColor(R.color.tf2_community_color_dark);
+            case STRANGE:
+                return context.getResources().getColor(R.color.tf2_strange_color_dark);
+            case HAUNTED:
+                return context.getResources().getColor(R.color.tf2_haunted_color_dark);
+            case COLLECTORS:
+                return context.getResources().getColor(R.color.tf2_collectors_color_dark);
+            default:
+                return 0;
+        }
+    }
+
     /**
      * Convenience class for storing in pairs.
      */
