@@ -12,12 +12,11 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.TypedValue;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,13 +24,10 @@ import android.widget.Toast;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.SettingsActivity;
 import com.tlongdev.bktf.Utility;
-import com.tlongdev.bktf.adapter.PriceListCursorAdapter;
+import com.tlongdev.bktf.adapter.PriceListAdapter;
 import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
-import com.tlongdev.bktf.quickreturn.AbsListViewQuickReturnAttacher;
-import com.tlongdev.bktf.quickreturn.QuickReturnAttacher;
-import com.tlongdev.bktf.quickreturn.widget.QuickReturnAdapter;
-import com.tlongdev.bktf.quickreturn.widget.QuickReturnTargetView;
 import com.tlongdev.bktf.task.FetchPriceList;
+import com.tlongdev.bktf.view.SpacesItemDecoration;
 
 /**
  * Main fragment the shows the latest price changes.
@@ -74,7 +70,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
     private ProgressBar progressBar;
 
-    private PriceListCursorAdapter cursorAdapter;
+    private PriceListAdapter cursorAdapter;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView metalPrice;
@@ -129,29 +125,22 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             budsPriceImage.setBackgroundColor(0xff850000);
         }
 
-        cursorAdapter = new PriceListCursorAdapter(getActivity(), null, 0);
+        cursorAdapter = new PriceListAdapter(getActivity());
 
         // Get a reference to the ListView, and attach this adapter to it.
-        ListView mListView = (ListView) rootView.findViewById(R.id.list_view_changes);
+        RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_changes);
+        mRecyclerView.setHasFixedSize(true);
+        // use a linear layout manager
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.addItemDecoration(new SpacesItemDecoration((int)Utility.convertDpToPx(getActivity(), 8)));
 
         //Set up the swipe refresh layout (color and listener)
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
         mSwipeRefreshLayout.setColorSchemeColors(0xff5787c5);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        //Offset, so the header isn't in the way
-        mSwipeRefreshLayout.setProgressViewOffset(false,
-                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, -15, getResources().getDisplayMetrics()),
-                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 65, getResources().getDisplayMetrics()));
-
-        LinearLayout header = (LinearLayout) rootView.findViewById(R.id.list_changes_header);
-
         //Set up quick return
-        mListView.setAdapter(new QuickReturnAdapter(cursorAdapter));
-        AbsListViewQuickReturnAttacher quickReturnAttacher =
-                (AbsListViewQuickReturnAttacher) QuickReturnAttacher.forView(mListView);
-        quickReturnAttacher.addTargetView(header, QuickReturnTargetView.POSITION_TOP,
-                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 42, getResources().getDisplayMetrics()));
+        mRecyclerView.setAdapter(cursorAdapter);
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
 

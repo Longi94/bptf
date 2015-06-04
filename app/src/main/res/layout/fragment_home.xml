@@ -12,15 +12,12 @@
         android:clipChildren="false">
 
         <!--Listview containing the latest changes-->
-        <ListView
-            android:id="@+id/list_view_changes"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_changes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="8dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
+            android:padding="8dp"
             android:scrollbars="none" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
@@ -32,7 +29,8 @@
         android:layout_height="40dp"
         android:background="@color/bptf_main_blue"
         android:baselineAligned="false"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="0dp"

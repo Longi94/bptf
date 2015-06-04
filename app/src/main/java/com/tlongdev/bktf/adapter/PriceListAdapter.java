@@ -6,12 +6,12 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,78 +23,83 @@ import com.tlongdev.bktf.fragment.HomeFragment;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class PriceListCursorAdapter extends CursorAdapter {
+public class PriceListAdapter extends RecyclerView.Adapter<PriceListAdapter.ViewHolder> {
 
-    public PriceListCursorAdapter(Context context, Cursor c, int flags) {
-        super(context, c, flags);
+    private final Context mContext;
+    private Cursor mDataSet;
+
+    public PriceListAdapter(Context context) {
+        mContext = context;
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View view = LayoutInflater.from(context).inflate(R.layout.list_changes, parent, false);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        // create a new view
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_changes, parent, false);
 
-        ViewHolder viewHolder = new ViewHolder(view);
-        view.setTag(viewHolder);
-
-        return view;
+        return new ViewHolder(v);
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        ViewHolder viewHolder = (ViewHolder) view.getTag();
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        if (mDataSet != null && mDataSet.moveToPosition(position)) {
 
-        viewHolder.icon.setVisibility(View.INVISIBLE);
-        viewHolder.background.setBackgroundColor(Utility.getBackgroundColor(context,
-                cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL)));
+            holder.icon.setVisibility(View.INVISIBLE);
+            holder.background.setBackgroundColor(Utility.getBackgroundColor(mContext,
+                    mDataSet.getInt(HomeFragment.COL_PRICE_LIST_QUAL)));
 
-        String itemTag = Utility.formatItemName(context,
-                cursor.getInt(HomeFragment.COL_PRICE_LIST_DEFI),
-                cursor.getString(HomeFragment.COL_PRICE_LIST_NAME),
-                cursor.getInt(HomeFragment.COL_PRICE_LIST_TRAD),
-                cursor.getInt(HomeFragment.COL_PRICE_LIST_CRAF),
-                cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL),
-                cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE));
-        viewHolder.nameView.setText(itemTag);
+            String itemTag = Utility.formatItemName(mContext,
+                    mDataSet.getInt(HomeFragment.COL_PRICE_LIST_DEFI),
+                    mDataSet.getString(HomeFragment.COL_PRICE_LIST_NAME),
+                    mDataSet.getInt(HomeFragment.COL_PRICE_LIST_TRAD),
+                    mDataSet.getInt(HomeFragment.COL_PRICE_LIST_CRAF),
+                    mDataSet.getInt(HomeFragment.COL_PRICE_LIST_QUAL),
+                    mDataSet.getInt(HomeFragment.COL_PRICE_LIST_INDE));
+            holder.nameView.setText(itemTag);
 
-        viewHolder.nameView.setTag(itemTag);
+            holder.nameView.setTag(itemTag);
 
-        viewHolder.icon.setImageDrawable(null);
+            holder.icon.setImageDrawable(null);
 
-        LoadImagesTask task = (LoadImagesTask) viewHolder.icon.getTag();
-        if (task != null) {
-            task.cancel(true);
+            LoadImagesTask task = (LoadImagesTask) holder.icon.getTag();
+            if (task != null) {
+                task.cancel(true);
+            }
+            task = new LoadImagesTask(mContext, holder);
+            holder.icon.setTag(task);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                    (double) mDataSet.getInt(HomeFragment.COL_PRICE_LIST_DEFI),
+                    (double) mDataSet.getInt(HomeFragment.COL_PRICE_LIST_INDE),
+                    (double) mDataSet.getInt(HomeFragment.COL_PRICE_LIST_QUAL)
+            );
+
+            try {
+                holder.priceView.setText(Utility.formatPrice(mContext,
+                        mDataSet.getDouble(HomeFragment.COL_PRICE_LIST_PRIC),
+                        mDataSet.getDouble(HomeFragment.COL_PRICE_LIST_PMAX),
+                        mDataSet.getString(HomeFragment.COL_PRICE_LIST_CURR),
+                        mDataSet.getString(HomeFragment.COL_PRICE_LIST_CURR), false));
+            } catch (Throwable throwable) {
+                Toast.makeText(mContext, "bptf: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
+                if (Utility.isDebugging(mContext))
+                    throwable.printStackTrace();
+            }
         }
-        task = new LoadImagesTask(context, viewHolder);
-        viewHolder.icon.setTag(task);
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_DEFI),
-                (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE),
-                cursor.getDouble(HomeFragment.COL_PRICE_LIST_DIFF),
-                cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRAW),
-                (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL),
-                (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_TRAD),
-                (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_CRAF)
-        );
-
-        try {
-            viewHolder.priceView.setText(Utility.formatPrice(context,
-                    cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRIC),
-                    cursor.getDouble(HomeFragment.COL_PRICE_LIST_PMAX),
-                    cursor.getString(HomeFragment.COL_PRICE_LIST_CURR),
-                    cursor.getString(HomeFragment.COL_PRICE_LIST_CURR), false));
-        } catch (Throwable throwable) {
-            Toast.makeText(context, "bptf: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
-            if (Utility.isDebugging(context))
-                throwable.printStackTrace();
-        }
     }
 
     @Override
-    public boolean isEnabled(int position) {
-        return false;
+    public int getItemCount() {
+        if (mDataSet == null) return 0;
+        return mDataSet.getCount();
     }
 
-    public static class ViewHolder {
+    public void swapCursor(Cursor data) {
+        mDataSet = data;
+        notifyDataSetChanged();
+    }
+
+    public static class ViewHolder  extends RecyclerView.ViewHolder{
         public final View background;
         public final ImageView icon;
 
@@ -102,6 +107,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
         public final TextView priceView;
 
         public ViewHolder(View view) {
+            super(view);
             background = view.findViewById(R.id.view_background);
             icon = (ImageView) view.findViewById(R.id.image_view_item_icon);
             nameView = (TextView) view.findViewById(R.id.item_name);
@@ -110,12 +116,10 @@ public class PriceListCursorAdapter extends CursorAdapter {
     }
 
     private class LoadImagesTask extends AsyncTask<Double, Void, Drawable> {
-        private Context mContext;
         private ViewHolder viewHolder;
         private String name;
 
         private LoadImagesTask(Context context, ViewHolder viewHolder) {
-            mContext = context;
             this.viewHolder = viewHolder;
             name = (String) viewHolder.nameView.getTag();
         }
@@ -134,7 +138,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
                 }
 
                 Drawable iconDrawable = Drawable.createFromStream(ims, null);
-                if (params[1] != 0 && Utility.canHaveEffects(params[0].intValue(), params[4].intValue())) {
+                if (params[1] != 0 && Utility.canHaveEffects(params[0].intValue(), params[2].intValue())) {
                     ims = assetManager.open("effects/" + params[1].intValue() + "_188x188.png");
                     Drawable effectDrawable = Drawable.createFromStream(ims, null);
                     returnVal = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});

@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.TypedValue;
 
 import com.tlongdev.bktf.data.ItemSchemaDbHelper;
 import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
@@ -2037,6 +2038,10 @@ public class Utility {
             default:
                 return 0;
         }
+    }
+
+    public static float convertDpToPx(Context context, float dp) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
     }
 
     /**
