@@ -1,30 +1,33 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Layout resources for grid items with prices-->
-<com.tlongdev.bktf.view.CustomLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--Layout resources for grid items with prices-->
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/item_background_unusual">
+    android:layout_height="wrap_content"
+    android:foreground="@drawable/simple_grid_item_background">
 
-    <!--Icon of the item-->
-    <com.tlongdev.bktf.view.CustomImageView
-        android:id="@+id/image_view_item_icon"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:background="@drawable/simple_grid_item_background"
-        android:padding="3dp"
-        android:scaleType="centerCrop" />
-
-    <!--Price of the item-->
-    <TextView
-        android:id="@+id/grid_item_price"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_margin="3dp"
-        android:background="#44000000"
-        android:gravity="center"
-        android:padding="4dp"
-        android:textColor="#fff" />
+        android:orientation="vertical">
 
-</com.tlongdev.bktf.view.CustomLayout>
+        <!--Icon of the item-->
+        <com.tlongdev.bktf.view.SquareImageView
+            android:id="@+id/image_view_item_icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/tf2_unusual_color_dark"
+            android:scaleType="centerCrop" />
+
+        <!--Price of the item-->
+        <TextView
+            android:id="@+id/grid_item_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:gravity="center_horizontal"
+            android:padding="4dp"
+            android:textColor="#000" />
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

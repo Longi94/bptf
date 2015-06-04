@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--Simple layout resource containing a grid view for unusual prices.-->
 <GridView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,10 +8,11 @@
     android:layout_height="match_parent"
     android:clipToPadding="false"
     android:gravity="center"
-    android:horizontalSpacing="4dp"
+    android:horizontalSpacing="8dp"
     android:numColumns="3"
-    android:padding="4dp"
-    android:scrollbars="none"
+    android:padding="8dp"
+    android:scrollbarStyle="outsideOverlay"
+    android:scrollbars="vertical"
     android:stretchMode="columnWidth"
-    android:verticalSpacing="4dp"
+    android:verticalSpacing="8dp"
     tools:context="com.tlongdev.bktf.fragment.UnusualPriceListFragment" />

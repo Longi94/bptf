@@ -54,7 +54,7 @@ public class UnusualListCursorAdapter extends CursorAdapter {
         viewHolder.icon.setTag(task);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, defindex);
 
-        viewHolder.icon.setOnClickListener(new View.OnClickListener() {
+        viewHolder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(context, UnusualActivity.class);
@@ -73,10 +73,12 @@ public class UnusualListCursorAdapter extends CursorAdapter {
 
     public static class ViewHolder {
 
+        public final View layout;
         public final ImageView icon;
         public final TextView priceView;
 
         public ViewHolder(View view) {
+            layout = view.findViewById(R.id.root);
             icon = (ImageView) view.findViewById(R.id.image_view_item_icon);
             priceView = (TextView) view.findViewById(R.id.grid_item_price);
         }
