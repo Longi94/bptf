@@ -85,6 +85,19 @@ public class PriceListAdapter extends RecyclerView.Adapter<PriceListAdapter.View
                 if (Utility.isDebugging(mContext))
                     throwable.printStackTrace();
             }
+
+            Double difference = mDataSet.getDouble(HomeFragment.COL_PRICE_LIST_DIFF);
+            Double raw = mDataSet.getDouble(HomeFragment.COL_PRICE_LIST_PRAW);
+
+            if (difference.equals(raw)) {
+                holder.priceView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_grade_black_18dp, 0, 0, 0);
+            } else if (difference == 0.0) {
+                holder.priceView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cached_black_18dp, 0, 0, 0);
+            } else if (difference > 0.0) {
+                holder.priceView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_call_made_black_18dp, 0, 0, 0);
+            } else {
+                holder.priceView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_call_received_black_18dp, 0, 0, 0);
+            }
         }
     }
 

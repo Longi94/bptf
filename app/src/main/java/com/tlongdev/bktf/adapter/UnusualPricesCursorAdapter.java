@@ -72,14 +72,14 @@ public class UnusualPricesCursorAdapter extends CursorAdapter {
         if (!Utility.isPriceOld(cursor.getInt(UnusualActivity.COL_PRICE_LIST_UPDA))) {
             int difference = cursor.getInt(UnusualActivity.COL_PRICE_LIST_DIFF);
             if (difference > 0) {
-                viewHolder.priceView.setBackgroundColor(0x44008504);
+                viewHolder.change.setImageResource(R.drawable.ic_call_made_black_18dp);
             } else if (difference < 0) {
-                viewHolder.priceView.setBackgroundColor(0x44850000);
+                viewHolder.change.setImageResource(R.drawable.ic_call_received_black_18dp);
             } else {
-                viewHolder.priceView.setBackgroundColor(0x44f2ee11);
+                viewHolder.change.setImageResource(R.drawable.ic_grade_black_18dp);
             }
         } else {
-            viewHolder.priceView.setBackgroundColor(0x44000000);
+            viewHolder.change.setImageResource(0);
         }
     }
 
@@ -91,10 +91,12 @@ public class UnusualPricesCursorAdapter extends CursorAdapter {
     public static class ViewHolder {
 
         public final ImageView icon;
+        public final ImageView change;
         public final TextView priceView;
 
         public ViewHolder(View view) {
             icon = (ImageView) view.findViewById(R.id.image_view_item_icon);
+            change = (ImageView) view.findViewById(R.id.image_view_item_change);
             priceView = (TextView) view.findViewById(R.id.grid_item_price);
         }
     }
