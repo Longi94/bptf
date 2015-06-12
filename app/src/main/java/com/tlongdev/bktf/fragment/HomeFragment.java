@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
@@ -73,12 +72,12 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     private PriceListAdapter cursorAdapter;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private TextView metalPrice;
+   /* private TextView metalPrice;
     private TextView keyPrice;
     private TextView budsPrice;
     private View metalPriceImage;
     private View keyPriceImage;
-    private View budsPriceImage;
+    private View budsPriceImage;*/
 
     public HomeFragment() {
         //Required empty constructor
@@ -97,19 +96,19 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        metalPrice = (TextView) rootView.findViewById(R.id.text_view_metal_price);
+        /*metalPrice = (TextView) rootView.findViewById(R.id.text_view_metal_price);
         keyPrice = (TextView) rootView.findViewById(R.id.text_view_key_price);
         budsPrice = (TextView) rootView.findViewById(R.id.text_view_buds_price);
 
         metalPriceImage = rootView.findViewById(R.id.image_view_metal_price);
         keyPriceImage = rootView.findViewById(R.id.image_view_key_price);
-        budsPriceImage = rootView.findViewById(R.id.image_view_buds_price);
+        budsPriceImage = rootView.findViewById(R.id.image_view_buds_price);*/
 
-        metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
+        /*metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
         keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
-        budsPrice.setText(prefs.getString(getString(R.string.pref_buds_price), ""));
+        budsPrice.setText(prefs.getString(getString(R.string.pref_buds_price), ""));*/
 
-        if (Utility.getDouble(prefs, getString(R.string.pref_metal_diff), 0) > 0) {
+        /*if (Utility.getDouble(prefs, getString(R.string.pref_metal_diff), 0) > 0) {
             metalPriceImage.setBackgroundColor(0xff008504);
         } else {
             metalPriceImage.setBackgroundColor(0xff850000);
@@ -123,7 +122,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             budsPriceImage.setBackgroundColor(0xff008504);
         } else {
             budsPriceImage.setBackgroundColor(0xff850000);
-        }
+        }*/
 
         cursorAdapter = new PriceListAdapter(getActivity());
 
@@ -177,10 +176,15 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             if (prefs.getBoolean(getString(R.string.pref_auto_sync), false) &&
                     System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_price_list_update), 0) >= 3600000L
                     && Utility.isNetworkAvailable(getActivity())) {
-                FetchPriceList task = new FetchPriceList(getActivity(), true, false);
+                FetchPriceList task = new FetchPriceList(getActivity(), true, true);
                 task.setOnPriceListFetchListener(this);
                 task.execute();
-                mSwipeRefreshLayout.setRefreshing(true);
+                //Workaround for the sircle not appearing
+                mSwipeRefreshLayout.post(new Runnable() {
+                    @Override public void run() {
+                        mSwipeRefreshLayout.setRefreshing(true);
+                    }
+                });
             }
 
             if (prefs.getBoolean(getString(R.string.pref_dev_key_notification), true)) {
@@ -242,7 +246,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             //Update the header with currency prices
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-            metalPrice.setText(prefs.getString(getActivity().getString(R.string.pref_metal_price), ""));
+            /*metalPrice.setText(prefs.getString(getActivity().getString(R.string.pref_metal_price), ""));
             keyPrice.setText(prefs.getString(getActivity().getString(R.string.pref_key_price), ""));
             budsPrice.setText(prefs.getString(getActivity().getString(R.string.pref_buds_price), ""));
 
@@ -260,7 +264,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
                 budsPriceImage.setBackgroundColor(0xff008504);
             } else {
                 budsPriceImage.setBackgroundColor(0xff850000);
-            }
+            }*/
 
             if (prefs.getBoolean(getString(R.string.pref_dev_key_notification), true)) {
                 showDeveloperKeyNotifications();
