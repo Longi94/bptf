@@ -2,7 +2,6 @@ package com.tlongdev.bktf.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -21,18 +20,18 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.SettingsActivity;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.adapter.PriceListAdapter;
 import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
 import com.tlongdev.bktf.task.FetchPriceList;
+import com.tlongdev.bktf.task.FetchPriceList.OnPriceListFetchListener;
 import com.tlongdev.bktf.view.SpacesItemDecoration;
 
 /**
  * Main fragment the shows the latest price changes.
  */
 public class HomeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
-        SwipeRefreshLayout.OnRefreshListener, FetchPriceList.OnPriceListFetchListener {
+        SwipeRefreshLayout.OnRefreshListener, OnPriceListFetchListener {
 
     private static final String LOG_TAG = HomeFragment.class.getSimpleName();
 
@@ -72,12 +71,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     private PriceListAdapter cursorAdapter;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-   /* private TextView metalPrice;
-    private TextView keyPrice;
-    private TextView budsPrice;
-    private View metalPriceImage;
-    private View keyPriceImage;
-    private View budsPriceImage;*/
+
 
     public HomeFragment() {
         //Required empty constructor
@@ -93,36 +87,6 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-        /*metalPrice = (TextView) rootView.findViewById(R.id.text_view_metal_price);
-        keyPrice = (TextView) rootView.findViewById(R.id.text_view_key_price);
-        budsPrice = (TextView) rootView.findViewById(R.id.text_view_buds_price);
-
-        metalPriceImage = rootView.findViewById(R.id.image_view_metal_price);
-        keyPriceImage = rootView.findViewById(R.id.image_view_key_price);
-        budsPriceImage = rootView.findViewById(R.id.image_view_buds_price);*/
-
-        /*metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
-        keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
-        budsPrice.setText(prefs.getString(getString(R.string.pref_buds_price), ""));*/
-
-        /*if (Utility.getDouble(prefs, getString(R.string.pref_metal_diff), 0) > 0) {
-            metalPriceImage.setBackgroundColor(0xff008504);
-        } else {
-            metalPriceImage.setBackgroundColor(0xff850000);
-        }
-        if (Utility.getDouble(prefs, getString(R.string.pref_key_diff), 0) > 0) {
-            keyPriceImage.setBackgroundColor(0xff008504);
-        } else {
-            keyPriceImage.setBackgroundColor(0xff850000);
-        }
-        if (Utility.getDouble(prefs, getString(R.string.pref_buds_diff), 0) > 0) {
-            budsPriceImage.setBackgroundColor(0xff008504);
-        } else {
-            budsPriceImage.setBackgroundColor(0xff850000);
-        }*/
 
         cursorAdapter = new PriceListAdapter(getActivity());
 
@@ -155,7 +119,8 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         if (prefs.getBoolean(getString(R.string.pref_initial_load), true)) {
             if (Utility.isNetworkAvailable(getActivity())) {
                 FetchPriceList task = new FetchPriceList(getActivity(), false, false);
-                task.setOnPriceListFetchListener(this);
+                task.addOnPriceListFetchListener(this);
+                task.addOnPriceListFetchListener((OnPriceListFetchListener)getActivity());
                 task.execute();
             } else {
                 //Quit the app if the download failed.
@@ -177,7 +142,8 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
                     System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_price_list_update), 0) >= 3600000L
                     && Utility.isNetworkAvailable(getActivity())) {
                 FetchPriceList task = new FetchPriceList(getActivity(), true, true);
-                task.setOnPriceListFetchListener(this);
+                task.addOnPriceListFetchListener(this);
+                task.addOnPriceListFetchListener((OnPriceListFetchListener)getActivity());
                 task.execute();
                 //Workaround for the sircle not appearing
                 mSwipeRefreshLayout.post(new Runnable() {
@@ -187,10 +153,6 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
                 });
             }
 
-            if (prefs.getBoolean(getString(R.string.pref_dev_key_notification), true)) {
-                showDeveloperKeyNotifications();
-                prefs.edit().putBoolean(getString(R.string.pref_dev_key_notification), false).apply();
-            }
         }
     }
 
@@ -228,7 +190,8 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         //Manual update
         if (Utility.isNetworkAvailable(getActivity())) {
             FetchPriceList task = new FetchPriceList(getActivity(), true, true);
-            task.setOnPriceListFetchListener(this);
+            task.addOnPriceListFetchListener(this);
+            task.addOnPriceListFetchListener((OnPriceListFetchListener)getActivity());
             task.execute();
         } else {
             Toast.makeText(getActivity(), "bptf: " + getString(R.string.error_no_network),
@@ -242,49 +205,6 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         if (isAdded()) {
             //Stop animation
             mSwipeRefreshLayout.setRefreshing(false);
-
-            //Update the header with currency prices
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-            /*metalPrice.setText(prefs.getString(getActivity().getString(R.string.pref_metal_price), ""));
-            keyPrice.setText(prefs.getString(getActivity().getString(R.string.pref_key_price), ""));
-            budsPrice.setText(prefs.getString(getActivity().getString(R.string.pref_buds_price), ""));
-
-            if (Utility.getDouble(prefs, getActivity().getString(R.string.pref_metal_diff), 0.0) > 0.0) {
-                metalPriceImage.setBackgroundColor(0xff008504);
-            } else {
-                metalPriceImage.setBackgroundColor(0xff850000);
-            }
-            if (Utility.getDouble(prefs, getActivity().getString(R.string.pref_key_diff), 0.0) > 0.0) {
-                keyPriceImage.setBackgroundColor(0xff008504);
-            } else {
-                keyPriceImage.setBackgroundColor(0xff850000);
-            }
-            if (Utility.getDouble(prefs, getActivity().getString(R.string.pref_buds_diff), 0.0) > 0) {
-                budsPriceImage.setBackgroundColor(0xff008504);
-            } else {
-                budsPriceImage.setBackgroundColor(0xff850000);
-            }*/
-
-            if (prefs.getBoolean(getString(R.string.pref_dev_key_notification), true)) {
-                showDeveloperKeyNotifications();
-                prefs.edit().putBoolean(getString(R.string.pref_dev_key_notification), false).apply();
-            }
         }
-    }
-
-    private void showDeveloperKeyNotifications() {
-        //Quit the app if the download failed.
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(getString(R.string.message_developer_api)).setCancelable(false).
-                setPositiveButton(getString(R.string.action_yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivity(new Intent(getActivity(), SettingsActivity.class));
-                    }
-                }).
-                setNegativeButton(getString(R.string.action_later), null);
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
     }
 }

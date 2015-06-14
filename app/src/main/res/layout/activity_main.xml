@@ -10,28 +10,123 @@
 
     <!-- As the main content view, the view below consumes the entire
          space available using match_parent in both dimensions. -->
-    <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <!-- We use a Toolbar so that our drawer can be displayed
-             in front of the action bar -->
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            style="@style/bptfActionBar"
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize" />
+            android:layout_height="wrap_content">
+
+            <!-- We use a Toolbar so that our drawer can be displayed
+             in front of the action bar -->
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/bptfActionBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                android:minHeight="?attr/actionBarSize"
+                app:layout_scrollFlags="scroll|enterAlways"/>
+
+            <LinearLayout
+                android:id="@+id/list_changes_header"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/bptf_main_blue"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/text_view_metal_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:drawableLeft="@drawable/ic_metal_white_18dp"
+                        android:drawablePadding="2dp"
+                        android:gravity="center"
+                        android:textColor="#fff"
+                        android:textSize="14sp"/>
+
+                    <View
+                        android:id="@+id/image_view_metal_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:background="#ff850000"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/text_view_key_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:drawableLeft="@drawable/ic_vpn_key_white_18dp"
+                        android:drawablePadding="2dp"
+                        android:textColor="#fff"
+                        android:gravity="center"
+                        android:textSize="14sp"/>
+
+                    <View
+                        android:id="@+id/image_view_key_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:background="#ff850000"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/text_view_buds_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:drawableLeft="@drawable/ic_earbuds_18dp"
+                        android:drawablePadding="2dp"
+                        android:textColor="#fff"
+                        android:gravity="center"
+                        android:textSize="14sp"/>
+
+                    <View
+                        android:id="@+id/image_view_buds_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:background="#ff850000"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.design.widget.AppBarLayout>
 
         <!-- The rest of your content view -->
         <FrameLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-    </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
     <!-- android:layout_gravity="start" tells DrawerLayout to treat
          this as a sliding drawer on the left side for left-to-right
@@ -40,9 +135,6 @@
          android:layout_gravity="left" instead. -->
     <!-- The drawer is given a fixed width in dp and extends the full height of
          the container. -->
-
-    <!--Layout resource for the navigation drawer-->
-
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_view"
         android:layout_width="wrap_content"

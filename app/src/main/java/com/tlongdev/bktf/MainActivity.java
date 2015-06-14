@@ -1,8 +1,11 @@
 package com.tlongdev.bktf;
 
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +23,8 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.tlongdev.bktf.fragment.AdvancedCalculatorFragment;
 import com.tlongdev.bktf.fragment.HomeFragment;
@@ -29,12 +34,13 @@ import com.tlongdev.bktf.fragment.UnusualPriceListFragment;
 import com.tlongdev.bktf.fragment.UserFragment;
 import com.tlongdev.bktf.service.NotificationsService;
 import com.tlongdev.bktf.service.UpdateDatabaseService;
+import com.tlongdev.bktf.task.FetchPriceList;
 
 /**
  * Tha main activity if the application. Navigation drawer is used. This is where most of the
  * fragments are shown.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FetchPriceList.OnPriceListFetchListener  {
 
     //Request codes for onActivityResult
     public static final int REQUEST_SETTINGS = 100;
@@ -62,6 +68,13 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView mNavigationView;
 
     private int mCurrentSelectedPosition = 0;
+
+    private TextView metalPrice;
+    private TextView keyPrice;
+    private TextView budsPrice;
+    private View metalPriceImage;
+    private View keyPriceImage;
+    private View budsPriceImage;
 
     /**
      * {@inheritDoc}
@@ -138,6 +151,36 @@ public class MainActivity extends AppCompatActivity {
 
         // Select either the default item (0) or the last selected item.
         selectItem(mCurrentSelectedPosition);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        metalPrice = (TextView) findViewById(R.id.text_view_metal_price);
+        keyPrice = (TextView) findViewById(R.id.text_view_key_price);
+        budsPrice = (TextView) findViewById(R.id.text_view_buds_price);
+
+        metalPriceImage = findViewById(R.id.image_view_metal_price);
+        keyPriceImage = findViewById(R.id.image_view_key_price);
+        budsPriceImage = findViewById(R.id.image_view_buds_price);
+
+        metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
+        keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
+        budsPrice.setText(prefs.getString(getString(R.string.pref_buds_price), ""));
+
+        if (Utility.getDouble(prefs, getString(R.string.pref_metal_diff), 0) > 0) {
+            metalPriceImage.setBackgroundColor(0xff008504);
+        } else {
+            metalPriceImage.setBackgroundColor(0xff850000);
+        }
+        if (Utility.getDouble(prefs, getString(R.string.pref_key_diff), 0) > 0) {
+            keyPriceImage.setBackgroundColor(0xff008504);
+        } else {
+            keyPriceImage.setBackgroundColor(0xff850000);
+        }
+        if (Utility.getDouble(prefs, getString(R.string.pref_buds_diff), 0) > 0) {
+            budsPriceImage.setBackgroundColor(0xff008504);
+        } else {
+            budsPriceImage.setBackgroundColor(0xff850000);
+        }
     }
 
     /**
@@ -145,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onResume() {
+        super.onResume();
 
         //If needed (mostly when the steamId was changed) reload a new instance of the UserFragment
         if (restartUserFragment) {
@@ -155,8 +199,11 @@ public class MainActivity extends AppCompatActivity {
             restartUserFragment = false;
         }
 
-        super.onResume();
-
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (prefs.getBoolean(getString(R.string.pref_dev_key_notification), true)) {
+            showDeveloperKeyNotifications();
+            prefs.edit().putBoolean(getString(R.string.pref_dev_key_notification), false).apply();
+        }
     }
 
     /**
@@ -401,5 +448,52 @@ public class MainActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
+    }
+
+    @Override
+    public void onPriceListFetchFinished() {
+
+        //Update the header with currency prices
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
+        keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
+        budsPrice.setText(prefs.getString(getString(R.string.pref_buds_price), ""));
+
+        if (Utility.getDouble(prefs, getString(R.string.pref_metal_diff), 0.0) > 0.0) {
+            metalPriceImage.setBackgroundColor(0xff008504);
+        } else {
+            metalPriceImage.setBackgroundColor(0xff850000);
+        }
+        if (Utility.getDouble(prefs, getString(R.string.pref_key_diff), 0.0) > 0.0) {
+            keyPriceImage.setBackgroundColor(0xff008504);
+        } else {
+            keyPriceImage.setBackgroundColor(0xff850000);
+        }
+        if (Utility.getDouble(prefs, getString(R.string.pref_buds_diff), 0.0) > 0) {
+            budsPriceImage.setBackgroundColor(0xff008504);
+        } else {
+            budsPriceImage.setBackgroundColor(0xff850000);
+        }
+
+        if (prefs.getBoolean(getString(R.string.pref_dev_key_notification), true)) {
+            showDeveloperKeyNotifications();
+            prefs.edit().putBoolean(getString(R.string.pref_dev_key_notification), false).apply();
+        }
+    }
+
+    private void showDeveloperKeyNotifications() {
+        //Quit the app if the download failed.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.message_developer_api)).setCancelable(false).
+                setPositiveButton(getString(R.string.action_yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                    }
+                }).
+                setNegativeButton(getString(R.string.action_later), null);
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

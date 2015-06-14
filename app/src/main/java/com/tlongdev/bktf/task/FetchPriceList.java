@@ -29,6 +29,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Vector;
 
 /**
@@ -57,7 +58,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
     private String apiKey;
 
     //The listener that will be notified when the fetching finishes
-    private OnPriceListFetchListener listener;
+    private LinkedList<OnPriceListFetchListener> listeners = new LinkedList<>();
 
     //the variable that contains the birth time of the youngest price
     private int latestUpdate = 0;
@@ -317,9 +318,9 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
         if (loadingDialog != null && !updateDatabase)
             loadingDialog.dismiss();
 
-        if (listener != null) {
-            //Notify the listener that the update finished
-            listener.onPriceListFetchFinished();
+        for (OnPriceListFetchListener listener : listeners) {
+            if (listener != null)
+                listener.onPriceListFetchFinished();
         }
     }
 
@@ -328,8 +329,17 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
      *
      * @param listener the listener to be notified
      */
-    public void setOnPriceListFetchListener(OnPriceListFetchListener listener) {
-        this.listener = listener;
+    public void addOnPriceListFetchListener(OnPriceListFetchListener listener) {
+        listeners.add(listener);
+    }
+
+    /**
+     * Remove a listener.
+     *
+     * @param listener the listener to be removed
+     */
+    public void removeOnPriceListFetchListener(OnPriceListFetchListener listener) {
+        listeners.remove(listener);
     }
 
     /**
