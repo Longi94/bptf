@@ -14,6 +14,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -71,10 +74,16 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     private PriceListAdapter cursorAdapter;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
+    private RecyclerView mRecyclerView;
 
     public HomeFragment() {
         //Required empty constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -91,7 +100,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         cursorAdapter = new PriceListAdapter(getActivity());
 
         // Get a reference to the ListView, and attach this adapter to it.
-        RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_changes);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_changes);
         mRecyclerView.setHasFixedSize(true);
         // use a linear layout manager
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -120,7 +129,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             if (Utility.isNetworkAvailable(getActivity())) {
                 FetchPriceList task = new FetchPriceList(getActivity(), false, false);
                 task.addOnPriceListFetchListener(this);
-                task.addOnPriceListFetchListener((OnPriceListFetchListener)getActivity());
+                task.addOnPriceListFetchListener((OnPriceListFetchListener) getActivity());
                 task.execute();
             } else {
                 //Quit the app if the download failed.
@@ -143,7 +152,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
                     && Utility.isNetworkAvailable(getActivity())) {
                 FetchPriceList task = new FetchPriceList(getActivity(), true, true);
                 task.addOnPriceListFetchListener(this);
-                task.addOnPriceListFetchListener((OnPriceListFetchListener)getActivity());
+                task.addOnPriceListFetchListener((OnPriceListFetchListener) getActivity());
                 task.execute();
                 //Workaround for the sircle not appearing
                 mSwipeRefreshLayout.post(new Runnable() {
@@ -206,5 +215,20 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             //Stop animation
             mSwipeRefreshLayout.setRefreshing(false);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_home, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_to_top) {
+            mRecyclerView.smoothScrollToPosition(0);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
