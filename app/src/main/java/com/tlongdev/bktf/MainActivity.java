@@ -10,7 +10,10 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -40,7 +43,7 @@ import com.tlongdev.bktf.task.FetchPriceList;
  * Tha main activity if the application. Navigation drawer is used. This is where most of the
  * fragments are shown.
  */
-public class MainActivity extends AppCompatActivity implements FetchPriceList.OnPriceListFetchListener  {
+public class MainActivity extends AppCompatActivity implements FetchPriceList.OnPriceListFetchListener, AppBarLayout.OnOffsetChangedListener {
 
     //Request codes for onActivityResult
     public static final int REQUEST_SETTINGS = 100;
@@ -75,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
     private View metalPriceImage;
     private View keyPriceImage;
     private View budsPriceImage;
+    private CoordinatorLayout mCoordinatorLayout;
+    private AppBarLayout mAppBarLayout;
 
     /**
      * {@inheritDoc}
@@ -93,12 +98,14 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
 
         onSectionAttached(0);
 
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
+        mAppBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.bptf_main_blue_dark));
+
         mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
-
         mNavigationView.getMenu().getItem(0).setChecked(true);
-
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -204,6 +211,14 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
             showDeveloperKeyNotifications();
             prefs.edit().putBoolean(getString(R.string.pref_dev_key_notification), false).apply();
         }
+
+        mAppBarLayout.addOnOffsetChangedListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mAppBarLayout.removeOnOffsetChangedListener(this);
     }
 
     /**
@@ -408,7 +423,13 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
                 mDrawerLayout,                    /* DrawerLayout object */
                 R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
                 R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
-        );
+        ) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                expandToolbar();
+            }
+        };
 
         // Defer code dependent on restoration of previous instance state.
         mDrawerLayout.post(new Runnable() {
@@ -504,5 +525,28 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
                 setNegativeButton(getString(R.string.action_later), null);
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    public void expandToolbar() {
+        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
+        behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
+    }
+
+    public void collapseToolbar() {
+        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
+        behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, 1000, true);
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+        if (currentFragment == 0) {
+            FragmentManager manager = getSupportFragmentManager();
+            HomeFragment fragment = (HomeFragment) manager.findFragmentById(R.id.container);
+            if (i == 0) {
+                fragment.setRefreshEnabled(true);
+            } else {
+                fragment.setRefreshEnabled(false);
+            }
+        }
     }
 }

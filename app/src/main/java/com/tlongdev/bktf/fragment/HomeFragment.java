@@ -231,4 +231,8 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public void setRefreshEnabled(boolean refreshEnabled) {
+        mSwipeRefreshLayout.setEnabled(refreshEnabled);
+    }
 }
