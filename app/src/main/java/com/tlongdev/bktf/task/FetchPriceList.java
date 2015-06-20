@@ -689,7 +689,15 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
         itemValues.put(PriceEntry.COLUMN_ITEM_QUALITY, Integer.parseInt(quality));
         itemValues.put(PriceEntry.COLUMN_ITEM_TRADABLE, itemTradable);
         itemValues.put(PriceEntry.COLUMN_ITEM_CRAFTABLE, itemCraftable);
-        itemValues.put(PriceEntry.COLUMN_PRICE_INDEX, Integer.parseInt(priceIndex));
+        try {
+            itemValues.put(PriceEntry.COLUMN_PRICE_INDEX, Integer.parseInt(priceIndex));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+
+            String[] numbers = priceIndex.split("-");
+            int formattedIndex = (Integer.parseInt(numbers[1]) << 16) + Integer.parseInt(numbers[0]);
+            itemValues.put(PriceEntry.COLUMN_PRICE_INDEX, formattedIndex);
+        }
         itemValues.put(PriceEntry.COLUMN_ITEM_PRICE_CURRENCY, currency);
         itemValues.put(PriceEntry.COLUMN_ITEM_PRICE, value);
         if (valueHigh != null) {
