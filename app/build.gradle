@@ -3,48 +3,14 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 22
     buildToolsVersion '22.0.1'
-
-    def versionPropsFile = file('version.properties')
-
-    if (versionPropsFile.canRead()) {
-
-        def Properties versionProps = new Properties()
-
-        versionProps.load(new FileInputStream(versionPropsFile))
-        /*def value = 0
-        def runTasks = gradle.startParameter.taskNames
-        if ('assemble' in runTasks || 'assembleRelease' in runTasks || 'aR' in runTasks) {
-            value = 1;
-        }*/
-
-        def versionMajor = 1
-        def versionMinor = 1
-        def versionPatch = 6/*versionProps['VERSION_PATCH'].toInteger() + value*/
-        def versionBuild = versionProps['VERSION_BUILD'].toInteger() + 1
-        /*def version_Code = versionProps['VERSION_CODE'].toInteger() + value*/
-
-        /*versionProps['VERSION_PATCH'] = versionPatch.toString()*/
-        versionProps['VERSION_BUILD'] = versionBuild.toString()
-        /*versionProps['VERSION_CODE'] = version_Code.toString()*/
-
-        versionProps.store(versionPropsFile.newWriter(), null)
-
-        defaultConfig {
-            applicationId "com.tlongdev.bktf"
-            minSdkVersion 14
-            targetSdkVersion 22
-            versionCode 13
-            versionName "${versionMajor}.${versionMinor}.${versionPatch}"
-        }
-
-    } else {
-        throw new GradleException("Could not read version.properties!")
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
-    }
+	
+	defaultConfig {
+		applicationId "com.tlongdev.bktf"
+		minSdkVersion 14
+		targetSdkVersion 22
+		versionCode 13
+		versionName "1.1.6"
+	}
     buildTypes {
         release {
             minifyEnabled false
