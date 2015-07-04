@@ -397,16 +397,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
                 continue;
             JSONArray defindexes = item.getJSONArray(OWM_DEFINDEX);
 
-            int defindex = 0;
-
-            //The api does not return any defindex for these items.
-            if (defindexes.length() > 0) {
-                defindex = defindexes.getInt(0);
-            } else if (name.equals("Strange Part: Fires Survived")) {
-                defindex = 6057;
-            } else if (name.equals("Strange Part: Freezecam Taunt Appearances")) {
-                defindex = 6055;
-            }
+            int defindex = defindexes.getInt(0);
 
             //Iterate through the qualities
             Iterator<String> qualityIterator = prices.keys();
