@@ -14,7 +14,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
@@ -86,7 +85,6 @@ public class PriceListCursorAdapter extends CursorAdapter {
                     cursor.getString(HomeFragment.COL_PRICE_LIST_CURR),
                     cursor.getString(HomeFragment.COL_PRICE_LIST_CURR), false));
         } catch (Throwable throwable) {
-            Toast.makeText(context, "bptf: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
             if (Utility.isDebugging(context))
                 throwable.printStackTrace();
         }

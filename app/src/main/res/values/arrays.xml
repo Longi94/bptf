@@ -66,6 +66,7 @@
         <item>@string/array_origin_mvm_completion</item>
         <item>@string/array_origin_surplus</item>
         <item>@string/array_origin_recipe</item>
+        <item>@string/array_origin_unkown</item>
     </string-array>
 
     <!--Simple array for the spinner in the item chooser dialog-->
@@ -236,4 +237,5 @@
         <item>3004</item>
     </integer-array>
 
+    <string name="array_origin_unkown">Unkown</string>
 </resources>

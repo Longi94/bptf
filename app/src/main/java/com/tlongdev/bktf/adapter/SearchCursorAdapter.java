@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
@@ -103,7 +102,6 @@ public class SearchCursorAdapter extends CursorAdapter {
                             true
                     ));
                 } catch (Throwable throwable) {
-                    Toast.makeText(context, "bptf: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
                     if (Utility.isDebugging(context))
                         throwable.printStackTrace();
                 }
@@ -160,7 +158,6 @@ public class SearchCursorAdapter extends CursorAdapter {
             // set image to ImageView
             icon.setImageDrawable(d);
         } catch (IOException e) {
-            Toast.makeText(context, "bptf: " + e.getMessage(), Toast.LENGTH_LONG).show();
             if (Utility.isDebugging(context))
                 e.printStackTrace();
         }
