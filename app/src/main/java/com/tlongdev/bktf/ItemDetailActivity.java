@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
 import com.tlongdev.bktf.data.UserBackpackContract.UserBackpackEntry;
@@ -409,7 +408,6 @@ public class ItemDetailActivity extends Activity {
             // set the drawable to ImageView
             icon.setImageDrawable(d);
         } catch (IOException e) {
-            Toast.makeText(context, "bptf: " + e.getMessage(), Toast.LENGTH_LONG).show();
             if (Utility.isDebugging(context))
                 e.printStackTrace();
         }

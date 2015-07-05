@@ -109,7 +109,13 @@ public class Utility {
             }
 
         //Convert the quality int to enum for better readability
-        Quality q = Quality.values()[quality];
+        Quality[] values = Quality.values();
+        Quality q;
+        if (quality >= values.length) {
+            q = Quality.NORMAL;
+        } else {
+            q = Quality.values()[quality];
+        }
 
         //Switch case for the quality
         switch (q) {
@@ -168,9 +174,16 @@ public class Utility {
      */
     public static String formatSimpleItemName(Context context, int defindex, String name,
                                               int quality, int index, boolean isProper) {
-        if (Quality.values()[quality] == Quality.UNUSUAL) {
+        Quality[] values = Quality.values();
+        Quality q;
+        if (quality >= values.length) {
+            q = Quality.NORMAL;
+        } else {
+            q = Quality.values()[quality];
+        }
+        if (q == Quality.UNUSUAL) {
             return context.getString(R.string.quality_unusual) + " " + name;
-        } else if (isProper && Quality.values()[quality] == Quality.UNIQUE) {
+        } else if (isProper && q == Quality.UNIQUE) {
             return formatItemName(context, defindex, "The " + name, 1, 1, quality, index);
         } else {
             return formatItemName(context, defindex, name, 1, 1, quality, index);
@@ -362,14 +375,20 @@ public class Utility {
     public static LayerDrawable getItemBackground(Context context, int quality, int tradable,
                                                   int craftable) {
         //Convert the quality int to enum for better readability
-        Quality q = Quality.values()[quality];
+        Quality[] values = Quality.values();
+        Quality q;
+        if (quality >= values.length) {
+            q = Quality.NORMAL;
+        } else {
+            q = Quality.values()[quality];
+        }
 
         //Three drawables, that will be merged into a single drawable.
         Drawable itemFrame;
         Drawable craftableFrame;
         Drawable tradableFrame;
 
-        //Siple switch case for getting the drawable from the resources
+        //Simple switch case for getting the drawable from the resources
         switch (q) {
             case GENUINE:
                 itemFrame = context.getResources().getDrawable(R.drawable.item_background_genuine);
