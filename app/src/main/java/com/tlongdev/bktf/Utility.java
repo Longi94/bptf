@@ -1576,15 +1576,19 @@ public class Utility {
                 return 8269;
             case 8457:
             case 8650: //grey shield first
+            case 8780:
                 return 8339;
             case 8458:
             case 8651: //grey shield second
+            case 8781:
                 return 8340;
             case 8459:
             case 8652: //grey shield third
+            case 8782:
                 return 8341;
             case 8460:
             case 8653: //grey shield participant
+            case 8783:
                 return 8342;
             case 8347:
             case 8351:
@@ -1598,6 +1602,10 @@ public class Utility {
             case 8658:
             case 8662:
             case 8666: //gold shield first
+            case 8784:
+            case 8788:
+            case 8792:
+            case 8796:
                 return 8343;
             case 8348:
             case 8352:
@@ -1611,6 +1619,10 @@ public class Utility {
             case 8659:
             case 8663:
             case 8667: //gold shield second
+            case 8785:
+            case 8789:
+            case 8793:
+            case 8797:
                 return 8344;
             case 8349:
             case 8353:
@@ -1624,6 +1636,10 @@ public class Utility {
             case 8660:
             case 8664:
             case 8668: //gold shield third
+            case 8786:
+            case 8790:
+            case 8794:
+            case 8798:
                 return 8345;
             case 8350:
             case 8354:
@@ -1637,6 +1653,10 @@ public class Utility {
             case 8661:
             case 8665:
             case 8669: //gold shield participant
+            case 8787:
+            case 8791:
+            case 8795:
+            case 8799:
                 return 8346;
             case 8388: //silver shooting star first
                 return 8368;
@@ -1924,18 +1944,30 @@ public class Utility {
             case 8638:
             case 8642:
             case 8646: //hexagon medal gold
+            case 8800:
+            case 8804:
+            case 8808:
                 return 8634;
             case 8639:
             case 8643:
             case 8647: //hexagon medal silver
+            case 8801:
+            case 8805:
+            case 8809:
                 return 8635;
             case 8640:
             case 8644:
             case 8648: //hexagon medal bronze
+            case 8802:
+            case 8806:
+            case 8810:
                 return 8636;
             case 8641:
             case 8645:
             case 8649: //hexagon medal participant
+            case 8803:
+            case 8807:
+            case 8811:
                 return 8637;
             case 8901:
             case 8902:
@@ -1970,6 +2002,21 @@ public class Utility {
             case 20008:
             case 20009://chemistry sets
                 return 20000;
+            case 25001:
+            case 25002:
+            case 25003:
+            case 25004:
+            case 25005:
+            case 25006:
+            case 25007:
+            case 25008:
+            case 25009:
+            case 25010:
+            case 25011:
+            case 25012:
+            case 25013:
+            case 25014://quest thingie
+                return 25000;
             case 30144:
             case 30145:
             case 30146:
