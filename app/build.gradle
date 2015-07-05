@@ -3,14 +3,14 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 22
     buildToolsVersion '22.0.1'
-	
-	defaultConfig {
-		applicationId "com.tlongdev.bktf"
-		minSdkVersion 14
-		targetSdkVersion 22
-		versionCode 13
-		versionName "1.1.6"
-	}
+
+    defaultConfig {
+        applicationId "com.tlongdev.bktf"
+        minSdkVersion 14
+        targetSdkVersion 22
+        versionCode 14
+        versionName "1.1.7"
+    }
     buildTypes {
         release {
             minifyEnabled false

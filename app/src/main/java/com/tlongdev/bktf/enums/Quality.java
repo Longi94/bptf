@@ -18,5 +18,6 @@ public enum Quality {
     STRANGE,
     UNUSED4,
     HAUNTED,
-    COLLECTORS
+    COLLECTORS,
+    PAINTKITWEAPON
 }
