@@ -432,56 +432,17 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
                         //Casting is redundant, but or some reason it doesn't work without it
                         String craftable = craftableIterator.next();
 
-                        //If there are multiple price indexes the api return a JSONObject, if there
-                        //is only one (0) the api returns a JSONArray (great...)
-                        if (craftability.get(craftable) instanceof JSONObject) {
+                        JSONObject priceIndexes = craftability.getJSONObject(craftable);
 
-                            JSONObject priceIndexes = craftability.getJSONObject(craftable);
+                        //Iterate through the price indexes
+                        Iterator<String> priceIndexIterator = priceIndexes.keys();
+                        while (priceIndexIterator.hasNext()) {
 
-                            //Iterate through the price indexes
-                            Iterator<String> priceIndexIterator = priceIndexes.keys();
-                            while (priceIndexIterator.hasNext()) {
+                            //Casting is redundant but or some reason it doesn't work without it
+                            String priceIndex = priceIndexIterator.next();
 
-                                //Casting is redundant but or some reason it doesn't work without it
-                                String priceIndex = priceIndexIterator.next();
-
-                                //Get the price
-                                JSONObject price = priceIndexes.getJSONObject(priceIndex);
-
-                                //Temporary variables so we can check if they even exist
-                                Double high = null;
-                                String currency = null;
-                                double value = 0;
-                                int lastUpdate = 0;
-                                double difference = 0;
-
-                                if (price.has(OWM_VALUE_HIGH))
-                                    high = price.getDouble(OWM_VALUE_HIGH);
-
-                                if (price.has(OWM_CURRENCY))
-                                    currency = price.getString(OWM_CURRENCY);
-
-                                if (price.has(OWM_VALUE))
-                                    value = price.getDouble(OWM_VALUE);
-
-                                if (price.has(OWM_LAST_UPDATE))
-                                    lastUpdate = price.getInt(OWM_LAST_UPDATE);
-
-                                if (price.has(OWM_DIFFERENCE))
-                                    difference = price.getDouble(OWM_DIFFERENCE);
-
-                                //Add the price to the CV vector
-                                cVVector.add(buildContentValues(defindex,
-                                        name, quality, tradable, craftable, priceIndex,
-                                        currency, value, high, lastUpdate,
-                                        difference
-                                ));
-                            }
-                        } else {
-                            JSONArray priceIndexes = craftability.getJSONArray(craftable);
-
-                            //The array has only one element
-                            JSONObject price = priceIndexes.getJSONObject(0);
+                            //Get the price
+                            JSONObject price = priceIndexes.getJSONObject(priceIndex);
 
                             //Temporary variables so we can check if they even exist
                             Double high = null;
@@ -507,7 +468,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
 
                             //Add the price to the CV vector
                             cVVector.add(buildContentValues(defindex,
-                                    name, quality, tradable, craftable, "0",
+                                    name, quality, tradable, craftable, priceIndex,
                                     currency, value, high, lastUpdate,
                                     difference
                             ));
@@ -643,6 +604,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
 
         return true;
     }
+
 
     /**
      * Convenient method for building content values which are to be inserted into the database
