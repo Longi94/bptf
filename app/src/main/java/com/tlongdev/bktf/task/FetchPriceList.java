@@ -7,8 +7,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -122,24 +120,24 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
         try {
             //The prices api and input keys
             final String PRICES_BASE_URL = mContext.getString(R.string.backpack_tf_get_prices);
-            final String KEY_PARAM = "key";
+            /*final String KEY_PARAM = "key";
             final String KEY_COMPRESS = "compress";
             final String KEY_APP_ID = "app_id";
             final String KEY_FORMAT = "format";
             final String KEY_RAW = "raw";
-            final String KEY_SINCE = "since";
+            final String KEY_SINCE = "since";*/
 
             //Build the URI
-            Uri.Builder builder = Uri.parse(PRICES_BASE_URL).buildUpon()
+            /*Uri.Builder builder = Uri.parse(PRICES_BASE_URL).buildUpon();
                     .appendQueryParameter(KEY_PARAM, apiKey)
                     .appendQueryParameter(KEY_COMPRESS, "1")
                     .appendQueryParameter(KEY_APP_ID, "440")
                     .appendQueryParameter(KEY_FORMAT, "json")
-                    .appendQueryParameter(KEY_RAW, "1");
+                    .appendQueryParameter(KEY_RAW, "1");*/
 
             //Get the youngest price from the database. If it's an update only prices newer than this
             //will be updated to speed up the update and reduce data usage.
-            if (updateDatabase) {
+            /*if (updateDatabase) {
                 String[] columns = {PriceEntry.COLUMN_LAST_UPDATE};
                 Cursor cursor = mContext.getContentResolver().query(
                         PriceEntry.CONTENT_URI,
@@ -153,15 +151,15 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
                 cursor.close();
 
                 builder.appendQueryParameter(KEY_SINCE, String.valueOf(latestUpdate));
-            }
+            }*/
 
-            Uri uri = builder.build();
+            /*Uri uri = builder.build();*/
 
             //Initialize the URL
-            URL url = new URL(uri.toString());
+            URL url = new URL(PRICES_BASE_URL);
 
-            if (Utility.isDebugging(mContext))
-                Log.v(LOG_TAG, "Built uri: " + uri.toString());
+            /*if (Utility.isDebugging(mContext))
+                Log.v(LOG_TAG, "Built uri: " + uri.toString());*/
 
             //Open connection
             urlConnection = (HttpURLConnection) url.openConnection();
