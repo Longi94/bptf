@@ -7,10 +7,6 @@
             android:key="@string/pref_steam_id"
             android:title="@string/pref_steam_id" />
 
-        <com.tlongdev.bktf.preference.DeveloperKeyPreference
-            android:key="@string/pref_developer_key"
-            android:title="@string/pref_title_developer_key" />
-
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_category_sync">

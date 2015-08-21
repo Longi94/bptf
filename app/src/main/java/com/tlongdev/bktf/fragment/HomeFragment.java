@@ -2,7 +2,6 @@ package com.tlongdev.bktf.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.SettingsActivity;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.adapter.PriceListCursorAdapter;
 import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
@@ -193,11 +191,6 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
                 task.execute();
                 mSwipeRefreshLayout.setRefreshing(true);
             }
-
-            if (prefs.getBoolean(getString(R.string.pref_dev_key_notification), true)) {
-                showDeveloperKeyNotifications();
-                prefs.edit().putBoolean(getString(R.string.pref_dev_key_notification), false).apply();
-            }
         }
     }
 
@@ -272,26 +265,6 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             } else {
                 budsPriceImage.setBackgroundColor(0xff850000);
             }
-
-            if (prefs.getBoolean(getString(R.string.pref_dev_key_notification), true)) {
-                showDeveloperKeyNotifications();
-                prefs.edit().putBoolean(getString(R.string.pref_dev_key_notification), false).apply();
-            }
         }
-    }
-
-    private void showDeveloperKeyNotifications() {
-        //Quit the app if the download failed.
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(getString(R.string.message_developer_api)).setCancelable(false).
-                setPositiveButton(getString(R.string.action_yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivity(new Intent(getActivity(), SettingsActivity.class));
-                    }
-                }).
-                setNegativeButton(getString(R.string.action_later), null);
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
     }
 }
