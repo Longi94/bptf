@@ -655,7 +655,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
             itemValues.put(PriceEntry.COLUMN_ITEM_PRICE_MAX, valueHigh);
         }
         //TODO placeholder
-        itemValues.put(PriceEntry.COLUMN_ITEM_PRICE_RAW, 0);
+        itemValues.put("raw", 0);
         itemValues.put(PriceEntry.COLUMN_LAST_UPDATE, update);
         itemValues.put(PriceEntry.COLUMN_DIFFERENCE, difference);
 
