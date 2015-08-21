@@ -13,13 +13,11 @@
     <string name="pref_buds_price" translatable="false">pref_buds_price</string>
     <string name="pref_buds_raw" translatable="false">pref_buds_raw_v2</string>
     <string name="pref_debug" translatable="false">pref_debug</string>
-    <string name="pref_dev_key_notification" translatable="false">pref_dev_key_notfication</string>
     <string name="pref_developer_key" translatable="false">pref_developer_key</string>
     <string name="pref_initial_load" translatable="false">initial_load</string>
     <string name="pref_key_diff" translatable="false">pref_key_diff_v2</string>
     <string name="pref_key_price" translatable="false">pref_key_price</string>
     <string name="pref_key_raw" translatable="false">pref_key_raw_v2</string>
-    <string name="pref_last_backpack_update" translatable="false">pref_last_backpack_update</string>
     <string name="pref_last_price_list_update" translatable="false">pref_last_price_list_update</string>
     <string name="pref_last_user_data_update" translatable="false">pref_last_user_data_update</string>
     <string name="pref_main_preference_screen" translatable="false">main_preference_screen</string>
@@ -30,7 +28,6 @@
     <string name="pref_notification" translatable="false">pref_notification</string>
     <string name="pref_notification_interval" translatable="false">pref_notification_interval</string>
     <string name="pref_player_avatar_url" translatable="false">pref_player_avatar_url</string>
-    <string name="pref_player_backpack_value_dota2" translatable="false">pref_player_backpack_value_dota2</string>
     <string name="pref_player_backpack_value_tf2" translatable="false">pref_player_backpack_value_tf2_v2</string>
     <string name="pref_player_banned" translatable="false">pref_player_banned</string>
     <string name="pref_player_community_banned" translatable="false">pref_player_community_banned</string>
@@ -62,13 +59,10 @@
     <string name="action_cancel" translatable="true">Cancel</string>
     <string name="action_close" translatable="true">Close</string>
     <string name="action_clear" translatable="true">Clear items</string>
-    <string name="action_later" translatable="true">Maybe later</string>
-    <string name="action_refresh" translatable="true">Refresh</string>
     <string name="action_settings" translatable="true">Settings</string>
     <string name="action_show_advanced" translatable="true">Advanced mode</string>
     <string name="action_show_simple" translatable="true">Simple mode</string>
     <string name="action_sort" translatable="true">Sort</string>
-    <string name="action_yes" translatable="true">Yes</string>
 
     <!--Searchview-->
 
@@ -80,13 +74,9 @@
     <string name="title_activity_credits" translatable="false">Credits</string>
     <string name="title_activity_item_chooser" translatable="false">ItemChooserActivity</string>
     <string name="title_activity_item_detail" translatable="false">ItemDetailActivity</string>
-    <string name="title_activity_search" translatable="false">SearchActivity</string>
     <string name="title_activity_settings" translatable="false">Settings</string>
-    <string name="title_activity_steam_login" translatable="false">SteamLoginActivity</string>
     <string name="title_activity_unusual" translatable="false">UnusualActivity</string>
     <string name="title_activity_user_backpack" translatable="false">UserBackpackActivity</string>
-    <string name="title_activity_user_info" translatable="false">UserInfoActivity</string>
-    <string name="title_activity_welcome" translatable="false">WelcomeActivity</string>
     <string name="title_calculator" translatable="true">Calculator</string>
     <string name="title_custom_profile" formatted="false" translatable="true">%s\'s profile</string>
     <string name="title_custom_backpack" formatted="false" translatable="true">%s\'s backpack</string>
@@ -100,18 +90,12 @@
 
     <string name="pref_title_quick_return" translatable="false">QuickReturn</string>
     <string name="pref_summary_developer" translatable="false">Long Tran</string>
-    <string name="pref_button_api_key" translatable="false">backpack.tf/api/register</string>
     <string name="pref_category_about" translatable="true">About</string>
     <string name="pref_category_account" translatable="true">Account</string>
     <string name="pref_category_dev" translatable="true">Developer</string>
     <string name="pref_category_notification" translatable="true">Notifications</string>
-    <string name="pref_description_api_key" translatable="true">Providing your own API key fixes the issue, where sometimes you wouldn\'t be able to refresh. To register your own API key go to:</string>
-    <string name="pref_description_api_key_default" translatable="true">Using the default key</string>
-    <string name="pref_description_api_key_custom" translatable="true">Using a custom key</string>
     <string name="pref_category_sync" translatable="true">Syncing</string>
-    <string name="pref_hint_dev_key" translatable="true">API key</string>
     <string name="pref_hint_steam_id" translatable="true">Steam ID</string>
-    <string name="pref_policy_api_key" translatable="true">Your key will not be shared with anyone.</string>
     <string name="pref_policy_steam_id" translatable="true">Your id will not be shared with anyone.</string>
     <string name="pref_summary_off_auto_sync" translatable="true">Manual refresh</string>
     <string name="pref_summary_on_auto_sync" translatable="true">Auto-update database</string>
@@ -123,7 +107,6 @@
     <string name="pref_title_credits" translatable="true">Credits</string>
     <string name="pref_title_debug_logs" translatable="true">Enable debug logs</string>
     <string name="pref_title_developer" translatable="true">Developer</string>
-    <string name="pref_title_developer_key" translatable="true">Custom API key</string>
     <string name="pref_title_feedback" translatable="true">Send feedback or bug report</string>
     <string name="pref_title_notification" translatable="true">backpack.tf Notifications</string>
     <string name="pref_title_notification_interval" translatable="true">Check for notifications</string>
@@ -384,11 +367,8 @@
     <string name="message_private_backpack" formatted="false" translatable="true">%s\'s backpack is private</string>
     <string name="message_private_backpack_own" translatable="true">Your backpack is private</string>
     <string name="message_send_email" translatable="true">Send email…</string>
-    <string name="message_developer_api" translatable="true">Due to limitations, a single API key must wait at least 5 seconds to make a new API request. Since the app uses a single key, everyone using this app will use the same API key, which can result in a failure when trying to update prices. You can fix this by providing your own API key. Would you like to do that now?</string>
     <string name="message_database_create" translatable="true">Creating database…</string>
     <string name="message_database_fail_network" translatable="true">Failed to download database. Check your internet connection and try again.</string>
-    <string name="message_database_fail_overload" translatable="true">Failed to download database. Negative response from API. Try again shortly.</string>
-    <string name="message_database_full_update_pending" translatable="true">Currency price updated. The whole database will be updated on the next refresh.</string>
 
     <!--Error messages-->
 
