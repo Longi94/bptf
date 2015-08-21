@@ -425,23 +425,5 @@
     <string name="header_page" formatted="false" translatable="true">Page %d</string>
     <string name="notification_unread_title" formatted="false" translatable="true">%d unread notifications on bp.tf</string>
     <string name="notification_unread_description" translatable="true">Tap to open in browser.</string>
-    <string name="title_activity_fuck">FuckActivity</string>
-
-    <string name="hello_world">Hello world!</string>
-    <string name="apology">
-        As you may have noticed, updating the local price database fails very frequently.
-        This is because a restriction that one can use a single developer key to access the
-        backpack.tf API no more often than every 2 minutes. This makes this application pretty
-        much useless, since most of the users use my developer key. For this reason, I have to
-        create a separate server, which will update it\'s own database every 2-5 minutes and provide
-        access for this app with no restrictions.
-        \n\nHowever, I don\'t have time to work on the app in the summer (mostly because of work and
-        other personal stuff) and the development has been on
-        a halt since June. The development will resume at the beginning of September. Until then I
-        pulled the application from the Play Store and disabled my development key. If you want to
-        use the app with your own development key. Send me an email (tlongdev@gmail.com) and I\'ll send you the previous
-        version of the application.
-        \n\nI hope you understand and I\'m really sorry for the inconvenience.
-    </string>
 
 </resources>
