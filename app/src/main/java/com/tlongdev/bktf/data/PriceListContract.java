@@ -47,7 +47,7 @@ public final class PriceListContract {
         public static final String COLUMN_ITEM_PRICE_CURRENCY = "currency";
         public static final String COLUMN_ITEM_PRICE = "price";
         public static final String COLUMN_ITEM_PRICE_MAX = "max";
-        public static final String COLUMN_ITEM_PRICE_RAW = "raw";
+        protected static final String COLUMN_ITEM_PRICE_RAW = "raw"; // TODO: 2015. 08. 21. REMOVE COLUMN
         public static final String COLUMN_LAST_UPDATE = "last_update";
         public static final String COLUMN_DIFFERENCE = "difference";
         public static final String COLUMN_PRICE_INDEX = "price_index";

@@ -34,7 +34,7 @@ public class AdvancedCalculatorFragment extends Fragment {
 
     private static final String[] PRICE_LIST_COLUMNS = {
             PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
-            PriceEntry.COLUMN_ITEM_PRICE_RAW,
+            null,
     };
 
     //Indexes for the columns above
@@ -62,6 +62,8 @@ public class AdvancedCalculatorFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        PRICE_LIST_COLUMNS[COL_PRICE_LIST_PRAW] = Utility.getRawPriceQueryString(getActivity());
     }
 
     @Override
@@ -176,10 +178,10 @@ public class AdvancedCalculatorFragment extends Fragment {
                 null
         );
 
-        if (cursor.moveToFirst()) {
+        if (cursor != null && cursor.moveToFirst()) {
             totalPrice += cursor.getDouble(COL_PRICE_LIST_PRAW) * count;
+            cursor.close();
         }
-        cursor.close();
 
         try {
             priceMetal.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
@@ -206,10 +208,10 @@ public class AdvancedCalculatorFragment extends Fragment {
                 null
         );
 
-        if (cursor.moveToFirst()) {
+        if (cursor != null && cursor.moveToFirst()) {
             totalPrice -= cursor.getDouble(COL_PRICE_LIST_PRAW) * count;
+            cursor.close();
         }
-        cursor.close();
 
         try {
             priceMetal.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
