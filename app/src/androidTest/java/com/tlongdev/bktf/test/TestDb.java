@@ -69,7 +69,7 @@ public class TestDb extends AndroidTestCase{
         values.put(PriceEntry.COLUMN_ITEM_PRICE_CURRENCY, "Metal");
         values.put(PriceEntry.COLUMN_ITEM_PRICE, 1.33);
         values.put(PriceEntry.COLUMN_ITEM_PRICE_MAX, 1.66);
-        values.put(PriceEntry.COLUMN_ITEM_PRICE_RAW, 1.46);
+        values.put("raw", 1.46);
         values.put(PriceEntry.COLUMN_LAST_UPDATE, 123);
         values.put(PriceEntry.COLUMN_DIFFERENCE, 0.11);
 
