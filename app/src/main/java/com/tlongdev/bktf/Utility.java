@@ -1043,6 +1043,8 @@ public class Utility {
             case 198:
             case 199:
                 return defindex - 190;
+            case 1155: //wrench
+                return 7;
             case 200:
             case 201:
             case 202:
@@ -1111,6 +1113,7 @@ public class Utility {
             case 2079:
             case 2123:
             case 2125: //map stamps packs
+            case 2138:
                 return 2007;
             case 2035:
             case 2036:
@@ -1148,6 +1151,8 @@ public class Utility {
                 return 524;
             case 5020: //desc tag
                 return 2093;
+            case 5814: //scrap metal
+                return 5000;
             case 5041:
             case 5045: //duplicate crates
                 return 5022;
@@ -1577,18 +1582,22 @@ public class Utility {
             case 8457:
             case 8650: //grey shield first
             case 8780:
+            case 8839:
                 return 8339;
             case 8458:
             case 8651: //grey shield second
             case 8781:
+            case 8840:
                 return 8340;
             case 8459:
             case 8652: //grey shield third
             case 8782:
+            case 8841:
                 return 8341;
             case 8460:
             case 8653: //grey shield participant
             case 8783:
+            case 8842:
                 return 8342;
             case 8347:
             case 8351:
@@ -1606,6 +1615,10 @@ public class Utility {
             case 8788:
             case 8792:
             case 8796:
+            case 8843:
+            case 8847:
+            case 8851:
+            case 8855:
                 return 8343;
             case 8348:
             case 8352:
@@ -1623,6 +1636,10 @@ public class Utility {
             case 8789:
             case 8793:
             case 8797:
+            case 8844:
+            case 8848:
+            case 8852:
+            case 8856:
                 return 8344;
             case 8349:
             case 8353:
@@ -1640,6 +1657,10 @@ public class Utility {
             case 8790:
             case 8794:
             case 8798:
+            case 8845:
+            case 8849:
+            case 8853:
+            case 8857:
                 return 8345;
             case 8350:
             case 8354:
@@ -1657,6 +1678,10 @@ public class Utility {
             case 8791:
             case 8795:
             case 8799:
+            case 8846:
+            case 8850:
+            case 8854:
+            case 8858:
                 return 8346;
             case 8388: //silver shooting star first
                 return 8368;
@@ -1787,18 +1812,30 @@ public class Utility {
             case 8741:
             case 8746:
             case 8751:
+            case 8812:
+            case 8816:
+            case 8821:
+            case 8826:
                 return 8502;
             case 8535: //tf2 medal silver
             case 8738:
             case 8742:
             case 8747:
             case 8752:
+            case 8813:
+            case 8817:
+            case 8822:
+            case 8827:
                 return 8503;
             case 8536: //tf2 medal bronze
             case 8739:
             case 8743:
             case 8748:
             case 8753:
+            case 8814:
+            case 8818:
+            case 8823:
+            case 8828:
                 return 8504;
             case 8506:
             case 8507:
@@ -1814,6 +1851,9 @@ public class Utility {
             case 8744:
             case 8749:
             case 8754:
+            case 8819:
+            case 8824:
+            case 8829:
                 return 8505;
             case 8512:
             case 8513:
@@ -1832,6 +1872,10 @@ public class Utility {
             case 8745:
             case 8750:
             case 8755:
+            case 8815:
+            case 8820:
+            case 8825:
+            case 8830:
                 return 8511;
             case 8550: //tf2 medal gold_
             case 8756:
@@ -1969,6 +2013,14 @@ public class Utility {
             case 8807:
             case 8811:
                 return 8637;
+            case 8835: //bullet gold
+                return 8831;
+            case 8836: //bullet silver
+                return 8832;
+            case 8837: //bullet bronze
+                return 8833;
+            case 8838: //bullet participant
+                return 8834;
             case 8901:
             case 8902:
             case 8903:
