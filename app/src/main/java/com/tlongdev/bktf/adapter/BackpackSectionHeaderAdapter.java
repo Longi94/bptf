@@ -111,6 +111,7 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                         int itemIndex = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_INDE);
                         int paint = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_PAIN);
                         int australium = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_AUS);
+                        int wear = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_WEAR);
 
                         holder.icon[i].setImageDrawable(null);
                         holder.icon[i].setBackgroundDrawable(null);
@@ -126,7 +127,7 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                             task = new ImageLoader(mContext, holder.icon[i], holder.background[i]);
                             holder.icon[i].setTag(task);
                             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                                    defindex, quality, tradable, craftable, itemIndex, paint, australium);
+                                    defindex, quality, tradable, craftable, itemIndex, paint, australium, wear);
 
                             holder.parent[i].setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -275,10 +276,14 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                 AssetManager assetManager = mContext.getAssets();
                 Drawable d;
 
-                if (params[6] == 1) {
-                    ims = assetManager.open("items/" + Utility.getIconIndex(params[0]) + "aus.png");
+                if (params[0] >= 15000 && params[0] <= 15059) {
+                    ims = assetManager.open("skins/" + Utility.getIconIndex(params[0]) + "/" + params[7] + ".png");
                 } else {
-                    ims = assetManager.open("items/" + Utility.getIconIndex(params[0]) + ".png");
+                    if (params[6] == 1) {
+                        ims = assetManager.open("items/" + Utility.getIconIndex(params[0]) + "aus.png");
+                    } else {
+                        ims = assetManager.open("items/" + Utility.getIconIndex(params[0]) + ".png");
+                    }
                 }
 
                 Drawable iconDrawable = Drawable.createFromStream(ims, null);
@@ -302,7 +307,7 @@ public class BackpackSectionHeaderAdapter extends RecyclerView.Adapter<BackpackS
                     e.printStackTrace();
             }
 
-            drawables[1] = Utility.getItemBackground(mContext, params[1], params[2], params[3]);
+            drawables[1] = Utility.getItemBackground(mContext, params[0], params[1], params[2], params[3]);
 
             return drawables;
         }
