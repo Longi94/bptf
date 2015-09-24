@@ -947,6 +947,9 @@ public class Utility {
      * @return true if the item can have particle effects
      */
     public static boolean canHaveEffects(int defindex, int quality) {
+        if (defindex >= 15000 && defindex <= 15059) {
+            return false; //TODO weapon effects disabled for now
+        }
         //Unusuals, self-made and community items
         if (quality == 5 || quality == 7 || quality == 9) {
             return defindex != 267 && defindex != 266;
@@ -2274,6 +2277,90 @@ public class Utility {
             case 15045:
             case 15059:
                 return isDark ? R.color.tf2_decorated_weapon_elite_dark : R.color.tf2_decorated_weapon_elite;
+            default:
+                throw new IllegalArgumentException("Invalid defindex: " + defindex);
+        }
+    }
+
+    public static String getDecoratedWeaponDesc(String type, int defindex, int wear) {
+        String wearStr;
+        switch (wear) {
+            case 1045220557: wearStr = "(Factory New)"; break;
+            case 1053609165: wearStr = "(Minimal Wear)"; break;
+            case 1058642330: wearStr = "(Field-Tested)"; break;
+            case 1061997773: wearStr = "(Well Worn)"; break;
+            case 1065353216: wearStr = "(Battle Scarred)"; break;
+            default:
+                throw new IllegalArgumentException("Invalid wear: " + wear);
+        }
+
+        switch (defindex) {
+            case 15025:
+            case 15026:
+            case 15027:
+            case 15028:
+            case 15029:
+            case 15039:
+            case 15040:
+            case 15041:
+            case 15042:
+            case 15043:
+            case 15044:
+                return "Civilian Grade " + type + " " + wearStr;
+            case 15020:
+            case 15021:
+            case 15022:
+            case 15023:
+            case 15024:
+            case 15035:
+            case 15036:
+            case 15037:
+            case 15038:
+                return "Freelance Grade " + type + " " + wearStr;
+            case 15000:
+            case 15001:
+            case 15003:
+            case 15004:
+            case 15005:
+            case 15008:
+            case 15016:
+            case 15017:
+            case 15018:
+            case 15032:
+            case 15033:
+            case 15034:
+            case 15047:
+            case 15054:
+            case 15055:
+            case 15057:
+            case 15058:
+                return "Mercenary Grade " + type + " " + wearStr;
+            case 15002:
+            case 15006:
+            case 15010:
+            case 15012:
+            case 15015:
+            case 15019:
+            case 15030:
+            case 15031:
+            case 15046:
+            case 15049:
+            case 15050:
+            case 15051:
+            case 15056:
+                return "Commando Grade " + type + " " + wearStr;
+            case 15007:
+            case 15009:
+            case 15011:
+            case 15048:
+            case 15052:
+            case 15053:
+                return "Assassin Grade " + type + " " + wearStr;
+            case 15013:
+            case 15014:
+            case 15045:
+            case 15059:
+                return "Elite Grade " + type + " " + wearStr;
             default:
                 throw new IllegalArgumentException("Invalid defindex: " + defindex);
         }

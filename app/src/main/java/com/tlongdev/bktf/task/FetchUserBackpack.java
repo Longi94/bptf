@@ -165,6 +165,13 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
                                 attribute.getInt(OWM_VALUE));
                         break;
                     case 725://Decorated weapon wear
+                        /*
+                        1045220557 - Factory New
+                        1053609165 - Minimal Wear
+                        1058642330 - Field-Tested
+                        1061997773 - Well Worn
+                        1065353216 - Battle Scarred
+                        */
                         values.put(UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR,
                                 attribute.getLong(OWM_VALUE));
                         break;

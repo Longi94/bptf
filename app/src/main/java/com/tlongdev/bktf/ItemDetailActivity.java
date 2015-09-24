@@ -255,8 +255,12 @@ public class ItemDetailActivity extends Activity {
                     mIntent.getIntExtra(EXTRA_PROPER_NAME, 0) == 1));
 
             //Set the level of the item, get the type from the intent
-            level.setText(getString(R.string.item_detail_level, itemCursor.getInt(COL_BACKPACK_LEVEL)
-                    , mIntent.getStringExtra(EXTRA_ITEM_TYPE)));
+            if (defindex >= 15000 && defindex <= 15059) {
+                level.setText(Utility.getDecoratedWeaponDesc(mIntent.getStringExtra(EXTRA_ITEM_TYPE), defindex, wear));
+            } else {
+                level.setText(getString(R.string.item_detail_level, itemCursor.getInt(COL_BACKPACK_LEVEL)
+                        , mIntent.getStringExtra(EXTRA_ITEM_TYPE)));
+            }
 
             //Set the origin of the item. Get the origin from the string array resource
             origin.setText(getString(R.string.item_detail_origin) + ": " +
