@@ -21,6 +21,13 @@
     <color name="tf2_vintage_color">#476291</color>
     <color name="tf2_genuine_color">#4D7455</color>
 
+    <color name="tf2_decorated_weapon_civilian">#B0C3D9</color>
+    <color name="tf2_decorated_weapon_freelance">#5E98D9</color>
+    <color name="tf2_decorated_weapon_mercenary">#4B69FF</color>
+    <color name="tf2_decorated_weapon_commando">#8847FF</color>
+    <color name="tf2_decorated_weapon_assassin">#D32CE6</color>
+    <color name="tf2_decorated_weapon_elite">#EB4B4B</color>
+
     <!--Dark quality colors-->
     <color name="tf2_unusual_color_dark">#ff4f3469</color>
     <color name="tf2_unique_color_dark">#ffc5a800</color>
@@ -32,6 +39,13 @@
     <color name="tf2_community_color_dark">#ff5a903b</color>
     <color name="tf2_vintage_color_dark">#ff37496e</color>
     <color name="tf2_genuine_color_dark">#ff36583d</color>
+
+    <color name="tf2_decorated_weapon_civilian_dark">#9aaabe</color>
+    <color name="tf2_decorated_weapon_freelance_dark">#4b79ae</color>
+    <color name="tf2_decorated_weapon_mercenary_dark">#364cb9</color>
+    <color name="tf2_decorated_weapon_commando_dark">#5a2fa9</color>
+    <color name="tf2_decorated_weapon_assassin_dark">#941fa1</color>
+    <color name="tf2_decorated_weapon_elite_dark">#a33535</color>
 
     <!--Player state colors-->
     <color name="player_online">#ff24a9de</color>
