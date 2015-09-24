@@ -164,6 +164,10 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
                         values.put(UserBackpackEntry.COLUMN_CRAFT_NUMBER,
                                 attribute.getInt(OWM_VALUE));
                         break;
+                    case 725://Decorated weapon wear
+                        values.put(UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR,
+                                attribute.getLong(OWM_VALUE));
+                        break;
                     case 2013://TODO Killstreaker
                         break;
                     case 2014://TODO Killstreak sheen
