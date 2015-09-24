@@ -57,5 +57,6 @@ public class UserBackpackContract {
         public static final String COLUMN_GIFTER_NAME = "gifter_name";
         public static final String COLUMN_CONTAINED_ITEM = "contained_item";
         public static final String COLUMN_AUSTRALIUM = "australium";
+        public static final String COLUMN_DECORATED_WEAPON_WEAR = "weapon_wear";
     }
 }

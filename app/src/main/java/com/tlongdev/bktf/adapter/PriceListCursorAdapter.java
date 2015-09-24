@@ -159,7 +159,8 @@ public class PriceListCursorAdapter extends CursorAdapter {
 
                 returnVal[2] = Drawable.createFromStream(ims, null);
 
-                returnVal[1] = Utility.getItemBackground(mContext, params[4].intValue(), params[5].intValue(), params[6].intValue());
+                returnVal[1] = Utility.getItemBackground(mContext, params[0].intValue(),
+                        params[4].intValue(), params[5].intValue(), params[6].intValue());
 
                 return returnVal;
             } catch (IOException e) {

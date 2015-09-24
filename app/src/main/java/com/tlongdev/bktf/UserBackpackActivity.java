@@ -35,6 +35,7 @@ public class UserBackpackActivity extends AppCompatActivity implements LoaderMan
     public static final int COL_BACKPACK_INDE = 6;
     public static final int COL_BACKPACK_PAIN = 7;
     public static final int COL_BACKPACK_AUS = 8;
+    public static final int COL_BACKPACK_WEAR = 9;
 
     //Keys for extre data in the intent
     public static final String EXTRA_NAME = "name";
@@ -51,7 +52,8 @@ public class UserBackpackActivity extends AppCompatActivity implements LoaderMan
             UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT,
             UserBackpackEntry.COLUMN_ITEM_INDEX,
             UserBackpackEntry.COLUMN_PAINT,
-            UserBackpackEntry.COLUMN_AUSTRALIUM
+            UserBackpackEntry.COLUMN_AUSTRALIUM,
+            UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR
     };
 
     //Query columns for s guest user
@@ -65,7 +67,8 @@ public class UserBackpackActivity extends AppCompatActivity implements LoaderMan
             UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT,
             UserBackpackEntry.COLUMN_ITEM_INDEX,
             UserBackpackEntry.COLUMN_PAINT,
-            UserBackpackEntry.COLUMN_AUSTRALIUM
+            UserBackpackEntry.COLUMN_AUSTRALIUM,
+            UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR
     };
     //Adapters used for the listview
     private BackpackSectionHeaderAdapter adapter;

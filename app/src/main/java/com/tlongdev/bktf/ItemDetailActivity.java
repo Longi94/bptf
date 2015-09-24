@@ -53,6 +53,7 @@ public class ItemDetailActivity extends Activity {
     public static final int COL_BACKPACK_LEVEL = 13;
     public static final int COL_BACKPACK_EQUIP = 14; // TODO
     public static final int COL_BACKPACK_ORIGIN = 15;
+    public static final int COL_BACKPACK_WEAR = 16;
 
     //Query columns for querying the price
     public static final String[] QUERY_COLUMNS_PRICE = {
@@ -84,7 +85,8 @@ public class ItemDetailActivity extends Activity {
             UserBackpackEntry.COLUMN_CUSTOM_DESCRIPTION,
             UserBackpackEntry.COLUMN_LEVEL,
             UserBackpackEntry.COLUMN_EQUIPPED,
-            UserBackpackEntry.COLUMN_ORIGIN
+            UserBackpackEntry.COLUMN_ORIGIN,
+            UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR
     };
     private static final String[] QUERY_COLUMNS_GUEST = {
             UserBackpackEntry.TABLE_NAME_GUEST + "." + UserBackpackEntry._ID,
@@ -102,7 +104,8 @@ public class ItemDetailActivity extends Activity {
             UserBackpackEntry.COLUMN_CUSTOM_DESCRIPTION,
             UserBackpackEntry.COLUMN_LEVEL,
             UserBackpackEntry.COLUMN_EQUIPPED,
-            UserBackpackEntry.COLUMN_ORIGIN
+            UserBackpackEntry.COLUMN_ORIGIN,
+            UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR
     };
 
     //This decides which table to load data from.
@@ -224,6 +227,7 @@ public class ItemDetailActivity extends Activity {
         int craftable;
         int quality;
         int isAus;
+        int wear;
 
         if (itemCursor.moveToFirst()) {
             //Store all the data
@@ -233,6 +237,7 @@ public class ItemDetailActivity extends Activity {
             craftable = Math.abs(itemCursor.getInt(COL_BACKPACK_CRAF) - 1);
             quality = itemCursor.getInt(COL_BACKPACK_QUAL);
             isAus = itemCursor.getInt(COL_BACKPACK_AUS);
+            wear = itemCursor.getInt(COL_BACKPACK_WEAR);
 
             String customName = itemCursor.getString(COL_BACKPACK_CUSTOM_NAME);
             String customDescription = itemCursor.getString(COL_BACKPACK_CUSTOM_DESC);
@@ -250,8 +255,12 @@ public class ItemDetailActivity extends Activity {
                     mIntent.getIntExtra(EXTRA_PROPER_NAME, 0) == 1));
 
             //Set the level of the item, get the type from the intent
-            level.setText(getString(R.string.item_detail_level, itemCursor.getInt(COL_BACKPACK_LEVEL)
-                    , mIntent.getStringExtra(EXTRA_ITEM_TYPE)));
+            if (defindex >= 15000 && defindex <= 15059) {
+                level.setText(Utility.getDecoratedWeaponDesc(mIntent.getStringExtra(EXTRA_ITEM_TYPE), defindex, wear));
+            } else {
+                level.setText(getString(R.string.item_detail_level, itemCursor.getInt(COL_BACKPACK_LEVEL)
+                        , mIntent.getStringExtra(EXTRA_ITEM_TYPE)));
+            }
 
             //Set the origin of the item. Get the origin from the string array resource
             origin.setText(getString(R.string.item_detail_origin) + ": " +
@@ -302,8 +311,8 @@ public class ItemDetailActivity extends Activity {
 
             //Set the icon and the background
             setIconImage(this, icon, Utility.getIconIndex(defindex), priceIndex,
-                    quality, paintNumber, isAus == 1);
-            background.setBackgroundDrawable(Utility.getItemBackground(this,
+                    quality, paintNumber, isAus == 1, wear);
+            background.setBackgroundDrawable(Utility.getItemBackground(this, defindex,
                     quality, tradable, craftable));
         } else {
             //Crash the app if there is no item with the id (should never happen)
@@ -370,18 +379,22 @@ public class ItemDetailActivity extends Activity {
      * @param isAustralium whether the item is australium or not
      */
     private void setIconImage(Context context, ImageView icon, int defindex, int index, int quality,
-                              int paint, boolean isAustralium) {
+                              int paint, boolean isAustralium, int wear) {
         try {
             InputStream ims;
             AssetManager assetManager = context.getAssets();
             Drawable d;
 
-            //Load the item icon
-            if (isAustralium) {
-                ims = assetManager.open("items/" + defindex + "aus.png");
+            if (defindex >= 15000 && defindex <= 15059) {
+                ims = assetManager.open("skins/" + Utility.getIconIndex(defindex) + "/" + wear + ".png");
             } else {
-                ims = assetManager.open("items/" + defindex + ".png");
+                if (isAustralium) {
+                    ims = assetManager.open("items/" + defindex + "aus.png");
+                } else {
+                    ims = assetManager.open("items/" + defindex + ".png");
+                }
             }
+            //Load the item icon
             Drawable iconDrawable = Drawable.createFromStream(ims, null);
 
             if (index != 0 && Utility.canHaveEffects(defindex, quality)) {

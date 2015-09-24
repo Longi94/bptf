@@ -70,14 +70,15 @@ public class SearchCursorAdapter extends CursorAdapter {
                 ViewHolder viewHolder = (ViewHolder) view.getTag();
 
                 int quality = cursor.getInt(SearchFragment.COL_PRICE_LIST_QUAL);
+                int defindex = cursor.getInt(SearchFragment.COL_PRICE_LIST_DEFI);
 
                 viewHolder.background.setBackgroundDrawable(Utility.getItemBackground(context,
-                        quality,
+                        defindex, quality,
                         cursor.getInt(SearchFragment.COL_PRICE_LIST_TRAD),
                         cursor.getInt(SearchFragment.COL_PRICE_LIST_CRAF)));
 
                 viewHolder.nameView.setText(Utility.formatItemName(context,
-                        cursor.getInt(SearchFragment.COL_PRICE_LIST_DEFI),
+                        defindex,
                         cursor.getString(SearchFragment.COL_PRICE_LIST_NAME),
                         cursor.getInt(SearchFragment.COL_PRICE_LIST_TRAD),
                         cursor.getInt(SearchFragment.COL_PRICE_LIST_CRAF),
@@ -85,10 +86,10 @@ public class SearchCursorAdapter extends CursorAdapter {
                         cursor.getInt(SearchFragment.COL_PRICE_LIST_INDE)));
 
                 if (cursor.getInt(SearchFragment.COL_PRICE_LIST_INDE) == 0) {
-                    setIconImage(context, viewHolder.icon, cursor.getInt(SearchFragment.COL_PRICE_LIST_DEFI),
+                    setIconImage(context, viewHolder.icon, defindex,
                             viewHolder.nameView.getText().toString().contains("Australium"));
                 } else {
-                    setIconImageWithIndex(context, viewHolder.icon, cursor.getInt(SearchFragment.COL_PRICE_LIST_DEFI),
+                    setIconImageWithIndex(context, viewHolder.icon, defindex,
                             cursor.getInt(SearchFragment.COL_PRICE_LIST_INDE),
                             viewHolder.nameView.getText().toString().contains("Australium"), quality);
                 }
