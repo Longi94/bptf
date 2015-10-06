@@ -19,7 +19,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.adapter.UnusualEffectListCursorAdapter;
 import com.tlongdev.bktf.adapter.UnusualListCursorAdapter;
-import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
+import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 
 public class UnusualPriceListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 

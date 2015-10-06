@@ -1,4 +1,4 @@
-package com.tlongdev.bktf.task;
+package com.tlongdev.bktf.network;
 
 import android.content.Context;
 import android.content.SharedPreferences;

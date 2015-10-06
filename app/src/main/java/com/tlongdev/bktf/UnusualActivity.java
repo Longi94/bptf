@@ -10,8 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.GridView;
 
 import com.tlongdev.bktf.adapter.UnusualPricesCursorAdapter;
-import com.tlongdev.bktf.data.PriceListContract;
-import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
+import com.tlongdev.bktf.data.DatabaseContract;
+import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 
 /**
  * Activity for showing unusual prices for specific effects or hats.
@@ -105,7 +105,7 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
         //Load
         return new CursorLoader(
                 this,
-                PriceListContract.PriceEntry.CONTENT_URI,
+                DatabaseContract.PriceEntry.CONTENT_URI,
                 PRICE_LIST_COLUMNS,
                 selection,
                 selectionArgs,

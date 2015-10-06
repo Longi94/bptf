@@ -25,7 +25,7 @@ import android.widget.Toast;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.UserBackpackActivity;
 import com.tlongdev.bktf.Utility;
-import com.tlongdev.bktf.task.FetchUserInfo;
+import com.tlongdev.bktf.network.FetchUserInfo;
 
 import java.io.File;
 import java.io.FileOutputStream;
