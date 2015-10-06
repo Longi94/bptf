@@ -12,7 +12,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.tlongdev.bktf.data.ItemSchemaDbHelper;
-import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
+import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.enums.Quality;
 
 import org.json.JSONArray;
@@ -473,7 +473,7 @@ public class Utility {
 
         //Convert the prices first
         low = convertPrice(context, low, originalCurrency, targetCurrency);
-        if (high > 0.0)
+        if (high > low)
             high = convertPrice(context, high, originalCurrency, targetCurrency);
 
         //Check if the price is an int
@@ -485,7 +485,7 @@ public class Utility {
         else
             product += low;
 
-        if (high > 0.0) {
+        if (high > low) {
             //Check if the price is an int
             if ((int) high == high)
                 product += "-" + (int) high;

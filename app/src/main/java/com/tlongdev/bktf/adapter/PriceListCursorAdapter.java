@@ -75,7 +75,8 @@ public class PriceListCursorAdapter extends CursorAdapter {
                 cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRAW),
                 (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL),
                 (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_TRAD),
-                (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_CRAF)
+                (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_CRAF),
+                (double) cursor.getInt(HomeFragment.COL_AUSTRALIUM)
         );
 
         try {
@@ -132,7 +133,7 @@ public class PriceListCursorAdapter extends CursorAdapter {
                 AssetManager assetManager = mContext.getAssets();
 
                 InputStream ims;
-                if (name.contains("Australium") && params[0] != 5037) {
+                if (params[7] == 1 && params[0] != 5037) {
                     ims = assetManager.open("items/" + Utility.getIconIndex(params[0].intValue()) + "aus.png");
                 } else {
                     ims = assetManager.open("items/" + Utility.getIconIndex(params[0].intValue()) + ".png");

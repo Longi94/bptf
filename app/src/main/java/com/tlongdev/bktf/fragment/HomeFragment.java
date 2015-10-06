@@ -24,12 +24,12 @@ import android.widget.Toast;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.adapter.PriceListCursorAdapter;
-import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
+import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.quickreturn.AbsListViewQuickReturnAttacher;
 import com.tlongdev.bktf.quickreturn.QuickReturnAttacher;
 import com.tlongdev.bktf.quickreturn.widget.QuickReturnAdapter;
 import com.tlongdev.bktf.quickreturn.widget.QuickReturnTargetView;
-import com.tlongdev.bktf.task.FetchPriceList;
+import com.tlongdev.bktf.network.FetchPriceList;
 
 /**
  * Main fragment the shows the latest price changes.
@@ -54,7 +54,8 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             PriceEntry.COLUMN_ITEM_PRICE,
             PriceEntry.COLUMN_ITEM_PRICE_MAX,
             null,
-            PriceEntry.COLUMN_DIFFERENCE
+            PriceEntry.COLUMN_DIFFERENCE,
+            PriceEntry.COLUMN_AUSTRALIUM
     };
 
     //Indexes for the columns above
@@ -69,6 +70,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     public static final int COL_PRICE_LIST_PMAX = 9;
     public static final int COL_PRICE_LIST_PRAW = 10;
     public static final int COL_PRICE_LIST_DIFF = 11;
+    public static final int COL_AUSTRALIUM = 12;
 
     private ProgressBar progressBar;
 

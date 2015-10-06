@@ -25,7 +25,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.UserInfoActivity;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.adapter.SearchCursorAdapter;
-import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
+import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 
 import org.json.JSONException;
 
@@ -60,6 +60,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
             PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
             PriceEntry.COLUMN_ITEM_PRICE,
             PriceEntry.COLUMN_ITEM_PRICE_MAX,
+            PriceEntry.COLUMN_AUSTRALIUM
     };
 
     //Indexes of the columns above
@@ -72,6 +73,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     public static final int COL_PRICE_LIST_CURR = 7;
     public static final int COL_PRICE_LIST_PRIC = 8;
     public static final int COL_PRICE_LIST_PMAX = 9;
+    public static final int COL_AUSTRALIUM = 10;
 
     //Selection
     private static final String sNameSearch =
