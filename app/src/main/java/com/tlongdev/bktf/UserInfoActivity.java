@@ -16,7 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tlongdev.bktf.task.FetchUserBackpack;
+import com.tlongdev.bktf.network.FetchUserBackpack;
 
 import org.json.JSONArray;
 import org.json.JSONException;

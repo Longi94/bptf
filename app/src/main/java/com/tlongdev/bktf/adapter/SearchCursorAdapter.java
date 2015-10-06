@@ -87,11 +87,11 @@ public class SearchCursorAdapter extends CursorAdapter {
 
                 if (cursor.getInt(SearchFragment.COL_PRICE_LIST_INDE) == 0) {
                     setIconImage(context, viewHolder.icon, defindex,
-                            viewHolder.nameView.getText().toString().contains("Australium"));
+                            cursor.getInt(SearchFragment.COL_AUSTRALIUM) == 1);
                 } else {
                     setIconImageWithIndex(context, viewHolder.icon, defindex,
                             cursor.getInt(SearchFragment.COL_PRICE_LIST_INDE),
-                            viewHolder.nameView.getText().toString().contains("Australium"), quality);
+                            cursor.getInt(SearchFragment.COL_AUSTRALIUM) == 1, quality);
                 }
 
                 try {

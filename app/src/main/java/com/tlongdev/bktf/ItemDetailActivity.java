@@ -17,7 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
+import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.data.UserBackpackContract.UserBackpackEntry;
 
 import java.io.IOException;
