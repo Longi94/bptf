@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
-import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
+import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.enums.Quality;
 
 import java.io.IOException;
@@ -37,7 +37,8 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
             PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
             PriceEntry.COLUMN_ITEM_PRICE,
             PriceEntry.COLUMN_ITEM_PRICE_MAX,
-            null
+            null,
+            PriceEntry.COLUMN_AUSTRALIUM
     };
 
     //Indexes for the columns above
@@ -51,6 +52,7 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
     public static final int COL_PRICE_LIST_PRIC = 8;
     public static final int COL_PRICE_LIST_PMAX = 9;
     public static final int COL_PRICE_LIST_PRAW = 10;
+    public static final int COL_AUSTRALIUM = 11;
 
     public static final String mSelection = PriceEntry.TABLE_NAME +
             "." + PriceEntry._ID + " = ?";
@@ -84,9 +86,15 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
 
         if (cursor.moveToFirst()) {
             try {
-                holder.icon.setImageDrawable(Drawable.createFromStream(
-                        mContext.getAssets().open("items/" + Utility
-                                .getIconIndex(cursor.getInt(COL_PRICE_LIST_DEFI)) + ".png"), null));
+                if (cursor.getInt(COL_AUSTRALIUM) == 1) {
+                    holder.icon.setImageDrawable(Drawable.createFromStream(
+                            mContext.getAssets().open("items/" + Utility
+                                    .getIconIndex(cursor.getInt(COL_PRICE_LIST_DEFI)) + "aus.png"), null));
+                } else {
+                    holder.icon.setImageDrawable(Drawable.createFromStream(
+                            mContext.getAssets().open("items/" + Utility
+                                    .getIconIndex(cursor.getInt(COL_PRICE_LIST_DEFI)) + ".png"), null));
+                }
             } catch (IOException e) {
                 if (Utility.isDebugging(mContext)) {
                     e.printStackTrace();
@@ -156,40 +164,39 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
     }
 
     private void setNameColor(TextView name, int quality) {
-        Quality q = Quality.values()[quality];
         int color;
-        switch (q) {
-            case NORMAL:
+        switch (quality) {
+            case Quality.NORMAL:
                 color = mContext.getResources().getColor(R.color.tf2_normal_color_dark);
                 break;
-            case GENUINE:
+            case Quality.GENUINE:
                 color = mContext.getResources().getColor(R.color.tf2_genuine_color_dark);
                 break;
-            case VINTAGE:
+            case Quality.VINTAGE:
                 color = mContext.getResources().getColor(R.color.tf2_vintage_color_dark);
                 break;
-            case UNUSUAL:
+            case Quality.UNUSUAL:
                 color = mContext.getResources().getColor(R.color.tf2_unusual_color_dark);
                 break;
-            case UNIQUE:
+            case Quality.UNIQUE:
                 color = mContext.getResources().getColor(R.color.tf2_unique_color_dark);
                 break;
-            case COMMUNITY:
+            case Quality.COMMUNITY:
                 color = mContext.getResources().getColor(R.color.tf2_community_color_dark);
                 break;
-            case VALVE:
+            case Quality.VALVE:
                 color = mContext.getResources().getColor(R.color.tf2_valve_color_dark);
                 break;
-            case SELF_MADE:
+            case Quality.SELF_MADE:
                 color = mContext.getResources().getColor(R.color.tf2_community_color_dark);
                 break;
-            case STRANGE:
+            case Quality.STRANGE:
                 color = mContext.getResources().getColor(R.color.tf2_strange_color_dark);
                 break;
-            case HAUNTED:
+            case Quality.HAUNTED:
                 color = mContext.getResources().getColor(R.color.tf2_haunted_color_dark);
                 break;
-            case COLLECTORS:
+            case Quality.COLLECTORS:
                 color = mContext.getResources().getColor(R.color.tf2_collectors_color_dark);
                 break;
             default:

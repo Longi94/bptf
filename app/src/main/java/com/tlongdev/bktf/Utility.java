@@ -12,7 +12,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.tlongdev.bktf.data.ItemSchemaDbHelper;
-import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
+import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.enums.Quality;
 
 import org.json.JSONArray;
@@ -108,51 +108,45 @@ public class Utility {
 
             }
 
-        //Convert the quality int to enum for better readability
-        Quality[] values = Quality.values();
-        Quality q;
-        if (quality >= values.length) {
-            q = Quality.NORMAL;
-        } else {
-            q = Quality.values()[quality];
-        }
-
         //Switch case for the quality
-        switch (q) {
-            case NORMAL:
+        switch (quality) {
+            case Quality.NORMAL:
                 formattedName += context.getString(R.string.quality_normal) + " ";
                 break;
-            case GENUINE:
+            case Quality.GENUINE:
                 formattedName += context.getString(R.string.quality_genuine) + " ";
                 break;
-            case VINTAGE:
+            case Quality.VINTAGE:
                 formattedName += context.getString(R.string.quality_vintage) + " ";
                 break;
-            case UNIQUE:
+            case Quality.UNIQUE:
                 if (index > 0) //A unique item with a number
                     name = name + " #" + index;
                 break;
-            case UNUSUAL:
+            case Quality.UNUSUAL:
                 //Get the unusual effect name by its index
                 formattedName += getUnusualEffectName(context, index) + " ";
                 break;
-            case COMMUNITY:
+            case Quality.COMMUNITY:
                 formattedName += context.getString(R.string.quality_community) + " ";
                 break;
-            case VALVE:
+            case Quality.VALVE:
                 formattedName += context.getString(R.string.quality_valve) + " ";
                 break;
-            case SELF_MADE:
+            case Quality.SELF_MADE:
                 formattedName += context.getString(R.string.quality_self_made) + " ";
                 break;
-            case STRANGE:
+            case Quality.STRANGE:
                 formattedName += context.getString(R.string.quality_strange) + " ";
                 break;
-            case HAUNTED:
+            case Quality.HAUNTED:
                 formattedName += context.getString(R.string.quality_haunted) + " ";
                 break;
-            case COLLECTORS:
+            case Quality.COLLECTORS:
                 formattedName += context.getString(R.string.quality_collectors) + " ";
+                break;
+            default:
+                formattedName += context.getString(R.string.quality_normal) + " ";
                 break;
         }
 
@@ -174,16 +168,9 @@ public class Utility {
      */
     public static String formatSimpleItemName(Context context, int defindex, String name,
                                               int quality, int index, boolean isProper) {
-        Quality[] values = Quality.values();
-        Quality q;
-        if (quality >= values.length) {
-            q = Quality.NORMAL;
-        } else {
-            q = Quality.values()[quality];
-        }
-        if (q == Quality.UNUSUAL) {
+        if (quality == Quality.UNUSUAL) {
             return context.getString(R.string.quality_unusual) + " " + name;
-        } else if (isProper && q == Quality.UNIQUE) {
+        } else if (isProper && quality == Quality.UNIQUE) {
             return formatItemName(context, defindex, "The " + name, 1, 1, quality, index);
         } else {
             return formatItemName(context, defindex, name, 1, 1, quality, index);
@@ -374,14 +361,6 @@ public class Utility {
      */
     public static LayerDrawable getItemBackground(Context context, int defindex, int quality, int tradable,
                                                   int craftable) {
-        //Convert the quality int to enum for better readability
-        Quality[] values = Quality.values();
-        Quality q;
-        if (quality >= values.length) {
-            q = Quality.NORMAL;
-        } else {
-            q = Quality.values()[quality];
-        }
 
         //Three drawables, that will be merged into a single drawable.
         Drawable itemFrame;
@@ -389,38 +368,38 @@ public class Utility {
         Drawable tradableFrame;
 
         //Simple switch case for getting the drawable from the resources
-        switch (q) {
-            case GENUINE:
+        switch (quality) {
+            case Quality.GENUINE:
                 itemFrame = context.getResources().getDrawable(R.drawable.item_background_genuine);
                 break;
-            case VINTAGE:
+            case Quality.VINTAGE:
                 itemFrame = context.getResources().getDrawable(R.drawable.item_background_vintage);
                 break;
-            case UNUSUAL:
+            case Quality.UNUSUAL:
                 itemFrame = context.getResources().getDrawable(R.drawable.item_background_unusual);
                 break;
-            case UNIQUE:
+            case Quality.UNIQUE:
                 itemFrame = context.getResources().getDrawable(R.drawable.item_background_unique);
                 break;
-            case COMMUNITY:
+            case Quality.COMMUNITY:
                 itemFrame = context.getResources().getDrawable(R.drawable.item_background_community);
                 break;
-            case VALVE:
+            case Quality.VALVE:
                 itemFrame = context.getResources().getDrawable(R.drawable.item_background_valve);
                 break;
-            case SELF_MADE:
+            case Quality.SELF_MADE:
                 itemFrame = context.getResources().getDrawable(R.drawable.item_background_community);
                 break;
-            case STRANGE:
+            case Quality.STRANGE:
                 itemFrame = context.getResources().getDrawable(R.drawable.item_background_strange);
                 break;
-            case HAUNTED:
+            case Quality.HAUNTED:
                 itemFrame = context.getResources().getDrawable(R.drawable.item_background_haunted);
                 break;
-            case COLLECTORS:
+            case Quality.COLLECTORS:
                 itemFrame = context.getResources().getDrawable(R.drawable.item_background_collectors);
                 break;
-            case PAINTKITWEAPON:
+            case Quality.PAINTKITWEAPON:
                 if (defindex >= 15000 && defindex <= 15059) {
                     itemFrame = context.getResources().getDrawable(getDecoratedWeaponBackgroundResource(defindex));
                 } else {
@@ -473,7 +452,7 @@ public class Utility {
 
         //Convert the prices first
         low = convertPrice(context, low, originalCurrency, targetCurrency);
-        if (high > 0.0)
+        if (high > low)
             high = convertPrice(context, high, originalCurrency, targetCurrency);
 
         //Check if the price is an int
@@ -485,7 +464,7 @@ public class Utility {
         else
             product += low;
 
-        if (high > 0.0) {
+        if (high > low) {
             //Check if the price is an int
             if ((int) high == high)
                 product += "-" + (int) high;

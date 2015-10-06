@@ -9,7 +9,7 @@ import android.preference.PreferenceManager;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
-import com.tlongdev.bktf.task.FetchPriceList;
+import com.tlongdev.bktf.network.FetchPriceList;
 
 /**
  * Service for updating the database in the background

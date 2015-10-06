@@ -23,7 +23,7 @@ import com.tlongdev.bktf.MainActivity;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.adapter.AdvancedCalculatorAdapter;
-import com.tlongdev.bktf.data.PriceListContract.PriceEntry;
+import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 
 import java.util.ArrayList;
 
