@@ -11,8 +11,8 @@ import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.tlongdev.bktf.data.ItemSchemaDbHelper;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.data.ItemSchemaDbHelper;
 import com.tlongdev.bktf.enums.Quality;
 
 import org.json.JSONArray;
@@ -322,6 +322,32 @@ public class Utility {
                 return context.getString(R.string.array_effects_morning_glory);
             case 90:
                 return context.getString(R.string.array_effects_death_at_dusk);
+            case 91:
+                return context.getString(R.string.array_effects_abduction);
+            case 92:
+                return context.getString(R.string.array_effects_atomic);
+            case 93:
+                return context.getString(R.string.array_effects_subatomic);
+            case 94:
+                return context.getString(R.string.array_effects_electric_protector);
+            case 95:
+                return context.getString(R.string.array_effects_magnetic_protector);
+            case 96:
+                return context.getString(R.string.array_effects_voltaic_protector);
+            case 97:
+                return context.getString(R.string.array_effects_galactic_codex);
+            case 98:
+                return context.getString(R.string.array_effects_ancient_codex);
+            case 99:
+                return context.getString(R.string.array_effects_nebula);
+            case 701:
+                return context.getString(R.string.array_effects_hot);
+            case 702:
+                return context.getString(R.string.array_effects_isotope);
+            case 703:
+                return context.getString(R.string.array_effects_cool);
+            case 704:
+                return context.getString(R.string.array_effects_energy_orb);
             case 3001:
                 return context.getString(R.string.array_effects_showstopper);
             case 3003:
@@ -2083,6 +2109,7 @@ public class Utility {
 
     /**
      * Return the complex query string for querying the raw price
+     *
      * @param context context for converting prices
      * @return the query string
      */
@@ -2093,25 +2120,25 @@ public class Utility {
         double budMultiplier = Utility.convertPrice(context, 1, Utility.CURRENCY_BUD, Utility.CURRENCY_METAL);
 
         return " CASE WHEN " + PriceEntry.COLUMN_ITEM_PRICE_MAX + " IS NULL THEN ( " +
-                    " CASE WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'keys' THEN ( " +
-                        PriceEntry.COLUMN_ITEM_PRICE + " * " + keyMultiplier +
-                    " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'earbuds' THEN ( " +
-                        PriceEntry.COLUMN_ITEM_PRICE + " * " + budMultiplier +
-                    " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'usd' THEN ( " +
-                        PriceEntry.COLUMN_ITEM_PRICE + " * " + usdMultiplier +
-                    " ) ELSE ( " +
-                        PriceEntry.COLUMN_ITEM_PRICE +
-                    " ) END " +
+                " CASE WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'keys' THEN ( " +
+                PriceEntry.COLUMN_ITEM_PRICE + " * " + keyMultiplier +
+                " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'earbuds' THEN ( " +
+                PriceEntry.COLUMN_ITEM_PRICE + " * " + budMultiplier +
+                " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'usd' THEN ( " +
+                PriceEntry.COLUMN_ITEM_PRICE + " * " + usdMultiplier +
+                " ) ELSE ( " +
+                PriceEntry.COLUMN_ITEM_PRICE +
+                " ) END " +
                 " ) ELSE (" +
-                    " CASE WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'keys' THEN ( " +
-                        " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 * " + keyMultiplier +
-                    " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'earbuds' THEN ( " +
-                        " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 * " + budMultiplier +
-                    " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'usd' THEN ( " +
-                        " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 * " + usdMultiplier +
-                    " ) ELSE ( " +
-                        PriceEntry.COLUMN_ITEM_PRICE +
-                    " ) END " +
+                " CASE WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'keys' THEN ( " +
+                " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 * " + keyMultiplier +
+                " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'earbuds' THEN ( " +
+                " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 * " + budMultiplier +
+                " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'usd' THEN ( " +
+                " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 * " + usdMultiplier +
+                " ) ELSE ( " +
+                PriceEntry.COLUMN_ITEM_PRICE +
+                " ) END " +
                 " ) END ";
     }
 
@@ -2264,11 +2291,21 @@ public class Utility {
     public static String getDecoratedWeaponDesc(String type, int defindex, int wear) {
         String wearStr;
         switch (wear) {
-            case 1045220557: wearStr = "(Factory New)"; break;
-            case 1053609165: wearStr = "(Minimal Wear)"; break;
-            case 1058642330: wearStr = "(Field-Tested)"; break;
-            case 1061997773: wearStr = "(Well Worn)"; break;
-            case 1065353216: wearStr = "(Battle Scarred)"; break;
+            case 1045220557:
+                wearStr = "(Factory New)";
+                break;
+            case 1053609165:
+                wearStr = "(Minimal Wear)";
+                break;
+            case 1058642330:
+                wearStr = "(Field-Tested)";
+                break;
+            case 1061997773:
+                wearStr = "(Well Worn)";
+                break;
+            case 1065353216:
+                wearStr = "(Battle Scarred)";
+                break;
             default:
                 throw new IllegalArgumentException("Invalid wear: " + wear);
         }

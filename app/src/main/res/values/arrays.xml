@@ -78,10 +78,13 @@
 
     <!--Alphabetical order-->
     <string-array name="array_effects">
+        <item>@string/array_effects_abduction</item>
         <item>@string/array_effects_aces_high</item>
         <item>@string/array_effects_amaranthine</item>
+        <item>@string/array_effects_ancient_codex</item>
         <item>@string/array_effects_anti_freeze</item>
         <item>@string/array_effects_arcana</item>
+        <item>@string/array_effects_atomic</item>
         <item>@string/array_effects_blizzardy_storm</item>
         <item>@string/array_effects_bonzo</item>
         <item>@string/array_effects_bubbling</item>
@@ -93,16 +96,20 @@
         <item>@string/array_effects_circling_tf_logo</item>
         <item>@string/array_effects_cloud_9</item>
         <item>@string/array_effects_cloudy_moon</item>
+        <item>@string/array_effects_cool</item>
         <item>@string/array_effects_darkblaze</item>
         <item>@string/array_effects_dead_presidents</item>
         <item>@string/array_effects_death_at_dusk</item>
         <item>@string/array_effects_demonflame</item>
         <item>@string/array_effects_disco_beat_down</item>
         <item>@string/array_effects_eerie_orbiting_fire</item>
+        <item>@string/array_effects_electric_protector</item>
         <item>@string/array_effects_electrostatic</item>
+        <item>@string/array_effects_energy_orb</item>
         <item>@string/array_effects_flaming_lantern</item>
         <item>@string/array_effects_fountain_of_delight</item>
         <item>@string/array_effects_frostbite</item>
+        <item>@string/array_effects_galactic_codex</item>
         <item>@string/array_effects_ghastly_ghosts</item>
         <item>@string/array_effects_ghastly_ghosts_jr</item>
         <item>@string/array_effects_green_confetti</item>
@@ -114,9 +121,12 @@
         <item>@string/array_effects_haunted_phantasm_jr</item>
         <item>@string/array_effects_hellfire</item>
         <item>@string/array_effects_holy_grail</item>
+        <item>@string/array_effects_hot</item>
+        <item>@string/array_effects_isotope</item>
         <item>@string/array_effects_secret</item>
         <item>@string/array_effects_kill_a_watt</item>
         <item>@string/array_effects_knifestorm</item>
+        <item>@string/array_effects_magnetic_protector</item>
         <item>@string/array_effects_massed_flies</item>
         <item>@string/array_effects_mega_strike</item>
         <item>@string/array_effects_memory_leak</item>
@@ -125,6 +135,7 @@
         <item>@string/array_effects_misty_skull</item>
         <item>@string/array_effects_molten_mallard</item>
         <item>@string/array_effects_morning_glory</item>
+        <item>@string/array_effects_nebula</item>
         <item>@string/array_effects_nuts_n_bolts</item>
         <item>@string/array_effects_orbiting_fire</item>
         <item>@string/array_effects_orbiting_planets</item>
@@ -148,12 +159,14 @@
         <item>@string/array_effects_steaming</item>
         <item>@string/array_effects_stormy_13th_hour</item>
         <item>@string/array_effects_stormy_storm</item>
+        <item>@string/array_effects_subatomic</item>
         <item>@string/array_effects_sulphurous</item>
         <item>@string/array_effects_sunbeams</item>
         <item>@string/array_effects_terror_watt</item>
         <item>@string/array_effects_the_ooze</item>
         <item>@string/array_effects_time_warp</item>
         <item>@string/array_effects_vivid_plasma</item>
+        <item>@string/array_effects_voltaic_protector</item>
         <item>@string/array_effects_72</item>
     </string-array>
 
