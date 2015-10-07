@@ -98,7 +98,7 @@
     <string name="pref_policy_steam_id" translatable="true">Your id will not be shared with anyone.</string>
     <string name="pref_summary_off_auto_sync" translatable="true">Manual refresh</string>
     <string name="pref_summary_on_auto_sync" translatable="true">Auto-update database</string>
-    <string name="pref_summary_jackson">fast and memory efficient JSON processing</string>
+    <string name="pref_summary_jackson" translatable="true">fast and memory efficient JSON processing</string>
     <string name="pref_summary_particles" translatable="true">provided by backpack.tf</string>
     <string name="pref_summary_quick_return" translatable="true">by felipecsl</string>
     <string name="pref_title_auto_sync" translatable="true">Auto-update database</string>
@@ -108,7 +108,7 @@
     <string name="pref_title_debug_logs" translatable="true">Enable debug logs</string>
     <string name="pref_title_developer" translatable="true">Developer</string>
     <string name="pref_title_feedback" translatable="true">Send feedback or bug report</string>
-    <string name="pref_title_jackson">Jackson JSON Processor</string>
+    <string name="pref_title_jackson" translatable="true">Jackson JSON Processor</string>
     <string name="pref_title_notification" translatable="true">backpack.tf Notifications</string>
     <string name="pref_title_notification_interval" translatable="true">Check for notifications</string>
     <string name="pref_title_particles" translatable="true">Particle effect images</string>
@@ -230,10 +230,13 @@
 
     <string name="array_effects_community_sparkle" translatable="true">Community Sparkle</string>
     <string name="array_effects_holy_glow" translatable="true">Holy Glow</string>
+    <string name="array_effects_abduction" translatable="true">Abduction</string>
     <string name="array_effects_aces_high" translatable="true">Aces High</string>
     <string name="array_effects_amaranthine" translatable="true">Amaranthine</string>
+    <string name="array_effects_ancient_codex" translatable="true">Ancient Codex</string>
     <string name="array_effects_anti_freeze" translatable="true">Anti-Freeze</string>
     <string name="array_effects_arcana" translatable="true">Arcana</string>
+    <string name="array_effects_atomic" translatable="true">Atomic</string>
     <string name="array_effects_blizzardy_storm" translatable="true">Blizzardy Storm</string>
     <string name="array_effects_bonzo" translatable="true">Bonzo The All-Gnawing</string>
     <string name="array_effects_bubbling" translatable="true">Bubbling</string>
@@ -245,16 +248,20 @@
     <string name="array_effects_circling_tf_logo" translatable="true">Circling TF Logo</string>
     <string name="array_effects_cloud_9" translatable="true">Cloud 9</string>
     <string name="array_effects_cloudy_moon" translatable="true">Cloudy Moon</string>
+    <string name="array_effects_cool" translatable="true">Cool</string>
     <string name="array_effects_darkblaze" translatable="true">Darkblaze</string>
     <string name="array_effects_dead_presidents" translatable="true">Dead Presidents</string>
     <string name="array_effects_death_at_dusk" translatable="true">Death at Dusk</string>
     <string name="array_effects_demonflame" translatable="true">Demonflame</string>
     <string name="array_effects_disco_beat_down" translatable="true">Disco Beat Down</string>
     <string name="array_effects_eerie_orbiting_fire" translatable="true">Eerie Orbiting Fire</string>
+    <string name="array_effects_energy_orb" translatable="true">Energy Orb</string>
+    <string name="array_effects_electric_protector" translatable="true">Electric Hat Protector</string>
     <string name="array_effects_electrostatic" translatable="true">Electrostatic</string>
     <string name="array_effects_flaming_lantern" translatable="true">Flaming Lantern</string>
     <string name="array_effects_fountain_of_delight" translatable="true">Fountain of Delight</string>
     <string name="array_effects_frostbite" translatable="true">Frostbite</string>
+    <string name="array_effects_galactic_codex" translatable="true">Galactic Codex</string>
     <string name="array_effects_ghastly_ghosts" translatable="true">Ghastly Ghosts</string>
     <string name="array_effects_ghastly_ghosts_jr" translatable="true">Ghastly Ghosts Jr</string>
     <string name="array_effects_green_confetti" translatable="true">Green Confetti</string>
@@ -266,9 +273,12 @@
     <string name="array_effects_haunted_phantasm_jr" translatable="true">Haunted Phantasm Jr</string>
     <string name="array_effects_hellfire" translatable="true">Hellfire</string>
     <string name="array_effects_holy_grail" translatable="true">Holy Grail</string>
+    <string name="array_effects_hot" translatable="true">Hot</string>
+    <string name="array_effects_isotope" translatable="true">Isotope</string>
     <string name="array_effects_secret" translatable="true">It\'s A Secret To Everybody</string>
     <string name="array_effects_kill_a_watt" translatable="true">Kill-a-Watt</string>
     <string name="array_effects_knifestorm" translatable="true">Knifestorm</string>
+    <string name="array_effects_magnetic_protector" translatable="true">Magnetic Hat Protector</string>
     <string name="array_effects_massed_flies" translatable="true">Massed Flies</string>
     <string name="array_effects_mega_strike" translatable="true">Mega Strike</string>
     <string name="array_effects_memory_leak" translatable="true">Memory Leak</string>
@@ -277,6 +287,7 @@
     <string name="array_effects_misty_skull" translatable="true">Misty Skull</string>
     <string name="array_effects_molten_mallard" translatable="true">Molten Mallard</string>
     <string name="array_effects_morning_glory" translatable="true">Morning Glory</string>
+    <string name="array_effects_nebula" translatable="true">Nebula</string>
     <string name="array_effects_nuts_n_bolts" translatable="true">Nuts n\' Bolts</string>
     <string name="array_effects_orbiting_fire" translatable="true">Orbiting Fire</string>
     <string name="array_effects_orbiting_planets" translatable="true">Orbiting Planets</string>
@@ -300,12 +311,14 @@
     <string name="array_effects_steaming" translatable="true">Steaming</string>
     <string name="array_effects_stormy_13th_hour" translatable="true">Stormy 13th Hour</string>
     <string name="array_effects_stormy_storm" translatable="true">Stormy Storm</string>
+    <string name="array_effects_subatomic" translatable="true">Subatomic</string>
     <string name="array_effects_sulphurous" translatable="true">Sulphurous</string>
     <string name="array_effects_sunbeams" translatable="true">Sunbeams</string>
     <string name="array_effects_terror_watt" translatable="true">Terror-Watt</string>
     <string name="array_effects_the_ooze" translatable="true">The Ooze</string>
     <string name="array_effects_time_warp" translatable="true">Time Warp</string>
     <string name="array_effects_vivid_plasma" translatable="true">Vivid Plasma</string>
+    <string name="array_effects_voltaic_protector" translatable="true">Voltaic Hat Protector</string>
     <string name="array_effects_72" translatable="true">\'72</string>
 
     <!--Parametrized currencies-->

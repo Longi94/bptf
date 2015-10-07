@@ -11,8 +11,8 @@ import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.tlongdev.bktf.data.ItemSchemaDbHelper;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.data.ItemSchemaDbHelper;
 import com.tlongdev.bktf.enums.Quality;
 
 import org.json.JSONArray;
@@ -322,6 +322,32 @@ public class Utility {
                 return context.getString(R.string.array_effects_morning_glory);
             case 90:
                 return context.getString(R.string.array_effects_death_at_dusk);
+            case 91:
+                return context.getString(R.string.array_effects_abduction);
+            case 92:
+                return context.getString(R.string.array_effects_atomic);
+            case 93:
+                return context.getString(R.string.array_effects_subatomic);
+            case 94:
+                return context.getString(R.string.array_effects_electric_protector);
+            case 95:
+                return context.getString(R.string.array_effects_magnetic_protector);
+            case 96:
+                return context.getString(R.string.array_effects_voltaic_protector);
+            case 97:
+                return context.getString(R.string.array_effects_galactic_codex);
+            case 98:
+                return context.getString(R.string.array_effects_ancient_codex);
+            case 99:
+                return context.getString(R.string.array_effects_nebula);
+            case 701:
+                return context.getString(R.string.array_effects_hot);
+            case 702:
+                return context.getString(R.string.array_effects_isotope);
+            case 703:
+                return context.getString(R.string.array_effects_cool);
+            case 704:
+                return context.getString(R.string.array_effects_energy_orb);
             case 3001:
                 return context.getString(R.string.array_effects_showstopper);
             case 3003:
@@ -1103,6 +1129,7 @@ public class Utility {
             case 2123:
             case 2125: //map stamps packs
             case 2138:
+            case 2139:
                 return 2007;
             case 2035:
             case 2036:
@@ -1141,6 +1168,8 @@ public class Utility {
             case 5020: //desc tag
                 return 2093;
             case 5814: //scrap metal
+            case 5824:
+            case 5825:
                 return 5000;
             case 5041:
             case 5045: //duplicate crates
@@ -1952,6 +1981,10 @@ public class Utility {
             case 8621:
             case 8625:
             case 8629: //olympic medal gold
+            case 8868:
+            case 8872:
+            case 8876:
+            case 8880:
                 return 8605;
             case 8610:
             case 8614:
@@ -1959,6 +1992,10 @@ public class Utility {
             case 8622:
             case 8626:
             case 8630: //olympic medal silver
+            case 8869:
+            case 8873:
+            case 8877:
+            case 8881:
                 return 8606;
             case 8611:
             case 8615:
@@ -1966,6 +2003,10 @@ public class Utility {
             case 8623:
             case 8627:
             case 8631: //olympic medal bronze
+            case 8870:
+            case 8874:
+            case 8878:
+            case 8882:
                 return 8607;
             case 8612:
             case 8616:
@@ -1973,6 +2014,10 @@ public class Utility {
             case 8624:
             case 8628:
             case 8632: //olympic medal participant
+            case 8871:
+            case 8875:
+            case 8879:
+            case 8883:
                 return 8608;
             case 8638:
             case 8642:
@@ -2010,6 +2055,14 @@ public class Utility {
                 return 8833;
             case 8838: //bullet participant
                 return 8834;
+            case 8884: //fbtf gold
+                return 8864;
+            case 8885: //fbtf silver
+                return 8865;
+            case 8886: //fbtf bronze
+                return 8866;
+            case 8887: //fbtf participant
+                return 8867;
             case 8901:
             case 8902:
             case 8903:
@@ -2083,6 +2136,7 @@ public class Utility {
 
     /**
      * Return the complex query string for querying the raw price
+     *
      * @param context context for converting prices
      * @return the query string
      */
@@ -2093,25 +2147,25 @@ public class Utility {
         double budMultiplier = Utility.convertPrice(context, 1, Utility.CURRENCY_BUD, Utility.CURRENCY_METAL);
 
         return " CASE WHEN " + PriceEntry.COLUMN_ITEM_PRICE_MAX + " IS NULL THEN ( " +
-                    " CASE WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'keys' THEN ( " +
-                        PriceEntry.COLUMN_ITEM_PRICE + " * " + keyMultiplier +
-                    " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'earbuds' THEN ( " +
-                        PriceEntry.COLUMN_ITEM_PRICE + " * " + budMultiplier +
-                    " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'usd' THEN ( " +
-                        PriceEntry.COLUMN_ITEM_PRICE + " * " + usdMultiplier +
-                    " ) ELSE ( " +
-                        PriceEntry.COLUMN_ITEM_PRICE +
-                    " ) END " +
+                " CASE WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'keys' THEN ( " +
+                PriceEntry.COLUMN_ITEM_PRICE + " * " + keyMultiplier +
+                " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'earbuds' THEN ( " +
+                PriceEntry.COLUMN_ITEM_PRICE + " * " + budMultiplier +
+                " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'usd' THEN ( " +
+                PriceEntry.COLUMN_ITEM_PRICE + " * " + usdMultiplier +
+                " ) ELSE ( " +
+                PriceEntry.COLUMN_ITEM_PRICE +
+                " ) END " +
                 " ) ELSE (" +
-                    " CASE WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'keys' THEN ( " +
-                        " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 * " + keyMultiplier +
-                    " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'earbuds' THEN ( " +
-                        " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 * " + budMultiplier +
-                    " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'usd' THEN ( " +
-                        " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 * " + usdMultiplier +
-                    " ) ELSE ( " +
-                        PriceEntry.COLUMN_ITEM_PRICE +
-                    " ) END " +
+                " CASE WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'keys' THEN ( " +
+                " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 * " + keyMultiplier +
+                " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'earbuds' THEN ( " +
+                " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 * " + budMultiplier +
+                " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'usd' THEN ( " +
+                " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 * " + usdMultiplier +
+                " ) ELSE ( " +
+                PriceEntry.COLUMN_ITEM_PRICE +
+                " ) END " +
                 " ) END ";
     }
 
@@ -2264,11 +2318,21 @@ public class Utility {
     public static String getDecoratedWeaponDesc(String type, int defindex, int wear) {
         String wearStr;
         switch (wear) {
-            case 1045220557: wearStr = "(Factory New)"; break;
-            case 1053609165: wearStr = "(Minimal Wear)"; break;
-            case 1058642330: wearStr = "(Field-Tested)"; break;
-            case 1061997773: wearStr = "(Well Worn)"; break;
-            case 1065353216: wearStr = "(Battle Scarred)"; break;
+            case 1045220557:
+                wearStr = "(Factory New)";
+                break;
+            case 1053609165:
+                wearStr = "(Minimal Wear)";
+                break;
+            case 1058642330:
+                wearStr = "(Field-Tested)";
+                break;
+            case 1061997773:
+                wearStr = "(Well Worn)";
+                break;
+            case 1065353216:
+                wearStr = "(Battle Scarred)";
+                break;
             default:
                 throw new IllegalArgumentException("Invalid wear: " + wear);
         }
