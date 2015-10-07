@@ -172,10 +172,13 @@
 
     <!--Must match the array above-->
     <integer-array name="array_effects_indexes">
+        <item>91</item>
         <item>59</item>
         <item>82</item>
+        <item>98</item>
         <item>69</item>
         <item>73</item>
+        <item>92</item>
         <item>30</item>
         <item>81</item>
         <item>34</item>
@@ -187,16 +190,20 @@
         <item>11</item>
         <item>58</item>
         <item>38</item>
+        <item>703</item>
         <item>79</item>
         <item>60</item>
         <item>90</item>
         <item>80</item>
         <item>62</item>
         <item>40</item>
+        <item>94</item>
         <item>67</item>
+        <item>704</item>
         <item>37</item>
         <item>3005</item>
         <item>87</item>
+        <item>97</item>
         <item>3012</item>
         <item>85</item>
         <item>6</item>
@@ -208,9 +215,12 @@
         <item>86</item>
         <item>78</item>
         <item>3003</item>
+        <item>701</item>
+        <item>702</item>
         <item>46</item>
         <item>56</item>
         <item>43</item>
+        <item>95</item>
         <item>12</item>
         <item>3070</item>
         <item>65</item>
@@ -219,6 +229,7 @@
         <item>44</item>
         <item>88</item>
         <item>89</item>
+        <item>99</item>
         <item>31</item>
         <item>33</item>
         <item>32</item>
@@ -242,12 +253,14 @@
         <item>36</item>
         <item>47</item>
         <item>29</item>
+        <item>93</item>
         <item>64</item>
         <item>17</item>
         <item>57</item>
         <item>84</item>
         <item>70</item>
         <item>16</item>
+        <item>96</item>
         <item>3004</item>
     </integer-array>
 
