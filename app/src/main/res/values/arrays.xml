@@ -78,10 +78,13 @@
 
     <!--Alphabetical order-->
     <string-array name="array_effects">
+        <item>@string/array_effects_abduction</item>
         <item>@string/array_effects_aces_high</item>
         <item>@string/array_effects_amaranthine</item>
+        <item>@string/array_effects_ancient_codex</item>
         <item>@string/array_effects_anti_freeze</item>
         <item>@string/array_effects_arcana</item>
+        <item>@string/array_effects_atomic</item>
         <item>@string/array_effects_blizzardy_storm</item>
         <item>@string/array_effects_bonzo</item>
         <item>@string/array_effects_bubbling</item>
@@ -93,16 +96,20 @@
         <item>@string/array_effects_circling_tf_logo</item>
         <item>@string/array_effects_cloud_9</item>
         <item>@string/array_effects_cloudy_moon</item>
+        <item>@string/array_effects_cool</item>
         <item>@string/array_effects_darkblaze</item>
         <item>@string/array_effects_dead_presidents</item>
         <item>@string/array_effects_death_at_dusk</item>
         <item>@string/array_effects_demonflame</item>
         <item>@string/array_effects_disco_beat_down</item>
         <item>@string/array_effects_eerie_orbiting_fire</item>
+        <item>@string/array_effects_electric_protector</item>
         <item>@string/array_effects_electrostatic</item>
+        <item>@string/array_effects_energy_orb</item>
         <item>@string/array_effects_flaming_lantern</item>
         <item>@string/array_effects_fountain_of_delight</item>
         <item>@string/array_effects_frostbite</item>
+        <item>@string/array_effects_galactic_codex</item>
         <item>@string/array_effects_ghastly_ghosts</item>
         <item>@string/array_effects_ghastly_ghosts_jr</item>
         <item>@string/array_effects_green_confetti</item>
@@ -114,9 +121,12 @@
         <item>@string/array_effects_haunted_phantasm_jr</item>
         <item>@string/array_effects_hellfire</item>
         <item>@string/array_effects_holy_grail</item>
+        <item>@string/array_effects_hot</item>
+        <item>@string/array_effects_isotope</item>
         <item>@string/array_effects_secret</item>
         <item>@string/array_effects_kill_a_watt</item>
         <item>@string/array_effects_knifestorm</item>
+        <item>@string/array_effects_magnetic_protector</item>
         <item>@string/array_effects_massed_flies</item>
         <item>@string/array_effects_mega_strike</item>
         <item>@string/array_effects_memory_leak</item>
@@ -125,6 +135,7 @@
         <item>@string/array_effects_misty_skull</item>
         <item>@string/array_effects_molten_mallard</item>
         <item>@string/array_effects_morning_glory</item>
+        <item>@string/array_effects_nebula</item>
         <item>@string/array_effects_nuts_n_bolts</item>
         <item>@string/array_effects_orbiting_fire</item>
         <item>@string/array_effects_orbiting_planets</item>
@@ -148,21 +159,26 @@
         <item>@string/array_effects_steaming</item>
         <item>@string/array_effects_stormy_13th_hour</item>
         <item>@string/array_effects_stormy_storm</item>
+        <item>@string/array_effects_subatomic</item>
         <item>@string/array_effects_sulphurous</item>
         <item>@string/array_effects_sunbeams</item>
         <item>@string/array_effects_terror_watt</item>
         <item>@string/array_effects_the_ooze</item>
         <item>@string/array_effects_time_warp</item>
         <item>@string/array_effects_vivid_plasma</item>
+        <item>@string/array_effects_voltaic_protector</item>
         <item>@string/array_effects_72</item>
     </string-array>
 
     <!--Must match the array above-->
     <integer-array name="array_effects_indexes">
+        <item>91</item>
         <item>59</item>
         <item>82</item>
+        <item>98</item>
         <item>69</item>
         <item>73</item>
+        <item>92</item>
         <item>30</item>
         <item>81</item>
         <item>34</item>
@@ -174,16 +190,20 @@
         <item>11</item>
         <item>58</item>
         <item>38</item>
+        <item>703</item>
         <item>79</item>
         <item>60</item>
         <item>90</item>
         <item>80</item>
         <item>62</item>
         <item>40</item>
+        <item>94</item>
         <item>67</item>
+        <item>704</item>
         <item>37</item>
         <item>3005</item>
         <item>87</item>
+        <item>97</item>
         <item>3012</item>
         <item>85</item>
         <item>6</item>
@@ -195,9 +215,12 @@
         <item>86</item>
         <item>78</item>
         <item>3003</item>
+        <item>701</item>
+        <item>702</item>
         <item>46</item>
         <item>56</item>
         <item>43</item>
+        <item>95</item>
         <item>12</item>
         <item>3070</item>
         <item>65</item>
@@ -206,6 +229,7 @@
         <item>44</item>
         <item>88</item>
         <item>89</item>
+        <item>99</item>
         <item>31</item>
         <item>33</item>
         <item>32</item>
@@ -229,12 +253,14 @@
         <item>36</item>
         <item>47</item>
         <item>29</item>
+        <item>93</item>
         <item>64</item>
         <item>17</item>
         <item>57</item>
         <item>84</item>
         <item>70</item>
         <item>16</item>
+        <item>96</item>
         <item>3004</item>
     </integer-array>
 
