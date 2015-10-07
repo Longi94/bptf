@@ -98,6 +98,7 @@
     <string name="pref_policy_steam_id" translatable="true">Your id will not be shared with anyone.</string>
     <string name="pref_summary_off_auto_sync" translatable="true">Manual refresh</string>
     <string name="pref_summary_on_auto_sync" translatable="true">Auto-update database</string>
+    <string name="pref_summary_jackson">fast and memory efficient JSON processing</string>
     <string name="pref_summary_particles" translatable="true">provided by backpack.tf</string>
     <string name="pref_summary_quick_return" translatable="true">by felipecsl</string>
     <string name="pref_title_auto_sync" translatable="true">Auto-update database</string>
@@ -107,6 +108,7 @@
     <string name="pref_title_debug_logs" translatable="true">Enable debug logs</string>
     <string name="pref_title_developer" translatable="true">Developer</string>
     <string name="pref_title_feedback" translatable="true">Send feedback or bug report</string>
+    <string name="pref_title_jackson">Jackson JSON Processor</string>
     <string name="pref_title_notification" translatable="true">backpack.tf Notifications</string>
     <string name="pref_title_notification_interval" translatable="true">Check for notifications</string>
     <string name="pref_title_particles" translatable="true">Particle effect images</string>
