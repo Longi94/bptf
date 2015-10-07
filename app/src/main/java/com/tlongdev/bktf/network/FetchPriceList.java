@@ -344,8 +344,8 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
                                 defindex = parser.getIntValue();
                                 break;
                             case KEY_NAME:
-                                name = parser.getText();
                                 parser.nextToken();
+                                name = parser.getText();
                                 break;
                             case KEY_QUALITY:
                                 parser.nextToken();
