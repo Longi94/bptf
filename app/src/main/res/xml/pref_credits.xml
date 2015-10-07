@@ -22,4 +22,15 @@
 
     </PreferenceScreen>
 
+    <PreferenceScreen
+        android:key="@string/pref_title_jackson"
+        android:summary="@string/pref_summary_jackson"
+        android:title="@string/pref_title_jackson">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="http://wiki.fasterxml.com/JacksonHome" />
+
+    </PreferenceScreen>
+
 </PreferenceScreen>
