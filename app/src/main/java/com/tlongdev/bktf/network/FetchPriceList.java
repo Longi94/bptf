@@ -14,18 +14,17 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Vector;
@@ -100,10 +99,6 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
         HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-
-        // Will contain the raw JSON response as a string.
-        String itemsJsonStr = null;
 
         try {
             //The prices api and input keys
@@ -147,57 +142,14 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
 
             //Get the input stream
             InputStream inputStream = urlConnection.getInputStream();
-            StringBuilder buffer = new StringBuilder();
 
             if (inputStream == null) {
                 // Stream was empty. Nothing to do.
                 return null;
             }
 
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            //Read the input
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line);
-            }
-
-            if (buffer.length() == 0) {
-                //Stream was empty, nothing to do.
-                return null;
-            }
-            //Get the jason string
-            itemsJsonStr = buffer.toString();
-
-        } catch (IOException e) {
-            //There was a network error
-            errorMessage = mContext.getString(R.string.error_network);
-            publishProgress(-1);
-            if (Utility.isDebugging(mContext))
-                e.printStackTrace();
-            return null;
-        } finally {
-            //Close the connection
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            if (reader != null) {
-                try {
-                    //Close the reader
-                    reader.close();
-                } catch (final IOException e) {
-                    //This should never be reached
-                    errorMessage = e.getMessage();
-                    publishProgress(-1);
-                    if (Utility.isDebugging(mContext))
-                        e.printStackTrace();
-                }
-
-            }
-        }
-        try {
             //Get all the items from the JSON string
-            if (getItemsFromJson(itemsJsonStr)) {
+            if (getItemsFromJson(inputStream)) {
                 //Get the shared preferences
                 SharedPreferences.Editor editor = prefs.edit();
 
@@ -208,6 +160,13 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
                 editor.apply();
             }
 
+        } catch (IOException e) {
+            //There was a network error
+            errorMessage = mContext.getString(R.string.error_network);
+            publishProgress(-1);
+            if (Utility.isDebugging(mContext))
+                e.printStackTrace();
+            return null;
         } catch (JSONException e) {
             //There was an error parsing data
             errorMessage = "error while parsing data";
@@ -215,6 +174,11 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
             if (Utility.isDebugging(mContext))
                 e.printStackTrace();
             return null;
+        } finally {
+            //Close the connection
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
         }
         return null;
     }
@@ -312,16 +276,16 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
     /**
      * Parse all the items from the JSON string.
      *
-     * @param jsonString the string to parse from
+     * @param inputStream the input stream to parse from
      * @return whether the query was successful or not
      * @throws JSONException
      */
-    private boolean getItemsFromJson(String jsonString) throws JSONException {
+    private boolean getItemsFromJson(InputStream inputStream) throws JSONException, IOException {
 
         //All the JSON keys needed to parse
         final String KEY_SUCCESS = "success";
         final String KEY_MESSAGE = "message";
-        final String KEY_PRICES = "prices";
+        final String KEY_COUNT = "count";
         final String KEY_DEFINDEX = "defindex";
         final String KEY_NAME = "item_name";
         final String KEY_QUALITY = "quality";
@@ -336,150 +300,230 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
         final String KEY_LAST_UPDATE = "last_update";
         final String KEY_DIFFERENCE = "difference";
 
-        //Get the response JSON
-        JSONObject response = new JSONObject(jsonString);
+        //Create a parser from the input stream for fast parsing and low impact on memory
+        JsonFactory factory = new JsonFactory();
+        JsonParser parser = factory.createParser(inputStream);
 
-        if (response.getInt(KEY_SUCCESS) == 0) {
-            publishProgress(-2);
-            //Unsuccessful query, nothing to do
-
-            errorMessage = response.getString(KEY_MESSAGE);
-            if (Utility.isDebugging(mContext))
-                Log.e(LOG_TAG, errorMessage);
+        //Not a JSON if it doesn't start with START OBJECT
+        if (parser.nextToken() != JsonToken.START_OBJECT) {
             return false;
         }
 
-        //Get the items
-        JSONArray prices = response.getJSONArray(KEY_PRICES);
+        JsonToken token;
+        while ((token = parser.nextToken()) != JsonToken.END_OBJECT) {
 
-        //Notify the task that the download finished and the processing begins
-        publishProgress(0, prices.length());
+            //Start of the items that contains the items
+            if (token == JsonToken.START_ARRAY) {
 
-        //Iterator that will iterate through the items
-        Vector<ContentValues> cVVector = new Vector<>();
+                //Iterator that will iterate through the items
+                Vector<ContentValues> cVVector = new Vector<>();
 
-        for (int i = 0; i < prices.length(); i++) {
-            JSONObject price = prices.getJSONObject(i);
+                //Keep iterating whil the array hasn't ended
+                while (parser.nextToken() != JsonToken.END_ARRAY) {
 
-            int defindex = price.getInt(KEY_DEFINDEX);
-            String name = price.getString(KEY_NAME);
-            int quality = price.getInt(KEY_QUALITY);
-            int tradable = price.getInt(KEY_TRADABLE);
-            int craftable = price.getInt(KEY_CRAFTABLE);
-            int priceIndex = price.getInt(KEY_PRICE_INDEX);
-            int australium = price.getInt(KEY_AUSTRALIUM);
-            double value = price.getDouble(KEY_VALUE);
-            String currency = price.getString(KEY_CURRENCY);
-            long lastUpdate = price.getLong(KEY_LAST_UPDATE);
-            double difference = price.getDouble(KEY_DIFFERENCE);
-            Double high = null;
-            if (price.has(KEY_VALUE_HIGH)) {
-                high = price.getDouble(KEY_VALUE_HIGH);
-            }
+                    //Initial values
+                    int defindex = 0;
+                    String name = null;
+                    int quality = 0;
+                    int tradable = 0;
+                    int craftable = 0;
+                    int priceIndex = 0;
+                    int australium = 0;
+                    double value = 0;
+                    String currency = null;
+                    long lastUpdate = 0;
+                    double difference = 0;
+                    Double high = null;
+                    double raw = 0;
 
-            //Add the price to the CV vector
-            cVVector.add(buildContentValues(defindex, name,
-                    quality, tradable, craftable, priceIndex, australium,
-                    currency, value, high, lastUpdate,
-                    difference
-            ));
+                    //Parse an attribute and get the value of it
+                    while (parser.nextToken() != JsonToken.END_OBJECT) {
+                        switch (parser.getCurrentName()) {
+                            case KEY_DEFINDEX:
+                                parser.nextToken();
+                                defindex = parser.getIntValue();
+                                break;
+                            case KEY_NAME:
+                                name = parser.getText();
+                                parser.nextToken();
+                                break;
+                            case KEY_QUALITY:
+                                parser.nextToken();
+                                quality = parser.getIntValue();
+                                break;
+                            case KEY_TRADABLE:
+                                parser.nextToken();
+                                tradable = parser.getIntValue();
+                                break;
+                            case KEY_CRAFTABLE:
+                                parser.nextToken();
+                                craftable = parser.getIntValue();
+                                break;
+                            case KEY_PRICE_INDEX:
+                                parser.nextToken();
+                                priceIndex = parser.getIntValue();
+                                break;
+                            case KEY_AUSTRALIUM:
+                                parser.nextToken();
+                                australium = parser.getIntValue();
+                                break;
+                            case KEY_CURRENCY:
+                                parser.nextToken();
+                                currency = parser.getText();
+                                break;
+                            case KEY_VALUE:
+                                parser.nextToken();
+                                value = parser.getDoubleValue();
+                                break;
+                            case KEY_VALUE_HIGH:
+                                parser.nextToken();
+                                high = parser.getDoubleValue();
+                                break;
+                            case KEY_VALUE_RAW:
+                                parser.nextToken();
+                                raw = parser.getIntValue();
+                                break;
+                            case KEY_LAST_UPDATE:
+                                parser.nextToken();
+                                lastUpdate = parser.getLongValue();
+                                break;
+                            case KEY_DIFFERENCE:
+                                parser.nextToken();
+                                difference = parser.getDoubleValue();
+                                break;
+                        }
 
-            //Currency prices a processed slightly differently, some more info is
-            //saved to the default shared preferences
-            if (quality == 6 && tradable == 1 && craftable == 1) {
-                //Save extra info about the buds price
-                if (defindex == 143) {
+                        //Currency prices a processed slightly differently, some more info is
+                        //saved to the default shared preferences
+                        if (quality == 6 && tradable == 1 && craftable == 1) {
+                            //Save extra info about the buds price
+                            if (defindex == 143) {
 
-                    //Get the sharedpreferences
-                    SharedPreferences.Editor editor = PreferenceManager
-                            .getDefaultSharedPreferences(mContext).edit();
+                                //Get the sharedpreferences
+                                SharedPreferences.Editor editor = PreferenceManager
+                                        .getDefaultSharedPreferences(mContext).edit();
 
-                    //Store the price in a string so it can be displayed in the
-                    //header in the latest changes page
-                    double highPrice = high == null ? 0 : high;
+                                //Store the price in a string so it can be displayed in the
+                                //header in the latest changes page
+                                double highPrice = high == null ? 0 : high;
 
-                    String priceString = Utility.formatPrice(
-                            mContext, price.getDouble(KEY_VALUE), highPrice,
-                            Utility.CURRENCY_KEY, Utility.CURRENCY_KEY, false
-                    );
-                    editor.putString(mContext.getString(R.string.pref_buds_price), priceString);
+                                String priceString = Utility.formatPrice(
+                                        mContext, value, highPrice,
+                                        Utility.CURRENCY_KEY, Utility.CURRENCY_KEY, false
+                                );
+                                editor.putString(mContext.getString(R.string.pref_buds_price), priceString);
 
-                    //Save the difference
-                    Utility.putDouble(editor, mContext.getString(R.string.pref_buds_diff), difference);
-                    //Save the raw price
-                    Utility.putDouble(editor, mContext.getString(R.string.pref_buds_raw), price.getDouble(KEY_VALUE_RAW));
+                                //Save the difference
+                                Utility.putDouble(editor, mContext.getString(R.string.pref_buds_diff), difference);
+                                //Save the raw price
+                                Utility.putDouble(editor, mContext.getString(R.string.pref_buds_raw), raw);
 
-                    editor.apply();
+                                editor.apply();
 
-                } else if (defindex == 5002) {//Save extra info about the refined price
+                            } else if (defindex == 5002) {//Save extra info about the refined price
 
-                    //Get the sharedpreferences
-                    SharedPreferences.Editor editor = PreferenceManager
-                            .getDefaultSharedPreferences(mContext).edit();
+                                //Get the sharedpreferences
+                                SharedPreferences.Editor editor = PreferenceManager
+                                        .getDefaultSharedPreferences(mContext).edit();
 
-                    //Store the price in a string so it can be displayed in the
-                    //header in the latest changes page
-                    double highPrice = high == null ? 0 : high;
+                                //Store the price in a string so it can be displayed in the
+                                //header in the latest changes page
+                                double highPrice = high == null ? 0 : high;
 
-                    String priceString = Utility.formatPrice(
-                            mContext, price.getDouble(KEY_VALUE), highPrice,
-                            Utility.CURRENCY_USD, Utility.CURRENCY_USD, false
-                    );
-                    editor.putString(mContext.getString(R.string.pref_metal_price), priceString);
+                                String priceString = Utility.formatPrice(
+                                        mContext, value, highPrice,
+                                        Utility.CURRENCY_USD, Utility.CURRENCY_USD, false
+                                );
+                                editor.putString(mContext.getString(R.string.pref_metal_price), priceString);
 
-                    //Save the difference
-                    Utility.putDouble(editor, mContext.getString(R.string.pref_metal_diff), difference);
+                                //Save the difference
+                                Utility.putDouble(editor, mContext.getString(R.string.pref_metal_diff), difference);
 
-                    if (highPrice > value) {
-                        //If the metal has a high price, save the average as raw.
-                        Utility.putDouble(editor, mContext.getString(R.string.pref_metal_raw_usd), ((value + highPrice) / 2));
-                    } else {
-                        //save as raw price
-                        Utility.putDouble(editor, mContext.getString(R.string.pref_metal_raw_usd), value);
+                                if (highPrice > value) {
+                                    //If the metal has a high price, save the average as raw.
+                                    Utility.putDouble(editor, mContext.getString(R.string.pref_metal_raw_usd), ((value + highPrice) / 2));
+                                } else {
+                                    //save as raw price
+                                    Utility.putDouble(editor, mContext.getString(R.string.pref_metal_raw_usd), value);
+                                }
+
+                                editor.apply();
+                            } else if (defindex == 5021) {//Save extra info about the key price
+
+                                //Get the sharedpreferences
+                                SharedPreferences.Editor editor = PreferenceManager
+                                        .getDefaultSharedPreferences(mContext).edit();
+
+                                //Store the price in a string so it can be displayed in the
+                                //header in the latest changes page
+                                double highPrice = high == null ? 0 : high;
+
+                                String priceString = Utility.formatPrice(
+                                        mContext, value, highPrice,
+                                        Utility.CURRENCY_METAL, Utility.CURRENCY_METAL, false
+                                );
+                                editor.putString(mContext.getString(R.string.pref_key_price), priceString);
+
+                                //Save the difference
+                                Utility.putDouble(editor, mContext.getString(R.string.pref_key_diff), difference);
+                                //Save the raw price
+                                Utility.putDouble(editor, mContext.getString(R.string.pref_key_raw), raw);
+
+                                editor.apply();
+                            }
+                        }
                     }
 
-                    editor.apply();
-                } else if (defindex == 5021) {//Save extra info about the key price
+                    //Add the price to the CV vector
+                    cVVector.add(buildContentValues(defindex, name, quality, tradable, craftable,
+                            priceIndex, australium, currency, value, high, lastUpdate, difference));
 
-                    //Get the sharedpreferences
-                    SharedPreferences.Editor editor = PreferenceManager
-                            .getDefaultSharedPreferences(mContext).edit();
+                    //Parsed one item
+                    publishProgress(1);
+                }
 
-                    //Store the price in a string so it can be displayed in the
-                    //header in the latest changes page
-                    double highPrice = high == null ? 0 : high;
+                if (cVVector.size() > 0) {
+                    ContentValues[] cvArray = new ContentValues[cVVector.size()];
+                    cVVector.toArray(cvArray);
+                    //Insert all the data into the database
+                    int rowsInserted = mContext.getContentResolver()
+                            .bulkInsert(PriceEntry.CONTENT_URI, cvArray);
+                    if (Utility.isDebugging(mContext))
+                        Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
+                }
+                parser.close();
+                return true;
+            }
 
-                    String priceString = Utility.formatPrice(
-                            mContext, price.getDouble(KEY_VALUE), highPrice,
-                            Utility.CURRENCY_METAL, Utility.CURRENCY_METAL, false
-                    );
-                    editor.putString(mContext.getString(R.string.pref_key_price), priceString);
+            //success object
+            if (parser.getCurrentName().equals(KEY_SUCCESS)) {
+                parser.nextToken();
+                if (parser.getIntValue() == 0) {
+                    publishProgress(-2);
+                    //Unsuccessful query, nothing to do
 
-                    //Save the difference
-                    Utility.putDouble(editor, mContext.getString(R.string.pref_key_diff), difference);
-                    //Save the raw price
-                    Utility.putDouble(editor, mContext.getString(R.string.pref_key_raw), price.getDouble(KEY_VALUE_RAW));
-
-                    editor.apply();
+                    while (parser.nextToken() != JsonToken.END_OBJECT) {
+                        if (parser.getCurrentName().equals(KEY_MESSAGE)) {
+                            errorMessage = parser.getText();
+                            if (Utility.isDebugging(mContext))
+                                Log.e(LOG_TAG, errorMessage);
+                        }
+                    }
+                    parser.close();
+                    return false;
                 }
             }
 
-
-            //Notify the UI that we finished.
-            publishProgress(1);
+            //count object since with this type of parser we don't actually know how long the array is
+            if (parser.getCurrentName().equals(KEY_COUNT)) {
+                parser.nextToken();
+                //Notify the task that the download finished and the processing begins
+                publishProgress(0, parser.getIntValue());
+            }
         }
 
-        if (cVVector.size() > 0) {
-            ContentValues[] cvArray = new ContentValues[cVVector.size()];
-            cVVector.toArray(cvArray);
-            //Insert all the data into the database
-            int rowsInserted = mContext.getContentResolver()
-                    .bulkInsert(PriceEntry.CONTENT_URI, cvArray);
-            if (Utility.isDebugging(mContext))
-                Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
-        }
-
-        return true;
+        parser.close();
+        return false;
     }
 
 
