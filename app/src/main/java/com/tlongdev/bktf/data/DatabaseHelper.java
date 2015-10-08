@@ -9,7 +9,7 @@ import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
     public static final String DATABASE_NAME = "pricelist.db";
 
     public DatabaseHelper(Context context) {
@@ -63,5 +63,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + PriceEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ItemSchemaEntry.TABLE_NAME);
+        onCreate(db);
     }
 }
