@@ -3,6 +3,7 @@ package com.tlongdev.bktf;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.tlongdev.bktf.fragment.AdvancedCalculatorFragment;
 import com.tlongdev.bktf.fragment.HomeFragment;
@@ -30,6 +32,7 @@ import com.tlongdev.bktf.fragment.SearchFragment;
 import com.tlongdev.bktf.fragment.SimpleCalculatorFragment;
 import com.tlongdev.bktf.fragment.UnusualPriceListFragment;
 import com.tlongdev.bktf.fragment.UserFragment;
+import com.tlongdev.bktf.network.FetchPriceList;
 import com.tlongdev.bktf.service.NotificationsService;
 import com.tlongdev.bktf.service.UpdateDatabaseService;
 
@@ -37,7 +40,7 @@ import com.tlongdev.bktf.service.UpdateDatabaseService;
  * Tha main activity if the application. Navigation drawer is used. This is where most of the
  * fragments are shown.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FetchPriceList.OnPriceListFetchListener {
 
     //Request codes for onActivityResult
     public static final int REQUEST_SETTINGS = 100;
@@ -81,6 +84,14 @@ public class MainActivity extends AppCompatActivity {
     private boolean restartUserFragment = false;
 
     private MenuItem currentMenuItem;
+
+
+    private TextView metalPrice;
+    private TextView keyPrice;
+    private TextView budsPrice;
+    private View metalPriceImage;
+    private View keyPriceImage;
+    private View budsPriceImage;
 
     /**
      * {@inheritDoc}
@@ -175,6 +186,37 @@ public class MainActivity extends AppCompatActivity {
 
         // Select either the default item (0) or the last selected item.
         selectItem(mCurrentSelectedPosition);
+        
+        
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        metalPrice = (TextView) findViewById(R.id.text_view_metal_price);
+        keyPrice = (TextView) findViewById(R.id.text_view_key_price);
+        budsPrice = (TextView) findViewById(R.id.text_view_buds_price);
+
+        metalPriceImage = findViewById(R.id.image_view_metal_price);
+        keyPriceImage = findViewById(R.id.image_view_key_price);
+        budsPriceImage = findViewById(R.id.image_view_buds_price);
+
+        metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
+        keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
+        budsPrice.setText(prefs.getString(getString(R.string.pref_buds_price), ""));
+
+        if (Utility.getDouble(prefs, getString(R.string.pref_metal_diff), 0) > 0) {
+            metalPriceImage.setBackgroundColor(0xff008504);
+        } else {
+            metalPriceImage.setBackgroundColor(0xff850000);
+        }
+        if (Utility.getDouble(prefs, getString(R.string.pref_key_diff), 0) > 0) {
+            keyPriceImage.setBackgroundColor(0xff008504);
+        } else {
+            keyPriceImage.setBackgroundColor(0xff850000);
+        }
+        if (Utility.getDouble(prefs, getString(R.string.pref_buds_diff), 0) > 0) {
+            budsPriceImage.setBackgroundColor(0xff008504);
+        } else {
+            budsPriceImage.setBackgroundColor(0xff850000);
+        }
     }
 
     /**
@@ -230,14 +272,13 @@ public class MainActivity extends AppCompatActivity {
         }
         if (position == 0 && currentFragment != 0) {
             //Home fragment
-            transaction.replace(R.id.container, new HomeFragment());
+            HomeFragment fragment = new HomeFragment();
+            fragment.setListener(this);
+            transaction.replace(R.id.container, fragment);
         } else if (position == 1 && currentFragment != 1) {
-            //User fragment
-            transaction.replace(R.id.container, new UserFragment());
-        } else if (position == 2 && currentFragment != 2) {
             //Unusual prices fragment
             transaction.replace(R.id.container, new UnusualPriceListFragment());
-        } else if (position == 3 && currentFragment != 3) {
+        } else if (position == 2 && currentFragment != 2) {
             if (!PreferenceManager.getDefaultSharedPreferences(this)
                     .getBoolean(getString(R.string.pref_preferred_advanced_calculator), false)) {
                 //Simple calculatior fragment
@@ -462,4 +503,30 @@ public class MainActivity extends AppCompatActivity {
             mDrawerLayout.closeDrawers();
     }
 
+    @Override
+    public void onPriceListFetchFinished() {
+
+        //Update the header with currency prices
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
+        keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
+        budsPrice.setText(prefs.getString(getString(R.string.pref_buds_price), ""));
+
+        if (Utility.getDouble(prefs, getString(R.string.pref_metal_diff), 0.0) > 0.0) {
+            metalPriceImage.setBackgroundColor(0xff008504);
+        } else {
+            metalPriceImage.setBackgroundColor(0xff850000);
+        }
+        if (Utility.getDouble(prefs, getString(R.string.pref_key_diff), 0.0) > 0.0) {
+            keyPriceImage.setBackgroundColor(0xff008504);
+        } else {
+            keyPriceImage.setBackgroundColor(0xff850000);
+        }
+        if (Utility.getDouble(prefs, getString(R.string.pref_buds_diff), 0.0) > 0) {
+            budsPriceImage.setBackgroundColor(0xff008504);
+        } else {
+            budsPriceImage.setBackgroundColor(0xff850000);
+        }
+    }
 }

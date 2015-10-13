@@ -15,20 +15,14 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.adapter.PriceListCursorAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
-import com.tlongdev.bktf.quickreturn.AbsListViewQuickReturnAttacher;
-import com.tlongdev.bktf.quickreturn.QuickReturnAttacher;
-import com.tlongdev.bktf.quickreturn.widget.QuickReturnAdapter;
-import com.tlongdev.bktf.quickreturn.widget.QuickReturnTargetView;
 import com.tlongdev.bktf.network.FetchPriceList;
 
 /**
@@ -77,12 +71,8 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     private PriceListCursorAdapter cursorAdapter;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private TextView metalPrice;
-    private TextView keyPrice;
-    private TextView budsPrice;
-    private View metalPriceImage;
-    private View keyPriceImage;
-    private View budsPriceImage;
+
+    private FetchPriceList.OnPriceListFetchListener listener;
 
     public HomeFragment() {
         //Required empty constructor
@@ -99,40 +89,11 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-        metalPrice = (TextView) rootView.findViewById(R.id.text_view_metal_price);
-        keyPrice = (TextView) rootView.findViewById(R.id.text_view_key_price);
-        budsPrice = (TextView) rootView.findViewById(R.id.text_view_buds_price);
-
-        metalPriceImage = rootView.findViewById(R.id.image_view_metal_price);
-        keyPriceImage = rootView.findViewById(R.id.image_view_key_price);
-        budsPriceImage = rootView.findViewById(R.id.image_view_buds_price);
-
-        metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
-        keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
-        budsPrice.setText(prefs.getString(getString(R.string.pref_buds_price), ""));
-
-        if (Utility.getDouble(prefs, getString(R.string.pref_metal_diff), 0) > 0) {
-            metalPriceImage.setBackgroundColor(0xff008504);
-        } else {
-            metalPriceImage.setBackgroundColor(0xff850000);
-        }
-        if (Utility.getDouble(prefs, getString(R.string.pref_key_diff), 0) > 0) {
-            keyPriceImage.setBackgroundColor(0xff008504);
-        } else {
-            keyPriceImage.setBackgroundColor(0xff850000);
-        }
-        if (Utility.getDouble(prefs, getString(R.string.pref_buds_diff), 0) > 0) {
-            budsPriceImage.setBackgroundColor(0xff008504);
-        } else {
-            budsPriceImage.setBackgroundColor(0xff850000);
-        }
-
         cursorAdapter = new PriceListCursorAdapter(getActivity(), null, 0);
 
         // Get a reference to the ListView, and attach this adapter to it.
         ListView mListView = (ListView) rootView.findViewById(R.id.list_view_changes);
+        mListView.setAdapter(cursorAdapter);
 
         //Set up the swipe refresh layout (color and listener)
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
@@ -143,15 +104,6 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
         mSwipeRefreshLayout.setProgressViewOffset(false,
                 (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, -15, getResources().getDisplayMetrics()),
                 (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 65, getResources().getDisplayMetrics()));
-
-        LinearLayout header = (LinearLayout) rootView.findViewById(R.id.list_changes_header);
-
-        //Set up quick return
-        mListView.setAdapter(new QuickReturnAdapter(cursorAdapter));
-        AbsListViewQuickReturnAttacher quickReturnAttacher =
-                (AbsListViewQuickReturnAttacher) QuickReturnAttacher.forView(mListView);
-        quickReturnAttacher.addTargetView(header, QuickReturnTargetView.POSITION_TOP,
-                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 42, getResources().getDisplayMetrics()));
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
 
@@ -245,28 +197,13 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             //Stop animation
             mSwipeRefreshLayout.setRefreshing(false);
 
-            //Update the header with currency prices
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-            metalPrice.setText(prefs.getString(getActivity().getString(R.string.pref_metal_price), ""));
-            keyPrice.setText(prefs.getString(getActivity().getString(R.string.pref_key_price), ""));
-            budsPrice.setText(prefs.getString(getActivity().getString(R.string.pref_buds_price), ""));
-
-            if (Utility.getDouble(prefs, getActivity().getString(R.string.pref_metal_diff), 0.0) > 0.0) {
-                metalPriceImage.setBackgroundColor(0xff008504);
-            } else {
-                metalPriceImage.setBackgroundColor(0xff850000);
-            }
-            if (Utility.getDouble(prefs, getActivity().getString(R.string.pref_key_diff), 0.0) > 0.0) {
-                keyPriceImage.setBackgroundColor(0xff008504);
-            } else {
-                keyPriceImage.setBackgroundColor(0xff850000);
-            }
-            if (Utility.getDouble(prefs, getActivity().getString(R.string.pref_buds_diff), 0.0) > 0) {
-                budsPriceImage.setBackgroundColor(0xff008504);
-            } else {
-                budsPriceImage.setBackgroundColor(0xff850000);
+            if (listener != null) {
+                listener.onPriceListFetchFinished();
             }
         }
+    }
+
+    public void setListener(FetchPriceList.OnPriceListFetchListener listener) {
+        this.listener = listener;
     }
 }

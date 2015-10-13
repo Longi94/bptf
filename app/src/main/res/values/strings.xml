@@ -87,7 +87,6 @@
 
     <!--Preference titles and summaries-->
 
-    <string name="pref_title_quick_return" translatable="false">QuickReturn</string>
     <string name="pref_summary_developer" translatable="false">Long Tran</string>
     <string name="pref_category_about" translatable="true">About</string>
     <string name="pref_category_account" translatable="true">Account</string>
