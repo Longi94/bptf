@@ -72,8 +72,6 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
     //Variables used for managing fragments.
     private boolean restartUserFragment = false;
 
-    private MenuItem currentMenuItem;
-
     private TextView metalPrice;
     private TextView keyPrice;
     private TextView budsPrice;
@@ -89,17 +87,14 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
                 case R.id.nav_recents:
                     menuItem.setCheckable(true);
                     switchFragment(0);
-                    currentMenuItem = menuItem.setChecked(true);
                     break;
                 case R.id.nav_unusuals:
                     menuItem.setCheckable(true);
                     switchFragment(1);
-                    currentMenuItem = menuItem.setChecked(true);
                     break;
                 case R.id.nav_calculator:
                     menuItem.setCheckable(true);
                     switchFragment(2);
-                    currentMenuItem = menuItem.setChecked(true);
                     break;
                 case R.id.nav_settings:
                     Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
@@ -166,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
         }
-        currentMenuItem = mNavigationView.getMenu().getItem(mCurrentSelectedPosition).setChecked(true);
+        mNavigationView.getMenu().getItem(mCurrentSelectedPosition).setChecked(true);
 
         // Select either the default item (0) or the last selected item.
         switchFragment(mCurrentSelectedPosition);
@@ -229,10 +224,6 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         Fragment newFragment;
 
-        if (currentMenuItem != null) {
-            //Simple fade animation for switching between fragments
-            transaction.setCustomAnimations(R.anim.simple_fade_in, R.anim.simple_fade_out);
-        }
         switch (position) {
             case -1:
                 newFragment = new UserFragment();
@@ -272,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         if (requestCode == REQUEST_SETTINGS) {
             //User returned from the settings activity
             if (resultCode == RESULT_OK) {
-                if (currentMenuItem == null) {
+                if (mCurrentSelectedPosition == -1) {
                     if (data != null && data.getBooleanExtra("preference_changed", false)) {
                         //User fragment needs to be reloaded if the steamId was changed
                         restartUserFragment = true;

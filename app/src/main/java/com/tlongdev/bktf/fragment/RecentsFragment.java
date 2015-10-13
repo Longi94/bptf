@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.tlongdev.bktf.MainActivity;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.adapter.RecentsAdapter;
@@ -81,6 +82,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     private FetchPriceList.OnPriceListFetchListener listener;
 
     private AppBarLayout appBarLayout;
+    private MainActivity parentActivity;
 
     public RecentsFragment() {
         //Required empty constructor
@@ -171,13 +173,13 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-
+                parentActivity.expandToolbar();
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-
+                parentActivity.expandToolbar();
                 return true;
             }
         });
@@ -188,11 +190,13 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                 new MenuItemCompat.OnActionExpandListener() {
                     @Override
                     public boolean onMenuItemActionExpand(MenuItem item) {
+                        parentActivity.expandToolbar();
                         return true;
                     }
 
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item) {
+                        parentActivity.expandToolbar();
                         return true;
                     }
                 });
@@ -269,5 +273,9 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
     public void setListener(FetchPriceList.OnPriceListFetchListener listener) {
         this.listener = listener;
+    }
+
+    public void setCallBack(MainActivity parentActivity) {
+        this.parentActivity = parentActivity;
     }
 }
