@@ -22,7 +22,8 @@
             android:id="@+id/image_view_user_avatar"
             android:layout_width="wrap_content"
             android:layout_height="64dp"
-            android:scaleType="fitXY" />
+            android:scaleType="fitXY"
+            android:foreground="@color/accent"/>
 
         <View
             android:layout_width="wrap_content"
@@ -42,7 +43,8 @@
                 android:gravity="center_vertical"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:text="NAME"/>
 
             <TextView
                 android:id="@+id/text_view_can_count"
@@ -50,7 +52,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:text="SOME_INFO"/>
 
         </LinearLayout>
 

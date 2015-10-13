@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -155,17 +156,12 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         });
 
         //User clicked on the header
-        /*mNavigationView.findViewById(R.id.navigation_view_header).setOnClickListener(new View.OnClickListener() {
+        mNavigationView.findViewById(R.id.navigation_view_header).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (prefs.getBoolean(getString(R.string.pref_facebook_logged_in), false)) {
-                    selectItem(-1);
-                    if (currentMenuItem != null) {
-                        currentMenuItem.setCheckable(false);
-                    }
-                }
+                selectItem(-1);
             }
-        });*/
+        });
 
         setUp();
 
@@ -265,32 +261,40 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         //Start handling fragment transactions
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
+        Fragment newFragment;
 
         if (currentFragment != -1) {
             //Simple fade animation for switching between fragments
             transaction.setCustomAnimations(R.anim.simple_fade_in, R.anim.simple_fade_out);
         }
-        if (position == 0 && currentFragment != 0) {
-            //Home fragment
-            HomeFragment fragment = new HomeFragment();
-            fragment.setListener(this);
-            transaction.replace(R.id.container, fragment);
-        } else if (position == 1 && currentFragment != 1) {
-            //Unusual prices fragment
-            transaction.replace(R.id.container, new UnusualPriceListFragment());
-        } else if (position == 2 && currentFragment != 2) {
-            if (!PreferenceManager.getDefaultSharedPreferences(this)
-                    .getBoolean(getString(R.string.pref_preferred_advanced_calculator), false)) {
-                //Simple calculatior fragment
-                transaction.replace(R.id.container, new SimpleCalculatorFragment());
-            } else {
-                //Advanced caltulator fragment
-                transaction.replace(R.id.container, new AdvancedCalculatorFragment());
-            }
+        switch (position) {
+            case -1:
+                newFragment = new UserFragment();
+                break;
+            case 0:
+                newFragment = new HomeFragment();
+                ((HomeFragment) newFragment).setListener(this);
+                setTitle(getString(R.string.title_home));
+                break;
+            case 1:
+                newFragment = new UnusualPriceListFragment();
+                setTitle(getString(R.string.title_unusuals));
+                break;
+            case 2:
+                if (!PreferenceManager.getDefaultSharedPreferences(this)
+                        .getBoolean(getString(R.string.pref_preferred_advanced_calculator), false)) {
+                    newFragment = new SimpleCalculatorFragment();
+                } else {
+                    newFragment = new AdvancedCalculatorFragment();
+                }
+                break;
+            default:
+                return;
         }
+
+        transaction.replace(R.id.container, newFragment);
         transaction.commit();
         currentFragment = position;
-        onSectionAttached(position);
     }
 
     /**
@@ -312,25 +316,6 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         }
         //super call is needed to pass the result to the fragments
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    /**
-     * This sets the title according to the fragments. I have no idea why this was generated.
-     *
-     * @param number index of the fragment
-     */
-    public void onSectionAttached(int number) {
-        switch (number) {
-            case 0:
-                mTitle = getString(R.string.title_home);
-                break;
-            case 1:
-                mTitle = getString(R.string.title_unusuals);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_calculator);
-                break;
-        }
     }
 
     /**
