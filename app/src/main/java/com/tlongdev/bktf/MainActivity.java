@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Setup the drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.bptf_main_blue_dark));
+        mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.primary_dark));
         mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override

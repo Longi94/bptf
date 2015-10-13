@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/calculator_earbuds"
-        android:textColor="@color/bptf_main_blue"
+        android:textColor="@color/primary"
         android:textStyle="bold" />
 
     <EditText
@@ -21,14 +21,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
-        android:textColorHighlight="@color/bktf_main_blue_light" />
+        android:textColorHighlight="@color/primary_light" />
 
     <!--Keys input-->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/calculator_keys"
-        android:textColor="@color/bptf_main_blue"
+        android:textColor="@color/primary"
         android:textStyle="bold" />
 
     <EditText
@@ -36,14 +36,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
-        android:textColorHighlight="@color/bktf_main_blue_light" />
+        android:textColorHighlight="@color/primary_light" />
 
     <!--Metal input-->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/calculator_metal"
-        android:textColor="@color/bptf_main_blue"
+        android:textColor="@color/primary"
         android:textStyle="bold" />
 
     <EditText
@@ -51,14 +51,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
-        android:textColorHighlight="@color/bktf_main_blue_light" />
+        android:textColorHighlight="@color/primary_light" />
 
     <!--USD input-->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/calculator_usd"
-        android:textColor="@color/bptf_main_blue"
+        android:textColor="@color/primary"
         android:textStyle="bold" />
 
     <EditText
@@ -66,6 +66,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
-        android:textColorHighlight="@color/bktf_main_blue_light" />
+        android:textColorHighlight="@color/primary_light" />
 
 </LinearLayout>
