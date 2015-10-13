@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_gravity="top"
-            android:background="@color/bptf_main_blue"
+            android:background="@color/primary"
             android:orientation="horizontal">
 
             <LinearLayout

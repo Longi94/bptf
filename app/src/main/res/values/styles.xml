@@ -6,9 +6,9 @@
         <item name="actionBarStyle">@style/bptfActionBar</item>
         <item name="android:windowContentOverlay">@null</item>
 
-        <item name="colorPrimary">@color/bptf_main_blue</item>
-        <item name="colorPrimaryDark">@color/bptf_main_blue_dark</item>
-        <item name="colorAccent">@color/bptf_main_blue</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
 
     </style>
 
@@ -45,7 +45,7 @@
 
     <!--Main Action Bar style-->
     <style name="bptfActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
-        <item name="background">@color/bptf_main_blue</item>
+        <item name="background">@color/primary</item>
     </style>
 
 </resources>

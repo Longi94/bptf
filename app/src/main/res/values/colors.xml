@@ -5,9 +5,10 @@
     <color name="white_ripple">#99ffffff</color>
 
     <!--Main colors-->
-    <color name="bptf_main_blue_dark">#ff5074ac</color>
-    <color name="bptf_main_blue">#ff5787c5</color>
-    <color name="bktf_main_blue_light">#ff60a2e8</color>
+    <color name="primary_dark">#303F9F</color>
+    <color name="primary">#3F51B5</color>
+    <color name="primary_light">#C5CAE9</color>
+    <color name="accent">#FF9800</color>
 
     <!--Main item quality colors-->
     <color name="tf2_unusual_color">#8650AC</color>
