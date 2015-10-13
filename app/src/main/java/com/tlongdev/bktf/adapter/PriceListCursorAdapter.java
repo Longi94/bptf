@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
-import com.tlongdev.bktf.fragment.HomeFragment;
+import com.tlongdev.bktf.fragment.RecentsFragment;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,12 +48,12 @@ public class PriceListCursorAdapter extends CursorAdapter {
         viewHolder.priceView.setVisibility(View.INVISIBLE);
 
         String itemTag = Utility.formatItemName(context,
-                cursor.getInt(HomeFragment.COL_PRICE_LIST_DEFI),
-                cursor.getString(HomeFragment.COL_PRICE_LIST_NAME),
-                cursor.getInt(HomeFragment.COL_PRICE_LIST_TRAD),
-                cursor.getInt(HomeFragment.COL_PRICE_LIST_CRAF),
-                cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL),
-                cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE));
+                cursor.getInt(RecentsFragment.COL_PRICE_LIST_DEFI),
+                cursor.getString(RecentsFragment.COL_PRICE_LIST_NAME),
+                cursor.getInt(RecentsFragment.COL_PRICE_LIST_TRAD),
+                cursor.getInt(RecentsFragment.COL_PRICE_LIST_CRAF),
+                cursor.getInt(RecentsFragment.COL_PRICE_LIST_QUAL),
+                cursor.getInt(RecentsFragment.COL_PRICE_LIST_INDE));
         viewHolder.nameView.setText(itemTag);
 
         viewHolder.background.setTag(itemTag);
@@ -69,22 +69,22 @@ public class PriceListCursorAdapter extends CursorAdapter {
         task = new LoadImagesTask(context, view, viewHolder);
         viewHolder.icon.setTag(task);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_DEFI),
-                (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_INDE),
-                cursor.getDouble(HomeFragment.COL_PRICE_LIST_DIFF),
-                cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRAW),
-                (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_QUAL),
-                (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_TRAD),
-                (double) cursor.getInt(HomeFragment.COL_PRICE_LIST_CRAF),
-                (double) cursor.getInt(HomeFragment.COL_AUSTRALIUM)
+                (double) cursor.getInt(RecentsFragment.COL_PRICE_LIST_DEFI),
+                (double) cursor.getInt(RecentsFragment.COL_PRICE_LIST_INDE),
+                cursor.getDouble(RecentsFragment.COL_PRICE_LIST_DIFF),
+                cursor.getDouble(RecentsFragment.COL_PRICE_LIST_PRAW),
+                (double) cursor.getInt(RecentsFragment.COL_PRICE_LIST_QUAL),
+                (double) cursor.getInt(RecentsFragment.COL_PRICE_LIST_TRAD),
+                (double) cursor.getInt(RecentsFragment.COL_PRICE_LIST_CRAF),
+                (double) cursor.getInt(RecentsFragment.COL_AUSTRALIUM)
         );
 
         try {
             viewHolder.priceView.setText(Utility.formatPrice(context,
-                    cursor.getDouble(HomeFragment.COL_PRICE_LIST_PRIC),
-                    cursor.getDouble(HomeFragment.COL_PRICE_LIST_PMAX),
-                    cursor.getString(HomeFragment.COL_PRICE_LIST_CURR),
-                    cursor.getString(HomeFragment.COL_PRICE_LIST_CURR), false));
+                    cursor.getDouble(RecentsFragment.COL_PRICE_LIST_PRIC),
+                    cursor.getDouble(RecentsFragment.COL_PRICE_LIST_PMAX),
+                    cursor.getString(RecentsFragment.COL_PRICE_LIST_CURR),
+                    cursor.getString(RecentsFragment.COL_PRICE_LIST_CURR), false));
         } catch (Throwable throwable) {
             if (Utility.isDebugging(context))
                 throwable.printStackTrace();
