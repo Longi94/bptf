@@ -136,7 +136,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
         //Set up the swipe refresh layout (color and listener)
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
-        mSwipeRefreshLayout.setColorSchemeColors(0xff5787c5);
+        mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.accent));
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         //Offset, so the header isn't in the way
