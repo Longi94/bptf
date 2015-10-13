@@ -1,7 +1,5 @@
 package com.tlongdev.bktf;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -15,20 +13,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.tlongdev.bktf.fragment.AdvancedCalculatorFragment;
-import com.tlongdev.bktf.fragment.HomeFragment;
+import com.tlongdev.bktf.fragment.RecentsFragment;
 import com.tlongdev.bktf.fragment.SearchFragment;
 import com.tlongdev.bktf.fragment.SimpleCalculatorFragment;
 import com.tlongdev.bktf.fragment.UnusualPriceListFragment;
@@ -243,8 +238,8 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
                 newFragment = new UserFragment();
                 break;
             case 0:
-                newFragment = new HomeFragment();
-                ((HomeFragment) newFragment).setListener(this);
+                newFragment = new RecentsFragment();
+                ((RecentsFragment) newFragment).setListener(this);
                 setTitle(getString(R.string.title_home));
                 break;
             case 1:
@@ -293,71 +288,9 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
      * {@inheritDoc}
      */
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //Inflate the action bar menu
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-
-        //Setup the search widget
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        MenuItem menuItem = menu.findItem(R.id.action_search);
-        SearchView mSearchView = (SearchView) menuItem.getActionView();
-
-        //Set the searchable info
-        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
-        //Start a new query everytime the text is edited and when the player taps on submit.
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                if (mSearchFragment != null && mSearchFragment.isAdded()) {
-                    mSearchFragment.restartLoader(s);
-                }
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if (mSearchFragment != null && mSearchFragment.isAdded()) {
-                    mSearchFragment.restartLoader(s);
-                }
-                return true;
-            }
-        });
-
-        //Switch to the search fragment when the searchview is expanded and switch back when
-        //collapsed.
-        MenuItemCompat.setOnActionExpandListener(menuItem,
-                new MenuItemCompat.OnActionExpandListener() {
-                    @Override
-                    public boolean onMenuItemActionExpand(MenuItem item) {
-                        //Close the drawer if it was open
-                        if (isDrawerOpen()) {
-                            mDrawerLayout.closeDrawers();
-                        }
-                        //Lock the drawer. Prevents the user from opening it while searching.
-                        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-
-                        //Switch to the search fragment
-                        mSearchFragment = new SearchFragment();
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-                        fragmentManager.beginTransaction()
-                                .setCustomAnimations(R.anim.simple_fade_in, R.anim.simple_fade_out)
-                                .replace(R.id.container, mSearchFragment)
-                                .commit();
-
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onMenuItemActionCollapse(MenuItem item) {
-                        //Unlock the drawer and switch back to the previous fragment
-                        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                        navigationListener.onNavigationItemSelected(currentMenuItem);
-                        return true;
-                    }
-                });
-
-        return super.onCreateOptionsMenu(menu);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //Handler the drawer toggle press
+        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     public boolean isDrawerOpen() {
