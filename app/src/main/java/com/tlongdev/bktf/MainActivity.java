@@ -53,11 +53,6 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
 
     /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
-    private CharSequence mTitle;
-
-    /**
      * Helper component that ties the action bar to the navigation drawer.
      */
     private ActionBarDrawerToggle mDrawerToggle;
@@ -80,12 +75,9 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
     private SearchFragment mSearchFragment;
 
     //Variables used for managing fragments.
-    private int previousFragment = -1;
-    private int currentFragment = -1;
     private boolean restartUserFragment = false;
 
     private MenuItem currentMenuItem;
-
 
     private TextView metalPrice;
     private TextView keyPrice;
@@ -93,6 +85,44 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
     private View metalPriceImage;
     private View keyPriceImage;
     private View budsPriceImage;
+
+    NavigationView.OnNavigationItemSelectedListener navigationListener = new NavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(MenuItem menuItem) {
+            mDrawerLayout.closeDrawers();
+            switch (menuItem.getItemId()) {
+                case R.id.nav_recents:
+                    menuItem.setCheckable(true);
+                    switchFragment(0);
+                    currentMenuItem = menuItem.setChecked(true);
+                    break;
+                case R.id.nav_unusuals:
+                    menuItem.setCheckable(true);
+                    switchFragment(1);
+                    currentMenuItem = menuItem.setChecked(true);
+                    break;
+                case R.id.nav_calculator:
+                    menuItem.setCheckable(true);
+                    switchFragment(2);
+                    currentMenuItem = menuItem.setChecked(true);
+                    break;
+                case R.id.nav_settings:
+                    Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivityForResult(settingsIntent, REQUEST_SETTINGS);
+                    break;
+                case R.id.nav_help:
+                    Uri webPage = Uri.parse("https://github.com/Longi94/bptf/wiki/Help");
+
+                    //Open link in the device default web browser
+                    Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        startActivity(intent);
+                    }
+                    break;
+            }
+            return true; // TODO: 2015. 10. 13.
+        }
+    };
 
     /**
      * {@inheritDoc}
@@ -116,54 +146,17 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.primary_dark));
         mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
-        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                mDrawerLayout.closeDrawers();
-                switch (menuItem.getItemId()) {
-                    case R.id.nav_recents:
-                        menuItem.setCheckable(true);
-                        selectItem(0);
-                        currentMenuItem = menuItem.setChecked(true);
-                        break;
-                    case R.id.nav_unusuals:
-                        menuItem.setCheckable(true);
-                        selectItem(1);
-                        currentMenuItem = menuItem.setChecked(true);
-                        break;
-                    case R.id.nav_calculator:
-                        menuItem.setCheckable(true);
-                        selectItem(2);
-                        currentMenuItem = menuItem.setChecked(true);
-                        break;
-                    case R.id.nav_settings:
-                        Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
-                        startActivityForResult(settingsIntent, REQUEST_SETTINGS);
-                        break;
-                    case R.id.nav_help:
-                        Uri webPage = Uri.parse("https://github.com/Longi94/bptf/wiki/Help");
-
-                        //Open link in the device default web browser
-                        Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
-                        if (intent.resolveActivity(getPackageManager()) != null) {
-                            startActivity(intent);
-                        }
-                        break;
-                }
-
-                return true; // TODO: 2015. 10. 13.
-            }
-        });
+        mNavigationView.setNavigationItemSelectedListener(navigationListener);
 
         //User clicked on the header
         mNavigationView.findViewById(R.id.navigation_view_header).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectItem(-1);
+                switchFragment(-1);
             }
         });
 
-        setUp();
+        setUpNavigationDrawer();
 
         //Start services if option is on
         if (PreferenceManager.getDefaultSharedPreferences(this)
@@ -181,10 +174,7 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         currentMenuItem = mNavigationView.getMenu().getItem(mCurrentSelectedPosition).setChecked(true);
 
         // Select either the default item (0) or the last selected item.
-        selectItem(mCurrentSelectedPosition);
-        
-        
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        switchFragment(mCurrentSelectedPosition);
 
         metalPrice = (TextView) findViewById(R.id.text_view_metal_price);
         keyPrice = (TextView) findViewById(R.id.text_view_key_price);
@@ -194,25 +184,7 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         keyPriceImage = findViewById(R.id.image_view_key_price);
         budsPriceImage = findViewById(R.id.image_view_buds_price);
 
-        metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
-        keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
-        budsPrice.setText(prefs.getString(getString(R.string.pref_buds_price), ""));
-
-        if (Utility.getDouble(prefs, getString(R.string.pref_metal_diff), 0) > 0) {
-            metalPriceImage.setBackgroundColor(0xff008504);
-        } else {
-            metalPriceImage.setBackgroundColor(0xff850000);
-        }
-        if (Utility.getDouble(prefs, getString(R.string.pref_key_diff), 0) > 0) {
-            keyPriceImage.setBackgroundColor(0xff008504);
-        } else {
-            keyPriceImage.setBackgroundColor(0xff850000);
-        }
-        if (Utility.getDouble(prefs, getString(R.string.pref_buds_diff), 0) > 0) {
-            budsPriceImage.setBackgroundColor(0xff008504);
-        } else {
-            budsPriceImage.setBackgroundColor(0xff850000);
-        }
+        onPriceListFetchFinished();
     }
 
     /**
@@ -220,7 +192,6 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
      */
     @Override
     protected void onResume() {
-
         //If needed (mostly when the steamId was changed) reload a new instance of the UserFragment
         if (restartUserFragment) {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -230,7 +201,6 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
             restartUserFragment = false;
         }
         super.onResume();
-
     }
 
     /**
@@ -253,17 +223,18 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void onNavigationDrawerItemSelected(int position) {
+    public void switchFragment(int position) {
+        mCurrentSelectedPosition = position;
+        if (mDrawerLayout != null) {
+            mDrawerLayout.closeDrawer(mNavigationView);
+        }
 
         //Start handling fragment transactions
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         Fragment newFragment;
 
-        if (currentFragment != -1) {
+        if (currentMenuItem != null) {
             //Simple fade animation for switching between fragments
             transaction.setCustomAnimations(R.anim.simple_fade_in, R.anim.simple_fade_out);
         }
@@ -287,6 +258,7 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
                 } else {
                     newFragment = new AdvancedCalculatorFragment();
                 }
+                setTitle(getString(R.string.title_calculator));
                 break;
             default:
                 return;
@@ -294,7 +266,6 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
 
         transaction.replace(R.id.container, newFragment);
         transaction.commit();
-        currentFragment = position;
     }
 
     /**
@@ -305,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         if (requestCode == REQUEST_SETTINGS) {
             //User returned from the settings activity
             if (resultCode == RESULT_OK) {
-                if (currentFragment == 1) {
+                if (currentMenuItem == null) {
                     if (data != null && data.getBooleanExtra("preference_changed", false)) {
                         //User fragment needs to be reloaded if the steamId was changed
                         restartUserFragment = true;
@@ -319,24 +290,12 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
     }
 
     /**
-     * Restores action bar I assume. It was auto generated.
-     */
-    public void restoreActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         //Inflate the action bar menu
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        restoreActionBar();
 
         //Setup the search widget
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -373,13 +332,10 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
                     public boolean onMenuItemActionExpand(MenuItem item) {
                         //Close the drawer if it was open
                         if (isDrawerOpen()) {
-                            closeDrawer();
+                            mDrawerLayout.closeDrawers();
                         }
                         //Lock the drawer. Prevents the user from opening it while searching.
-                        lockDrawer();
-
-                        //Store the index of the previous fragment.
-                        previousFragment = getCheckedItemPosition();
+                        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
                         //Switch to the search fragment
                         mSearchFragment = new SearchFragment();
@@ -389,15 +345,14 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
                                 .replace(R.id.container, mSearchFragment)
                                 .commit();
 
-                        currentFragment = -2;
                         return true;
                     }
 
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item) {
                         //Unlock the drawer and switch back to the previous fragment
-                        unlockDrawer();
-                        onNavigationDrawerItemSelected(previousFragment);
+                        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                        navigationListener.onNavigationItemSelected(currentMenuItem);
                         return true;
                     }
                 });
@@ -412,8 +367,7 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
     /**
      * Users of this fragment must call this method to set up the navigation drawer interactions.
      */
-    public void setUp() {
-
+    public void setUpNavigationDrawer() {
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
@@ -458,39 +412,8 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
     }
 
-    /**
-     * Select an item from the navigation drawer.
-     *
-     * @param position the position of the item.
-     */
-    private void selectItem(int position) {
-        mCurrentSelectedPosition = position;
-        if (mDrawerLayout != null) {
-            mDrawerLayout.closeDrawer(mNavigationView);
-        }
-        onNavigationDrawerItemSelected(position);
-    }
-
-    public void lockDrawer() {
-        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-    }
-
-    public void unlockDrawer() {
-        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-    }
-
-    public int getCheckedItemPosition() {
-        return 0; // TODO: 2015. 10. 13.
-    }
-
-    public void closeDrawer() {
-        if (mDrawerLayout != null)
-            mDrawerLayout.closeDrawers();
-    }
-
     @Override
     public void onPriceListFetchFinished() {
-
         //Update the header with currency prices
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
