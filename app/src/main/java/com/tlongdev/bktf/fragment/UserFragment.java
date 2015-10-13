@@ -104,7 +104,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         progressBar = (ProgressBar) mLayout.findViewById(R.id.progress_bar);
 
         //Set the color of the refreshing animation
-        mLayout.setColorSchemeColors(0xff5787c5);
+        mLayout.setColorSchemeColors(getResources().getColor(R.color.accent));
         mLayout.setOnRefreshListener(this);
 
         //A workaround for the refreshing animation not appearing when calling setRefreshing(true)

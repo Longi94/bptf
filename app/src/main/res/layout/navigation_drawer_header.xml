@@ -3,9 +3,9 @@
     android:id="@+id/navigation_view_header"
     android:layout_width="match_parent"
     android:layout_height="172dp"
+    android:background="@drawable/navigation_header_selector"
     android:paddingTop="24dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
-    <!--android:background="@drawable/navigation_header_selector"-->
 
     <LinearLayout
         android:id="@+id/linear_layout_user_info"
