@@ -13,11 +13,10 @@
         android:clipChildren="false">
 
         <!--Listview containing the latest changes-->
-        <ListView
-            android:id="@+id/list_view_changes"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@android:color/transparent"
             android:scrollbars="none" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
