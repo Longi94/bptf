@@ -3,21 +3,29 @@ package com.tlongdev.bktf;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.tlongdev.bktf.fragment.AdvancedCalculatorFragment;
 import com.tlongdev.bktf.fragment.HomeFragment;
-import com.tlongdev.bktf.fragment.NavigationDrawerFragment;
 import com.tlongdev.bktf.fragment.SearchFragment;
 import com.tlongdev.bktf.fragment.SimpleCalculatorFragment;
 import com.tlongdev.bktf.fragment.UnusualPriceListFragment;
@@ -29,22 +37,40 @@ import com.tlongdev.bktf.service.UpdateDatabaseService;
  * Tha main activity if the application. Navigation drawer is used. This is where most of the
  * fragments are shown.
  */
-public class MainActivity extends AppCompatActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class MainActivity extends AppCompatActivity {
 
     //Request codes for onActivityResult
     public static final int REQUEST_SETTINGS = 100;
     public static final int REQUEST_NEW_ITEM = 101;
 
     /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
+     * Remember the position of the selected item.
      */
-    private NavigationDrawerFragment mNavigationDrawerFragment;
+    private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+
+    /**
+     * Helper component that ties the action bar to the navigation drawer.
+     */
+    private ActionBarDrawerToggle mDrawerToggle;
+
+    /**
+     * The drawer layout and the navigation drawer
+     */
+    private DrawerLayout mDrawerLayout;
+    private NavigationView mNavigationView;
+
+    private AppBarLayout mAppBarLayout;
+    private CoordinatorLayout mCoordinatorLayout;
+
+    /**
+     * The index of the current fragment.
+     */
+    private int mCurrentSelectedPosition = 0;
 
     //Store reference to search fragment to pass search queries.
     private SearchFragment mSearchFragment;
@@ -53,6 +79,8 @@ public class MainActivity extends AppCompatActivity
     private int previousFragment = -1;
     private int currentFragment = -1;
     private boolean restartUserFragment = false;
+
+    private MenuItem currentMenuItem;
 
     /**
      * {@inheritDoc}
@@ -65,15 +93,70 @@ public class MainActivity extends AppCompatActivity
         //Set the default values for all preferences when the app is first loaded
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
-        onSectionAttached(0);
+        //As we're using a Toolbar, we should retrieve it and set it to be our ActionBar
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
+        //Views used for toolbar behavior
+        mAppBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
+
+        //Setup the drawer
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.bptf_main_blue_dark));
+        mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                mDrawerLayout.closeDrawers();
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_recents:
+                        menuItem.setCheckable(true);
+                        selectItem(0);
+                        currentMenuItem = menuItem.setChecked(true);
+                        break;
+                    case R.id.nav_unusuals:
+                        menuItem.setCheckable(true);
+                        selectItem(1);
+                        currentMenuItem = menuItem.setChecked(true);
+                        break;
+                    case R.id.nav_calculator:
+                        menuItem.setCheckable(true);
+                        selectItem(2);
+                        currentMenuItem = menuItem.setChecked(true);
+                        break;
+                    case R.id.nav_settings:
+                        Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                        startActivityForResult(settingsIntent, REQUEST_SETTINGS);
+                        break;
+                    case R.id.nav_help:
+                        Uri webPage = Uri.parse("https://github.com/Longi94/bptf/wiki/Help");
+
+                        //Open link in the device default web browser
+                        Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            startActivity(intent);
+                        }
+                        break;
+                }
+
+                return true; // TODO: 2015. 10. 13.
+            }
+        });
+
+        //User clicked on the header
+        /*mNavigationView.findViewById(R.id.navigation_view_header).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (prefs.getBoolean(getString(R.string.pref_facebook_logged_in), false)) {
+                    selectItem(-1);
+                    if (currentMenuItem != null) {
+                        currentMenuItem.setCheckable(false);
+                    }
+                }
+            }
+        });*/
+
+        setUp();
 
         //Start services if option is on
         if (PreferenceManager.getDefaultSharedPreferences(this)
@@ -84,6 +167,14 @@ public class MainActivity extends AppCompatActivity
                 .getBoolean(getString(R.string.pref_background_sync), false)) {
             startService(new Intent(this, UpdateDatabaseService.class));
         }
+
+        if (savedInstanceState != null) {
+            mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
+        }
+        currentMenuItem = mNavigationView.getMenu().getItem(mCurrentSelectedPosition).setChecked(true);
+
+        // Select either the default item (0) or the last selected item.
+        selectItem(mCurrentSelectedPosition);
     }
 
     /**
@@ -108,6 +199,25 @@ public class MainActivity extends AppCompatActivity
      * {@inheritDoc}
      */
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //Save the current fragment to be restored.
+        outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Forward the new configuration the drawer toggle component.
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public void onNavigationDrawerItemSelected(int position) {
 
         //Start handling fragment transactions
@@ -143,14 +253,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Convenience activity to start the settings activity
-     */
-    public void startSettingsActivity() {
-        Intent settingsIntent = new Intent(this, SettingsActivity.class);
-        startActivityForResult(settingsIntent, REQUEST_SETTINGS);
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -182,13 +284,11 @@ public class MainActivity extends AppCompatActivity
                 mTitle = getString(R.string.title_home);
                 break;
             case 1:
-                mTitle = getString(R.string.title_user_profile);
-                break;
-            case 2:
                 mTitle = getString(R.string.title_unusuals);
                 break;
-            case 3:
+            case 2:
                 mTitle = getString(R.string.title_calculator);
+                break;
         }
     }
 
@@ -246,14 +346,14 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public boolean onMenuItemActionExpand(MenuItem item) {
                         //Close the drawer if it was open
-                        if (mNavigationDrawerFragment.isDrawerOpen()) {
-                            mNavigationDrawerFragment.closeDrawer();
+                        if (isDrawerOpen()) {
+                            closeDrawer();
                         }
                         //Lock the drawer. Prevents the user from opening it while searching.
-                        mNavigationDrawerFragment.lockDrawer();
+                        lockDrawer();
 
                         //Store the index of the previous fragment.
-                        previousFragment = mNavigationDrawerFragment.getCheckedItemPosition();
+                        previousFragment = getCheckedItemPosition();
 
                         //Switch to the search fragment
                         mSearchFragment = new SearchFragment();
@@ -270,7 +370,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item) {
                         //Unlock the drawer and switch back to the previous fragment
-                        mNavigationDrawerFragment.unlockDrawer();
+                        unlockDrawer();
                         onNavigationDrawerItemSelected(previousFragment);
                         return true;
                     }
@@ -278,4 +378,88 @@ public class MainActivity extends AppCompatActivity
 
         return super.onCreateOptionsMenu(menu);
     }
+
+    public boolean isDrawerOpen() {
+        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mNavigationView);
+    }
+
+    /**
+     * Users of this fragment must call this method to set up the navigation drawer interactions.
+     */
+    public void setUp() {
+
+        // set a custom shadow that overlays the main content when the drawer opens
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        // set up the drawer's list view with items and click listener
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
+
+        // ActionBarDrawerToggle ties together the the proper interactions
+        // between the navigation drawer and the action bar app icon.
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,                             /* host Activity */
+                mDrawerLayout,                    /* DrawerLayout object */
+                R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
+                R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
+        ) {
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                expandToolbar();
+            }
+        };
+
+        // Defer code dependent on restoration of previous instance state.
+        mDrawerLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mDrawerToggle.syncState();
+            }
+        });
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+    }
+
+    /**
+     * Fully expand the toolbar with animation.
+     */
+    public void expandToolbar() {
+        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
+        behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
+    }
+
+    /**
+     * Select an item from the navigation drawer.
+     *
+     * @param position the position of the item.
+     */
+    private void selectItem(int position) {
+        mCurrentSelectedPosition = position;
+        if (mDrawerLayout != null) {
+            mDrawerLayout.closeDrawer(mNavigationView);
+        }
+        onNavigationDrawerItemSelected(position);
+    }
+
+    public void lockDrawer() {
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    }
+
+    public void unlockDrawer() {
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+    }
+
+    public int getCheckedItemPosition() {
+        return 0; // TODO: 2015. 10. 13.
+    }
+
+    public void closeDrawer() {
+        if (mDrawerLayout != null)
+            mDrawerLayout.closeDrawers();
+    }
+
 }
