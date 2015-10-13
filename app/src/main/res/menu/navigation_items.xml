@@ -5,12 +5,15 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_recents"
+            android:icon="@drawable/ic_new_releases_white_24dp"
             android:title="@string/title_home" />
         <item
             android:id="@+id/nav_unusuals"
+            android:icon="@drawable/ic_whatshot_white_24dp"
             android:title="@string/title_prices" />
         <item
             android:id="@+id/nav_calculator"
+            android:icon="@drawable/ic_calculator_24dp"
             android:title="@string/title_calculator" />
     </group>
     <group
@@ -18,9 +21,11 @@
         android:checkableBehavior="none">
         <item
             android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings_white_24dp"
             android:title="@string/title_activity_settings" />
         <item
             android:id="@+id/nav_help"
+            android:icon="@drawable/ic_help_white_24dp"
             android:title="@string/navigation_drawer_help" />
     </group>
 </menu>

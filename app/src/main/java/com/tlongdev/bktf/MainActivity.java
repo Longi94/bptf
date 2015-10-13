@@ -240,6 +240,7 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
             case 0:
                 newFragment = new RecentsFragment();
                 ((RecentsFragment) newFragment).setListener(this);
+                ((RecentsFragment) newFragment).setAppBarLayout(mAppBarLayout);
                 setTitle(getString(R.string.title_home));
                 break;
             case 1:
@@ -320,8 +321,8 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
                 R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
         ) {
             @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
                 expandToolbar();
             }
         };

@@ -6,12 +6,15 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,13 +22,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
-import com.tlongdev.bktf.adapter.PriceListCursorAdapter;
+import com.tlongdev.bktf.adapter.RecentsAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.network.FetchPriceList;
 
@@ -33,7 +35,7 @@ import com.tlongdev.bktf.network.FetchPriceList;
  * Main fragment the shows the latest price changes.
  */
 public class RecentsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
-        SwipeRefreshLayout.OnRefreshListener, FetchPriceList.OnPriceListFetchListener {
+        SwipeRefreshLayout.OnRefreshListener, FetchPriceList.OnPriceListFetchListener, AppBarLayout.OnOffsetChangedListener {
 
     private static final String LOG_TAG = RecentsFragment.class.getSimpleName();
 
@@ -72,11 +74,13 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
     private ProgressBar progressBar;
 
-    private PriceListCursorAdapter cursorAdapter;
+    private RecentsAdapter adapter;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private FetchPriceList.OnPriceListFetchListener listener;
+
+    private AppBarLayout appBarLayout;
 
     public RecentsFragment() {
         //Required empty constructor
@@ -95,11 +99,11 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
         setHasOptionsMenu(true);
 
-        cursorAdapter = new PriceListCursorAdapter(getActivity(), null, 0);
+        adapter = new RecentsAdapter(getActivity(), null);
 
-        // Get a reference to the ListView, and attach this adapter to it.
-        ListView mListView = (ListView) rootView.findViewById(R.id.list_view_changes);
-        mListView.setAdapter(cursorAdapter);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(adapter);
 
         //Set up the swipe refresh layout (color and listener)
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
@@ -107,6 +111,10 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
+
+        if (appBarLayout != null) {
+            appBarLayout.addOnOffsetChangedListener(this);
+        }
 
         return rootView;
     }
@@ -210,14 +218,14 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        cursorAdapter.swapCursor(data);
+        adapter.swapCursor(data);
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        cursorAdapter.swapCursor(null);
+        adapter.swapCursor(null);
     }
 
     @Override
@@ -244,6 +252,19 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                 listener.onPriceListFetchFinished();
             }
         }
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+        if (i == 0) {
+            mSwipeRefreshLayout.setEnabled(true);
+        } else {
+            mSwipeRefreshLayout.setEnabled(false);
+        }
+    }
+
+    public void setAppBarLayout(AppBarLayout appBarLayout) {
+        this.appBarLayout = appBarLayout;
     }
 
     public void setListener(FetchPriceList.OnPriceListFetchListener listener) {
