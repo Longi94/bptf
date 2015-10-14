@@ -10,6 +10,10 @@
     <color name="primary_light">#C5CAE9</color>
     <color name="accent">#FF9800</color>
 
+
+    <color name="text_secondary">@android:color/secondary_text_dark</color>
+    <color name="text_primary">@android:color/primary_text_dark</color>
+
     <!--Main item quality colors-->
     <color name="tf2_unusual_color">#8650AC</color>
     <color name="tf2_unique_color">#FFD700</color>
@@ -52,6 +56,5 @@
     <color name="player_online">#ff24a9de</color>
     <color name="player_offline">#ff6E6E6E</color>
     <color name="player_in_game">#ff8fb93b</color>
-    <color name="text_view_default">#ff666666</color>
 
 </resources>
