@@ -22,6 +22,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -82,7 +84,10 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     private FetchPriceList.OnPriceListFetchListener listener;
 
     private AppBarLayout appBarLayout;
+
     private MainActivity parentActivity;
+
+    private RecyclerView mRecyclerView;
 
     public RecentsFragment() {
         //Required empty constructor
@@ -103,9 +108,10 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
         adapter = new RecentsAdapter(getActivity(), null);
 
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(adapter);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setVisibility(View.GONE);
 
         //Set up the swipe refresh layout (color and listener)
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
@@ -223,8 +229,18 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         adapter.swapCursor(data);
-        if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+
+        Animation fadeIn = AnimationUtils.loadAnimation(getActivity(), R.anim.simple_fade_in);
+        Animation fadeOut = AnimationUtils.loadAnimation(getActivity(), R.anim.simple_fade_in);
+
+        fadeIn.setDuration(250);
+        fadeOut.setDuration(250);
+
+        mRecyclerView.startAnimation(fadeIn);
+        progressBar.startAnimation(fadeOut);
+
+        mRecyclerView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override

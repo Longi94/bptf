@@ -4,14 +4,10 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
-import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,49 +38,58 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (mDataSet != null && mDataSet.moveToPosition(position)) {
-            holder.view.setVisibility(View.INVISIBLE);
-            holder.nameView.setVisibility(View.INVISIBLE);
-            holder.priceView.setVisibility(View.INVISIBLE);
 
-            String itemTag = Utility.formatItemName(mContext,
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_DEFI),
-                    mDataSet.getString(RecentsFragment.COL_PRICE_LIST_NAME),
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_TRAD),
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_CRAF),
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_QUAL),
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_INDE));
-            holder.nameView.setText(itemTag);
+            int defindex = mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_DEFI);
+            int quality = mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_QUAL);
+            int tradable = mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_TRAD);
+            int craftable = mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_CRAF);
+            int priceIndex = mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_INDE);
+            int australium = mDataSet.getInt(RecentsFragment.COL_AUSTRALIUM);
+
+            double price = mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PRIC);
+            double priceHigh = mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PMAX);
+
+            String name = mDataSet.getString(RecentsFragment.COL_PRICE_LIST_NAME);
+            String currency = mDataSet.getString(RecentsFragment.COL_PRICE_LIST_CURR);
+
+            String itemName = Utility.formatItemName(mContext, defindex, name, tradable, craftable,
+                    quality, priceIndex);
+            holder.nameView.setText(itemName);
 
             holder.icon.setImageDrawable(null);
-            holder.icon.setBackgroundColor(Utility.getQualityColor(mContext,
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_QUAL),
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_DEFI),
-                    true
-            ));
-
-            LoadImagesTask task = (LoadImagesTask) holder.icon.getTag();
-            if (task != null) {
-                task.cancel(true);
-            }
-            task = new LoadImagesTask(mContext, holder.view, holder);
-            holder.icon.setTag(task);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                    (double) mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_DEFI),
-                    (double) mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_INDE),
-                    mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_DIFF),
-                    mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PRAW),
-                    (double) mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_QUAL),
-                    (double) mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_TRAD),
-                    (double) mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_CRAF),
-                    (double) mDataSet.getInt(RecentsFragment.COL_AUSTRALIUM)
-            );
+            holder.effect.setBackgroundColor(Utility.getQualityColor(mContext, quality, defindex, true));
 
             try {
-                holder.priceView.setText(Utility.formatPrice(mContext,
-                        mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PRIC),
-                        mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PMAX),
-                        mDataSet.getString(RecentsFragment.COL_PRICE_LIST_CURR),
-                        mDataSet.getString(RecentsFragment.COL_PRICE_LIST_CURR), false));
+                AssetManager assetManager = mContext.getAssets();
+
+                InputStream ims;
+                if (australium == 1 && defindex != 5037) {
+                    ims = assetManager.open("items/" + Utility.getIconIndex(defindex) + "aus.png");
+                } else {
+                    ims = assetManager.open("items/" + Utility.getIconIndex(defindex) + ".png");
+                }
+
+                Drawable iconDrawable = Drawable.createFromStream(ims, null);
+                holder.icon.setImageDrawable(iconDrawable);
+
+                if (priceIndex != 0 && Utility.canHaveEffects(defindex, quality)) {
+                    ims = assetManager.open("effects/" +  priceIndex + "_188x188.png");
+                    Drawable effectDrawable = Drawable.createFromStream(ims, null);
+                    holder.effect.setImageDrawable(effectDrawable);
+                } else {
+                    holder.effect.setImageDrawable(null);
+                }
+
+            } catch (IOException e) {
+                if (Utility.isDebugging(mContext))
+                    e.printStackTrace();
+                holder.icon.setImageDrawable(null);
+                holder.effect.setImageDrawable(null);
+            }
+
+            try {
+                holder.priceView.setText(Utility.formatPrice(mContext, price, priceHigh,
+                        currency, currency, false));
             } catch (Throwable throwable) {
                 if (Utility.isDebugging(mContext))
                     throwable.printStackTrace();
@@ -108,6 +113,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
         public final View view;
 
         public final ImageView icon;
+        public final ImageView effect;
 
         public final TextView nameView;
         public final TextView priceView;
@@ -116,64 +122,9 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
             super(view);
             this.view = view;
             icon = (ImageView) view.findViewById(R.id.image_view_item_icon);
+            effect = (ImageView) view.findViewById(R.id.image_view_item_effect);
             nameView = (TextView) view.findViewById(R.id.item_name);
             priceView = (TextView) view.findViewById(R.id.item_price);
-        }
-    }
-
-
-    private class LoadImagesTask extends AsyncTask<Double, Void, Drawable> {
-        private Context mContext;
-        private View rootView;
-        private ViewHolder viewHolder;
-
-        private LoadImagesTask(Context context, View rootView, ViewHolder viewHolder) {
-            mContext = context;
-            this.rootView = rootView;
-            this.viewHolder = viewHolder;
-        }
-
-        @Override
-        protected Drawable doInBackground(Double... params) {
-            try {
-                AssetManager assetManager = mContext.getAssets();
-
-                InputStream ims;
-                if (params[7] == 1 && params[0] != 5037) {
-                    ims = assetManager.open("items/" + Utility.getIconIndex(params[0].intValue()) + "aus.png");
-                } else {
-                    ims = assetManager.open("items/" + Utility.getIconIndex(params[0].intValue()) + ".png");
-                }
-
-                Drawable iconDrawable = Drawable.createFromStream(ims, null);
-                if (params[1] != 0 && Utility.canHaveEffects(params[0].intValue(), params[4].intValue())) {
-                    ims = assetManager.open("effects/" + params[1].intValue() + "_188x188.png");
-                    Drawable effectDrawable = Drawable.createFromStream(ims, null);
-                    return new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
-                } else {
-                    return iconDrawable;
-                }
-
-            } catch (IOException e) {
-                if (Utility.isDebugging(mContext))
-                    e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Drawable drawable) {
-            if (drawable != null) {
-                viewHolder.icon.setImageDrawable(drawable);
-            } else {
-                viewHolder.icon.setImageDrawable(null);
-            }
-            Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.simple_fade_in);
-            fadeIn.setDuration(100);
-            rootView.startAnimation(fadeIn);
-            rootView.setVisibility(View.VISIBLE);
-            viewHolder.nameView.setVisibility(View.VISIBLE);
-            viewHolder.priceView.setVisibility(View.VISIBLE);
         }
     }
 }
