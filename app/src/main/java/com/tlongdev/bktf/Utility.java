@@ -2242,7 +2242,8 @@ public class Utility {
         }
     }
 
-    public static int getDecoratedWeaponColor(int defindex, boolean isDark) {
+    public static int getDecoratedWeaponColor(Context context, int defindex, boolean isDark) {
+        int colorResource = 0;
         switch (defindex) {
             case 15025:
             case 15026:
@@ -2255,7 +2256,8 @@ public class Utility {
             case 15042:
             case 15043:
             case 15044:
-                return isDark ? R.color.tf2_decorated_weapon_civilian_dark : R.color.tf2_decorated_weapon_civilian;
+                colorResource = isDark ? R.color.tf2_decorated_weapon_civilian_dark : R.color.tf2_decorated_weapon_civilian;
+                break;
             case 15020:
             case 15021:
             case 15022:
@@ -2265,7 +2267,8 @@ public class Utility {
             case 15036:
             case 15037:
             case 15038:
-                return isDark ? R.color.tf2_decorated_weapon_freelance_dark : R.color.tf2_decorated_weapon_freelance;
+                colorResource = isDark ? R.color.tf2_decorated_weapon_freelance_dark : R.color.tf2_decorated_weapon_freelance;
+                break;
             case 15000:
             case 15001:
             case 15003:
@@ -2283,7 +2286,8 @@ public class Utility {
             case 15055:
             case 15057:
             case 15058:
-                return isDark ? R.color.tf2_decorated_weapon_mercenary_dark : R.color.tf2_decorated_weapon_mercenary;
+                colorResource = isDark ? R.color.tf2_decorated_weapon_mercenary_dark : R.color.tf2_decorated_weapon_mercenary;
+                break;
             case 15002:
             case 15006:
             case 15010:
@@ -2297,22 +2301,24 @@ public class Utility {
             case 15050:
             case 15051:
             case 15056:
-                return isDark ? R.color.tf2_decorated_weapon_commando_dark : R.color.tf2_decorated_weapon_commando;
+                colorResource = isDark ? R.color.tf2_decorated_weapon_commando_dark : R.color.tf2_decorated_weapon_commando;
+                break;
             case 15007:
             case 15009:
             case 15011:
             case 15048:
             case 15052:
             case 15053:
-                return isDark ? R.color.tf2_decorated_weapon_assassin_dark : R.color.tf2_decorated_weapon_assassin;
+                colorResource = isDark ? R.color.tf2_decorated_weapon_assassin_dark : R.color.tf2_decorated_weapon_assassin;
+                break;
             case 15013:
             case 15014:
             case 15045:
             case 15059:
-                return isDark ? R.color.tf2_decorated_weapon_elite_dark : R.color.tf2_decorated_weapon_elite;
-            default:
-                throw new IllegalArgumentException("Invalid defindex: " + defindex);
+                colorResource = isDark ? R.color.tf2_decorated_weapon_elite_dark : R.color.tf2_decorated_weapon_elite;
+                break;
         }
+        return context.getResources().getColor(colorResource);
     }
 
     public static String getDecoratedWeaponDesc(String type, int defindex, int wear) {
@@ -2406,6 +2412,46 @@ public class Utility {
                 return "Elite Grade " + type + " " + wearStr;
             default:
                 throw new IllegalArgumentException("Invalid defindex: " + defindex);
+        }
+    }
+
+    public static int getQualityColor(Context context, int quality, int defindex, boolean isDark) {
+        switch (quality) {
+            case Quality.GENUINE:
+                return isDark ? context.getResources().getColor(R.color.tf2_genuine_color_dark)
+                        : context.getResources().getColor(R.color.tf2_genuine_color);
+            case Quality.VINTAGE:
+                return isDark ? context.getResources().getColor(R.color.tf2_vintage_color_dark)
+                        : context.getResources().getColor(R.color.tf2_vintage_color);
+            case Quality.UNUSUAL:
+                return isDark ? context.getResources().getColor(R.color.tf2_unusual_color_dark)
+                        : context.getResources().getColor(R.color.tf2_unusual_color);
+            case Quality.UNIQUE:
+                return isDark ? context.getResources().getColor(R.color.tf2_unique_color_dark)
+                        : context.getResources().getColor(R.color.tf2_unique_color);
+            case Quality.COMMUNITY:
+                return isDark ? context.getResources().getColor(R.color.tf2_community_color_dark)
+                        : context.getResources().getColor(R.color.tf2_community_color);
+            case Quality.VALVE:
+                return isDark ? context.getResources().getColor(R.color.tf2_valve_color_dark)
+                        : context.getResources().getColor(R.color.tf2_valve_color);
+            case Quality.SELF_MADE:
+                return isDark ? context.getResources().getColor(R.color.tf2_community_color_dark)
+                        : context.getResources().getColor(R.color.tf2_community_color);
+            case Quality.STRANGE:
+                return isDark ? context.getResources().getColor(R.color.tf2_strange_color_dark)
+                        : context.getResources().getColor(R.color.tf2_strange_color);
+            case Quality.HAUNTED:
+                return isDark ? context.getResources().getColor(R.color.tf2_haunted_color_dark)
+                        : context.getResources().getColor(R.color.tf2_haunted_color);
+            case Quality.COLLECTORS:
+                return isDark ? context.getResources().getColor(R.color.tf2_collectors_color_dark)
+                        : context.getResources().getColor(R.color.tf2_collectors_color);
+            case Quality.PAINTKITWEAPON:
+                return getDecoratedWeaponColor(context, defindex, isDark);
+            default:
+                return isDark ? context.getResources().getColor(R.color.tf2_normal_color_dark)
+                        : context.getResources().getColor(R.color.tf2_normal_color);
         }
     }
 

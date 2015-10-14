@@ -43,7 +43,7 @@
         android:paddingLeft="16dp"
         android:paddingRight="8dp"
         android:textSize="16sp"
-        android:textColor="@color/text_view_default" />
+        android:textColor="@color/text_secondary" />
 
     <!--Price of the item-->
     <TextView
@@ -53,6 +53,6 @@
         android:gravity="center_vertical|end"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:textColor="@color/text_view_default" />
+        android:textColor="@color/text_secondary" />
 
 </LinearLayout>
