@@ -22,7 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.UserInfoActivity;
+import com.tlongdev.bktf.activity.UserInfoActivity;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.adapter.SearchCursorAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;

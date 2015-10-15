@@ -27,7 +27,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.tlongdev.bktf.MainActivity;
+import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.adapter.RecentsAdapter;

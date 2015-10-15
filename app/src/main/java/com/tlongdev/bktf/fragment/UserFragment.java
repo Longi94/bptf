@@ -23,7 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.UserBackpackActivity;
+import com.tlongdev.bktf.activity.UserBackpackActivity;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.network.FetchUserInfo;
 

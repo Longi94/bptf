@@ -1,4 +1,4 @@
-package com.tlongdev.bktf;
+package com.tlongdev.bktf.activity;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.ItemChooserAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 

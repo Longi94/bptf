@@ -1,4 +1,4 @@
-package com.tlongdev.bktf;
+package com.tlongdev.bktf.activity;
 
 import android.database.Cursor;
 import android.net.Uri;
@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 
+import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.BackpackSectionHeaderAdapter;
 import com.tlongdev.bktf.data.UserBackpackContract.UserBackpackEntry;
 

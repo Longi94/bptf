@@ -18,9 +18,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tlongdev.bktf.ItemDetailActivity;
+import com.tlongdev.bktf.activity.ItemDetailActivity;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.UserBackpackActivity;
+import com.tlongdev.bktf.activity.UserBackpackActivity;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.ItemSchemaDbHelper;
 

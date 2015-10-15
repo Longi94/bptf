@@ -22,7 +22,7 @@
             android:gravity="center"
             android:orientation="vertical"
             android:padding="16dp"
-            tools:context="com.tlongdev.bktf.ItemDetailActivity">
+            tools:context=".activity.ItemDetailActivity">
 
             <com.tlongdev.bktf.view.SquareFrameLayout
                 android:id="@+id/relative_layout_image"
