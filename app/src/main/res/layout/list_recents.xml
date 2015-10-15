@@ -7,6 +7,7 @@
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
     android:layout_marginTop="4dp"
+    android:foreground="@drawable/simple_selector_white"
     card_view:cardBackgroundColor="#393939">
 
     <LinearLayout
@@ -38,12 +39,22 @@
 
         </FrameLayout>
 
+        <ImageView
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/shadow_gradient" />
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_margin="8dp">
+            android:orientation="vertical">
 
             <!--Name of the item-->
             <TextView

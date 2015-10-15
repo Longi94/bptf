@@ -39,6 +39,13 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (mDataSet != null && mDataSet.moveToPosition(position)) {
 
+            holder.view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
             int defindex = mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_DEFI);
             int quality = mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_QUAL);
             int tradable = mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_TRAD);
