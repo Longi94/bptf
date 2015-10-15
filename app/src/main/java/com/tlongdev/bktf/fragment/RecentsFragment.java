@@ -11,15 +11,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -27,9 +22,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.adapter.RecentsAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.network.FetchPriceList;
@@ -104,8 +99,6 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recents, container, false);
 
-        setHasOptionsMenu(true);
-
         adapter = new RecentsAdapter(getActivity(), null);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
@@ -163,50 +156,6 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                 mSwipeRefreshLayout.setRefreshing(true);
             }
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_recents, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-
-        //Setup the search widget
-        MenuItem menuItem = menu.findItem(R.id.action_search);
-        SearchView mSearchView = (SearchView) menuItem.getActionView();
-        mSearchView.setQueryHint("Search for items or users...");
-
-        //Start a new query everytime the text is edited and when the player taps on submit.
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                parentActivity.expandToolbar();
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                parentActivity.expandToolbar();
-                return true;
-            }
-        });
-
-        //Switch to the search fragment when the searchview is expanded and switch back when
-        //collapsed.
-        MenuItemCompat.setOnActionExpandListener(menuItem,
-                new MenuItemCompat.OnActionExpandListener() {
-                    @Override
-                    public boolean onMenuItemActionExpand(MenuItem item) {
-                        parentActivity.expandToolbar();
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onMenuItemActionCollapse(MenuItem item) {
-                        parentActivity.expandToolbar();
-                        return true;
-                    }
-                });
-
     }
 
     @Override

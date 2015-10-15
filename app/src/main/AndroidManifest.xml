@@ -117,6 +117,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.UserBackpackActivity" />
         </activity>
+        <activity
+            android:name=".activity.SearchActivity"
+            android:label=""
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tlongdev.bktf.activity.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
