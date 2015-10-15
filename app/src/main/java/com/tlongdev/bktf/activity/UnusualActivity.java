@@ -1,4 +1,4 @@
-package com.tlongdev.bktf;
+package com.tlongdev.bktf.activity;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,6 +9,8 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.GridView;
 
+import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.adapter.UnusualPricesCursorAdapter;
 import com.tlongdev.bktf.data.DatabaseContract;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;

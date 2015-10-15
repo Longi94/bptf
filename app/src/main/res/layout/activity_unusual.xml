@@ -12,5 +12,5 @@
     android:padding="4dp"
     android:stretchMode="columnWidth"
     android:verticalSpacing="4dp"
-    tools:context="com.tlongdev.bktf.UnusualActivity" />
+    tools:context=".activity.UnusualActivity" />
 

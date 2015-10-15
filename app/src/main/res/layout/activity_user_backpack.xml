@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.tlongdev.bktf.UserBackpackActivity">
+    tools:context=".activity.UserBackpackActivity">
 
     <!--Listview showing the headers and items-->
     <android.support.v7.widget.RecyclerView

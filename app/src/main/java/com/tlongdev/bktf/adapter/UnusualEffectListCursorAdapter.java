@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.UnusualActivity;
+import com.tlongdev.bktf.activity.UnusualActivity;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.fragment.UnusualPriceListFragment;
 

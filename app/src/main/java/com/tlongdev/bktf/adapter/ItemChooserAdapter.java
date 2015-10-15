@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
-import com.tlongdev.bktf.ItemChooserActivity;
+import com.tlongdev.bktf.activity.ItemChooserActivity;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 

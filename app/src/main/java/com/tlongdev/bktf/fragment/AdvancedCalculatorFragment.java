@@ -18,8 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.tlongdev.bktf.ItemChooserActivity;
-import com.tlongdev.bktf.MainActivity;
+import com.tlongdev.bktf.activity.ItemChooserActivity;
+import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.adapter.AdvancedCalculatorAdapter;
