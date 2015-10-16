@@ -3,6 +3,7 @@ package com.tlongdev.bktf.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.UnusualActivity;
+import com.tlongdev.bktf.enums.Currency;
 import com.tlongdev.bktf.fragment.UnusualFragment;
 
 import java.io.IOException;
@@ -33,9 +35,15 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
 
     private int type = 0;
 
-    public UnusualAdapter(Context mContext, Cursor dataSet) {
-        this.mContext = mContext;
+    public UnusualAdapter(Context context, Cursor dataSet) {
+        this.mContext = context;
         this.mDataSet = dataSet;
+    }
+
+    public UnusualAdapter(Context context, Cursor dataSet, int type) {
+        this.mContext = context;
+        this.mDataSet = dataSet;
+        this.type = type;
     }
 
     @Override
@@ -50,6 +58,8 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
         if (mDataSet.moveToPosition(position)) {
 
             String iconPath = "";
+
+            AssetManager assets = mContext.getAssets();
 
             switch (type) {
                 case TYPE_HATS:
@@ -80,12 +90,48 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                             mContext.startActivity(i);
                         }
                     });
+                    break;
+                case TYPE_SPECIFIC_HAT:
+                    try {
+                        holder.price.setText(Utility.formatPrice(mContext,
+                                mDataSet.getDouble(UnusualActivity.COL_PRICE_LIST_PRIC),
+                                mDataSet.getDouble(UnusualActivity.COL_PRICE_LIST_PMAX),
+                                mDataSet.getString(UnusualActivity.COL_PRICE_LIST_CURR),
+                                Currency.KEY, false));
+                    } catch (IllegalArgumentException e) {
+                        if (Utility.isDebugging(mContext))
+                            e.printStackTrace();
+                        holder.price.setText(null);
+                    }
 
+                    iconPath = "items/" + Utility.getIconIndex(mDataSet.getInt(UnusualActivity.COL_PRICE_LIST_DEFI)) + ".png";
+
+                    if (!Utility.isPriceOld(mDataSet.getInt(UnusualActivity.COL_PRICE_LIST_UPDA))) {
+                        int difference = mDataSet.getInt(UnusualActivity.COL_PRICE_LIST_DIFF);
+                        if (difference > 0) {
+                            holder.price.setBackgroundColor(0x44008504);
+                        } else if (difference < 0) {
+                            holder.price.setBackgroundColor(0x44850000);
+                        } else {
+                            holder.price.setBackgroundColor(0x44f2ee11);
+                        }
+                    } else {
+                        holder.price.setBackgroundColor(0x44000000);
+                    }
+
+                    try {
+                        InputStream ims = assets.open("effects/" + mDataSet.getInt(UnusualActivity.COL_PRICE_LIST_INDE) + "_188x188.png");
+                        holder.effect.setImageDrawable(Drawable.createFromStream(ims, null));
+                    } catch (IOException e) {
+                        if (Utility.isDebugging(mContext))
+                            e.printStackTrace();
+                        holder.effect.setImageDrawable(null);
+                    }
                     break;
             }
 
             try {
-                InputStream ims = mContext.getAssets().open(iconPath);
+                InputStream ims = assets.open(iconPath);
                 holder.icon.setImageDrawable(Drawable.createFromStream(ims, null));
             } catch (IOException e) {
                 if (Utility.isDebugging(mContext))
@@ -95,7 +141,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             double rawKeyPrice = Utility.getDouble(prefs, mContext.getString(R.string.pref_key_raw), 1);
-            holder.priceView.setText(mContext.getString(R.string.currency_key_plural,
+            holder.price.setText(mContext.getString(R.string.currency_key_plural,
                     new DecimalFormat("#0.00").format(mDataSet.getDouble(
                             UnusualFragment.COL_PRICE_LIST_AVG_PRICE) / rawKeyPrice)));
         }
@@ -119,12 +165,14 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
     class ViewHolder extends RecyclerView.ViewHolder {
 
         public final ImageView icon;
-        public final TextView priceView;
+        public final ImageView effect;
+        public final TextView price;
 
         public ViewHolder(View view) {
             super(view);
             icon = (ImageView) view.findViewById(R.id.image_view_item_icon);
-            priceView = (TextView) view.findViewById(R.id.grid_item_price);
+            effect = (ImageView) view.findViewById(R.id.image_view_item_effect);
+            price = (TextView) view.findViewById(R.id.grid_item_price);
         }
     }
 }

@@ -6,15 +6,30 @@
     android:layout_margin="2dp"
     android:background="@drawable/item_background_unusual">
 
-    <!--Icon of the item-->
-    <com.tlongdev.bktf.view.CustomImageView
-        android:id="@+id/image_view_item_icon"
+    <com.tlongdev.bktf.view.CustomLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:background="@drawable/simple_selector_white"
-        android:padding="3dp"
-        android:scaleType="centerCrop" />
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/image_view_item_effect"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@drawable/simple_selector_white"
+            android:padding="3dp"
+            android:scaleType="centerCrop" />
+
+        <!--Icon of the item-->
+        <ImageView
+            android:id="@+id/image_view_item_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@drawable/simple_selector_white"
+            android:padding="3dp"
+            android:scaleType="centerCrop" />
+
+    </com.tlongdev.bktf.view.CustomLayout>
 
     <!--Price of the item-->
     <TextView

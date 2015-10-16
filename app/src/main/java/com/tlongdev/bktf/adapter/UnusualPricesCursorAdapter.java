@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.UnusualActivity;
-import com.tlongdev.bktf.enums.Currency;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,11 +25,9 @@ import java.io.InputStream;
  */
 public class UnusualPricesCursorAdapter extends CursorAdapter {
 
-    int defindex;
 
     public UnusualPricesCursorAdapter(Context context, Cursor c, int flags, int defindex) {
         super(context, c, flags);
-        this.defindex = defindex;
     }
 
     @Override
@@ -59,29 +56,8 @@ public class UnusualPricesCursorAdapter extends CursorAdapter {
                 (double) cursor.getInt(UnusualActivity.COL_PRICE_LIST_DEFI),
                 (double) cursor.getInt(UnusualActivity.COL_PRICE_LIST_INDE));
 
-        try {
-            viewHolder.priceView.setText(Utility.formatPrice(context,
-                    cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRIC),
-                    cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PMAX),
-                    cursor.getString(UnusualActivity.COL_PRICE_LIST_CURR),
-                    Currency.KEY, false));
-        } catch (Throwable throwable) {
-            if (Utility.isDebugging(context))
-                throwable.printStackTrace();
-        }
 
-        if (!Utility.isPriceOld(cursor.getInt(UnusualActivity.COL_PRICE_LIST_UPDA))) {
-            int difference = cursor.getInt(UnusualActivity.COL_PRICE_LIST_DIFF);
-            if (difference > 0) {
-                viewHolder.priceView.setBackgroundColor(0x44008504);
-            } else if (difference < 0) {
-                viewHolder.priceView.setBackgroundColor(0x44850000);
-            } else {
-                viewHolder.priceView.setBackgroundColor(0x44f2ee11);
-            }
-        } else {
-            viewHolder.priceView.setBackgroundColor(0x44000000);
-        }
+
     }
 
     @Override
