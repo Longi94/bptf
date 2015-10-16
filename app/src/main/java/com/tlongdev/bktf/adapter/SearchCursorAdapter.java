@@ -203,8 +203,8 @@ public class SearchCursorAdapter extends CursorAdapter {
         public ViewHolder(View view) {
             icon = (ImageView) view.findViewById(R.id.image_view_item_icon);
             background = (ImageView) view.findViewById(R.id.image_view_item_background);
-            nameView = (TextView) view.findViewById(R.id.item_name);
-            priceView = (TextView) view.findViewById(R.id.item_price);
+            nameView = (TextView) view.findViewById(R.id.name);
+            priceView = (TextView) view.findViewById(R.id.price);
         }
     }
 }

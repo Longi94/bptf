@@ -34,7 +34,7 @@
 
     <!--Name of the item-->
     <TextView
-        android:id="@+id/item_name"
+        android:id="@+id/name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -47,7 +47,7 @@
 
     <!--Price of the item-->
     <TextView
-        android:id="@+id/item_price"
+        android:id="@+id/price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical|end"

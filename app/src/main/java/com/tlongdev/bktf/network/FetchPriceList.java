@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.enums.Currency;
 
 import org.json.JSONException;
 
@@ -409,7 +410,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
 
                                 String priceString = Utility.formatPrice(
                                         mContext, value, highPrice,
-                                        Utility.CURRENCY_KEY, Utility.CURRENCY_KEY, false
+                                        Currency.KEY, Currency.KEY, false
                                 );
                                 editor.putString(mContext.getString(R.string.pref_buds_price), priceString);
 
@@ -432,7 +433,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
 
                                 String priceString = Utility.formatPrice(
                                         mContext, value, highPrice,
-                                        Utility.CURRENCY_USD, Utility.CURRENCY_USD, false
+                                        Currency.USD, Currency.USD, false
                                 );
                                 editor.putString(mContext.getString(R.string.pref_metal_price), priceString);
 
@@ -460,7 +461,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
 
                                 String priceString = Utility.formatPrice(
                                         mContext, value, highPrice,
-                                        Utility.CURRENCY_METAL, Utility.CURRENCY_METAL, false
+                                        Currency.METAL, Currency.METAL, false
                                 );
                                 editor.putString(mContext.getString(R.string.pref_key_price), priceString);
 

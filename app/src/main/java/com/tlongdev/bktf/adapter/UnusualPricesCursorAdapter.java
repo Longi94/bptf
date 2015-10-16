@@ -14,8 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.activity.UnusualActivity;
 import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.activity.UnusualActivity;
+import com.tlongdev.bktf.enums.Currency;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,7 +64,7 @@ public class UnusualPricesCursorAdapter extends CursorAdapter {
                     cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PRIC),
                     cursor.getDouble(UnusualActivity.COL_PRICE_LIST_PMAX),
                     cursor.getString(UnusualActivity.COL_PRICE_LIST_CURR),
-                    Utility.CURRENCY_KEY, false));
+                    Currency.KEY, false));
         } catch (Throwable throwable) {
             if (Utility.isDebugging(context))
                 throwable.printStackTrace();

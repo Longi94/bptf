@@ -17,6 +17,7 @@ import android.widget.EditText;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.enums.Currency;
 
 public class SimpleCalculatorFragment extends Fragment {
 
@@ -60,11 +61,11 @@ public class SimpleCalculatorFragment extends Fragment {
                             inputUsd.setText(null);
                         } else {
                             inputKeys.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Utility.CURRENCY_BUD, Utility.CURRENCY_KEY), 2)));
+                                    Double.parseDouble(s.toString()), Currency.BUD, Currency.KEY), 2)));
                             inputMetal.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Utility.CURRENCY_BUD, Utility.CURRENCY_METAL), 2)));
+                                    Double.parseDouble(s.toString()), Currency.BUD, Currency.METAL), 2)));
                             inputUsd.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Utility.CURRENCY_BUD, Utility.CURRENCY_USD), 2)));
+                                    Double.parseDouble(s.toString()), Currency.BUD, Currency.USD), 2)));
                         }
                     }
                 } catch (Throwable throwable) {
@@ -92,11 +93,11 @@ public class SimpleCalculatorFragment extends Fragment {
                             inputUsd.setText(null);
                         } else {
                             inputEarbuds.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Utility.CURRENCY_KEY, Utility.CURRENCY_BUD), 2)));
+                                    Double.parseDouble(s.toString()), Currency.KEY, Currency.BUD), 2)));
                             inputMetal.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Utility.CURRENCY_KEY, Utility.CURRENCY_METAL), 2)));
+                                    Double.parseDouble(s.toString()), Currency.KEY, Currency.METAL), 2)));
                             inputUsd.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Utility.CURRENCY_KEY, Utility.CURRENCY_USD), 2)));
+                                    Double.parseDouble(s.toString()), Currency.KEY, Currency.USD), 2)));
                         }
                     }
                 } catch (Throwable throwable) {
@@ -124,11 +125,11 @@ public class SimpleCalculatorFragment extends Fragment {
                             inputUsd.setText(null);
                         } else {
                             inputKeys.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Utility.CURRENCY_METAL, Utility.CURRENCY_KEY), 2)));
+                                    Double.parseDouble(s.toString()), Currency.METAL, Currency.KEY), 2)));
                             inputEarbuds.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Utility.CURRENCY_METAL, Utility.CURRENCY_BUD), 2)));
+                                    Double.parseDouble(s.toString()), Currency.METAL, Currency.BUD), 2)));
                             inputUsd.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Utility.CURRENCY_METAL, Utility.CURRENCY_USD), 2)));
+                                    Double.parseDouble(s.toString()), Currency.METAL, Currency.USD), 2)));
                         }
                     }
                 } catch (Throwable throwable) {
@@ -156,11 +157,11 @@ public class SimpleCalculatorFragment extends Fragment {
                             inputEarbuds.setText(null);
                         } else {
                             inputKeys.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Utility.CURRENCY_USD, Utility.CURRENCY_KEY), 2)));
+                                    Double.parseDouble(s.toString()), Currency.USD, Currency.KEY), 2)));
                             inputMetal.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Utility.CURRENCY_USD, Utility.CURRENCY_METAL), 2)));
+                                    Double.parseDouble(s.toString()), Currency.USD, Currency.METAL), 2)));
                             inputEarbuds.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Utility.CURRENCY_USD, Utility.CURRENCY_BUD), 2)));
+                                    Double.parseDouble(s.toString()), Currency.USD, Currency.BUD), 2)));
                         }
                     }
                 } catch (Throwable throwable) {
@@ -177,11 +178,11 @@ public class SimpleCalculatorFragment extends Fragment {
         inputEarbuds.setText("1");
         try {
             inputKeys.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                    1, Utility.CURRENCY_BUD, Utility.CURRENCY_KEY), 2)));
+                    1, Currency.BUD, Currency.KEY), 2)));
             inputMetal.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                    1, Utility.CURRENCY_BUD, Utility.CURRENCY_METAL), 2)));
+                    1, Currency.BUD, Currency.METAL), 2)));
             inputUsd.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                    1, Utility.CURRENCY_BUD, Utility.CURRENCY_USD), 2)));
+                    1, Currency.BUD, Currency.USD), 2)));
         } catch (Throwable throwable) {
             if (Utility.isDebugging(getActivity()))
                 throwable.printStackTrace();

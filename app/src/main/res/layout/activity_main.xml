@@ -145,7 +145,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:headerLayout="@layout/navigation_drawer_header"
         app:menu="@menu/navigation_items"
         app:itemTextColor="@color/navigation_drawer_item_color"
         app:itemIconTint="@color/navigation_drawer_item_color"/>

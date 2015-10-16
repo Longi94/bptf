@@ -13,6 +13,7 @@ import android.util.Log;
 
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.data.ItemSchemaDbHelper;
+import com.tlongdev.bktf.enums.Currency;
 import com.tlongdev.bktf.enums.Quality;
 
 import org.json.JSONArray;
@@ -31,11 +32,6 @@ import java.util.Date;
 public class Utility {
 
     public static final String LOG_TAG = Utility.class.getSimpleName();
-
-    public static final String CURRENCY_USD = "usd";
-    public static final String CURRENCY_METAL = "metal";
-    public static final String CURRENCY_KEY = "keys";
-    public static final String CURRENCY_BUD = "earbuds";
 
     /**
      * Convenient method for getting the steamId (or vanity user name) of the user.
@@ -508,19 +504,19 @@ public class Utility {
 
         //Append the string with the proper currency, plural ir needed.
         switch (targetCurrency) {
-            case CURRENCY_BUD:
+            case Currency.BUD:
                 if (low == 1.0 && high == 0.0)
                     return context.getString(R.string.currency_bud, product);
                 else
                     return context.getString(R.string.currency_bud_plural, product);
-            case CURRENCY_METAL:
+            case Currency.METAL:
                 return context.getString(R.string.currency_metal, product);
-            case CURRENCY_KEY:
+            case Currency.KEY:
                 if (low == 1.0 && high == 0.0)
                     return context.getString(R.string.currency_key, product);
                 else
                     return context.getString(R.string.currency_key_plural, product);
-            case CURRENCY_USD:
+            case Currency.USD:
                 return "$" + product;
             default:
                 //App should never reach this code
@@ -552,45 +548,45 @@ public class Utility {
         //Magic converter block. ALl prices are converted according to their raw metal price.
         //Metal is the base currency
         switch (originalCurrency) {
-            case CURRENCY_BUD:
+            case Currency.BUD:
                 switch (targetCurrency) {
-                    case CURRENCY_KEY:
+                    case Currency.KEY:
                         return price * (getDouble(prefs, context.getString(R.string.pref_buds_raw), 1)
                                 / getDouble(prefs, context.getString(R.string.pref_key_raw), 1));
-                    case CURRENCY_METAL:
+                    case Currency.METAL:
                         return price * getDouble(prefs, context.getString(R.string.pref_buds_raw), 1);
-                    case CURRENCY_USD:
+                    case Currency.USD:
                         return price * (getDouble(prefs, context.getString(R.string.pref_buds_raw), 1)
                                 * getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1));
                 }
-            case CURRENCY_METAL:
+            case Currency.METAL:
                 switch (targetCurrency) {
-                    case CURRENCY_KEY:
+                    case Currency.KEY:
                         return price / getDouble(prefs, context.getString(R.string.pref_key_raw), 1);
-                    case CURRENCY_BUD:
+                    case Currency.BUD:
                         return price / getDouble(prefs, context.getString(R.string.pref_buds_raw), 1);
-                    case CURRENCY_USD:
+                    case Currency.USD:
                         return price * getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1);
                 }
-            case CURRENCY_KEY:
+            case Currency.KEY:
                 switch (targetCurrency) {
-                    case CURRENCY_METAL:
+                    case Currency.METAL:
                         return price * getDouble(prefs, context.getString(R.string.pref_key_raw), 1);
-                    case CURRENCY_BUD:
+                    case Currency.BUD:
                         return price * (getDouble(prefs, context.getString(R.string.pref_key_raw), 1)
                                 / getDouble(prefs, context.getString(R.string.pref_buds_raw), 1));
-                    case CURRENCY_USD:
+                    case Currency.USD:
                         return price * getDouble(prefs, context.getString(R.string.pref_key_raw), 1)
                                 * getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1);
                 }
-            case CURRENCY_USD:
+            case Currency.USD:
                 switch (targetCurrency) {
-                    case CURRENCY_METAL:
+                    case Currency.METAL:
                         return price / getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1);
-                    case CURRENCY_BUD:
+                    case Currency.BUD:
                         return price / getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1)
                                 / getDouble(prefs, context.getString(R.string.pref_buds_raw), 1);
-                    case CURRENCY_KEY:
+                    case Currency.KEY:
                         return price / getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1)
                                 / getDouble(prefs, context.getString(R.string.pref_key_raw), 1);
                 }
@@ -2142,9 +2138,9 @@ public class Utility {
      */
     public static String getRawPriceQueryString(Context context) {
 
-        double keyMultiplier = Utility.convertPrice(context, 1, Utility.CURRENCY_KEY, Utility.CURRENCY_METAL);
-        double usdMultiplier = Utility.convertPrice(context, 1, Utility.CURRENCY_USD, Utility.CURRENCY_METAL);
-        double budMultiplier = Utility.convertPrice(context, 1, Utility.CURRENCY_BUD, Utility.CURRENCY_METAL);
+        double keyMultiplier = Utility.convertPrice(context, 1, Currency.KEY, Currency.METAL);
+        double usdMultiplier = Utility.convertPrice(context, 1, Currency.USD, Currency.METAL);
+        double budMultiplier = Utility.convertPrice(context, 1, Currency.BUD, Currency.METAL);
 
         return " CASE WHEN " + PriceEntry.COLUMN_ITEM_PRICE_MAX + " IS NULL THEN ( " +
                 " CASE WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'keys' THEN ( " +
