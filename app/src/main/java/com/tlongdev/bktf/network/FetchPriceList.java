@@ -381,7 +381,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
                                 break;
                             case KEY_VALUE_RAW:
                                 parser.nextToken();
-                                raw = parser.getIntValue();
+                                raw = parser.getDoubleValue();
                                 break;
                             case KEY_LAST_UPDATE:
                                 parser.nextToken();
