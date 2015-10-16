@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.enums.Currency;
 import com.tlongdev.bktf.enums.Quality;
 
 import java.io.IOException;
@@ -114,25 +115,25 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
             try {
                 String currency = cursor.getString(COL_PRICE_LIST_CURR);
                 double priceRaw = cursor.getDouble(COL_PRICE_LIST_PRAW);
-                if (currency.equals(Utility.CURRENCY_USD) && cursor.getInt(COL_PRICE_LIST_DEFI) != 5002) {
+                if (currency.equals(Currency.USD) && cursor.getInt(COL_PRICE_LIST_DEFI) != 5002) {
                     if (priceRaw >= Utility.getDouble(prefs, mContext.getString(R.string.pref_buds_raw), 0)) {
                         holder.price.setText(Utility.formatPrice(mContext,
                                 cursor.getDouble(COL_PRICE_LIST_PRIC),
                                 cursor.getDouble(COL_PRICE_LIST_PMAX),
                                 currency,
-                                Utility.CURRENCY_BUD, false));
+                                Currency.BUD, false));
                     } else if (priceRaw >= Utility.getDouble(prefs, mContext.getString(R.string.pref_key_raw), 0)) {
                         holder.price.setText(Utility.formatPrice(mContext,
                                 cursor.getDouble(COL_PRICE_LIST_PRIC),
                                 cursor.getDouble(COL_PRICE_LIST_PMAX),
                                 currency,
-                                Utility.CURRENCY_KEY, false));
+                                Currency.KEY, false));
                     } else {
                         holder.price.setText(Utility.formatPrice(mContext,
                                 cursor.getDouble(COL_PRICE_LIST_PRIC),
                                 cursor.getDouble(COL_PRICE_LIST_PMAX),
                                 currency,
-                                Utility.CURRENCY_METAL, false));
+                                Currency.METAL, false));
                     }
                 } else {
                     holder.price.setText(Utility.formatPrice(mContext,

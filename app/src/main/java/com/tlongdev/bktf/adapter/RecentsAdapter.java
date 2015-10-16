@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.enums.Currency;
 import com.tlongdev.bktf.fragment.RecentsFragment;
 
 import java.io.IOException;
@@ -55,13 +56,30 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
 
             double price = mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PRIC);
             double priceHigh = mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PMAX);
+            double difference = mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_DIFF);
+            double raw = mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PRAW);
 
             String name = mDataSet.getString(RecentsFragment.COL_PRICE_LIST_NAME);
             String currency = mDataSet.getString(RecentsFragment.COL_PRICE_LIST_CURR);
 
             String itemName = Utility.formatItemName(mContext, defindex, name, tradable, craftable,
                     quality, priceIndex);
-            holder.nameView.setText(itemName);
+            holder.name.setText(itemName);
+
+            if (difference == raw) {
+                holder.difference.setText("new");
+                holder.difference.setTextColor(0xFFFFFF00);
+            } else if (difference == 0.0) {
+                holder.difference.setText("refresh");
+                holder.difference.setTextColor(0xFFFFFFFF);
+            } else if (difference > 0.0) {
+                holder.difference.setText("+ " + Utility.formatPrice(mContext, difference, 0, Currency.METAL, currency, false));
+                holder.difference.setTextColor(0xFF00FF00);
+            } else {
+                holder.difference.setText("- " + Utility.formatPrice(mContext, Math.abs(difference), 0, Currency.METAL, currency, false));
+                holder.difference.setTextColor(0xFFFF0000);
+            }
+
 
             holder.icon.setImageDrawable(null);
             holder.effect.setBackgroundColor(Utility.getQualityColor(mContext, quality, defindex, true));
@@ -95,7 +113,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
             }
 
             try {
-                holder.priceView.setText(Utility.formatPrice(mContext, price, priceHigh,
+                holder.price.setText(Utility.formatPrice(mContext, price, priceHigh,
                         currency, currency, false));
             } catch (Throwable throwable) {
                 if (Utility.isDebugging(mContext))
@@ -122,16 +140,18 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
         public final ImageView icon;
         public final ImageView effect;
 
-        public final TextView nameView;
-        public final TextView priceView;
+        public final TextView name;
+        public final TextView price;
+        public final TextView difference;
 
         public ViewHolder(View view) {
             super(view);
             this.view = view;
             icon = (ImageView) view.findViewById(R.id.image_view_item_icon);
             effect = (ImageView) view.findViewById(R.id.image_view_item_effect);
-            nameView = (TextView) view.findViewById(R.id.item_name);
-            priceView = (TextView) view.findViewById(R.id.item_price);
+            name = (TextView) view.findViewById(R.id.name);
+            price = (TextView) view.findViewById(R.id.price);
+            difference = (TextView) view.findViewById(R.id.difference);
         }
     }
 }

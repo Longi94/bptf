@@ -14,17 +14,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:baselineAligned="false"
+        android:minHeight="84dp"
         android:orientation="horizontal">
 
         <FrameLayout
             android:layout_width="84dp"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <!--Icon of the item-->
             <ImageView
                 android:id="@+id/image_view_item_effect"
                 android:layout_width="84dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:contentDescription="@string/description_icon"
                 android:minHeight="84dp"
                 android:scaleType="centerCrop" />
@@ -32,7 +33,7 @@
             <ImageView
                 android:id="@+id/image_view_item_icon"
                 android:layout_width="84dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:contentDescription="@string/description_icon"
                 android:minHeight="84dp"
                 android:scaleType="centerCrop" />
@@ -44,36 +45,68 @@
             android:layout_height="match_parent"
             android:src="@drawable/shadow_gradient" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
-            <!--Name of the item-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="26dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="26dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical">
+
+                <!--Name of the item-->
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp" />
+
+                <!--Price of the item-->
+                <TextView
+                    android:id="@+id/price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:textSize="13sp"
+                    android:textColor="@color/text_secondary" />
+
+            </LinearLayout>
+
             <TextView
-                android:id="@+id/item_name"
+                android:id="@+id/difference"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:textColor="@color/text_primary"
-                android:textSize="16sp" />
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="8dp"
+                android:textAllCaps="true"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp" />
 
-            <!--Price of the item-->
-            <TextView
-                android:id="@+id/item_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:textColor="@color/text_secondary" />
+            <ImageView
+                android:id="@+id/more"
+                android:layout_width="30dp"
+                android:layout_height="34dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:paddingBottom="8dp"
+                android:paddingEnd="4dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="4dp"
+                android:paddingStart="8dp"
+                android:paddingTop="8dp"
+                android:src="@drawable/ic_more_vert_white_18dp" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 

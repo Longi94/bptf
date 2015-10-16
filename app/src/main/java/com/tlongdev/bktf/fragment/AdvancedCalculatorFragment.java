@@ -18,12 +18,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.tlongdev.bktf.activity.ItemChooserActivity;
-import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.activity.ItemChooserActivity;
+import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.adapter.AdvancedCalculatorAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.enums.Currency;
 
 import java.util.ArrayList;
 
@@ -155,13 +156,13 @@ public class AdvancedCalculatorFragment extends Fragment {
         totalPrice = 0;
         try {
             priceMetal.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Utility.CURRENCY_METAL, Utility.CURRENCY_METAL, false));
+                    Currency.METAL, Currency.METAL, false));
             priceKeys.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Utility.CURRENCY_METAL, Utility.CURRENCY_KEY, false));
+                    Currency.METAL, Currency.KEY, false));
             priceBuds.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Utility.CURRENCY_METAL, Utility.CURRENCY_BUD, false));
+                    Currency.METAL, Currency.BUD, false));
             priceUsd.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Utility.CURRENCY_METAL, Utility.CURRENCY_USD, false));
+                    Currency.METAL, Currency.USD, false));
         } catch (Throwable throwable) {
             if (Utility.isDebugging(getActivity())) {
                 throwable.printStackTrace();
@@ -185,13 +186,13 @@ public class AdvancedCalculatorFragment extends Fragment {
 
         try {
             priceMetal.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Utility.CURRENCY_METAL, Utility.CURRENCY_METAL, false));
+                    Currency.METAL, Currency.METAL, false));
             priceKeys.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Utility.CURRENCY_METAL, Utility.CURRENCY_KEY, false));
+                    Currency.METAL, Currency.KEY, false));
             priceBuds.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Utility.CURRENCY_METAL, Utility.CURRENCY_BUD, false));
+                    Currency.METAL, Currency.BUD, false));
             priceUsd.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Utility.CURRENCY_METAL, Utility.CURRENCY_USD, false));
+                    Currency.METAL, Currency.USD, false));
         } catch (Throwable throwable) {
             if (Utility.isDebugging(getActivity())) {
                 throwable.printStackTrace();
@@ -215,13 +216,13 @@ public class AdvancedCalculatorFragment extends Fragment {
 
         try {
             priceMetal.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Utility.CURRENCY_METAL, Utility.CURRENCY_METAL, false));
+                    Currency.METAL, Currency.METAL, false));
             priceKeys.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Utility.CURRENCY_METAL, Utility.CURRENCY_KEY, false));
+                    Currency.METAL, Currency.KEY, false));
             priceBuds.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Utility.CURRENCY_METAL, Utility.CURRENCY_BUD, false));
+                    Currency.METAL, Currency.BUD, false));
             priceUsd.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Utility.CURRENCY_METAL, Utility.CURRENCY_USD, false));
+                    Currency.METAL, Currency.USD, false));
         } catch (Throwable throwable) {
             if (Utility.isDebugging(getActivity())) {
                 throwable.printStackTrace();

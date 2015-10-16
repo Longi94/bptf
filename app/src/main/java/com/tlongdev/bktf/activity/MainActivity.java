@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         mNavigationView.setNavigationItemSelectedListener(navigationListener);
 
         //User clicked on the header
-        mNavigationView.findViewById(R.id.navigation_view_header).setOnClickListener(new View.OnClickListener() {
+        mNavigationView.inflateHeaderView(R.layout.navigation_drawer_header).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switchFragment(-1);
