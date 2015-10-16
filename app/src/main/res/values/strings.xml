@@ -66,7 +66,6 @@
     <!--Searchview-->
 
     <string name="search_title" translatable="true">Search</string>
-    <string name="search_hint" translatable="true">Item name or steam ID</string>
 
     <!--Activity/Fragment titles-->
 
@@ -83,7 +82,6 @@
     <string name="title_home" translatable="true">Latest Changes</string>
     <string name="title_prices" translatable="true">Unusual Prices</string>
     <string name="title_unusuals" translatable="true">Unusuals</string>
-    <string name="title_user_profile" translatable="true">User Profile</string>
 
     <!--Preference titles and summaries-->
 
@@ -99,7 +97,6 @@
     <string name="pref_summary_on_auto_sync" translatable="true">Auto-update database</string>
     <string name="pref_summary_jackson" translatable="true">fast and memory efficient JSON processing</string>
     <string name="pref_summary_particles" translatable="true">provided by backpack.tf</string>
-    <string name="pref_summary_quick_return" translatable="true">by felipecsl</string>
     <string name="pref_title_auto_sync" translatable="true">Auto-update database</string>
     <string name="pref_title_background_sync" translatable="true">Sync in the background</string>
     <string name="pref_title_changelog" translatable="true">Changelogs</string>
@@ -119,7 +116,6 @@
     <!--Content descriptions-->
 
     <string name="description_background" translatable="true">Background</string>
-    <string name="description_change" translatable="true">Change</string>
     <string name="description_delete" translatable="true">Delete</string>
     <string name="description_icon" translatable="true">Icon</string>
     <string name="description_player_avatar" translatable="true">Player Avatar</string>
