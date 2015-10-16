@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 
-public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHolder>{
+public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHolder> {
 
     public static final int TYPE_HATS = 0;
     public static final int TYPE_EFFECTS = 1;
@@ -49,7 +49,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.grid_items, parent, false);
+                .inflate(R.layout.grid_unusual, parent, false);
         return new ViewHolder(v);
     }
 
@@ -60,6 +60,8 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
             String iconPath = "";
 
             AssetManager assets = mContext.getAssets();
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+            double rawKeyPrice = Utility.getDouble(prefs, mContext.getString(R.string.pref_key_raw), 1);
 
             switch (type) {
                 case TYPE_HATS:
@@ -67,7 +69,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                     final String name = mDataSet.getString(UnusualFragment.COL_PRICE_LIST_NAME);
                     iconPath = "items/" + Utility.getIconIndex(defindex) + ".png";
 
-                    holder.icon.setOnClickListener(new View.OnClickListener() {
+                    holder.root.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent i = new Intent(mContext, UnusualActivity.class);
@@ -76,12 +78,15 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                             mContext.startActivity(i);
                         }
                     });
-                break;
+                    holder.price.setText(mContext.getString(R.string.currency_key_plural,
+                            new DecimalFormat("#0.00").format(mDataSet.getDouble(
+                                    UnusualFragment.COL_PRICE_LIST_AVG_PRICE) / rawKeyPrice)));
+                    break;
                 case TYPE_EFFECTS:
                     final int index = mDataSet.getInt(UnusualFragment.COL_PRICE_LIST_INDE);
                     iconPath = "effects/" + index + "_188x188.png";
 
-                    holder.icon.setOnClickListener(new View.OnClickListener() {
+                    holder.root.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent i = new Intent(mContext, UnusualActivity.class);
@@ -90,6 +95,10 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                             mContext.startActivity(i);
                         }
                     });
+
+                    holder.price.setText(mContext.getString(R.string.currency_key_plural,
+                            new DecimalFormat("#0.00").format(mDataSet.getDouble(
+                                    UnusualFragment.COL_PRICE_LIST_AVG_PRICE) / rawKeyPrice)));
                     break;
                 case TYPE_SPECIFIC_HAT:
                     try {
@@ -105,19 +114,6 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                     }
 
                     iconPath = "items/" + Utility.getIconIndex(mDataSet.getInt(UnusualActivity.COL_PRICE_LIST_DEFI)) + ".png";
-
-                    if (!Utility.isPriceOld(mDataSet.getInt(UnusualActivity.COL_PRICE_LIST_UPDA))) {
-                        int difference = mDataSet.getInt(UnusualActivity.COL_PRICE_LIST_DIFF);
-                        if (difference > 0) {
-                            holder.price.setBackgroundColor(0x44008504);
-                        } else if (difference < 0) {
-                            holder.price.setBackgroundColor(0x44850000);
-                        } else {
-                            holder.price.setBackgroundColor(0x44f2ee11);
-                        }
-                    } else {
-                        holder.price.setBackgroundColor(0x44000000);
-                    }
 
                     try {
                         InputStream ims = assets.open("effects/" + mDataSet.getInt(UnusualActivity.COL_PRICE_LIST_INDE) + "_188x188.png");
@@ -138,12 +134,6 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                     e.printStackTrace();
                 holder.icon.setImageDrawable(null);
             }
-
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-            double rawKeyPrice = Utility.getDouble(prefs, mContext.getString(R.string.pref_key_raw), 1);
-            holder.price.setText(mContext.getString(R.string.currency_key_plural,
-                    new DecimalFormat("#0.00").format(mDataSet.getDouble(
-                            UnusualFragment.COL_PRICE_LIST_AVG_PRICE) / rawKeyPrice)));
         }
     }
 
@@ -168,8 +158,13 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
         public final ImageView effect;
         public final TextView price;
 
+        public final View root;
+
         public ViewHolder(View view) {
             super(view);
+
+            root = view;
+
             icon = (ImageView) view.findViewById(R.id.image_view_item_icon);
             effect = (ImageView) view.findViewById(R.id.image_view_item_effect);
             price = (TextView) view.findViewById(R.id.grid_item_price);
