@@ -3,12 +3,11 @@ package com.tlongdev.bktf.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.widget.ImageView;
+import android.widget.FrameLayout;
 
 import com.tlongdev.bktf.R;
 
-public class CustomImageView extends ImageView {
-
+public class CustomFrameLayout extends FrameLayout {
     private double mRatioWidth = 1;
     private double mRatioHeight = 1;
 
@@ -17,7 +16,7 @@ public class CustomImageView extends ImageView {
      *
      * @param context context
      */
-    public CustomImageView(Context context) {
+    public CustomFrameLayout(Context context) {
         super(context);
     }
 
@@ -27,7 +26,7 @@ public class CustomImageView extends ImageView {
      * @param context context
      * @param attrs   attributes
      */
-    public CustomImageView(Context context, AttributeSet attrs) {
+    public CustomFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
@@ -39,7 +38,7 @@ public class CustomImageView extends ImageView {
      * @param attrs        attributes
      * @param defStyleAttr default style attributes
      */
-    public CustomImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CustomFrameLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }

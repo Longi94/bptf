@@ -8,7 +8,7 @@
     android:layout_marginRight="8dp"
     android:layout_marginTop="4dp"
     android:foreground="@drawable/simple_selector_white"
-    card_view:cardBackgroundColor="#393939">
+    card_view:cardBackgroundColor="@color/card_color">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,7 +43,7 @@
         <ImageView
             android:layout_width="4dp"
             android:layout_height="match_parent"
-            android:src="@drawable/shadow_gradient" />
+            android:src="@drawable/shadow_gradient_end" />
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -74,7 +74,6 @@
                     android:id="@+id/price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAllCaps="true"
                     android:textSize="13sp"
                     android:textColor="@color/text_secondary" />
 

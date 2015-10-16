@@ -7,7 +7,7 @@ import android.widget.ImageView;
 
 import com.tlongdev.bktf.R;
 
-public class CustomImageView extends ImageView {
+public class CustomImageViewReverse extends ImageView {
 
     private double mRatioWidth = 1;
     private double mRatioHeight = 1;
@@ -17,7 +17,7 @@ public class CustomImageView extends ImageView {
      *
      * @param context context
      */
-    public CustomImageView(Context context) {
+    public CustomImageViewReverse(Context context) {
         super(context);
     }
 
@@ -27,7 +27,7 @@ public class CustomImageView extends ImageView {
      * @param context context
      * @param attrs   attributes
      */
-    public CustomImageView(Context context, AttributeSet attrs) {
+    public CustomImageViewReverse(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
@@ -39,7 +39,7 @@ public class CustomImageView extends ImageView {
      * @param attrs        attributes
      * @param defStyleAttr default style attributes
      */
-    public CustomImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CustomImageViewReverse(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
@@ -64,6 +64,6 @@ public class CustomImageView extends ImageView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        setMeasuredDimension(getMeasuredWidth(), (int) (getMeasuredWidth() * mRatioHeight / mRatioWidth));
+        setMeasuredDimension((int) (getMeasuredHeight() * mRatioWidth / mRatioHeight), getMeasuredHeight());
     }
 }
