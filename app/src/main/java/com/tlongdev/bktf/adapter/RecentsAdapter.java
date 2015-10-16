@@ -127,8 +127,8 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
         return mDataSet == null ? 0 : mDataSet.getCount();
     }
 
-    public void swapCursor(Cursor data) {
-        if (mDataSet != null) mDataSet.close();
+    public void swapCursor(Cursor data, boolean closePrevious) {
+        if (closePrevious && mDataSet != null) mDataSet.close();
         mDataSet = data;
         notifyDataSetChanged();
     }

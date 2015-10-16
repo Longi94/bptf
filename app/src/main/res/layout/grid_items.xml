@@ -3,6 +3,7 @@
 <com.tlongdev.bktf.view.CustomLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="2dp"
     android:background="@drawable/item_background_unusual">
 
     <!--Icon of the item-->
@@ -11,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:background="@drawable/simple_grid_item_background"
+        android:background="@drawable/simple_selector_white"
         android:padding="3dp"
         android:scaleType="centerCrop" />
 

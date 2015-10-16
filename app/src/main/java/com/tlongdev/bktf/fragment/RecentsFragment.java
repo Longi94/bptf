@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
-import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.adapter.RecentsAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.network.FetchPriceList;
@@ -79,8 +78,6 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     private FetchPriceList.OnPriceListFetchListener listener;
 
     private AppBarLayout appBarLayout;
-
-    private MainActivity parentActivity;
 
     private RecyclerView mRecyclerView;
 
@@ -177,7 +174,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        adapter.swapCursor(data);
+        adapter.swapCursor(data, false);
 
         Animation fadeIn = AnimationUtils.loadAnimation(getActivity(), R.anim.simple_fade_in);
         Animation fadeOut = AnimationUtils.loadAnimation(getActivity(), R.anim.simple_fade_in);
@@ -194,7 +191,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.swapCursor(null);
+        adapter.swapCursor(null, false);
     }
 
     @Override
@@ -238,9 +235,5 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
     public void setListener(FetchPriceList.OnPriceListFetchListener listener) {
         this.listener = listener;
-    }
-
-    public void setCallBack(MainActivity parentActivity) {
-        this.parentActivity = parentActivity;
     }
 }
