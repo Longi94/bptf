@@ -29,7 +29,7 @@ import com.tlongdev.bktf.fragment.AdvancedCalculatorFragment;
 import com.tlongdev.bktf.fragment.RecentsFragment;
 import com.tlongdev.bktf.fragment.SearchFragment;
 import com.tlongdev.bktf.fragment.SimpleCalculatorFragment;
-import com.tlongdev.bktf.fragment.UnusualPriceListFragment;
+import com.tlongdev.bktf.fragment.UnusualFragment;
 import com.tlongdev.bktf.fragment.UserFragment;
 import com.tlongdev.bktf.network.FetchPriceList;
 import com.tlongdev.bktf.service.NotificationsService;
@@ -250,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
                 setTitle(getString(R.string.title_home));
                 break;
             case 1:
-                newFragment = new UnusualPriceListFragment();
+                newFragment = new UnusualFragment();
                 setTitle(getString(R.string.title_unusuals));
                 break;
             case 2:
