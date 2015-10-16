@@ -47,7 +47,6 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
     public static final int COL_PRICE_LIST_NAME = 2;
     public static final int COL_PRICE_LIST_AVG_PRICE = 3;
 
-    private RecyclerView mRecyclerView;
     private UnusualAdapter adapter;
 
     private MenuItem effectMenuItem;
@@ -69,7 +68,7 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mRecyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_unusual, container, false);
+        RecyclerView mRecyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_unusual, container, false);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
 
         adapter = new UnusualAdapter(getActivity(), null);

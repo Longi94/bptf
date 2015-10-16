@@ -2,16 +2,19 @@ package com.tlongdev.bktf.activity;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.GridView;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
-import com.tlongdev.bktf.adapter.UnusualPricesCursorAdapter;
+import com.tlongdev.bktf.adapter.UnusualAdapter;
 import com.tlongdev.bktf.data.DatabaseContract;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 
@@ -52,7 +55,7 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
     };
 
     //Adapter for the gridView
-    private UnusualPricesCursorAdapter cursorAdapter;
+    private UnusualAdapter adapter;
 
     //The defindex and index of the item to be viewed
     private int defindex;
@@ -66,20 +69,31 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unusual);
 
+        //Set the color of the status bar
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.primary_dark));
+        }
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         //Get necessary data from intent
         Intent i = getIntent();
         defindex = i.getIntExtra(DEFINDEX_KEY, -1);
         index = i.getIntExtra(PRICE_INDEX_KEY, -1);
 
         //Set the action bar title to the current hat/effect name
-        getSupportActionBar().setTitle(i.getStringExtra(NAME_KEY));
+        setTitle(i.getStringExtra(NAME_KEY));
 
         //The rootview is the gridview
-        GridView mGridView = (GridView) getWindow().getDecorView().findViewById(R.id.grid_view);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
         //Initialize adapter
-        cursorAdapter = new UnusualPricesCursorAdapter(this, null, 0, defindex);
-        mGridView.setAdapter(cursorAdapter);
+        adapter = new UnusualAdapter(this, null, UnusualAdapter.TYPE_SPECIFIC_HAT);
+        recyclerView.setAdapter(adapter);
 
         //Start loading the data for the cursor
         getSupportLoaderManager().initLoader(PRICE_LIST_LOADER, null, this);
@@ -121,7 +135,7 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         //pass the cursor to the adapter to show data
-        cursorAdapter.swapCursor(data);
+        adapter.swapCursor(data, false);
     }
 
     /**
@@ -131,6 +145,6 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
     public void onLoaderReset(Loader<Cursor> loader) {
         //This is never reached, but it's here just in case
         //Remove all data from the adapter
-        cursorAdapter.swapCursor(null);
+        adapter.swapCursor(null, false);
     }
 }
