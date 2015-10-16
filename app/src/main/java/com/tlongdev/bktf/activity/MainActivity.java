@@ -82,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
     private View keyPriceImage;
     private View budsPriceImage;
 
+    private View toolbarHeader;
+
     NavigationView.OnNavigationItemSelectedListener navigationListener = new NavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -166,6 +168,8 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         }
         mNavigationView.getMenu().getItem(mCurrentSelectedPosition).setChecked(true);
 
+        toolbarHeader = findViewById(R.id.list_changes_header);
+
         // Select either the default item (0) or the last selected item.
         switchFragment(mCurrentSelectedPosition);
 
@@ -232,6 +236,12 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         mCurrentSelectedPosition = position;
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mNavigationView);
+        }
+
+        if (position == 0) {
+            toolbarHeader.setVisibility(View.VISIBLE);
+        } else {
+            toolbarHeader.setVisibility(View.GONE);
         }
 
         //Start handling fragment transactions
