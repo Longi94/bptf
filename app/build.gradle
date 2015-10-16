@@ -7,9 +7,9 @@ android {
     defaultConfig {
         applicationId "com.tlongdev.bktf"
         minSdkVersion 14
-        targetSdkVersion 23
-        versionCode 22
-        versionName "1.2.5"
+        targetSdkVersion 22
+        versionCode 23
+        versionName "1.2.6"
     }
     buildTypes {
         release {
