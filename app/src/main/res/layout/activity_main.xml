@@ -131,6 +131,14 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/ic_add_white_24dp" />
+
     </android.support.design.widget.CoordinatorLayout>
 
     <!-- android:layout_gravity="start" tells DrawerLayout to treat
@@ -145,8 +153,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:menu="@menu/navigation_items"
+        app:itemIconTint="@color/navigation_drawer_item_color"
         app:itemTextColor="@color/navigation_drawer_item_color"
-        app:itemIconTint="@color/navigation_drawer_item_color"/>
+        app:menu="@menu/navigation_items" />
 
 </android.support.v4.widget.DrawerLayout>
