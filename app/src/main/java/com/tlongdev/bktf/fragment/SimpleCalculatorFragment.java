@@ -4,7 +4,6 @@ package com.tlongdev.bktf.fragment;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -17,6 +16,7 @@ import android.widget.EditText;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.enums.Currency;
 
 public class SimpleCalculatorFragment extends Fragment {
@@ -203,11 +203,7 @@ public class SimpleCalculatorFragment extends Fragment {
             case R.id.action_show_advanced:
                 PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
                         .putBoolean(getString(R.string.pref_preferred_advanced_calculator), true).apply();
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.simple_fade_in, R.anim.simple_fade_out)
-                        .replace(R.id.container, new AdvancedCalculatorFragment())
-                        .commit();
+                ((MainActivity)getActivity()).switchFragment(2);
                 break;
         }
         return true;

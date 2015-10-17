@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -55,6 +55,8 @@ public class AdvancedCalculatorFragment extends Fragment {
 
     private double totalPrice = 0;
 
+    private FloatingActionButton fab;
+
     public AdvancedCalculatorFragment() {
         // Required empty public constructor
     }
@@ -86,14 +88,16 @@ public class AdvancedCalculatorFragment extends Fragment {
         });
         mRecyclerView.setAdapter(mAdapter);
 
-        rootView.findViewById(R.id.image_button_add).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getActivity(), ItemChooserActivity.class);
-                startActivityForResult(i, MainActivity.REQUEST_NEW_ITEM);
-                getActivity().overridePendingTransition(R.anim.item_chooser_animation, 0);
-            }
-        });
+        if (fab != null) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getActivity(), ItemChooserActivity.class);
+                    startActivityForResult(i, MainActivity.REQUEST_NEW_ITEM);
+                    getActivity().overridePendingTransition(R.anim.item_chooser_animation, 0);
+                }
+            });
+        }
 
         priceMetal = (TextView) rootView.findViewById(R.id.text_view_price_metal);
         priceKeys = (TextView) rootView.findViewById(R.id.text_view_price_keys);
@@ -137,11 +141,7 @@ public class AdvancedCalculatorFragment extends Fragment {
             case R.id.action_show_simple:
                 PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
                         .putBoolean(getString(R.string.pref_preferred_advanced_calculator), false).apply();
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.simple_fade_in, R.anim.simple_fade_out)
-                        .replace(R.id.container, new SimpleCalculatorFragment())
-                        .commit();
+                ((MainActivity)getActivity()).switchFragment(2);
                 break;
             case R.id.action_clear:
                 ids.clear();
@@ -228,5 +228,9 @@ public class AdvancedCalculatorFragment extends Fragment {
                 throwable.printStackTrace();
             }
         }
+    }
+
+    public void setFab(FloatingActionButton fab) {
+        this.fab = fab;
     }
 }

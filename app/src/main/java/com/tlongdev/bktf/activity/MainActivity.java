@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -119,6 +120,8 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         }
     };
 
+    private FloatingActionButton fab;
+
     /**
      * {@inheritDoc}
      */
@@ -150,6 +153,8 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
                 switchFragment(-1);
             }
         });
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
 
         setUpNavigationDrawer();
 
@@ -221,7 +226,6 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
     }
 
 
-
     /**
      * {@inheritDoc}
      */
@@ -238,15 +242,13 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
             mDrawerLayout.closeDrawer(mNavigationView);
         }
 
-        if (position == 0) {
-            toolbarHeader.setVisibility(View.VISIBLE);
-        } else {
-            toolbarHeader.setVisibility(View.GONE);
-        }
+        toolbarHeader.setVisibility(View.GONE);
+        fab.setVisibility(View.GONE);
 
         //Start handling fragment transactions
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.simple_fade_in, R.anim.simple_fade_out);
         Fragment newFragment;
 
         switch (position) {
@@ -258,6 +260,7 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
                 ((RecentsFragment) newFragment).setListener(this);
                 ((RecentsFragment) newFragment).setAppBarLayout(mAppBarLayout);
                 setTitle(getString(R.string.title_home));
+                toolbarHeader.setVisibility(View.VISIBLE);
                 break;
             case 1:
                 newFragment = new UnusualFragment();
@@ -268,7 +271,9 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
                         .getBoolean(getString(R.string.pref_preferred_advanced_calculator), false)) {
                     newFragment = new SimpleCalculatorFragment();
                 } else {
+                    fab.setVisibility(View.VISIBLE);
                     newFragment = new AdvancedCalculatorFragment();
+                    ((AdvancedCalculatorFragment) newFragment).setFab(fab);
                 }
                 setTitle(getString(R.string.title_calculator));
                 break;
