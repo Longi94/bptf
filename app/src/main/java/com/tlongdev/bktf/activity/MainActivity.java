@@ -27,7 +27,6 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.fragment.AdvancedCalculatorFragment;
 import com.tlongdev.bktf.fragment.RecentsFragment;
-import com.tlongdev.bktf.fragment.SearchFragment;
 import com.tlongdev.bktf.fragment.SimpleCalculatorFragment;
 import com.tlongdev.bktf.fragment.UnusualFragment;
 import com.tlongdev.bktf.fragment.UserFragment;
@@ -68,9 +67,6 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
      * The index of the current fragment.
      */
     private int mCurrentSelectedPosition = 0;
-
-    //Store reference to search fragment to pass search queries.
-    private SearchFragment mSearchFragment;
 
     //Variables used for managing fragments.
     private boolean restartUserFragment = false;
@@ -219,7 +215,6 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-
 
 
     /**
