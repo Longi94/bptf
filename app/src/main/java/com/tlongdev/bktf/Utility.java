@@ -2164,7 +2164,7 @@ public class Utility {
                 " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'usd' THEN ( " +
                 " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 * " + usdMultiplier +
                 " ) ELSE ( " +
-                PriceEntry.COLUMN_ITEM_PRICE +
+                " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 " +
                 " ) END " +
                 " ) END ";
     }
