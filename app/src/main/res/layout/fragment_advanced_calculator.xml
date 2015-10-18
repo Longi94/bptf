@@ -1,119 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Layout resource used for advanced calculator fragment-->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.tlongdev.bktf.fragment.AdvancedCalculatorFragment">
 
+    <!--Header containing the results.-->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="60dp"
+        android:layout_gravity="top"
+        android:background="@color/primary"
+        android:orientation="horizontal">
 
-        <!--Header containing the results.-->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_gravity="top"
-            android:background="@color/primary"
-            android:orientation="horizontal">
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/text_view_price_metal"
-                    android:layout_width="match_parent"
-                    android:layout_height="29.5dp"
-                    android:gravity="center"
-                    android:textColor="@android:color/white" />
-
-                <View
-                    style="@style/DividerHorizontal"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@android:color/white" />
-
-
-                <TextView
-                    android:id="@+id/text_view_price_buds"
-                    android:layout_width="match_parent"
-                    android:layout_height="29.5dp"
-                    android:gravity="center"
-                    android:textColor="@android:color/white" />
-
-            </LinearLayout>
+            <TextView
+                android:id="@+id/text_view_price_metal"
+                android:layout_width="match_parent"
+                android:layout_height="29.5dp"
+                android:gravity="center"
+                android:textColor="@android:color/white" />
 
             <View
-                style="@style/DividerVertical"
-                android:layout_marginBottom="4dp"
-                android:layout_marginTop="4dp"
+                style="@style/DividerHorizontal"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
                 android:background="@android:color/white" />
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/text_view_price_keys"
-                    android:layout_width="match_parent"
-                    android:layout_height="29.5dp"
-                    android:gravity="center"
-                    android:textColor="@android:color/white" />
-
-                <View
-                    style="@style/DividerHorizontal"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@android:color/white" />
-
-
-                <TextView
-                    android:id="@+id/text_view_price_usd"
-                    android:layout_width="match_parent"
-                    android:layout_height="29.5dp"
-                    android:gravity="center"
-                    android:textColor="@android:color/white" />
-
-            </LinearLayout>
+            <TextView
+                android:id="@+id/text_view_price_buds"
+                android:layout_width="match_parent"
+                android:layout_height="29.5dp"
+                android:gravity="center"
+                android:textColor="@android:color/white" />
 
         </LinearLayout>
 
-        <!--ListView containing the added items-->
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+        <View
+            style="@style/DividerVertical"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@android:color/white" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:clipToPadding="false"
-            android:paddingBottom="80dp"
-            android:scrollbars="vertical" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_view_price_keys"
+                android:layout_width="match_parent"
+                android:layout_height="29.5dp"
+                android:gravity="center"
+                android:textColor="@android:color/white" />
+
+            <View
+                style="@style/DividerHorizontal"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:background="@android:color/white" />
+
+
+            <TextView
+                android:id="@+id/text_view_price_usd"
+                android:layout_width="match_parent"
+                android:layout_height="29.5dp"
+                android:gravity="center"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <!--Shadow of the FAB-->
-    <ImageView
-        android:layout_width="88dp"
-        android:layout_height="88dp"
-        android:layout_gravity="bottom|end"
-        android:contentDescription="@string/calculator_add"
-        android:src="@drawable/circular_button_shadow" />
+    <!--ListView containing the added items-->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp"
+        android:scrollbars="vertical" />
 
-    <!--FAB-->
-    <ImageButton
-        android:id="@+id/image_button_add"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:background="@drawable/floating_action_button"
-        android:contentDescription="@string/calculator_add"
-        android:src="@drawable/ic_add_white_24dp" />
-
-</FrameLayout>
+</LinearLayout>

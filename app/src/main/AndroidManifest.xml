@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tlongdev.bktf">
+    package="com.tlongdev.bktf" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -10,7 +10,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <provider
             android:name=".data.DatabaseProvider"
             android:authorities="com.tlongdev.bktf"
@@ -34,7 +34,7 @@
         <receiver
             android:name=".broadcastreceiver.BootBroadcastReceiver"
             android:enabled="true"
-            android:exported="false">
+            android:exported="false" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -44,7 +44,7 @@
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -58,7 +58,7 @@
             android:name=".activity.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".activity.MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
@@ -67,7 +67,7 @@
             android:name=".activity.UnusualActivity"
             android:label="@string/title_activity_unusual"
             android:parentActivityName=".activity.MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
@@ -76,7 +76,7 @@
             android:name=".activity.UserInfoActivity"
             android:label=""
             android:parentActivityName=".activity.MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
@@ -87,7 +87,7 @@
             android:label="@string/title_activity_item_chooser"
             android:parentActivityName=".activity.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dialog">
+            android:theme="@style/AppTheme.Dialog" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
@@ -98,7 +98,7 @@
             android:label="@string/title_activity_credits"
             android:parentActivityName=".activity.SettingsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dialog">
+            android:theme="@style/AppTheme.Dialog" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.SettingsActivity" />
@@ -112,7 +112,7 @@
             android:label="@string/title_activity_item_detail"
             android:parentActivityName=".activity.UserBackpackActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Transparent">
+            android:theme="@style/AppTheme.Transparent" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.UserBackpackActivity" />
@@ -121,10 +121,15 @@
             android:name=".activity.SearchActivity"
             android:label=""
             android:parentActivityName=".activity.MainActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tlongdev.bktf.activity.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activity.ExampleActivity"
+            android:label="@string/title_activity_example"
+            android:theme="@style/AppTheme" >
         </activity>
     </application>
 
