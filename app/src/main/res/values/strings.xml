@@ -59,7 +59,6 @@
     <string name="action_close" translatable="true">Close</string>
     <string name="action_clear" translatable="true">Clear items</string>
     <string name="action_settings" translatable="true">Settings</string>
-    <string name="action_show_advanced" translatable="true">Advanced mode</string>
     <string name="action_show_simple" translatable="true">Simple mode</string>
     <string name="action_sort" translatable="true">Sort</string>
 
@@ -166,12 +165,8 @@
 
     <!--Resources for calculator-->
 
-    <string name="calculator_usd" translatable="false">USD</string>
     <string name="item_chooser_count" translatable="false">1</string>
     <string name="calculator_add" translatable="true">Add new item</string>
-    <string name="calculator_earbuds" translatable="true">Earbuds</string>
-    <string name="calculator_keys" translatable="true">Keys</string>
-    <string name="calculator_metal" translatable="true">Refined Metal</string>
     <string name="item_chooser_hint" translatable="true">Start typing…</string>
     <string name="item_chooser_no_match" translatable="true">No match or string has no price</string>
 
