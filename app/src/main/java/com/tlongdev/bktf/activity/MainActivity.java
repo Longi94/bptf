@@ -21,7 +21,7 @@ import android.view.View;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.fragment.AdvancedCalculatorFragment;
 import com.tlongdev.bktf.fragment.RecentsFragment;
-import com.tlongdev.bktf.fragment.SimpleCalculatorFragment;
+import com.tlongdev.bktf.fragment.CalculatorFragment;
 import com.tlongdev.bktf.fragment.UnusualFragment;
 import com.tlongdev.bktf.fragment.UserFragment;
 import com.tlongdev.bktf.service.NotificationsService;
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
             case 2:
                 if (!PreferenceManager.getDefaultSharedPreferences(this)
                         .getBoolean(getString(R.string.pref_preferred_advanced_calculator), false)) {
-                    newFragment = new SimpleCalculatorFragment();
+                    newFragment = new CalculatorFragment();
                 } else {
                     newFragment = new AdvancedCalculatorFragment();
                 }

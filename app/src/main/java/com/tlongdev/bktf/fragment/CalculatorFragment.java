@@ -23,7 +23,7 @@ import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.enums.Currency;
 
-public class SimpleCalculatorFragment extends Fragment {
+public class CalculatorFragment extends Fragment implements View.OnClickListener {
 
     private EditText inputEarbuds;
     private EditText inputKeys;
@@ -33,7 +33,7 @@ public class SimpleCalculatorFragment extends Fragment {
     private AppBarLayout mAppBarLayout;
     private CoordinatorLayout mCoordinatorLayout;
 
-    public SimpleCalculatorFragment() {
+    public CalculatorFragment() {
         // Required empty public constructor
     }
 
@@ -197,6 +197,19 @@ public class SimpleCalculatorFragment extends Fragment {
             if (Utility.isDebugging(getActivity()))
                 throwable.printStackTrace();
         }
+
+        rootView.findViewById(R.id.calculator_0).setOnClickListener(this);
+        rootView.findViewById(R.id.calculator_1).setOnClickListener(this);
+        rootView.findViewById(R.id.calculator_2).setOnClickListener(this);
+        rootView.findViewById(R.id.calculator_3).setOnClickListener(this);
+        rootView.findViewById(R.id.calculator_4).setOnClickListener(this);
+        rootView.findViewById(R.id.calculator_5).setOnClickListener(this);
+        rootView.findViewById(R.id.calculator_6).setOnClickListener(this);
+        rootView.findViewById(R.id.calculator_7).setOnClickListener(this);
+        rootView.findViewById(R.id.calculator_8).setOnClickListener(this);
+        rootView.findViewById(R.id.calculator_9).setOnClickListener(this);
+        rootView.findViewById(R.id.calculator_dot).setOnClickListener(this);
+        rootView.findViewById(R.id.calculator_delete).setOnClickListener(this);
         return rootView;
     }
 
@@ -215,5 +228,12 @@ public class SimpleCalculatorFragment extends Fragment {
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+
+        }
     }
 }
