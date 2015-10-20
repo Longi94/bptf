@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.adapter.RecentsAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
@@ -42,7 +43,7 @@ import com.tlongdev.bktf.network.FetchPriceList;
  */
 public class RecentsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
         SwipeRefreshLayout.OnRefreshListener, FetchPriceList.OnPriceListFetchListener,
-        AppBarLayout.OnOffsetChangedListener{
+        AppBarLayout.OnOffsetChangedListener, MainActivity.OnDrawerOpenedListener{
 
     private static final String LOG_TAG = RecentsFragment.class.getSimpleName();
 
@@ -311,5 +312,10 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     public void expandToolbar() {
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
         behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
+    }
+
+    @Override
+    public void onDrawerOpened() {
+        expandToolbar();
     }
 }

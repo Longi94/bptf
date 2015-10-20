@@ -22,11 +22,13 @@ import android.view.ViewGroup;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.adapter.UnusualAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 
-public class UnusualFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class UnusualFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+        MainActivity.OnDrawerOpenedListener {
 
     public static final String LOG_TAG = UnusualFragment.class.getSimpleName();
 
@@ -211,5 +213,10 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
     public void expandToolbar() {
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
         behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
+    }
+
+    @Override
+    public void onDrawerOpened() {
+        expandToolbar();
     }
 }
