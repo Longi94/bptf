@@ -1,5 +1,6 @@
 package com.tlongdev.bktf.fragment;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -21,6 +22,7 @@ import android.view.ViewGroup;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.adapter.UnusualAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 
@@ -73,16 +75,17 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_unusual, container, false);
         // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.fragment_unusual, container, false);
+
+        ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
+
         RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
 
         adapter = new UnusualAdapter(getActivity(), null);
 
         mRecyclerView.setAdapter(adapter);
-
-        ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
         //Views used for toolbar behavior
         mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar_layout);
@@ -196,6 +199,8 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
                 getLoaderManager().initLoader(EFFECT_LIST_LOADER, null, this);
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_effects));
             }
+        } else if (id == R.id.action_search) {
+            startActivity(new Intent(getActivity(), SearchActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }

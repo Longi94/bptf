@@ -5,6 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activity.UnusualActivity">
 
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:orderInCategory="100"
+        android:title="@string/search_title"
+        app:showAsAction="always" />
+
     <!--Spinner used for sorting the items.-->
     <item
         android:id="@+id/action_sort"
