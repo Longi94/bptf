@@ -32,6 +32,7 @@ import java.util.Date;
 public class Utility {
 
     public static final String LOG_TAG = Utility.class.getSimpleName();
+    public static final double EPSILON = 0.0001;
 
     /**
      * Convenient method for getting the steamId (or vanity user name) of the user.
