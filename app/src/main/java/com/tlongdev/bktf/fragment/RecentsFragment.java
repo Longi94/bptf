@@ -150,7 +150,13 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                 FetchPriceList task = new FetchPriceList(getActivity(), true, false);
                 task.setOnPriceListFetchListener(this);
                 task.execute();
-                mSwipeRefreshLayout.setRefreshing(true);
+                //Workaround for the circle not appearing
+                mSwipeRefreshLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSwipeRefreshLayout.setRefreshing(true);
+                    }
+                });
             }
         }
     }

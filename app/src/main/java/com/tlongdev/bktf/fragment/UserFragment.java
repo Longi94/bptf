@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.activity.UserBackpackActivity;
 import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.activity.UserBackpackActivity;
 import com.tlongdev.bktf.network.FetchUserInfo;
 
 import java.io.File;
@@ -60,7 +59,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private ProgressBar progressBar;
 
     //Swipe refresh layout for refreshing the user data manually
-    private SwipeRefreshLayout mLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     //The task for fetching user info
     private FetchUserInfo fetchTask;
@@ -82,50 +81,43 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mLayout = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_user,
+        mSwipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_user,
                 container, false);
 
         //Find all the views
-        playerName = (TextView) mLayout.findViewById(R.id.text_view_player_name);
-        playerReputation = (TextView) mLayout.findViewById(R.id.text_view_player_reputation);
-        trustStatus = (TextView) mLayout.findViewById(R.id.text_view_trust_status);
-        steamRepStatus = (TextView) mLayout.findViewById(R.id.text_view_steamrep_status);
-        vacStatus = (TextView) mLayout.findViewById(R.id.text_view_vac_status);
-        tradeStatus = (TextView) mLayout.findViewById(R.id.text_view_trade_status);
-        communityStatus = (TextView) mLayout.findViewById(R.id.text_view_community_status);
-        backpackValueRefined = (TextView) mLayout.findViewById(R.id.text_view_bp_refined);
-        backpackRawMetal = (TextView) mLayout.findViewById(R.id.text_view_bp_raw_metal);
-        backpackRawKeys = (TextView) mLayout.findViewById(R.id.text_view_bp_raw_keys);
-        backpackValueUsd = (TextView) mLayout.findViewById(R.id.text_view_bp_usd);
-        backpackSlots = (TextView) mLayout.findViewById(R.id.text_view_bp_slots);
-        userSinceText = (TextView) mLayout.findViewById(R.id.text_view_user_since);
-        lastOnlineText = (TextView) mLayout.findViewById(R.id.text_view_user_last_online);
-        avatar = (ImageView) mLayout.findViewById(R.id.player_avatar);
-        progressBar = (ProgressBar) mLayout.findViewById(R.id.progress_bar);
+        playerName = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_player_name);
+        playerReputation = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_player_reputation);
+        trustStatus = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_trust_status);
+        steamRepStatus = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_steamrep_status);
+        vacStatus = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_vac_status);
+        tradeStatus = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_trade_status);
+        communityStatus = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_community_status);
+        backpackValueRefined = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_bp_refined);
+        backpackRawMetal = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_bp_raw_metal);
+        backpackRawKeys = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_bp_raw_keys);
+        backpackValueUsd = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_bp_usd);
+        backpackSlots = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_bp_slots);
+        userSinceText = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_user_since);
+        lastOnlineText = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_user_last_online);
+        avatar = (ImageView) mSwipeRefreshLayout.findViewById(R.id.player_avatar);
+        progressBar = (ProgressBar) mSwipeRefreshLayout.findViewById(R.id.progress_bar);
 
         //Set the color of the refreshing animation
-        mLayout.setColorSchemeColors(getResources().getColor(R.color.accent));
-        mLayout.setOnRefreshListener(this);
-
-        //A workaround for the refreshing animation not appearing when calling setRefreshing(true)
-        mLayout.setProgressViewOffset(false,
-                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, -55,
-                        getResources().getDisplayMetrics()),
-                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 25,
-                        getResources().getDisplayMetrics()));
+        mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.accent));
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
         //Set the on click listeners for the buttons
-        mLayout.findViewById(R.id.button_bazaar_tf).setOnClickListener(this);
-        mLayout.findViewById(R.id.button_steamrep).setOnClickListener(this);
-        mLayout.findViewById(R.id.button_tf2op).setOnClickListener(this);
-        mLayout.findViewById(R.id.button_tf2tp).setOnClickListener(this);
-        mLayout.findViewById(R.id.button_steam_community).setOnClickListener(this);
-        mLayout.findViewById(R.id.button_backpack).setOnClickListener(this);
+        mSwipeRefreshLayout.findViewById(R.id.button_bazaar_tf).setOnClickListener(this);
+        mSwipeRefreshLayout.findViewById(R.id.button_steamrep).setOnClickListener(this);
+        mSwipeRefreshLayout.findViewById(R.id.button_tf2op).setOnClickListener(this);
+        mSwipeRefreshLayout.findViewById(R.id.button_tf2tp).setOnClickListener(this);
+        mSwipeRefreshLayout.findViewById(R.id.button_steam_community).setOnClickListener(this);
+        mSwipeRefreshLayout.findViewById(R.id.button_backpack).setOnClickListener(this);
 
         //Update all the views to show te user data
         updateUserPage();
 
-        return mLayout;
+        return mSwipeRefreshLayout;
     }
 
     /**
@@ -144,8 +136,13 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             fetchTask.registerFetchUserInfoListener(this);
             fetchTask.execute();
 
-            //Show the refreshing animation
-            mLayout.setRefreshing(true);
+            //Workaround for the circle not appearing
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mSwipeRefreshLayout.setRefreshing(true);
+                }
+            });
         }
 
     }
@@ -164,7 +161,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             //There is no internet connection, notify the user
             Toast.makeText(getActivity(), "bptf: " + getString(R.string.error_no_network),
                     Toast.LENGTH_SHORT).show();
-            mLayout.setRefreshing(false);
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -487,7 +484,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         //Stop the refreshing animation and update the UI
         if (isAdded()) {
             updateUserPage();
-            mLayout.setRefreshing(false);
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
