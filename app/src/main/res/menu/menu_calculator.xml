@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Menu resources used in the main activity-->
+<!--Menu resource used in the simple fragment calculator-->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activity.MainActivity">
+    tools:context=".fragment.SimpleCalculatorFragment">
 
     <item
         android:id="@+id/action_search"

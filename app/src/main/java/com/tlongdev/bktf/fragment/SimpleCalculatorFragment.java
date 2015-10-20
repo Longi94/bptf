@@ -1,9 +1,13 @@
 package com.tlongdev.bktf.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -16,7 +20,7 @@ import android.widget.EditText;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
-import com.tlongdev.bktf.activity.MainActivity;
+import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.enums.Currency;
 
 public class SimpleCalculatorFragment extends Fragment {
@@ -25,6 +29,9 @@ public class SimpleCalculatorFragment extends Fragment {
     private EditText inputKeys;
     private EditText inputMetal;
     private EditText inputUsd;
+
+    private AppBarLayout mAppBarLayout;
+    private CoordinatorLayout mCoordinatorLayout;
 
     public SimpleCalculatorFragment() {
         // Required empty public constructor
@@ -40,7 +47,10 @@ public class SimpleCalculatorFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_simple_calculator, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_calculator, container, false);
+
+        ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
+
         inputEarbuds = (EditText) rootView.findViewById(R.id.edit_text_earbuds);
         inputKeys = (EditText) rootView.findViewById(R.id.edit_text_keys);
         inputMetal = (EditText) rootView.findViewById(R.id.edit_text_metal);
@@ -192,7 +202,7 @@ public class SimpleCalculatorFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_simple_calculator, menu);
+        inflater.inflate(R.menu.menu_calculator, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -200,10 +210,8 @@ public class SimpleCalculatorFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         switch (itemId) {
-            case R.id.action_show_advanced:
-                PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
-                        .putBoolean(getString(R.string.pref_preferred_advanced_calculator), true).apply();
-                ((MainActivity)getActivity()).switchFragment(2);
+            case R.id.action_search:
+                startActivity(new Intent(getActivity(), SearchActivity.class));
                 break;
         }
         return true;
