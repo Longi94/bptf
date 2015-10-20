@@ -19,7 +19,7 @@
             android:clipToPadding="false"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:scrollbars="none" />
+            android:scrollbars="none"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

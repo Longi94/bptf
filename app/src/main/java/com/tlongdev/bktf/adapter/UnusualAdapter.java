@@ -165,7 +165,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
 
             root = view;
 
-            icon = (ImageView) view.findViewById(R.id.image_view_item_icon);
+            icon = (ImageView) view.findViewById(R.id.icon);
             effect = (ImageView) view.findViewById(R.id.image_view_item_effect);
             price = (TextView) view.findViewById(R.id.grid_item_price);
         }

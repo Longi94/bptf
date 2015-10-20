@@ -26,10 +26,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     private static final int VIEW_TYPE_PRICE = 0;
     private static final int VIEW_TYPE_USER = 1;
     private static final int VIEW_TYPE_LOADING = 2;
-    
+
     private Cursor mDataSet;
     private Context mContext;
-    
+
     private boolean userFound = false;
     private boolean loading;
     private String[] userInfo;
@@ -41,23 +41,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v;
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_search, parent, false);
 
-        switch (viewType) {
-            case VIEW_TYPE_USER: {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_search_user, parent, false);
-                break;
-            }
-            case VIEW_TYPE_LOADING: {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_search_loading, parent, false);
-                break;
-            }
-            default: {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_search, parent, false);
-                break;
-            }
-        }
-        
         return new ViewHolder(v);
     }
 
@@ -66,11 +51,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         if (mDataSet != null && mDataSet.moveToPosition(position)) {
             switch (getItemViewType(position)) {
                 case VIEW_TYPE_USER:
-                    ((TextView) holder.root.findViewById(R.id.text_view_user_name)).setText(mDataSet.getString(SearchActivity.COL_PRICE_LIST_NAME));
-                    ((ImageView) holder.root.findViewById(R.id.image_view_avatar)).setImageDrawable(Drawable.
-                            createFromPath(mContext.getFilesDir().toString() + "/avatar_search.png"));
-
+                    holder.more.setVisibility(View.GONE);
                     if (userFound) {
+                        holder.more.setVisibility(View.GONE);
+                        holder.loading.setVisibility(View.GONE);
+                        holder.priceLayout.setVisibility(View.VISIBLE);
                         holder.root.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -80,49 +65,64 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                                 mContext.startActivity(intent);
                             }
                         });
+
+                        holder.name.setText(mDataSet.getString(SearchActivity.COL_PRICE_LIST_NAME));
+                        holder.icon.setImageDrawable(Drawable.
+                                createFromPath(mContext.getFilesDir().toString() + "/avatar_search.png"));
                     }
+                    break;
+                case VIEW_TYPE_LOADING:
+                    holder.loading.setVisibility(View.VISIBLE);
+                    holder.priceLayout.setVisibility(View.GONE);
+
+                    holder.name.setText(null);
+                    holder.icon.setImageDrawable(null);
                     break;
                 case VIEW_TYPE_PRICE:
 
-                    int quality = mDataSet.getInt(SearchActivity.COL_PRICE_LIST_QUAL);
+                    holder.priceLayout.setVisibility(View.VISIBLE);
+                    holder.more.setVisibility(View.VISIBLE);
+                    holder.loading.setVisibility(View.GONE);
+
+                    holder.root.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                        }
+                    });
+
                     int defindex = mDataSet.getInt(SearchActivity.COL_PRICE_LIST_DEFI);
+                    int quality = mDataSet.getInt(SearchActivity.COL_PRICE_LIST_QUAL);
+                    int tradable = mDataSet.getInt(SearchActivity.COL_PRICE_LIST_TRAD);
+                    int craftable = mDataSet.getInt(SearchActivity.COL_PRICE_LIST_CRAF);
+                    int priceIndex = mDataSet.getInt(SearchActivity.COL_PRICE_LIST_INDE);
+                    int australium = mDataSet.getInt(SearchActivity.COL_AUSTRALIUM);
 
-                    holder.background.setBackgroundDrawable(Utility.getItemBackground(mContext,
-                            defindex, quality,
-                            mDataSet.getInt(SearchActivity.COL_PRICE_LIST_TRAD),
-                            mDataSet.getInt(SearchActivity.COL_PRICE_LIST_CRAF)));
+                    double price = mDataSet.getDouble(SearchActivity.COL_PRICE_LIST_PRIC);
+                    double priceHigh = mDataSet.getDouble(SearchActivity.COL_PRICE_LIST_PMAX);
 
-                    holder.nameView.setText(Utility.formatItemName(mContext,
-                            defindex,
-                            mDataSet.getString(SearchActivity.COL_PRICE_LIST_NAME),
-                            mDataSet.getInt(SearchActivity.COL_PRICE_LIST_TRAD),
-                            mDataSet.getInt(SearchActivity.COL_PRICE_LIST_CRAF),
-                            quality,
-                            mDataSet.getInt(SearchActivity.COL_PRICE_LIST_INDE)));
+                    String name = mDataSet.getString(SearchActivity.COL_PRICE_LIST_NAME);
+                    String currency = mDataSet.getString(SearchActivity.COL_PRICE_LIST_CURR);
 
-                    if (mDataSet.getInt(SearchActivity.COL_PRICE_LIST_INDE) == 0) {
-                        setIconImage(mContext, holder.icon, defindex,
-                                mDataSet.getInt(SearchActivity.COL_AUSTRALIUM) == 1);
+                    holder.name.setText(Utility.formatItemName(mContext, defindex, name,
+                            tradable, craftable, quality, priceIndex));
+
+                    holder.icon.setImageDrawable(null);
+                    holder.icon.setBackgroundColor(Utility.getQualityColor(mContext, quality, defindex, true));
+
+                    if (priceIndex == 0) {
+                        setIconImage(mContext, holder.icon, defindex, australium == 1);
                     } else {
-                        setIconImageWithIndex(mContext, holder.icon, defindex,
-                                mDataSet.getInt(SearchActivity.COL_PRICE_LIST_INDE),
-                                mDataSet.getInt(SearchActivity.COL_AUSTRALIUM) == 1, quality);
+                        setIconImageWithIndex(mContext, holder.icon, defindex, priceIndex,
+                                australium == 1, quality);
                     }
 
                     try {
-                        holder.priceView.setText(Utility.formatPrice(
-                                mContext, mDataSet.getDouble(SearchActivity.COL_PRICE_LIST_PRIC),
-                                mDataSet.getDouble(SearchActivity.COL_PRICE_LIST_PMAX),
-                                mDataSet.getString(SearchActivity.COL_PRICE_LIST_CURR),
-                                mDataSet.getString(SearchActivity.COL_PRICE_LIST_CURR),
-                                true
-                        ));
+                        holder.price.setText(Utility.formatPrice(mContext, price, priceHigh,
+                                currency, currency, false));
                     } catch (Throwable throwable) {
                         if (Utility.isDebugging(mContext))
                             throwable.printStackTrace();
                     }
-                    break;
-                case VIEW_TYPE_LOADING:
                     break;
             }
         }
@@ -214,19 +214,24 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
         public final View root;
 
-        public final ImageView icon;
-        public final ImageView background;
+        public final View loading;
+        public final View priceLayout;
 
-        public final TextView nameView;
-        public final TextView priceView;
+        public final ImageView icon;
+        public final ImageView more;
+
+        public final TextView name;
+        public final TextView price;
 
         public ViewHolder(View view) {
             super(view);
             root = view;
-            icon = (ImageView) view.findViewById(R.id.image_view_item_icon);
-            background = (ImageView) view.findViewById(R.id.image_view_item_background);
-            nameView = (TextView) view.findViewById(R.id.name);
-            priceView = (TextView) view.findViewById(R.id.price);
+            loading = view.findViewById(R.id.loading_layout);
+            priceLayout = view.findViewById(R.id.price_layout);
+            icon = (ImageView) view.findViewById(R.id.icon);
+            more = (ImageView) view.findViewById(R.id.more);
+            name = (TextView) view.findViewById(R.id.name);
+            price = (TextView) view.findViewById(R.id.price);
         }
     }
 }

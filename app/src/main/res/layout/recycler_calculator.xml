@@ -12,7 +12,7 @@
 
     <!--Icon of the item-->
     <ImageView
-        android:id="@+id/image_view_item_icon"
+        android:id="@+id/icon"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:contentDescription="@string/description_icon" />

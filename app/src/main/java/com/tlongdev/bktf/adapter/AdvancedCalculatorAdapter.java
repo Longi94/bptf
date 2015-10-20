@@ -226,7 +226,7 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
 
         public ViewHolder(View itemView) {
             super(itemView);
-            icon = (ImageView) itemView.findViewById(R.id.image_view_item_icon);
+            icon = (ImageView) itemView.findViewById(R.id.icon);
             name = (TextView) itemView.findViewById(R.id.text_view_item_name);
             price = (TextView) itemView.findViewById(R.id.text_view_item_price);
             count = (TextView) itemView.findViewById(R.id.text_view_item_count);

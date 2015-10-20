@@ -38,7 +38,7 @@
                     android:background="@drawable/item_background_blank" />
 
                 <com.tlongdev.bktf.view.SquareImageView
-                    android:id="@+id/image_view_item_icon"
+                    android:id="@+id/icon"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"

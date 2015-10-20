@@ -185,7 +185,7 @@ public class ItemDetailActivity extends Activity {
         paint = (TextView) findViewById(R.id.text_view_paint);
         price = (TextView) findViewById(R.id.text_view_price);
 
-        icon = (ImageView) findViewById(R.id.image_view_item_icon);
+        icon = (ImageView) findViewById(R.id.icon);
         background = (ImageView) findViewById(R.id.image_view_item_background);
 
         queryItemDetails();
