@@ -1,14 +1,10 @@
 package com.tlongdev.bktf.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,19 +15,15 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.fragment.AdvancedCalculatorFragment;
 import com.tlongdev.bktf.fragment.RecentsFragment;
 import com.tlongdev.bktf.fragment.SimpleCalculatorFragment;
 import com.tlongdev.bktf.fragment.UnusualFragment;
 import com.tlongdev.bktf.fragment.UserFragment;
-import com.tlongdev.bktf.network.FetchPriceList;
 import com.tlongdev.bktf.service.NotificationsService;
 import com.tlongdev.bktf.service.UpdateDatabaseService;
 
@@ -39,7 +31,7 @@ import com.tlongdev.bktf.service.UpdateDatabaseService;
  * Tha main activity if the application. Navigation drawer is used. This is where most of the
  * fragments are shown.
  */
-public class MainActivity extends AppCompatActivity implements FetchPriceList.OnPriceListFetchListener {
+public class MainActivity extends AppCompatActivity {
 
     //Request codes for onActivityResult
     public static final int REQUEST_SETTINGS = 100;
@@ -61,9 +53,6 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
 
-    private AppBarLayout mAppBarLayout;
-    private CoordinatorLayout mCoordinatorLayout;
-
     /**
      * The index of the current fragment.
      */
@@ -71,15 +60,6 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
 
     //Variables used for managing fragments.
     private boolean restartUserFragment = false;
-
-    private TextView metalPrice;
-    private TextView keyPrice;
-    private TextView budsPrice;
-    private View metalPriceImage;
-    private View keyPriceImage;
-    private View budsPriceImage;
-
-    private View toolbarHeader;
 
     NavigationView.OnNavigationItemSelectedListener navigationListener = new NavigationView.OnNavigationItemSelectedListener() {
         @Override
@@ -116,8 +96,6 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         }
     };
 
-    private FloatingActionButton fab;
-
     /**
      * {@inheritDoc}
      */
@@ -129,16 +107,14 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         //Set the default values for all preferences when the app is first loaded
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
 
-        //As we're using a Toolbar, we should retrieve it and set it to be our ActionBar
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-
-        //Views used for toolbar behavior
-        mAppBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
-        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
-
         //Setup the drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.primary_dark));
+
+        // set a custom shadow that overlays the main content when the drawer opens
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
+
         mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
         mNavigationView.setNavigationItemSelectedListener(navigationListener);
 
@@ -149,10 +125,6 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
                 switchFragment(-1);
             }
         });
-
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-
-        setUpNavigationDrawer();
 
         //Start services if option is on
         if (PreferenceManager.getDefaultSharedPreferences(this)
@@ -169,20 +141,8 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         }
         mNavigationView.getMenu().getItem(mCurrentSelectedPosition).setChecked(true);
 
-        toolbarHeader = findViewById(R.id.list_changes_header);
-
         // Select either the default item (0) or the last selected item.
         switchFragment(mCurrentSelectedPosition);
-
-        metalPrice = (TextView) findViewById(R.id.text_view_metal_price);
-        keyPrice = (TextView) findViewById(R.id.text_view_key_price);
-        budsPrice = (TextView) findViewById(R.id.text_view_buds_price);
-
-        metalPriceImage = findViewById(R.id.image_view_metal_price);
-        keyPriceImage = findViewById(R.id.image_view_key_price);
-        budsPriceImage = findViewById(R.id.image_view_buds_price);
-
-        onPriceListFetchFinished();
     }
 
     /**
@@ -211,35 +171,11 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Forward the new configuration the drawer toggle component.
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
     public void switchFragment(int position) {
         mCurrentSelectedPosition = position;
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mNavigationView);
         }
-
-        toolbarHeader.setVisibility(View.GONE);
-        fab.setVisibility(View.GONE);
 
         //Start handling fragment transactions
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -253,10 +189,7 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
                 break;
             case 0:
                 newFragment = new RecentsFragment();
-                ((RecentsFragment) newFragment).setListener(this);
-                ((RecentsFragment) newFragment).setAppBarLayout(mAppBarLayout);
                 setTitle(getString(R.string.title_home));
-                toolbarHeader.setVisibility(View.VISIBLE);
                 break;
             case 1:
                 newFragment = new UnusualFragment();
@@ -267,9 +200,7 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
                         .getBoolean(getString(R.string.pref_preferred_advanced_calculator), false)) {
                     newFragment = new SimpleCalculatorFragment();
                 } else {
-                    fab.setVisibility(View.VISIBLE);
                     newFragment = new AdvancedCalculatorFragment();
-                    ((AdvancedCalculatorFragment) newFragment).setFab(fab);
                 }
                 setTitle(getString(R.string.title_calculator));
                 break;
@@ -302,9 +233,6 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //Handler the drawer toggle press
@@ -318,6 +246,22 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
 
     public boolean isDrawerOpen() {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mNavigationView);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Forward the new configuration the drawer toggle component.
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void setSupportActionBar(Toolbar toolbar) {
+        super.setSupportActionBar(toolbar);
+        setUpNavigationDrawer();
     }
 
     /**
@@ -345,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                expandToolbar();
+                // TODO expandToolbar();
             }
         };
 
@@ -358,39 +302,5 @@ public class MainActivity extends AppCompatActivity implements FetchPriceList.On
         });
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-    }
-
-    /**
-     * Fully expand the toolbar with animation.
-     */
-    public void expandToolbar() {
-        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
-        behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
-    }
-
-    @Override
-    public void onPriceListFetchFinished() {
-        //Update the header with currency prices
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-        metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
-        keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
-        budsPrice.setText(prefs.getString(getString(R.string.pref_buds_price), ""));
-
-        if (Utility.getDouble(prefs, getString(R.string.pref_metal_diff), 0.0) > 0.0) {
-            metalPriceImage.setBackgroundColor(0xff008504);
-        } else {
-            metalPriceImage.setBackgroundColor(0xff850000);
-        }
-        if (Utility.getDouble(prefs, getString(R.string.pref_key_diff), 0.0) > 0.0) {
-            keyPriceImage.setBackgroundColor(0xff008504);
-        } else {
-            keyPriceImage.setBackgroundColor(0xff850000);
-        }
-        if (Utility.getDouble(prefs, getString(R.string.pref_buds_diff), 0.0) > 0) {
-            budsPriceImage.setBackgroundColor(0xff008504);
-        } else {
-            budsPriceImage.setBackgroundColor(0xff850000);
-        }
     }
 }

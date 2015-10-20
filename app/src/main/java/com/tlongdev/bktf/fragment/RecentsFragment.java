@@ -2,28 +2,37 @@ package com.tlongdev.bktf.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.adapter.RecentsAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.network.FetchPriceList;
@@ -32,7 +41,8 @@ import com.tlongdev.bktf.network.FetchPriceList;
  * Main fragment the shows the latest price changes.
  */
 public class RecentsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
-        SwipeRefreshLayout.OnRefreshListener, FetchPriceList.OnPriceListFetchListener, AppBarLayout.OnOffsetChangedListener {
+        SwipeRefreshLayout.OnRefreshListener, FetchPriceList.OnPriceListFetchListener,
+        AppBarLayout.OnOffsetChangedListener{
 
     private static final String LOG_TAG = RecentsFragment.class.getSimpleName();
 
@@ -75,11 +85,17 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private FetchPriceList.OnPriceListFetchListener listener;
-
-    private AppBarLayout appBarLayout;
-
     private RecyclerView mRecyclerView;
+
+    private AppBarLayout mAppBarLayout;
+    private CoordinatorLayout mCoordinatorLayout;
+
+    private TextView metalPrice;
+    private TextView keyPrice;
+    private TextView budsPrice;
+    private View metalPriceImage;
+    private View keyPriceImage;
+    private View budsPriceImage;
 
     public RecentsFragment() {
         //Required empty constructor
@@ -96,6 +112,14 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recents, container, false);
 
+        setHasOptionsMenu(true);
+
+        ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
+
+        //Views used for toolbar behavior
+        mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar_layout);
+        mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator_layout);
+
         adapter = new RecentsAdapter(getActivity(), null);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
@@ -110,9 +134,19 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
 
-        if (appBarLayout != null) {
-            appBarLayout.addOnOffsetChangedListener(this);
+        if (mAppBarLayout != null) {
+            mAppBarLayout.addOnOffsetChangedListener(this);
         }
+
+        metalPrice = (TextView) rootView.findViewById(R.id.text_view_metal_price);
+        keyPrice = (TextView) rootView.findViewById(R.id.text_view_key_price);
+        budsPrice = (TextView) rootView.findViewById(R.id.text_view_buds_price);
+
+        metalPriceImage = rootView.findViewById(R.id.image_view_metal_price);
+        keyPriceImage = rootView.findViewById(R.id.image_view_key_price);
+        budsPriceImage = rootView.findViewById(R.id.image_view_buds_price);
+
+        onPriceListFetchFinished();
 
         return rootView;
     }
@@ -159,6 +193,23 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                 });
             }
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //Handler the drawer toggle press
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                startActivity(new Intent(getActivity(), SearchActivity.class));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -220,8 +271,28 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
             //Stop animation
             mSwipeRefreshLayout.setRefreshing(false);
 
-            if (listener != null) {
-                listener.onPriceListFetchFinished();
+
+            //Update the header with currency prices
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+            metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
+            keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
+            budsPrice.setText(prefs.getString(getString(R.string.pref_buds_price), ""));
+
+            if (Utility.getDouble(prefs, getString(R.string.pref_metal_diff), 0.0) > 0.0) {
+                metalPriceImage.setBackgroundColor(0xff008504);
+            } else {
+                metalPriceImage.setBackgroundColor(0xff850000);
+            }
+            if (Utility.getDouble(prefs, getString(R.string.pref_key_diff), 0.0) > 0.0) {
+                keyPriceImage.setBackgroundColor(0xff008504);
+            } else {
+                keyPriceImage.setBackgroundColor(0xff850000);
+            }
+            if (Utility.getDouble(prefs, getString(R.string.pref_buds_diff), 0.0) > 0) {
+                budsPriceImage.setBackgroundColor(0xff008504);
+            } else {
+                budsPriceImage.setBackgroundColor(0xff850000);
             }
         }
     }
@@ -235,11 +306,11 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         }
     }
 
-    public void setAppBarLayout(AppBarLayout appBarLayout) {
-        this.appBarLayout = appBarLayout;
-    }
-
-    public void setListener(FetchPriceList.OnPriceListFetchListener listener) {
-        this.listener = listener;
+    /**
+     * Fully expand the toolbar with animation.
+     */
+    public void expandToolbar() {
+        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
+        behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
     }
 }

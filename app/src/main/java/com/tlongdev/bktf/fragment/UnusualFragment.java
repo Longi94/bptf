@@ -2,6 +2,8 @@ package com.tlongdev.bktf.fragment;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -9,6 +11,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,6 +54,9 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
 
     private MenuItem effectMenuItem;
 
+    private AppBarLayout mAppBarLayout;
+    private CoordinatorLayout mCoordinatorLayout;
+
     private int currentSort = 0;
     private boolean showEffect = false;
 
@@ -67,14 +73,22 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_unusual, container, false);
         // Inflate the layout for this fragment
-        RecyclerView mRecyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_unusual, container, false);
+        RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
 
         adapter = new UnusualAdapter(getActivity(), null);
 
         mRecyclerView.setAdapter(adapter);
-        return mRecyclerView;
+
+        ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
+
+        //Views used for toolbar behavior
+        mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar_layout);
+        mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator_layout);
+
+        return rootView;
     }
 
     @Override
@@ -184,5 +198,13 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Fully expand the toolbar with animation.
+     */
+    public void expandToolbar() {
+        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
+        behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
     }
 }
