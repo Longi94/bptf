@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
     //Variables used for managing fragments.
     private boolean restartUserFragment = false;
 
+    private OnDrawerOpenedListener drawerListener;
+
     NavigationView.OnNavigationItemSelectedListener navigationListener = new NavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -187,11 +189,11 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case 0:
                 newFragment = new RecentsFragment();
-                setTitle(getString(R.string.title_home));
+                drawerListener = (RecentsFragment) newFragment;
                 break;
             case 1:
                 newFragment = new UnusualFragment();
-                setTitle(getString(R.string.title_unusuals));
+                drawerListener = (UnusualFragment) newFragment;
                 break;
             case 2:
                 if (!PreferenceManager.getDefaultSharedPreferences(this)
@@ -200,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     newFragment = new AdvancedCalculatorFragment();
                 }
-                setTitle(getString(R.string.title_calculator));
+                drawerListener = null;
                 break;
             default:
                 return;
@@ -276,7 +278,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                // TODO expandToolbar();
+                if (drawerListener != null) {
+                    drawerListener.onDrawerOpened();
+                }
             }
         };
 
@@ -289,5 +293,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+    }
+
+    public interface OnDrawerOpenedListener {
+        void onDrawerOpened();
     }
 }
