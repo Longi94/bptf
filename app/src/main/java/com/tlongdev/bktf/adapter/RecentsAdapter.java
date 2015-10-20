@@ -66,7 +66,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
                     quality, priceIndex);
             holder.name.setText(itemName);
 
-            if (difference == raw) {
+            if (Math.abs(difference - raw) < Utility.EPSILON) {
                 holder.difference.setText("new");
                 holder.difference.setTextColor(0xFFFFFF00);
             } else if (difference == 0.0) {
