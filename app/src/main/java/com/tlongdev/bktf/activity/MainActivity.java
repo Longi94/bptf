@@ -110,10 +110,8 @@ public class MainActivity extends AppCompatActivity {
         //Setup the drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.primary_dark));
-
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-
 
         mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
         mNavigationView.setNavigationItemSelectedListener(navigationListener);
@@ -256,17 +254,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void setSupportActionBar(Toolbar toolbar) {
         super.setSupportActionBar(toolbar);
-        setUpNavigationDrawer();
+        restoreNavigationIcon();
     }
 
-    /**
-     * Users of this fragment must call this method to set up the navigation drawer interactions.
-     */
-    public void setUpNavigationDrawer() {
-        // set a custom shadow that overlays the main content when the drawer opens
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+    private void restoreNavigationIcon() {
         // set up the drawer's list view with items and click listener
-
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
