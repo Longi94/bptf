@@ -40,10 +40,9 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (mDataSet != null && mDataSet.moveToPosition(position)) {
 
-            holder.view.setOnClickListener(new View.OnClickListener() {
+            holder.root.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                 }
             });
 
@@ -79,7 +78,6 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
                 holder.difference.setText("- " + Utility.formatPrice(mContext, Math.abs(difference), 0, Currency.METAL, currency, false));
                 holder.difference.setTextColor(0xFFFF0000);
             }
-
 
             holder.icon.setImageDrawable(null);
             holder.effect.setBackgroundColor(Utility.getQualityColor(mContext, quality, defindex, true));
@@ -135,7 +133,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
-        public final View view;
+        public final View root;
 
         public final ImageView icon;
         public final ImageView effect;
@@ -146,8 +144,8 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
 
         public ViewHolder(View view) {
             super(view);
-            this.view = view;
-            icon = (ImageView) view.findViewById(R.id.image_view_item_icon);
+            root = view;
+            icon = (ImageView) view.findViewById(R.id.icon);
             effect = (ImageView) view.findViewById(R.id.image_view_item_effect);
             name = (TextView) view.findViewById(R.id.name);
             price = (TextView) view.findViewById(R.id.price);

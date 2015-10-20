@@ -31,7 +31,7 @@
                 android:scaleType="centerCrop" />
 
             <ImageView
-                android:id="@+id/image_view_item_icon"
+                android:id="@+id/icon"
                 android:layout_width="84dp"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/description_icon"
