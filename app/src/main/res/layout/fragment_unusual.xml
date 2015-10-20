@@ -7,4 +7,5 @@
     android:layout_height="match_parent"
     android:padding="4dp"
     android:clipToPadding="false"
+    android:scrollbars="vertical"
     tools:context=".fragment.UnusualFragment"/>

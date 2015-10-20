@@ -13,6 +13,6 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:padding="2dp"
-        android:scrollbars="none" />
+        android:scrollbars="vertical" />
 
 </RelativeLayout>
