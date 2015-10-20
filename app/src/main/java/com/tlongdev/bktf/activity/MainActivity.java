@@ -236,11 +236,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //Handler the drawer toggle press
-        switch (item.getItemId()) {
-            case R.id.action_search:
-                startActivity(new Intent(this, SearchActivity.class));
-                break;
-        }
         return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
