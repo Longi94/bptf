@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -59,6 +61,9 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
 
     private FloatingActionButton fab;
 
+    private AppBarLayout mAppBarLayout;
+    private CoordinatorLayout mCoordinatorLayout;
+
     public CalculatorFragment() {
         // Required empty public constructor
     }
@@ -77,6 +82,10 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         View rootView = inflater.inflate(R.layout.fragment_calculator, container, false);
 
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
+
+        //Views used for toolbar behavior
+        mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar_layout);
+        mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator_layout);
 
         RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
@@ -227,8 +236,16 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         }
     }
 
+    /**
+     * Fully expand the toolbar with animation.
+     */
+    public void expandToolbar() {
+        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
+        behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
+    }
+
     @Override
     public void onDrawerOpened() {
-
+        expandToolbar();
     }
 }
