@@ -3,8 +3,6 @@ package com.tlongdev.bktf.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,15 +21,12 @@ import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.enums.Currency;
 
-public class ConverterFragment extends Fragment implements View.OnClickListener {
+public class ConverterFragment extends Fragment implements View.OnClickListener, View.OnFocusChangeListener {
 
     private EditText inputEarbuds;
     private EditText inputKeys;
     private EditText inputMetal;
     private EditText inputUsd;
-
-    private AppBarLayout mAppBarLayout;
-    private CoordinatorLayout mCoordinatorLayout;
 
     public ConverterFragment() {
         // Required empty public constructor
@@ -198,6 +193,11 @@ public class ConverterFragment extends Fragment implements View.OnClickListener 
                 throwable.printStackTrace();
         }
 
+        inputEarbuds.setOnFocusChangeListener(this);
+        inputKeys.setOnFocusChangeListener(this);
+        inputMetal.setOnFocusChangeListener(this);
+        inputUsd.setOnFocusChangeListener(this);
+
         rootView.findViewById(R.id.calculator_0).setOnClickListener(this);
         rootView.findViewById(R.id.calculator_1).setOnClickListener(this);
         rootView.findViewById(R.id.calculator_2).setOnClickListener(this);
@@ -233,7 +233,46 @@ public class ConverterFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            case R.id.calculator_0:
+                break;
+            case R.id.calculator_1:
+                break;
+            case R.id.calculator_2:
+                break;
+            case R.id.calculator_3:
+                break;
+            case R.id.calculator_4:
+                break;
+            case R.id.calculator_5:
+                break;
+            case R.id.calculator_6:
+                break;
+            case R.id.calculator_7:
+                break;
+            case R.id.calculator_8:
+                break;
+            case R.id.calculator_9:
+                break;
+            case R.id.calculator_dot:
+                break;
+            case R.id.calculator_delete:
+                break;
+        }
+    }
 
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if (hasFocus) {
+            switch (v.getId()) {
+                case R.id.edit_text_earbuds:
+                    break;
+                case R.id.edit_text_keys:
+                    break;
+                case R.id.edit_text_metal:
+                    break;
+                case R.id.edit_text_usd:
+                    break;
+            }
         }
     }
 }
