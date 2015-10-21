@@ -52,21 +52,21 @@
                     android:drawableLeft="@drawable/ic_earbuds_18dp"
                     android:drawablePadding="4dp"
                     android:drawableStart="@drawable/ic_earbuds_18dp"
-                    android:editable="false"
-                    android:inputType="none"
-                    android:lines="1" />
+                    android:inputType="number"
+                    android:lines="1"
+                    android:scrollHorizontally="true" />
 
                 <EditText
-                    android:id="@+id/edit_text_keys"
+                    android:id="@+id/edit_text_metal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:drawableLeft="@drawable/ic_metal_white_18dp"
                     android:drawablePadding="4dp"
                     android:drawableStart="@drawable/ic_metal_white_18dp"
-                    android:editable="false"
-                    android:inputType="none"
-                    android:lines="1" />
+                    android:inputType="number"
+                    android:lines="1"
+                    android:scrollHorizontally="true" />
 
             </LinearLayout>
 
@@ -77,29 +77,28 @@
                 android:orientation="vertical">
 
                 <EditText
-                    android:id="@+id/edit_text_metal"
+                    android:id="@+id/edit_text_keys"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:drawableLeft="@drawable/ic_vpn_key_white_18dp"
                     android:drawablePadding="4dp"
                     android:drawableStart="@drawable/ic_vpn_key_white_18dp"
-                    android:editable="false"
-                    android:inputType="none"
-                    android:lines="1" />
+                    android:inputType="number"
+                    android:lines="1"
+                    android:scrollHorizontally="true" />
 
                 <EditText
-
                     android:id="@+id/edit_text_usd"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:drawableLeft="@drawable/ic_metal_white_18dp"
+                    android:drawableLeft="@drawable/ic_attach_money_white_24dp"
                     android:drawablePadding="4dp"
-                    android:drawableStart="@drawable/ic_metal_white_18dp"
-                    android:editable="false"
-                    android:inputType="none"
-                    android:lines="1" />
+                    android:drawableStart="@drawable/ic_attach_money_white_24dp"
+                    android:inputType="number"
+                    android:lines="1"
+                    android:scrollHorizontally="true" />
 
             </LinearLayout>
 
