@@ -19,9 +19,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.fragment.AdvancedCalculatorFragment;
-import com.tlongdev.bktf.fragment.RecentsFragment;
 import com.tlongdev.bktf.fragment.CalculatorFragment;
+import com.tlongdev.bktf.fragment.ConverterFragment;
+import com.tlongdev.bktf.fragment.RecentsFragment;
 import com.tlongdev.bktf.fragment.UnusualFragment;
 import com.tlongdev.bktf.fragment.UserFragment;
 import com.tlongdev.bktf.service.NotificationsService;
@@ -69,16 +69,16 @@ public class MainActivity extends AppCompatActivity {
             mDrawerLayout.closeDrawers();
             switch (menuItem.getItemId()) {
                 case R.id.nav_recents:
-                    menuItem.setCheckable(true);
                     switchFragment(0);
                     break;
                 case R.id.nav_unusuals:
-                    menuItem.setCheckable(true);
                     switchFragment(1);
                     break;
-                case R.id.nav_calculator:
-                    menuItem.setCheckable(true);
+                case R.id.nav_converter:
                     switchFragment(2);
+                    break;
+                case R.id.nav_calculator:
+                    switchFragment(3);
                     break;
                 case R.id.nav_settings:
                     Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
@@ -196,13 +196,12 @@ public class MainActivity extends AppCompatActivity {
                 drawerListener = (UnusualFragment) newFragment;
                 break;
             case 2:
-                if (!PreferenceManager.getDefaultSharedPreferences(this)
-                        .getBoolean(getString(R.string.pref_preferred_advanced_calculator), false)) {
-                    newFragment = new CalculatorFragment();
-                } else {
-                    newFragment = new AdvancedCalculatorFragment();
-                }
+                newFragment = new ConverterFragment();
                 drawerListener = null;
+                break;
+            case 3:
+                newFragment = new CalculatorFragment();
+                drawerListener = (CalculatorFragment) newFragment;
                 break;
             default:
                 return;

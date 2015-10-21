@@ -12,6 +12,10 @@
             android:icon="@drawable/ic_whatshot_white_24dp"
             android:title="@string/title_prices" />
         <item
+            android:id="@+id/nav_converter"
+            android:icon="@drawable/ic_swap_horiz_white_24dp"
+            android:title="@string/title_converter" />
+        <item
             android:id="@+id/nav_calculator"
             android:icon="@drawable/ic_calculator_24dp"
             android:title="@string/title_calculator" />
