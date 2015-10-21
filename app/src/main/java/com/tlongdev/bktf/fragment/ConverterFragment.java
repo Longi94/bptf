@@ -1,6 +1,8 @@
 package com.tlongdev.bktf.fragment;
 
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,8 +14,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.tlongdev.bktf.R;
@@ -27,6 +31,19 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
     private EditText inputKeys;
     private EditText inputMetal;
     private EditText inputUsd;
+    private EditText focus;
+
+    private View.OnTouchListener inputListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            v.onTouchEvent(event);
+            InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
+            return true;
+        }
+    };
 
     public ConverterFragment() {
         // Required empty public constructor
@@ -50,6 +67,11 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
         inputKeys = (EditText) rootView.findViewById(R.id.edit_text_keys);
         inputMetal = (EditText) rootView.findViewById(R.id.edit_text_metal);
         inputUsd = (EditText) rootView.findViewById(R.id.edit_text_usd);
+
+        inputEarbuds.setOnTouchListener(inputListener);
+        inputKeys.setOnTouchListener(inputListener);
+        inputMetal.setOnTouchListener(inputListener);
+        inputUsd.setOnTouchListener(inputListener);
 
         inputEarbuds.addTextChangedListener(new TextWatcher() {
             @Override
@@ -181,6 +203,7 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
         });
 
         inputEarbuds.setText("1");
+        inputEarbuds.setSelection(inputEarbuds.length());
         try {
             inputKeys.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
                     1, Currency.BUD, Currency.KEY), 2)));
@@ -230,33 +253,66 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
         return true;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        String s = null;
+        switch (v.getId()) {
             case R.id.calculator_0:
+                s = "0";
                 break;
             case R.id.calculator_1:
+                s = "1";
                 break;
             case R.id.calculator_2:
+                s = "2";
                 break;
             case R.id.calculator_3:
+                s = "3";
                 break;
             case R.id.calculator_4:
+                s = "4";
                 break;
             case R.id.calculator_5:
+                s = "5";
                 break;
             case R.id.calculator_6:
+                s = "6";
                 break;
             case R.id.calculator_7:
+                s = "7";
                 break;
             case R.id.calculator_8:
+                s = "8";
                 break;
             case R.id.calculator_9:
+                s = "9";
                 break;
             case R.id.calculator_dot:
+                s = ".";
                 break;
             case R.id.calculator_delete:
                 break;
+        }
+        String prev = focus.getText().toString();
+        int selectionStart = focus.getSelectionStart();
+        int selectionEnd = focus.getSelectionEnd();
+        if (s != null) {
+            if (!s.contains(".") || !prev.contains(".")) {
+                focus.setText(prev.substring(0, selectionStart) + s +
+                        prev.substring(selectionEnd, prev.length()));
+                focus.setSelection(selectionStart + 1);
+            }
+        } else if (prev.length() > 0){
+            if (selectionStart != selectionEnd) {
+                focus.setText(prev.substring(0, selectionStart) +
+                        prev.substring(selectionEnd, prev.length()));
+                focus.setSelection(selectionStart);
+            } else {
+                focus.setText(prev.substring(0, selectionStart - 1) +
+                        prev.substring(selectionEnd, prev.length()));
+                focus.setSelection(selectionStart - 1);
+            }
         }
     }
 
@@ -265,12 +321,16 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
         if (hasFocus) {
             switch (v.getId()) {
                 case R.id.edit_text_earbuds:
+                    focus = inputEarbuds;
                     break;
                 case R.id.edit_text_keys:
+                    focus = inputKeys;
                     break;
                 case R.id.edit_text_metal:
+                    focus = inputMetal;
                     break;
                 case R.id.edit_text_usd:
+                    focus = inputUsd;
                     break;
             }
         }
