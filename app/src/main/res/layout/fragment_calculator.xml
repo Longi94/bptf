@@ -20,7 +20,7 @@
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="@string/title_unusuals" />
+            app:title="@string/title_calculator" />
 
         <!--Header containing the results.-->
         <LinearLayout

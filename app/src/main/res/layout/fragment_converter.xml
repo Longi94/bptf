@@ -20,7 +20,7 @@
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="@string/title_calculator" />
+            app:title="@string/title_converter" />
 
     </android.support.design.widget.AppBarLayout>
 
