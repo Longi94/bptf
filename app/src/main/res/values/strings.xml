@@ -410,5 +410,6 @@
     <string name="notification_unread_title" formatted="false" translatable="true">%d unread notifications on bp.tf</string>
     <string name="notification_unread_description" translatable="true">Tap to open in browser.</string>
     <string name="title_activity_example">ExampleActivity</string>
+    <string name="title_converter">Converter</string>
 
 </resources>
