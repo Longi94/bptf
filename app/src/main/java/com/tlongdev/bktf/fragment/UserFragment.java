@@ -292,7 +292,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         //Set the player name
         String name = prefs.getString(getString(R.string.pref_player_name), "");
         playerName.setText(name);
-        getActivity().setTitle(getString(R.string.title_custom_profile, name));
+        getActivity().setTitle(name);
 
         if (prefs.getInt(getString(R.string.pref_player_banned), 0) == 1) {
             //Set player name to red and cross name out if banned
