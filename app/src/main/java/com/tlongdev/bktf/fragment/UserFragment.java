@@ -18,6 +18,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -28,6 +31,7 @@ import android.widget.Toast;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.MainActivity;
+import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.activity.UserBackpackActivity;
 import com.tlongdev.bktf.network.FetchUserInfo;
 
@@ -43,7 +47,8 @@ import java.text.DecimalFormat;
  * Fragment for displaying the user profile.
  */
 public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
-        View.OnClickListener, FetchUserInfo.OnFetchUserInfoListener, MainActivity.OnDrawerOpenedListener {
+        View.OnClickListener, FetchUserInfo.OnFetchUserInfoListener, MainActivity.OnDrawerOpenedListener,
+        AppBarLayout.OnOffsetChangedListener{
 
     //Reference too all the views that need to be updated
     private TextView playerName;
@@ -82,6 +87,12 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         //Required empty constructor.
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -95,6 +106,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         //Views used for toolbar behavior
         mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar_layout);
+        mAppBarLayout.addOnOffsetChangedListener(this);
         mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator_layout);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
@@ -180,6 +192,23 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_user, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case R.id.action_search:
+                startActivity(new Intent(getActivity(), SearchActivity.class));
+                break;
+        }
+        return true;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -261,7 +290,9 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         //Set the player name
-        playerName.setText(prefs.getString(getString(R.string.pref_player_name), ""));
+        String name = prefs.getString(getString(R.string.pref_player_name), "");
+        playerName.setText(name);
+        getActivity().setTitle(getString(R.string.title_custom_profile, name));
 
         if (prefs.getInt(getString(R.string.pref_player_banned), 0) == 1) {
             //Set player name to red and cross name out if banned
@@ -500,6 +531,15 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         if (isAdded()) {
             updateUserPage();
             mSwipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+        if (i == 0) {
+            mSwipeRefreshLayout.setEnabled(true);
+        } else {
+            mSwipeRefreshLayout.setEnabled(false);
         }
     }
 
