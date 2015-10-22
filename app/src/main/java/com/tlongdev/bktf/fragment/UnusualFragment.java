@@ -82,16 +82,16 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
 
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
+        //Views used for toolbar behavior
+        mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar_layout);
+        mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator_layout);
+
         RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
 
         adapter = new UnusualAdapter(getActivity(), null);
 
         mRecyclerView.setAdapter(adapter);
-
-        //Views used for toolbar behavior
-        mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar_layout);
-        mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator_layout);
 
         return rootView;
     }
