@@ -186,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
         switch (position) {
             case -1:
                 newFragment = new UserFragment();
+                drawerListener = (UserFragment) newFragment;
                 break;
             case 0:
                 newFragment = new RecentsFragment();

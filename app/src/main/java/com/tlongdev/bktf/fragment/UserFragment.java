@@ -11,8 +11,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +27,7 @@ import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.activity.UserBackpackActivity;
 import com.tlongdev.bktf.network.FetchUserInfo;
 
@@ -38,7 +43,7 @@ import java.text.DecimalFormat;
  * Fragment for displaying the user profile.
  */
 public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
-        View.OnClickListener, FetchUserInfo.OnFetchUserInfoListener {
+        View.OnClickListener, FetchUserInfo.OnFetchUserInfoListener, MainActivity.OnDrawerOpenedListener {
 
     //Reference too all the views that need to be updated
     private TextView playerName;
@@ -67,6 +72,9 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     //Stores whether the backpack is private or not
     private boolean privateBackpack = false;
 
+    private AppBarLayout mAppBarLayout;
+    private CoordinatorLayout mCoordinatorLayout;
+
     /**
      * Constructor
      */
@@ -81,8 +89,15 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mSwipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_user,
-                container, false);
+        View rootView = inflater.inflate(R.layout.fragment_user, container, false);
+
+        ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
+
+        //Views used for toolbar behavior
+        mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar_layout);
+        mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator_layout);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
 
         //Find all the views
         playerName = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_player_name);
@@ -117,7 +132,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         //Update all the views to show te user data
         updateUserPage();
 
-        return mSwipeRefreshLayout;
+        return rootView;
     }
 
     /**
@@ -486,6 +501,19 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             updateUserPage();
             mSwipeRefreshLayout.setRefreshing(false);
         }
+    }
+
+    @Override
+    public void onDrawerOpened() {
+        expandToolbar();
+    }
+
+    /**
+     * Fully expand the toolbar with animation.
+     */
+    public void expandToolbar() {
+        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
+        behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
     }
 
     /**
