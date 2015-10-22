@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -66,6 +67,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private TextView userSinceText;
     private TextView lastOnlineText;
     private ImageView avatar;
+    private ImageView avatar2;
     private ProgressBar progressBar;
 
     //Swipe refresh layout for refreshing the user data manually
@@ -79,6 +81,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private AppBarLayout mAppBarLayout;
     private CoordinatorLayout mCoordinatorLayout;
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
+    private Toolbar mToolbar;
 
     /**
      * Constructor
@@ -102,32 +106,36 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_user, container, false);
 
-        ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
+        mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
 
         //Views used for toolbar behavior
         mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar_layout);
         mAppBarLayout.addOnOffsetChangedListener(this);
         mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator_layout);
+        mCollapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsing_toolbar);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
 
         //Find all the views
-        playerName = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_player_name);
-        playerReputation = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_player_reputation);
-        trustStatus = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_trust_status);
-        steamRepStatus = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_steamrep_status);
-        vacStatus = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_vac_status);
-        tradeStatus = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_trade_status);
-        communityStatus = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_community_status);
-        backpackValueRefined = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_bp_refined);
-        backpackRawMetal = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_bp_raw_metal);
-        backpackRawKeys = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_bp_raw_keys);
-        backpackValueUsd = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_bp_usd);
-        backpackSlots = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_bp_slots);
-        userSinceText = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_user_since);
-        lastOnlineText = (TextView) mSwipeRefreshLayout.findViewById(R.id.text_view_user_last_online);
-        avatar = (ImageView) mSwipeRefreshLayout.findViewById(R.id.player_avatar);
-        progressBar = (ProgressBar) mSwipeRefreshLayout.findViewById(R.id.progress_bar);
+        playerName = (TextView) rootView.findViewById(R.id.text_view_player_name);
+        playerReputation = (TextView) rootView.findViewById(R.id.text_view_player_reputation);
+        trustStatus = (TextView) rootView.findViewById(R.id.text_view_trust_status);
+        steamRepStatus = (TextView) rootView.findViewById(R.id.text_view_steamrep_status);
+        vacStatus = (TextView) rootView.findViewById(R.id.text_view_vac_status);
+        tradeStatus = (TextView) rootView.findViewById(R.id.text_view_trade_status);
+        communityStatus = (TextView) rootView.findViewById(R.id.text_view_community_status);
+        backpackValueRefined = (TextView) rootView.findViewById(R.id.text_view_bp_refined);
+        backpackRawMetal = (TextView) rootView.findViewById(R.id.text_view_bp_raw_metal);
+        backpackRawKeys = (TextView) rootView.findViewById(R.id.text_view_bp_raw_keys);
+        backpackValueUsd = (TextView) rootView.findViewById(R.id.text_view_bp_usd);
+        backpackSlots = (TextView) rootView.findViewById(R.id.text_view_bp_slots);
+        userSinceText = (TextView) rootView.findViewById(R.id.text_view_user_since);
+        lastOnlineText = (TextView) rootView.findViewById(R.id.text_view_user_last_online);
+        avatar = (ImageView) rootView.findViewById(R.id.player_avatar);
+        avatar2 = (ImageView) rootView.findViewById(R.id.avatar);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
 
         //Set the color of the refreshing animation
         mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.accent));
@@ -292,7 +300,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         //Set the player name
         String name = prefs.getString(getString(R.string.pref_player_name), "");
         playerName.setText(name);
-        getActivity().setTitle(name);
+        mCollapsingToolbarLayout.setTitle(name);
 
         if (prefs.getInt(getString(R.string.pref_player_banned), 0) == 1) {
             //Set player name to red and cross name out if banned
@@ -536,7 +544,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-        if (i == 0) {
+        if(i == 0){
             mSwipeRefreshLayout.setEnabled(true);
         } else {
             mSwipeRefreshLayout.setEnabled(false);
@@ -678,6 +686,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 File path = mContext.getFilesDir();
                 d = Drawable.createFromPath(path.toString() + "/avatar.png");
                 avatar.setImageDrawable(d);
+                avatar2.setImageDrawable(d);
 
                 //Remove the progressbar
                 if (progressBar != null)
