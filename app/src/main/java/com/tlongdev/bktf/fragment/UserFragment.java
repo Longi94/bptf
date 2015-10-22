@@ -139,7 +139,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mSwipeRefreshLayout.findViewById(R.id.button_tf2op).setOnClickListener(this);
         mSwipeRefreshLayout.findViewById(R.id.button_tf2tp).setOnClickListener(this);
         mSwipeRefreshLayout.findViewById(R.id.button_steam_community).setOnClickListener(this);
-        mSwipeRefreshLayout.findViewById(R.id.button_backpack).setOnClickListener(this);
+        mSwipeRefreshLayout.findViewById(R.id.backpack).setOnClickListener(this);
 
         //Update all the views to show te user data
         updateUserPage();
@@ -226,7 +226,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         //All buttons (except the backpack one) open a link in the browser
-        if (v.getId() != R.id.button_backpack) {
+        if (v.getId() != R.id.backpack) {
 
             String url;
             switch (v.getId()) {
