@@ -28,13 +28,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                app:layout_collapseMode="parallax"/>
+                app:layout_collapseMode="parallax" />
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_collapseMode="parallax"
-                android:src="@drawable/toolbar_parallax_shadow"/>
+                android:src="@drawable/toolbar_parallax_shadow"
+                app:layout_collapseMode="parallax" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -86,11 +86,6 @@
                             android:textColor="@color/accent"
                             android:textSize="16sp" />
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/separator_color" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -139,18 +134,30 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="16dp"
-                            android:text="Backpack"
-                            android:textColor="@color/accent"
-                            android:textSize="16sp" />
-
-                        <View
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/separator_color" />
+                            android:layout_height="wrap_content"
+                            android:gravity="center">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="16dp"
+                                android:layout_weight="1"
+                                android:text="Backpack"
+                                android:textColor="@color/accent"
+                                android:textSize="16sp" />
+
+                            <ImageView
+                                android:id="@+id/backpack"
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
+                                android:padding="16dp"
+                                android:background="@drawable/simple_selector_white"
+                                android:src="@drawable/ic_arrow_forward_white_24dp"
+                                android:tint="@color/accent" />
+
+                        </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -328,11 +335,6 @@
                             android:text="Reputation"
                             android:textColor="@color/accent"
                             android:textSize="16sp" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/separator_color" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -529,11 +531,6 @@
                             android:textColor="@color/accent"
                             android:textSize="16sp" />
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/separator_color" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -603,15 +600,6 @@
                                     android:layout_weight="1"
                                     android:clickable="true"
                                     android:text="@string/user_page_link_community" />
-
-                                <!--Backpack-->
-                                <Button
-                                    android:id="@+id/button_backpack"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:clickable="true"
-                                    android:text="@string/user_page_link_backpack" />
 
                             </LinearLayout>
 
