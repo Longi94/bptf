@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -52,7 +51,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         AppBarLayout.OnOffsetChangedListener{
 
     //Reference too all the views that need to be updated
-    private TextView playerName;
     private TextView playerReputation;
     private TextView trustStatus;
     private TextView steamRepStatus;
@@ -66,7 +64,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private TextView backpackSlots;
     private TextView userSinceText;
     private TextView lastOnlineText;
-    private ImageView avatar;
     private ImageView avatar2;
     private ProgressBar progressBar;
 
@@ -82,7 +79,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private AppBarLayout mAppBarLayout;
     private CoordinatorLayout mCoordinatorLayout;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
-    private Toolbar mToolbar;
 
     /**
      * Constructor
@@ -106,9 +102,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_user, container, false);
 
-        mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
         //Views used for toolbar behavior
         mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar_layout);
@@ -119,7 +113,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
 
         //Find all the views
-        playerName = (TextView) rootView.findViewById(R.id.text_view_player_name);
         playerReputation = (TextView) rootView.findViewById(R.id.text_view_player_reputation);
         trustStatus = (TextView) rootView.findViewById(R.id.text_view_trust_status);
         steamRepStatus = (TextView) rootView.findViewById(R.id.text_view_steamrep_status);
@@ -133,7 +126,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         backpackSlots = (TextView) rootView.findViewById(R.id.text_view_bp_slots);
         userSinceText = (TextView) rootView.findViewById(R.id.text_view_user_since);
         lastOnlineText = (TextView) rootView.findViewById(R.id.text_view_user_last_online);
-        avatar = (ImageView) rootView.findViewById(R.id.player_avatar);
         avatar2 = (ImageView) rootView.findViewById(R.id.avatar);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
 
@@ -274,7 +266,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 //Else the user clicked on the backpack button. Start the backpack activity. Pass
                 //the steamId and whether it's the user's backpack or not
                 Intent i = new Intent(getActivity(), UserBackpackActivity.class);
-                i.putExtra(UserBackpackActivity.EXTRA_NAME, playerName.getText());
+                i.putExtra(UserBackpackActivity.EXTRA_NAME, mCollapsingToolbarLayout.getTitle());
                 i.putExtra(UserBackpackActivity.EXTRA_GUEST, false);
                 startActivity(i);
             }
@@ -299,13 +291,11 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         //Set the player name
         String name = prefs.getString(getString(R.string.pref_player_name), "");
-        playerName.setText(name);
         mCollapsingToolbarLayout.setTitle(name);
 
         if (prefs.getInt(getString(R.string.pref_player_banned), 0) == 1) {
             //Set player name to red and cross name out if banned
-            playerName.setTextColor(0xffdd4c44);
-            playerName.setPaintFlags(playerName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            // TODO: 2015. 10. 22.
         }
 
         //Set the player reputation. Reputation: X
@@ -469,22 +459,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 backpackValueUsd.setText(String.valueOf(new DecimalFormat("#0.00").format(bpValueUsd)));
             else
                 backpackValueUsd.setText(String.valueOf(bpValueUsd));
-        }
-
-        //Set the border of the avatar according to the player's state
-        switch (prefs.getInt(getString(R.string.pref_player_state), 0)) {
-            case 0:
-                avatar.setBackgroundDrawable(getResources()
-                        .getDrawable(R.drawable.frame_user_state_offline));
-                break;
-            case 7:
-                avatar.setBackgroundDrawable(getResources()
-                        .getDrawable(R.drawable.frame_user_state_in_game));
-                break;
-            default:
-                avatar.setBackgroundDrawable(getResources()
-                        .getDrawable(R.drawable.frame_user_state_online));
-                break;
         }
 
         //Set the trust score and color the background according to it.
@@ -685,7 +659,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 //Get the avatar from the private data folder and set it to the image view
                 File path = mContext.getFilesDir();
                 d = Drawable.createFromPath(path.toString() + "/avatar.png");
-                avatar.setImageDrawable(d);
                 avatar2.setImageDrawable(d);
 
                 //Remove the progressbar
