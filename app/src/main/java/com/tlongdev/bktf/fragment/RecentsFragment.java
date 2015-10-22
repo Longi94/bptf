@@ -118,6 +118,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
         //Views used for toolbar behavior
         mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar_layout);
+        mAppBarLayout.addOnOffsetChangedListener(this);
         mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator_layout);
 
         adapter = new RecentsAdapter(getActivity(), null);
@@ -133,10 +134,6 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
-
-        if (mAppBarLayout != null) {
-            mAppBarLayout.addOnOffsetChangedListener(this);
-        }
 
         metalPrice = (TextView) rootView.findViewById(R.id.text_view_metal_price);
         keyPrice = (TextView) rootView.findViewById(R.id.text_view_key_price);
