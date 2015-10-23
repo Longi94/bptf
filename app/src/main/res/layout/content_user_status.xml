@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_margin="16dp"
+        android:text="Status"
+        android:textColor="@color/accent"
+        android:textSize="16sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/separator_color" />
+
+    <!--How long was it since the user was last online-->
+    <TextView
+        android:id="@+id/text_view_user_last_online"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        android:text="@string/user_page_last_online"
+        android:textAllCaps="true"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp" />
+
+    <!--Age of the user's steam account-->
+    <TextView
+        android:id="@+id/text_view_user_since"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textAllCaps="true"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp" />
+
+    <!--Age of the user's steam account-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/user_page_user_since"
+        android:textAllCaps="true"
+        android:textColor="@color/text_secondary" />
+
+</LinearLayout>
