@@ -75,7 +75,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:gravity="center">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -83,44 +84,44 @@
                             android:layout_margin="16dp"
                             android:text="Status"
                             android:textColor="@color/accent"
-                            android:textSize="16sp" />
+                            android:textSize="16sp"
+                            android:layout_gravity="start"/>
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:background="@color/separator_color" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <!--How long was it since the user was last online-->
+                        <TextView
+                            android:id="@+id/text_view_user_last_online"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="16dp"
-                            android:orientation="vertical">
+                            android:text="@string/user_page_last_online"
+                            android:textAllCaps="true"
+                            android:textColor="@color/text_primary"
+                            android:textSize="20sp"
+                            android:gravity="center"/>
 
-                            <!--Reputation of the player-->
-                            <TextView
-                                android:id="@+id/text_view_player_reputation"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/user_page_reputation"
-                                android:textColor="@color/text_secondary" />
+                        <!--Age of the user's steam account-->
+                        <TextView
+                            android:id="@+id/text_view_user_since"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:textAllCaps="true"
+                            android:textColor="@color/text_primary"
+                            android:textSize="20sp" />
 
-                            <!--Age of the user's steam account-->
-                            <TextView
-                                android:id="@+id/text_view_user_since"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/user_page_user_since"
-                                android:textColor="@color/text_secondary" />
-
-                            <!--How long was it since the user was last online-->
-                            <TextView
-                                android:id="@+id/text_view_user_last_online"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/user_page_last_online"
-                                android:textColor="@color/text_secondary" />
-
-                        </LinearLayout>
+                        <!--Age of the user's steam account-->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/user_page_user_since"
+                            android:textAllCaps="true"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginBottom="16dp"/>
 
                     </LinearLayout>
 
@@ -187,10 +188,11 @@
                                     android:id="@+id/text_view_bp_refined"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:lines="1"
                                     android:text="@string/placeholder_unknown"
                                     android:textColor="@color/text_primary"
                                     android:textSize="32sp"
-                                    android:lines="1" />
+                                    android:gravity="center" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -199,7 +201,7 @@
 
                             </LinearLayout>
 
-                            <LinearLayout
+                                <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -212,10 +214,11 @@
                                     android:id="@+id/text_view_bp_usd"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:lines="1"
                                     android:text="@string/placeholder_unknown"
                                     android:textColor="@color/text_primary"
                                     android:textSize="32sp"
-                                    android:lines="1" />
+                                    android:gravity="center" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -229,8 +232,8 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:baselineAligned="false">
+                            android:baselineAligned="false"
+                            android:orientation="horizontal">
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -245,10 +248,10 @@
                                     android:id="@+id/text_view_bp_raw_metal"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:lines="1"
                                     android:text="@string/placeholder_unknown"
                                     android:textColor="@color/text_primary"
-                                    android:textSize="32sp"
-                                    android:lines="1" />
+                                    android:textSize="32sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -270,10 +273,10 @@
                                     android:id="@+id/text_view_bp_raw_keys"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:lines="1"
                                     android:text="@string/placeholder_unknown"
                                     android:textColor="@color/text_primary"
-                                    android:textSize="32sp"
-                                    android:lines="1" />
+                                    android:textSize="32sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -296,10 +299,10 @@
                                 android:id="@+id/text_view_bp_slots"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:lines="1"
                                 android:text="@string/placeholder_slots_used"
                                 android:textColor="@color/text_primary"
-                                android:textSize="32sp"
-                                android:lines="1" />
+                                android:textSize="32sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -343,13 +346,13 @@
                             android:layout_margin="16dp"
                             android:orientation="vertical">
 
+                            <!--Reputation of the player-->
                             <TextView
+                                android:id="@+id/text_view_player_reputation"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/user_page_status"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
+                                android:text="@string/user_page_reputation"
+                                android:textColor="@color/text_secondary" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"

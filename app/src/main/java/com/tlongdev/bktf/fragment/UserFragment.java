@@ -63,7 +63,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private TextView backpackSlots;
     private TextView userSinceText;
     private TextView lastOnlineText;
-    private ImageView avatar2;
+    private ImageView avatar;
     private ProgressBar progressBar;
 
     //Swipe refresh layout for refreshing the user data manually
@@ -125,7 +125,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         backpackSlots = (TextView) rootView.findViewById(R.id.text_view_bp_slots);
         userSinceText = (TextView) rootView.findViewById(R.id.text_view_user_since);
         lastOnlineText = (TextView) rootView.findViewById(R.id.text_view_user_last_online);
-        avatar2 = (ImageView) rootView.findViewById(R.id.avatar);
+        avatar = (ImageView) rootView.findViewById(R.id.avatar);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
 
         //Set the color of the refreshing animation
@@ -304,11 +304,9 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         //Set the 'user since' text
         long profileCreated = prefs.getLong(getString(R.string.pref_player_profile_created), -1L);
         if (profileCreated == -1) {
-            userSinceText.setText(getString(R.string.user_page_user_since)
-                    + getString(R.string.filler_unknown));
+            userSinceText.setText(getString(R.string.filler_unknown));
         } else {
-            userSinceText.setText(getString(R.string.user_page_user_since) +
-                    Utility.formatUnixTimeStamp(profileCreated));
+            userSinceText.setText(Utility.formatUnixTimeStamp(profileCreated));
         }
 
         //Switch for the player's state
@@ -325,7 +323,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                             + Utility.formatLastOnlineTime(getActivity(),
                             System.currentTimeMillis() - lastOnline * 1000L));
                 }
-                lastOnlineText.setTextColor(getResources().getColor(R.color.player_offline));
+                lastOnlineText.setTextColor(getResources().getColor(R.color.text_primary));
                 break;
             case 1:
                 lastOnlineText.setText(getString(R.string.user_page_status_online));
@@ -647,7 +645,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 //Get the avatar from the private data folder and set it to the image view
                 File path = mContext.getFilesDir();
                 d = Drawable.createFromPath(path.toString() + "/avatar.png");
-                avatar2.setImageDrawable(d);
+                avatar.setImageDrawable(d);
 
                 //Remove the progressbar
                 if (progressBar != null)
