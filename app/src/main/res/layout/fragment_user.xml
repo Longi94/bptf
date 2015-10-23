@@ -47,7 +47,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
@@ -85,6 +84,11 @@
                             android:text="Status"
                             android:textColor="@color/accent"
                             android:textSize="16sp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/separator_color" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -152,32 +156,31 @@
                                 android:id="@+id/backpack"
                                 android:layout_width="56dp"
                                 android:layout_height="56dp"
-                                android:padding="16dp"
                                 android:background="@drawable/simple_selector_white"
+                                android:padding="16dp"
                                 android:src="@drawable/ic_arrow_forward_white_24dp"
                                 android:tint="@color/accent" />
 
                         </LinearLayout>
 
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/separator_color" />
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="16dp"
-                            android:orientation="vertical">
-
-                            <TextView
-
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/user_page_link_backpack"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
+                            android:baselineAligned="false"
+                            android:orientation="horizontal">
 
                             <LinearLayout
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal">
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="16dp">
 
                                 <!--Backpack value in refined metal-->
                                 <TextView
@@ -185,83 +188,24 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/placeholder_unknown"
-                                    android:textColor="#000"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="32sp"
+                                    android:lines="1" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/user_page_refined"
-                                    android:textColor="@color/text_secondary"
-                                    android:textSize="16sp" />
+                                    android:text="@string/user_page_refined" />
 
                             </LinearLayout>
 
-                            <View
-                                style="@style/DividerHorizontal.Margins"
-                                android:background="#555" />
-
                             <LinearLayout
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                                <!--Number of raw metal in backpack.-->
-                                <TextView
-                                    android:id="@+id/text_view_bp_raw_metal"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/placeholder_unknown"
-                                    android:textColor="#000"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/user_page_metal"
-                                    android:textColor="@color/text_secondary"
-                                    android:textSize="16sp" />
-
-                            </LinearLayout>
-
-                            <View
-                                style="@style/DividerHorizontal.Margins"
-                                android:background="#555" />
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                                <!--Number of raw keys in backpack-->
-                                <TextView
-                                    android:id="@+id/text_view_bp_raw_keys"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/placeholder_unknown"
-                                    android:textColor="#000"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/user_page_keys"
-                                    android:textColor="@color/text_secondary"
-                                    android:textSize="16sp" />
-
-                            </LinearLayout>
-
-                            <View
-                                style="@style/DividerHorizontal.Margins"
-                                android:background="#555" />
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="16dp">
 
                                 <!--Backpack value in usd-->
                                 <TextView
@@ -269,46 +213,98 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/placeholder_unknown"
-                                    android:textColor="#000"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="32sp"
+                                    android:lines="1" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/user_page_usd"
-                                    android:textColor="@color/text_secondary"
-                                    android:textSize="16sp" />
+                                    android:text="@string/user_page_usd" />
 
                             </LinearLayout>
 
-                            <View
-                                style="@style/DividerHorizontal.Margins"
-                                android:background="#555" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:baselineAligned="false">
 
                             <LinearLayout
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal">
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="16dp">
 
-                                <!--Number of used and all slots in backpack-->
+                                <!--Number of raw metal in backpack.-->
                                 <TextView
-                                    android:id="@+id/text_view_bp_slots"
+                                    android:id="@+id/text_view_bp_raw_metal"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/placeholder_slots_used"
-                                    android:textColor="#000"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
+                                    android:text="@string/placeholder_unknown"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="32sp"
+                                    android:lines="1" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/user_page_slots"
-                                    android:textColor="@color/text_secondary"
-                                    android:textSize="16sp" />
+                                    android:text="@string/user_page_metal" />
 
                             </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="16dp">
+
+                                <!--Number of raw keys in backpack-->
+                                <TextView
+                                    android:id="@+id/text_view_bp_raw_keys"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/placeholder_unknown"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="32sp"
+                                    android:lines="1" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/user_page_keys" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <!--Number of used and all slots in backpack-->
+                            <TextView
+                                android:id="@+id/text_view_bp_slots"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/placeholder_slots_used"
+                                android:textColor="@color/text_primary"
+                                android:textSize="32sp"
+                                android:lines="1" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/user_page_slots" />
 
                         </LinearLayout>
 
@@ -335,6 +331,11 @@
                             android:text="Reputation"
                             android:textColor="@color/accent"
                             android:textSize="16sp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/separator_color" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -530,6 +531,11 @@
                             android:text="Links"
                             android:textColor="@color/accent"
                             android:textSize="16sp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/separator_color" />
 
                         <LinearLayout
                             android:layout_width="match_parent"

@@ -125,16 +125,16 @@
     <string name="user_page_link_steamrep" translatable="false">STEAMREP</string>
     <string name="user_page_link_tf2op" translatable="false">TF2Outpost</string>
     <string name="user_page_link_tf2tp" translatable="false">TF2TP</string>
-    <string name="user_page_usd" translatable="false">\ USD</string>
+    <string name="user_page_usd" translatable="false">USD</string>
     <string name="user_page_vac" translatable="false">VAC</string>
-    <string name="user_page_keys" translatable="true">\ RAW KEYS</string>
+    <string name="user_page_keys" translatable="true">RAW KEYS</string>
     <string name="user_page_last_online" translatable="true">Last online:</string>
     <string name="user_page_link_backpack" translatable="true">BACKPACK</string>
     <string name="user_page_link_community" translatable="true">COMMUNITY</string>
-    <string name="user_page_metal" translatable="true">\ RAW METAL</string>
-    <string name="user_page_refined" translatable="true">\ REFINED</string>
+    <string name="user_page_metal" translatable="true">RAW METAL</string>
+    <string name="user_page_refined" translatable="true">REFINED</string>
     <string name="user_page_reputation" translatable="true">Reputation:</string>
-    <string name="user_page_slots" translatable="true">\ SLOTS</string>
+    <string name="user_page_slots" translatable="true">SLOTS</string>
     <string name="user_page_status" translatable="true">Status</string>
     <string name="user_page_trade_status" translatable="true">TRADE</string>
     <string name="user_page_trust" translatable="true">TRUST</string>

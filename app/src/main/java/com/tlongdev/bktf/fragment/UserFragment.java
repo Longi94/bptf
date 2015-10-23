@@ -41,14 +41,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DecimalFormat;
 
 /**
  * Fragment for displaying the user profile.
  */
 public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
         View.OnClickListener, FetchUserInfo.OnFetchUserInfoListener, MainActivity.OnDrawerOpenedListener,
-        AppBarLayout.OnOffsetChangedListener{
+        AppBarLayout.OnOffsetChangedListener {
 
     //Reference too all the views that need to be updated
     private TextView playerReputation;
@@ -443,22 +442,11 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             backpackValueUsd.setText("?");
         } else if (!privateBackpack) {
             //Properly format the backpack value (is int, does it have a fraction smaller than 0.01)
-            if ((int) bpValue == bpValue)
-                backpackValueRefined.setText(String.valueOf((int) bpValue));
-            else if ((String.valueOf(bpValue)).substring((String.valueOf(bpValue)).indexOf('.') + 1)
-                    .length() > 2)
-                backpackValueRefined.setText(String.valueOf(new DecimalFormat("#0.00").format(bpValue)));
-            else
-                backpackValueRefined.setText(String.valueOf(bpValue));
+            backpackValueRefined.setText(String.valueOf(Math.round(bpValue)));
 
             //Convert the value into USD and format it like above
             double bpValueUsd = bpValue * Utility.getDouble(prefs, getString(R.string.pref_metal_raw_usd), 1);
-            if ((int) bpValueUsd == bpValueUsd)
-                backpackValueUsd.setText(String.valueOf((int) bpValueUsd));
-            else if ((String.valueOf(bpValueUsd).substring((String.valueOf(bpValueUsd).indexOf('.') + 1)).length() > 2))
-                backpackValueUsd.setText(String.valueOf(new DecimalFormat("#0.00").format(bpValueUsd)));
-            else
-                backpackValueUsd.setText(String.valueOf(bpValueUsd));
+            backpackValueUsd.setText(String.valueOf(Math.round(bpValueUsd)));
         }
 
         //Set the trust score and color the background according to it.
@@ -518,7 +506,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-        if(i == 0){
+        if (i == 0) {
             mSwipeRefreshLayout.setEnabled(true);
         } else {
             mSwipeRefreshLayout.setEnabled(false);
