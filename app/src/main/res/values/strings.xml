@@ -138,7 +138,7 @@
     <string name="user_page_status" translatable="true">Status</string>
     <string name="user_page_trade_status" translatable="true">TRADE</string>
     <string name="user_page_trust" translatable="true">TRUST</string>
-    <string name="user_page_user_since" translatable="true">Steam user since: \n</string>
+    <string name="user_page_user_since" translatable="true">Steam user since</string>
     <string name="user_page_status_online" translatable="true">Online</string>
     <string name="user_page_status_busy" translatable="true">Busy</string>
     <string name="user_page_status_away" translatable="true">Away</string>
