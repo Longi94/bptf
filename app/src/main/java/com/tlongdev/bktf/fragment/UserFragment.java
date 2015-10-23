@@ -52,10 +52,10 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     //Reference too all the views that need to be updated
     private TextView playerReputation;
     private TextView trustStatus;
-    private TextView steamRepStatus;
-    private TextView vacStatus;
-    private TextView tradeStatus;
-    private TextView communityStatus;
+    private ImageView steamRepStatus;
+    private ImageView vacStatus;
+    private ImageView tradeStatus;
+    private ImageView communityStatus;
     private TextView backpackValueRefined;
     private TextView backpackRawMetal;
     private TextView backpackRawKeys;
@@ -114,10 +114,10 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         //Find all the views
         playerReputation = (TextView) rootView.findViewById(R.id.text_view_player_reputation);
         trustStatus = (TextView) rootView.findViewById(R.id.text_view_trust_status);
-        steamRepStatus = (TextView) rootView.findViewById(R.id.text_view_steamrep_status);
-        vacStatus = (TextView) rootView.findViewById(R.id.text_view_vac_status);
-        tradeStatus = (TextView) rootView.findViewById(R.id.text_view_trade_status);
-        communityStatus = (TextView) rootView.findViewById(R.id.text_view_community_status);
+        steamRepStatus = (ImageView) rootView.findViewById(R.id.steamrep_status);
+        vacStatus = (ImageView) rootView.findViewById(R.id.vac_status);
+        tradeStatus = (ImageView) rootView.findViewById(R.id.trade_status);
+        communityStatus = (ImageView) rootView.findViewById(R.id.community_status);
         backpackValueRefined = (TextView) rootView.findViewById(R.id.text_view_bp_refined);
         backpackRawMetal = (TextView) rootView.findViewById(R.id.text_view_bp_raw_metal);
         backpackRawKeys = (TextView) rootView.findViewById(R.id.text_view_bp_raw_keys);
@@ -356,7 +356,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         //Steamrep information
-        switch (prefs.getInt(getString(R.string.pref_player_scammer), -1)) {
+        /*switch (prefs.getInt(getString(R.string.pref_player_scammer), -1)) {
             case -1:
                 steamRepStatus.setText("?");
                 steamRepStatus.setBackgroundDrawable(getResources()
@@ -429,7 +429,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 communityStatus.setBackgroundDrawable(getResources()
                         .getDrawable(R.drawable.status_background_bad));
                 break;
-        }
+        }*/
 
         //Backpack value
         double bpValue = Utility.getDouble(prefs,
