@@ -133,7 +133,7 @@
     <string name="user_page_link_community" translatable="true">COMMUNITY</string>
     <string name="user_page_metal" translatable="true">RAW METAL</string>
     <string name="user_page_refined" translatable="true">REFINED</string>
-    <string name="user_page_reputation" translatable="true">Reputation:</string>
+    <string name="user_page_reputation" translatable="true">Reputation</string>
     <string name="user_page_slots" translatable="true">SLOTS</string>
     <string name="user_page_status" translatable="true">Status</string>
     <string name="user_page_trade_status" translatable="true">TRADE</string>

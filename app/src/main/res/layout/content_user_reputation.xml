@@ -23,167 +23,173 @@
         android:layout_margin="16dp"
         android:orientation="vertical">
 
-        <!--Reputation of the player-->
-        <TextView
-            android:id="@+id/text_view_player_reputation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/user_page_reputation"
-            android:textColor="@color/text_secondary" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <!--Trust score of the user-->
-            <TextView
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/user_page_trust"
-                android:textColor="@color/text_secondary"
-                android:textSize="16sp" />
+                android:baselineAligned="false">
 
-            <TextView
-                android:id="@+id/text_view_trust_status"
-                android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <!--Reputation of the player-->
+                    <TextView
+                        android:id="@+id/text_view_player_reputation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/user_page_reputation"
+                        android:textColor="@color/text_secondary" />
+                    <!--Reputation of the player-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/user_page_reputation"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_secondary" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/text_view_trust_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/user_page_reputation"
+                        android:textColor="@color/text_secondary" />
+
+                    <!--Trust score of the user-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/user_page_trust"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/status_background_neutral"
-                android:paddingEnd="3dp"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp"
-                android:text="@string/placeholder_unknown"
-                android:textColor="#fff"
-                android:textSize="16sp" />
+                android:baselineAligned="false">
 
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-        <View
-            style="@style/DividerHorizontal.Margins"
-            android:background="#555" />
+                    <!--Reputation of the player-->
+                    <ImageView
+                        android:id="@+id/steamrep_status"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/ic_check_circle_white_48dp"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                    <!--Reputation of the player-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/user_page_link_steamrep"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_secondary" />
 
-            <!--Steamrep status-->
-            <TextView
-                android:layout_width="0dp"
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/trade_status"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/ic_check_circle_white_48dp"/>
+
+                    <!--Trust score of the user-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/user_page_trade_status"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/user_page_link_steamrep"
-                android:textColor="@color/text_secondary"
-                android:textSize="16sp" />
+                android:baselineAligned="false">
 
-            <TextView
-                android:id="@+id/text_view_steamrep_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/status_background_neutral"
-                android:paddingEnd="3dp"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp"
-                android:text="@string/placeholder_unknown"
-                android:textColor="#fff"
-                android:textSize="16sp" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-        </LinearLayout>
+                    <!--Reputation of the player-->
+                    <ImageView
+                        android:id="@+id/vac_status"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/ic_check_circle_white_48dp"/>
 
-        <View
-            style="@style/DividerHorizontal.Margins"
-            android:background="#555" />
+                    <!--Reputation of the player-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/user_page_vac"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_secondary" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                </LinearLayout>
 
-            <!--Steam trade status-->
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/user_page_trade_status"
-                android:textColor="@color/text_secondary"
-                android:textSize="16sp" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-            <TextView
-                android:id="@+id/text_view_trade_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/status_background_neutral"
-                android:paddingEnd="3dp"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp"
-                android:text="@string/placeholder_unknown"
-                android:textColor="#fff"
-                android:textSize="16sp" />
+                    <ImageView
+                        android:id="@+id/community_status"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/ic_check_circle_white_48dp"/>
 
-        </LinearLayout>
+                    <!--Trust score of the user-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/user_page_link_community"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
 
-        <View
-            style="@style/DividerHorizontal.Margins"
-            android:background="#555" />
+                </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <!--VAC satus-->
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/user_page_vac"
-                android:textColor="@color/text_secondary"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/text_view_vac_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/status_background_neutral"
-                android:paddingEnd="3dp"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp"
-                android:text="@string/placeholder_unknown"
-                android:textColor="#fff"
-                android:textSize="16sp" />
-
-        </LinearLayout>
-
-        <View
-            style="@style/DividerHorizontal.Margins"
-            android:background="#555" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <!--Community status-->
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/user_page_link_community"
-                android:textColor="@color/text_secondary"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/text_view_community_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/status_background_neutral"
-                android:paddingEnd="3dp"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp"
-                android:text="@string/placeholder_unknown"
-                android:textColor="#fff"
-                android:textSize="16sp" />
+            </LinearLayout>
 
         </LinearLayout>
 
