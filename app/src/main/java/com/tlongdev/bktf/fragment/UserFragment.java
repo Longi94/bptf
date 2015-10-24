@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -51,7 +52,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     //Reference too all the views that need to be updated
     private TextView playerReputation;
-    private TextView trustStatus;
+    private TextView trustPositive;
+    private TextView trustNegative;
     private ImageView steamRepStatus;
     private ImageView vacStatus;
     private ImageView tradeStatus;
@@ -113,7 +115,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         //Find all the views
         playerReputation = (TextView) rootView.findViewById(R.id.text_view_player_reputation);
-        trustStatus = (TextView) rootView.findViewById(R.id.text_view_trust_status);
+        trustPositive = (TextView) rootView.findViewById(R.id.trust_positive);
+        trustNegative = (TextView) rootView.findViewById(R.id.trust_negative);
         steamRepStatus = (ImageView) rootView.findViewById(R.id.steamrep_status);
         vacStatus = (ImageView) rootView.findViewById(R.id.vac_status);
         tradeStatus = (ImageView) rootView.findViewById(R.id.trade_status);
@@ -297,9 +300,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             // TODO: 2015. 10. 22.
         }
 
-        //Set the player reputation. Reputation: X
-        playerReputation.setText(getString(R.string.user_page_reputation) + " " +
-                prefs.getInt(getString(R.string.pref_player_reputation), 0));
+        //Set the player reputation.
+        playerReputation.setText(String.valueOf(prefs.getInt(getString(R.string.pref_player_reputation), 0)));
 
         //Set the 'user since' text
         long profileCreated = prefs.getLong(getString(R.string.pref_player_profile_created), -1L);
@@ -355,81 +357,63 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 break;
         }
 
+        Drawable statusUnknown = getResources().getDrawable(R.drawable.ic_help_outline_white_48dp);
+        Drawable statusOk = getResources().getDrawable(R.drawable.ic_done_white_48dp);
+        Drawable statusBad = getResources().getDrawable(R.drawable.ic_close_white_48dp);
+        if (statusOk != null) statusOk.setColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY);
+        if (statusBad != null) statusBad.setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
+
         //Steamrep information
-        /*switch (prefs.getInt(getString(R.string.pref_player_scammer), -1)) {
+        switch (prefs.getInt(getString(R.string.pref_player_scammer), -1)) {
             case -1:
-                steamRepStatus.setText("?");
-                steamRepStatus.setBackgroundDrawable(getResources()
-                        .getDrawable(R.drawable.status_background_neutral));
+                steamRepStatus.setImageDrawable(statusUnknown);
                 break;
             case 0:
-                steamRepStatus.setText(getString(R.string.user_page_status_normal));
-                steamRepStatus.setBackgroundDrawable(getResources()
-                        .getDrawable(R.drawable.status_background_neutral));
+                steamRepStatus.setImageDrawable(statusOk);
                 break;
             case 1:
-                steamRepStatus.setText(getString(R.string.user_page_status_scammer));
-                steamRepStatus.setBackgroundDrawable(getResources()
-                        .getDrawable(R.drawable.status_background_bad));
+                steamRepStatus.setImageDrawable(statusBad);
                 break;
         }
 
         //Trade status
         switch (prefs.getInt(getString(R.string.pref_player_economy_banned), -1)) {
             case -1:
-                tradeStatus.setText("?");
-                tradeStatus.setBackgroundDrawable(getResources()
-                        .getDrawable(R.drawable.status_background_neutral));
+                tradeStatus.setImageDrawable(statusUnknown);
                 break;
             case 0:
-                tradeStatus.setText(getString(R.string.user_page_status_ok));
-                tradeStatus.setBackgroundDrawable(getResources()
-                        .getDrawable(R.drawable.status_background_good));
+                tradeStatus.setImageDrawable(statusOk);
                 break;
             case 1:
-                tradeStatus.setText(getString(R.string.user_page_status_ban));
-                tradeStatus.setBackgroundDrawable(getResources()
-                        .getDrawable(R.drawable.status_background_bad));
+                tradeStatus.setImageDrawable(statusBad);
                 break;
         }
 
         //VAC status
         switch (prefs.getInt(getString(R.string.pref_player_vac_banned), -1)) {
             case -1:
-                vacStatus.setText("?");
-                vacStatus.setBackgroundDrawable(getResources()
-                        .getDrawable(R.drawable.status_background_neutral));
+                vacStatus.setImageDrawable(statusUnknown);
                 break;
             case 0:
-                vacStatus.setText(getString(R.string.user_page_status_ok));
-                vacStatus.setBackgroundDrawable(getResources()
-                        .getDrawable(R.drawable.status_background_good));
+                vacStatus.setImageDrawable(statusOk);
                 break;
             case 1:
-                vacStatus.setText(getString(R.string.user_page_status_ban));
-                vacStatus.setBackgroundDrawable(getResources()
-                        .getDrawable(R.drawable.status_background_bad));
+                vacStatus.setImageDrawable(statusBad);
                 break;
         }
 
         //Community status
         switch (prefs.getInt(getString(R.string.pref_player_community_banned), -1)) {
             case -1:
-                communityStatus.setText("?");
-                communityStatus.setBackgroundDrawable(getResources()
-                        .getDrawable(R.drawable.status_background_neutral));
+                communityStatus.setImageDrawable(statusUnknown);
                 break;
             case 0:
-                communityStatus.setText(getString(R.string.user_page_status_ok));
-                communityStatus.setBackgroundDrawable(getResources()
-                        .getDrawable(R.drawable.status_background_good));
+                communityStatus.setImageDrawable(statusOk);
                 break;
             case 1:
-                communityStatus.setText(getString(R.string.user_page_status_ban));
-                communityStatus.setBackgroundDrawable(getResources()
-                        .getDrawable(R.drawable.status_background_bad));
+                communityStatus.setImageDrawable(statusBad);
                 break;
-        }*/
+        }
 
         //Backpack value
         double bpValue = Utility.getDouble(prefs,
@@ -448,22 +432,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         //Set the trust score and color the background according to it.
-        int positiveScore = prefs.getInt(getString(R.string.pref_player_trust_positive), 0);
-        int negativeScore = prefs.getInt(getString(R.string.pref_player_trust_negative), 0);
-        trustStatus.setText(String.valueOf(positiveScore - negativeScore));
-        if (negativeScore > positiveScore) {
-            trustStatus.setBackgroundDrawable(getResources()
-                    .getDrawable(R.drawable.status_background_bad));
-        } else if (positiveScore > negativeScore && negativeScore == 0) {
-            trustStatus.setBackgroundDrawable(getResources()
-                    .getDrawable(R.drawable.status_background_good));
-        } else if (positiveScore > negativeScore && negativeScore >= 0) {
-            trustStatus.setBackgroundDrawable(getResources()
-                    .getDrawable(R.drawable.status_background_caution));
-        } else {
-            trustStatus.setBackgroundDrawable(getResources()
-                    .getDrawable(R.drawable.status_background_neutral));
-        }
+        trustPositive.setText("+" + prefs.getInt(getString(R.string.pref_player_trust_positive), 0));
+        trustNegative.setText("-" + prefs.getInt(getString(R.string.pref_player_trust_negative), 0));
 
         //Raw keys
         int rawKeys = prefs.getInt(getString(R.string.pref_user_raw_key), -1);
