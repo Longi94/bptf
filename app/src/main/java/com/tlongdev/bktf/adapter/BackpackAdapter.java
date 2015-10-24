@@ -153,8 +153,13 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                                 }
                             }
                         });
+                    } else {
+                        holder.icon.setImageDrawable(null);
+                        holder.icon.setBackgroundDrawable(null);
+                        holder.background.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.item_background_blank));
+                        holder.root.setOnClickListener(null);
                     }
-
+                } else {
                     holder.icon.setImageDrawable(null);
                     holder.icon.setBackgroundDrawable(null);
                     holder.background.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.item_background_blank));
@@ -198,7 +203,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
         mDataSet = cursor;
         mDataSetNew = cursorNew;
         if (mDataSetNew != null && mDataSetNew.getCount() > 0) {
-            newItemSlots = mDataSetNew.getCount() - (mDataSetNew.getCount() % -5) + 1;
+            newItemSlots = mDataSetNew.getCount() - mDataSetNew.getCount() % 5 + 6;
         }
         notifyDataSetChanged();
     }
