@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -130,10 +129,12 @@ public class ItemDetailActivity extends Activity {
 
     //References to the imageview
     private ImageView icon;
-    private ImageView background;
+    private ImageView effectView;
+    private ImageView paintView;
 
     //Store the intent that came
     private Intent mIntent;
+    private CardView cardView;
 
     /**
      * {@inheritDoc}
@@ -158,7 +159,7 @@ public class ItemDetailActivity extends Activity {
         layout.requestLayout();
 
         //Cardview which makes it look like a dialog
-        final CardView cardView = (CardView) findViewById(R.id.card_view);
+        cardView = (CardView) findViewById(R.id.card_view);
 
         //Return to the previous activity if the user taps utside te dialog.
         ((View) cardView.getParent()).setOnClickListener(new View.OnClickListener() {
@@ -186,7 +187,8 @@ public class ItemDetailActivity extends Activity {
         price = (TextView) findViewById(R.id.text_view_price);
 
         icon = (ImageView) findViewById(R.id.icon);
-        background = (ImageView) findViewById(R.id.image_view_item_background);
+        effectView = (ImageView) findViewById(R.id.effect);
+        paintView = (ImageView) findViewById(R.id.paint);
 
         queryItemDetails();
     }
@@ -312,10 +314,9 @@ public class ItemDetailActivity extends Activity {
             }
 
             //Set the icon and the background
-            setIconImage(this, icon, Utility.getIconIndex(defindex), priceIndex,
+            setIconImage(this, icon, effectView, paintView, Utility.getIconIndex(defindex), priceIndex,
                     quality, paintNumber, isAus == 1, wear);
-            background.setBackgroundDrawable(Utility.getItemBackground(this, defindex,
-                    quality, tradable, craftable));
+            cardView.setCardBackgroundColor(Utility.getQualityColor(this, quality, defindex, true));
         } else {
             //Crash the app if there is no item with the id (should never happen)
             throw new RuntimeException("Item with id " + id + " not found (selection: "
@@ -380,12 +381,11 @@ public class ItemDetailActivity extends Activity {
      * @param paint        paint index of the item
      * @param isAustralium whether the item is australium or not
      */
-    private void setIconImage(Context context, ImageView icon, int defindex, int index, int quality,
-                              int paint, boolean isAustralium, int wear) {
+    private void setIconImage(Context context, ImageView icon, ImageView effect, ImageView paint, int defindex, int index, int quality,
+                              int paintColor, boolean isAustralium, int wear) {
         try {
             InputStream ims;
             AssetManager assetManager = context.getAssets();
-            Drawable d;
 
             if (defindex >= 15000 && defindex <= 15059) {
                 ims = assetManager.open("skins/" + Utility.getIconIndex(defindex) + "/" + wear + ".png");
@@ -397,31 +397,20 @@ public class ItemDetailActivity extends Activity {
                 }
             }
             //Load the item icon
-            Drawable iconDrawable = Drawable.createFromStream(ims, null);
+            icon.setImageDrawable(Drawable.createFromStream(ims, null));
 
             if (index != 0 && Utility.canHaveEffects(defindex, quality)) {
                 //Load the effect image
                 ims = assetManager.open("effects/" + index + "_188x188.png");
-                Drawable effectDrawable = Drawable.createFromStream(ims, null);
-
-                //Layer the two drawables on top of each other
-                d = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
-            } else {
-                //No effects
-                d = iconDrawable;
+                effect.setImageDrawable(Drawable.createFromStream(ims, null));
             }
 
-            if (Utility.isPaint(paint)) {
+            if (Utility.isPaint(paintColor)) {
                 //Load the paint indicator dot
-                ims = assetManager.open("paint/" + paint + ".png");
-                Drawable paintDrawable = Drawable.createFromStream(ims, null);
-
-                //Layer the two drawables on top of each other
-                d = new LayerDrawable(new Drawable[]{d, paintDrawable});
+                ims = assetManager.open("paint/" + paintColor + ".png");
+                paint.setImageDrawable(Drawable.createFromStream(ims, null));
             }
 
-            // set the drawable to ImageView
-            icon.setImageDrawable(d);
         } catch (IOException e) {
             if (Utility.isDebugging(context))
                 e.printStackTrace();
