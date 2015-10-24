@@ -24,72 +24,50 @@
         android:layout_margin="16dp"
         android:orientation="vertical">
 
-        <LinearLayout
+        <!--Bazaar.tf-->
+        <Button
+            android:id="@+id/button_bazaar_tf"
+            style="?buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:clickable="true"
+            android:text="@string/user_page_link_bazaar" />
 
-            <!--Bazaar.tf-->
-            <Button
-                android:id="@+id/button_bazaar_tf"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:text="@string/user_page_link_bazaar" />
-
-            <!--Tf2Outpost-->
-            <Button
-                android:id="@+id/button_tf2op"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:text="@string/user_page_link_tf2op" />
-
-        </LinearLayout>
-
-        <LinearLayout
+        <!--Tf2Outpost-->
+        <Button
+            android:id="@+id/button_tf2op"
+            style="?buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:clickable="true"
+            android:text="@string/user_page_link_tf2op" />
 
-            <!--Tf2TradePost-->
-            <Button
-                android:id="@+id/button_tf2tp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:text="@string/user_page_link_tf2tp" />
-
-            <!--SteamRep-->
-            <Button
-                android:id="@+id/button_steamrep"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:text="@string/user_page_link_steamrep" />
-
-        </LinearLayout>
-
-        <LinearLayout
+        <!--Tf2TradePost-->
+        <Button
+            android:id="@+id/button_tf2tp"
+            style="?buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:clickable="true"
+            android:text="@string/user_page_link_tf2tp" />
 
-            <!--Steam account-->
-            <Button
-                android:id="@+id/button_steam_community"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:text="@string/user_page_link_community" />
+        <!--SteamRep-->
+        <Button
+            android:id="@+id/button_steamrep"
+            style="?buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:text="@string/user_page_link_steamrep" />
 
-        </LinearLayout>
-
+        <!--Steam account-->
+        <Button
+            android:id="@+id/button_steam_community"
+            style="?buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:text="@string/user_page_link_community" />
     </LinearLayout>
 
 </LinearLayout>
