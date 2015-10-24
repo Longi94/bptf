@@ -6,9 +6,11 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -35,10 +37,10 @@ import java.text.DecimalFormat;
 /**
  * Profile page activity.
  */
-public class UserInfoActivity extends AppCompatActivity implements View.OnClickListener,
+public class UserActivity extends AppCompatActivity implements View.OnClickListener,
         FetchUserBackpack.OnFetchUserBackpackListener {
 
-    private static final String LOG_TAG = UserInfoActivity.class.getSimpleName();
+    private static final String LOG_TAG = UserActivity.class.getSimpleName();
 
     //Keys for extra data in the intent.
     public static final String STEAM_ID_KEY = "steamid";
@@ -100,7 +102,17 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_info);
+        setContentView(R.layout.activity_user);
+
+        //Set the color of the status bar
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.primary_dark));
+        }
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent i = getIntent();
 
@@ -612,7 +624,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                         .appendQueryParameter(KEY_COMPRESS, "1")
                         .build();
 
-                if (Utility.isDebugging(UserInfoActivity.this)) {
+                if (Utility.isDebugging(UserActivity.this)) {
                     Log.d(LOG_TAG, "Built uri: " + uri.toString());
                 }
 
@@ -652,13 +664,13 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 //There was a network error
                 //TODO distinguish all network errors: timeout, connection refused, api down, etc.
                 publishProgress(getString(R.string.error_network));
-                if (Utility.isDebugging(UserInfoActivity.this))
+                if (Utility.isDebugging(UserActivity.this))
                     e.printStackTrace();
                 return null;
             } catch (JSONException e) {
                 //JSON was improperly formatted, pls no
                 publishProgress(getString(R.string.error_data_parse));
-                if (Utility.isDebugging(UserInfoActivity.this))
+                if (Utility.isDebugging(UserActivity.this))
                     e.printStackTrace();
                 return null;
             } finally {
@@ -673,7 +685,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                         reader.close();
                     } catch (final IOException e) {
                         publishProgress(e.getMessage());
-                        if (Utility.isDebugging(UserInfoActivity.this)) {
+                        if (Utility.isDebugging(UserActivity.this)) {
                             e.printStackTrace();
                         }
                     }
@@ -689,7 +701,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         protected void onProgressUpdate(String... values) {
             //only used for showing error messages to the user.
             if (values.length > 0) {
-                Toast.makeText(UserInfoActivity.this, "bptf: " + values[0], Toast.LENGTH_SHORT)
+                Toast.makeText(UserActivity.this, "bptf: " + values[0], Toast.LENGTH_SHORT)
                         .show();
             }
         }

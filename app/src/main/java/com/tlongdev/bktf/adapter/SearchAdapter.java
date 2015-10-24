@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.SearchActivity;
-import com.tlongdev.bktf.activity.UserInfoActivity;
+import com.tlongdev.bktf.activity.UserActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,9 +59,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                         holder.root.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intent = new Intent(mContext, UserInfoActivity.class);
-                                intent.putExtra(UserInfoActivity.STEAM_ID_KEY, userInfo[1]);
-                                intent.putExtra(UserInfoActivity.JSON_USER_SUMMARIES_KEY, userInfo[2]);
+                                Intent intent = new Intent(mContext, UserActivity.class);
+                                intent.putExtra(UserActivity.STEAM_ID_KEY, userInfo[1]);
+                                intent.putExtra(UserActivity.JSON_USER_SUMMARIES_KEY, userInfo[2]);
                                 mContext.startActivity(intent);
                             }
                         });

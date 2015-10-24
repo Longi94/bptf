@@ -70,7 +70,7 @@
                 android:value=".activity.MainActivity" />
         </activity>
         <activity
-            android:name=".activity.UserInfoActivity"
+            android:name=".activity.UserActivity"
             android:label=""
             android:parentActivityName=".activity.MainActivity"
             android:screenOrientation="portrait" >
