@@ -2,17 +2,19 @@ package com.tlongdev.bktf.activity;
 
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.adapter.BackpackSectionHeaderAdapter;
+import com.tlongdev.bktf.adapter.BackpackAdapter;
 import com.tlongdev.bktf.data.UserBackpackContract.UserBackpackEntry;
 
 /**
@@ -72,7 +74,7 @@ public class UserBackpackActivity extends AppCompatActivity implements LoaderMan
             UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR
     };
     //Adapters used for the listview
-    private BackpackSectionHeaderAdapter adapter;
+    private BackpackAdapter adapter;
 
     //Boolean to decide which database table to load from
     private boolean isGuest;
@@ -88,6 +90,14 @@ public class UserBackpackActivity extends AppCompatActivity implements LoaderMan
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_backpack);
+
+        //Set the color of the status bar
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.primary_dark));
+        }
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         //Show the home button as back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -106,11 +116,18 @@ public class UserBackpackActivity extends AppCompatActivity implements LoaderMan
         // in content do not change the layout size of the RecyclerView
         listView.setHasFixedSize(true);
 
-        // use a linear layout manager
-        listView.setLayoutManager(new LinearLayoutManager(this));
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 5);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return position % 51 == 0 ? 5 : 1;
+            }
+        });
+
+        listView.setLayoutManager(layoutManager);
 
         //Initialise adn set the adapter
-        adapter = new BackpackSectionHeaderAdapter(this, isGuest);
+        adapter = new BackpackAdapter(this, isGuest);
         listView.setAdapter(adapter);
 
         //Start loading data from the database
