@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tlongdev.bktf" >
+    package="com.tlongdev.bktf">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -10,12 +10,14 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
+
         <provider
             android:name=".data.DatabaseProvider"
             android:authorities="com.tlongdev.bktf"
             android:enabled="true"
             android:exported="false" />
+
         <provider
             android:name=".data.UserBackpackProvider"
             android:authorities="com.tlongdev.bktf.backpack"
@@ -26,6 +28,7 @@
             android:name=".service.NotificationsService"
             android:enabled="true"
             android:exported="false" />
+
         <service
             android:name=".service.UpdateDatabaseService"
             android:enabled="true"
@@ -34,7 +37,7 @@
         <receiver
             android:name=".broadcastreceiver.BootBroadcastReceiver"
             android:enabled="true"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -44,85 +47,94 @@
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activity.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".activity.MainActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
         </activity>
+
         <activity
             android:name=".activity.UnusualActivity"
             android:label="@string/title_activity_unusual"
             android:parentActivityName=".activity.MainActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
         </activity>
+
         <activity
             android:name=".activity.UserActivity"
             android:label=""
-            android:parentActivityName=".activity.MainActivity"
-            android:screenOrientation="portrait" >
+            android:parentActivityName=".activity.SearchActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.MainActivity" />
+                android:value=".activity.SearchActivity" />
         </activity>
+
         <activity
             android:name=".activity.ItemChooserActivity"
             android:excludeFromRecents="true"
             android:label="@string/title_activity_item_chooser"
             android:parentActivityName=".activity.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dialog" >
+            android:theme="@style/AppTheme.Dialog">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
         </activity>
+
         <activity
             android:name=".activity.CreditsActivity"
             android:excludeFromRecents="true"
             android:label="@string/title_activity_credits"
             android:parentActivityName=".activity.SettingsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dialog" >
+            android:theme="@style/AppTheme.Dialog">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.SettingsActivity" />
         </activity>
+
         <activity
             android:name=".activity.UserBackpackActivity"
             android:label="@string/title_activity_user_backpack"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".activity.ItemDetailActivity"
             android:label="@string/title_activity_item_detail"
             android:parentActivityName=".activity.UserBackpackActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Transparent" >
+            android:theme="@style/AppTheme.Transparent">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.UserBackpackActivity" />
         </activity>
+
         <activity
             android:name=".activity.SearchActivity"
             android:label=""
+            android:launchMode="singleTop"
             android:parentActivityName=".activity.MainActivity"
-            android:theme="@style/AppTheme" >
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tlongdev.bktf.activity.MainActivity" />
         </activity>
+
     </application>
 
 </manifest>
