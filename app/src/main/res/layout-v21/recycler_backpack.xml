@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:foreground="@drawable/simple_grid_item_background"
-    android:padding="1dp">
+    android:layout_margin="1dp">
 
     <com.tlongdev.bktf.view.SquareImageView
         android:id="@+id/background"

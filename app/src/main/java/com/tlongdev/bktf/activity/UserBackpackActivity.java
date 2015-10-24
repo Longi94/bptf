@@ -115,19 +115,23 @@ public class UserBackpackActivity extends AppCompatActivity implements LoaderMan
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         listView.setHasFixedSize(true);
+        adapter = new BackpackAdapter(this, isGuest);
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, 5);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                return position % 51 == 0 ? 5 : 1;
+                if (adapter.getItemViewType(position) == BackpackAdapter.VIEW_TYPE_HEADER) {
+                    return 5;
+                } else {
+                    return 1;
+                }
             }
         });
 
         listView.setLayoutManager(layoutManager);
 
         //Initialise adn set the adapter
-        adapter = new BackpackAdapter(this, isGuest);
         listView.setAdapter(adapter);
 
         //Start loading data from the database
