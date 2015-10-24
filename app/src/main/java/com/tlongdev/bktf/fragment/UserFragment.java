@@ -25,7 +25,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,7 +65,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private TextView userSinceText;
     private TextView lastOnlineText;
     private ImageView avatar;
-    private ProgressBar progressBar;
 
     //Swipe refresh layout for refreshing the user data manually
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -129,7 +127,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         userSinceText = (TextView) rootView.findViewById(R.id.text_view_user_since);
         lastOnlineText = (TextView) rootView.findViewById(R.id.text_view_user_last_online);
         avatar = (ImageView) rootView.findViewById(R.id.avatar);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
 
         //Set the color of the refreshing animation
         mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.accent));
@@ -529,16 +526,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
          * {@inheritDoc}
          */
         @Override
-        protected void onPreExecute() {
-            //Show the progressbar
-            if (progressBar != null)
-                progressBar.setVisibility(View.VISIBLE);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
         protected Void doInBackground(Void... params) {
 
             //Check again if we really need to download the image
@@ -616,10 +603,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 File path = mContext.getFilesDir();
                 d = Drawable.createFromPath(path.toString() + "/avatar.png");
                 avatar.setImageDrawable(d);
-
-                //Remove the progressbar
-                if (progressBar != null)
-                    progressBar.setVisibility(View.GONE);
 
                 //Save to preferences that we don't need to download the avatar again.
                 PreferenceManager.getDefaultSharedPreferences(mContext).edit().putBoolean(

@@ -2,7 +2,7 @@ package com.tlongdev.bktf.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -32,7 +32,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DecimalFormat;
 
 /**
  * Profile page activity.
@@ -50,13 +49,13 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     private ProgressBar progressBar;
 
     //Reference too all the views that needs to be updated
-    private TextView playerName;
     private TextView playerReputation;
-    private TextView trustStatus;
-    private TextView steamRepStatus;
-    private TextView vacStatus;
-    private TextView tradeStatus;
-    private TextView communityStatus;
+    private TextView trustPositive;
+    private TextView trustNegative;
+    private ImageView steamRepStatus;
+    private ImageView vacStatus;
+    private ImageView tradeStatus;
+    private ImageView communityStatus;
     private TextView backpackValueRefined;
     private TextView backpackRawMetal;
     private TextView backpackRawKeys;
@@ -134,13 +133,13 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
         //Find all the views
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        playerName = (TextView) findViewById(R.id.text_view_player_name);
         playerReputation = (TextView) findViewById(R.id.text_view_player_reputation);
-        trustStatus = (TextView) findViewById(R.id.text_view_trust_status);
-        steamRepStatus = (TextView) findViewById(R.id.text_view_steamrep_status);
-        vacStatus = (TextView) findViewById(R.id.text_view_vac_status);
-        tradeStatus = (TextView) findViewById(R.id.text_view_trade_status);
-        communityStatus = (TextView) findViewById(R.id.text_view_community_status);
+        trustPositive = (TextView) findViewById(R.id.trust_positive);
+        trustNegative = (TextView) findViewById(R.id.trust_negative);
+        steamRepStatus = (ImageView) findViewById(R.id.steamrep_status);
+        vacStatus = (ImageView) findViewById(R.id.vac_status);
+        tradeStatus = (ImageView) findViewById(R.id.trade_status);
+        communityStatus = (ImageView) findViewById(R.id.community_status);
         backpackValueRefined = (TextView) findViewById(R.id.text_view_bp_refined);
         backpackRawMetal = (TextView) findViewById(R.id.text_view_bp_raw_metal);
         backpackRawKeys = (TextView) findViewById(R.id.text_view_bp_raw_keys);
@@ -148,7 +147,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         backpackSlots = (TextView) findViewById(R.id.text_view_bp_slots);
         userSinceText = (TextView) findViewById(R.id.text_view_user_since);
         lastOnlineText = (TextView) findViewById(R.id.text_view_user_last_online);
-        avatar = (ImageView) findViewById(R.id.player_avatar);
+        avatar = (ImageView) findViewById(R.id.avatar);
 
         //Register this onclicklistener
         findViewById(R.id.button_bazaar_tf).setOnClickListener(this);
@@ -156,7 +155,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.button_tf2op).setOnClickListener(this);
         findViewById(R.id.button_tf2tp).setOnClickListener(this);
         findViewById(R.id.button_steam_community).setOnClickListener(this);
-        findViewById(R.id.button_backpack).setOnClickListener(this);
+        findViewById(R.id.backpack).setOnClickListener(this);
 
     }
 
@@ -167,7 +166,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
 
         //All buttons (except the backpack one) open a link in the browser
-        if (v.getId() != R.id.button_backpack) {
+        if (v.getId() != R.id.backpack) {
 
             String url;
 
@@ -349,28 +348,16 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     private void updateUI() {
 
         //Set the title to X's profile
-        getSupportActionBar().setTitle(getString(R.string.title_custom_profile, playerNameString));
-
-        //Set the player name
-        playerName.setText(playerNameString);
-
-        if (isBanned) {
-            //Set player name to red and cross it out.
-            playerName.setTextColor(0xffdd4c44);
-            playerName.setPaintFlags(playerName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        }
+        getSupportActionBar().setTitle(playerNameString);
 
         //Set the player reputation. Reputation: X
-        playerReputation.setText(getString(R.string.user_page_reputation) + " "
-                + playerReputationValue);
+        playerReputation.setText(String.valueOf(playerReputationValue));
 
         //Set the 'user since' text
         if (profileCreated == -1) {
-            userSinceText.setText(getString(R.string.user_page_user_since)
-                    + getString(R.string.filler_unknown));
+            userSinceText.setText(getString(R.string.filler_unknown));
         } else {
-            userSinceText.setText(getString(R.string.user_page_user_since) + Utility
-                    .formatUnixTimeStamp(profileCreated));
+            userSinceText.setText(Utility.formatUnixTimeStamp(profileCreated));
         }
 
         //Switch for the player's state
@@ -386,7 +373,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                             + Utility.formatLastOnlineTime(this,
                             System.currentTimeMillis() - lastOnline * 1000L));
                 }
-                lastOnlineText.setTextColor(getResources().getColor(R.color.player_offline));
                 break;
             case 1:
                 lastOnlineText.setText(getString(R.string.user_page_status_online));
@@ -418,48 +404,37 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
 
+        Drawable statusOk = getResources().getDrawable(R.drawable.ic_done_white_48dp);
+        Drawable statusBad = getResources().getDrawable(R.drawable.ic_close_white_48dp);
+        if (statusOk != null) statusOk.setColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY);
+        if (statusBad != null) statusBad.setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
+
         //Steamrep information
         if (!isScammer) {
-            steamRepStatus.setText(getString(R.string.user_page_status_normal));
-            steamRepStatus.setBackgroundDrawable(getResources()
-                    .getDrawable(R.drawable.status_background_neutral));
+            steamRepStatus.setImageDrawable(statusOk);
         } else {
-            steamRepStatus.setText(getString(R.string.user_page_status_scammer));
-            steamRepStatus.setBackgroundDrawable(getResources()
-                    .getDrawable(R.drawable.status_background_bad));
+            steamRepStatus.setImageDrawable(statusBad);
         }
 
         //Trade status
         if (!isTradeBanned) {
-            tradeStatus.setText(getString(R.string.user_page_status_ok));
-            tradeStatus.setBackgroundDrawable(getResources()
-                    .getDrawable(R.drawable.status_background_good));
+            tradeStatus.setImageDrawable(statusOk);
         } else {
-            tradeStatus.setText(getString(R.string.user_page_status_ban));
-            tradeStatus.setBackgroundDrawable(getResources()
-                    .getDrawable(R.drawable.status_background_bad));
+            tradeStatus.setImageDrawable(statusBad);
         }
 
         //VAC status
         if (!isVacBanned) {
-            vacStatus.setText(getString(R.string.user_page_status_ok));
-            vacStatus.setBackgroundDrawable(getResources()
-                    .getDrawable(R.drawable.status_background_good));
+            vacStatus.setImageDrawable(statusOk);
         } else {
-            vacStatus.setText(getString(R.string.user_page_status_ban));
-            vacStatus.setBackgroundDrawable(getResources()
-                    .getDrawable(R.drawable.status_background_bad));
+            vacStatus.setImageDrawable(statusBad);
         }
 
         //Community status
         if (!isCommunityBanned) {
-            communityStatus.setText(getString(R.string.user_page_status_ok));
-            communityStatus.setBackgroundDrawable(getResources()
-                    .getDrawable(R.drawable.status_background_good));
+            communityStatus.setImageDrawable(statusOk);
         } else {
-            communityStatus.setText(getString(R.string.user_page_status_ban));
-            communityStatus.setBackgroundDrawable(getResources()
-                    .getDrawable(R.drawable.status_background_bad));
+            communityStatus.setImageDrawable(statusBad);
         }
 
         //Backpack value
@@ -468,57 +443,17 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
             backpackValueRefined.setText("?");
             backpackValueUsd.setText("?");
         } else if (!privateBackpack) {
-            //Properly format the backpack value (is int, does it have a fraction smaller than 0.01)
-            if ((int) backpackValue == backpackValue)
-                backpackValueRefined.setText(String.valueOf((int) backpackValue));
-            else if ((String.valueOf(backpackValue)).substring((String.valueOf(backpackValue)).indexOf('.') + 1)
-                    .length() > 2)
-                backpackValueRefined.setText(String.valueOf(new DecimalFormat("#0.00").format(backpackValue)));
-            else
-                backpackValueRefined.setText(String.valueOf(backpackValue));
+            backpackValueRefined.setText(String.valueOf(backpackValue));
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
             //Convert the value into USD and format it like above
             double bpValueUsd = backpackValue * Utility.getDouble(prefs, getString(R.string.pref_metal_raw_usd), 1);
-            if ((int) bpValueUsd == bpValueUsd)
-                backpackValueUsd.setText(String.valueOf((int) bpValueUsd));
-            else if ((String.valueOf(bpValueUsd).substring((String.valueOf(bpValueUsd).indexOf('.') + 1)).length() > 2))
-                backpackValueUsd.setText(String.valueOf(new DecimalFormat("#0.00").format(bpValueUsd)));
-            else
-                backpackValueUsd.setText(String.valueOf(bpValueUsd));
-        }
-
-        //Set the border of the avatar according to the player's state
-        switch (playerState) {
-            case 0:
-                avatar.setBackgroundDrawable(getResources()
-                        .getDrawable(R.drawable.frame_user_state_offline));
-                break;
-            case 7:
-                avatar.setBackgroundDrawable(getResources()
-                        .getDrawable(R.drawable.frame_user_state_in_game));
-                break;
-            default:
-                avatar.setBackgroundDrawable(getResources()
-                        .getDrawable(R.drawable.frame_user_state_online));
-                break;
+            backpackValueUsd.setText(String.valueOf(bpValueUsd));
         }
 
         //Set the trust score and color the background according to it.
-        trustStatus.setText(String.valueOf((ratingPositive - ratingNegative)));
-        if (ratingNegative > ratingPositive) {
-            trustStatus.setBackgroundDrawable(getResources()
-                    .getDrawable(R.drawable.status_background_bad));
-        } else if (ratingPositive > ratingNegative && ratingNegative == 0) {
-            trustStatus.setBackgroundDrawable(getResources()
-                    .getDrawable(R.drawable.status_background_good));
-        } else if (ratingPositive > ratingNegative && ratingNegative >= 0) {
-            trustStatus.setBackgroundDrawable(getResources()
-                    .getDrawable(R.drawable.status_background_caution));
-        } else {
-            trustStatus.setBackgroundDrawable(getResources()
-                    .getDrawable(R.drawable.status_background_neutral));
-        }
+        trustPositive.setText("+" + ratingPositive);
+        trustNegative.setText("-" + ratingNegative);
 
         //Image should be available in data folder by the time this method is called.
         avatar.setImageDrawable(Drawable.createFromPath(getFilesDir().toString() +
