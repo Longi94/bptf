@@ -15,7 +15,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         card_view:cardCornerRadius="2dp"
-        card_view:cardElevation="16dp">
+        card_view:cardElevation="16dp"
+        card_view:cardBackgroundColor="@color/card_color">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,13 +33,21 @@
                 android:layout_height="match_parent">
 
                 <com.tlongdev.bktf.view.SquareImageView
-                    android:id="@+id/image_view_item_background"
+                    android:id="@+id/effect"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/item_background_blank" />
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop" />
 
                 <com.tlongdev.bktf.view.SquareImageView
                     android:id="@+id/icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop" />
+
+                <com.tlongdev.bktf.view.SquareImageView
+                    android:id="@+id/paint"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -54,7 +63,7 @@
                 android:gravity="center"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
-                android:textColor="@color/text_secondary"
+                android:textColor="@color/text_primary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -71,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/text_secondary"
+                android:textColor="@color/text_primary"
                 android:visibility="gone" />
 
             <!--Custom name of the item-->
@@ -80,7 +89,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/text_secondary"
+                android:textColor="@color/text_primary"
                 android:visibility="gone" />
 
             <!--Custom description of the item-->
@@ -89,7 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/text_secondary"
+                android:textColor="@color/text_primary"
                 android:visibility="gone" />
 
             <!--Name of the crafter-->
@@ -98,7 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/text_secondary"
+                android:textColor="@color/text_primary"
                 android:visibility="gone" />
 
             <!--Name of the gifter-->
@@ -107,7 +116,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/text_secondary"
+                android:textColor="@color/text_primary"
                 android:visibility="gone" />
 
             <!--The item's origin-->
@@ -116,7 +125,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/text_secondary" />
+                android:textColor="@color/text_primary" />
 
             <!--Name of the paint-->
             <TextView
@@ -124,7 +133,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/text_secondary"
+                android:textColor="@color/text_primary"
                 android:visibility="gone" />
 
             <!--Price of the item-->
@@ -134,7 +143,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingTop="8dp"
-                android:textColor="@color/text_secondary"
+                android:textColor="@color/text_primary"
                 android:visibility="gone" />
 
         </LinearLayout>

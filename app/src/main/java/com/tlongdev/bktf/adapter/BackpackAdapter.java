@@ -7,9 +7,9 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -98,6 +98,12 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                     cursorPosition = (position - (position / 51) - 1);
                 }
 
+                holder.icon.setImageDrawable(null);
+                holder.effect.setImageDrawable(null);
+                holder.paint.setImageDrawable(null);
+                holder.effect.setBackgroundColor(0x00000000);
+                holder.root.setOnClickListener(null);
+
                 if (currentCursor.moveToPosition(cursorPosition)) {
                     final int id = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_ID);
                     final int defindex = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_DEFI);
@@ -109,18 +115,15 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                     int australium = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_AUS);
                     int wear = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_WEAR);
 
-                    holder.icon.setImageDrawable(null);
-                    holder.icon.setBackgroundDrawable(null);
-                    holder.background.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.item_background_blank));
-                    holder.root.setOnClickListener(null);
-
                     if (defindex != 0) {
+
+                        holder.root.setCardBackgroundColor(Utility.getQualityColor(mContext, quality, defindex, true));
 
                         ImageLoader task = (ImageLoader) holder.icon.getTag();
                         if (task != null) {
                             task.cancel(true);
                         }
-                        task = new ImageLoader(mContext, holder.icon, holder.background);
+                        task = new ImageLoader(mContext, holder.icon, holder.effect, holder.paint);
                         holder.icon.setTag(task);
                         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
                                 defindex, quality, tradable, craftable, itemIndex, paint, australium, wear);
@@ -146,24 +149,16 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                                     ActivityOptions options = ActivityOptions
                                             .makeSceneTransitionAnimation((Activity) mContext,
                                                     Pair.create((View) holder.icon, "icon_transition"),
-                                                    Pair.create((View) holder.background, "background_transition"));
+                                                    Pair.create((View) holder.effect, "effect_transition"),
+                                                    Pair.create((View) holder.paint, "paint_transition"),
+                                                    Pair.create((View) holder.root, "background_transition"));
                                     mContext.startActivity(i, options.toBundle());
                                 } else {
                                     mContext.startActivity(i);
                                 }
                             }
                         });
-                    } else {
-                        holder.icon.setImageDrawable(null);
-                        holder.icon.setBackgroundDrawable(null);
-                        holder.background.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.item_background_blank));
-                        holder.root.setOnClickListener(null);
                     }
-                } else {
-                    holder.icon.setImageDrawable(null);
-                    holder.icon.setBackgroundDrawable(null);
-                    holder.background.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.item_background_blank));
-                    holder.root.setOnClickListener(null);
                 }
                 break;
         }
@@ -211,9 +206,10 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView header = null;
-        public ImageView background = null;
         public ImageView icon = null;
-        public View root = null;
+        public ImageView effect = null;
+        public ImageView paint = null;
+        public CardView root = null;
 
         public ViewHolder(View view, int viewType) {
             super(view);
@@ -222,9 +218,10 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                     header = (TextView) view.findViewById(R.id.text_view_header);
                     break;
                 case VIEW_TYPE_ITEM_ROW:
-                    background = (ImageView) view.findViewById(R.id.background);
                     icon = (ImageView) view.findViewById(R.id.icon);
-                    root = view;
+                    effect = (ImageView) view.findViewById(R.id.effect);
+                    paint = (ImageView) view.findViewById(R.id.paint);
+                    root = (CardView)view;
                     break;
             }
         }
@@ -233,13 +230,15 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
     private class ImageLoader extends AsyncTask<Integer, Void, Drawable[]> {
 
         private ImageView icon;
-        private ImageView background;
+        private ImageView effect;
+        private ImageView paint;
         private Context mContext;
 
-        private ImageLoader(Context context, ImageView icon, ImageView background) {
+        private ImageLoader(Context context, ImageView icon, ImageView effect, ImageView paint) {
             this.mContext = context;
             this.icon = icon;
-            this.background = background;
+            this.effect = effect;
+            this.paint = paint;
         }
 
         @Override
@@ -260,38 +259,31 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                         ims = assetManager.open("items/" + Utility.getIconIndex(params[0]) + ".png");
                     }
                 }
+                drawables[0] = Drawable.createFromStream(ims, null);
 
-                Drawable iconDrawable = Drawable.createFromStream(ims, null);
                 if (params[4] != 0 && Utility.canHaveEffects(params[0], params[1])) {
                     ims = assetManager.open("effects/" + params[4] + "_188x188.png");
-                    Drawable effectDrawable = Drawable.createFromStream(ims, null);
-                    d = new LayerDrawable(new Drawable[]{effectDrawable, iconDrawable});
-                } else {
-                    d = iconDrawable;
+                    drawables[1] = Drawable.createFromStream(ims, null);
                 }
 
                 if (Utility.isPaint(params[5])) {
                     ims = assetManager.open("paint/" + params[5] + ".png");
-                    Drawable paintDrawable = Drawable.createFromStream(ims, null);
-                    d = new LayerDrawable(new Drawable[]{d, paintDrawable});
+                    drawables[2] = Drawable.createFromStream(ims, null);
                 }
-                drawables[0] = d;
 
             } catch (IOException e) {
                 if (Utility.isDebugging(mContext))
                     e.printStackTrace();
             }
 
-            drawables[1] = Utility.getItemBackground(mContext, params[0], params[1], params[2], params[3]);
-
             return drawables;
         }
 
         @Override
         protected void onPostExecute(Drawable[] drawables) {
-            icon.setBackgroundDrawable(drawables[0]);
-            background.setBackgroundDrawable(drawables[1]);
-            icon.setImageDrawable(drawables[2]);
+            icon.setImageDrawable(drawables[0]);
+            effect.setImageDrawable(drawables[1]);
+            paint.setImageDrawable(drawables[2]);
         }
     }
 }
