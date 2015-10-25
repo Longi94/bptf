@@ -467,6 +467,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             updateUserPage();
             mSwipeRefreshLayout.setRefreshing(false);
         }
+
+        ((MainActivity) getActivity()).updateHeader();
     }
 
     @Override
