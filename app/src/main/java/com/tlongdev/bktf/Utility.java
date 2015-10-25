@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
@@ -370,88 +368,6 @@ public class Utility {
             default:
                 return "";
         }
-    }
-
-    /**
-     * Get the drawable based on the item's properties to use as a background.
-     *
-     * @param context   context for accessing resources
-     * @param quality   the quality of the item
-     * @param tradable  whether the item is tradable (1-true, 0-false)
-     * @param craftable whether the item is craftabe (1-true, 0-false)
-     * @return the background drawable
-     * @see Quality
-     */
-    public static LayerDrawable getItemBackground(Context context, int defindex, int quality, int tradable,
-                                                  int craftable) {
-
-        //Three drawables, that will be merged into a single drawable.
-        Drawable itemFrame;
-        Drawable craftableFrame;
-        Drawable tradableFrame;
-
-        //Simple switch case for getting the drawable from the resources
-        switch (quality) {
-            case Quality.GENUINE:
-                itemFrame = context.getResources().getDrawable(R.drawable.item_background_genuine);
-                break;
-            case Quality.VINTAGE:
-                itemFrame = context.getResources().getDrawable(R.drawable.item_background_vintage);
-                break;
-            case Quality.UNUSUAL:
-                itemFrame = context.getResources().getDrawable(R.drawable.item_background_unusual);
-                break;
-            case Quality.UNIQUE:
-                itemFrame = context.getResources().getDrawable(R.drawable.item_background_unique);
-                break;
-            case Quality.COMMUNITY:
-                itemFrame = context.getResources().getDrawable(R.drawable.item_background_community);
-                break;
-            case Quality.VALVE:
-                itemFrame = context.getResources().getDrawable(R.drawable.item_background_valve);
-                break;
-            case Quality.SELF_MADE:
-                itemFrame = context.getResources().getDrawable(R.drawable.item_background_community);
-                break;
-            case Quality.STRANGE:
-                itemFrame = context.getResources().getDrawable(R.drawable.item_background_strange);
-                break;
-            case Quality.HAUNTED:
-                itemFrame = context.getResources().getDrawable(R.drawable.item_background_haunted);
-                break;
-            case Quality.COLLECTORS:
-                itemFrame = context.getResources().getDrawable(R.drawable.item_background_collectors);
-                break;
-            case Quality.PAINTKITWEAPON:
-                if (defindex >= 15000 && defindex <= 15059) {
-                    itemFrame = context.getResources().getDrawable(getDecoratedWeaponBackgroundResource(defindex));
-                } else {
-                    itemFrame = context.getResources().getDrawable(R.drawable.item_background_normal);
-                }
-                break;
-            default:
-                itemFrame = context.getResources().getDrawable(R.drawable.item_background_normal);
-                break;
-        }
-
-        //Get the dashed border drawable if the item is uncraftable.
-        if (craftable == 0) {
-            craftableFrame = context.getResources().getDrawable(R.drawable.non_craftable_border);
-        } else {
-            //Easier to use an empty drawable instead of resizing the layer drawable
-            craftableFrame = context.getResources().getDrawable(R.drawable.empty_drawable);
-        }
-
-        //Get the red gradient border drawable if the item is untradable.
-        if (tradable == 0) {
-            tradableFrame = context.getResources().getDrawable(R.drawable.non_tradable_border);
-        } else {
-            //Easier to use an empty drawable instead of resizing the layer drawable
-            tradableFrame = context.getResources().getDrawable(R.drawable.empty_drawable);
-        }
-
-        //Combine the drawables into a single LayerDrawable.
-        return new LayerDrawable(new Drawable[]{itemFrame, craftableFrame, tradableFrame});
     }
 
     /**
@@ -2164,79 +2080,6 @@ public class Utility {
                 " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 " +
                 " ) END " +
                 " ) END ";
-    }
-
-    public static int getDecoratedWeaponBackgroundResource(int defindex) {
-        switch (defindex) {
-            case 15025:
-            case 15026:
-            case 15027:
-            case 15028:
-            case 15029:
-            case 15039:
-            case 15040:
-            case 15041:
-            case 15042:
-            case 15043:
-            case 15044:
-                return R.drawable.item_background_decorated_civilian;
-            case 15020:
-            case 15021:
-            case 15022:
-            case 15023:
-            case 15024:
-            case 15035:
-            case 15036:
-            case 15037:
-            case 15038:
-                return R.drawable.item_background_decorated_freelance;
-            case 15000:
-            case 15001:
-            case 15003:
-            case 15004:
-            case 15005:
-            case 15008:
-            case 15016:
-            case 15017:
-            case 15018:
-            case 15032:
-            case 15033:
-            case 15034:
-            case 15047:
-            case 15054:
-            case 15055:
-            case 15057:
-            case 15058:
-                return R.drawable.item_background_decorated_mercenary;
-            case 15002:
-            case 15006:
-            case 15010:
-            case 15012:
-            case 15015:
-            case 15019:
-            case 15030:
-            case 15031:
-            case 15046:
-            case 15049:
-            case 15050:
-            case 15051:
-            case 15056:
-                return R.drawable.item_background_decorated_commando;
-            case 15007:
-            case 15009:
-            case 15011:
-            case 15048:
-            case 15052:
-            case 15053:
-                return R.drawable.item_background_decorated_assassin;
-            case 15013:
-            case 15014:
-            case 15045:
-            case 15059:
-                return R.drawable.item_background_decorated_elite;
-            default:
-                throw new IllegalArgumentException("Invalid defindex: " + defindex);
-        }
     }
 
     public static int getDecoratedWeaponColor(Context context, int defindex, boolean isDark) {

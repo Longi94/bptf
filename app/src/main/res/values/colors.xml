@@ -51,7 +51,6 @@
 
     <!--Player state colors-->
     <color name="player_online">#ff24a9de</color>
-    <color name="player_offline">#ff6E6E6E</color>
     <color name="player_in_game">#ff8fb93b</color>
     <color name="card_color">#393939</color>
     <color name="separator_color">#555555</color>
