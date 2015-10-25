@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -54,36 +55,41 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             DatabaseContract.PriceEntry.COLUMN_ITEM_TRADABLE,
             DatabaseContract.PriceEntry.COLUMN_ITEM_CRAFTABLE,
             DatabaseContract.PriceEntry.COLUMN_PRICE_INDEX,
-            DatabaseContract.PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
-            DatabaseContract.PriceEntry.COLUMN_ITEM_PRICE,
-            DatabaseContract.PriceEntry.COLUMN_ITEM_PRICE_MAX,
+            DatabaseContract.PriceEntry.COLUMN_CURRENCY,
+            DatabaseContract.PriceEntry.COLUMN_PRICE,
+            DatabaseContract.PriceEntry.COLUMN_PRICE_HIGH,
             DatabaseContract.PriceEntry.COLUMN_AUSTRALIUM
     };
 
     //Indexes of the columns above
-    public static final int COL_PRICE_LIST_DEFI = 1;
-    public static final int COL_PRICE_LIST_NAME = 2;
-    public static final int COL_PRICE_LIST_QUAL = 3;
-    public static final int COL_PRICE_LIST_TRAD = 4;
-    public static final int COL_PRICE_LIST_CRAF = 5;
-    public static final int COL_PRICE_LIST_INDE = 6;
-    public static final int COL_PRICE_LIST_CURR = 7;
-    public static final int COL_PRICE_LIST_PRIC = 8;
-    public static final int COL_PRICE_LIST_PMAX = 9;
-    public static final int COL_AUSTRALIUM = 10;
+    public static final int COLUMN_DEFINDEX = 1;
+    public static final int COLUMN_NAME = 2;
+    public static final int COLUMN_QUALITY = 3;
+    public static final int COLUMN_TRADABLE = 4;
+    public static final int COLUMN_CRAFTABLE = 5;
+    public static final int COLUMN_PRICE_INDEX = 6;
+    public static final int COLUMN_CURRENCY = 7;
+    public static final int COLUMN_PRICE = 8;
+    public static final int COLUMN_PRICE_HIGH = 9;
+    public static final int COLUMN_AUSTRALIUM = 10;
 
     //Selection
-    private static final String sNameSearch =
-            DatabaseContract.PriceEntry.TABLE_NAME +
-                    "." + DatabaseContract.PriceEntry.COLUMN_ITEM_NAME + " LIKE ? AND NOT(" +
-                    DatabaseContract.PriceEntry.COLUMN_ITEM_QUALITY + " = 5 AND " +
-                    DatabaseContract.PriceEntry.COLUMN_PRICE_INDEX + " != 0)";
+    private static final String sNameSearch = DatabaseContract.PriceEntry.TABLE_NAME +
+            "." + DatabaseContract.PriceEntry.COLUMN_ITEM_NAME + " LIKE ? AND NOT(" +
+            DatabaseContract.PriceEntry.COLUMN_ITEM_QUALITY + " = 5 AND " +
+            DatabaseContract.PriceEntry.COLUMN_PRICE_INDEX + " != 0)";
 
+    //The search query string
     private String searchQuery;
+
+    //Store the task so it can be stopped when the user modifies the query
+    // TODO: 2015. 10. 25. might need to change it to submission based query
     private SearchForUserTask searchTask;
 
-    private RecyclerView mRecyclerView;
+    //The adapter of the recyclerview
     private SearchAdapter adapter;
+
+    //Cursor of the adapter
     private Cursor data;
 
     @Override
@@ -93,19 +99,23 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
 
         //Set the color of the status bar
         if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.primary_dark));
+            getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //Show the home button as back button
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
+        //Initialize the list
         adapter = new SearchAdapter(this, null);
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(adapter);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -114,9 +124,6 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         getSupportLoaderManager().initLoader(PRICE_LIST_LOADER, null, this);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -127,6 +134,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         SearchView mSearchView = (SearchView) menuItem.getActionView();
         mSearchView.setQueryHint("Items and users...");
 
+        //Restart the loader every time the query string is changed
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -141,6 +149,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             }
         });
 
+        //Auto expand the search view
         mSearchView.setIconified(false);
 
         return true;
@@ -151,18 +160,21 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         String query;
         String[] selectionArgs;
 
+        //Build the query selection argument
         if (args != null) {
             query = args.getString(QUERY_KEY);
             if (query != null && query.length() > 0)
                 selectionArgs = new String[]{"%" + query + "%"};
             else
-                selectionArgs = new String[]{"there is no such itme like thisasd"};
+                selectionArgs = new String[]{"there is no such itme like thisasd"}; //stupid
         } else {
             selectionArgs = new String[]{"there is no such itme like thisasd"};
         }
+
         if (Utility.isDebugging(this)) {
             Log.d(LOG_TAG, "selection: " + sNameSearch + ", arguments: " + Arrays.toString(selectionArgs));
         }
+
         return new CursorLoader(
                 this,
                 DatabaseContract.PriceEntry.CONTENT_URI,
@@ -197,9 +209,9 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                     DatabaseContract.PriceEntry.COLUMN_ITEM_TRADABLE,
                     DatabaseContract.PriceEntry.COLUMN_ITEM_CRAFTABLE,
                     DatabaseContract.PriceEntry.COLUMN_PRICE_INDEX,
-                    DatabaseContract.PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
-                    DatabaseContract.PriceEntry.COLUMN_ITEM_PRICE,
-                    DatabaseContract.PriceEntry.COLUMN_ITEM_PRICE_MAX,});
+                    DatabaseContract.PriceEntry.COLUMN_CURRENCY,
+                    DatabaseContract.PriceEntry.COLUMN_PRICE,
+                    DatabaseContract.PriceEntry.COLUMN_PRICE_HIGH,});
             extras.addRow(new String[]{"-1", null, null, null, null, null, null, null, null, null});
             Cursor[] cursors = {extras, data};
             Cursor extendedCursor = new MergeCursor(cursors);
@@ -213,21 +225,33 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         adapter.swapCursor(null, false);
     }
 
+    /**
+     * Task that searches for a user of the given query string
+     */
     private class SearchForUserTask extends AsyncTask<String, Void, String[]> {
 
-        private final String VANITY_BASE_URL = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/";
         private final String KEY_API = "key";
         private final String KEY_VANITY_URL = "vanityurl";
 
         private final String KEY_STEAM_ID = "steamids";
 
-        private final String USER_SUMMARIES_BASE_URL = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/";
-
+        /**
+         * Bitmap for the user avatar
+         */
         private Bitmap bmp;
+
+        /**
+         * The context
+         */
         private Context mContext;
 
-        private SearchForUserTask(Context mContext) {
-            this.mContext = mContext;
+        /**
+         * Constructor
+         *
+         * @param context the context the task is launched in
+         */
+        private SearchForUserTask(Context context) {
+            this.mContext = context;
         }
 
         @Override
@@ -247,7 +271,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             try {
 
                 if (!Utility.isSteamId(params[0])) {
-                    uri = Uri.parse(VANITY_BASE_URL).buildUpon()
+                    uri = Uri.parse(mContext.getString(R.string.steam_resolve_vanity_url)).buildUpon()
                             .appendQueryParameter(KEY_API, mContext.getString(R.string.steam_web_api_key))
                             .appendQueryParameter(KEY_VANITY_URL, params[0]).build();
                     url = new URL(uri.toString());
@@ -285,7 +309,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                         steamId = userData[1] = params[0];
                     }
 
-                    uri = Uri.parse(USER_SUMMARIES_BASE_URL).buildUpon()
+                    uri = Uri.parse(mContext.getString(R.string.steam_get_player_summaries_url)).buildUpon()
                             .appendQueryParameter(KEY_API, mContext.getString(R.string.steam_web_api_key))
                             .appendQueryParameter(KEY_STEAM_ID, steamId)
                             .build();
@@ -336,7 +360,9 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         @Override
         protected void onPostExecute(final String[] s) {
             if (s != null && s[0] != null) {
+
                 //Insert an extra row to the cursor
+                // TODO: 2015. 10. 25. there is really no need to do this, all we need is a proper adapter
                 MatrixCursor extras = new MatrixCursor(new String[]{
                         DatabaseContract.PriceEntry._ID,
                         DatabaseContract.PriceEntry.COLUMN_DEFINDEX,
@@ -345,9 +371,9 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                         DatabaseContract.PriceEntry.COLUMN_ITEM_TRADABLE,
                         DatabaseContract.PriceEntry.COLUMN_ITEM_CRAFTABLE,
                         DatabaseContract.PriceEntry.COLUMN_PRICE_INDEX,
-                        DatabaseContract.PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
-                        DatabaseContract.PriceEntry.COLUMN_ITEM_PRICE,
-                        DatabaseContract.PriceEntry.COLUMN_ITEM_PRICE_MAX,});
+                        DatabaseContract.PriceEntry.COLUMN_CURRENCY,
+                        DatabaseContract.PriceEntry.COLUMN_PRICE,
+                        DatabaseContract.PriceEntry.COLUMN_PRICE_HIGH,});
                 extras.addRow(new String[]{"-1", null, s[0], null, null, null, null, null, null, null});
                 Cursor[] cursors = {extras, data};
                 Cursor extendedCursor = new MergeCursor(cursors);
@@ -359,20 +385,31 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             }
         }
 
-        //Method for downloading image
+        /**
+         * Method to download the image.
+         *
+         * @param link the link to download the image from
+         * @return the bitmap object containing the image
+         */
         public Bitmap getBitmapFromURL(String link) {
 
             try {
+                //Open connection
                 URL url = new URL(link);
                 HttpURLConnection connection = (HttpURLConnection) url
                         .openConnection();
                 connection.setDoInput(true);
                 connection.connect();
+
+                //Get the input stream
                 InputStream input = connection.getInputStream();
 
+                //Decode the image
                 return BitmapFactory.decodeStream(input);
 
             } catch (IOException e) {
+                //There was an error, notify the user
+                publishProgress();
                 if (Utility.isDebugging(mContext))
                     e.printStackTrace();
                 return null;
@@ -380,6 +417,11 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         }
     }
 
+    /**
+     * Restarts the cursor loader with the given query string
+     *
+     * @param query the query string of the search view.
+     */
     public void restartLoader(String query) {
         searchQuery = query;
         Bundle args = new Bundle();

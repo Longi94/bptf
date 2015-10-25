@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -100,7 +101,10 @@ public class UserBackpackActivity extends AppCompatActivity implements LoaderMan
         setSupportActionBar(toolbar);
 
         //Show the home button as back button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         //Set the actionbar title to xyz's backpack
         getSupportActionBar().setTitle(getString(R.string.title_custom_backpack,

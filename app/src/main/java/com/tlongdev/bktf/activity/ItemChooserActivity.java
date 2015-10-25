@@ -23,7 +23,7 @@ import com.tlongdev.bktf.adapter.ItemChooserAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 
 /**
- *
+ * Dialog style activity for selecting items to be added to the calculator list.
  */
 public class ItemChooserActivity extends FragmentActivity implements
         TextWatcher, LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener,
@@ -34,13 +34,13 @@ public class ItemChooserActivity extends FragmentActivity implements
     public static final String EXTRA_ITEM_COUNT = "item_count";
 
     //Indexes of the columns below
-    public static final int COL_PRICE_LIST_ID = 0;
-    public static final int COL_PRICE_LIST_NAME = 1;
-    public static final int COL_PRICE_LIST_QUAL = 2;
-    public static final int COL_PRICE_LIST_TRAD = 3;
-    public static final int COL_PRICE_LIST_CRAF = 4;
-    public static final int COL_PRICE_LIST_INDE = 5;
-    public static final int COL_PRICE_LIST_DEFINDEX = 5;
+    public static final int COLUMN_ID = 0;
+    public static final int COLUMN_NAME = 1;
+    public static final int COLUMN_QUALITY = 2;
+    public static final int COLUMN_TRADABLE = 3;
+    public static final int COLUMN_CRAFTABLE = 4;
+    public static final int COLUMN_PRICE_INDEX = 5;
+    public static final int COLUMN_DEFINDEX = 5;
 
     //The columns we need
     private static final String[] PRICE_LIST_COLUMNS = {
@@ -76,9 +76,6 @@ public class ItemChooserActivity extends FragmentActivity implements
     //Adapter for the listview
     private ItemChooserAdapter adapter;
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,13 +95,13 @@ public class ItemChooserActivity extends FragmentActivity implements
         //Listen for text changes
         searchInput.addTextChangedListener(this);
 
-        //Listne for focus changes
+        //Listen for focus changes
         numberInput.setOnFocusChangeListener(this);
 
         //The listview that displays the serach result
         ListView itemChooserList = (ListView) findViewById(R.id.list_view_item_chooser);
 
-        //Initialse he adapter and set it to the listview
+        //Initialise he adapter and set it to the listview
         adapter = new ItemChooserAdapter(this, null, 0);
         itemChooserList.setAdapter(adapter);
 
@@ -117,15 +114,17 @@ public class ItemChooserActivity extends FragmentActivity implements
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> effectsAdapter = ArrayAdapter.createFromResource(this,
                 R.array.array_effects, android.R.layout.simple_spinner_item);
+
         // Specify the layout to use when the list of choices appears
         effectsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         // Apply the adapter to the spinner
         effectTypeSpinner.setAdapter(effectsAdapter);
 
         //Listen for selection in the spinner
         effectTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-            //Store the seleciton
+            //Store the selection
             private int previousSelection = -1;
 
             /**
@@ -133,7 +132,7 @@ public class ItemChooserActivity extends FragmentActivity implements
              */
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //Requery everytime the user changes the selection
+                //Re-query every time the user changes the selection
                 if (previousSelection != position) {
                     previousSelection = position;
                     getSupportLoaderManager().restartLoader(0, null, ItemChooserActivity.this);
@@ -145,14 +144,14 @@ public class ItemChooserActivity extends FragmentActivity implements
              */
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                //Unusued
+                //Unused
             }
         });
 
         //Listen for selection in the spinner
         itemTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-            //Store the seleciton
+            //Store the selection
             private int previousSelection = -1;
 
             /**
@@ -173,7 +172,7 @@ public class ItemChooserActivity extends FragmentActivity implements
                             effectTypeSpinner.setEnabled(true);
                             break;
                     }
-                    //Requery the data
+                    //Re-query the data
                     getSupportLoaderManager().restartLoader(0, null, ItemChooserActivity.this);
                 }
             }
@@ -183,7 +182,7 @@ public class ItemChooserActivity extends FragmentActivity implements
              */
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                //Unusued
+                //Unused
             }
         });
 
@@ -227,34 +226,22 @@ public class ItemChooserActivity extends FragmentActivity implements
         getSupportLoaderManager().initLoader(0, null, this);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         //Unusued
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         //Unusued
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void afterTextChanged(Editable s) {
         //Requery the data everytime the search input is changed
         getSupportLoaderManager().restartLoader(0, null, this);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
@@ -296,9 +283,6 @@ public class ItemChooserActivity extends FragmentActivity implements
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
@@ -320,9 +304,6 @@ public class ItemChooserActivity extends FragmentActivity implements
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         //Remove the data from the adapter
@@ -335,9 +316,6 @@ public class ItemChooserActivity extends FragmentActivity implements
         addButton.setEnabled(false);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         //Set the selected item's index so it will be highlighted
@@ -348,9 +326,6 @@ public class ItemChooserActivity extends FragmentActivity implements
         addButton.setEnabled(true);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
         //When the count input looses focus and there is nothing entered, put 0 into it.

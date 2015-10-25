@@ -33,9 +33,9 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
             PriceEntry.COLUMN_ITEM_TRADABLE,
             PriceEntry.COLUMN_ITEM_CRAFTABLE,
             PriceEntry.COLUMN_PRICE_INDEX,
-            PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
-            PriceEntry.COLUMN_ITEM_PRICE,
-            PriceEntry.COLUMN_ITEM_PRICE_MAX,
+            PriceEntry.COLUMN_CURRENCY,
+            PriceEntry.COLUMN_PRICE,
+            PriceEntry.COLUMN_PRICE_HIGH,
             null,
             PriceEntry.COLUMN_AUSTRALIUM
     };

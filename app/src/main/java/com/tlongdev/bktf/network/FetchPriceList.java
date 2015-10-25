@@ -559,9 +559,9 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
         itemValues.put(PriceEntry.COLUMN_ITEM_CRAFTABLE, craftable);
         itemValues.put(PriceEntry.COLUMN_PRICE_INDEX, priceIndex);
         itemValues.put(PriceEntry.COLUMN_AUSTRALIUM, australium);
-        itemValues.put(PriceEntry.COLUMN_ITEM_PRICE_CURRENCY, currency);
-        itemValues.put(PriceEntry.COLUMN_ITEM_PRICE, value);
-        itemValues.put(PriceEntry.COLUMN_ITEM_PRICE_MAX, high);
+        itemValues.put(PriceEntry.COLUMN_CURRENCY, currency);
+        itemValues.put(PriceEntry.COLUMN_PRICE, value);
+        itemValues.put(PriceEntry.COLUMN_PRICE_HIGH, high);
         itemValues.put(PriceEntry.COLUMN_LAST_UPDATE, update);
         itemValues.put(PriceEntry.COLUMN_DIFFERENCE, difference);
         itemValues.put(PriceEntry.COLUMN_WEAPON_WEAR, 0);

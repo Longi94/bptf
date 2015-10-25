@@ -29,9 +29,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         PriceEntry.COLUMN_ITEM_CRAFTABLE + " INTEGER NOT NULL, " +
                         PriceEntry.COLUMN_PRICE_INDEX + " INTEGER NOT NULL, " +
                         PriceEntry.COLUMN_AUSTRALIUM + " INTEGER NOT NULL, " +
-                        PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " TEXT NOT NULL, " +
-                        PriceEntry.COLUMN_ITEM_PRICE + " REAL NOT NULL, " +
-                        PriceEntry.COLUMN_ITEM_PRICE_MAX + " REAL, " +
+                        PriceEntry.COLUMN_CURRENCY + " TEXT NOT NULL, " +
+                        PriceEntry.COLUMN_PRICE + " REAL NOT NULL, " +
+                        PriceEntry.COLUMN_PRICE_HIGH + " REAL, " +
                         PriceEntry.COLUMN_LAST_UPDATE + " INTEGER NOT NULL, " +
                         PriceEntry.COLUMN_DIFFERENCE + " REAL NOT NULL, " +
                         PriceEntry.COLUMN_WEAPON_WEAR + " INTEGER NOT NULL, " +
