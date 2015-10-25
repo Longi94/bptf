@@ -60,7 +60,6 @@
                 android:layout_marginTop="8dp"
                 android:orientation="vertical">
 
-                <!--Name of the item-->
                 <TextView
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
@@ -68,7 +67,6 @@
                     android:textColor="@color/text_primary"
                     android:textSize="16sp" />
 
-                <!--Price of the item-->
                 <TextView
                     android:id="@+id/price"
                     android:layout_width="wrap_content"

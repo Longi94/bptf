@@ -22,7 +22,6 @@
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <!--Avatar-->
             <ImageView
                 android:id="@+id/avatar"
                 android:layout_width="match_parent"

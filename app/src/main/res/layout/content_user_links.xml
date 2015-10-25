@@ -23,7 +23,6 @@
         android:layout_margin="16dp"
         android:orientation="vertical">
 
-        <!--Bazaar.tf-->
         <Button
             android:id="@+id/button_bazaar_tf"
             style="?buttonBarButtonStyle"
@@ -32,7 +31,6 @@
             android:clickable="true"
             android:text="@string/user_page_link_bazaar" />
 
-        <!--Tf2Outpost-->
         <Button
             android:id="@+id/button_tf2op"
             style="?buttonBarButtonStyle"
@@ -41,7 +39,6 @@
             android:clickable="true"
             android:text="@string/user_page_link_tf2op" />
 
-        <!--Tf2TradePost-->
         <Button
             android:id="@+id/button_tf2tp"
             style="?buttonBarButtonStyle"
@@ -50,7 +47,6 @@
             android:clickable="true"
             android:text="@string/user_page_link_tf2tp" />
 
-        <!--SteamRep-->
         <Button
             android:id="@+id/button_steamrep"
             style="?buttonBarButtonStyle"
@@ -59,7 +55,6 @@
             android:clickable="true"
             android:text="@string/user_page_link_steamrep" />
 
-        <!--Steam account-->
         <Button
             android:id="@+id/button_steam_community"
             style="?buttonBarButtonStyle"
@@ -67,6 +62,7 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:text="@string/user_page_link_community" />
+
     </LinearLayout>
 
 </LinearLayout>

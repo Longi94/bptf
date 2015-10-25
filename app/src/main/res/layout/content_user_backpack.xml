@@ -49,7 +49,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!--Backpack value in refined metal-->
             <TextView
                 android:id="@+id/text_view_bp_refined"
                 android:layout_width="wrap_content"
@@ -75,7 +74,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!--Backpack value in usd-->
             <TextView
                 android:id="@+id/text_view_bp_usd"
                 android:layout_width="wrap_content"
@@ -109,7 +107,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!--Number of raw metal in backpack.-->
             <TextView
                 android:id="@+id/text_view_bp_raw_metal"
                 android:layout_width="wrap_content"
@@ -134,7 +131,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!--Number of raw keys in backpack-->
             <TextView
                 android:id="@+id/text_view_bp_raw_keys"
                 android:layout_width="wrap_content"
@@ -153,7 +149,6 @@
 
     </LinearLayout>
 
-    <!--Number of used and all slots in backpack-->
     <TextView
         android:id="@+id/text_view_bp_slots"
         android:layout_width="wrap_content"

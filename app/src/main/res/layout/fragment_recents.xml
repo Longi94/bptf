@@ -20,7 +20,7 @@
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="@string/title_home"/>
+            app:title="@string/title_home" />
 
         <LinearLayout
             android:id="@+id/list_changes_header"
@@ -37,7 +37,6 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <!--Metal price-->
                 <TextView
                     android:id="@+id/text_view_metal_price"
                     android:layout_width="wrap_content"
@@ -64,7 +63,6 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <!--Key price-->
                 <TextView
                     android:id="@+id/text_view_key_price"
                     android:layout_width="wrap_content"
@@ -91,7 +89,6 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <!--Buds price-->
                 <TextView
                     android:id="@+id/text_view_buds_price"
                     android:layout_width="wrap_content"
@@ -126,7 +123,6 @@
             android:layout_height="match_parent"
             android:clipChildren="false">
 
-            <!--Listview containing the latest changes-->
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
@@ -134,11 +130,10 @@
                 android:clipToPadding="false"
                 android:paddingBottom="4dp"
                 android:paddingTop="4dp"
-                android:scrollbars="none"/>
+                android:scrollbars="none" />
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
-        <!--Progress bar fro indicating loading-->
         <ProgressBar
             android:id="@+id/progress_bar"
             style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
