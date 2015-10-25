@@ -41,7 +41,6 @@
     <string name="pref_player_trust_negative" translatable="false">pref_player_trust_negative</string>
     <string name="pref_player_trust_positive" translatable="false">pref_player_trust_positive</string>
     <string name="pref_player_vac_banned" translatable="false">pref_player_vac_banned</string>
-    <string name="pref_preferred_advanced_calculator" translatable="false">pref_preferred_advanced_calculator</string>
     <string name="pref_resolved_steam_id" translatable="false">pref_resolved_steam_id</string>
     <string name="pref_steam_id" translatable="false">Steam ID</string>
     <string name="pref_sync_interval" translatable="false">pref_sync_interval</string>
@@ -75,7 +74,6 @@
     <string name="title_activity_unusual" translatable="false">UnusualActivity</string>
     <string name="title_activity_user_backpack" translatable="false">UserBackpackActivity</string>
     <string name="title_calculator" translatable="true">Calculator</string>
-    <string name="title_custom_profile" formatted="false" translatable="true">%s\'s profile</string>
     <string name="title_custom_backpack" formatted="false" translatable="true">%s\'s backpack</string>
     <string name="title_effects" translatable="true">Effects</string>
     <string name="title_home" translatable="true">Latest Changes</string>
@@ -114,10 +112,8 @@
 
     <!--Content descriptions-->
 
-    <string name="description_background" translatable="true">Background</string>
     <string name="description_delete" translatable="true">Delete</string>
     <string name="description_icon" translatable="true">Icon</string>
-    <string name="description_player_avatar" translatable="true">Player Avatar</string>
 
     <!--Resources for user page-->
 
@@ -129,13 +125,11 @@
     <string name="user_page_vac" translatable="false">VAC</string>
     <string name="user_page_keys" translatable="true">RAW KEYS</string>
     <string name="user_page_last_online" translatable="true">Last online:</string>
-    <string name="user_page_link_backpack" translatable="true">BACKPACK</string>
     <string name="user_page_link_community" translatable="true">COMMUNITY</string>
     <string name="user_page_metal" translatable="true">RAW METAL</string>
     <string name="user_page_refined" translatable="true">REFINED</string>
     <string name="user_page_reputation" translatable="true">Reputation</string>
     <string name="user_page_slots" translatable="true">SLOTS</string>
-    <string name="user_page_status" translatable="true">Status</string>
     <string name="user_page_trade_status" translatable="true">TRADE</string>
     <string name="user_page_trust" translatable="true">TRUST</string>
     <string name="user_page_user_since" translatable="true">Steam user since</string>
@@ -146,10 +140,6 @@
     <string name="user_page_status_trade" translatable="true">Looking to trade</string>
     <string name="user_page_status_play" translatable="true">Looking to play</string>
     <string name="user_page_status_in_game" translatable="true">In-Game</string>
-    <string name="user_page_status_normal" translatable="true">NORMAL</string>
-    <string name="user_page_status_scammer" translatable="true">SCAMMER</string>
-    <string name="user_page_status_ok" translatable="true">OK</string>
-    <string name="user_page_status_ban" translatable="true">BAN</string>
 
     <!--Resources for item details-->
 
@@ -166,7 +156,6 @@
     <!--Resources for calculator-->
 
     <string name="item_chooser_count" translatable="false">1</string>
-    <string name="calculator_add" translatable="true">Add new item</string>
     <string name="item_chooser_hint" translatable="true">Start typing…</string>
     <string name="item_chooser_no_match" translatable="true">No match or item has no price</string>
 
@@ -409,7 +398,6 @@
     <string name="header_page" formatted="false" translatable="true">Page %d</string>
     <string name="notification_unread_title" formatted="false" translatable="true">%d unread notifications on bp.tf</string>
     <string name="notification_unread_description" translatable="true">Tap to open in browser.</string>
-    <string name="title_activity_example">ExampleActivity</string>
     <string name="title_converter">Converter</string>
 
 </resources>

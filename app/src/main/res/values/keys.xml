@@ -7,7 +7,6 @@
     <!--API URLs-->
     <string name="backpack_tf_get_users" translatable="false">http://backpack.tf/api/IGetUsers/v3/</string>
     <string name="tlongdev_prices" translatable="false">http://tlongdev.com/prices.php</string>
-    <string name="steam_get_schema_url" translatable="false">http://api.steampowered.com/IEconItems_440/GetSchema/v0001/</string>
     <string name="steam_get_player_items_url" translatable="false">http://api.steampowered.com/IEconItems_440/GetPlayerItems/v0001/</string>
     <string name="steam_get_player_summaries_url" translatable="false">http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/</string>
     <string name="steam_resolve_vanity_url"  translatable="false">http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/</string>
