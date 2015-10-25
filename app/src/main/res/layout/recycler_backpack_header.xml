@@ -2,7 +2,7 @@
 <!--Layout of the headers used in the backpack activity.-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="?android:attr/listPreferredItemHeightSmall"
+    android:layout_height="wrap_content"
     android:gravity="center_vertical">
 
     <!--Simple text.-->
@@ -10,9 +10,8 @@
         android:id="@+id/text_view_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:textColor="@color/primary"
+        android:layout_margin="16dp"
+        android:textColor="@color/text_primary"
         android:textStyle="bold" />
 
 </RelativeLayout>

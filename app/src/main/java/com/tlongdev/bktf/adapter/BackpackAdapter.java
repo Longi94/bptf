@@ -101,7 +101,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                 holder.icon.setImageDrawable(null);
                 holder.effect.setImageDrawable(null);
                 holder.paint.setImageDrawable(null);
-                holder.effect.setBackgroundColor(0x00000000);
+                holder.root.setCardBackgroundColor(mContext.getResources().getColor(R.color.card_color));
                 holder.root.setOnClickListener(null);
 
                 if (currentCursor.moveToPosition(cursorPosition)) {
