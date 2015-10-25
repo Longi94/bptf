@@ -74,10 +74,10 @@ public class SteamIdPreference extends DialogPreference {
 
         //Format the instructions.
         ((TextView) view.findViewById(R.id.steam_id_64_bit)).setText(
-                Html.fromHtml("steamcommunity.com/profiles/<b>id</b>")/*7656119XXXXXXXXXX*/
+                Html.fromHtml("steamcommunity.com/profiles/<b><font color=\"#FF9800\">7656119XXXXXXXXXX</font></b>")/*7656119XXXXXXXXXX*/
         );
         ((TextView) view.findViewById(R.id.steam_id_vanity)).setText(
-                Html.fromHtml("steamcommunity.com/id/<b>name</b>/")
+                Html.fromHtml("steamcommunity.com/id/<b><font color=\"#FF9800\">name</font></b>/")
         );
     }
 }

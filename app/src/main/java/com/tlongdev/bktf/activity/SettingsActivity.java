@@ -3,6 +3,7 @@ package com.tlongdev.bktf.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -10,6 +11,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -31,7 +33,7 @@ import com.tlongdev.bktf.service.UpdateDatabaseService;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class SettingsActivity extends PreferenceActivity implements
+public class SettingsActivity extends AppCompatPreferenceActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
     /**
@@ -90,6 +92,28 @@ public class SettingsActivity extends PreferenceActivity implements
                         .getString(preference.getKey(), ""));
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //Set the color of the status bar
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.primary_dark));
+        }
+
+        //Re-add actionbar that was removed in recent build tools.
+        LinearLayout root = (LinearLayout) findViewById(android.R.id.list)
+                .getParent().getParent().getParent();
+        View toolbar = LayoutInflater.from(this)
+                .inflate(R.layout.settings_toolbar, root, false);
+        // insert at top
+        root.addView(toolbar, 0);
+
+        setSupportActionBar((Toolbar) toolbar.findViewById(R.id.toolbar));
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -98,21 +122,12 @@ public class SettingsActivity extends PreferenceActivity implements
         super.onPostCreate(savedInstanceState);
 
         setupSimplePreferencesScreen();
+    }
 
-        //Re-add actionbar that was removed in recent build tools.
-        LinearLayout root = (LinearLayout) findViewById(android.R.id.list)
-                .getParent().getParent().getParent();
-        Toolbar bar = (Toolbar) LayoutInflater.from(this)
-                .inflate(R.layout.settings_toolbar, root, false);
-        // insert at top
-        root.addView(bar, 0);
-        //finish the activity when the user clicks on the back button in the navigation bar
-        bar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        finish();
+        return super.onOptionsItemSelected(item);
     }
 
     /**
