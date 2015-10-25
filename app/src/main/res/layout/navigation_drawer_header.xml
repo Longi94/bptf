@@ -8,7 +8,7 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <LinearLayout
-        android:id="@+id/linear_layout_user_info"
+        android:id="@+id/linear_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom"
@@ -19,11 +19,10 @@
         android:paddingTop="16dp">
 
         <com.tlongdev.bktf.view.RoundedImageView
-            android:id="@+id/image_view_user_avatar"
+            android:id="@+id/avatar"
             android:layout_width="wrap_content"
             android:layout_height="64dp"
-            android:scaleType="fitXY"
-            android:foreground="@color/accent"/>
+            android:scaleType="fitXY"/>
 
         <View
             android:layout_width="wrap_content"
@@ -37,23 +36,21 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/text_view_user_name"
+                android:id="@+id/user_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textSize="14sp"
-                android:textStyle="bold"
-                android:text="NAME"/>
+                android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/text_view_can_count"
+                android:id="@+id/backpack_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textSize="14sp"
-                android:text="SOME_INFO"/>
+                android:textSize="14sp"/>
 
         </LinearLayout>
 

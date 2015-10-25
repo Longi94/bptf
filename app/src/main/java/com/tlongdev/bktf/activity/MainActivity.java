@@ -1,8 +1,14 @@
 package com.tlongdev.bktf.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
@@ -17,8 +23,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.fragment.CalculatorFragment;
 import com.tlongdev.bktf.fragment.ConverterFragment;
 import com.tlongdev.bktf.fragment.RecentsFragment;
@@ -26,6 +36,13 @@ import com.tlongdev.bktf.fragment.UnusualFragment;
 import com.tlongdev.bktf.fragment.UserFragment;
 import com.tlongdev.bktf.service.NotificationsService;
 import com.tlongdev.bktf.service.UpdateDatabaseService;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Tha main activity if the application. Navigation drawer is used. This is where most of the
@@ -98,6 +115,19 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private View.OnClickListener headerListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switchFragment(-1);
+        }
+    };
+
+    private TextView name;
+    private TextView backpack;
+    private ImageView avatar;
+    private View navigationHeader;
+    private View headerLayout;
+
     /**
      * {@inheritDoc}
      */
@@ -119,12 +149,13 @@ public class MainActivity extends AppCompatActivity {
         mNavigationView.setNavigationItemSelectedListener(navigationListener);
 
         //User clicked on the header
-        mNavigationView.inflateHeaderView(R.layout.navigation_drawer_header).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchFragment(-1);
-            }
-        });
+        navigationHeader = mNavigationView.inflateHeaderView(R.layout.navigation_drawer_header);
+        navigationHeader.setOnClickListener(headerListener);
+
+        name = (TextView) navigationHeader.findViewById(R.id.user_name);
+        backpack = (TextView) navigationHeader.findViewById(R.id.backpack_value);
+        avatar = (ImageView) navigationHeader.findViewById(R.id.avatar);
+        headerLayout = navigationHeader.findViewById(R.id.linear_layout);
 
         //Start services if option is on
         if (PreferenceManager.getDefaultSharedPreferences(this)
@@ -158,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
             restartUserFragment = false;
         }
+        updateHeader();
         super.onResume();
     }
 
@@ -210,6 +242,33 @@ public class MainActivity extends AppCompatActivity {
 
         transaction.replace(R.id.container, newFragment);
         transaction.commit();
+    }
+
+    public void updateHeader() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String steamId = prefs.getString(getString(R.string.pref_resolved_steam_id), "");
+        if (!steamId.equals("")) {
+            name.setText(prefs.getString(getString(R.string.pref_player_name), null));
+
+            double bpValue = Utility.getDouble(prefs,
+                    getString(R.string.pref_player_backpack_value_tf2), -1);
+            backpack.setText(String.valueOf(Math.round(bpValue)));
+
+            if (prefs.contains(getString(R.string.pref_new_avatar)) &&
+                    Utility.isNetworkAvailable(this)) {
+                //Start downloading the avatar in the background
+                new AvatarDownLoader(PreferenceManager.getDefaultSharedPreferences(this).
+                        getString(getString(R.string.pref_player_avatar_url), ""), this,
+                        avatar).
+                        execute();
+            }
+            navigationHeader.setOnClickListener(headerListener);
+            headerLayout.setVisibility(View.VISIBLE);
+        } else {
+            // TODO navigationHeader.setOnClickListener(null);
+            headerLayout.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -297,5 +356,126 @@ public class MainActivity extends AppCompatActivity {
 
     public interface OnDrawerOpenedListener {
         void onDrawerOpened();
+    }
+
+    /**
+     * Asynctask for downloading the avatar in the background.
+     */
+    private class AvatarDownLoader extends AsyncTask<Void, Void, Void> {
+
+        //The url of the avatar
+        private String url;
+
+        //The context the task was launched in
+        private Context mContext;
+
+        //Bitmap to store the image
+        private Bitmap bmp;
+
+        //Drawable for the avatar
+        private Drawable d;
+
+        //Error message to be shown to the user
+        private String errorMessage;
+
+        private ImageView avatar;
+
+        /**
+         * Constructor.
+         *
+         * @param url     url link for the avatar
+         * @param context the context the task was launched in
+         */
+        private AvatarDownLoader(String url, Context context, ImageView avatar) {
+            this.url = url;
+            this.mContext = context;
+            this.avatar = avatar;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            //Check again if we really need to download the image
+            if (PreferenceManager.getDefaultSharedPreferences(mContext).
+                    getBoolean(mContext.getString(R.string.pref_new_avatar), false)) {
+
+                //Get the image
+                bmp = getBitmapFromURL(url);
+
+                try {
+                    //Save avatar as png into the private data folder
+                    FileOutputStream fos = mContext.openFileOutput("avatar.png",
+                            Context.MODE_PRIVATE);
+                    bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                    fos.close();
+                } catch (IOException e) {
+                    //IO error, shouldn't reach
+                    errorMessage = e.getMessage();
+                    publishProgress();
+                    if (Utility.isDebugging(mContext))
+                        e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            //There was an error, notify the user
+            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
+        }
+
+        /**
+         * Method to download the image.
+         *
+         * @param link the link to download the image from
+         * @return the bitmap object containing the image
+         */
+        public Bitmap getBitmapFromURL(String link) {
+
+            try {
+                //Open connection
+                URL url = new URL(link);
+                HttpURLConnection connection = (HttpURLConnection) url
+                        .openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+
+                //Get the input stream
+                InputStream input = connection.getInputStream();
+
+                //Decode the image
+                return BitmapFactory.decodeStream(input);
+
+            } catch (IOException e) {
+                //There was an error, notify the user
+                errorMessage = e.getMessage();
+                publishProgress();
+                if (Utility.isDebugging(mContext))
+                    e.printStackTrace();
+                return null;
+            }
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            //Get the avatar from the private data folder and set it to the image view
+            File path = mContext.getFilesDir();
+            d = Drawable.createFromPath(path.toString() + "/avatar.png");
+            avatar.setImageDrawable(d);
+
+            //Save to preferences that we don't need to download the avatar again.
+            PreferenceManager.getDefaultSharedPreferences(mContext).edit().putBoolean(
+                    mContext.getString(R.string.pref_new_avatar), false).apply();
+        }
     }
 }
