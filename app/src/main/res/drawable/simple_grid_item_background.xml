@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Simple white selector for items. Pre-21-->
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/rectangle_grey" android:state_pressed="true" />
-</selector>
