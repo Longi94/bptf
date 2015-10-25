@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Layout of the headers used in the backpack activity.-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical">
 
-    <!--Simple text.-->
     <TextView
         android:id="@+id/text_view_header"
         android:layout_width="wrap_content"

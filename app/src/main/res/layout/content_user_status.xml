@@ -19,7 +19,6 @@
         android:layout_height="1dp"
         android:background="@color/separator_color" />
 
-    <!--How long was it since the user was last online-->
     <TextView
         android:id="@+id/text_view_user_last_online"
         android:layout_width="wrap_content"
@@ -31,7 +30,6 @@
         android:textColor="@color/text_primary"
         android:textSize="24sp" />
 
-    <!--Age of the user's steam account-->
     <TextView
         android:id="@+id/text_view_user_since"
         android:layout_width="wrap_content"
@@ -41,7 +39,6 @@
         android:textColor="@color/text_primary"
         android:textSize="24sp" />
 
-    <!--Age of the user's steam account-->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -22,7 +22,6 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:title="@string/title_calculator" />
 
-        <!--Header containing the results.-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
@@ -114,7 +113,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_margin="16dp"
         android:src="@drawable/ic_add_white_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>

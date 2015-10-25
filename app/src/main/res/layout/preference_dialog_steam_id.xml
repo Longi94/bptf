@@ -10,9 +10,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:text="Enter your 64bit SteamId or your vanity name. They can be found in you steam profile URL."
-        android:textColor="@color/text_secondary"
-        android:layout_marginBottom="16dp"/>
+        android:textColor="@color/text_secondary" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -43,8 +43,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:textColor="@color/text_primary"
-        android:text="ONLY ENTER THE HIGHLITED PART OF THE URLS!" />
+        android:text="ONLY ENTER THE HIGHLITED PART OF THE URLS!"
+        android:textColor="@color/text_primary" />
 
     <TextView
         android:layout_width="match_parent"
@@ -52,7 +52,6 @@
         android:layout_marginTop="16dp"
         android:text="@string/pref_policy_steam_id" />
 
-    <!--Input for preference-->
     <EditText
         android:id="@+id/edit_text_steam_id"
         android:layout_width="match_parent"
