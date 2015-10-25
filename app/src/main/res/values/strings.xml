@@ -58,7 +58,6 @@
     <string name="action_close" translatable="true">Close</string>
     <string name="action_clear" translatable="true">Clear items</string>
     <string name="action_settings" translatable="true">Settings</string>
-    <string name="action_show_simple" translatable="true">Simple mode</string>
     <string name="action_sort" translatable="true">Sort</string>
 
     <!--Searchview-->
