@@ -21,7 +21,6 @@
             android:layout_width="84dp"
             android:layout_height="match_parent">
 
-            <!--Icon of the item-->
             <ImageView
                 android:id="@+id/image_view_item_effect"
                 android:layout_width="84dp"
@@ -74,8 +73,8 @@
                     android:id="@+id/price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="13sp"
-                    android:textColor="@color/text_secondary" />
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp" />
 
             </LinearLayout>
 

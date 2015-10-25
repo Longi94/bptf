@@ -56,7 +56,7 @@ public class ItemChooserAdapter extends CursorAdapter {
 
         if (selectedIndex == cursor.getPosition()) {
             viewHolder.nameView.setTypeface(normalTypeface, Typeface.BOLD);
-            viewHolder.nameView.setTextColor(context.getResources().getColor(R.color.primary_dark));
+            viewHolder.nameView.setTextColor(context.getResources().getColor(R.color.accent));
         } else {
             viewHolder.nameView.setTypeface(normalTypeface, Typeface.NORMAL);
             viewHolder.nameView.setTextColor(mainColor);

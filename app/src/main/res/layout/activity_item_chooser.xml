@@ -86,7 +86,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/action_cancel"
-            android:textColor="@color/primary" />
+            android:textColor="@color/accent" />
 
         <!--Add button-->
         <Button
@@ -96,7 +96,7 @@
             android:layout_height="wrap_content"
             android:enabled="false"
             android:text="@string/action_add"
-            android:textColor="@color/primary" />
+            android:textColor="@color/accent" />
 
     </LinearLayout>
 
