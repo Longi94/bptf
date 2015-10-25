@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,7 +37,7 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
     public static final int COL_PRICE_LIST_CURR = 3;
     public static final int COL_PRICE_LIST_PRIC = 4;
     public static final int COL_PRICE_LIST_PMAX = 5;
-    public static final int COL_PRICE_LIST_UPDA = 6;
+    public static final int COL_PRICE_LIST_UPDA = 6; // TODO: 2015. 10. 25.
     public static final int COL_PRICE_LIST_DIFF = 7;
 
     //Default loader id
@@ -47,9 +48,9 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
             PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
             PriceEntry.COLUMN_DEFINDEX,
             PriceEntry.COLUMN_PRICE_INDEX,
-            PriceEntry.COLUMN_ITEM_PRICE_CURRENCY,
-            PriceEntry.COLUMN_ITEM_PRICE,
-            PriceEntry.COLUMN_ITEM_PRICE_MAX,
+            PriceEntry.COLUMN_CURRENCY,
+            PriceEntry.COLUMN_PRICE,
+            PriceEntry.COLUMN_PRICE_HIGH,
             PriceEntry.COLUMN_LAST_UPDATE,
             PriceEntry.COLUMN_DIFFERENCE,
     };
@@ -61,9 +62,6 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
     private int defindex;
     private int index;
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +75,11 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //Show the home button as back button
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         //Get necessary data from intent
         Intent i = getIntent();
@@ -100,9 +102,6 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         //Select only items with unusual quelity
@@ -129,18 +128,12 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         //pass the cursor to the adapter to show data
         adapter.swapCursor(data, false);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         //This is never reached, but it's here just in case

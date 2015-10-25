@@ -41,16 +41,16 @@ public class ItemChooserAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
-        int quality = cursor.getInt(ItemChooserActivity.COL_PRICE_LIST_QUAL);
-        int index = cursor.getInt(ItemChooserActivity.COL_PRICE_LIST_INDE);
+        int quality = cursor.getInt(ItemChooserActivity.COLUMN_QUALITY);
+        int index = cursor.getInt(ItemChooserActivity.COLUMN_PRICE_INDEX);
         if (quality == 5 && index != 0) {
-            viewHolder.nameView.setText(cursor.getString(ItemChooserActivity.COL_PRICE_LIST_NAME));
+            viewHolder.nameView.setText(cursor.getString(ItemChooserActivity.COLUMN_NAME));
         } else {
             viewHolder.nameView.setText(Utility.formatItemName(context,
-                    cursor.getInt(ItemChooserActivity.COL_PRICE_LIST_DEFINDEX),
-                    cursor.getString(ItemChooserActivity.COL_PRICE_LIST_NAME),
-                    cursor.getInt(ItemChooserActivity.COL_PRICE_LIST_TRAD),
-                    cursor.getInt(ItemChooserActivity.COL_PRICE_LIST_CRAF),
+                    cursor.getInt(ItemChooserActivity.COLUMN_DEFINDEX),
+                    cursor.getString(ItemChooserActivity.COLUMN_NAME),
+                    cursor.getInt(ItemChooserActivity.COLUMN_TRADABLE),
+                    cursor.getInt(ItemChooserActivity.COLUMN_CRAFTABLE),
                     quality, index));
         }
 
@@ -67,7 +67,7 @@ public class ItemChooserAdapter extends CursorAdapter {
         selectedIndex = index;
         Cursor cursor = getCursor();
         if (cursor != null && cursor.moveToPosition(index)) {
-            itemId = cursor.getInt(ItemChooserActivity.COL_PRICE_LIST_ID);
+            itemId = cursor.getInt(ItemChooserActivity.COLUMN_ID);
         }
     }
 

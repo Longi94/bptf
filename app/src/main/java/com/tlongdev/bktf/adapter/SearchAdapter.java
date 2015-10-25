@@ -66,7 +66,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                             }
                         });
 
-                        holder.name.setText(mDataSet.getString(SearchActivity.COL_PRICE_LIST_NAME));
+                        holder.name.setText(mDataSet.getString(SearchActivity.COLUMN_NAME));
                         holder.icon.setImageDrawable(Drawable.
                                 createFromPath(mContext.getFilesDir().toString() + "/avatar_search.png"));
                     }
@@ -90,18 +90,18 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                         }
                     });
 
-                    int defindex = mDataSet.getInt(SearchActivity.COL_PRICE_LIST_DEFI);
-                    int quality = mDataSet.getInt(SearchActivity.COL_PRICE_LIST_QUAL);
-                    int tradable = mDataSet.getInt(SearchActivity.COL_PRICE_LIST_TRAD);
-                    int craftable = mDataSet.getInt(SearchActivity.COL_PRICE_LIST_CRAF);
-                    int priceIndex = mDataSet.getInt(SearchActivity.COL_PRICE_LIST_INDE);
-                    int australium = mDataSet.getInt(SearchActivity.COL_AUSTRALIUM);
+                    int defindex = mDataSet.getInt(SearchActivity.COLUMN_DEFINDEX);
+                    int quality = mDataSet.getInt(SearchActivity.COLUMN_QUALITY);
+                    int tradable = mDataSet.getInt(SearchActivity.COLUMN_TRADABLE);
+                    int craftable = mDataSet.getInt(SearchActivity.COLUMN_CRAFTABLE);
+                    int priceIndex = mDataSet.getInt(SearchActivity.COLUMN_PRICE_INDEX);
+                    int australium = mDataSet.getInt(SearchActivity.COLUMN_AUSTRALIUM);
 
-                    double price = mDataSet.getDouble(SearchActivity.COL_PRICE_LIST_PRIC);
-                    double priceHigh = mDataSet.getDouble(SearchActivity.COL_PRICE_LIST_PMAX);
+                    double price = mDataSet.getDouble(SearchActivity.COLUMN_PRICE);
+                    double priceHigh = mDataSet.getDouble(SearchActivity.COLUMN_PRICE_HIGH);
 
-                    String name = mDataSet.getString(SearchActivity.COL_PRICE_LIST_NAME);
-                    String currency = mDataSet.getString(SearchActivity.COL_PRICE_LIST_CURR);
+                    String name = mDataSet.getString(SearchActivity.COLUMN_NAME);
+                    String currency = mDataSet.getString(SearchActivity.COLUMN_CURRENCY);
 
                     holder.name.setText(Utility.formatItemName(mContext, defindex, name,
                             tradable, craftable, quality, priceIndex));

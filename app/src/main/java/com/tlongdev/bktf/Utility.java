@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -31,6 +32,15 @@ public class Utility {
 
     public static final String LOG_TAG = Utility.class.getSimpleName();
     public static final double EPSILON = 0.0001;
+
+    public static int getColor(Context context, int id) {
+        if (Build.VERSION.SDK_INT >= 23) {
+            return context.getResources().getColor(id, null);
+        } else {
+            //noinspection deprecation
+            return context.getResources().getColor(id);
+        }
+    }
 
     /**
      * Convenient method for getting the steamId (or vanity user name) of the user.
@@ -2059,25 +2069,25 @@ public class Utility {
         double usdMultiplier = Utility.convertPrice(context, 1, Currency.USD, Currency.METAL);
         double budMultiplier = Utility.convertPrice(context, 1, Currency.BUD, Currency.METAL);
 
-        return " CASE WHEN " + PriceEntry.COLUMN_ITEM_PRICE_MAX + " IS NULL THEN ( " +
-                " CASE WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'keys' THEN ( " +
-                PriceEntry.COLUMN_ITEM_PRICE + " * " + keyMultiplier +
-                " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'earbuds' THEN ( " +
-                PriceEntry.COLUMN_ITEM_PRICE + " * " + budMultiplier +
-                " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'usd' THEN ( " +
-                PriceEntry.COLUMN_ITEM_PRICE + " * " + usdMultiplier +
+        return " CASE WHEN " + PriceEntry.COLUMN_PRICE_HIGH + " IS NULL THEN ( " +
+                " CASE WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'keys' THEN ( " +
+                PriceEntry.COLUMN_PRICE + " * " + keyMultiplier +
+                " ) WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'earbuds' THEN ( " +
+                PriceEntry.COLUMN_PRICE + " * " + budMultiplier +
+                " ) WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'usd' THEN ( " +
+                PriceEntry.COLUMN_PRICE + " * " + usdMultiplier +
                 " ) ELSE ( " +
-                PriceEntry.COLUMN_ITEM_PRICE +
+                PriceEntry.COLUMN_PRICE +
                 " ) END " +
                 " ) ELSE (" +
-                " CASE WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'keys' THEN ( " +
-                " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 * " + keyMultiplier +
-                " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'earbuds' THEN ( " +
-                " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 * " + budMultiplier +
-                " ) WHEN " + PriceEntry.COLUMN_ITEM_PRICE_CURRENCY + " = 'usd' THEN ( " +
-                " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 * " + usdMultiplier +
+                " CASE WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'keys' THEN ( " +
+                " ( " + PriceEntry.COLUMN_PRICE + " + " + PriceEntry.COLUMN_PRICE_HIGH + ") / 2 * " + keyMultiplier +
+                " ) WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'earbuds' THEN ( " +
+                " ( " + PriceEntry.COLUMN_PRICE + " + " + PriceEntry.COLUMN_PRICE_HIGH + ") / 2 * " + budMultiplier +
+                " ) WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'usd' THEN ( " +
+                " ( " + PriceEntry.COLUMN_PRICE + " + " + PriceEntry.COLUMN_PRICE_HIGH + ") / 2 * " + usdMultiplier +
                 " ) ELSE ( " +
-                " ( " + PriceEntry.COLUMN_ITEM_PRICE + " + " + PriceEntry.COLUMN_ITEM_PRICE_MAX + ") / 2 " +
+                " ( " + PriceEntry.COLUMN_PRICE + " + " + PriceEntry.COLUMN_PRICE_HIGH + ") / 2 " +
                 " ) END " +
                 " ) END ";
     }

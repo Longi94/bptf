@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -45,7 +46,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     public static final String STEAM_ID_KEY = "steamid";
     public static final String JSON_USER_SUMMARIES_KEY = "json_user_summaries";
 
-    //Progress bar that indicates donwloading user data.
+    //Progress bar that indicates downloading user data.
     private ProgressBar progressBar;
 
     //Reference too all the views that needs to be updated
@@ -95,9 +96,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     private boolean backpackFetching = false;
     private boolean userFetching = false;
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,13 +103,17 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
         //Set the color of the status bar
         if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.primary_dark));
+            getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //Show the home button as back button
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         Intent i = getIntent();
 
@@ -159,9 +161,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onClick(View v) {
 
@@ -214,6 +213,44 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                         .getString(getString(R.string.pref_resolved_steam_id), "")));
                 startActivity(i);
             }
+        }
+    }
+
+    @Override
+    public void onFetchFinished(int rawKeys, double rawMetal, int backpackSlots, int itemNumber) {
+        //Store all the data
+        this.rawKeys = rawKeys;
+        this.rawMetal = rawMetal;
+        this.backpackSlotNumber = backpackSlots;
+        this.itemNumber = itemNumber;
+
+        //Backpack fetching finished
+        backpackFetching = false;
+
+        //Update the UI if both tasks have stopped
+        if (!userFetching) {
+            updateUI();
+        }
+    }
+
+    @Override
+    public void onPrivateBackpack() {
+        //Backpack is private. All data bout the backpack is unkown and will be set to '?'
+        rawKeys = -1;
+        rawMetal = -1;
+        backpackSlotNumber = -1;
+        itemNumber = -1;
+        backpackValue = -1;
+
+        //Backpack fetshing finished
+        backpackFetching = false;
+
+        //Backpack is private
+        privateBackpack = true;
+
+        //Update the UI if both tasks have stopped
+        if (!userFetching) {
+            updateUI();
         }
     }
 
@@ -348,7 +385,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     private void updateUI() {
 
         //Set the title to X's profile
-        getSupportActionBar().setTitle(playerNameString);
+        setTitle(playerNameString);
 
         //Set the player reputation. Reputation: X
         playerReputation.setText(String.valueOf(playerReputationValue));
@@ -365,42 +402,40 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
             case 0:
                 if (lastOnline == -1) {
                     //Weird
-                    lastOnlineText.setText(getString(R.string.user_page_last_online) + " "
-                            + getString(R.string.filler_unknown));
+                    lastOnlineText.setText(String.format("%s %s", getString(R.string.user_page_last_online), getString(R.string.filler_unknown)));
                 } else {
                     //Player is offline, show how long was it since the player was last online
-                    lastOnlineText.setText(getString(R.string.user_page_last_online) + " "
-                            + Utility.formatLastOnlineTime(this,
-                            System.currentTimeMillis() - lastOnline * 1000L));
+                    lastOnlineText.setText(String.format("%s %s", getString(R.string.user_page_last_online), Utility.formatLastOnlineTime(this,
+                            System.currentTimeMillis() - lastOnline * 1000L)));
                 }
                 break;
             case 1:
                 lastOnlineText.setText(getString(R.string.user_page_status_online));
-                lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
+                lastOnlineText.setTextColor(Utility.getColor(this, R.color.player_online));
                 break;
             case 2:
                 lastOnlineText.setText(getString(R.string.user_page_status_busy));
-                lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
+                lastOnlineText.setTextColor(Utility.getColor(this, R.color.player_online));
                 break;
             case 3:
                 lastOnlineText.setText(getString(R.string.user_page_status_away));
-                lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
+                lastOnlineText.setTextColor(Utility.getColor(this, R.color.player_online));
                 break;
             case 4:
                 lastOnlineText.setText(getString(R.string.user_page_status_snooze));
-                lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
+                lastOnlineText.setTextColor(Utility.getColor(this, R.color.player_online));
                 break;
             case 5:
                 lastOnlineText.setText(getString(R.string.user_page_status_trade));
-                lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
+                lastOnlineText.setTextColor(Utility.getColor(this, R.color.player_online));
                 break;
             case 6:
                 lastOnlineText.setText(getString(R.string.user_page_status_play));
-                lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
+                lastOnlineText.setTextColor(Utility.getColor(this, R.color.player_online));
                 break;
             case 7:
                 lastOnlineText.setText(getString(R.string.user_page_status_in_game));
-                lastOnlineText.setTextColor(getResources().getColor(R.color.player_in_game));
+                lastOnlineText.setTextColor(Utility.getColor(this, R.color.player_in_game));
                 break;
         }
 
@@ -452,8 +487,8 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //Set the trust score and color the background according to it.
-        trustPositive.setText("+" + ratingPositive);
-        trustNegative.setText("-" + ratingNegative);
+        trustPositive.setText(String.format("+%d", ratingPositive));
+        trustNegative.setText(String.format("-%d", ratingNegative));
 
         //Image should be available in data folder by the time this method is called.
         avatar.setImageDrawable(Drawable.createFromPath(getFilesDir().toString() +
@@ -480,50 +515,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         //Reveal all the info and remove the progress bar.
         findViewById(R.id.scroll_view).setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onFetchFinished(int rawKeys, double rawMetal, int backpackSlots, int itemNumber) {
-        //Store all the data
-        this.rawKeys = rawKeys;
-        this.rawMetal = rawMetal;
-        this.backpackSlotNumber = backpackSlots;
-        this.itemNumber = itemNumber;
-
-        //Backpack fetching finished
-        backpackFetching = false;
-
-        //Update the UI if both tasks have stopped
-        if (!userFetching) {
-            updateUI();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onPrivateBackpack() {
-        //Backpack is private. All data bout the backpack is unkown and will be set to '?'
-        rawKeys = -1;
-        rawMetal = -1;
-        backpackSlotNumber = -1;
-        itemNumber = -1;
-        backpackValue = -1;
-
-        //Backpack fetshing finished
-        backpackFetching = false;
-
-        //Backpack is private
-        privateBackpack = true;
-
-        //Update the UI if both tasks have stopped
-        if (!userFetching) {
-            updateUI();
-        }
     }
 
     /**
@@ -629,9 +620,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
             return null;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         protected void onProgressUpdate(String... values) {
             //only used for showing error messages to the user.
@@ -641,9 +629,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         protected void onPostExecute(Void aVoid) {
             userFetching = false;

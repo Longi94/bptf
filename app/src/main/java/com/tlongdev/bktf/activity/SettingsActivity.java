@@ -33,6 +33,7 @@ import com.tlongdev.bktf.service.UpdateDatabaseService;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
+@SuppressWarnings("deprecation")
 public class SettingsActivity extends AppCompatPreferenceActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -98,7 +99,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
 
         //Set the color of the status bar
         if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.primary_dark));
+            getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
         }
 
         //Re-add actionbar that was removed in recent build tools.

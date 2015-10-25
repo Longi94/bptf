@@ -42,9 +42,9 @@ public final class DatabaseContract {
         public static final String COLUMN_ITEM_CRAFTABLE = "craftable";
         public static final String COLUMN_PRICE_INDEX = "price_index";
         public static final String COLUMN_AUSTRALIUM = "australium";
-        public static final String COLUMN_ITEM_PRICE = "price";
-        public static final String COLUMN_ITEM_PRICE_MAX = "max";
-        public static final String COLUMN_ITEM_PRICE_CURRENCY = "currency";
+        public static final String COLUMN_PRICE = "price";
+        public static final String COLUMN_PRICE_HIGH = "max";
+        public static final String COLUMN_CURRENCY = "currency";
         public static final String COLUMN_LAST_UPDATE = "last_update";
         public static final String COLUMN_DIFFERENCE = "difference";
         public static final String COLUMN_WEAPON_WEAR = "weapon_wear";
