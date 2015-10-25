@@ -168,7 +168,7 @@
     <string name="item_chooser_count" translatable="false">1</string>
     <string name="calculator_add" translatable="true">Add new item</string>
     <string name="item_chooser_hint" translatable="true">Start typing…</string>
-    <string name="item_chooser_no_match" translatable="true">No match or string has no price</string>
+    <string name="item_chooser_no_match" translatable="true">No match or item has no price</string>
 
     <!--Menu resources-->
 

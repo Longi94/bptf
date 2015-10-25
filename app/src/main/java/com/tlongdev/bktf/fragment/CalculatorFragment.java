@@ -26,7 +26,7 @@ import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.ItemChooserActivity;
 import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.activity.SearchActivity;
-import com.tlongdev.bktf.adapter.AdvancedCalculatorAdapter;
+import com.tlongdev.bktf.adapter.CalculatorAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.enums.Currency;
 
@@ -48,7 +48,7 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
     public static final String mSelection = PriceEntry.TABLE_NAME +
             "." + PriceEntry._ID + " = ?";
 
-    private AdvancedCalculatorAdapter mAdapter;
+    private CalculatorAdapter mAdapter;
 
     private ArrayList<Utility.IntegerPair> ids = new ArrayList<>();
 
@@ -93,8 +93,8 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new AdvancedCalculatorAdapter(getActivity(), ids);
-        mAdapter.setOnItemDeletedListener(new AdvancedCalculatorAdapter.OnItemEditListener() {
+        mAdapter = new CalculatorAdapter(getActivity(), ids);
+        mAdapter.setOnItemDeletedListener(new CalculatorAdapter.OnItemEditListener() {
             @Override
             public void onItemDeleted(int id, int count) {
                 deleteItem(id, count);

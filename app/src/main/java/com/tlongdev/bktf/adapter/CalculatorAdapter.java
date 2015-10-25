@@ -3,7 +3,6 @@ package com.tlongdev.bktf.adapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,12 +16,11 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.enums.Currency;
-import com.tlongdev.bktf.enums.Quality;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalculatorAdapter.ViewHolder> {
+public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.ViewHolder> {
 
     private ArrayList<Utility.IntegerPair> ids;
     private Context mContext;
@@ -60,7 +58,7 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
 
     private OnItemEditListener listener;
 
-    public AdvancedCalculatorAdapter(Context context, ArrayList<Utility.IntegerPair> ids) {
+    public CalculatorAdapter(Context context, ArrayList<Utility.IntegerPair> ids) {
         mContext = context;
         this.ids = ids;
     }
@@ -69,7 +67,7 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recycler_calculator, parent, false);
+                .inflate(R.layout.list_calculator, parent, false);
         return new ViewHolder(v);
     }
 
@@ -86,15 +84,32 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
         );
 
         if (cursor.moveToFirst()) {
+
+            int defindex = cursor.getInt(COL_PRICE_LIST_DEFI);
+            int quality = cursor.getInt(COL_PRICE_LIST_QUAL);
+            int australium = cursor.getInt(COL_AUSTRALIUM);
+            int tradable = cursor.getInt(COL_PRICE_LIST_TRAD);
+            int craftable = cursor.getInt(COL_PRICE_LIST_CRAF);
+            int priceIndex = cursor.getInt(COL_PRICE_LIST_INDE);
+
+            double raw = cursor.getDouble(COL_PRICE_LIST_PRAW);
+            double price = cursor.getDouble(COL_PRICE_LIST_PRIC);
+            double high = cursor.getDouble(COL_PRICE_LIST_PMAX);
+
+            String currency = cursor.getString(COL_PRICE_LIST_CURR);
+            String name = cursor.getString(COL_PRICE_LIST_NAME);
+
+            int count = ids.get(position).getY();
+
             try {
-                if (cursor.getInt(COL_AUSTRALIUM) == 1) {
+                if (australium == 1) {
                     holder.icon.setImageDrawable(Drawable.createFromStream(
                             mContext.getAssets().open("items/" + Utility
-                                    .getIconIndex(cursor.getInt(COL_PRICE_LIST_DEFI)) + "aus.png"), null));
+                                    .getIconIndex(defindex) + "aus.png"), null));
                 } else {
                     holder.icon.setImageDrawable(Drawable.createFromStream(
                             mContext.getAssets().open("items/" + Utility
-                                    .getIconIndex(cursor.getInt(COL_PRICE_LIST_DEFI)) + ".png"), null));
+                                    .getIconIndex(defindex) + ".png"), null));
                 }
             } catch (IOException e) {
                 if (Utility.isDebugging(mContext)) {
@@ -103,42 +118,30 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
                 holder.icon.setImageDrawable(null);
             }
 
-            holder.name.setText(Utility.formatItemName(mContext,
-                    cursor.getInt(COL_PRICE_LIST_DEFI),
-                    cursor.getString(COL_PRICE_LIST_NAME),
-                    cursor.getInt(COL_PRICE_LIST_TRAD),
-                    cursor.getInt(COL_PRICE_LIST_CRAF),
-                    cursor.getInt(COL_PRICE_LIST_QUAL),
-                    cursor.getInt(COL_PRICE_LIST_INDE)));
+            holder.name.setText(Utility.formatItemName(mContext, defindex, name, tradable, craftable,
+                    quality, priceIndex));
+
+            if (count > 1) {
+                holder.name.append(" " + count + "x");
+            }
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             try {
-                String currency = cursor.getString(COL_PRICE_LIST_CURR);
-                double priceRaw = cursor.getDouble(COL_PRICE_LIST_PRAW);
-                if (currency.equals(Currency.USD) && cursor.getInt(COL_PRICE_LIST_DEFI) != 5002) {
-                    if (priceRaw >= Utility.getDouble(prefs, mContext.getString(R.string.pref_buds_raw), 0)) {
-                        holder.price.setText(Utility.formatPrice(mContext,
-                                cursor.getDouble(COL_PRICE_LIST_PRIC),
-                                cursor.getDouble(COL_PRICE_LIST_PMAX),
-                                currency,
+                if (currency.equals(Currency.USD) && defindex != 5002) {
+                    if (raw >= Utility.getDouble(prefs, mContext.getString(R.string.pref_buds_raw), 0)) {
+                        holder.price.setText(Utility.formatPrice(mContext, price, high, currency,
                                 Currency.BUD, false));
-                    } else if (priceRaw >= Utility.getDouble(prefs, mContext.getString(R.string.pref_key_raw), 0)) {
-                        holder.price.setText(Utility.formatPrice(mContext,
-                                cursor.getDouble(COL_PRICE_LIST_PRIC),
-                                cursor.getDouble(COL_PRICE_LIST_PMAX),
-                                currency,
+                    } else if (raw >= Utility.getDouble(prefs, mContext.getString(R.string.pref_key_raw), 0)) {
+                        holder.price.setText(Utility.formatPrice(mContext, price, high, currency,
                                 Currency.KEY, false));
                     } else {
-                        holder.price.setText(Utility.formatPrice(mContext,
-                                cursor.getDouble(COL_PRICE_LIST_PRIC),
-                                cursor.getDouble(COL_PRICE_LIST_PMAX),
-                                currency,
+                        holder.price.setText(Utility.formatPrice(mContext, price, high, currency,
                                 Currency.METAL, false));
                     }
                 } else {
                     holder.price.setText(Utility.formatPrice(mContext,
-                            cursor.getDouble(COL_PRICE_LIST_PRIC),
-                            cursor.getDouble(COL_PRICE_LIST_PMAX),
+                            price,
+                            high,
                             currency,
                             currency, false));
                 }
@@ -147,8 +150,7 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
                     throwable.printStackTrace();
             }
 
-            holder.count.setText(String.valueOf(ids.get(position).getY()));
-            setNameColor(holder.name, cursor.getInt(COL_PRICE_LIST_QUAL));
+            holder.effect.setBackgroundColor(Utility.getQualityColor(mContext, quality, defindex, true));
 
             holder.delete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -164,49 +166,6 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
         cursor.close();
     }
 
-    private void setNameColor(TextView name, int quality) {
-        int color;
-        switch (quality) {
-            case Quality.NORMAL:
-                color = mContext.getResources().getColor(R.color.tf2_normal_color_dark);
-                break;
-            case Quality.GENUINE:
-                color = mContext.getResources().getColor(R.color.tf2_genuine_color_dark);
-                break;
-            case Quality.VINTAGE:
-                color = mContext.getResources().getColor(R.color.tf2_vintage_color_dark);
-                break;
-            case Quality.UNUSUAL:
-                color = mContext.getResources().getColor(R.color.tf2_unusual_color_dark);
-                break;
-            case Quality.UNIQUE:
-                color = mContext.getResources().getColor(R.color.tf2_unique_color_dark);
-                break;
-            case Quality.COMMUNITY:
-                color = mContext.getResources().getColor(R.color.tf2_community_color_dark);
-                break;
-            case Quality.VALVE:
-                color = mContext.getResources().getColor(R.color.tf2_valve_color_dark);
-                break;
-            case Quality.SELF_MADE:
-                color = mContext.getResources().getColor(R.color.tf2_community_color_dark);
-                break;
-            case Quality.STRANGE:
-                color = mContext.getResources().getColor(R.color.tf2_strange_color_dark);
-                break;
-            case Quality.HAUNTED:
-                color = mContext.getResources().getColor(R.color.tf2_haunted_color_dark);
-                break;
-            case Quality.COLLECTORS:
-                color = mContext.getResources().getColor(R.color.tf2_collectors_color_dark);
-                break;
-            default:
-                color = Color.BLACK;
-                break;
-        }
-        name.setTextColor(color);
-    }
-
     @Override
     public int getItemCount() {
         return ids.size();
@@ -218,18 +177,18 @@ public class AdvancedCalculatorAdapter extends RecyclerView.Adapter<AdvancedCalc
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView icon;
-        TextView name;
-        TextView price;
-        TextView count;
-        ImageView delete;
+        public final ImageView icon;
+        public final TextView name;
+        public final TextView price;
+        public final ImageView effect;
+        public final ImageView delete;
 
         public ViewHolder(View itemView) {
             super(itemView);
             icon = (ImageView) itemView.findViewById(R.id.icon);
+            effect = (ImageView) itemView.findViewById(R.id.effect);
             name = (TextView) itemView.findViewById(R.id.text_view_item_name);
             price = (TextView) itemView.findViewById(R.id.text_view_item_price);
-            count = (TextView) itemView.findViewById(R.id.text_view_item_count);
             delete = (ImageView) itemView.findViewById(R.id.image_view_delete);
         }
     }
