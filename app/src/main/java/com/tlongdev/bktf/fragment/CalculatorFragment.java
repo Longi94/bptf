@@ -154,6 +154,11 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
             case R.id.action_search:
                 startActivity(new Intent(getActivity(), SearchActivity.class));
                 break;
+            case R.id.action_clear:
+                ids.clear();
+                mAdapter.notifyDataSetChanged();
+                deleteAllItems();
+                break;
         }
         return true;
     }
