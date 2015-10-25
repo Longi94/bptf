@@ -7,31 +7,44 @@
     android:paddingRight="24dp"
     android:paddingTop="24dp">
 
-    <!--TextViews for showing hints and guides for finding steam id.-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter your 64bit SteamId or your vanity name. They can be found in you steam profile URL."
+        android:textColor="@color/text_secondary"
+        android:layout_marginBottom="16dp"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/preference_dialog_steam_id"
-        android:textColor="@android:color/black" />
+        android:textColor="@color/text_primary" />
 
     <TextView
         android:id="@+id/steam_id_64_bit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black" />
+        android:textColor="@color/text_primary" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
         android:text="@string/preference_dialog_vanity_name"
-        android:textColor="@android:color/black" />
+        android:textColor="@color/text_primary" />
 
     <TextView
         android:id="@+id/steam_id_vanity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black" />
+        android:textColor="@color/text_primary" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/text_primary"
+        android:text="ONLY ENTER THE HIGHLITED PART OF THE URLS!" />
 
     <TextView
         android:layout_width="match_parent"
