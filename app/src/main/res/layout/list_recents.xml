@@ -27,7 +27,7 @@
                 android:layout_height="match_parent"
                 android:contentDescription="@string/description_icon"
                 android:minHeight="84dp"
-                android:scaleType="centerInside" />
+                android:scaleType="fitCenter" />
 
             <ImageView
                 android:id="@+id/icon"
@@ -35,7 +35,7 @@
                 android:layout_height="match_parent"
                 android:contentDescription="@string/description_icon"
                 android:minHeight="84dp"
-                android:scaleType="centerInside" />
+                android:scaleType="fitCenter" />
 
         </FrameLayout>
 

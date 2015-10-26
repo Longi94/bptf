@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:background="@color/tf2_unusual_color_dark">
 
-            <com.tlongdev.bktf.view.CustomImageView
+            <com.tlongdev.bktf.view.RatioHeightImageView
                 android:id="@+id/image_view_item_effect"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -28,7 +28,7 @@
                 custom:ratioHeight="4"
                 custom:ratioWidth="5" />
 
-            <com.tlongdev.bktf.view.CustomImageView
+            <com.tlongdev.bktf.view.RatioHeightImageView
                 android:id="@+id/icon"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

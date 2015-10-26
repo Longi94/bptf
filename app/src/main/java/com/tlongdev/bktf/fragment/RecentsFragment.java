@@ -275,7 +275,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         mRecyclerView.startAnimation(fadeIn);
         mRecyclerView.setVisibility(View.VISIBLE);
 
-        if (progressBar.getVisibility() != View.VISIBLE) {
+        if (progressBar.getVisibility() == View.VISIBLE) {
             progressBar.startAnimation(fadeOut);
             progressBar.setVisibility(View.GONE);
         }

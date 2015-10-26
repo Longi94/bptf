@@ -24,33 +24,33 @@
             android:padding="16dp"
             tools:context=".activity.ItemDetailActivity">
 
-            <com.tlongdev.bktf.view.SquareFrameLayout
+            <com.tlongdev.bktf.view.RatioHeightFrameLayout
                 android:id="@+id/relative_layout_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <com.tlongdev.bktf.view.SquareImageView
+                <com.tlongdev.bktf.view.RatioHeightImageView
                     android:id="@+id/effect"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop" />
 
-                <com.tlongdev.bktf.view.SquareImageView
+                <com.tlongdev.bktf.view.RatioHeightImageView
                     android:id="@+id/icon"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop" />
 
-                <com.tlongdev.bktf.view.SquareImageView
+                <com.tlongdev.bktf.view.RatioHeightImageView
                     android:id="@+id/paint"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop" />
 
-            </com.tlongdev.bktf.view.SquareFrameLayout>
+            </com.tlongdev.bktf.view.RatioHeightFrameLayout>
 
             <TextView
                 android:id="@+id/text_view_name"
