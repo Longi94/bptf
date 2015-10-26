@@ -19,11 +19,27 @@ import com.tlongdev.bktf.fragment.RecentsFragment;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Adapter for the recycler view in the recents fragment.
+ */
 public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHolder> {
 
+    /**
+     * The context
+     */
     private Context mContext;
+
+    /**
+     * The data set
+     */
     private Cursor mDataSet;
 
+    /**
+     * Constructor.
+     *
+     * @param context the context
+     * @param dataSet the data set
+     */
     public RecentsAdapter(Context context, Cursor dataSet) {
         this.mContext = context;
         this.mDataSet = dataSet;
@@ -43,9 +59,11 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
             holder.root.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    // TODO: 2015. 10. 26. does nothing, this is for the fancy ripples for now
                 }
             });
 
+            //Get all the data from the cursor
             int defindex = mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_DEFI);
             int quality = mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_QUAL);
             int tradable = mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_TRAD);
@@ -65,17 +83,19 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
                     quality, priceIndex);
             holder.name.setText(itemName);
 
+            //Set the change indicator of the item
             if (Math.abs(difference - raw) < Utility.EPSILON) {
+                // TODO: 2015. 10. 26. There might be inaccuracies resulting in the difference not being equal to the raw price
                 holder.difference.setText("new");
                 holder.difference.setTextColor(0xFFFFFF00);
             } else if (difference == 0.0) {
                 holder.difference.setText("refresh");
                 holder.difference.setTextColor(0xFFFFFFFF);
             } else if (difference > 0.0) {
-                holder.difference.setText("+ " + Utility.formatPrice(mContext, difference, 0, Currency.METAL, currency, false));
+                holder.difference.setText(String.format("+ %s", Utility.formatPrice(mContext, difference, 0, Currency.METAL, currency, false)));
                 holder.difference.setTextColor(0xFF00FF00);
             } else {
-                holder.difference.setText("- " + Utility.formatPrice(mContext, Math.abs(difference), 0, Currency.METAL, currency, false));
+                holder.difference.setText(String.format("- %s", Utility.formatPrice(mContext, -difference, 0, Currency.METAL, currency, false)));
                 holder.difference.setTextColor(0xFFFF0000);
             }
 
@@ -84,21 +104,20 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
 
             try {
                 AssetManager assetManager = mContext.getAssets();
-
                 InputStream ims;
+
+                //Get the icon of the item
                 if (australium == 1 && defindex != 5037) {
                     ims = assetManager.open("items/" + Utility.getIconIndex(defindex) + "aus.png");
                 } else {
                     ims = assetManager.open("items/" + Utility.getIconIndex(defindex) + ".png");
                 }
+                holder.icon.setImageDrawable(Drawable.createFromStream(ims, null));
 
-                Drawable iconDrawable = Drawable.createFromStream(ims, null);
-                holder.icon.setImageDrawable(iconDrawable);
-
+                //Get the icon if the effect if needed
                 if (priceIndex != 0 && Utility.canHaveEffects(defindex, quality)) {
-                    ims = assetManager.open("effects/" +  priceIndex + "_188x188.png");
-                    Drawable effectDrawable = Drawable.createFromStream(ims, null);
-                    holder.effect.setImageDrawable(effectDrawable);
+                    ims = assetManager.open("effects/" + priceIndex + "_188x188.png");
+                    holder.effect.setImageDrawable(Drawable.createFromStream(ims, null));
                 } else {
                     holder.effect.setImageDrawable(null);
                 }
@@ -111,6 +130,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
             }
 
             try {
+                //Properly format the price
                 holder.price.setText(Utility.formatPrice(mContext, price, priceHigh,
                         currency, currency, false));
             } catch (Throwable throwable) {
@@ -125,13 +145,22 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
         return mDataSet == null ? 0 : mDataSet.getCount();
     }
 
+    /**
+     * Replaces the cursor of the adapter
+     *
+     * @param data          the cursor that will replace the current one
+     * @param closePrevious whether to close the previous cursor
+     */
     public void swapCursor(Cursor data, boolean closePrevious) {
         if (closePrevious && mDataSet != null) mDataSet.close();
         mDataSet = data;
         notifyDataSetChanged();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    /**
+     * The view holder.
+     */
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public final View root;
 
@@ -142,11 +171,16 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
         public final TextView price;
         public final TextView difference;
 
+        /**
+         * Constructor.
+         *
+         * @param view the root view
+         */
         public ViewHolder(View view) {
             super(view);
             root = view;
             icon = (ImageView) view.findViewById(R.id.icon);
-            effect = (ImageView) view.findViewById(R.id.image_view_item_effect);
+            effect = (ImageView) view.findViewById(R.id.effect);
             name = (TextView) view.findViewById(R.id.name);
             price = (TextView) view.findViewById(R.id.price);
             difference = (TextView) view.findViewById(R.id.difference);

@@ -13,6 +13,10 @@ import com.tlongdev.bktf.service.UpdateDatabaseService;
  * Broadcast receiver for starting services on device startup.
  */
 public class BootBroadcastReceiver extends BroadcastReceiver {
+
+    /**
+     * Constructor
+     */
     public BootBroadcastReceiver() {
     }
 

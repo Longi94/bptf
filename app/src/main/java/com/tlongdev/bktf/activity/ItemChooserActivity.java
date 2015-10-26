@@ -98,7 +98,8 @@ public class ItemChooserActivity extends FragmentActivity implements
         //Listen for focus changes
         numberInput.setOnFocusChangeListener(this);
 
-        //The listview that displays the serach result
+        // TODO: 2015. 10. 26. switch to a recycler view? maybe? maybe unnecessary
+        //The listview that displays the search result
         ListView itemChooserList = (ListView) findViewById(R.id.list_view_item_chooser);
 
         //Initialise he adapter and set it to the listview

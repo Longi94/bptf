@@ -20,11 +20,25 @@ import com.tlongdev.bktf.enums.Currency;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Adapter for the recycler view of the calculator.
+ */
 public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.ViewHolder> {
 
+    /**
+     * Pairs of prices table IDs and count numbers.
+     */
     private ArrayList<Utility.IntegerPair> ids;
+
+    /**
+     * The context
+     */
     private Context mContext;
 
+    /**
+     * The columns to load
+     * TODO there is really no need to query for every single item...
+     */
     private static final String[] PRICE_LIST_COLUMNS = {
             PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
             PriceEntry.COLUMN_DEFINDEX,
@@ -40,7 +54,9 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
             PriceEntry.COLUMN_AUSTRALIUM
     };
 
-    //Indexes for the columns above
+    /**
+     * Indexes for the columns above
+     */
     public static final int COL_PRICE_LIST_DEFI = 1;
     public static final int COL_PRICE_LIST_NAME = 2;
     public static final int COL_PRICE_LIST_QUAL = 3;
@@ -53,11 +69,23 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
     public static final int COL_PRICE_LIST_PRAW = 10;
     public static final int COL_AUSTRALIUM = 11;
 
+    /**
+     * The selection
+     */
     public static final String mSelection = PriceEntry.TABLE_NAME +
             "." + PriceEntry._ID + " = ?";
 
+    /**
+     * The listener that will be notified when an items is edited.
+     */
     private OnItemEditListener listener;
 
+    /**
+     * Constructor.
+     *
+     * @param context the context
+     * @param ids     the ids and counts if the items
+     */
     public CalculatorAdapter(Context context, ArrayList<Utility.IntegerPair> ids) {
         mContext = context;
         this.ids = ids;
@@ -65,7 +93,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // create a new view
+        //create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_calculator, parent, false);
         return new ViewHolder(v);
@@ -75,6 +103,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
     public void onBindViewHolder(ViewHolder holder, final int position) {
         PRICE_LIST_COLUMNS[COL_PRICE_LIST_PRAW] = Utility.getRawPriceQueryString(mContext);
 
+        //Query data of the item
         Cursor cursor = mContext.getContentResolver().query(
                 PriceEntry.CONTENT_URI,
                 PRICE_LIST_COLUMNS,
@@ -83,98 +112,111 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                 null
         );
 
-        if (cursor.moveToFirst()) {
+        if (cursor != null) {
 
-            int defindex = cursor.getInt(COL_PRICE_LIST_DEFI);
-            int quality = cursor.getInt(COL_PRICE_LIST_QUAL);
-            int australium = cursor.getInt(COL_AUSTRALIUM);
-            int tradable = cursor.getInt(COL_PRICE_LIST_TRAD);
-            int craftable = cursor.getInt(COL_PRICE_LIST_CRAF);
-            int priceIndex = cursor.getInt(COL_PRICE_LIST_INDE);
+            if (cursor.moveToFirst()) {
 
-            double raw = cursor.getDouble(COL_PRICE_LIST_PRAW);
-            double price = cursor.getDouble(COL_PRICE_LIST_PRIC);
-            double high = cursor.getDouble(COL_PRICE_LIST_PMAX);
+                //Get the data from the cursor
+                int defindex = cursor.getInt(COL_PRICE_LIST_DEFI);
+                int quality = cursor.getInt(COL_PRICE_LIST_QUAL);
+                int australium = cursor.getInt(COL_AUSTRALIUM);
+                int tradable = cursor.getInt(COL_PRICE_LIST_TRAD);
+                int craftable = cursor.getInt(COL_PRICE_LIST_CRAF);
+                int priceIndex = cursor.getInt(COL_PRICE_LIST_INDE);
 
-            String currency = cursor.getString(COL_PRICE_LIST_CURR);
-            String name = cursor.getString(COL_PRICE_LIST_NAME);
+                double raw = cursor.getDouble(COL_PRICE_LIST_PRAW);
+                double price = cursor.getDouble(COL_PRICE_LIST_PRIC);
+                double high = cursor.getDouble(COL_PRICE_LIST_PMAX);
 
-            int count = ids.get(position).getY();
+                String currency = cursor.getString(COL_PRICE_LIST_CURR);
+                String name = cursor.getString(COL_PRICE_LIST_NAME);
 
-            try {
-                if (australium == 1) {
-                    holder.icon.setImageDrawable(Drawable.createFromStream(
-                            mContext.getAssets().open("items/" + Utility
-                                    .getIconIndex(defindex) + "aus.png"), null));
-                } else {
-                    holder.icon.setImageDrawable(Drawable.createFromStream(
-                            mContext.getAssets().open("items/" + Utility
-                                    .getIconIndex(defindex) + ".png"), null));
-                }
-            } catch (IOException e) {
-                if (Utility.isDebugging(mContext)) {
-                    e.printStackTrace();
-                }
-                holder.icon.setImageDrawable(null);
-            }
+                int count = ids.get(position).getY();
 
-            holder.name.setText(Utility.formatItemName(mContext, defindex, name, tradable, craftable,
-                    quality, priceIndex));
-
-            if (count > 1) {
-                holder.name.append(" " + count + "x");
-            }
-
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-            try {
-                if (currency.equals(Currency.USD) && defindex != 5002) {
-                    if (raw >= Utility.getDouble(prefs, mContext.getString(R.string.pref_buds_raw), 0)) {
-                        holder.price.setText(Utility.formatPrice(mContext, price, high, currency,
-                                Currency.BUD, false));
-                    } else if (raw >= Utility.getDouble(prefs, mContext.getString(R.string.pref_key_raw), 0)) {
-                        holder.price.setText(Utility.formatPrice(mContext, price, high, currency,
-                                Currency.KEY, false));
+                try {
+                    //Get the icon of the item
+                    if (australium == 1) {
+                        holder.icon.setImageDrawable(Drawable.createFromStream(
+                                mContext.getAssets().open("items/" + Utility
+                                        .getIconIndex(defindex) + "aus.png"), null));
                     } else {
-                        holder.price.setText(Utility.formatPrice(mContext, price, high, currency,
-                                Currency.METAL, false));
+                        holder.icon.setImageDrawable(Drawable.createFromStream(
+                                mContext.getAssets().open("items/" + Utility
+                                        .getIconIndex(defindex) + ".png"), null));
                     }
-                } else {
-                    holder.price.setText(Utility.formatPrice(mContext,
-                            price,
-                            high,
-                            currency,
-                            currency, false));
+                } catch (IOException e) {
+                    if (Utility.isDebugging(mContext)) {
+                        e.printStackTrace();
+                    }
+                    holder.icon.setImageDrawable(null);
                 }
-            } catch (Throwable throwable) {
-                if (Utility.isDebugging(mContext))
-                    throwable.printStackTrace();
+
+                holder.name.setText(Utility.formatItemName(mContext, defindex, name, tradable,
+                        craftable, quality, priceIndex));
+
+                //Put the number of items behind the name if it is higher than 1
+                if (count > 1) {
+                    holder.name.append(String.format(" %dx", count));
+                }
+
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+                try {
+                    //If the currency is in USD convert it to keys or refs
+                    if (currency.equals(Currency.USD) && defindex != 5002) {
+                        if (raw >= Utility.getDouble(prefs, mContext.getString(R.string.pref_key_raw), 0)) {
+                            holder.price.setText(Utility.formatPrice(mContext, price, high, currency,
+                                    Currency.KEY, false));
+                        } else {
+                            holder.price.setText(Utility.formatPrice(mContext, price, high, currency,
+                                    Currency.METAL, false));
+                        }
+                    } else {
+                        holder.price.setText(Utility.formatPrice(mContext,
+                                price,
+                                high,
+                                currency,
+                                currency, false));
+                    }
+                } catch (Throwable throwable) {
+                    if (Utility.isDebugging(mContext))
+                        throwable.printStackTrace();
+                }
+
+                holder.effect.setBackgroundColor(Utility.getQualityColor(mContext, quality, defindex, true));
+
+                holder.delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (listener != null) {
+                            //Notify listener that an item was deleted
+                            listener.onItemDeleted(ids.get(position).getX(), ids.get(position).getY());
+                        }
+                        ids.remove(position);
+                        notifyDataSetChanged();
+                    }
+                });
             }
-
-            holder.effect.setBackgroundColor(Utility.getQualityColor(mContext, quality, defindex, true));
-
-            holder.delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onItemDeleted(ids.get(position).getX(), ids.get(position).getY());
-                    }
-                    ids.remove(position);
-                    notifyDataSetChanged();
-                }
-            });
+            cursor.close();
         }
-        cursor.close();
     }
 
     @Override
     public int getItemCount() {
-        return ids.size();
+        return ids == null ? 0 : ids.size();
     }
 
+    /**
+     * Set the listener that will be notified when an items is edited/deleted
+     *
+     * @param listener the listener to be set
+     */
     public void setOnItemDeletedListener(OnItemEditListener listener) {
         this.listener = listener;
     }
 
+    /**
+     * The view holder
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public final ImageView icon;
@@ -183,17 +225,31 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
         public final ImageView effect;
         public final ImageView delete;
 
-        public ViewHolder(View itemView) {
-            super(itemView);
-            icon = (ImageView) itemView.findViewById(R.id.icon);
-            effect = (ImageView) itemView.findViewById(R.id.effect);
-            name = (TextView) itemView.findViewById(R.id.text_view_item_name);
-            price = (TextView) itemView.findViewById(R.id.text_view_item_price);
-            delete = (ImageView) itemView.findViewById(R.id.image_view_delete);
+        /**
+         * Constructor
+         *
+         * @param view the root view
+         */
+        public ViewHolder(View view) {
+            super(view);
+            icon = (ImageView) view.findViewById(R.id.icon);
+            effect = (ImageView) view.findViewById(R.id.effect);
+            name = (TextView) view.findViewById(R.id.text_view_item_name);
+            price = (TextView) view.findViewById(R.id.text_view_item_price);
+            delete = (ImageView) view.findViewById(R.id.image_view_delete);
         }
     }
 
+    /**
+     * Interface that will be notified when an item is edited/deleted.
+     */
     public interface OnItemEditListener {
+        /**
+         * Called when an item is deleted.
+         *
+         * @param itemId the id of the item
+         * @param count  the number of the item(s)
+         */
         void onItemDeleted(int itemId, int count);
     }
 }
