@@ -25,14 +25,33 @@ import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.enums.Currency;
 
+/**
+ * Converter fragment. Let's the user quickly convert between currencies.
+ */
 public class ConverterFragment extends Fragment implements View.OnClickListener, View.OnFocusChangeListener {
 
+    /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = ConverterFragment.class.getSimpleName();
+
+    /**
+     * Inputs
+     */
     private EditText inputEarbuds;
     private EditText inputKeys;
     private EditText inputMetal;
     private EditText inputUsd;
+
+    /**
+     * the view that is currently in focus
+     */
     private EditText focus;
 
+    /**
+     * This disables the soft keyboard because we don't need it
+     */
     private View.OnTouchListener inputListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -45,6 +64,9 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
         }
     };
 
+    /**
+     * Constructor.
+     */
     public ConverterFragment() {
         // Required empty public constructor
     }
@@ -61,6 +83,7 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_converter, container, false);
 
+        //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
         inputEarbuds = (EditText) rootView.findViewById(R.id.edit_text_earbuds);
@@ -68,11 +91,13 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
         inputMetal = (EditText) rootView.findViewById(R.id.edit_text_metal);
         inputUsd = (EditText) rootView.findViewById(R.id.edit_text_usd);
 
+        //Handle the touch events inside the fragment
         inputEarbuds.setOnTouchListener(inputListener);
         inputKeys.setOnTouchListener(inputListener);
         inputMetal.setOnTouchListener(inputListener);
         inputUsd.setOnTouchListener(inputListener);
 
+        //Whenever a text of a input changes, update the value of the other three
         inputEarbuds.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -202,6 +227,7 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
             }
         });
 
+        //Set the initial values
         inputEarbuds.setText("1");
         inputEarbuds.setSelection(inputEarbuds.length());
         try {
@@ -247,6 +273,7 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.action_search:
+                //Start the search activity
                 startActivity(new Intent(getActivity(), SearchActivity.class));
                 break;
         }
@@ -256,6 +283,7 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
     @SuppressLint("SetTextI18n")
     @Override
     public void onClick(View v) {
+        //Handle all the clicks
         String s = null;
         switch (v.getId()) {
             case R.id.calculator_0:
@@ -294,6 +322,9 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
             case R.id.calculator_delete:
                 break;
         }
+
+        //This magical code simulates the behavior of a normal soft keyboard edit
+        //Also properly handles text selections
         String prev = focus.getText().toString();
         int selectionStart = focus.getSelectionStart();
         int selectionEnd = focus.getSelectionEnd();
@@ -303,7 +334,7 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                         prev.substring(selectionEnd, prev.length()));
                 focus.setSelection(selectionStart + 1);
             }
-        } else if (prev.length() > 0){
+        } else if (prev.length() > 0) {
             if (selectionStart != selectionEnd) {
                 focus.setText(prev.substring(0, selectionStart) +
                         prev.substring(selectionEnd, prev.length()));

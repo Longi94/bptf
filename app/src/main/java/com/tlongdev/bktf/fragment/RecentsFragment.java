@@ -39,17 +39,26 @@ import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.network.FetchPriceList;
 
 /**
- * Main fragment the shows the latest price changes.
+ * recents fragment. Shows a list of all the prices orderd by the time of the price update.
  */
 public class RecentsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
         SwipeRefreshLayout.OnRefreshListener, FetchPriceList.OnPriceListFetchListener,
-        AppBarLayout.OnOffsetChangedListener, MainActivity.OnDrawerOpenedListener{
+        AppBarLayout.OnOffsetChangedListener, MainActivity.OnDrawerOpenedListener {
 
+    /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
     private static final String LOG_TAG = RecentsFragment.class.getSimpleName();
 
+    /**
+     * The ID of the loader
+     */
     private static final int PRICE_LIST_LOADER = 0;
 
-    //Query columns
+    /**
+     * Query columns
+     */
     private static final String[] PRICE_LIST_COLUMNS = {
             PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
             PriceEntry.COLUMN_DEFINDEX,
@@ -66,7 +75,9 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
             PriceEntry.COLUMN_AUSTRALIUM
     };
 
-    //Indexes for the columns above
+    /**
+     * Indexes for the columns above
+     */
     public static final int COL_PRICE_LIST_DEFI = 1;
     public static final int COL_PRICE_LIST_NAME = 2;
     public static final int COL_PRICE_LIST_QUAL = 3;
@@ -80,17 +91,35 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     public static final int COL_PRICE_LIST_DIFF = 11;
     public static final int COL_AUSTRALIUM = 12;
 
+    /**
+     * Loading indicator
+     */
     private ProgressBar progressBar;
 
+    /**
+     * Adapter of the recycler view
+     */
     private RecentsAdapter adapter;
 
+    /**
+     * the swipe refresh layout
+     */
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    /**
+     * The recycler view
+     */
     private RecyclerView mRecyclerView;
 
+    /**
+     * Only needed for manually expanding the toolbar
+     */
     private AppBarLayout mAppBarLayout;
     private CoordinatorLayout mCoordinatorLayout;
 
+    /**
+     * Views
+     */
     private TextView metalPrice;
     private TextView keyPrice;
     private TextView budsPrice;
@@ -98,6 +127,9 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     private View keyPriceImage;
     private View budsPriceImage;
 
+    /**
+     * Constructor
+     */
     public RecentsFragment() {
         //Required empty constructor
     }
@@ -114,6 +146,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recents, container, false);
 
+        //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
         //Views used for toolbar behavior
@@ -123,6 +156,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
         adapter = new RecentsAdapter(getActivity(), null);
 
+        //Setup the recycler view
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(adapter);
@@ -130,11 +164,12 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
         //Set up the swipe refresh layout (color and listener)
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
-        mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.accent));
+        mSwipeRefreshLayout.setColorSchemeColors(Utility.getColor(getActivity(), R.color.accent));
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
 
+        //Views of in the toolbar
         metalPrice = (TextView) rootView.findViewById(R.id.text_view_metal_price);
         keyPrice = (TextView) rootView.findViewById(R.id.text_view_key_price);
         budsPrice = (TextView) rootView.findViewById(R.id.text_view_buds_price);
@@ -143,6 +178,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         keyPriceImage = rootView.findViewById(R.id.image_view_key_price);
         budsPriceImage = rootView.findViewById(R.id.image_view_buds_price);
 
+        //Populate the toolbar header
         onPriceListFetchFinished();
 
         return rootView;
@@ -200,9 +236,9 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //Handler the drawer toggle press
         switch (item.getItemId()) {
             case R.id.action_search:
+                //Start the search activity
                 startActivity(new Intent(getActivity(), SearchActivity.class));
                 break;
         }
@@ -211,7 +247,6 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
         String sortOrder = PriceEntry.COLUMN_LAST_UPDATE + " DESC";
 
         PRICE_LIST_COLUMNS[COL_PRICE_LIST_PRAW] = Utility.getRawPriceQueryString(getActivity());
@@ -230,17 +265,20 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         adapter.swapCursor(data, false);
 
+        //Animate in the recycler view, so it's not that abrupt
         Animation fadeIn = AnimationUtils.loadAnimation(getActivity(), R.anim.simple_fade_in);
         Animation fadeOut = AnimationUtils.loadAnimation(getActivity(), R.anim.simple_fade_in);
 
-        fadeIn.setDuration(250);
-        fadeOut.setDuration(250);
+        fadeIn.setDuration(500);
+        fadeOut.setDuration(500);
 
         mRecyclerView.startAnimation(fadeIn);
-        progressBar.startAnimation(fadeOut);
-
         mRecyclerView.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.GONE);
+
+        if (progressBar.getVisibility() != View.VISIBLE) {
+            progressBar.startAnimation(fadeOut);
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -267,7 +305,6 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         if (isAdded()) {
             //Stop animation
             mSwipeRefreshLayout.setRefreshing(false);
-
 
             //Update the header with currency prices
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -296,6 +333,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+        //Disable the swipe refresh layout when the toolbar is not fully visible
         if (i == 0) {
             mSwipeRefreshLayout.setEnabled(true);
         } else {

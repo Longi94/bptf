@@ -1,8 +1,9 @@
 package com.tlongdev.bktf.enums;
 
 /**
- * Enum for readability
+ * Quality types.
  */
+@SuppressWarnings("unused")
 public class Quality {
     public static final int NORMAL = 0;
     public static final int GENUINE = 1;
