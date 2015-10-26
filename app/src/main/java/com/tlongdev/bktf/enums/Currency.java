@@ -1,5 +1,9 @@
 package com.tlongdev.bktf.enums;
 
+/**
+ * Currency types.
+ */
+@SuppressWarnings("unused")
 public class Currency {
     public static final String USD = "usd";
     public static final String METAL = "metal";

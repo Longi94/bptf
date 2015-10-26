@@ -33,37 +33,68 @@ import com.tlongdev.bktf.enums.Currency;
 import java.util.ArrayList;
 
 /**
- * Fragment for calculator
+ * Calculator fragment. Let's the user create a list of items and it will calculate the total value
+ * of the items
  */
 public class CalculatorFragment extends Fragment implements MainActivity.OnDrawerOpenedListener {
 
+    /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = CalculatorFragment.class.getSimpleName();
+
+    /**
+     * The columns to query
+     */
     private static final String[] PRICE_LIST_COLUMNS = {
             PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
             null,
     };
 
-    //Indexes for the columns above
+    /**
+     * Indexes for the columns above
+     */
     public static final int COL_PRICE_LIST_PRAW = 1;
 
+    /**
+     * the selection
+     */
     public static final String mSelection = PriceEntry.TABLE_NAME +
             "." + PriceEntry._ID + " = ?";
 
+    /**
+     * the adapter of the recycler view
+     */
     private CalculatorAdapter mAdapter;
 
+    /**
+     * Pairs of prices table IDs and count numbers.
+     */
     private ArrayList<Utility.IntegerPair> ids = new ArrayList<>();
 
+    /**
+     * Views of the results
+     */
     private TextView priceMetal;
     private TextView priceKeys;
     private TextView priceBuds;
     private TextView priceUsd;
 
+    /**
+     * The sum of the price of items in the list
+     */
     private double totalPrice = 0;
 
-    private FloatingActionButton fab;
-
+    /**
+     * Only needed for manually expanding the toolbar
+     */
     private AppBarLayout mAppBarLayout;
     private CoordinatorLayout mCoordinatorLayout;
 
+    /**
+     * Constrctor.
+     */
     public CalculatorFragment() {
         // Required empty public constructor
     }
@@ -81,17 +112,15 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_calculator, container, false);
 
+        //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
         //Views used for toolbar behavior
         mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar_layout);
         mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator_layout);
 
-        RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        mRecyclerView.setHasFixedSize(true);
-
+        //Init the recycler view
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
 
         mAdapter = new CalculatorAdapter(getActivity(), ids);
         mAdapter.setOnItemDeletedListener(new CalculatorAdapter.OnItemEditListener() {
@@ -100,9 +129,14 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
                 deleteItem(id, count);
             }
         });
+
+        RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        //Init the FAB
+        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,9 +186,11 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.action_search:
+                //Start the search activity
                 startActivity(new Intent(getActivity(), SearchActivity.class));
                 break;
             case R.id.action_clear:
+                //Clear the items
                 ids.clear();
                 mAdapter.notifyDataSetChanged();
                 deleteAllItems();
@@ -163,6 +199,9 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         return true;
     }
 
+    /**
+     * Deletes all the items from the list
+     */
     private void deleteAllItems() {
         totalPrice = 0;
         try {
@@ -181,6 +220,12 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         }
     }
 
+    /**
+     * Adds an element into the list
+     *
+     * @param id    the id of the item
+     * @param count the number of the item(s)
+     */
     private void addItem(int id, int count) {
         Cursor cursor = getActivity().getContentResolver().query(
                 PriceEntry.CONTENT_URI,
@@ -190,8 +235,11 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
                 null
         );
 
-        if (cursor != null && cursor.moveToFirst()) {
-            totalPrice += cursor.getDouble(COL_PRICE_LIST_PRAW) * count;
+        //The value to the total price
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                totalPrice += cursor.getDouble(COL_PRICE_LIST_PRAW) * count;
+            }
             cursor.close();
         }
 
@@ -211,6 +259,12 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         }
     }
 
+    /**
+     * Deletes a single element from the list
+     *
+     * @param id    the id of the item
+     * @param count the number of the item(s)
+     */
     private void deleteItem(int id, int count) {
         Cursor cursor = getActivity().getContentResolver().query(
                 PriceEntry.CONTENT_URI,
@@ -220,6 +274,7 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
                 null
         );
 
+        //Subtract the value from the sum
         if (cursor != null && cursor.moveToFirst()) {
             totalPrice -= cursor.getDouble(COL_PRICE_LIST_PRAW) * count;
             cursor.close();

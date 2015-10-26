@@ -75,8 +75,15 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     //Stores whether the backpack is private or not
     private boolean privateBackpack = false;
 
+    /**
+     * Only needed for manually expanding the toolbar
+     */
     private AppBarLayout mAppBarLayout;
     private CoordinatorLayout mCoordinatorLayout;
+
+    /**
+     * the collapsing toolbar layout
+     */
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
 
     /**
@@ -98,9 +105,9 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_user, container, false);
 
+        //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
         //Views used for toolbar behavior
@@ -129,16 +136,16 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         avatar = (ImageView) rootView.findViewById(R.id.avatar);
 
         //Set the color of the refreshing animation
-        mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.accent));
+        mSwipeRefreshLayout.setColorSchemeColors(Utility.getColor(getActivity(), R.color.accent));
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         //Set the on click listeners for the buttons
-        mSwipeRefreshLayout.findViewById(R.id.button_bazaar_tf).setOnClickListener(this);
-        mSwipeRefreshLayout.findViewById(R.id.button_steamrep).setOnClickListener(this);
-        mSwipeRefreshLayout.findViewById(R.id.button_tf2op).setOnClickListener(this);
-        mSwipeRefreshLayout.findViewById(R.id.button_tf2tp).setOnClickListener(this);
-        mSwipeRefreshLayout.findViewById(R.id.button_steam_community).setOnClickListener(this);
-        mSwipeRefreshLayout.findViewById(R.id.backpack).setOnClickListener(this);
+        rootView.findViewById(R.id.button_bazaar_tf).setOnClickListener(this);
+        rootView.findViewById(R.id.button_steamrep).setOnClickListener(this);
+        rootView.findViewById(R.id.button_tf2op).setOnClickListener(this);
+        rootView.findViewById(R.id.button_tf2tp).setOnClickListener(this);
+        rootView.findViewById(R.id.button_steam_community).setOnClickListener(this);
+        rootView.findViewById(R.id.backpack).setOnClickListener(this);
 
         //Update all the views to show te user data
         updateUserPage();
@@ -202,6 +209,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.action_search:
+                //Start the search activity
                 startActivity(new Intent(getActivity(), SearchActivity.class));
                 break;
         }
@@ -218,7 +226,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         //Get the steam id, do nothing if there is no steam id
         String steamId = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(
                 getString(R.string.pref_resolved_steam_id), "");
-        if (steamId != null && steamId.equals("")) {
+        if (steamId.equals("")) {
             Toast.makeText(getActivity(), "bptf: " + getString(R.string.error_no_steam_id),
                     Toast.LENGTH_SHORT).show();
             return;
@@ -314,46 +322,45 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 long lastOnline = prefs.getLong(getString(R.string.pref_player_last_online), -1L);
                 if (lastOnline == -1) {
                     //Weird
-                    lastOnlineText.setText(getString(R.string.user_page_last_online) + " "
-                            + getString(R.string.filler_unknown));
+                    lastOnlineText.setText(String.format("%s %s", getString(R.string.user_page_last_online), getString(R.string.filler_unknown)));
                 } else {
                     //Player is offline, show how long was it since the player was last online
-                    lastOnlineText.setText(getString(R.string.user_page_last_online) + " "
-                            + Utility.formatLastOnlineTime(getActivity(),
-                            System.currentTimeMillis() - lastOnline * 1000L));
+                    lastOnlineText.setText(String.format("%s %s", getString(R.string.user_page_last_online), Utility.formatLastOnlineTime(getActivity(),
+                            System.currentTimeMillis() - lastOnline * 1000L)));
                 }
-                lastOnlineText.setTextColor(getResources().getColor(R.color.text_primary));
+                lastOnlineText.setTextColor(Utility.getColor(getActivity(), R.color.text_primary));
                 break;
             case 1:
                 lastOnlineText.setText(getString(R.string.user_page_status_online));
-                lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
+                lastOnlineText.setTextColor(Utility.getColor(getActivity(), R.color.player_online));
                 break;
             case 2:
                 lastOnlineText.setText(getString(R.string.user_page_status_busy));
-                lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
+                lastOnlineText.setTextColor(Utility.getColor(getActivity(), R.color.player_online));
                 break;
             case 3:
                 lastOnlineText.setText(getString(R.string.user_page_status_away));
-                lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
+                lastOnlineText.setTextColor(Utility.getColor(getActivity(), R.color.player_online));
                 break;
             case 4:
                 lastOnlineText.setText(getString(R.string.user_page_status_snooze));
-                lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
+                lastOnlineText.setTextColor(Utility.getColor(getActivity(), R.color.player_online));
                 break;
             case 5:
                 lastOnlineText.setText(getString(R.string.user_page_status_trade));
-                lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
+                lastOnlineText.setTextColor(Utility.getColor(getActivity(), R.color.player_online));
                 break;
             case 6:
                 lastOnlineText.setText(getString(R.string.user_page_status_play));
-                lastOnlineText.setTextColor(getResources().getColor(R.color.player_online));
+                lastOnlineText.setTextColor(Utility.getColor(getActivity(), R.color.player_online));
                 break;
             case 7:
                 lastOnlineText.setText(getString(R.string.user_page_status_in_game));
-                lastOnlineText.setTextColor(getResources().getColor(R.color.player_in_game));
+                lastOnlineText.setTextColor(Utility.getColor(getActivity(), R.color.player_in_game));
                 break;
         }
 
+        //Load drawables for palyer statuses
         Drawable statusUnknown = getResources().getDrawable(R.drawable.ic_help_outline_white_48dp);
         Drawable statusOk = getResources().getDrawable(R.drawable.ic_done_white_48dp);
         Drawable statusBad = getResources().getDrawable(R.drawable.ic_close_white_48dp);
@@ -429,8 +436,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         //Set the trust score and color the background according to it.
-        trustPositive.setText("+" + prefs.getInt(getString(R.string.pref_player_trust_positive), 0));
-        trustNegative.setText("-" + prefs.getInt(getString(R.string.pref_player_trust_negative), 0));
+        trustPositive.setText(String.format("+%d", prefs.getInt(getString(R.string.pref_player_trust_positive), 0)));
+        trustNegative.setText(String.format("-%d", prefs.getInt(getString(R.string.pref_player_trust_negative), 0)));
 
         //Raw keys
         int rawKeys = prefs.getInt(getString(R.string.pref_user_raw_key), -1);
@@ -451,7 +458,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         int itemNumber = prefs.getInt(getString(R.string.pref_user_items), -1);
         int backpackSlotNumber = prefs.getInt(getString(R.string.pref_user_slots), -1);
         if (itemNumber >= 0 && backpackSlotNumber >= 0)
-            backpackSlots.setText(String.valueOf(itemNumber) + "/" + backpackSlotNumber);
+            backpackSlots.setText(String.format("%s/%d", String.valueOf(itemNumber), backpackSlotNumber));
         else
             backpackSlots.setText("?/?");
     }
@@ -473,6 +480,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+        //Disable the swipe refresh layout when the toolbar is not fully visible
         if (i == 0) {
             mSwipeRefreshLayout.setEnabled(true);
         } else {

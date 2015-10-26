@@ -27,15 +27,33 @@ import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.adapter.UnusualAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 
+/**
+ * The unusual fragment, that shows a list of unusual item categories. Either categorized by
+ * hats or effects.
+ */
 public class UnusualFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
         MainActivity.OnDrawerOpenedListener {
 
-    public static final String LOG_TAG = UnusualFragment.class.getSimpleName();
+    /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = UnusualFragment.class.getSimpleName();
 
+    /**
+     * Loader IDs
+     */
     private static final int PRICE_LIST_LOADER = 0;
     private static final int EFFECT_LIST_LOADER = 1;
+
+    /**
+     * Extra key for the query string
+     */
     private static final String QUERY_KEY = "query";
 
+    /**
+     * Columns to query
+     */
     private static final String[] PRICE_LIST_COLUMNS = {
             PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
             PriceEntry.COLUMN_DEFINDEX,
@@ -49,21 +67,43 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
             null
     };
 
+    /**
+     * The IDs of the columns above
+     */
     public static final int COL_PRICE_LIST_INDE = 1;
     public static final int COL_PRICE_LIST_DEFI = 1;
     public static final int COL_PRICE_LIST_NAME = 2;
     public static final int COL_PRICE_LIST_AVG_PRICE = 3;
 
+    /**
+     * The adapter of the recycler view
+     */
     private UnusualAdapter adapter;
 
+    /**
+     * the menu item that switches between effects and hats
+     */
     private MenuItem effectMenuItem;
 
+    /**
+     * Only needed for manually expanding the toolbar
+     */
     private AppBarLayout mAppBarLayout;
     private CoordinatorLayout mCoordinatorLayout;
 
+    /**
+     * the current sort type
+     */
     private int currentSort = 0;
+
+    /**
+     * Whether to show effects or hats
+     */
     private boolean showEffect = false;
 
+    /**
+     * Constructor.
+     */
     public UnusualFragment() {
         // Required empty public constructor
     }
@@ -77,20 +117,19 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_unusual, container, false);
 
+        //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
         //Views used for toolbar behavior
         mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar_layout);
         mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator_layout);
 
+        //init the recycler view
         RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-
         adapter = new UnusualAdapter(getActivity(), null);
-
         mRecyclerView.setAdapter(adapter);
 
         return rootView;
@@ -99,6 +138,7 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
+        //Init the loader
         Bundle args = new Bundle();
         args.putString(QUERY_KEY, "AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC");
         getLoaderManager().initLoader(PRICE_LIST_LOADER, args, this);
@@ -109,6 +149,7 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
+        //Query stuff
         String selection;
         String[] selectionArgs = {"5"};
 
@@ -178,30 +219,35 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (!showEffect && id == R.id.menu_sort_name && currentSort != 1) {
+            //Show hats sorted by their name
             Bundle args = new Bundle();
             args.putString(QUERY_KEY, PriceEntry.COLUMN_ITEM_NAME + " ASC");
             getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
             currentSort = 1;
         } else if (!showEffect && id == R.id.menu_sort_price && currentSort != 0) {
+            //Show hats sorted by their average price
             Bundle args = new Bundle();
             args.putString(QUERY_KEY, "AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC");
             getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
             currentSort = 0;
         } else if (id == R.id.action_effect) {
             if (showEffect) {
+                //Show hats sorted by their average price
                 showEffect = false;
                 effectMenuItem.setIcon(R.drawable.ic_star_outline_white_24dp);
                 Bundle args = new Bundle();
                 args.putString(QUERY_KEY, "AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC");
                 getLoaderManager().initLoader(PRICE_LIST_LOADER, args, this);
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_unusuals));
+                getActivity().setTitle(getString(R.string.title_unusuals));
             } else {
+                //Show effects
                 showEffect = true;
                 effectMenuItem.setIcon(R.drawable.ic_star_white_24dp);
                 getLoaderManager().initLoader(EFFECT_LIST_LOADER, null, this);
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_effects));
+                getActivity().setTitle(getString(R.string.title_effects));
             }
         } else if (id == R.id.action_search) {
+            //Start the search activity
             startActivity(new Intent(getActivity(), SearchActivity.class));
         }
         return super.onOptionsItemSelected(item);
