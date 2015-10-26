@@ -7,7 +7,11 @@ import android.widget.ImageView;
 
 import com.tlongdev.bktf.R;
 
-public class CustomImageViewReverse extends ImageView {
+/**
+ * An image view that allows to set that width of the view in ratio to its height.
+ * Ratio is 1:1 by default.
+ */
+public class RatioWidthImageView extends ImageView {
 
     private double mRatioWidth = 1;
     private double mRatioHeight = 1;
@@ -17,7 +21,7 @@ public class CustomImageViewReverse extends ImageView {
      *
      * @param context context
      */
-    public CustomImageViewReverse(Context context) {
+    public RatioWidthImageView(Context context) {
         super(context);
     }
 
@@ -27,7 +31,7 @@ public class CustomImageViewReverse extends ImageView {
      * @param context context
      * @param attrs   attributes
      */
-    public CustomImageViewReverse(Context context, AttributeSet attrs) {
+    public RatioWidthImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
@@ -39,7 +43,7 @@ public class CustomImageViewReverse extends ImageView {
      * @param attrs        attributes
      * @param defStyleAttr default style attributes
      */
-    public CustomImageViewReverse(Context context, AttributeSet attrs, int defStyleAttr) {
+    public RatioWidthImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
@@ -47,12 +51,12 @@ public class CustomImageViewReverse extends ImageView {
     private void init(Context context, AttributeSet attrs) {
         TypedArray a = context.getTheme().obtainStyledAttributes(
                 attrs,
-                R.styleable.CustomLayout,
+                R.styleable.Ratio,
                 0, 0);
 
         try {
-            mRatioWidth = a.getFloat(R.styleable.CustomLayout_ratioWidth, 1f);
-            mRatioHeight = a.getFloat(R.styleable.CustomLayout_ratioHeight, 1f);
+            mRatioWidth = a.getFloat(R.styleable.Ratio_ratioWidth, 1f);
+            mRatioHeight = a.getFloat(R.styleable.Ratio_ratioHeight, 1f);
         } finally {
             a.recycle();
         }

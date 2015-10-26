@@ -196,8 +196,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
                 //Download finished. Replace dialog.
                 case 0:
                     loadingDialog.dismiss();
-                    loadingDialog = new ProgressDialog(mContext,
-                            ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT);
+                    loadingDialog = new ProgressDialog(mContext);
                     loadingDialog.setIndeterminate(false);
                     loadingDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                     loadingDialog.setMessage(mContext.getString(R.string.message_database_create));
@@ -281,6 +280,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
      * @return whether the query was successful or not
      * @throws JSONException
      */
+    @SuppressWarnings("ConstantConditions")
     private boolean getItemsFromJson(InputStream inputStream) throws JSONException, IOException {
 
         //All the JSON keys needed to parse

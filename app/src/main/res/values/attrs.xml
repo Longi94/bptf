@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="CustomLayout">
+    <declare-styleable name="Ratio">
         <attr name="ratioWidth" format="float"/>
         <attr name="ratioHeight" format="float"/>
     </declare-styleable>
