@@ -47,12 +47,20 @@
             android:layout_height="match_parent">
 
             <ImageView
+                android:id="@+id/effect"
+                android:layout_width="84dp"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/description_icon"
+                android:minHeight="84dp"
+                android:scaleType="centerInside" />
+
+            <ImageView
                 android:id="@+id/icon"
                 android:layout_width="84dp"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/description_icon"
                 android:minHeight="84dp"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerInside" />
 
         </FrameLayout>
 

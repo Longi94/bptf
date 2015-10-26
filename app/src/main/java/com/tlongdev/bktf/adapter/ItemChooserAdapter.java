@@ -9,20 +9,39 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
-import com.tlongdev.bktf.activity.ItemChooserActivity;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.activity.ItemChooserActivity;
 
+/**
+ * Adapter for the item chooser.
+ */
 public class ItemChooserAdapter extends CursorAdapter {
 
+    /**
+     * The index of the selected item.
+     */
     private int selectedIndex = -1;
+
+    /**
+     * The ID of the selected item.
+     */
     private int itemId = -1;
 
+    //The stored typeface to be reused when restyling the text
     private Typeface normalTypeface;
-    private int mainColor;
 
-    public ItemChooserAdapter(Context context, Cursor c, int flags) {
-        super(context, c, flags);
+    /**
+     * Recommended constructor.
+     *
+     * @param cursor  The cursor from which to get the data.
+     * @param context The context
+     * @param flags   Flags used to determine the behavior of the adapter; may
+     *                be any combination of {@link #FLAG_AUTO_REQUERY} and
+     *                {@link #FLAG_REGISTER_CONTENT_OBSERVER}.
+     */
+    public ItemChooserAdapter(Context context, Cursor cursor, int flags) {
+        super(context, cursor, flags);
     }
 
     @Override
@@ -32,8 +51,8 @@ public class ItemChooserAdapter extends CursorAdapter {
         ViewHolder viewHolder = new ViewHolder(view);
         view.setTag(viewHolder);
 
+        //Save the typeface of the text
         normalTypeface = viewHolder.nameView.getTypeface();
-        mainColor = viewHolder.nameView.getCurrentTextColor();
 
         return view;
     }
@@ -43,6 +62,8 @@ public class ItemChooserAdapter extends CursorAdapter {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
         int quality = cursor.getInt(ItemChooserActivity.COLUMN_QUALITY);
         int index = cursor.getInt(ItemChooserActivity.COLUMN_PRICE_INDEX);
+
+        //Set the name of the item
         if (quality == 5 && index != 0) {
             viewHolder.nameView.setText(cursor.getString(ItemChooserActivity.COLUMN_NAME));
         } else {
@@ -54,15 +75,21 @@ public class ItemChooserAdapter extends CursorAdapter {
                     quality, index));
         }
 
+        //If there is a selected item, mark it
         if (selectedIndex == cursor.getPosition()) {
             viewHolder.nameView.setTypeface(normalTypeface, Typeface.BOLD);
-            viewHolder.nameView.setTextColor(context.getResources().getColor(R.color.accent));
+            viewHolder.nameView.setTextColor(Utility.getColor(context, R.color.accent));
         } else {
             viewHolder.nameView.setTypeface(normalTypeface, Typeface.NORMAL);
-            viewHolder.nameView.setTextColor(mainColor);
+            viewHolder.nameView.setTextColor(Utility.getColor(context, R.color.text_secondary));
         }
     }
 
+    /**
+     * Selects and marks an item in the list
+     *
+     * @param index the index of the item to be selected
+     */
     public void setSelectedIndex(int index) {
         selectedIndex = index;
         Cursor cursor = getCursor();
@@ -71,14 +98,27 @@ public class ItemChooserAdapter extends CursorAdapter {
         }
     }
 
+    /**
+     * Returns the ID of the selected item
+     *
+     * @return the ID
+     */
     public int getItemId() {
         return itemId;
     }
 
+    /**
+     * The view holder
+     */
     public static class ViewHolder {
 
         public final TextView nameView;
 
+        /**
+         * Constructor of the view holder
+         *
+         * @param view the root view
+         */
         public ViewHolder(View view) {
             nameView = (TextView) view.findViewById(R.id.text_view_item_name);
         }

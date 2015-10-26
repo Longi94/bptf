@@ -24,22 +24,51 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 
+/**
+ * Adapter for the recycler view in the unusual fragment and activity.
+ */
 public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHolder> {
 
+    /**
+     * Type IDs
+     */
     public static final int TYPE_HATS = 0;
     public static final int TYPE_EFFECTS = 1;
     public static final int TYPE_SPECIFIC_HAT = 2;
 
+    /**
+     * The data set
+     */
     private Cursor mDataSet;
+
+    /**
+     * The context
+     */
     private Context mContext;
 
+    /**
+     * This variable will determine how the items will look like in the list
+     */
     private int type = 0;
 
+    /**
+     * Main constructor.
+     *
+     * @param context the context
+     * @param dataSet the data set
+     */
     public UnusualAdapter(Context context, Cursor dataSet) {
         this.mContext = context;
         this.mDataSet = dataSet;
     }
 
+    /**
+     * Constructor.
+     *
+     * @param context the context
+     * @param dataSet the data set
+     * @param type    the type of the adapter
+     */
     public UnusualAdapter(Context context, Cursor dataSet, int type) {
         this.mContext = context;
         this.mDataSet = dataSet;
@@ -55,15 +84,19 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        if (mDataSet.moveToPosition(position)) {
+        if (mDataSet != null && mDataSet.moveToPosition(position)) {
 
+            //the path of the icon
             String iconPath = "";
-
+            //Asset manager for loading iamges
             AssetManager assets = mContext.getAssets();
+
+            //Get the raw key price
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             double rawKeyPrice = Utility.getDouble(prefs, mContext.getString(R.string.pref_key_raw), 1);
 
             switch (type) {
+                //We are showing the hats, no effects
                 case TYPE_HATS:
                     final int defindex = mDataSet.getInt(UnusualFragment.COL_PRICE_LIST_DEFI);
                     final String name = mDataSet.getString(UnusualFragment.COL_PRICE_LIST_NAME);
@@ -82,6 +115,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                             new DecimalFormat("#0.00").format(mDataSet.getDouble(
                                     UnusualFragment.COL_PRICE_LIST_AVG_PRICE) / rawKeyPrice)));
                     break;
+                //We are showing the effects, no hats
                 case TYPE_EFFECTS:
                     final int index = mDataSet.getInt(UnusualFragment.COL_PRICE_LIST_INDE);
                     iconPath = "effects/" + index + "_188x188.png";
@@ -100,6 +134,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                             new DecimalFormat("#0.00").format(mDataSet.getDouble(
                                     UnusualFragment.COL_PRICE_LIST_AVG_PRICE) / rawKeyPrice)));
                     break;
+                //We are showing both that icon and the effect for a specific hat or effect
                 case TYPE_SPECIFIC_HAT:
                     try {
                         holder.price.setText(Utility.formatPrice(mContext,
@@ -116,6 +151,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                     iconPath = "items/" + Utility.getIconIndex(mDataSet.getInt(UnusualActivity.COL_PRICE_LIST_DEFI)) + ".png";
 
                     try {
+                        //Load the effect icon
                         InputStream ims = assets.open("effects/" + mDataSet.getInt(UnusualActivity.COL_PRICE_LIST_INDE) + "_188x188.png");
                         holder.effect.setImageDrawable(Drawable.createFromStream(ims, null));
                     } catch (IOException e) {
@@ -127,6 +163,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
             }
 
             try {
+                //Get the icon that needs to be loaded
                 InputStream ims = assets.open(iconPath);
                 holder.icon.setImageDrawable(Drawable.createFromStream(ims, null));
             } catch (IOException e) {
@@ -142,16 +179,30 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
         return mDataSet == null ? 0 : mDataSet.getCount();
     }
 
+    /**
+     * Replaces the cursor of the adapter
+     *
+     * @param data          the cursor that will replace the current one
+     * @param closePrevious whether to close the previous cursor
+     */
     public void swapCursor(Cursor data, boolean closePrevious) {
         if (closePrevious && mDataSet != null) mDataSet.close();
         mDataSet = data;
         notifyDataSetChanged();
     }
 
+    /**
+     * Set the type of the adapter
+     *
+     * @param type the type of the adapter
+     */
     public void setType(int type) {
         this.type = type;
     }
 
+    /**
+     * The view holder.
+     */
     class ViewHolder extends RecyclerView.ViewHolder {
 
         public final ImageView icon;
@@ -160,6 +211,11 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
 
         public final View root;
 
+        /**
+         * Constructor.
+         *
+         * @param view the root view
+         */
         public ViewHolder(View view) {
             super(view);
 
