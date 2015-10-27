@@ -29,6 +29,12 @@ public class ItemChooserActivity extends FragmentActivity implements
         TextWatcher, LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener,
         View.OnFocusChangeListener {
 
+    /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = ItemChooserActivity.class.getSimpleName();
+
     //Extra keys. Only used when the user is editing the item.
     public static final String EXTRA_ITEM_ID = "item_id";
     public static final String EXTRA_ITEM_COUNT = "item_count";

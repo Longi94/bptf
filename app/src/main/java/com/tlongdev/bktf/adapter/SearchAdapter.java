@@ -26,6 +26,12 @@ import java.io.InputStream;
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
     /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = SearchAdapter.class.getSimpleName();
+
+    /**
      * View type IDs
      */
     private static final int VIEW_TYPE_PRICE = 0;

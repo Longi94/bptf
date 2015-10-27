@@ -51,6 +51,12 @@ import java.net.URL;
 public class MainActivity extends AppCompatActivity {
 
     /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
+    /**
      * Request codes for onActivityResult
      */
     public static final int REQUEST_SETTINGS = 100;

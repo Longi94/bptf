@@ -38,6 +38,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
     /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = SettingsActivity.class.getSimpleName();
+
+    /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */

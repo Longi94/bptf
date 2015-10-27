@@ -18,6 +18,12 @@ import com.tlongdev.bktf.R;
  */
 public class SteamIdPreference extends DialogPreference {
 
+    /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = SteamIdPreference.class.getSimpleName();
+
     //The input field
     private EditText steamIdInput;
 

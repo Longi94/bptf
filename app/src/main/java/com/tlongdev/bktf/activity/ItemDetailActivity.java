@@ -29,6 +29,12 @@ import java.io.InputStream;
  */
 public class ItemDetailActivity extends Activity {
 
+    /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = ItemDetailActivity.class.getSimpleName();
+
     //Keys for the extra data in the intent
     public static final String EXTRA_ITEM_ID = "id";
     public static final String EXTRA_GUEST = "guest";

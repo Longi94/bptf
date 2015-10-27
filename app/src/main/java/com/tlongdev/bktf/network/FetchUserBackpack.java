@@ -30,7 +30,11 @@ import java.util.Vector;
  */
 public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
 
-    public static final String LOG_TAG = FetchUserBackpack.class.getSimpleName();
+    /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = FetchUserBackpack.class.getSimpleName();
 
     //All the json keys needed to parse the data out of the json string
     private static final String OWM_UNIQUE_ID = "id";

@@ -30,6 +30,12 @@ import java.text.DecimalFormat;
 public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHolder> {
 
     /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = UnusualAdapter.class.getSimpleName();
+
+    /**
      * Type IDs
      */
     public static final int TYPE_HATS = 0;

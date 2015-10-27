@@ -15,6 +15,12 @@ import com.tlongdev.bktf.service.UpdateDatabaseService;
 public class BootBroadcastReceiver extends BroadcastReceiver {
 
     /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = BootBroadcastReceiver.class.getSimpleName();
+
+    /**
      * Constructor
      */
     public BootBroadcastReceiver() {

@@ -19,6 +19,12 @@ import com.tlongdev.bktf.activity.ItemChooserActivity;
 public class ItemChooserAdapter extends CursorAdapter {
 
     /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = ItemChooserAdapter.class.getSimpleName();
+
+    /**
      * The index of the selected item.
      */
     private int selectedIndex = -1;

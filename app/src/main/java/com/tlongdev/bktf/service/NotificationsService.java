@@ -32,6 +32,12 @@ import java.net.URL;
  */
 public class NotificationsService extends Service {
 
+    /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = NotificationsService.class.getSimpleName();
+
     //Intent extra keys for indicating the need for the notification check
     private static final String CHECK_FOR_NOTIFICATIONS = "notification";
 

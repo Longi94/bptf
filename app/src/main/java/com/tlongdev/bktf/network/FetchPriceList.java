@@ -35,6 +35,10 @@ import java.util.Vector;
  */
 public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
 
+    /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
     private static final String LOG_TAG = FetchPriceList.class.getSimpleName();
 
     //The context the task runs in

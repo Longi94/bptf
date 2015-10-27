@@ -25,6 +25,12 @@ import java.io.InputStream;
 public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHolder> {
 
     /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = RecentsAdapter.class.getSimpleName();
+
+    /**
      * The context
      */
     private Context mContext;

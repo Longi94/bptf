@@ -27,6 +27,12 @@ import java.net.URL;
 public class FetchUserInfo extends AsyncTask<String, Void, Void> implements
         FetchUserBackpack.OnFetchUserBackpackListener {
 
+    /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = FetchUserInfo.class.getSimpleName();
+
     //The context the task is running in
     private Context mContext;
 

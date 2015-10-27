@@ -26,6 +26,12 @@ import java.util.ArrayList;
 public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.ViewHolder> {
 
     /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = CalculatorAdapter.class.getSimpleName();
+
+    /**
      * Pairs of prices table IDs and count numbers.
      */
     private ArrayList<Utility.IntegerPair> ids;

@@ -14,6 +14,12 @@ import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 public class DatabaseProvider extends ContentProvider {
 
     /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = DatabaseProvider.class.getSimpleName();
+
+    /**
      * URI matcher result codes
      */
     public static final int PRICE_LIST = 100;

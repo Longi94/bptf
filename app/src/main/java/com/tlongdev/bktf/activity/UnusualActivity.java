@@ -24,7 +24,11 @@ import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
  */
 public class UnusualActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    public static final String LOG_TAG = UnusualActivity.class.getSimpleName();
+    /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = UnusualActivity.class.getSimpleName();
 
     //Intent extra keys
     public static final String DEFINDEX_KEY = "defindex";

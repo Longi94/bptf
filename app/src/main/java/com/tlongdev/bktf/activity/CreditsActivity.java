@@ -9,6 +9,12 @@ import com.tlongdev.bktf.R;
  */
 public class CreditsActivity extends AppCompatPreferenceActivity {
 
+    /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = CreditsActivity.class.getSimpleName();
+
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
