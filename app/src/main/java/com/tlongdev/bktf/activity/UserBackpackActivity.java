@@ -23,6 +23,10 @@ import com.tlongdev.bktf.data.UserBackpackContract.UserBackpackEntry;
  */
 public class UserBackpackActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
     private static final String LOG_TAG = UserBackpackActivity.class.getSimpleName();
 
     //Loader types

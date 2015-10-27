@@ -15,6 +15,7 @@ import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.data.ItemSchemaDbHelper;
 import com.tlongdev.bktf.enums.Currency;
 import com.tlongdev.bktf.enums.Quality;
+import com.tlongdev.bktf.service.UpdateDatabaseService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,7 +32,12 @@ import java.util.Date;
  */
 public class Utility {
 
-    public static final String LOG_TAG = Utility.class.getSimpleName();
+    /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = Utility.class.getSimpleName();
+
     public static final double EPSILON = 0.0001;
 
     /**

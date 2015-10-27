@@ -16,6 +16,12 @@ import com.tlongdev.bktf.network.FetchPriceList;
  */
 public class UpdateDatabaseService extends Service {
 
+    /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = UpdateDatabaseService.class.getSimpleName();
+
     //Intent extra keys for indicating the need for the update
     private static final String UPDATE_DATABASE = "update";
 

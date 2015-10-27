@@ -40,6 +40,10 @@ import java.net.URL;
 public class UserActivity extends AppCompatActivity implements View.OnClickListener,
         FetchUserBackpack.OnFetchUserBackpackListener {
 
+    /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
     private static final String LOG_TAG = UserActivity.class.getSimpleName();
 
     //Keys for extra data in the intent.

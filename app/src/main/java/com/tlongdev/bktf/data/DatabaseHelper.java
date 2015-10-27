@@ -4,10 +4,16 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
+import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
+
+    /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = DatabaseHelper.class.getSimpleName();
 
     private static final int DATABASE_VERSION = 6;
     public static final String DATABASE_NAME = "pricelist.db";

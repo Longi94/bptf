@@ -49,6 +49,12 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         View.OnClickListener, FetchUserInfo.OnFetchUserInfoListener, MainActivity.OnDrawerOpenedListener,
         AppBarLayout.OnOffsetChangedListener {
 
+    /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = UserFragment.class.getSimpleName();
+
     //Reference too all the views that need to be updated
     private TextView playerReputation;
     private TextView trustPositive;

@@ -41,7 +41,11 @@ import java.util.Arrays;
 
 public class SearchActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    public static final String LOG_TAG = SearchActivity.class.getSimpleName();
+    /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = SearchActivity.class.getSimpleName();
 
     private static final int PRICE_LIST_LOADER = 0;
     private static final String QUERY_KEY = "query";

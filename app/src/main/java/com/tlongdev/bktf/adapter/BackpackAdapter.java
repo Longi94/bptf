@@ -33,6 +33,12 @@ import java.io.InputStream;
 public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHolder> {
 
     /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = BackpackAdapter.class.getSimpleName();
+
+    /**
      * View types
      */
     public static final int VIEW_TYPE_ITEM = 0;
