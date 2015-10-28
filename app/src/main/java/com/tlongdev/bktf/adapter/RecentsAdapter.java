@@ -1,9 +1,7 @@
 package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +11,11 @@ import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
-import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.fragment.RecentsFragment;
+import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.model.Tf2Item;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Adapter for the recycler view in the recents fragment.
@@ -70,75 +68,54 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
             });
 
             //Get all the data from the cursor
-            int defindex = mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_DEFI);
-            int quality = mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_QUAL);
-            int tradable = mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_TRAD);
-            int craftable = mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_CRAF);
-            int priceIndex = mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_INDE);
-            int australium = mDataSet.getInt(RecentsFragment.COL_AUSTRALIUM);
+            Tf2Item item = new Tf2Item(
+                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_DEFI),
+                    mDataSet.getString(RecentsFragment.COL_PRICE_LIST_NAME),
+                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_QUAL),
+                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_TRAD) == 1,
+                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_CRAF) == 1,
+                    mDataSet.getInt(RecentsFragment.COL_AUSTRALIUM) == 1,
+                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_INDE),
+                    new Price(
+                            mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PRIC),
+                            mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PMAX),
+                            mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PRAW),
+                            0 /* TODO last update */,
+                            mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_DIFF),
+                            mDataSet.getString(RecentsFragment.COL_PRICE_LIST_CURR)
+                    )
+            );
 
-            double price = mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PRIC);
-            double priceHigh = mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PMAX);
-            double difference = mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_DIFF);
-            double raw = mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PRAW);
-
-            String name = mDataSet.getString(RecentsFragment.COL_PRICE_LIST_NAME);
-            String currency = mDataSet.getString(RecentsFragment.COL_PRICE_LIST_CURR);
-
-            String itemName = Utility.formatItemName(mContext, defindex, name, tradable, craftable,
-                    quality, priceIndex);
-            holder.name.setText(itemName);
+            holder.name.setText(item.getFormattedName(mContext, false));
 
             //Set the change indicator of the item
-            if (Math.abs(difference - raw) < Utility.EPSILON) {
-                // TODO: 2015. 10. 26. There might be inaccuracies resulting in the difference not being equal to the raw price
-                holder.difference.setText("new");
-                holder.difference.setTextColor(0xFFFFFF00);
-            } else if (difference == 0.0) {
-                holder.difference.setText("refresh");
-                holder.difference.setTextColor(0xFFFFFFFF);
-            } else if (difference > 0.0) {
-                holder.difference.setText(String.format("+ %s", Utility.formatPrice(mContext, difference, 0, Currency.METAL, currency, false)));
-                holder.difference.setTextColor(0xFF00FF00);
-            } else {
-                holder.difference.setText(String.format("- %s", Utility.formatPrice(mContext, -difference, 0, Currency.METAL, currency, false)));
-                holder.difference.setTextColor(0xFFFF0000);
-            }
+            holder.difference.setTextColor(item.getPrice().getDifferenceColor());
+            holder.difference.setText(item.getPrice().getFormattedDifference(mContext));
 
             holder.icon.setImageDrawable(null);
-            holder.effect.setBackgroundColor(Utility.getQualityColor(mContext, quality, defindex, true));
+            holder.effect.setBackgroundColor(item.getColor(mContext, true));
 
+            //Set the item icon
             try {
-                AssetManager assetManager = mContext.getAssets();
-                InputStream ims;
-
-                //Get the icon of the item
-                if (australium == 1 && defindex != 5037) {
-                    ims = assetManager.open("items/" + Utility.getIconIndex(defindex) + "aus.png");
-                } else {
-                    ims = assetManager.open("items/" + Utility.getIconIndex(defindex) + ".png");
-                }
-                holder.icon.setImageDrawable(Drawable.createFromStream(ims, null));
-
-                //Get the icon if the effect if needed
-                if (priceIndex != 0 && Utility.canHaveEffects(defindex, quality)) {
-                    ims = assetManager.open("effects/" + priceIndex + "_188x188.png");
-                    holder.effect.setImageDrawable(Drawable.createFromStream(ims, null));
-                } else {
-                    holder.effect.setImageDrawable(null);
-                }
-
+                holder.icon.setImageDrawable(item.getIconDrawable(mContext));
             } catch (IOException e) {
                 if (Utility.isDebugging(mContext))
                     e.printStackTrace();
                 holder.icon.setImageDrawable(null);
+            }
+
+            //Set the effect icon
+            try {
+                holder.effect.setImageDrawable(item.getEffectDrawable(mContext));
+            } catch (IOException e) {
+                if (Utility.isDebugging(mContext))
+                    e.printStackTrace();
                 holder.effect.setImageDrawable(null);
             }
 
             try {
                 //Properly format the price
-                holder.price.setText(Utility.formatPrice(mContext, price, priceHigh,
-                        currency, currency, false));
+                holder.price.setText(item.getPrice().getFormattedPrice(mContext));
             } catch (Throwable throwable) {
                 if (Utility.isDebugging(mContext))
                     throwable.printStackTrace();
