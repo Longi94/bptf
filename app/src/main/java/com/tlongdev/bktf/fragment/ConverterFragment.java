@@ -24,6 +24,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.model.Currency;
+import com.tlongdev.bktf.model.Price;
 
 /**
  * Converter fragment. Let's the user quickly convert between currencies.
@@ -112,12 +113,10 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                             inputMetal.setText(null);
                             inputUsd.setText(null);
                         } else {
-                            inputKeys.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Currency.BUD, Currency.KEY), 2)));
-                            inputMetal.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Currency.BUD, Currency.METAL), 2)));
-                            inputUsd.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Currency.BUD, Currency.USD), 2)));
+                            Price price = new Price(Double.parseDouble(s.toString()), Currency.BUD);
+                            inputKeys.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false), 2)));
+                            inputMetal.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false), 2)));
+                            inputUsd.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.USD, false), 2)));
                         }
                     }
                 } catch (Throwable throwable) {
@@ -144,12 +143,10 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                             inputMetal.setText(null);
                             inputUsd.setText(null);
                         } else {
-                            inputEarbuds.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Currency.KEY, Currency.BUD), 2)));
-                            inputMetal.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Currency.KEY, Currency.METAL), 2)));
-                            inputUsd.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Currency.KEY, Currency.USD), 2)));
+                            Price price = new Price(Double.parseDouble(s.toString()), Currency.KEY);
+                            inputEarbuds.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.BUD, false), 2)));
+                            inputMetal.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false), 2)));
+                            inputUsd.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.USD, false), 2)));
                         }
                     }
                 } catch (Throwable throwable) {
@@ -176,12 +173,10 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                             inputEarbuds.setText(null);
                             inputUsd.setText(null);
                         } else {
-                            inputKeys.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Currency.METAL, Currency.KEY), 2)));
-                            inputEarbuds.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Currency.METAL, Currency.BUD), 2)));
-                            inputUsd.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Currency.METAL, Currency.USD), 2)));
+                            Price price = new Price(Double.parseDouble(s.toString()), Currency.METAL);
+                            inputKeys.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false), 2)));
+                            inputEarbuds.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.BUD, false), 2)));
+                            inputUsd.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.USD, false), 2)));
                         }
                     }
                 } catch (Throwable throwable) {
@@ -208,12 +203,10 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                             inputMetal.setText(null);
                             inputEarbuds.setText(null);
                         } else {
-                            inputKeys.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Currency.USD, Currency.KEY), 2)));
-                            inputMetal.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Currency.USD, Currency.METAL), 2)));
-                            inputEarbuds.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                                    Double.parseDouble(s.toString()), Currency.USD, Currency.BUD), 2)));
+                            Price price = new Price(Double.parseDouble(s.toString()), Currency.USD);
+                            inputKeys.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false), 2)));
+                            inputMetal.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false), 2)));
+                            inputEarbuds.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.BUD, false), 2)));
                         }
                     }
                 } catch (Throwable throwable) {
@@ -228,15 +221,13 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
         });
 
         //Set the initial values
+        Price price = new Price(1, Currency.BUD);
         inputEarbuds.setText("1");
         inputEarbuds.setSelection(inputEarbuds.length());
         try {
-            inputKeys.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                    1, Currency.BUD, Currency.KEY), 2)));
-            inputMetal.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                    1, Currency.BUD, Currency.METAL), 2)));
-            inputUsd.setText(String.valueOf(Utility.roundDouble(Utility.convertPrice(getActivity(),
-                    1, Currency.BUD, Currency.USD), 2)));
+            inputKeys.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false), 2)));
+            inputMetal.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false), 2)));
+            inputUsd.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.USD, false), 2)));
         } catch (Throwable throwable) {
             if (Utility.isDebugging(getActivity()))
                 throwable.printStackTrace();
