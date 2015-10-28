@@ -23,7 +23,7 @@ import android.widget.EditText;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.SearchActivity;
-import com.tlongdev.bktf.enums.Currency;
+import com.tlongdev.bktf.model.Currency;
 
 /**
  * Converter fragment. Let's the user quickly convert between currencies.
