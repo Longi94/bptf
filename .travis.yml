@@ -29,7 +29,7 @@ env:
 
 before_install:
  - chmod +x gradlew
- - pip install codecov
+ - pip install --user codecov
 
 # Emulator Management: Create, Start and Wait
 before_script:
