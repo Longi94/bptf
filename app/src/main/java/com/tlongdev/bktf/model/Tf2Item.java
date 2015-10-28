@@ -215,6 +215,10 @@ public class Tf2Item {
         return formattedName + name;
     }
 
+    public String getFormattedName(Context context) {
+        return getFormattedName(context, false);
+    }
+
     /**
      * Properly formats the item name according to its properties. Simple version.
      *
@@ -230,6 +234,10 @@ public class Tf2Item {
         } else {
             return getFormattedName(context, false);
         }
+    }
+
+    public String getSimpleFormattedName(Context context) {
+        return getSimpleFormattedName(context, false);
     }
 
     /**
