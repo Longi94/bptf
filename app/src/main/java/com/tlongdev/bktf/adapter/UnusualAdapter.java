@@ -3,9 +3,7 @@ package com.tlongdev.bktf.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,11 +15,12 @@ import android.widget.TextView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.UnusualActivity;
-import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.fragment.UnusualFragment;
+import com.tlongdev.bktf.model.Currency;
+import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.model.Tf2Item;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.DecimalFormat;
 
 /**
@@ -92,11 +91,6 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (mDataSet != null && mDataSet.moveToPosition(position)) {
 
-            //the path of the icon
-            String iconPath = "";
-            //Asset manager for loading iamges
-            AssetManager assets = mContext.getAssets();
-
             //Get the raw key price
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             double rawKeyPrice = Utility.getDouble(prefs, mContext.getString(R.string.pref_key_raw), 1);
@@ -104,16 +98,26 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
             switch (type) {
                 //We are showing the hats, no effects
                 case TYPE_HATS:
-                    final int defindex = mDataSet.getInt(UnusualFragment.COL_PRICE_LIST_DEFI);
-                    final String name = mDataSet.getString(UnusualFragment.COL_PRICE_LIST_NAME);
-                    iconPath = "items/" + Utility.getIconIndex(defindex) + ".png";
+                    final Tf2Item item = new Tf2Item(
+                            mDataSet.getInt(UnusualFragment.COL_PRICE_LIST_DEFI),
+                            mDataSet.getString(UnusualFragment.COL_PRICE_LIST_NAME),
+                            0, false, false, false, 0, null
+                    );
+
+                    try {
+                        holder.icon.setImageDrawable(item.getIconDrawable(mContext));
+                    } catch (IOException e) {
+                        if (Utility.isDebugging(mContext))
+                            e.printStackTrace();
+                        holder.icon.setImageDrawable(null);
+                    }
 
                     holder.root.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent i = new Intent(mContext, UnusualActivity.class);
-                            i.putExtra(UnusualActivity.DEFINDEX_KEY, defindex);
-                            i.putExtra(UnusualActivity.NAME_KEY, name);
+                            i.putExtra(UnusualActivity.DEFINDEX_KEY, item.getDefindex());
+                            i.putExtra(UnusualActivity.NAME_KEY, item.getName());
                             mContext.startActivity(i);
                         }
                     });
@@ -123,15 +127,24 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                     break;
                 //We are showing the effects, no hats
                 case TYPE_EFFECTS:
-                    final int index = mDataSet.getInt(UnusualFragment.COL_PRICE_LIST_INDE);
-                    iconPath = "effects/" + index + "_188x188.png";
+
+                    final Tf2Item effect = new Tf2Item(0, null, 0, false, false, false,
+                            mDataSet.getInt(UnusualActivity.COL_PRICE_LIST_INDE), null);
+
+                    try {
+                        holder.icon.setImageDrawable(effect.getEffectDrawable(mContext));
+                    } catch (IOException e) {
+                        if (Utility.isDebugging(mContext))
+                            e.printStackTrace();
+                        holder.icon.setImageDrawable(null);
+                    }
 
                     holder.root.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent i = new Intent(mContext, UnusualActivity.class);
-                            i.putExtra(UnusualActivity.PRICE_INDEX_KEY, index);
-                            i.putExtra(UnusualActivity.NAME_KEY, Utility.getUnusualEffectName(mContext, index));
+                            i.putExtra(UnusualActivity.PRICE_INDEX_KEY, effect.getPriceIndex());
+                            i.putExtra(UnusualActivity.NAME_KEY, Utility.getUnusualEffectName(mContext, effect.getPriceIndex()));
                             mContext.startActivity(i);
                         }
                     });
@@ -142,40 +155,36 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                     break;
                 //We are showing both that icon and the effect for a specific hat or effect
                 case TYPE_SPECIFIC_HAT:
+                    Tf2Item hat = new Tf2Item(
+                            mDataSet.getInt(UnusualFragment.COL_PRICE_LIST_DEFI),
+                            mDataSet.getString(UnusualFragment.COL_PRICE_LIST_NAME),
+                            0, false, false, false,
+                            mDataSet.getInt(UnusualActivity.COL_PRICE_LIST_INDE),
+                            new Price(
+                                    mDataSet.getDouble(UnusualActivity.COL_PRICE_LIST_PRIC),
+                                    mDataSet.getDouble(UnusualActivity.COL_PRICE_LIST_PMAX),
+                                    0, 0, 0,
+                                    mDataSet.getString(UnusualActivity.COL_PRICE_LIST_CURR)
+                            )
+                    );
+
                     try {
-                        holder.price.setText(Utility.formatPrice(mContext,
-                                mDataSet.getDouble(UnusualActivity.COL_PRICE_LIST_PRIC),
-                                mDataSet.getDouble(UnusualActivity.COL_PRICE_LIST_PMAX),
-                                mDataSet.getString(UnusualActivity.COL_PRICE_LIST_CURR),
-                                Currency.KEY, false));
+                        holder.price.setText(hat.getPrice().getFormattedPrice(mContext, Currency.KEY));
                     } catch (IllegalArgumentException e) {
                         if (Utility.isDebugging(mContext))
                             e.printStackTrace();
                         holder.price.setText(null);
                     }
 
-                    iconPath = "items/" + Utility.getIconIndex(mDataSet.getInt(UnusualActivity.COL_PRICE_LIST_DEFI)) + ".png";
-
                     try {
                         //Load the effect icon
-                        InputStream ims = assets.open("effects/" + mDataSet.getInt(UnusualActivity.COL_PRICE_LIST_INDE) + "_188x188.png");
-                        holder.effect.setImageDrawable(Drawable.createFromStream(ims, null));
+                        holder.effect.setImageDrawable(hat.getEffectDrawable(mContext));
                     } catch (IOException e) {
                         if (Utility.isDebugging(mContext))
                             e.printStackTrace();
                         holder.effect.setImageDrawable(null);
                     }
                     break;
-            }
-
-            try {
-                //Get the icon that needs to be loaded
-                InputStream ims = assets.open(iconPath);
-                holder.icon.setImageDrawable(Drawable.createFromStream(ims, null));
-            } catch (IOException e) {
-                if (Utility.isDebugging(mContext))
-                    e.printStackTrace();
-                holder.icon.setImageDrawable(null);
             }
         }
     }

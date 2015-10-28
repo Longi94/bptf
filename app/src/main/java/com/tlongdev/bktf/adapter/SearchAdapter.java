@@ -2,7 +2,6 @@ package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
@@ -16,9 +15,10 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.activity.UserActivity;
+import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.model.Tf2Item;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Adapter for the recycler view in the search activity
@@ -131,32 +131,50 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                         }
                     });
 
-                    //Get all the data about the item
-                    int defindex = mDataSet.getInt(SearchActivity.COLUMN_DEFINDEX);
-                    int quality = mDataSet.getInt(SearchActivity.COLUMN_QUALITY);
-                    int tradable = mDataSet.getInt(SearchActivity.COLUMN_TRADABLE);
-                    int craftable = mDataSet.getInt(SearchActivity.COLUMN_CRAFTABLE);
-                    int priceIndex = mDataSet.getInt(SearchActivity.COLUMN_PRICE_INDEX);
-                    int australium = mDataSet.getInt(SearchActivity.COLUMN_AUSTRALIUM);
+                    //Get all the data from the cursor
+                    Tf2Item item = new Tf2Item(
+                            mDataSet.getInt(SearchActivity.COLUMN_DEFINDEX),
+                            mDataSet.getString(SearchActivity.COLUMN_NAME),
+                            mDataSet.getInt(SearchActivity.COLUMN_QUALITY),
+                            mDataSet.getInt(SearchActivity.COLUMN_TRADABLE) == 1,
+                            mDataSet.getInt(SearchActivity.COLUMN_CRAFTABLE) == 1,
+                            mDataSet.getInt(SearchActivity.COLUMN_AUSTRALIUM) == 1,
+                            mDataSet.getInt(SearchActivity.COLUMN_PRICE_INDEX),
+                            new Price(
+                                    mDataSet.getDouble(SearchActivity.COLUMN_PRICE),
+                                    mDataSet.getDouble(SearchActivity.COLUMN_PRICE_HIGH),
+                                    0,
+                                    0,
+                                    0,
+                                    mDataSet.getString(SearchActivity.COLUMN_CURRENCY)
+                            )
+                    );
 
-                    double price = mDataSet.getDouble(SearchActivity.COLUMN_PRICE);
-                    double priceHigh = mDataSet.getDouble(SearchActivity.COLUMN_PRICE_HIGH);
-
-                    String name = mDataSet.getString(SearchActivity.COLUMN_NAME);
-                    String currency = mDataSet.getString(SearchActivity.COLUMN_CURRENCY);
-
-                    holder.name.setText(Utility.formatItemName(mContext, defindex, name,
-                            tradable, craftable, quality, priceIndex));
+                    holder.name.setText(item.getFormattedName(mContext));
 
                     holder.icon.setImageDrawable(null);
-                    holder.icon.setBackgroundColor(Utility.getQualityColor(mContext, quality, defindex, true));
+                    holder.icon.setBackgroundColor(item.getColor(mContext, true));
 
-                    setIconImage(mContext, holder.icon, holder.effect, defindex, priceIndex,
-                            australium == 1, quality);
+                    //Set the item icon
+                    try {
+                        holder.icon.setImageDrawable(item.getIconDrawable(mContext));
+                    } catch (IOException e) {
+                        if (Utility.isDebugging(mContext))
+                            e.printStackTrace();
+                        holder.icon.setImageDrawable(null);
+                    }
+
+                    //Set the effect icon
+                    try {
+                        holder.effect.setImageDrawable(item.getEffectDrawable(mContext));
+                    } catch (IOException e) {
+                        if (Utility.isDebugging(mContext))
+                            e.printStackTrace();
+                        holder.effect.setImageDrawable(null);
+                    }
 
                     try {
-                        holder.price.setText(Utility.formatPrice(mContext, price, priceHigh,
-                                currency, currency, false));
+                        holder.price.setText(item.getPrice().getFormattedPrice(mContext));
                     } catch (Throwable throwable) {
                         if (Utility.isDebugging(mContext))
                             throwable.printStackTrace();
@@ -214,40 +232,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         this.userInfo = userInfo;
         if (userFound) {
             loading = false;
-        }
-    }
-
-    /**
-     * Loads and sets the icon of the image
-     * TODO might need to move it the Utility class and use it where applicable
-     *
-     * @param context      the context
-     * @param icon         the image view if the item
-     * @param effect       the image view of the effect
-     * @param defindex     the defindex of the item
-     * @param priceIndex   the price index of the item
-     * @param isAustralium whether the item is australium or not
-     * @param quality      the quality of the item
-     */
-    private void setIconImage(Context context, ImageView icon, ImageView effect, int defindex, int priceIndex, boolean isAustralium, int quality) {
-        try {
-            InputStream ims;
-            AssetManager assetManager = context.getAssets();
-            if (isAustralium && defindex != 5037) {
-                ims = assetManager.open("items/" + Utility.getIconIndex(defindex) + "aus.png");
-            } else {
-                ims = assetManager.open("items/" + Utility.getIconIndex(defindex) + ".png");
-            }
-            icon.setImageDrawable(Drawable.createFromStream(ims, null));
-
-            if (Utility.canHaveEffects(defindex, quality)) {
-                ims = assetManager.open("effects/" + priceIndex + "_188x188.png");
-                effect.setImageDrawable(Drawable.createFromStream(ims, null));
-            }
-        } catch (IOException e) {
-            if (Utility.isDebugging(context))
-                e.printStackTrace();
-            icon.setImageDrawable(null);
         }
     }
 
