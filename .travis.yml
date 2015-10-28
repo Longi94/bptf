@@ -29,6 +29,7 @@ env:
 
 before_install:
  - chmod +x gradlew
+ - pip install codecov
 
 # Emulator Management: Create, Start and Wait
 before_script:
@@ -40,3 +41,6 @@ before_script:
 script:
   # - ./gradlew build connectedCheck
   - ./gradlew assembleDebug
+  
+after_success:
+  - codecov
