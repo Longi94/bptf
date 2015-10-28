@@ -13,15 +13,15 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Created by Long on 2015. 10. 28..
+ * Item class
  */
-public class Tf2Item {
+public class Item {
 
     /**
      * Log tag for logging.
      */
     @SuppressWarnings("unused")
-    private static final String LOG_TAG = Tf2Item.class.getSimpleName();
+    private static final String LOG_TAG = Item.class.getSimpleName();
 
     private int defindex;
 
@@ -41,15 +41,15 @@ public class Tf2Item {
 
     private Price price;
 
-    public Tf2Item() {
-        this(-1, null, -1, false, false, false, -1, null);
+    public Item() {
+        this(0, null, 0, false, false, false, 0, null);
     }
 
-    public Tf2Item(int defindex, String name, int quality, boolean tradable, boolean craftable, boolean australium, int priceIndex, Price price) {
+    public Item(int defindex, String name, int quality, boolean tradable, boolean craftable, boolean australium, int priceIndex, Price price) {
         this(defindex, name, quality, tradable, craftable, australium, priceIndex, -1, price);
     }
 
-    public Tf2Item(int defindex, String name, int quality, boolean tradable, boolean craftable, boolean australium, int priceIndex, int weaponWear, Price price) {
+    public Item(int defindex, String name, int quality, boolean tradable, boolean craftable, boolean australium, int priceIndex, int weaponWear, Price price) {
         this.defindex = defindex;
         this.name = name;
         this.quality = quality;
@@ -212,9 +212,15 @@ public class Tf2Item {
         }
 
         //Append the item name to the end.
-        return formattedName + name;
+        return isProper ? formattedName + "The " + name : formattedName + name;
     }
 
+    /**
+     * Properly formats the item name according to its properties.
+     *
+     * @param context the context
+     * @return the formatted name
+     */
     public String getFormattedName(Context context) {
         return getFormattedName(context, false);
     }
@@ -236,6 +242,12 @@ public class Tf2Item {
         }
     }
 
+    /**
+     * Properly formats the item name according to its properties. Simple version.
+     *
+     * @param context the context
+     * @return the formatted name
+     */
     public String getSimpleFormattedName(Context context) {
         return getSimpleFormattedName(context, false);
     }
@@ -1660,6 +1672,13 @@ public class Tf2Item {
         }
     }
 
+    /**
+     * Gets the icon of the item from file
+     *
+     * @param context the context
+     * @return icon drawable
+     * @throws IOException
+     */
     public Drawable getIconDrawable(Context context) throws IOException {
         AssetManager assetManager = context.getAssets();
         InputStream ims;
@@ -1675,6 +1694,13 @@ public class Tf2Item {
         return Drawable.createFromStream(ims, null);
     }
 
+    /**
+     * Gets the effect of the item from file
+     *
+     * @param context the context
+     * @return icon drawable
+     * @throws IOException
+     */
     public Drawable getEffectDrawable(Context context) throws IOException {
         AssetManager assetManager = context.getAssets();
         InputStream ims;

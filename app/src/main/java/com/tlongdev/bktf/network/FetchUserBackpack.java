@@ -11,7 +11,7 @@ import android.widget.Toast;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.UserBackpackContract.UserBackpackEntry;
-import com.tlongdev.bktf.model.Tf2Item;
+import com.tlongdev.bktf.model.Item;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -457,7 +457,7 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
         }
 
         //Fix the defindex for pricing purposes
-        Tf2Item item = new Tf2Item(defindex, null, 0, false, false, false, 0, null);
+        Item item = new Item(defindex, null, 0, false, false, false, 0, null);
         defindex = item.getFixedDefindex();
 
         //Save the unique ID

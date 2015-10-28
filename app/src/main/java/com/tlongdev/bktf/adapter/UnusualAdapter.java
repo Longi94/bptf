@@ -18,7 +18,8 @@ import com.tlongdev.bktf.activity.UnusualActivity;
 import com.tlongdev.bktf.fragment.UnusualFragment;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Price;
-import com.tlongdev.bktf.model.Tf2Item;
+import com.tlongdev.bktf.model.Quality;
+import com.tlongdev.bktf.model.Item;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -98,10 +99,10 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
             switch (type) {
                 //We are showing the hats, no effects
                 case TYPE_HATS:
-                    final Tf2Item item = new Tf2Item(
+                    final Item item = new Item(
                             mDataSet.getInt(UnusualFragment.COL_PRICE_LIST_DEFI),
                             mDataSet.getString(UnusualFragment.COL_PRICE_LIST_NAME),
-                            0, false, false, false, 0, null
+                            Quality.UNUSUAL, false, false, false, 0, null
                     );
 
                     try {
@@ -128,8 +129,8 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                 //We are showing the effects, no hats
                 case TYPE_EFFECTS:
 
-                    final Tf2Item effect = new Tf2Item(0, null, 0, false, false, false,
-                            mDataSet.getInt(UnusualActivity.COL_PRICE_LIST_INDE), null);
+                    final Item effect = new Item(1, null, Quality.UNUSUAL, false, false, false,
+                            mDataSet.getInt(UnusualFragment.COL_PRICE_LIST_INDE), null);
 
                     try {
                         holder.icon.setImageDrawable(effect.getEffectDrawable(mContext));
@@ -155,10 +156,10 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                     break;
                 //We are showing both that icon and the effect for a specific hat or effect
                 case TYPE_SPECIFIC_HAT:
-                    Tf2Item hat = new Tf2Item(
+                    Item hat = new Item(
                             mDataSet.getInt(UnusualFragment.COL_PRICE_LIST_DEFI),
                             mDataSet.getString(UnusualFragment.COL_PRICE_LIST_NAME),
-                            0, false, false, false,
+                            Quality.UNUSUAL, false, false, false,
                             mDataSet.getInt(UnusualActivity.COL_PRICE_LIST_INDE),
                             new Price(
                                     mDataSet.getDouble(UnusualActivity.COL_PRICE_LIST_PRIC),
@@ -168,12 +169,14 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                             )
                     );
 
+                    holder.price.setText(hat.getPrice().getFormattedPrice(mContext, Currency.KEY));
+
                     try {
-                        holder.price.setText(hat.getPrice().getFormattedPrice(mContext, Currency.KEY));
-                    } catch (IllegalArgumentException e) {
+                        holder.icon.setImageDrawable(hat.getIconDrawable(mContext));
+                    } catch (IOException e) {
                         if (Utility.isDebugging(mContext))
                             e.printStackTrace();
-                        holder.price.setText(null);
+                        holder.icon.setImageDrawable(null);
                     }
 
                     try {

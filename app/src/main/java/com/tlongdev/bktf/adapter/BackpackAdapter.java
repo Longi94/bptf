@@ -23,7 +23,7 @@ import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.ItemDetailActivity;
 import com.tlongdev.bktf.activity.UserBackpackActivity;
 import com.tlongdev.bktf.data.ItemSchemaDbHelper;
-import com.tlongdev.bktf.model.Tf2Item;
+import com.tlongdev.bktf.model.Item;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -160,7 +160,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
 
                 if (currentCursor.moveToPosition(cursorPosition)) {
                     //Get all the data from the cursor
-                    final Tf2Item item = new Tf2Item(
+                    final Item item = new Item(
                             currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_DEFI),
                             null,
                             currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_QUAL),
@@ -329,7 +329,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
         private ImageView effect;
         private ImageView paintView;
 
-        private Tf2Item item;
+        private Item item;
 
         private int paint;
 
@@ -346,7 +346,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
          * @param effect  the effect of the item
          * @param paint   the pain indicator of the item
          */
-        private ImageLoader(Context context, ImageView icon, ImageView effect, ImageView paintView, Tf2Item item, int paint) {
+        private ImageLoader(Context context, ImageView icon, ImageView effect, ImageView paintView, Item item, int paint) {
             this.mContext = context;
             this.icon = icon;
             this.effect = effect;

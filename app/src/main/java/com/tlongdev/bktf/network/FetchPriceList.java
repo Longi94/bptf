@@ -21,7 +21,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Price;
-import com.tlongdev.bktf.model.Tf2Item;
+import com.tlongdev.bktf.model.Item;
 
 import org.json.JSONException;
 
@@ -554,7 +554,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
     private ContentValues buildContentValues(int defindex, String name, int quality, int tradable, int craftable, int priceIndex, int australium,
                                              String currency, double value, Double high, long update, double difference) {
         //Fix the defindex for pricing
-        Tf2Item item = new Tf2Item(defindex, null, 0, false, false, false, 0, null);
+        Item item = new Item(defindex, null, 0, false, false, false, 0, null);
         defindex = item.getFixedDefindex();
 
         //The DV that will contain all the data

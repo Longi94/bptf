@@ -13,7 +13,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Price;
-import com.tlongdev.bktf.model.Tf2Item;
+import com.tlongdev.bktf.model.Item;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -121,7 +121,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
             if (cursor.moveToFirst()) {
 
                 //Get the data from the cursor
-                Tf2Item item = new Tf2Item(
+                Item item = new Item(
                         cursor.getInt(COL_PRICE_LIST_DEFI),
                         cursor.getString(COL_PRICE_LIST_NAME),
                         cursor.getInt(COL_PRICE_LIST_QUAL),

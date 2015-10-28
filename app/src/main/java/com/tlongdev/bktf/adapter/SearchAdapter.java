@@ -16,7 +16,7 @@ import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.activity.UserActivity;
 import com.tlongdev.bktf.model.Price;
-import com.tlongdev.bktf.model.Tf2Item;
+import com.tlongdev.bktf.model.Item;
 
 import java.io.IOException;
 
@@ -132,7 +132,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     });
 
                     //Get all the data from the cursor
-                    Tf2Item item = new Tf2Item(
+                    Item item = new Item(
                             mDataSet.getInt(SearchActivity.COLUMN_DEFINDEX),
                             mDataSet.getString(SearchActivity.COLUMN_NAME),
                             mDataSet.getInt(SearchActivity.COLUMN_QUALITY),
