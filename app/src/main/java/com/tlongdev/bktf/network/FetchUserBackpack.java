@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.UserBackpackContract.UserBackpackEntry;
+import com.tlongdev.bktf.model.Tf2Item;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -420,14 +421,14 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
     /**
      * Create a ContentValues object from the JSONObject
      *
-     * @param item the object containing the data
+     * @param jsonItem the object containing the data
      * @return the ContentValues object containing the data from the JSONObject
      * @throws JSONException
      */
-    private ContentValues buildContentValues(JSONObject item) throws JSONException {
+    private ContentValues buildContentValues(JSONObject jsonItem) throws JSONException {
 
         //Get the inventory token
-        long inventoryToken = item.getLong(OWM_INVENTORY_TOKEN);
+        long inventoryToken = jsonItem.getLong(OWM_INVENTORY_TOKEN);
         if (inventoryToken == 0) {
             //Item hasn't been found yet
             return null;
@@ -437,7 +438,7 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
         ContentValues values = new ContentValues();
 
         //Get the defindex
-        int defindex = item.getInt(OWM_DEFINDEX);
+        int defindex = jsonItem.getInt(OWM_DEFINDEX);
 
         //Raw currency values
         switch (defindex) {
@@ -456,81 +457,82 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
         }
 
         //Fix the defindex for pricing purposes
-        defindex = Utility.fixDefindex(defindex);
+        Tf2Item item = new Tf2Item(defindex, null, 0, false, false, false, 0, null);
+        defindex = item.getFixedDefindex();
 
         //Save the unique ID
-        values.put(UserBackpackEntry.COLUMN_UNIQUE_ID, item.getLong(OWM_UNIQUE_ID));
+        values.put(UserBackpackEntry.COLUMN_UNIQUE_ID, jsonItem.getLong(OWM_UNIQUE_ID));
 
         //Save the original ID
-        values.put(UserBackpackEntry.COLUMN_ORIGINAL_ID, item.getLong(OWM_ORIGINAL_ID));
+        values.put(UserBackpackEntry.COLUMN_ORIGINAL_ID, jsonItem.getLong(OWM_ORIGINAL_ID));
 
         //Save the defindex
         values.put(UserBackpackEntry.COLUMN_DEFINDEX, defindex);
 
         //Save the level
-        values.put(UserBackpackEntry.COLUMN_LEVEL, item.getInt(OWM_LEVEL));
+        values.put(UserBackpackEntry.COLUMN_LEVEL, jsonItem.getInt(OWM_LEVEL));
 
         //Save the origin type
-        if (item.has(OWM_ORIGIN))
-            values.put(UserBackpackEntry.COLUMN_ORIGIN, item.getInt(OWM_ORIGIN));
+        if (jsonItem.has(OWM_ORIGIN))
+            values.put(UserBackpackEntry.COLUMN_ORIGIN, jsonItem.getInt(OWM_ORIGIN));
         else
             values.put(UserBackpackEntry.COLUMN_ORIGIN, -1);
 
         //Save the tradability
-        if (item.has(OWM_UNTRADABLE) && item.getBoolean(OWM_UNTRADABLE))
+        if (jsonItem.has(OWM_UNTRADABLE) && jsonItem.getBoolean(OWM_UNTRADABLE))
             values.put(UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE, 1);
         else
             values.put(UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE, 0);
 
         //Save the craftability
-        if (item.has(OWM_UNCRAFTABLE) && item.getBoolean(OWM_UNCRAFTABLE))
+        if (jsonItem.has(OWM_UNCRAFTABLE) && jsonItem.getBoolean(OWM_UNCRAFTABLE))
             values.put(UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT, 1);
         else
             values.put(UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT, 0);
 
         if (inventoryToken >= 3221225472L /*11000000000000000000000000000000*/) {
-            //The item doesn't have a designated place i the backpack yet. It's a new item.
+            //The jsonItem doesn't have a designated place i the backpack yet. It's a new jsonItem.
             values.put(UserBackpackEntry.COLUMN_POSITION, -1);
         } else {
-            //Save the position of the item
+            //Save the position of the jsonItem
             int position = (int) (inventoryToken % ((Double) Math.pow(2, 16)).intValue());
             values.put(UserBackpackEntry.COLUMN_POSITION, position);
 
-            //The position doens't need to be filled with an empty item.
+            //The position doens't need to be filled with an empty jsonItem.
             slotNumbers.remove(Integer.valueOf(position));
         }
 
-        //Save the quality of the item
-        values.put(UserBackpackEntry.COLUMN_QUALITY, item.getInt(OWM_QUALITY));
+        //Save the quality of the jsonItem
+        values.put(UserBackpackEntry.COLUMN_QUALITY, jsonItem.getInt(OWM_QUALITY));
 
-        //Save the custom name of the item
-        if (item.has(OWM_CUSTOM_NAME))
-            values.put(UserBackpackEntry.COLUMN_CUSTOM_NAME, item.getString(OWM_CUSTOM_NAME));
+        //Save the custom name of the jsonItem
+        if (jsonItem.has(OWM_CUSTOM_NAME))
+            values.put(UserBackpackEntry.COLUMN_CUSTOM_NAME, jsonItem.getString(OWM_CUSTOM_NAME));
 
-        //Save the custom description of the item
-        if (item.has(OWM_CUSTOM_DESCRIPTION))
+        //Save the custom description of the jsonItem
+        if (jsonItem.has(OWM_CUSTOM_DESCRIPTION))
             values.put(UserBackpackEntry.COLUMN_CUSTOM_DESCRIPTION,
-                    item.getString(OWM_CUSTOM_DESCRIPTION));
+                    jsonItem.getString(OWM_CUSTOM_DESCRIPTION));
 
-        //Save the content of the item TODO show the content of a gift
-        if (item.has(OWM_CONTENT))
+        //Save the content of the jsonItem TODO show the content of a gift
+        if (jsonItem.has(OWM_CONTENT))
             values.put(UserBackpackEntry.COLUMN_CONTAINED_ITEM,
-                    item.getJSONObject(OWM_CONTENT).toString());
+                    jsonItem.getJSONObject(OWM_CONTENT).toString());
 
-        //Save the index of the item
+        //Save the index of the jsonItem
         values.put(UserBackpackEntry.COLUMN_ITEM_INDEX, 0);
 
-        //Save the craftnumber of the item
+        //Save the craftnumber of the jsonItem
         values.put(UserBackpackEntry.COLUMN_CRAFT_NUMBER, 0);
 
-        //Save the australium property of the item
+        //Save the australium property of the jsonItem
         values.put(UserBackpackEntry.COLUMN_AUSTRALIUM, 0);
 
         //Get the other attributes from the attributes JSON object
-        values = addAttributes(values, item);
+        values = addAttributes(values, jsonItem);
 
-        //Save the equipped property of the item
-        if (item.has(OWM_EQUIPPED))
+        //Save the equipped property of the jsonItem
+        if (jsonItem.has(OWM_EQUIPPED))
             values.put(UserBackpackEntry.COLUMN_EQUIPPED, 1);
         else
             values.put(UserBackpackEntry.COLUMN_EQUIPPED, 0);
