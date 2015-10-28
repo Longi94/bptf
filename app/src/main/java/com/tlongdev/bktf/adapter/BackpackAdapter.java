@@ -23,6 +23,7 @@ import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.ItemDetailActivity;
 import com.tlongdev.bktf.activity.UserBackpackActivity;
 import com.tlongdev.bktf.data.ItemSchemaDbHelper;
+import com.tlongdev.bktf.model.Tf2Item;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -159,31 +160,34 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
 
                 if (currentCursor.moveToPosition(cursorPosition)) {
                     //Get all the data from the cursor
-                    final int id = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_ID);
-                    final int defindex = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_DEFI);
-                    int quality = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_QUAL);
-                    int tradable = Math.abs(currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_TRAD) - 1);
-                    int craftable = Math.abs(currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_CRAF) - 1);
-                    int itemIndex = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_INDE);
-                    int paint = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_PAIN);
-                    int australium = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_AUS);
-                    int wear = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_WEAR);
+                    final Tf2Item item = new Tf2Item(
+                            currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_DEFI),
+                            null,
+                            currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_QUAL),
+                            Math.abs(currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_TRAD) - 1) == 1,
+                            Math.abs(currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_CRAF) - 1) == 1,
+                            currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_AUS) == 1,
+                            currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_INDE),
+                            currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_WEAR),
+                            null
+                    );
 
-                    if (defindex != 0) {
+                    final int id = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_ID);
+                    int paint = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_PAIN);
+
+                    if (item.getDefindex() != 0) {
 
                         //Set the background to the color of the quality
-                        holder.root.setCardBackgroundColor(
-                                Utility.getQualityColor(mContext, quality, defindex, true));
+                        holder.root.setCardBackgroundColor(item.getColor(mContext, true));
 
                         //Load the image on a background thread to avoid hiccups
                         ImageLoader task = (ImageLoader) holder.icon.getTag();
                         if (task != null) {
                             task.cancel(true);
                         }
-                        task = new ImageLoader(mContext, holder.icon, holder.effect, holder.paint);
+                        task = new ImageLoader(mContext, holder.icon, holder.effect, holder.paint, item, paint);
                         holder.icon.setTag(task);
-                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, defindex, quality,
-                                tradable, craftable, itemIndex, paint, australium, wear);
+                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                         //The on click listener for an item
                         holder.root.setOnClickListener(new View.OnClickListener() {
@@ -193,7 +197,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                                 Intent i = new Intent(mContext, ItemDetailActivity.class);
                                 i.putExtra(ItemDetailActivity.EXTRA_ITEM_ID, id);
                                 i.putExtra(ItemDetailActivity.EXTRA_GUEST, isGuest);
-                                Cursor itemCursor = mDbHelper.getItem(defindex);
+                                Cursor itemCursor = mDbHelper.getItem(item.getDefindex());
                                 if (itemCursor != null && itemCursor.moveToFirst()) {
                                     i.putExtra(ItemDetailActivity.EXTRA_ITEM_NAME,
                                             itemCursor.getString(0));
@@ -316,14 +320,18 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
     /**
      * A task te loads images in the background.
      */
-    private class ImageLoader extends AsyncTask<Integer, Void, Drawable[]> {
+    private class ImageLoader extends AsyncTask<Void, Void, Drawable[]> {
 
         /**
-         * Image views to set the images to-
+         * Image views to set the images to
          */
         private ImageView icon;
         private ImageView effect;
-        private ImageView paint;
+        private ImageView paintView;
+
+        private Tf2Item item;
+
+        private int paint;
 
         /**
          * The context
@@ -338,15 +346,17 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
          * @param effect  the effect of the item
          * @param paint   the pain indicator of the item
          */
-        private ImageLoader(Context context, ImageView icon, ImageView effect, ImageView paint) {
+        private ImageLoader(Context context, ImageView icon, ImageView effect, ImageView paintView, Tf2Item item, int paint) {
             this.mContext = context;
             this.icon = icon;
             this.effect = effect;
+            this.paintView = paintView;
+            this.item = item;
             this.paint = paint;
         }
 
         @Override
-        protected Drawable[] doInBackground(Integer... params) {
+        protected Drawable[] doInBackground(Void... params) {
             //Three drawables will be returned at most
             Drawable[] drawables = new Drawable[3];
 
@@ -354,27 +364,11 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                 InputStream ims;
                 AssetManager assetManager = mContext.getAssets();
 
-                if (params[0] >= 15000 && params[0] <= 15059) {
-                    //Weapon skins
-                    ims = assetManager.open("skins/" + Utility.getIconIndex(params[0]) + "/" + params[7] + ".png");
-                } else {
-                    //Get the icon of the item
-                    if (params[6] == 1) {
-                        ims = assetManager.open("items/" + Utility.getIconIndex(params[0]) + "aus.png");
-                    } else {
-                        ims = assetManager.open("items/" + Utility.getIconIndex(params[0]) + ".png");
-                    }
-                }
-                drawables[0] = Drawable.createFromStream(ims, null);
-
-                //Get the effect icon if needed
-                if (params[4] != 0 && Utility.canHaveEffects(params[0], params[1])) {
-                    ims = assetManager.open("effects/" + params[4] + "_188x188.png");
-                    drawables[1] = Drawable.createFromStream(ims, null);
-                }
+                drawables[0] = item.getIconDrawable(mContext);
+                drawables[1] = item.getEffectDrawable(mContext);
 
                 //Get the paint indicator if needed
-                if (Utility.isPaint(params[5])) {
+                if (Utility.isPaint(paint)) {
                     ims = assetManager.open("paint/" + params[5] + ".png");
                     drawables[2] = Drawable.createFromStream(ims, null);
                 }
@@ -392,7 +386,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
             //Set the images
             icon.setImageDrawable(drawables[0]);
             effect.setImageDrawable(drawables[1]);
-            paint.setImageDrawable(drawables[2]);
+            paintView.setImageDrawable(drawables[2]);
         }
     }
 }

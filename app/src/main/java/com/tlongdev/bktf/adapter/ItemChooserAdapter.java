@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.ItemChooserActivity;
+import com.tlongdev.bktf.model.Tf2Item;
 
 /**
  * Adapter for the item chooser.
@@ -66,19 +67,23 @@ public class ItemChooserAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
-        int quality = cursor.getInt(ItemChooserActivity.COLUMN_QUALITY);
-        int index = cursor.getInt(ItemChooserActivity.COLUMN_PRICE_INDEX);
+
+        Tf2Item item = new Tf2Item(
+                cursor.getInt(ItemChooserActivity.COLUMN_DEFINDEX),
+                cursor.getString(ItemChooserActivity.COLUMN_NAME),
+                cursor.getInt(ItemChooserActivity.COLUMN_QUALITY),
+                cursor.getInt(ItemChooserActivity.COLUMN_TRADABLE) == 1,
+                cursor.getInt(ItemChooserActivity.COLUMN_CRAFTABLE) == 1,
+                false,
+                cursor.getInt(ItemChooserActivity.COLUMN_PRICE_INDEX),
+                null
+        );
 
         //Set the name of the item
-        if (quality == 5 && index != 0) {
+        if (item.getQuality() == 5 && item.getPriceIndex() != 0) {
             viewHolder.nameView.setText(cursor.getString(ItemChooserActivity.COLUMN_NAME));
         } else {
-            viewHolder.nameView.setText(Utility.formatItemName(context,
-                    cursor.getInt(ItemChooserActivity.COLUMN_DEFINDEX),
-                    cursor.getString(ItemChooserActivity.COLUMN_NAME),
-                    cursor.getInt(ItemChooserActivity.COLUMN_TRADABLE),
-                    cursor.getInt(ItemChooserActivity.COLUMN_CRAFTABLE),
-                    quality, index));
+            viewHolder.nameView.setText(item.getFormattedName(context));
         }
 
         //If there is a selected item, mark it

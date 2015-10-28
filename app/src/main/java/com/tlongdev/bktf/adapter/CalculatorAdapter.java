@@ -1,10 +1,7 @@
 package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
-import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +12,8 @@ import android.widget.TextView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
-import com.tlongdev.bktf.model.Currency;
+import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.model.Tf2Item;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -123,33 +121,28 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
             if (cursor.moveToFirst()) {
 
                 //Get the data from the cursor
-                int defindex = cursor.getInt(COL_PRICE_LIST_DEFI);
-                int quality = cursor.getInt(COL_PRICE_LIST_QUAL);
-                int australium = cursor.getInt(COL_AUSTRALIUM);
-                int tradable = cursor.getInt(COL_PRICE_LIST_TRAD);
-                int craftable = cursor.getInt(COL_PRICE_LIST_CRAF);
-                int priceIndex = cursor.getInt(COL_PRICE_LIST_INDE);
-
-                double raw = cursor.getDouble(COL_PRICE_LIST_PRAW);
-                double price = cursor.getDouble(COL_PRICE_LIST_PRIC);
-                double high = cursor.getDouble(COL_PRICE_LIST_PMAX);
-
-                String currency = cursor.getString(COL_PRICE_LIST_CURR);
-                String name = cursor.getString(COL_PRICE_LIST_NAME);
+                Tf2Item item = new Tf2Item(
+                        cursor.getInt(COL_PRICE_LIST_DEFI),
+                        cursor.getString(COL_PRICE_LIST_NAME),
+                        cursor.getInt(COL_PRICE_LIST_QUAL),
+                        cursor.getInt(COL_PRICE_LIST_TRAD) == 1,
+                        cursor.getInt(COL_PRICE_LIST_CRAF) == 1,
+                        cursor.getInt(COL_AUSTRALIUM) == 1,
+                        cursor.getInt(COL_PRICE_LIST_INDE),
+                        new Price(
+                                cursor.getDouble(COL_PRICE_LIST_PRIC),
+                                cursor.getDouble(COL_PRICE_LIST_PMAX),
+                                cursor.getDouble(COL_PRICE_LIST_PRAW),
+                                0, 0,
+                                cursor.getString(COL_PRICE_LIST_CURR)
+                        )
+                );
 
                 int count = ids.get(position).getY();
 
                 try {
                     //Get the icon of the item
-                    if (australium == 1) {
-                        holder.icon.setImageDrawable(Drawable.createFromStream(
-                                mContext.getAssets().open("items/" + Utility
-                                        .getIconIndex(defindex) + "aus.png"), null));
-                    } else {
-                        holder.icon.setImageDrawable(Drawable.createFromStream(
-                                mContext.getAssets().open("items/" + Utility
-                                        .getIconIndex(defindex) + ".png"), null));
-                    }
+                    holder.icon.setImageDrawable(item.getIconDrawable(mContext));
                 } catch (IOException e) {
                     if (Utility.isDebugging(mContext)) {
                         e.printStackTrace();
@@ -157,38 +150,16 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                     holder.icon.setImageDrawable(null);
                 }
 
-                holder.name.setText(Utility.formatItemName(mContext, defindex, name, tradable,
-                        craftable, quality, priceIndex));
+                holder.name.setText(item.getFormattedName(mContext));
 
                 //Put the number of items behind the name if it is higher than 1
                 if (count > 1) {
                     holder.name.append(String.format(" %dx", count));
                 }
 
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-                try {
-                    //If the currency is in USD convert it to keys or refs
-                    if (currency.equals(Currency.USD) && defindex != 5002) {
-                        if (raw >= Utility.getDouble(prefs, mContext.getString(R.string.pref_key_raw), 0)) {
-                            holder.price.setText(Utility.formatPrice(mContext, price, high, currency,
-                                    Currency.KEY, false));
-                        } else {
-                            holder.price.setText(Utility.formatPrice(mContext, price, high, currency,
-                                    Currency.METAL, false));
-                        }
-                    } else {
-                        holder.price.setText(Utility.formatPrice(mContext,
-                                price,
-                                high,
-                                currency,
-                                currency, false));
-                    }
-                } catch (Throwable throwable) {
-                    if (Utility.isDebugging(mContext))
-                        throwable.printStackTrace();
-                }
+                holder.price.setText(item.getPrice().getFormattedPrice(mContext));
 
-                holder.effect.setBackgroundColor(Utility.getQualityColor(mContext, quality, defindex, true));
+                holder.effect.setBackgroundColor(item.getColor(mContext, true));
 
                 holder.delete.setOnClickListener(new View.OnClickListener() {
                     @Override

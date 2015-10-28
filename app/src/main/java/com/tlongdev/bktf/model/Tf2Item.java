@@ -1665,7 +1665,9 @@ public class Tf2Item {
         InputStream ims;
 
         //Get the icon of the item
-        if (australium && defindex != 5037) {
+        if (defindex >= 15000 && defindex <= 15059) {
+            ims = assetManager.open("skins/" + getIconIndex() + "/" + weaponWear + ".png");
+        } else if (australium && defindex != 5037) {
             ims = assetManager.open("items/" + getIconIndex() + "aus.png");
         } else {
             ims = assetManager.open("items/" + getIconIndex() + ".png");
