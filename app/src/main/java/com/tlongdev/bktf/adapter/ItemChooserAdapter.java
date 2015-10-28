@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.ItemChooserActivity;
-import com.tlongdev.bktf.model.Tf2Item;
+import com.tlongdev.bktf.model.Item;
 
 /**
  * Adapter for the item chooser.
@@ -68,7 +68,7 @@ public class ItemChooserAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        Tf2Item item = new Tf2Item(
+        Item item = new Item(
                 cursor.getInt(ItemChooserActivity.COLUMN_DEFINDEX),
                 cursor.getString(ItemChooserActivity.COLUMN_NAME),
                 cursor.getInt(ItemChooserActivity.COLUMN_QUALITY),

@@ -11,7 +11,7 @@ import com.tlongdev.bktf.Utility;
 import java.text.DecimalFormat;
 
 /**
- * Created by Long on 2015. 10. 28..
+ * Price class
  */
 public class Price {
 
@@ -162,7 +162,7 @@ public class Price {
     /**
      * Formats the given price and converts it to the desired currency.
      *
-     * @param context        the context
+     * @param context the context
      * @return the formatted price
      */
     public String getFormattedPrice(Context context) {
@@ -268,6 +268,12 @@ public class Price {
         }
     }
 
+    /**
+     * Formats the difference value.
+     *
+     * @param context the context
+     * @return the formatted difference
+     */
     public String getFormattedDifference(Context context) {
         if (Math.abs(difference - rawValue) < Utility.EPSILON) {
             // TODO: 2015. 10. 26. There might be inaccuracies resulting in the difference not being equal to the raw price

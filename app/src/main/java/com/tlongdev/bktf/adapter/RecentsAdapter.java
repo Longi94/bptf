@@ -13,7 +13,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.fragment.RecentsFragment;
 import com.tlongdev.bktf.model.Price;
-import com.tlongdev.bktf.model.Tf2Item;
+import com.tlongdev.bktf.model.Item;
 
 import java.io.IOException;
 
@@ -68,7 +68,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
             });
 
             //Get all the data from the cursor
-            Tf2Item item = new Tf2Item(
+            Item item = new Item(
                     mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_DEFI),
                     mDataSet.getString(RecentsFragment.COL_PRICE_LIST_NAME),
                     mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_QUAL),

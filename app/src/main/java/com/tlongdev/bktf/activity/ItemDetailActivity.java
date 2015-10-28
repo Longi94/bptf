@@ -20,7 +20,7 @@ import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.data.UserBackpackContract.UserBackpackEntry;
 import com.tlongdev.bktf.model.Price;
-import com.tlongdev.bktf.model.Tf2Item;
+import com.tlongdev.bktf.model.Item;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -230,7 +230,7 @@ public class ItemDetailActivity extends Activity {
         if (itemCursor != null) {
             if (itemCursor.moveToFirst()) {
                 //Store all the data
-                Tf2Item item = new Tf2Item(
+                Item item = new Item(
                         itemCursor.getInt(COLUMN_DEFINDEX),
                         mIntent.getStringExtra(EXTRA_ITEM_NAME),
                         itemCursor.getInt(COLUMN_QUALITY),

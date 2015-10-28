@@ -147,6 +147,8 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
             }
         });
 
+        totalPrice.setCurrency(Currency.METAL);
+
         priceMetal = (TextView) rootView.findViewById(R.id.text_view_price_metal);
         priceKeys = (TextView) rootView.findViewById(R.id.text_view_price_keys);
         priceBuds = (TextView) rootView.findViewById(R.id.text_view_price_buds);
