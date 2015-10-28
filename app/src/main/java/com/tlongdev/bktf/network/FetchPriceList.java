@@ -20,7 +20,8 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
-import com.tlongdev.bktf.model.Currency;
+import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.model.Tf2Item;
 
 import org.json.JSONException;
 
@@ -412,10 +413,11 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
                                 //header in the latest changes page
                                 double highPrice = high == null ? 0 : high;
 
-                                String priceString = Utility.formatPrice(
-                                        mContext, value, highPrice,
-                                        Currency.KEY, Currency.KEY, false
+                                Price budPrice = new Price(
+                                        value, highPrice, raw, lastUpdate, difference, currency
                                 );
+
+                                String priceString = budPrice.getFormattedPrice(mContext);
                                 editor.putString(mContext.getString(R.string.pref_buds_price), priceString);
 
                                 //Save the difference
@@ -435,10 +437,11 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
                                 //header in the latest changes page
                                 double highPrice = high == null ? 0 : high;
 
-                                String priceString = Utility.formatPrice(
-                                        mContext, value, highPrice,
-                                        Currency.USD, Currency.USD, false
+                                Price refPrice = new Price(
+                                        value, highPrice, raw, lastUpdate, difference, currency
                                 );
+
+                                String priceString = refPrice.getFormattedPrice(mContext);
                                 editor.putString(mContext.getString(R.string.pref_metal_price), priceString);
 
                                 //Save the difference
@@ -463,10 +466,11 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
                                 //header in the latest changes page
                                 double highPrice = high == null ? 0 : high;
 
-                                String priceString = Utility.formatPrice(
-                                        mContext, value, highPrice,
-                                        Currency.METAL, Currency.METAL, false
+                                Price keyPrice = new Price(
+                                        value, highPrice, raw, lastUpdate, difference, currency
                                 );
+
+                                String priceString = keyPrice.getFormattedPrice(mContext);
                                 editor.putString(mContext.getString(R.string.pref_key_price), priceString);
 
                                 //Save the difference
@@ -550,7 +554,8 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
     private ContentValues buildContentValues(int defindex, String name, int quality, int tradable, int craftable, int priceIndex, int australium,
                                              String currency, double value, Double high, long update, double difference) {
         //Fix the defindex for pricing
-        defindex = Utility.fixDefindex(defindex);
+        Tf2Item item = new Tf2Item(defindex, null, 0, false, false, false, 0, null);
+        defindex = item.getFixedDefindex();
 
         //The DV that will contain all the data
         ContentValues itemValues = new ContentValues();

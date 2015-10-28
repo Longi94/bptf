@@ -1,7 +1,6 @@
 package com.tlongdev.bktf.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
@@ -20,6 +19,8 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.data.UserBackpackContract.UserBackpackEntry;
+import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.model.Tf2Item;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,7 +61,7 @@ public class ItemDetailActivity extends Activity {
     public static final int COLUMN_ORIGIN = 15;
     public static final int COLUMN_WEAPON_WEAR = 16;
 
-    //Query columns for querying the price
+    //Query columns for querying the priceView
     public static final String[] QUERY_COLUMNS_PRICE = {
             PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
             PriceEntry.COLUMN_PRICE,
@@ -129,7 +130,7 @@ public class ItemDetailActivity extends Activity {
     private TextView gifterName;
     private TextView origin;
     private TextView paint;
-    private TextView price;
+    private TextView priceView;
 
     //References to the image view
     private ImageView icon;
@@ -185,7 +186,7 @@ public class ItemDetailActivity extends Activity {
         gifterName = (TextView) findViewById(R.id.text_view_gifted);
         origin = (TextView) findViewById(R.id.text_view_origin);
         paint = (TextView) findViewById(R.id.text_view_paint);
-        price = (TextView) findViewById(R.id.text_view_price);
+        priceView = (TextView) findViewById(R.id.text_view_price);
 
         icon = (ImageView) findViewById(R.id.icon);
         effectView = (ImageView) findViewById(R.id.effect);
@@ -229,13 +230,17 @@ public class ItemDetailActivity extends Activity {
         if (itemCursor != null) {
             if (itemCursor.moveToFirst()) {
                 //Store all the data
-                int defindex = itemCursor.getInt(COLUMN_DEFINDEX);
-                int priceIndex = itemCursor.getInt(COLUMN_PRICE_INDEX);
-                int tradable = Math.abs(itemCursor.getInt(COLUMN_TRADABLE) - 1);
-                int craftable = Math.abs(itemCursor.getInt(COLUMN_CRAFTABLE) - 1);
-                int quality = itemCursor.getInt(COLUMN_QUALITY);
-                int isAus = itemCursor.getInt(COLUMN_AUSTRALIUM);
-                int wear = itemCursor.getInt(COLUMN_WEAPON_WEAR);
+                Tf2Item item = new Tf2Item(
+                        itemCursor.getInt(COLUMN_DEFINDEX),
+                        mIntent.getStringExtra(EXTRA_ITEM_NAME),
+                        itemCursor.getInt(COLUMN_QUALITY),
+                        Math.abs(itemCursor.getInt(COLUMN_TRADABLE) - 1) == 1,
+                        Math.abs(itemCursor.getInt(COLUMN_CRAFTABLE) - 1) == 1,
+                        itemCursor.getInt(COLUMN_AUSTRALIUM) == 1,
+                        itemCursor.getInt(COLUMN_PRICE_INDEX),
+                        itemCursor.getInt(COLUMN_WEAPON_WEAR),
+                        null
+                );
                 int paintNumber = itemCursor.getInt(COLUMN_PAINT);
 
                 String customName = itemCursor.getString(COLUMN_CUSTOM_NAME);
@@ -244,14 +249,11 @@ public class ItemDetailActivity extends Activity {
                 String gifter = itemCursor.getString(COLUMN_GIFTER);
 
                 //Set the name of the item
-                name.setText(Utility.formatSimpleItemName(this, defindex,
-                        mIntent.getStringExtra(EXTRA_ITEM_NAME), quality, priceIndex,
-                        mIntent.getIntExtra(EXTRA_PROPER_NAME, 0) == 1));
+                name.setText(item.getFormattedName(this, mIntent.getIntExtra(EXTRA_PROPER_NAME, 0) == 1));
 
                 //Set the level of the item, get the type from the intent
-                if (defindex >= 15000 && defindex <= 15059) {
-                    level.setText(Utility.getDecoratedWeaponDesc(
-                            mIntent.getStringExtra(EXTRA_ITEM_TYPE), defindex, wear));
+                if (item.getDefindex() >= 15000 && item.getDefindex() <= 15059) {
+                    level.setText(item.getDecoratedWeaponDesc(mIntent.getStringExtra(EXTRA_ITEM_TYPE)));
                 } else {
                     level.setText(getString(R.string.item_detail_level,
                             itemCursor.getInt(COLUMN_LEVEL),
@@ -264,9 +266,9 @@ public class ItemDetailActivity extends Activity {
                                 [itemCursor.getInt(COLUMN_ORIGIN)]));
 
                 //Set the effect of the item (if any)
-                if (priceIndex != 0 && (quality == 5 || quality == 7 || quality == 9)) {
+                if (item.getPriceIndex() != 0 && (item.getQuality() == 5 || item.getQuality() == 7 || item.getQuality() == 9)) {
                     effect.setText(String.format("%s: %s", getString(R.string.item_detail_effect),
-                            Utility.getUnusualEffectName(this, priceIndex)));
+                            Utility.getUnusualEffectName(this, item.getPriceIndex())));
                     effect.setVisibility(View.VISIBLE);
                 }
 
@@ -306,17 +308,42 @@ public class ItemDetailActivity extends Activity {
                 }
 
                 //Set the icon and the background
-                setIconImage(this, icon, effectView, paintView, Utility.getIconIndex(defindex), priceIndex,
-                        quality, paintNumber, isAus == 1, wear);
-                cardView.setCardBackgroundColor(Utility.getQualityColor(this, quality, defindex, true));
+                try {
+                    icon.setImageDrawable(item.getIconDrawable(this));
+                } catch (IOException e) {
+                    if (Utility.isDebugging(this))
+                        e.printStackTrace();
+                }
 
-                //Start querying the price
+                try {
+                    effectView.setImageDrawable(item.getEffectDrawable(this));
+                } catch (IOException e) {
+                    if (Utility.isDebugging(this))
+                        e.printStackTrace();
+                }
+
+                try {
+                    InputStream ims;
+                    AssetManager assetManager = getAssets();
+                    if (Utility.isPaint(paintNumber)) {
+                        //Load the paint indicator dot
+                        ims = assetManager.open("paint/" + paintNumber + ".png");
+                        paintView.setImageDrawable(Drawable.createFromStream(ims, null));
+                    }
+                } catch (IOException e) {
+                    if (Utility.isDebugging(this))
+                        e.printStackTrace();
+                }
+
+                cardView.setCardBackgroundColor(item.getColor(this, true));
+
+                //Start querying the priceView
                 uri = PriceEntry.CONTENT_URI;
                 columns = QUERY_COLUMNS_PRICE;
 
                 //Proper condition for searching for australum items.
                 String ausCondition;
-                if (isAus == 1 || defindex == 5037) {
+                if (item.isAustralium() || item.getDefindex() == 5037) {
                     ausCondition = PriceEntry.COLUMN_ITEM_NAME + " LIKE ?";
                 } else {
                     ausCondition = PriceEntry.COLUMN_ITEM_NAME + " NOT LIKE ?";
@@ -336,22 +363,25 @@ public class ItemDetailActivity extends Activity {
                         uri,
                         columns,
                         selection,
-                        new String[]{String.valueOf(defindex), String.valueOf(quality),
-                                String.valueOf(tradable), String.valueOf(craftable),
-                                String.valueOf(priceIndex), "%australium%"},
+                        new String[]{String.valueOf(item.getDefindex()), String.valueOf(item.getQuality()),
+                                String.valueOf(item.isTradable() ? 1 : 0), String.valueOf(item.isCraftable() ? 1 : 0),
+                                String.valueOf(item.getPriceIndex()), "%australium%"},
                         null
                 );
 
                 if (priceCursor != null) {
                     if (priceCursor.moveToFirst()) {
-                        //Show the price
-                        price.setVisibility(View.VISIBLE);
-                        price.setText(String.format("%s: %s",
+                        Price price = new Price(
+                                priceCursor.getDouble(COLUMN_PRICE),
+                                priceCursor.getDouble(COLUMN_PRICE_HIGH),
+                                0, 0, 0,
+                                priceCursor.getString(COLUMN_CURRENCY)
+                        );
+                        //Show the priceView
+                        priceView.setVisibility(View.VISIBLE);
+                        priceView.setText(String.format("%s: %s",
                                 getString(R.string.item_detail_suggested_price),
-                                Utility.formatPrice(this, priceCursor.getDouble(COLUMN_PRICE),
-                                        priceCursor.getDouble(COLUMN_PRICE_HIGH),
-                                        priceCursor.getString(COLUMN_CURRENCY),
-                                        priceCursor.getString(COLUMN_CURRENCY), false)));
+                                price.getFormattedPrice(this)));
                     }
                     priceCursor.close();
                 }
@@ -361,53 +391,6 @@ public class ItemDetailActivity extends Activity {
             //Crash the app if there is no item with the id (should never happen)
             throw new RuntimeException("Item with id " + id + " not found (selection: "
                     + selection + ")");
-        }
-    }
-
-    /**
-     * Create and set the items icon according to it's properties
-     *
-     * @param context      context for accessing assets
-     * @param icon         the ImageView to set the drawable to
-     * @param defindex     defindex of the item
-     * @param index        price index of the item
-     * @param quality      quality of the item
-     * @param paint        paint index of the item
-     * @param isAustralium whether the item is australium or not
-     */
-    private void setIconImage(Context context, ImageView icon, ImageView effect, ImageView paint, int defindex, int index, int quality,
-                              int paintColor, boolean isAustralium, int wear) {
-        try {
-            InputStream ims;
-            AssetManager assetManager = context.getAssets();
-
-            if (defindex >= 15000 && defindex <= 15059) {
-                ims = assetManager.open("skins/" + Utility.getIconIndex(defindex) + "/" + wear + ".png");
-            } else {
-                if (isAustralium) {
-                    ims = assetManager.open("items/" + defindex + "aus.png");
-                } else {
-                    ims = assetManager.open("items/" + defindex + ".png");
-                }
-            }
-            //Load the item icon
-            icon.setImageDrawable(Drawable.createFromStream(ims, null));
-
-            if (index != 0 && Utility.canHaveEffects(defindex, quality)) {
-                //Load the effect image
-                ims = assetManager.open("effects/" + index + "_188x188.png");
-                effect.setImageDrawable(Drawable.createFromStream(ims, null));
-            }
-
-            if (Utility.isPaint(paintColor)) {
-                //Load the paint indicator dot
-                ims = assetManager.open("paint/" + paintColor + ".png");
-                paint.setImageDrawable(Drawable.createFromStream(ims, null));
-            }
-
-        } catch (IOException e) {
-            if (Utility.isDebugging(context))
-                e.printStackTrace();
         }
     }
 }
