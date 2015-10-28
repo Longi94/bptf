@@ -1,4 +1,4 @@
-package com.tlongdev.bktf.enums;
+package com.tlongdev.bktf.model;
 
 /**
  * Currency types.

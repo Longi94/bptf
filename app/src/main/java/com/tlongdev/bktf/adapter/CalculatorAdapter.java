@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
-import com.tlongdev.bktf.enums.Currency;
+import com.tlongdev.bktf.model.Currency;
 
 import java.io.IOException;
 import java.util.ArrayList;

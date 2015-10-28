@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.UnusualActivity;
-import com.tlongdev.bktf.enums.Currency;
+import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.fragment.UnusualFragment;
 
 import java.io.IOException;

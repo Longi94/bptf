@@ -13,9 +13,8 @@ import android.util.Log;
 
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.data.ItemSchemaDbHelper;
-import com.tlongdev.bktf.enums.Currency;
-import com.tlongdev.bktf.enums.Quality;
-import com.tlongdev.bktf.service.UpdateDatabaseService;
+import com.tlongdev.bktf.model.Currency;
+import com.tlongdev.bktf.model.Quality;
 
 import org.json.JSONArray;
 import org.json.JSONException;

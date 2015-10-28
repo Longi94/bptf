@@ -28,7 +28,7 @@ import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.adapter.CalculatorAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
-import com.tlongdev.bktf.enums.Currency;
+import com.tlongdev.bktf.model.Currency;
 
 import java.util.ArrayList;
 
