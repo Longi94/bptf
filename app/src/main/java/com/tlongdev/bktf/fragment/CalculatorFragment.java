@@ -29,6 +29,7 @@ import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.adapter.CalculatorAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Currency;
+import com.tlongdev.bktf.model.Price;
 
 import java.util.ArrayList;
 
@@ -84,7 +85,7 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
     /**
      * The sum of the price of items in the list
      */
-    private double totalPrice = 0;
+    private Price totalPrice = new Price();
 
     /**
      * Only needed for manually expanding the toolbar
@@ -203,16 +204,12 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
      * Deletes all the items from the list
      */
     private void deleteAllItems() {
-        totalPrice = 0;
+        totalPrice.setValue(0);
         try {
-            priceMetal.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Currency.METAL, Currency.METAL, false));
-            priceKeys.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Currency.METAL, Currency.KEY, false));
-            priceBuds.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Currency.METAL, Currency.BUD, false));
-            priceUsd.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Currency.METAL, Currency.USD, false));
+            priceMetal.setText(totalPrice.getFormattedPrice(getActivity(), Currency.METAL));
+            priceKeys.setText(totalPrice.getFormattedPrice(getActivity(), Currency.KEY));
+            priceBuds.setText(totalPrice.getFormattedPrice(getActivity(), Currency.BUD));
+            priceUsd.setText(totalPrice.getFormattedPrice(getActivity(), Currency.USD));
         } catch (Throwable throwable) {
             if (Utility.isDebugging(getActivity())) {
                 throwable.printStackTrace();
@@ -238,20 +235,16 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         //The value to the total price
         if (cursor != null) {
             if (cursor.moveToFirst()) {
-                totalPrice += cursor.getDouble(COL_PRICE_LIST_PRAW) * count;
+                totalPrice.setValue(totalPrice.getValue() + cursor.getDouble(COL_PRICE_LIST_PRAW) * count);
             }
             cursor.close();
         }
 
         try {
-            priceMetal.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Currency.METAL, Currency.METAL, false));
-            priceKeys.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Currency.METAL, Currency.KEY, false));
-            priceBuds.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Currency.METAL, Currency.BUD, false));
-            priceUsd.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Currency.METAL, Currency.USD, false));
+            priceMetal.setText(totalPrice.getFormattedPrice(getActivity(), Currency.METAL));
+            priceKeys.setText(totalPrice.getFormattedPrice(getActivity(), Currency.KEY));
+            priceBuds.setText(totalPrice.getFormattedPrice(getActivity(), Currency.BUD));
+            priceUsd.setText(totalPrice.getFormattedPrice(getActivity(), Currency.USD));
         } catch (Throwable throwable) {
             if (Utility.isDebugging(getActivity())) {
                 throwable.printStackTrace();
@@ -276,19 +269,15 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
 
         //Subtract the value from the sum
         if (cursor != null && cursor.moveToFirst()) {
-            totalPrice -= cursor.getDouble(COL_PRICE_LIST_PRAW) * count;
+            totalPrice.setValue(totalPrice.getValue() - cursor.getDouble(COL_PRICE_LIST_PRAW) * count);
             cursor.close();
         }
 
         try {
-            priceMetal.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Currency.METAL, Currency.METAL, false));
-            priceKeys.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Currency.METAL, Currency.KEY, false));
-            priceBuds.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Currency.METAL, Currency.BUD, false));
-            priceUsd.setText(Utility.formatPrice(getActivity(), totalPrice, 0,
-                    Currency.METAL, Currency.USD, false));
+            priceMetal.setText(totalPrice.getFormattedPrice(getActivity(), Currency.METAL));
+            priceKeys.setText(totalPrice.getFormattedPrice(getActivity(), Currency.KEY));
+            priceBuds.setText(totalPrice.getFormattedPrice(getActivity(), Currency.BUD));
+            priceUsd.setText(totalPrice.getFormattedPrice(getActivity(), Currency.USD));
         } catch (Throwable throwable) {
             if (Utility.isDebugging(getActivity())) {
                 throwable.printStackTrace();

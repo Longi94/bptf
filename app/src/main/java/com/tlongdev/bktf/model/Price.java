@@ -37,6 +37,10 @@ public class Price {
         this(0, 0, 0, 0, 0, null);
     }
 
+    public Price(double value, String currency) {
+        this(value, 0, 0, 0, 0, currency);
+    }
+
     public Price(double value, double highValue, double rawValue, long lastUpdate, double difference, String currency) {
         this.value = value;
         this.highValue = highValue;
@@ -271,10 +275,10 @@ public class Price {
         } else if (difference == 0.0) {
             return "refresh";
         } else if (difference > 0.0) {
-            Price differencePrice = new Price(difference, 0, 0, 0, 0, Currency.METAL);
+            Price differencePrice = new Price(difference, Currency.METAL);
             return String.format("+ %s", differencePrice.getFormattedPrice(context, currency));
         } else {
-            Price differencePrice = new Price(difference, 0, 0, 0, 0, Currency.METAL);
+            Price differencePrice = new Price(difference, Currency.METAL);
             return String.format("+ %s", differencePrice.getFormattedPrice(context, currency));
         }
     }
