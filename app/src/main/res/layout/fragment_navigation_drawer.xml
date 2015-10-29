@@ -35,14 +35,14 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:contentDescription="@string/navigation_drawer_help"
-            android:src="@drawable/ic_help_black_24dp" />
+            android:src="@drawable/ic_steam_24dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
-            android:text="@string/navigation_drawer_help"
+            android:text="Steam group"
             android:textColor="#000" />
 
     </LinearLayout>

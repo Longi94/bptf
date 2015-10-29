@@ -2,8 +2,10 @@ package com.tlongdev.bktf.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -193,6 +195,21 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
                 task.execute();
                 mSwipeRefreshLayout.setRefreshing(true);
             }
+
+            if (prefs.getBoolean(getString(R.string.pref_promo), true)) {
+                prefs.edit().putBoolean(getString(R.string.pref_promo), false).apply();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Get involved!")
+                        .setMessage("There is now a steam group for the application!\n\nThe source code if the app is now available so anyone can contribute. You can join the beta testing program to get and test the 2.0.0 version.\n\nHead over to the steam group for more info!")
+                        .setPositiveButton("Join!", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://steamcommunity.com/groups/bptfandroid")));
+                            }
+                        })
+                        .setNegativeButton("Later", null)
+                        .show();
+            }
         }
     }
 
@@ -267,6 +284,23 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             } else {
                 budsPriceImage.setBackgroundColor(0xff850000);
             }
+        }
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        if (prefs.getBoolean(getString(R.string.pref_promo), true)) {
+            prefs.edit().putBoolean(getString(R.string.pref_promo), false).apply();
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Get involved!")
+                    .setMessage("There is now a steam group for the application!\n\nThe source code if the app is now available and you can join the beta testing program to get and test the 2.0.0 version.\n\nHead over to the steam group for more info!")
+                    .setPositiveButton("Join!", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://steamcommunity.com/groups/bptfandroid")));
+                        }
+                    })
+                    .setNegativeButton("Later", null)
+                    .show();
         }
     }
 }
