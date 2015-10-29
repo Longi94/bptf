@@ -284,8 +284,8 @@ public class Price {
             Price differencePrice = new Price(difference, Currency.METAL);
             return String.format("+ %s", differencePrice.getFormattedPrice(context, currency));
         } else {
-            Price differencePrice = new Price(difference, Currency.METAL);
-            return String.format("+ %s", differencePrice.getFormattedPrice(context, currency));
+            Price differencePrice = new Price(-difference, Currency.METAL);
+            return String.format("- %s", differencePrice.getFormattedPrice(context, currency));
         }
     }
 }
