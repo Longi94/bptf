@@ -7,7 +7,7 @@ The unofficial backpack.tf mobile application
 
 `development` [![Build Status](https://travis-ci.org/Longi94/bptf.svg?branch=development)](https://travis-ci.org/Longi94/bptf)
 
-`v2.0.0-beta` [![Build Status](https://travis-ci.org/Longi94/bptf.svg?branch=v2.0.0-beta)](https://travis-ci.org/Longi94/bptf)
+`v2.0.0-beta` [![Build Status](https://travis-ci.org/Longi94/bptf.svg?branch=v2.0.0-beta)](https://travis-ci.org/Longi94/bptf) [![codecov.io](https://codecov.io/github/Longi94/bptf/coverage.svg?branch=v2.0.0-beta)](https://codecov.io/github/Longi94/bptf?branch=v2.0.0-beta)
 
 ### Contribute!
 Fork this repository and contribute by creating a pull request. Notable contributions will be credited in the application. See the [contributing guidelines](https://github.com/Longi94/bptf/blob/master/CONTRIBUTING.md) before contributing.
