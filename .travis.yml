@@ -33,14 +33,14 @@ before_install:
 
 # Emulator Management: Create, Start and Wait
 before_script:
-  # - echo no | android create avd --force --name test --target android-22 --abi armeabi-v7a
-  # - emulator -avd test -no-skin -no-audio -no-window -gpu off -no-boot-anim &
-  # - android-wait-for-emulator
-  # - adb shell input keyevent 82 &
+  - echo no | android create avd --force --name test --target android-23 --abi armeabi-v7a
+  - emulator -avd test -no-skin -no-audio -no-window -no-boot-anim &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
 
 script:
-  # - ./gradlew build connectedCheck
-  - ./gradlew assembleDebug
+  - ./gradlew build connectedCheck --stacktrace
+  #  - ./gradlew assembleDebug
   
 after_success:
   - codecov
