@@ -108,7 +108,7 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Uri webPage = Uri.parse("https://github.com/Longi94/bptf/wiki/Help");
+                Uri webPage = Uri.parse("http://steamcommunity.com/groups/bptfandroid");
 
                 //Open link in the device default web browser
                 Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
