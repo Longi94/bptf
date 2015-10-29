@@ -171,15 +171,6 @@ public class SettingsActivity extends PreferenceActivity implements
                     }
                 });
 
-        findPreference(getString(R.string.pref_title_translate)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(Intent.ACTION_VIEW,
-                        Uri.parse(getString(R.string.link_one_sky))));
-                return true;
-            }
-        });
-
         findPreference(getString(R.string.pref_title_changelog)).setOnPreferenceClickListener(
                 new Preference.OnPreferenceClickListener() {
                     @Override
