@@ -19,8 +19,8 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.data.UserBackpackContract.UserBackpackEntry;
+import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.model.Price;
-import com.tlongdev.bktf.model.Item;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -230,7 +230,7 @@ public class ItemDetailActivity extends Activity {
         if (itemCursor != null) {
             if (itemCursor.moveToFirst()) {
                 //Store all the data
-                Item item = new Item(
+                BackpackItem item = new BackpackItem(
                         itemCursor.getInt(COLUMN_DEFINDEX),
                         mIntent.getStringExtra(EXTRA_ITEM_NAME),
                         itemCursor.getInt(COLUMN_QUALITY),
@@ -239,14 +239,20 @@ public class ItemDetailActivity extends Activity {
                         itemCursor.getInt(COLUMN_AUSTRALIUM) == 1,
                         itemCursor.getInt(COLUMN_PRICE_INDEX),
                         itemCursor.getInt(COLUMN_WEAPON_WEAR),
-                        null
+                        null,
+                        0,
+                        0,
+                        itemCursor.getInt(COLUMN_LEVEL),
+                        itemCursor.getInt(COLUMN_ORIGIN),
+                        itemCursor.getInt(COLUMN_PAINT),
+                        0,
+                        itemCursor.getString(COLUMN_CUSTOM_NAME),
+                        itemCursor.getString(COLUMN_CUSTOM_DESCRIPTION),
+                        itemCursor.getString(COLUMN_CRAFTER),
+                        itemCursor.getString(COLUMN_GIFTER),
+                        null,
+                        false
                 );
-                int paintNumber = itemCursor.getInt(COLUMN_PAINT);
-
-                String customName = itemCursor.getString(COLUMN_CUSTOM_NAME);
-                String customDescription = itemCursor.getString(COLUMN_CUSTOM_DESCRIPTION);
-                String crafter = itemCursor.getString(COLUMN_CRAFTER);
-                String gifter = itemCursor.getString(COLUMN_GIFTER);
 
                 //Set the name of the item
                 name.setText(item.getFormattedName(this, mIntent.getIntExtra(EXTRA_PROPER_NAME, 0) == 1));
@@ -256,14 +262,13 @@ public class ItemDetailActivity extends Activity {
                     level.setText(item.getDecoratedWeaponDesc(mIntent.getStringExtra(EXTRA_ITEM_TYPE)));
                 } else {
                     level.setText(getString(R.string.item_detail_level,
-                            itemCursor.getInt(COLUMN_LEVEL),
+                            item.getLevel(),
                             mIntent.getStringExtra(EXTRA_ITEM_TYPE)));
                 }
 
                 //Set the origin of the item. Get the origin from the string array resource
                 origin.setText(String.format("%s: %s", getString(R.string.item_detail_origin),
-                        getResources().getStringArray(R.array.array_origins)
-                                [itemCursor.getInt(COLUMN_ORIGIN)]));
+                        getResources().getStringArray(R.array.array_origins)[item.getOrigin()]));
 
                 //Set the effect of the item (if any)
                 if (item.getPriceIndex() != 0 && (item.getQuality() == 5 || item.getQuality() == 7 || item.getQuality() == 9)) {
@@ -273,37 +278,36 @@ public class ItemDetailActivity extends Activity {
                 }
 
                 //set the custom name of the item (if any)
-                if (customName != null) {
-                    this.customName.setText(Html.fromHtml(String.format("%s: <i>%s</i>",
-                            getString(R.string.item_detail_custom_name), customName)));
-                    this.customName.setVisibility(View.VISIBLE);
+                if (item.getCustomName() != null) {
+                    customName.setText(Html.fromHtml(String.format("%s: <i>%s</i>",
+                            getString(R.string.item_detail_custom_name), item.getCustomName())));
+                    customName.setVisibility(View.VISIBLE);
                 }
 
                 //Set the custom description of the item (if any)
-                if (customDescription != null) {
+                if (item.getCustomDescription() != null) {
                     customDesc.setText(Html.fromHtml(String.format("%s: <i>%s</i>",
-                            getString(R.string.item_detail_custom_description), customDescription)));
+                            getString(R.string.item_detail_custom_description), item.getCustomDescription())));
                     customDesc.setVisibility(View.VISIBLE);
                 }
 
                 //Set the crafter's name (if any)
-                if (crafter != null) {
+                if (item.getCreatorName() != null) {
                     crafterName.setText(Html.fromHtml(String.format("%s: <i>%s</i>",
-                            getString(R.string.item_detail_craft), crafter)));
+                            getString(R.string.item_detail_craft), item.getCreatorName())));
                     crafterName.setVisibility(View.VISIBLE);
                 }
 
                 //Set the gifter's name (if any)
-                if (gifter != null) {
+                if (item.getGifterName() != null) {
                     gifterName.setText(Html.fromHtml(String.format("%s: <i>%s</i>",
-                            getString(R.string.item_detail_gift), gifter)));
+                            getString(R.string.item_detail_gift), item.getGifterName())));
                     gifterName.setVisibility(View.VISIBLE);
                 }
 
                 //Set the paint text (if any)
-                if (paintNumber != 0) {
-                    paint.setText(String.format("%s: %s", getString(R.string.item_detail_paint),
-                            Utility.getPaintName(this, paintNumber)));
+                if (item.getPaint() != 0) {
+                    paint.setText(String.format("%s: %s", getString(R.string.item_detail_paint), item.getPaintName(this)));
                     paint.setVisibility(View.VISIBLE);
                 }
 
@@ -325,9 +329,9 @@ public class ItemDetailActivity extends Activity {
                 try {
                     InputStream ims;
                     AssetManager assetManager = getAssets();
-                    if (Utility.isPaint(paintNumber)) {
+                    if (BackpackItem.isPaint(item.getPaint())) {
                         //Load the paint indicator dot
-                        ims = assetManager.open("paint/" + paintNumber + ".png");
+                        ims = assetManager.open("paint/" + item.getPaint() + ".png");
                         paintView.setImageDrawable(Drawable.createFromStream(ims, null));
                     }
                 } catch (IOException e) {

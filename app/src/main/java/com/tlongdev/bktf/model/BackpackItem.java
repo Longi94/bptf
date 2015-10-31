@@ -57,6 +57,102 @@ public class BackpackItem extends Item {
         this.equipped = equipped;
     }
 
+    public int getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(int uniqueId) {
+        this.uniqueId = uniqueId;
+    }
+
+    public int getOriginalId() {
+        return originalId;
+    }
+
+    public void setOriginalId(int originalId) {
+        this.originalId = originalId;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(int origin) {
+        this.origin = origin;
+    }
+
+    public int getPaint() {
+        return paint;
+    }
+
+    public void setPaint(int paint) {
+        this.paint = paint;
+    }
+
+    public int getCraftNumber() {
+        return craftNumber;
+    }
+
+    public void setCraftNumber(int craftNumber) {
+        this.craftNumber = craftNumber;
+    }
+
+    public String getCustomName() {
+        return customName;
+    }
+
+    public void setCustomName(String customName) {
+        this.customName = customName;
+    }
+
+    public String getCustomDescription() {
+        return customDescription;
+    }
+
+    public void setCustomDescription(String customDescription) {
+        this.customDescription = customDescription;
+    }
+
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
+    }
+
+    public String getGifterName() {
+        return gifterName;
+    }
+
+    public void setGifterName(String gifterName) {
+        this.gifterName = gifterName;
+    }
+
+    public String getContainedItem() {
+        return containedItem;
+    }
+
+    public void setContainedItem(String containedItem) {
+        this.containedItem = containedItem;
+    }
+
+    public boolean isEquipped() {
+        return equipped;
+    }
+
+    public void setEquipped(boolean equipped) {
+        this.equipped = equipped;
+    }
+
     /**
      * Get the paint name according to the index returned by the GetPlayerItems API (attributes).
      *

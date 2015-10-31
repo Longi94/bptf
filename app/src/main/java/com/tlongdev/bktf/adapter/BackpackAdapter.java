@@ -23,6 +23,7 @@ import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.ItemDetailActivity;
 import com.tlongdev.bktf.activity.UserBackpackActivity;
 import com.tlongdev.bktf.data.ItemSchemaDbHelper;
+import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.model.Item;
 
 import java.io.IOException;
@@ -213,9 +214,9 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                                     @SuppressWarnings("unchecked")
                                     ActivityOptions options = ActivityOptions
                                             .makeSceneTransitionAnimation((Activity) mContext,
-                                                    Pair.create((View) holder.icon, "icon_transition"),
+                                                    /*Pair.create((View) holder.icon, "icon_transition"),
                                                     Pair.create((View) holder.effect, "effect_transition"),
-                                                    Pair.create((View) holder.paint, "paint_transition"),
+                                                    Pair.create((View) holder.paint, "paint_transition"),*/
                                                     Pair.create((View) holder.root, "background_transition"));
                                     mContext.startActivity(i, options.toBundle());
                                 } else {
@@ -368,8 +369,8 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                 drawables[1] = item.getEffectDrawable(mContext);
 
                 //Get the paint indicator if needed
-                if (Utility.isPaint(paint)) {
-                    ims = assetManager.open("paint/" + params[5] + ".png");
+                if (BackpackItem.isPaint(paint)) {
+                    ims = assetManager.open("paint/" + paint + ".png");
                     drawables[2] = Drawable.createFromStream(ims, null);
                 }
 
