@@ -24,7 +24,9 @@ public final class DatabaseContract {
     // as the ContentProvider hasn't been given any information on what to do with "givemeroot".
     // At least, let's hope not.  Don't be that dev, reader.  Don't be that dev.
     public static final String PATH_PRICE_LIST = "pricelist";
-    public static final String PATH_ITEM_SCHEMA = "backpack";
+    public static final String PATH_ITEM_SCHEMA = "schema";
+    public static final String PATH_UNUSUAL_SCHEMA = "unusual_schema";
+    public static final String PATH_ORIGIN_NAMES = "origin_names";
     public static final String PATH_BACKPACK = "backpack";
 
     /* Inner class that defines the table contents of the weather table */
@@ -66,12 +68,41 @@ public final class DatabaseContract {
         public static final String COLUMN_ITEM_NAME = "item_name";
         public static final String COLUMN_TYPE_NAME = "type_name";
         public static final String COLUMN_PROPER_NAME = "proper_name";
+        public static final String COLUMN_ICON = "icon";
+        public static final String COLUMN_ICON_SMALL = "icon";
 
         public static Uri buildUri(long id) {
             return CONTENT_URI.buildUpon().appendPath("id").appendPath("" + id).build();
         }
     }
 
+    public static final class UnusualSchemaEntry implements BaseColumns {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_UNUSUAL_SCHEMA).build();
+
+        public static final String TABLE_NAME = "unusual_schema";
+
+        public static final String COLUMN_INDEX = "index";
+        public static final String COLUMN_NAME = "name";
+
+        public static Uri buildUri(long id) {
+            return CONTENT_URI.buildUpon().appendPath("id").appendPath("" + id).build();
+        }
+    }
+
+    public static final class OriginEntry implements BaseColumns {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_ORIGIN_NAMES).build();
+
+        public static final String TABLE_NAME = "origin_names";
+
+        public static final String COLUMN_INDEX = "index";
+        public static final String COLUMN_NAME = "name";
+
+        public static Uri buildUri(long id) {
+            return CONTENT_URI.buildUpon().appendPath("id").appendPath("" + id).build();
+        }
+    }
 
     public static final class UserBackpackEntry implements BaseColumns {
 
