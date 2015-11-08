@@ -27,6 +27,8 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.adapter.SearchAdapter;
 import com.tlongdev.bktf.data.DatabaseContract;
+import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
+import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 
 import org.json.JSONException;
 
@@ -50,38 +52,23 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     private static final int PRICE_LIST_LOADER = 0;
     private static final String QUERY_KEY = "query";
 
-    //The columns we need
-    private static final String[] PRICE_LIST_COLUMNS = {
-            DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry._ID,
-            DatabaseContract.PriceEntry.COLUMN_DEFINDEX,
-            DatabaseContract.PriceEntry.COLUMN_ITEM_NAME,
-            DatabaseContract.PriceEntry.COLUMN_ITEM_QUALITY,
-            DatabaseContract.PriceEntry.COLUMN_ITEM_TRADABLE,
-            DatabaseContract.PriceEntry.COLUMN_ITEM_CRAFTABLE,
-            DatabaseContract.PriceEntry.COLUMN_PRICE_INDEX,
-            DatabaseContract.PriceEntry.COLUMN_CURRENCY,
-            DatabaseContract.PriceEntry.COLUMN_PRICE,
-            DatabaseContract.PriceEntry.COLUMN_PRICE_HIGH,
-            DatabaseContract.PriceEntry.COLUMN_AUSTRALIUM
-    };
-
     //Indexes of the columns above
-    public static final int COLUMN_DEFINDEX = 1;
-    public static final int COLUMN_NAME = 2;
-    public static final int COLUMN_QUALITY = 3;
-    public static final int COLUMN_TRADABLE = 4;
-    public static final int COLUMN_CRAFTABLE = 5;
-    public static final int COLUMN_PRICE_INDEX = 6;
-    public static final int COLUMN_CURRENCY = 7;
-    public static final int COLUMN_PRICE = 8;
-    public static final int COLUMN_PRICE_HIGH = 9;
-    public static final int COLUMN_AUSTRALIUM = 10;
+    public static final int COLUMN_DEFINDEX = 0;
+    public static final int COLUMN_NAME = 1;
+    public static final int COLUMN_QUALITY = 2;
+    public static final int COLUMN_TRADABLE = 3;
+    public static final int COLUMN_CRAFTABLE = 4;
+    public static final int COLUMN_PRICE_INDEX = 5;
+    public static final int COLUMN_CURRENCY = 6;
+    public static final int COLUMN_PRICE = 7;
+    public static final int COLUMN_PRICE_HIGH = 8;
+    public static final int COLUMN_AUSTRALIUM = 9;
 
     //Selection
-    private static final String sNameSearch = DatabaseContract.PriceEntry.TABLE_NAME +
-            "." + DatabaseContract.PriceEntry.COLUMN_ITEM_NAME + " LIKE ? AND NOT(" +
-            DatabaseContract.PriceEntry.COLUMN_ITEM_QUALITY + " = 5 AND " +
-            DatabaseContract.PriceEntry.COLUMN_PRICE_INDEX + " != 0)";
+    private static final String sNameSearch = ItemSchemaEntry.TABLE_NAME +
+            "." + ItemSchemaEntry.COLUMN_ITEM_NAME + " LIKE ? AND NOT(" +
+            PriceEntry.COLUMN_ITEM_QUALITY + " = 5 AND " +
+            PriceEntry.COLUMN_PRICE_INDEX + " != 0)";
 
     //The search query string
     private String searchQuery;
@@ -161,6 +148,23 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        String sql = "SELECT " +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + "," +
+                ItemSchemaEntry.TABLE_NAME + "." + DatabaseContract.ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_TRADABLE + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_CRAFTABLE + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_CURRENCY + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_HIGH + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM +
+                " FROM " + PriceEntry.TABLE_NAME +
+                " JOIN " + ItemSchemaEntry.TABLE_NAME +
+                " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
+                " WHERE " + sNameSearch;
+
         String query;
         String[] selectionArgs;
 
@@ -181,9 +185,9 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
 
         return new CursorLoader(
                 this,
-                DatabaseContract.PriceEntry.CONTENT_URI,
-                PRICE_LIST_COLUMNS,
-                sNameSearch,
+                DatabaseContract.RAW_QUERY_URI,
+                null,
+                sql,
                 selectionArgs,
                 null
         );
@@ -206,16 +210,16 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             searchTask.execute(searchQuery);
 
             MatrixCursor extras = new MatrixCursor(new String[]{
-                    DatabaseContract.PriceEntry._ID,
-                    DatabaseContract.PriceEntry.COLUMN_DEFINDEX,
-                    DatabaseContract.PriceEntry.COLUMN_ITEM_NAME,
-                    DatabaseContract.PriceEntry.COLUMN_ITEM_QUALITY,
-                    DatabaseContract.PriceEntry.COLUMN_ITEM_TRADABLE,
-                    DatabaseContract.PriceEntry.COLUMN_ITEM_CRAFTABLE,
-                    DatabaseContract.PriceEntry.COLUMN_PRICE_INDEX,
-                    DatabaseContract.PriceEntry.COLUMN_CURRENCY,
-                    DatabaseContract.PriceEntry.COLUMN_PRICE,
-                    DatabaseContract.PriceEntry.COLUMN_PRICE_HIGH,});
+                    PriceEntry._ID,
+                    PriceEntry.COLUMN_DEFINDEX,
+                    ItemSchemaEntry.COLUMN_ITEM_NAME,
+                    PriceEntry.COLUMN_ITEM_QUALITY,
+                    PriceEntry.COLUMN_ITEM_TRADABLE,
+                    PriceEntry.COLUMN_ITEM_CRAFTABLE,
+                    PriceEntry.COLUMN_PRICE_INDEX,
+                    PriceEntry.COLUMN_CURRENCY,
+                    PriceEntry.COLUMN_PRICE,
+                    PriceEntry.COLUMN_PRICE_HIGH,});
             extras.addRow(new String[]{"-1", null, null, null, null, null, null, null, null, null});
             Cursor[] cursors = {extras, data};
             Cursor extendedCursor = new MergeCursor(cursors);
@@ -368,16 +372,16 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                 //Insert an extra row to the cursor
                 // TODO: 2015. 10. 25. there is really no need to do this, all we need is a proper adapter
                 MatrixCursor extras = new MatrixCursor(new String[]{
-                        DatabaseContract.PriceEntry._ID,
-                        DatabaseContract.PriceEntry.COLUMN_DEFINDEX,
-                        DatabaseContract.PriceEntry.COLUMN_ITEM_NAME,
-                        DatabaseContract.PriceEntry.COLUMN_ITEM_QUALITY,
-                        DatabaseContract.PriceEntry.COLUMN_ITEM_TRADABLE,
-                        DatabaseContract.PriceEntry.COLUMN_ITEM_CRAFTABLE,
-                        DatabaseContract.PriceEntry.COLUMN_PRICE_INDEX,
-                        DatabaseContract.PriceEntry.COLUMN_CURRENCY,
-                        DatabaseContract.PriceEntry.COLUMN_PRICE,
-                        DatabaseContract.PriceEntry.COLUMN_PRICE_HIGH,});
+                        PriceEntry._ID,
+                        PriceEntry.COLUMN_DEFINDEX,
+                        ItemSchemaEntry.COLUMN_ITEM_NAME,
+                        PriceEntry.COLUMN_ITEM_QUALITY,
+                        PriceEntry.COLUMN_ITEM_TRADABLE,
+                        PriceEntry.COLUMN_ITEM_CRAFTABLE,
+                        PriceEntry.COLUMN_PRICE_INDEX,
+                        PriceEntry.COLUMN_CURRENCY,
+                        PriceEntry.COLUMN_PRICE,
+                        PriceEntry.COLUMN_PRICE_HIGH,});
                 extras.addRow(new String[]{"-1", null, s[0], null, null, null, null, null, null, null});
                 Cursor[] cursors = {extras, data};
                 Cursor extendedCursor = new MergeCursor(cursors);

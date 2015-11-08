@@ -20,6 +20,8 @@ import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.ItemChooserAdapter;
+import com.tlongdev.bktf.data.DatabaseContract;
+import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 
 /**
@@ -41,33 +43,23 @@ public class ItemChooserActivity extends FragmentActivity implements
 
     //Indexes of the columns below
     public static final int COLUMN_ID = 0;
-    public static final int COLUMN_NAME = 1;
-    public static final int COLUMN_QUALITY = 2;
-    public static final int COLUMN_TRADABLE = 3;
-    public static final int COLUMN_CRAFTABLE = 4;
-    public static final int COLUMN_PRICE_INDEX = 5;
-    public static final int COLUMN_DEFINDEX = 5;
-
-    //The columns we need
-    private static final String[] PRICE_LIST_COLUMNS = {
-            PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
-            PriceEntry.COLUMN_ITEM_NAME,
-            PriceEntry.COLUMN_ITEM_QUALITY,
-            PriceEntry.COLUMN_ITEM_TRADABLE,
-            PriceEntry.COLUMN_ITEM_CRAFTABLE,
-            PriceEntry.COLUMN_PRICE_INDEX,
-            PriceEntry.COLUMN_DEFINDEX
-    };
+    public static final int COLUMN_DEFINDEX = 1;
+    public static final int COLUMN_NAME = 2;
+    public static final int COLUMN_QUALITY = 3;
+    public static final int COLUMN_TRADABLE = 4;
+    public static final int COLUMN_CRAFTABLE = 5;
+    public static final int COLUMN_PRICE_INDEX = 6;
+    public static final int COLUMN_AUSTRALIUM = 6;
 
     //Selection
     private static final String sGeneralSearch =
-            PriceEntry.TABLE_NAME +
-                    "." + PriceEntry.COLUMN_ITEM_NAME + " LIKE ? AND NOT(" +
+            ItemSchemaEntry.TABLE_NAME +
+                    "." + ItemSchemaEntry.COLUMN_ITEM_NAME + " LIKE ? AND NOT(" +
                     PriceEntry.COLUMN_ITEM_QUALITY + " = 5 AND " +
                     PriceEntry.COLUMN_PRICE_INDEX + " != 0)";
     private static final String sUnusualSearch =
-            PriceEntry.TABLE_NAME +
-                    "." + PriceEntry.COLUMN_ITEM_NAME + " LIKE ? AND " +
+            ItemSchemaEntry.TABLE_NAME +
+                    "." + ItemSchemaEntry.COLUMN_ITEM_NAME + " LIKE ? AND " +
                     PriceEntry.COLUMN_ITEM_QUALITY + " = 5 AND " +
                     PriceEntry.COLUMN_PRICE_INDEX + " = ?";
 
@@ -252,15 +244,27 @@ public class ItemChooserActivity extends FragmentActivity implements
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
+        String sql = "SELECT " +
+                PriceEntry.TABLE_NAME + "." + PriceEntry._ID + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + "," +
+                ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_TRADABLE + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_CRAFTABLE + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM +
+                " FROM " + PriceEntry.TABLE_NAME +
+                " JOIN " + ItemSchemaEntry.TABLE_NAME +
+                " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX;
+
         //Get the search input
         String query = searchInput.getText().toString();
 
         //The selection based on the first spinner
-        String selection;
         if (itemTypeSpinner.getSelectedItemPosition() == 0) {
-            selection = sGeneralSearch;
+            sql += " WHERE " + sGeneralSearch;
         } else {
-            selection = sUnusualSearch;
+            sql += " WHERE " + sUnusualSearch;
         }
 
         //The selection arguments
@@ -282,9 +286,9 @@ public class ItemChooserActivity extends FragmentActivity implements
         //Query
         return new CursorLoader(
                 this,
-                PriceEntry.CONTENT_URI,
-                PRICE_LIST_COLUMNS,
-                selection,
+                DatabaseContract.RAW_QUERY_URI,
+                null,
+                sql,
                 selectionArgs,
                 null
         );
