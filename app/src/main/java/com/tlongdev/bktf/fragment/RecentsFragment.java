@@ -35,7 +35,9 @@ import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.adapter.RecentsAdapter;
+import com.tlongdev.bktf.data.DatabaseContract;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.network.GetPriceList;
 
 /**
@@ -57,26 +59,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     private static final int PRICE_LIST_LOADER = 0;
 
     /**
-     * Query columns
-     */
-    private static final String[] PRICE_LIST_COLUMNS = {
-            PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
-            PriceEntry.COLUMN_DEFINDEX,
-            PriceEntry.COLUMN_ITEM_NAME,
-            PriceEntry.COLUMN_ITEM_QUALITY,
-            PriceEntry.COLUMN_ITEM_TRADABLE,
-            PriceEntry.COLUMN_ITEM_CRAFTABLE,
-            PriceEntry.COLUMN_PRICE_INDEX,
-            PriceEntry.COLUMN_CURRENCY,
-            PriceEntry.COLUMN_PRICE,
-            PriceEntry.COLUMN_PRICE_HIGH,
-            null,
-            PriceEntry.COLUMN_DIFFERENCE,
-            PriceEntry.COLUMN_AUSTRALIUM
-    };
-
-    /**
-     * Indexes for the columns above
+     * Indexes for the columns
      */
     public static final int COL_PRICE_LIST_DEFI = 1;
     public static final int COL_PRICE_LIST_NAME = 2;
@@ -247,17 +230,31 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String sortOrder = PriceEntry.COLUMN_LAST_UPDATE + " DESC";
-
-        PRICE_LIST_COLUMNS[COL_PRICE_LIST_PRAW] = Utility.getRawPriceQueryString(getActivity());
+        String sql = "SELECT " +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + "," +
+                ItemSchemaEntry.TABLE_NAME + "." + DatabaseContract.ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_TRADABLE + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_CRAFTABLE + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_CURRENCY + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_HIGH + "," +
+                Utility.getRawPriceQueryString(getActivity()) +  "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DIFFERENCE + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM +
+                " FROM " + PriceEntry.TABLE_NAME +
+                " JOIN " + ItemSchemaEntry.TABLE_NAME +
+                " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
+                " ORDER BY " + PriceEntry.COLUMN_LAST_UPDATE + " DESC";
 
         return new CursorLoader(
                 getActivity(),
-                PriceEntry.CONTENT_URI,
-                PRICE_LIST_COLUMNS,
+                DatabaseContract.RAW_QUERY_URI,
                 null,
+                sql,
                 null,
-                sortOrder
+                null
         );
     }
 

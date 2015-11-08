@@ -23,11 +23,14 @@ public final class DatabaseContract {
     // looking at weather data. content://com.example.android.sunshine.app/givemeroot/ will fail,
     // as the ContentProvider hasn't been given any information on what to do with "givemeroot".
     // At least, let's hope not.  Don't be that dev, reader.  Don't be that dev.
+    public static final String PATH_RAW_QUERY = "raw";
     public static final String PATH_PRICE_LIST = "pricelist";
     public static final String PATH_ITEM_SCHEMA = "schema";
     public static final String PATH_UNUSUAL_SCHEMA = "unusual_schema";
     public static final String PATH_ORIGIN_NAMES = "origin_names";
     public static final String PATH_BACKPACK = "backpack";
+
+    public static final Uri RAW_QUERY_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_RAW_QUERY).build();
 
     /* Inner class that defines the table contents of the weather table */
     public static final class PriceEntry implements BaseColumns {
