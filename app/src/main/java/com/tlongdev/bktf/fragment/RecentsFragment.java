@@ -39,6 +39,7 @@ import com.tlongdev.bktf.adapter.RecentsAdapter;
 import com.tlongdev.bktf.data.DatabaseContract;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.network.GetItemSchema;
 import com.tlongdev.bktf.network.GetPriceList;
 
 /**
@@ -46,7 +47,7 @@ import com.tlongdev.bktf.network.GetPriceList;
  */
 public class RecentsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
         SwipeRefreshLayout.OnRefreshListener, GetPriceList.OnPriceListListener,
-        AppBarLayout.OnOffsetChangedListener, MainActivity.OnDrawerOpenedListener {
+        AppBarLayout.OnOffsetChangedListener, MainActivity.OnDrawerOpenedListener, GetItemSchema.OnItemSchemaListener {
 
     /**
      * Log tag for logging.
@@ -166,26 +167,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         budsPriceImage = rootView.findViewById(R.id.image_view_buds_price);
 
         //Populate the toolbar header
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
-        keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
-        budsPrice.setText(prefs.getString(getString(R.string.pref_buds_price), ""));
-
-        if (Utility.getDouble(prefs, getString(R.string.pref_metal_diff), 0.0) > 0.0) {
-            metalPriceImage.setBackgroundColor(0xff008504);
-        } else {
-            metalPriceImage.setBackgroundColor(0xff850000);
-        }
-        if (Utility.getDouble(prefs, getString(R.string.pref_key_diff), 0.0) > 0.0) {
-            keyPriceImage.setBackgroundColor(0xff008504);
-        } else {
-            keyPriceImage.setBackgroundColor(0xff850000);
-        }
-        if (Utility.getDouble(prefs, getString(R.string.pref_buds_diff), 0.0) > 0) {
-            budsPriceImage.setBackgroundColor(0xff008504);
-        } else {
-            budsPriceImage.setBackgroundColor(0xff850000);
-        }
+        updateCurrencyHeader(PreferenceManager.getDefaultSharedPreferences(getActivity()));
 
         return rootView;
     }
@@ -203,7 +185,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                 task.execute();
 
                 //Show the progress dialog
-                loadingDialog = ProgressDialog.show(getActivity(), null, "Downloading data...", true);
+                loadingDialog = ProgressDialog.show(getActivity(), null, "Downloading prices...", true);
             } else {
                 //Quit the app if the download failed.
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -324,15 +306,32 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     @Override
-    public void onPriceListFinished() {
+    public void onPriceListFinished(int newItems) {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
         if (loadingDialog != null) {
             loadingDialog.dismiss();
+
+            loadingDialog = ProgressDialog.show(getActivity(), null, "Downloading item schema...", true);
+
+            GetItemSchema task = new GetItemSchema(getActivity());
+            task.setListener(this);
+            task.execute();
+        } else {
+            if (newItems > 0) {
+                getLoaderManager().restartLoader(PRICE_LIST_LOADER, null, this);
+            }
+
+
+            if (prefs.getBoolean(getString(R.string.pref_auto_sync), false) &&
+                    System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_item_schema_update), 0) >= 172800000L //2days
+                    && Utility.isNetworkAvailable(getActivity())) {
+                GetItemSchema task = new GetItemSchema(getActivity());
+                task.setListener(this);
+                task.execute();
+            }
         }
-
-        getLoaderManager().restartLoader(PRICE_LIST_LOADER, null, this);
-
-        //Update the header with currency prices
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         //Get the shared preferences
         SharedPreferences.Editor editor = prefs.edit();
@@ -347,25 +346,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
             //Stop animation
             mSwipeRefreshLayout.setRefreshing(false);
 
-            metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
-            keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
-            budsPrice.setText(prefs.getString(getString(R.string.pref_buds_price), ""));
-
-            if (Utility.getDouble(prefs, getString(R.string.pref_metal_diff), 0.0) > 0.0) {
-                metalPriceImage.setBackgroundColor(0xff008504);
-            } else {
-                metalPriceImage.setBackgroundColor(0xff850000);
-            }
-            if (Utility.getDouble(prefs, getString(R.string.pref_key_diff), 0.0) > 0.0) {
-                keyPriceImage.setBackgroundColor(0xff008504);
-            } else {
-                keyPriceImage.setBackgroundColor(0xff850000);
-            }
-            if (Utility.getDouble(prefs, getString(R.string.pref_buds_diff), 0.0) > 0) {
-                budsPriceImage.setBackgroundColor(0xff008504);
-            } else {
-                budsPriceImage.setBackgroundColor(0xff850000);
-            }
+            updateCurrencyHeader(prefs);
         }
     }
 
@@ -387,7 +368,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     @Override
-    public void onPriceListFailed(String errorMesage) {
+    public void onPriceListFailed(String errorMessage) {
         if (loadingDialog != null) {
             loadingDialog.dismiss();
 
@@ -406,6 +387,71 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
             alertDialog = builder.create();
             loadingDialog.dismiss();
             alertDialog.show();
+        } else {
+            Toast.makeText(getActivity(), "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onItemSchemaFinished() {
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
+        }
+
+        getLoaderManager().restartLoader(PRICE_LIST_LOADER, null, this);
+
+        //Update the header with currency prices
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        //Get the shared preferences
+        SharedPreferences.Editor editor = prefs.edit();
+
+        //Save when the update finished
+        editor.putLong(getActivity().getString(R.string.pref_last_item_schema_update),
+                System.currentTimeMillis());
+        editor.putBoolean(getActivity().getString(R.string.pref_initial_load), false);
+        editor.apply();
+    }
+
+    @Override
+    public void onItemSchemaUpdate(int max) {
+        if (loadingDialog != null && loadingDialog.isShowing()) {
+            if (loadingDialog.isIndeterminate()) {
+                loadingDialog.dismiss();
+                loadingDialog = new ProgressDialog(getActivity());
+                loadingDialog.setIndeterminate(false);
+                loadingDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                loadingDialog.setMessage(getActivity().getString(R.string.message_item_schema_create));
+                loadingDialog.setMax(max);
+                loadingDialog.show();
+            } else {
+                loadingDialog.incrementProgressBy(1);
+            }
+        }
+    }
+
+    @Override
+    public void onItemSchemaFailed(String errorMessage) {
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
+
+            AlertDialog.Builder builder;
+            AlertDialog alertDialog;
+            builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(getActivity().getString(R.string.message_database_fail_network))
+                    .setCancelable(false)
+                    .setPositiveButton(getActivity().getString(R.string.action_close), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //Close app
+                            (getActivity()).finish();
+                        }
+                    });
+            alertDialog = builder.create();
+            loadingDialog.dismiss();
+            alertDialog.show();
+        } else {
+            Toast.makeText(getActivity(), "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -419,6 +465,11 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         }
     }
 
+    @Override
+    public void onDrawerOpened() {
+        expandToolbar();
+    }
+
     /**
      * Fully expand the toolbar with animation.
      */
@@ -427,8 +478,25 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
     }
 
-    @Override
-    public void onDrawerOpened() {
-        expandToolbar();
+    private void updateCurrencyHeader(SharedPreferences prefs) {
+        metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
+        keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
+        budsPrice.setText(prefs.getString(getString(R.string.pref_buds_price), ""));
+
+        if (Utility.getDouble(prefs, getString(R.string.pref_metal_diff), 0.0) > 0.0) {
+            metalPriceImage.setBackgroundColor(0xff008504);
+        } else {
+            metalPriceImage.setBackgroundColor(0xff850000);
+        }
+        if (Utility.getDouble(prefs, getString(R.string.pref_key_diff), 0.0) > 0.0) {
+            keyPriceImage.setBackgroundColor(0xff008504);
+        } else {
+            keyPriceImage.setBackgroundColor(0xff850000);
+        }
+        if (Utility.getDouble(prefs, getString(R.string.pref_buds_diff), 0.0) > 0) {
+            budsPriceImage.setBackgroundColor(0xff008504);
+        } else {
+            budsPriceImage.setBackgroundColor(0xff850000);
+        }
     }
 }

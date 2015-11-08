@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
 import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
@@ -30,6 +31,7 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
     private Context mContext;
 
     private OnItemSchemaListener listener;
+    private String errorMessage;
 
     public GetItemSchema(Context context) {
         this.mContext = context;
@@ -62,7 +64,10 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
 
             return parseJson(inputStream);
         } catch (IOException e) {
-            e.printStackTrace();
+            //There was a network error
+            errorMessage = mContext.getString(R.string.error_network);
+            if (Utility.isDebugging(mContext))
+                e.printStackTrace();
         } finally {
             //Close the connection
             if (urlConnection != null) {
@@ -112,7 +117,9 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
 
                     while (parser.nextToken() != JsonToken.END_OBJECT) {
                         if (parser.getCurrentName().equals(KEY_MESSAGE)) {
-                            Log.e(LOG_TAG, parser.getText());
+                            errorMessage = parser.getText();
+                            if (Utility.isDebugging(mContext))
+                                Log.e(LOG_TAG, errorMessage);
                         }
                     }
                     parser.close();
@@ -294,10 +301,10 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
                     listener.onItemSchemaFinished();
                     break;
                 case -1:
-                    listener.onItemSchemaFailed();
+                    listener.onItemSchemaFailed(errorMessage);
                     break;
                 default:
-                    listener.onItemSchemaFailed();
+                    listener.onItemSchemaFailed(errorMessage);
                     break;
             }
         }
@@ -329,6 +336,6 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
 
         void onItemSchemaUpdate(int max);
 
-        void onItemSchemaFailed();
+        void onItemSchemaFailed(String errorMessage);
     }
 }
