@@ -29,13 +29,13 @@ import java.util.Vector;
 /**
  * Task for fetchin the user's backpack in the background
  */
-public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
+public class GetUserBackpack extends AsyncTask<String, Void, Boolean> {
 
     /**
      * Log tag for logging.
      */
     @SuppressWarnings("unused")
-    private static final String LOG_TAG = FetchUserBackpack.class.getSimpleName();
+    private static final String LOG_TAG = GetUserBackpack.class.getSimpleName();
 
     //All the json keys needed to parse the data out of the json string
     private static final String OWM_UNIQUE_ID = "id";
@@ -88,7 +88,7 @@ public class FetchUserBackpack extends AsyncTask<String, Void, Boolean> {
      *
      * @param context the context the task was launched in
      */
-    public FetchUserBackpack(Context context) {
+    public GetUserBackpack(Context context) {
         mContext = context;
     }
 

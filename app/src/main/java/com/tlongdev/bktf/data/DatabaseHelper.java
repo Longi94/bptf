@@ -58,6 +58,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
                         ItemSchemaEntry.COLUMN_DEFINDEX + " INTEGER NOT NULL, " +
                         ItemSchemaEntry.COLUMN_ITEM_NAME + " INTEGER NOT NULL, " +
+                        ItemSchemaEntry.COLUMN_DESCRIPTION + " TEXT, " +
                         ItemSchemaEntry.COLUMN_TYPE_NAME + " INTEGER NOT NULL, " +
                         ItemSchemaEntry.COLUMN_PROPER_NAME + " INTEGER NOT NULL, " +
 
@@ -67,19 +68,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "CREATE TABLE " + UnusualSchemaEntry.TABLE_NAME + " (" +
                         UnusualSchemaEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
-                        UnusualSchemaEntry.COLUMN_INDEX + " INTEGER NOT NULL, " +
+                        UnusualSchemaEntry.COLUMN_ID + " INTEGER NOT NULL, " +
                         UnusualSchemaEntry.COLUMN_NAME + " TEXT NOT NULL, " +
 
-                        " UNIQUE (" + UnusualSchemaEntry.COLUMN_INDEX + ") ON CONFLICT REPLACE);";
+                        " UNIQUE (" + UnusualSchemaEntry.COLUMN_ID + ") ON CONFLICT REPLACE);";
 
         final String SQL_CREATE_ORIGIN_NAMES_TABLE =
                 "CREATE TABLE " + OriginEntry.TABLE_NAME + " (" +
                         OriginEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
-                        OriginEntry.COLUMN_INDEX + " INTEGER NOT NULL, " +
+                        OriginEntry.COLUMN_ID + " INTEGER NOT NULL, " +
                         OriginEntry.COLUMN_NAME + " TEXT NOT NULL, " +
 
-                        " UNIQUE (" + OriginEntry.COLUMN_INDEX + ") ON CONFLICT REPLACE);";
+                        " UNIQUE (" + OriginEntry.COLUMN_ID + ") ON CONFLICT REPLACE);";
 
         db.execSQL(SQL_CREATE_PRICE_LIST_TABLE);
         db.execSQL(SQL_CREATE_ITEM_SCHEMA_TABLE);

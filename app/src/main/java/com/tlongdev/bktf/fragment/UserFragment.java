@@ -33,7 +33,7 @@ import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.activity.UserBackpackActivity;
-import com.tlongdev.bktf.network.FetchUserInfo;
+import com.tlongdev.bktf.network.GetUserInfo;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -46,7 +46,7 @@ import java.net.URL;
  * Fragment for displaying the user profile.
  */
 public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
-        View.OnClickListener, FetchUserInfo.OnFetchUserInfoListener, MainActivity.OnDrawerOpenedListener,
+        View.OnClickListener, GetUserInfo.OnFetchUserInfoListener, MainActivity.OnDrawerOpenedListener,
         AppBarLayout.OnOffsetChangedListener {
 
     /**
@@ -76,7 +76,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     //The task for fetching user info
-    private FetchUserInfo fetchTask;
+    private GetUserInfo fetchTask;
 
     //Stores whether the backpack is private or not
     private boolean privateBackpack = false;
@@ -171,7 +171,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 .getLong(getString(R.string.pref_last_user_data_update), 0) >= 3600000L) {
 
             //Start the task and listne for the end
-            fetchTask = new FetchUserInfo(getActivity(), false);
+            fetchTask = new GetUserInfo(getActivity(), false);
             fetchTask.registerFetchUserInfoListener(this);
             fetchTask.execute();
 
@@ -193,7 +193,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onRefresh() {
         if (Utility.isNetworkAvailable(getActivity())) {
             //Start fetching the data and listen for the end
-            fetchTask = new FetchUserInfo(getActivity(), true);
+            fetchTask = new GetUserInfo(getActivity(), true);
             fetchTask.registerFetchUserInfoListener(this);
             fetchTask.execute();
         } else {

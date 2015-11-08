@@ -10,6 +10,8 @@ import android.support.annotation.NonNull;
 
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
+import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
+import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
 
 public class DatabaseProvider extends ContentProvider {
 
@@ -24,6 +26,8 @@ public class DatabaseProvider extends ContentProvider {
      */
     public static final int PRICE_LIST = 100;
     public static final int ITEM_SCHEMA = 101;
+    public static final int ORIGIN_NAMES = 102;
+    public static final int UNUSUAL_SCHEMA = 103;
 
     /**
      * The URI Matcher used by this content provider
@@ -53,6 +57,8 @@ public class DatabaseProvider extends ContentProvider {
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, DatabaseContract.PATH_PRICE_LIST, PRICE_LIST);
         matcher.addURI(authority, DatabaseContract.PATH_ITEM_SCHEMA, ITEM_SCHEMA);
+        matcher.addURI(authority, DatabaseContract.PATH_UNUSUAL_SCHEMA, UNUSUAL_SCHEMA);
+        matcher.addURI(authority, DatabaseContract.PATH_ORIGIN_NAMES, ORIGIN_NAMES);
 
         return matcher;
     }
@@ -75,6 +81,12 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             case ITEM_SCHEMA:
                 tableName = ItemSchemaEntry.TABLE_NAME;
+                break;
+            case UNUSUAL_SCHEMA:
+                tableName = UnusualSchemaEntry.TABLE_NAME;
+                break;
+            case ORIGIN_NAMES:
+                tableName = OriginEntry.TABLE_NAME;
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -102,6 +114,10 @@ public class DatabaseProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_PRICE_LIST;
             case ITEM_SCHEMA:
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_ITEM_SCHEMA;
+            case UNUSUAL_SCHEMA:
+                return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_UNUSUAL_SCHEMA;
+            case ORIGIN_NAMES:
+                return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_ORIGIN_NAMES;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -112,24 +128,29 @@ public class DatabaseProvider extends ContentProvider {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         Uri returnUri;
         long _id;
+        String tableName;
         switch (sUriMatcher.match(uri)) {
             case PRICE_LIST:
-                _id = db.insert(PriceEntry.TABLE_NAME, null, values);
-                if (_id > 0)
-                    returnUri = PriceEntry.buildUri(_id);
-                else
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                tableName = PriceEntry.TABLE_NAME;
                 break;
             case ITEM_SCHEMA:
-                _id = db.insert(ItemSchemaEntry.TABLE_NAME, null, values);
-                if (_id > 0)
-                    returnUri = ItemSchemaEntry.buildUri(_id);
-                else
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                tableName = ItemSchemaEntry.TABLE_NAME;
+                break;
+            case UNUSUAL_SCHEMA:
+                tableName = UnusualSchemaEntry.TABLE_NAME;
+                break;
+            case ORIGIN_NAMES:
+                tableName = OriginEntry.TABLE_NAME;
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+
+        _id = db.insert(PriceEntry.TABLE_NAME, null, values);
+        if (_id > 0)
+            returnUri = PriceEntry.buildUri(_id);
+        else
+            throw new android.database.SQLException("Failed to insert row into " + uri);
         return returnUri;
     }
 
@@ -138,11 +159,18 @@ public class DatabaseProvider extends ContentProvider {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         int rowsDeleted;
         switch (sUriMatcher.match(uri)) {
+
             case PRICE_LIST:
                 rowsDeleted = db.delete(PriceEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             case ITEM_SCHEMA:
                 rowsDeleted = db.delete(ItemSchemaEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case UNUSUAL_SCHEMA:
+                rowsDeleted = db.delete(UnusualSchemaEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case ORIGIN_NAMES:
+                rowsDeleted = db.delete(OriginEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -168,6 +196,12 @@ public class DatabaseProvider extends ContentProvider {
             case ITEM_SCHEMA:
                 rowsUpdated = db.update(ItemSchemaEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
+            case UNUSUAL_SCHEMA:
+                rowsUpdated = db.update(UnusualSchemaEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
+            case ORIGIN_NAMES:
+                rowsUpdated = db.update(OriginEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -189,6 +223,12 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             case ITEM_SCHEMA:
                 tableName = ItemSchemaEntry.TABLE_NAME;
+                break;
+            case UNUSUAL_SCHEMA:
+                tableName = UnusualSchemaEntry.TABLE_NAME;
+                break;
+            case ORIGIN_NAMES:
+                tableName = OriginEntry.TABLE_NAME;
                 break;
             default:
                 return super.bulkInsert(uri, values);
