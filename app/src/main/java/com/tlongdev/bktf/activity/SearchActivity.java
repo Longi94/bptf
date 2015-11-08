@@ -161,7 +161,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_HIGH + "," +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM +
                 " FROM " + PriceEntry.TABLE_NAME +
-                " JOIN " + ItemSchemaEntry.TABLE_NAME +
+                " LEFT JOIN " + ItemSchemaEntry.TABLE_NAME +
                 " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
                 " WHERE " + sNameSearch;
 

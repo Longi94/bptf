@@ -153,7 +153,7 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
                         ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
                         Utility.getRawPriceQueryString(getActivity()) +
                         " FROM " + PriceEntry.TABLE_NAME +
-                        " JOIN " + ItemSchemaEntry.TABLE_NAME +
+                        " LEFT JOIN " + ItemSchemaEntry.TABLE_NAME +
                         " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
                         " WHERE " + selection +
                         " ORDER BY " + args.getString(QUERY_KEY);
@@ -178,7 +178,7 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
                         ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
                         Utility.getRawPriceQueryString(getActivity()) +
                         " FROM " + PriceEntry.TABLE_NAME +
-                        " JOIN " + ItemSchemaEntry.TABLE_NAME +
+                        " LEFT JOIN " + ItemSchemaEntry.TABLE_NAME +
                         " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
                         " WHERE " + selection +
                         " ORDER BY AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC";

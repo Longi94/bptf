@@ -95,7 +95,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                 Utility.getRawPriceQueryString(context) + "," +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM +
                 " FROM " + PriceEntry.TABLE_NAME +
-                " JOIN " + DatabaseContract.ItemSchemaEntry.TABLE_NAME +
+                " LEFT JOIN " + DatabaseContract.ItemSchemaEntry.TABLE_NAME +
                 " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + DatabaseContract.ItemSchemaEntry.TABLE_NAME + "." + DatabaseContract.ItemSchemaEntry.COLUMN_DEFINDEX +
                 " WHERE " + mSelection;
     }
