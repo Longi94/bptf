@@ -31,7 +31,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         PriceEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
                         PriceEntry.COLUMN_DEFINDEX + " INTEGER NOT NULL, " +
-                        PriceEntry.COLUMN_ITEM_NAME + " TEXT NOT NULL, " +
                         PriceEntry.COLUMN_ITEM_QUALITY + " INTEGER NOT NULL, " +
                         PriceEntry.COLUMN_ITEM_TRADABLE + " INTEGER NOT NULL, " +
                         PriceEntry.COLUMN_ITEM_CRAFTABLE + " INTEGER NOT NULL, " +

@@ -38,7 +38,6 @@ public final class DatabaseContract {
         public static final String TABLE_NAME = "pricelist";
 
         public static final String COLUMN_DEFINDEX = "defindex";
-        public static final String COLUMN_ITEM_NAME = "name";
         public static final String COLUMN_ITEM_QUALITY = "quality";
         public static final String COLUMN_ITEM_TRADABLE = "tradable";
         public static final String COLUMN_ITEM_CRAFTABLE = "craftable";
