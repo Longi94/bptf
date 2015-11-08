@@ -1,18 +1,13 @@
 package com.tlongdev.bktf.network;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
@@ -34,7 +29,7 @@ import java.util.Vector;
 /**
  * Task for fetching all data for prices database and updating it in the background.
  */
-public class GetPriceList extends AsyncTask<Void, Integer, Void> {
+public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
 
     /**
      * Log tag for logging.
@@ -51,17 +46,16 @@ public class GetPriceList extends AsyncTask<Void, Integer, Void> {
     //Whether it was a user initiated update
     private boolean manualSync;
 
-    //Dialog to indicate the download progress
-    private ProgressDialog loadingDialog;
-
     //Error message to be displayed to the user
     private String errorMessage;
 
     //The listener that will be notified when the fetching finishes
-    private OnPriceListFetchListener listener;
+    private OnPriceListListener listener;
 
     //the variable that contains the birth time of the youngest price
     private int latestUpdate = 0;
+
+    private int itemCount = -1;
 
     /**
      * Constructor
@@ -80,18 +74,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Void> {
      * {@inheritDoc}
      */
     @Override
-    protected void onPreExecute() {
-        if (!updateDatabase)
-            //Show the progress dialog
-            loadingDialog = ProgressDialog.show(mContext, null, "Downloading data...", true);
-
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected Void doInBackground(Void... params) {
+    protected Integer doInBackground(Void... params) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
@@ -99,7 +82,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Void> {
                 .getString(R.string.pref_last_price_list_update), 0) < 3600000L
                 && !manualSync) {
             //This task ran less than an hour ago and wasn't a manual sync, nothing to do.
-            return null;
+            return 0;
         }
 
         // These two need to be declared outside the try/catch
@@ -151,20 +134,10 @@ public class GetPriceList extends AsyncTask<Void, Integer, Void> {
 
             if (inputStream == null) {
                 // Stream was empty. Nothing to do.
-                return null;
+                return -1;
             }
 
-            //Get all the items from the JSON string
-            if (getItemsFromJson(inputStream)) {
-                //Get the shared preferences
-                SharedPreferences.Editor editor = prefs.edit();
-
-                //Save when the update finished
-                editor.putLong(mContext.getString(R.string.pref_last_price_list_update),
-                        System.currentTimeMillis());
-                editor.putBoolean(mContext.getString(R.string.pref_initial_load), false);
-                editor.apply();
-            }
+            return getItemsFromJson(inputStream);
 
         } catch (IOException e) {
             //There was a network error
@@ -172,20 +145,19 @@ public class GetPriceList extends AsyncTask<Void, Integer, Void> {
             publishProgress(-1);
             if (Utility.isDebugging(mContext))
                 e.printStackTrace();
-            return null;
         } catch (JSONException e) {
             //There was an error parsing data
             errorMessage = "error while parsing data";
             publishProgress(-1);
             if (Utility.isDebugging(mContext))
                 e.printStackTrace();
-            return null;
         } finally {
             //Close the connection
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
         }
+
         return null;
     }
 
@@ -194,63 +166,11 @@ public class GetPriceList extends AsyncTask<Void, Integer, Void> {
      */
     @Override
     protected void onProgressUpdate(Integer... values) {
-        if (loadingDialog != null) {
-            AlertDialog.Builder builder;
-            AlertDialog alertDialog;
-            switch (values[0]) {
-                //Download finished. Replace dialog.
-                case 0:
-                    loadingDialog.dismiss();
-                    loadingDialog = new ProgressDialog(mContext);
-                    loadingDialog.setIndeterminate(false);
-                    loadingDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    loadingDialog.setMessage(mContext.getString(R.string.message_database_create));
-                    loadingDialog.setMax(values[1]);
-                    loadingDialog.show();
-                    break;
-                //One item processed
-                case 1:
-                    loadingDialog.incrementProgressBy(1);
-                    break;
-                //There was an error (exception) while trying to create initial database.
-                //Show a dialog that the download failed.
-                case -1:
-                    builder = new AlertDialog.Builder(mContext);
-                    builder.setMessage(mContext.getString(R.string.message_database_fail_network))
-                            .setCancelable(false)
-                            .setPositiveButton(mContext.getString(R.string.action_close), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    //Close app
-                                    ((Activity) mContext).finish();
-                                }
-                            });
-                    alertDialog = builder.create();
-                    loadingDialog.dismiss();
-                    alertDialog.show();
-                    break;
-                //Api returned 0, unsuccessful
-                case -2:
-                    builder = new AlertDialog.Builder(mContext);
-                    builder.setMessage(mContext.getString(R.string.message_database_fail_network))
-                            .setCancelable(false)
-                            .setPositiveButton(mContext.getString(R.string.action_close), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    //Close app
-                                    ((Activity) mContext).finish();
-                                }
-                            });
-                    alertDialog = builder.create();
-                    loadingDialog.dismiss();
-                    alertDialog.show();
-                    break;
+        if (listener != null) {
+            if (values.length > 0) {
+                itemCount = values[0];
             }
-        } else if (values[0] == -1) {
-            //There was an error while trying to update database
-            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
-        } else if (values[0] == -2) {
-            Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
+            listener.onPriceListUpdate(itemCount);
         }
     }
 
@@ -258,14 +178,14 @@ public class GetPriceList extends AsyncTask<Void, Integer, Void> {
      * {@inheritDoc}
      */
     @Override
-    protected void onPostExecute(Void aVoid) {
-        //Dismiss loading dialog
-        if (loadingDialog != null && !updateDatabase)
-            loadingDialog.dismiss();
-
+    protected void onPostExecute(Integer integer) {
         if (listener != null) {
-            //Notify the listener that the update finished
-            listener.onPriceListFetchFinished();
+            if (integer >= 0) {
+                //Notify the listener that the update finished
+                listener.onPriceListFinished();
+            } else {
+                listener.onPriceListFailed(errorMessage);
+            }
         }
     }
 
@@ -274,7 +194,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Void> {
      *
      * @param listener the listener to be notified
      */
-    public void setOnPriceListFetchListener(OnPriceListFetchListener listener) {
+    public void setOnPriceListFetchListener(OnPriceListListener listener) {
         this.listener = listener;
     }
 
@@ -286,7 +206,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Void> {
      * @throws JSONException
      */
     @SuppressWarnings("ConstantConditions")
-    private boolean getItemsFromJson(InputStream inputStream) throws JSONException, IOException {
+    private int getItemsFromJson(InputStream inputStream) throws JSONException, IOException {
 
         //All the JSON keys needed to parse
         final String KEY_SUCCESS = "success";
@@ -311,11 +231,13 @@ public class GetPriceList extends AsyncTask<Void, Integer, Void> {
 
         //Not a JSON if it doesn't start with START OBJECT
         if (parser.nextToken() != JsonToken.START_OBJECT) {
-            return false;
+            return -1;
         }
 
         JsonToken token;
         while ((token = parser.nextToken()) != JsonToken.END_OBJECT) {
+
+            int count = 0;
 
             //Start of the items that contains the items
             if (token == JsonToken.START_ARRAY) {
@@ -482,7 +404,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Void> {
                             priceIndex, australium, currency, value, high, lastUpdate, difference));
 
                     //Parsed one item
-                    publishProgress(1);
+                    publishProgress(count);
                 }
 
                 if (cVVector.size() > 0) {
@@ -495,14 +417,13 @@ public class GetPriceList extends AsyncTask<Void, Integer, Void> {
                         Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
                 }
                 parser.close();
-                return true;
+                return 0;
             }
 
             //success object
             if (parser.getCurrentName().equals(KEY_SUCCESS)) {
                 parser.nextToken();
                 if (parser.getIntValue() == 0) {
-                    publishProgress(-2);
                     //Unsuccessful query, nothing to do
 
                     while (parser.nextToken() != JsonToken.END_OBJECT) {
@@ -513,7 +434,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Void> {
                         }
                     }
                     parser.close();
-                    return false;
+                    return -1;
                 }
             }
 
@@ -521,12 +442,13 @@ public class GetPriceList extends AsyncTask<Void, Integer, Void> {
             if (parser.getCurrentName().equals(KEY_COUNT)) {
                 parser.nextToken();
                 //Notify the task that the download finished and the processing begins
-                publishProgress(0, parser.getIntValue());
+                count = parser.getIntValue();
+                publishProgress(count);
             }
         }
 
         parser.close();
-        return false;
+        return -1;
     }
 
 
@@ -574,11 +496,15 @@ public class GetPriceList extends AsyncTask<Void, Integer, Void> {
     /**
      * Listener interface for listening for the end of the fetch.
      */
-    public interface OnPriceListFetchListener {
+    public interface OnPriceListListener {
 
         /**
          * Notify the listener, that the fetching has stopped.
          */
-        void onPriceListFetchFinished();
+        void onPriceListFinished();
+
+        void onPriceListUpdate(int max);
+
+        void onPriceListFailed(String errorMesage);
     }
 }
