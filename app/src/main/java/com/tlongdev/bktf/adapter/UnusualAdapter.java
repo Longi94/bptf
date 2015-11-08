@@ -157,8 +157,8 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                 //We are showing both that icon and the effect for a specific hat or effect
                 case TYPE_SPECIFIC_HAT:
                     Item hat = new Item(
-                            mDataSet.getInt(UnusualFragment.COL_PRICE_LIST_DEFI),
-                            mDataSet.getString(UnusualFragment.COL_PRICE_LIST_NAME),
+                            mDataSet.getInt(UnusualActivity.COL_PRICE_LIST_DEFI),
+                            null,
                             Quality.UNUSUAL, false, false, false,
                             mDataSet.getInt(UnusualActivity.COL_PRICE_LIST_INDE),
                             new Price(

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.data.DatabaseHelper;
 import com.tlongdev.bktf.data.UserBackpackContract.UserBackpackEntry;
 import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.model.Price;
@@ -61,18 +63,10 @@ public class ItemDetailActivity extends Activity {
     public static final int COLUMN_ORIGIN = 15;
     public static final int COLUMN_WEAPON_WEAR = 16;
 
-    //Query columns for querying the priceView
-    public static final String[] QUERY_COLUMNS_PRICE = {
-            PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
-            PriceEntry.COLUMN_PRICE,
-            PriceEntry.COLUMN_PRICE_HIGH,
-            PriceEntry.COLUMN_CURRENCY
-    };
-
     //Indexes for the columns above
-    public static final int COLUMN_PRICE = 1;
-    public static final int COLUMN_PRICE_HIGH = 2;
-    public static final int COLUMN_CURRENCY = 3;
+    public static final int COLUMN_PRICE = 0;
+    public static final int COLUMN_PRICE_HIGH = 1;
+    public static final int COLUMN_CURRENCY = 2;
 
     //Query columns for querying info of the item
     private static final String[] QUERY_COLUMNS = {
@@ -342,36 +336,25 @@ public class ItemDetailActivity extends Activity {
                 cardView.setCardBackgroundColor(item.getColor(this, true));
 
                 //Start querying the priceView
-                uri = PriceEntry.CONTENT_URI;
-                columns = QUERY_COLUMNS_PRICE;
 
-                //Proper condition for searching for australum items.
-                String ausCondition;
-                if (item.isAustralium() || item.getDefindex() == 5037) {
-                    ausCondition = PriceEntry.COLUMN_ITEM_NAME + " LIKE ?";
-                } else {
-                    ausCondition = PriceEntry.COLUMN_ITEM_NAME + " NOT LIKE ?";
-                }
-
-                //Exact selection, should return only one match
-                selection = PriceEntry.TABLE_NAME + "." +
-                        PriceEntry.COLUMN_DEFINDEX + " = ? AND " +
+                String sql = "SELECT " +
+                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE + "," +
+                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_HIGH + "," +
+                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_CURRENCY +
+                        " FROM " + PriceEntry.TABLE_NAME +
+                        " WHERE " + PriceEntry.COLUMN_DEFINDEX + " = ? AND " +
                         PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
                         PriceEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
                         PriceEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
                         PriceEntry.COLUMN_PRICE_INDEX + " = ? AND " +
-                        ausCondition;
+                        PriceEntry.COLUMN_AUSTRALIUM + " = ?";
 
-                //Query
-                Cursor priceCursor = getContentResolver().query(
-                        uri,
-                        columns,
-                        selection,
-                        new String[]{String.valueOf(item.getDefindex()), String.valueOf(item.getQuality()),
-                                String.valueOf(item.isTradable() ? 1 : 0), String.valueOf(item.isCraftable() ? 1 : 0),
-                                String.valueOf(item.getPriceIndex()), "%australium%"},
-                        null
-                );
+                DatabaseHelper dbHelper = new DatabaseHelper(this);
+                SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+                Cursor priceCursor = db.rawQuery(sql, new String[]{String.valueOf(item.getDefindex()), String.valueOf(item.getQuality()),
+                        String.valueOf(item.isTradable() ? 1 : 0), String.valueOf(item.isCraftable() ? 1 : 0),
+                        String.valueOf(item.getPriceIndex()), String.valueOf(item.isAustralium() ? 1 : 0)});
 
                 if (priceCursor != null) {
                     if (priceCursor.moveToFirst()) {

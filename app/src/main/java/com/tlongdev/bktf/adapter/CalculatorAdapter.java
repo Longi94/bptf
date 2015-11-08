@@ -11,9 +11,10 @@ import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.data.DatabaseContract;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
-import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.model.Item;
+import com.tlongdev.bktf.model.Price;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,35 +44,22 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
      * The columns to load
      * TODO there is really no need to query for every single item...
      */
-    private static final String[] PRICE_LIST_COLUMNS = {
-            PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
-            PriceEntry.COLUMN_DEFINDEX,
-            PriceEntry.COLUMN_ITEM_NAME,
-            PriceEntry.COLUMN_ITEM_QUALITY,
-            PriceEntry.COLUMN_ITEM_TRADABLE,
-            PriceEntry.COLUMN_ITEM_CRAFTABLE,
-            PriceEntry.COLUMN_PRICE_INDEX,
-            PriceEntry.COLUMN_CURRENCY,
-            PriceEntry.COLUMN_PRICE,
-            PriceEntry.COLUMN_PRICE_HIGH,
-            null,
-            PriceEntry.COLUMN_AUSTRALIUM
-    };
+    private String sql;
 
     /**
      * Indexes for the columns above
      */
-    public static final int COL_PRICE_LIST_DEFI = 1;
-    public static final int COL_PRICE_LIST_NAME = 2;
-    public static final int COL_PRICE_LIST_QUAL = 3;
-    public static final int COL_PRICE_LIST_TRAD = 4;
-    public static final int COL_PRICE_LIST_CRAF = 5;
-    public static final int COL_PRICE_LIST_INDE = 6;
-    public static final int COL_PRICE_LIST_CURR = 7;
-    public static final int COL_PRICE_LIST_PRIC = 8;
-    public static final int COL_PRICE_LIST_PMAX = 9;
-    public static final int COL_PRICE_LIST_PRAW = 10;
-    public static final int COL_AUSTRALIUM = 11;
+    public static final int COL_PRICE_LIST_DEFI = 0;
+    public static final int COL_PRICE_LIST_NAME = 1;
+    public static final int COL_PRICE_LIST_QUAL = 2;
+    public static final int COL_PRICE_LIST_TRAD = 3;
+    public static final int COL_PRICE_LIST_CRAF = 4;
+    public static final int COL_PRICE_LIST_INDE = 5;
+    public static final int COL_PRICE_LIST_CURR = 6;
+    public static final int COL_PRICE_LIST_PRIC = 7;
+    public static final int COL_PRICE_LIST_PMAX = 8;
+    public static final int COL_PRICE_LIST_PRAW = 9;
+    public static final int COL_AUSTRALIUM = 10;
 
     /**
      * The selection
@@ -93,6 +81,23 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
     public CalculatorAdapter(Context context, ArrayList<Utility.IntegerPair> ids) {
         mContext = context;
         this.ids = ids;
+
+        sql = "SELECT " +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + "," +
+                DatabaseContract.ItemSchemaEntry.TABLE_NAME + "." + DatabaseContract.ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_TRADABLE + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_CRAFTABLE + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_CURRENCY + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_HIGH + "," +
+                Utility.getRawPriceQueryString(context) + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM +
+                " FROM " + PriceEntry.TABLE_NAME +
+                " JOIN " + DatabaseContract.ItemSchemaEntry.TABLE_NAME +
+                " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + DatabaseContract.ItemSchemaEntry.TABLE_NAME + "." + DatabaseContract.ItemSchemaEntry.COLUMN_DEFINDEX +
+                " WHERE " + mSelection;
     }
 
     @Override
@@ -105,13 +110,12 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        PRICE_LIST_COLUMNS[COL_PRICE_LIST_PRAW] = Utility.getRawPriceQueryString(mContext);
 
         //Query data of the item
         Cursor cursor = mContext.getContentResolver().query(
-                PriceEntry.CONTENT_URI,
-                PRICE_LIST_COLUMNS,
-                mSelection,
+                DatabaseContract.RAW_QUERY_URI,
+                null,
+                sql,
                 new String[]{"" + ids.get(position).getX()},
                 null
         );

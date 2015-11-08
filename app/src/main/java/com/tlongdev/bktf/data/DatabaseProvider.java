@@ -56,6 +56,7 @@ public class DatabaseProvider extends ContentProvider {
         final String authority = DatabaseContract.CONTENT_AUTHORITY;
 
         // For each type of URI you want to add, create a corresponding code.
+        matcher.addURI(authority, DatabaseContract.PATH_RAW_QUERY, RAW_QUERY);
         matcher.addURI(authority, DatabaseContract.PATH_PRICE_LIST, PRICE_LIST);
         matcher.addURI(authority, DatabaseContract.PATH_ITEM_SCHEMA, ITEM_SCHEMA);
         matcher.addURI(authority, DatabaseContract.PATH_UNUSUAL_SCHEMA, UNUSUAL_SCHEMA);

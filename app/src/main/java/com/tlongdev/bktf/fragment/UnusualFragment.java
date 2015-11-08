@@ -25,6 +25,8 @@ import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.adapter.UnusualAdapter;
+import com.tlongdev.bktf.data.DatabaseContract;
+import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 
 /**
@@ -52,28 +54,12 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
     private static final String QUERY_KEY = "query";
 
     /**
-     * Columns to query
-     */
-    private static final String[] PRICE_LIST_COLUMNS = {
-            PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
-            PriceEntry.COLUMN_DEFINDEX,
-            PriceEntry.COLUMN_ITEM_NAME,
-            null
-    };
-    private static final String[] EFFECT_LIST_COLUMNS = {
-            PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
-            PriceEntry.COLUMN_PRICE_INDEX,
-            PriceEntry.COLUMN_ITEM_NAME,
-            null
-    };
-
-    /**
      * The IDs of the columns above
      */
-    public static final int COL_PRICE_LIST_INDE = 1;
-    public static final int COL_PRICE_LIST_DEFI = 1;
-    public static final int COL_PRICE_LIST_NAME = 2;
-    public static final int COL_PRICE_LIST_AVG_PRICE = 3;
+    public static final int COL_PRICE_LIST_INDE = 0;
+    public static final int COL_PRICE_LIST_DEFI = 0;
+    public static final int COL_PRICE_LIST_NAME = 1;
+    public static final int COL_PRICE_LIST_AVG_PRICE = 2;
 
     /**
      * The adapter of the recycler view
@@ -151,41 +137,59 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
 
         //Query stuff
         String selection;
+        String sql;
         String[] selectionArgs = {"5"};
 
         switch (id) {
             case PRICE_LIST_LOADER:
-                PRICE_LIST_COLUMNS[COL_PRICE_LIST_AVG_PRICE] =
-                        "AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC";
 
                 selection = PriceEntry.TABLE_NAME +
                         "." + PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
                         PriceEntry.COLUMN_PRICE_INDEX + " != 0 GROUP BY " +
-                        PriceEntry.COLUMN_DEFINDEX;
+                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX;
+
+                sql = "SELECT " +
+                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + "," +
+                        ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
+                        Utility.getRawPriceQueryString(getActivity()) +
+                        " FROM " + PriceEntry.TABLE_NAME +
+                        " JOIN " + ItemSchemaEntry.TABLE_NAME +
+                        " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
+                        " WHERE " + selection +
+                        " ORDER BY " + args.getString(QUERY_KEY);
 
                 return new CursorLoader(
                         getActivity(),
-                        PriceEntry.CONTENT_URI,
-                        PRICE_LIST_COLUMNS,
-                        selection,
+                        DatabaseContract.RAW_QUERY_URI,
+                        null,
+                        sql,
                         selectionArgs,
-                        args.getString(QUERY_KEY)
+                        null
                 );
             case EFFECT_LIST_LOADER:
-                EFFECT_LIST_COLUMNS[COL_PRICE_LIST_AVG_PRICE] =
-                        "AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC";
+
                 selection = PriceEntry.TABLE_NAME +
                         "." + PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
                         PriceEntry.COLUMN_PRICE_INDEX + " != 0 GROUP BY " +
                         PriceEntry.COLUMN_PRICE_INDEX;
 
+                sql = "SELECT " +
+                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + "," +
+                        ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
+                        Utility.getRawPriceQueryString(getActivity()) +
+                        " FROM " + PriceEntry.TABLE_NAME +
+                        " JOIN " + ItemSchemaEntry.TABLE_NAME +
+                        " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
+                        " WHERE " + selection +
+                        " ORDER BY AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC";
+
                 return new CursorLoader(
                         getActivity(),
-                        PriceEntry.CONTENT_URI,
-                        EFFECT_LIST_COLUMNS,
-                        selection,
+                        DatabaseContract.RAW_QUERY_URI,
+                        null,
+                        sql,
                         selectionArgs,
-                        "AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC"
+                        null
                 );
             default:
                 return null;
@@ -221,7 +225,7 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
         if (!showEffect && id == R.id.menu_sort_name && currentSort != 1) {
             //Show hats sorted by their name
             Bundle args = new Bundle();
-            args.putString(QUERY_KEY, PriceEntry.COLUMN_ITEM_NAME + " ASC");
+            args.putString(QUERY_KEY, ItemSchemaEntry.COLUMN_ITEM_NAME + " ASC");
             getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
             currentSort = 1;
         } else if (!showEffect && id == R.id.menu_sort_price && currentSort != 0) {

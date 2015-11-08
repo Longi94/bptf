@@ -61,18 +61,18 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     /**
      * Indexes for the columns
      */
-    public static final int COL_PRICE_LIST_DEFI = 1;
-    public static final int COL_PRICE_LIST_NAME = 2;
-    public static final int COL_PRICE_LIST_QUAL = 3;
-    public static final int COL_PRICE_LIST_TRAD = 4;
-    public static final int COL_PRICE_LIST_CRAF = 5;
-    public static final int COL_PRICE_LIST_INDE = 6;
-    public static final int COL_PRICE_LIST_CURR = 7;
-    public static final int COL_PRICE_LIST_PRIC = 8;
-    public static final int COL_PRICE_LIST_PMAX = 9;
-    public static final int COL_PRICE_LIST_PRAW = 10;
-    public static final int COL_PRICE_LIST_DIFF = 11;
-    public static final int COL_AUSTRALIUM = 12;
+    public static final int COL_PRICE_LIST_DEFI = 0;
+    public static final int COL_PRICE_LIST_NAME = 1;
+    public static final int COL_PRICE_LIST_QUAL = 2;
+    public static final int COL_PRICE_LIST_TRAD = 3;
+    public static final int COL_PRICE_LIST_CRAF = 4;
+    public static final int COL_PRICE_LIST_INDE = 5;
+    public static final int COL_PRICE_LIST_CURR = 6;
+    public static final int COL_PRICE_LIST_PRIC = 7;
+    public static final int COL_PRICE_LIST_PMAX = 8;
+    public static final int COL_PRICE_LIST_PRAW = 9;
+    public static final int COL_PRICE_LIST_DIFF = 10;
+    public static final int COL_AUSTRALIUM = 11;
 
     /**
      * Loading indicator
