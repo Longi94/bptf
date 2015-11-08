@@ -244,7 +244,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DIFFERENCE + "," +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM +
                 " FROM " + PriceEntry.TABLE_NAME +
-                " JOIN " + ItemSchemaEntry.TABLE_NAME +
+                " LEFT JOIN " + ItemSchemaEntry.TABLE_NAME +
                 " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
                 " ORDER BY " + PriceEntry.COLUMN_LAST_UPDATE + " DESC";
 
