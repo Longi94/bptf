@@ -293,7 +293,6 @@ public class GetPriceList extends AsyncTask<Void, Integer, Void> {
         final String KEY_MESSAGE = "message";
         final String KEY_COUNT = "count";
         final String KEY_DEFINDEX = "defindex";
-        final String KEY_NAME = "item_name";
         final String KEY_QUALITY = "quality";
         final String KEY_TRADABLE = "tradable";
         final String KEY_CRAFTABLE = "craftable";
@@ -329,7 +328,6 @@ public class GetPriceList extends AsyncTask<Void, Integer, Void> {
 
                     //Initial values
                     int defindex = 0;
-                    String name = null;
                     int quality = 0;
                     int tradable = 0;
                     int craftable = 0;
@@ -348,10 +346,6 @@ public class GetPriceList extends AsyncTask<Void, Integer, Void> {
                             case KEY_DEFINDEX:
                                 parser.nextToken();
                                 defindex = parser.getIntValue();
-                                break;
-                            case KEY_NAME:
-                                parser.nextToken();
-                                name = parser.getText();
                                 break;
                             case KEY_QUALITY:
                                 parser.nextToken();
@@ -484,7 +478,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Void> {
                     }
 
                     //Add the price to the CV vector
-                    cVVector.add(buildContentValues(defindex, name, quality, tradable, craftable,
+                    cVVector.add(buildContentValues(defindex, quality, tradable, craftable,
                             priceIndex, australium, currency, value, high, lastUpdate, difference));
 
                     //Parsed one item
@@ -551,7 +545,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Void> {
      * @param difference difference of the the new and old price
      * @return the ContentValues object containing the data
      */
-    private ContentValues buildContentValues(int defindex, String name, int quality, int tradable, int craftable, int priceIndex, int australium,
+    private ContentValues buildContentValues(int defindex, int quality, int tradable, int craftable, int priceIndex, int australium,
                                              String currency, double value, Double high, long update, double difference) {
         //Fix the defindex for pricing
         Item item = new Item(defindex, null, 0, false, false, false, 0, null);
@@ -562,7 +556,6 @@ public class GetPriceList extends AsyncTask<Void, Integer, Void> {
 
         //Put all the data into the content values
         itemValues.put(PriceEntry.COLUMN_DEFINDEX, defindex);
-        itemValues.put(PriceEntry.COLUMN_ITEM_NAME, name);
         itemValues.put(PriceEntry.COLUMN_ITEM_QUALITY, quality);
         itemValues.put(PriceEntry.COLUMN_ITEM_TRADABLE, tradable);
         itemValues.put(PriceEntry.COLUMN_ITEM_CRAFTABLE, craftable);
