@@ -359,7 +359,7 @@
     <string name="message_private_backpack" formatted="false" translatable="true">%s\'s backpack is private</string>
     <string name="message_private_backpack_own" translatable="true">Your backpack is private</string>
     <string name="message_send_email" translatable="true">Send email…</string>
-    <string name="message_database_create" translatable="true">Creating database…</string>
+    <string name="message_database_create" translatable="true">Creating prices database…</string>
     <string name="message_database_fail_network" translatable="true">Failed to download database. Check your internet connection and try again.</string>
 
     <!--Error messages-->
@@ -398,5 +398,7 @@
     <string name="notification_unread_title" formatted="false" translatable="true">%d unread notifications on bp.tf</string>
     <string name="notification_unread_description" translatable="true">Tap to open in browser.</string>
     <string name="title_converter">Converter</string>
+    <string name="message_item_schema_create">Creating item schema database...</string>
+    <string name="pref_last_item_schema_update">pref_last_item_schema_update</string>
 
 </resources>

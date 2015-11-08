@@ -18,8 +18,6 @@ import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 
-import org.json.JSONException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -56,6 +54,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
     private int latestUpdate = 0;
 
     private int itemCount = -1;
+    private int rowsInserted = 0;
 
     /**
      * Constructor
@@ -142,13 +141,6 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
         } catch (IOException e) {
             //There was a network error
             errorMessage = mContext.getString(R.string.error_network);
-            publishProgress(-1);
-            if (Utility.isDebugging(mContext))
-                e.printStackTrace();
-        } catch (JSONException e) {
-            //There was an error parsing data
-            errorMessage = "error while parsing data";
-            publishProgress(-1);
             if (Utility.isDebugging(mContext))
                 e.printStackTrace();
         } finally {
@@ -182,7 +174,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
         if (listener != null) {
             if (integer >= 0) {
                 //Notify the listener that the update finished
-                listener.onPriceListFinished();
+                listener.onPriceListFinished(rowsInserted);
             } else {
                 listener.onPriceListFailed(errorMessage);
             }
@@ -203,10 +195,10 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
      *
      * @param inputStream the input stream to parse from
      * @return whether the query was successful or not
-     * @throws JSONException
+     * @throws IOException
      */
     @SuppressWarnings("ConstantConditions")
-    private int getItemsFromJson(InputStream inputStream) throws JSONException, IOException {
+    private int getItemsFromJson(InputStream inputStream) throws IOException {
 
         //All the JSON keys needed to parse
         final String KEY_SUCCESS = "success";
@@ -411,7 +403,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
                     ContentValues[] cvArray = new ContentValues[cVVector.size()];
                     cVVector.toArray(cvArray);
                     //Insert all the data into the database
-                    int rowsInserted = mContext.getContentResolver()
+                    rowsInserted = mContext.getContentResolver()
                             .bulkInsert(PriceEntry.CONTENT_URI, cvArray);
                     if (Utility.isDebugging(mContext))
                         Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
@@ -501,10 +493,10 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
         /**
          * Notify the listener, that the fetching has stopped.
          */
-        void onPriceListFinished();
+        void onPriceListFinished(int newItems);
 
         void onPriceListUpdate(int max);
 
-        void onPriceListFailed(String errorMesage);
+        void onPriceListFailed(String errorMessage);
     }
 }
