@@ -20,8 +20,8 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
-import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.model.Item;
+import com.tlongdev.bktf.model.Price;
 
 import org.json.JSONException;
 
@@ -34,13 +34,13 @@ import java.util.Vector;
 /**
  * Task for fetching all data for prices database and updating it in the background.
  */
-public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
+public class GetPriceList extends AsyncTask<Void, Integer, Void> {
 
     /**
      * Log tag for logging.
      */
     @SuppressWarnings("unused")
-    private static final String LOG_TAG = FetchPriceList.class.getSimpleName();
+    private static final String LOG_TAG = GetPriceList.class.getSimpleName();
 
     //The context the task runs in
     private final Context mContext;
@@ -70,7 +70,7 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
      * @param updateDatabase whether the database only needs an update
      * @param manualSync     whether this task was user initiated
      */
-    public FetchPriceList(Context context, boolean updateDatabase, boolean manualSync) {
+    public GetPriceList(Context context, boolean updateDatabase, boolean manualSync) {
         this.mContext = context;
         this.updateDatabase = updateDatabase;
         this.manualSync = manualSync;
@@ -398,88 +398,88 @@ public class FetchPriceList extends AsyncTask<Void, Integer, Void> {
                                 difference = parser.getDoubleValue();
                                 break;
                         }
+                    }
 
-                        //Currency prices a processed slightly differently, some more info is
-                        //saved to the default shared preferences
-                        if (quality == 6 && tradable == 1 && craftable == 1) {
-                            //Save extra info about the buds price
-                            if (defindex == 143) {
+                    //Currency prices a processed slightly differently, some more info is
+                    //saved to the default shared preferences
+                    if (quality == 6 && tradable == 1 && craftable == 1) {
+                        //Save extra info about the buds price
+                        if (defindex == 143) {
 
-                                //Get the sharedpreferences
-                                SharedPreferences.Editor editor = PreferenceManager
-                                        .getDefaultSharedPreferences(mContext).edit();
+                            //Get the sharedpreferences
+                            SharedPreferences.Editor editor = PreferenceManager
+                                    .getDefaultSharedPreferences(mContext).edit();
 
-                                //Store the price in a string so it can be displayed in the
-                                //header in the latest changes page
-                                double highPrice = high == null ? 0 : high;
+                            //Store the price in a string so it can be displayed in the
+                            //header in the latest changes page
+                            double highPrice = high == null ? 0 : high;
 
-                                Price budPrice = new Price(
-                                        value, highPrice, raw, lastUpdate, difference, currency
-                                );
+                            Price budPrice = new Price(
+                                    value, highPrice, raw, lastUpdate, difference, currency
+                            );
 
-                                String priceString = budPrice.getFormattedPrice(mContext);
-                                editor.putString(mContext.getString(R.string.pref_buds_price), priceString);
+                            String priceString = budPrice.getFormattedPrice(mContext);
+                            editor.putString(mContext.getString(R.string.pref_buds_price), priceString);
 
-                                //Save the difference
-                                Utility.putDouble(editor, mContext.getString(R.string.pref_buds_diff), difference);
-                                //Save the raw price
-                                Utility.putDouble(editor, mContext.getString(R.string.pref_buds_raw), raw);
+                            //Save the difference
+                            Utility.putDouble(editor, mContext.getString(R.string.pref_buds_diff), difference);
+                            //Save the raw price
+                            Utility.putDouble(editor, mContext.getString(R.string.pref_buds_raw), raw);
 
-                                editor.apply();
+                            editor.apply();
 
-                            } else if (defindex == 5002) {//Save extra info about the refined price
+                        } else if (defindex == 5002) {//Save extra info about the refined price
 
-                                //Get the sharedpreferences
-                                SharedPreferences.Editor editor = PreferenceManager
-                                        .getDefaultSharedPreferences(mContext).edit();
+                            //Get the sharedpreferences
+                            SharedPreferences.Editor editor = PreferenceManager
+                                    .getDefaultSharedPreferences(mContext).edit();
 
-                                //Store the price in a string so it can be displayed in the
-                                //header in the latest changes page
-                                double highPrice = high == null ? 0 : high;
+                            //Store the price in a string so it can be displayed in the
+                            //header in the latest changes page
+                            double highPrice = high == null ? 0 : high;
 
-                                Price refPrice = new Price(
-                                        value, highPrice, raw, lastUpdate, difference, currency
-                                );
+                            Price refPrice = new Price(
+                                    value, highPrice, raw, lastUpdate, difference, currency
+                            );
 
-                                String priceString = refPrice.getFormattedPrice(mContext);
-                                editor.putString(mContext.getString(R.string.pref_metal_price), priceString);
+                            String priceString = refPrice.getFormattedPrice(mContext);
+                            editor.putString(mContext.getString(R.string.pref_metal_price), priceString);
 
-                                //Save the difference
-                                Utility.putDouble(editor, mContext.getString(R.string.pref_metal_diff), difference);
+                            //Save the difference
+                            Utility.putDouble(editor, mContext.getString(R.string.pref_metal_diff), difference);
 
-                                if (highPrice > value) {
-                                    //If the metal has a high price, save the average as raw.
-                                    Utility.putDouble(editor, mContext.getString(R.string.pref_metal_raw_usd), ((value + highPrice) / 2));
-                                } else {
-                                    //save as raw price
-                                    Utility.putDouble(editor, mContext.getString(R.string.pref_metal_raw_usd), value);
-                                }
-
-                                editor.apply();
-                            } else if (defindex == 5021) {//Save extra info about the key price
-
-                                //Get the sharedpreferences
-                                SharedPreferences.Editor editor = PreferenceManager
-                                        .getDefaultSharedPreferences(mContext).edit();
-
-                                //Store the price in a string so it can be displayed in the
-                                //header in the latest changes page
-                                double highPrice = high == null ? 0 : high;
-
-                                Price keyPrice = new Price(
-                                        value, highPrice, raw, lastUpdate, difference, currency
-                                );
-
-                                String priceString = keyPrice.getFormattedPrice(mContext);
-                                editor.putString(mContext.getString(R.string.pref_key_price), priceString);
-
-                                //Save the difference
-                                Utility.putDouble(editor, mContext.getString(R.string.pref_key_diff), difference);
-                                //Save the raw price
-                                Utility.putDouble(editor, mContext.getString(R.string.pref_key_raw), raw);
-
-                                editor.apply();
+                            if (highPrice > value) {
+                                //If the metal has a high price, save the average as raw.
+                                Utility.putDouble(editor, mContext.getString(R.string.pref_metal_raw_usd), ((value + highPrice) / 2));
+                            } else {
+                                //save as raw price
+                                Utility.putDouble(editor, mContext.getString(R.string.pref_metal_raw_usd), value);
                             }
+
+                            editor.apply();
+                        } else if (defindex == 5021) {//Save extra info about the key price
+
+                            //Get the sharedpreferences
+                            SharedPreferences.Editor editor = PreferenceManager
+                                    .getDefaultSharedPreferences(mContext).edit();
+
+                            //Store the price in a string so it can be displayed in the
+                            //header in the latest changes page
+                            double highPrice = high == null ? 0 : high;
+
+                            Price keyPrice = new Price(
+                                    value, highPrice, raw, lastUpdate, difference, currency
+                            );
+
+                            String priceString = keyPrice.getFormattedPrice(mContext);
+                            editor.putString(mContext.getString(R.string.pref_key_price), priceString);
+
+                            //Save the difference
+                            Utility.putDouble(editor, mContext.getString(R.string.pref_key_diff), difference);
+                            //Save the raw price
+                            Utility.putDouble(editor, mContext.getString(R.string.pref_key_raw), raw);
+
+                            editor.apply();
                         }
                     }
 

@@ -36,13 +36,13 @@ import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.adapter.RecentsAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
-import com.tlongdev.bktf.network.FetchPriceList;
+import com.tlongdev.bktf.network.GetPriceList;
 
 /**
  * recents fragment. Shows a list of all the prices orderd by the time of the price update.
  */
 public class RecentsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
-        SwipeRefreshLayout.OnRefreshListener, FetchPriceList.OnPriceListFetchListener,
+        SwipeRefreshLayout.OnRefreshListener, GetPriceList.OnPriceListFetchListener,
         AppBarLayout.OnOffsetChangedListener, MainActivity.OnDrawerOpenedListener {
 
     /**
@@ -192,7 +192,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         //Download whole database when the app is first opened.
         if (prefs.getBoolean(getString(R.string.pref_initial_load), true)) {
             if (Utility.isNetworkAvailable(getActivity())) {
-                FetchPriceList task = new FetchPriceList(getActivity(), false, false);
+                GetPriceList task = new GetPriceList(getActivity(), false, false);
                 task.setOnPriceListFetchListener(this);
                 task.execute();
             } else {
@@ -214,7 +214,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
             if (prefs.getBoolean(getString(R.string.pref_auto_sync), false) &&
                     System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_price_list_update), 0) >= 3600000L
                     && Utility.isNetworkAvailable(getActivity())) {
-                FetchPriceList task = new FetchPriceList(getActivity(), true, false);
+                GetPriceList task = new GetPriceList(getActivity(), true, false);
                 task.setOnPriceListFetchListener(this);
                 task.execute();
                 //Workaround for the circle not appearing
@@ -290,7 +290,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     public void onRefresh() {
         //Manual update
         if (Utility.isNetworkAvailable(getActivity())) {
-            FetchPriceList task = new FetchPriceList(getActivity(), true, true);
+            GetPriceList task = new GetPriceList(getActivity(), true, true);
             task.setOnPriceListFetchListener(this);
             task.execute();
         } else {

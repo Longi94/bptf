@@ -68,8 +68,7 @@ public final class DatabaseContract {
         public static final String COLUMN_ITEM_NAME = "item_name";
         public static final String COLUMN_TYPE_NAME = "type_name";
         public static final String COLUMN_PROPER_NAME = "proper_name";
-        public static final String COLUMN_ICON = "icon";
-        public static final String COLUMN_ICON_SMALL = "icon";
+        public static final String COLUMN_DESCRIPTION = "description";
 
         public static Uri buildUri(long id) {
             return CONTENT_URI.buildUpon().appendPath("id").appendPath("" + id).build();
@@ -82,7 +81,7 @@ public final class DatabaseContract {
 
         public static final String TABLE_NAME = "unusual_schema";
 
-        public static final String COLUMN_INDEX = "index";
+        public static final String COLUMN_ID = "id";
         public static final String COLUMN_NAME = "name";
 
         public static Uri buildUri(long id) {
@@ -96,7 +95,7 @@ public final class DatabaseContract {
 
         public static final String TABLE_NAME = "origin_names";
 
-        public static final String COLUMN_INDEX = "index";
+        public static final String COLUMN_ID = "id";
         public static final String COLUMN_NAME = "name";
 
         public static Uri buildUri(long id) {

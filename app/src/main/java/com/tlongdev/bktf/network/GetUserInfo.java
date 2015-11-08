@@ -24,14 +24,14 @@ import java.net.URL;
 /**
  * Task for fetching data about the user in the background.
  */
-public class FetchUserInfo extends AsyncTask<String, Void, Void> implements
-        FetchUserBackpack.OnFetchUserBackpackListener {
+public class GetUserInfo extends AsyncTask<String, Void, Void> implements
+        GetUserBackpack.OnFetchUserBackpackListener {
 
     /**
      * Log tag for logging.
      */
     @SuppressWarnings("unused")
-    private static final String LOG_TAG = FetchUserInfo.class.getSimpleName();
+    private static final String LOG_TAG = GetUserInfo.class.getSimpleName();
 
     //The context the task is running in
     private Context mContext;
@@ -60,7 +60,7 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> implements
      * @param context    the context the task will run in
      * @param manualSync whether the updated was initiated by the user
      */
-    public FetchUserInfo(Context context, boolean manualSync) {
+    public GetUserInfo(Context context, boolean manualSync) {
         this.mContext = context;
         this.manualSync = manualSync;
     }
@@ -167,7 +167,7 @@ public class FetchUserInfo extends AsyncTask<String, Void, Void> implements
             }
 
             //SteamID successfully acquired. Start fatching the backpack.
-            FetchUserBackpack fetchTask = new FetchUserBackpack(mContext);
+            GetUserBackpack fetchTask = new GetUserBackpack(mContext);
             //Register a listener to be notified
             fetchTask.registerOnFetchUserBackpackListener(this);
             fetchTask.execute(steamId);

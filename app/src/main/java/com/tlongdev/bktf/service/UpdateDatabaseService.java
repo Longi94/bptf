@@ -9,7 +9,7 @@ import android.preference.PreferenceManager;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
-import com.tlongdev.bktf.network.FetchPriceList;
+import com.tlongdev.bktf.network.GetPriceList;
 
 /**
  * Service for updating the database in the background
@@ -38,7 +38,7 @@ public class UpdateDatabaseService extends Service {
                 && Utility.isNetworkAvailable(this)) {
 
             //Start updating the database
-            new FetchPriceList(this, true, true).execute();
+            new GetPriceList(this, true, true).execute();
         }
 
         //Stop the service

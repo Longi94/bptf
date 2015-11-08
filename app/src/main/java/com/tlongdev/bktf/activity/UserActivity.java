@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
-import com.tlongdev.bktf.network.FetchUserBackpack;
+import com.tlongdev.bktf.network.GetUserBackpack;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +38,7 @@ import java.net.URL;
  * Profile page activity.
  */
 public class UserActivity extends AppCompatActivity implements View.OnClickListener,
-        FetchUserBackpack.OnFetchUserBackpackListener {
+        GetUserBackpack.OnFetchUserBackpackListener {
 
     /**
      * Log tag for logging.
@@ -129,7 +129,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
         //Start downloading remaining info if the user.
         new FetchUserInfoTask().execute(i.getStringExtra(JSON_USER_SUMMARIES_KEY));
-        FetchUserBackpack fetchTask = new FetchUserBackpack(this);
+        GetUserBackpack fetchTask = new GetUserBackpack(this);
         fetchTask.registerOnFetchUserBackpackListener(this);
         fetchTask.execute(steamId);
 
