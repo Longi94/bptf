@@ -1,6 +1,7 @@
 package com.tlongdev.bktf.fragment;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,15 +37,15 @@ import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.adapter.RecentsAdapter;
 import com.tlongdev.bktf.data.DatabaseContract;
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
+import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.network.GetPriceList;
 
 /**
  * recents fragment. Shows a list of all the prices orderd by the time of the price update.
  */
 public class RecentsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
-        SwipeRefreshLayout.OnRefreshListener, GetPriceList.OnPriceListFetchListener,
+        SwipeRefreshLayout.OnRefreshListener, GetPriceList.OnPriceListListener,
         AppBarLayout.OnOffsetChangedListener, MainActivity.OnDrawerOpenedListener {
 
     /**
@@ -110,6 +111,9 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     private View keyPriceImage;
     private View budsPriceImage;
 
+    //Dialog to indicate the download progress
+    private ProgressDialog loadingDialog;
+
     /**
      * Constructor
      */
@@ -162,7 +166,26 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         budsPriceImage = rootView.findViewById(R.id.image_view_buds_price);
 
         //Populate the toolbar header
-        onPriceListFetchFinished();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
+        keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
+        budsPrice.setText(prefs.getString(getString(R.string.pref_buds_price), ""));
+
+        if (Utility.getDouble(prefs, getString(R.string.pref_metal_diff), 0.0) > 0.0) {
+            metalPriceImage.setBackgroundColor(0xff008504);
+        } else {
+            metalPriceImage.setBackgroundColor(0xff850000);
+        }
+        if (Utility.getDouble(prefs, getString(R.string.pref_key_diff), 0.0) > 0.0) {
+            keyPriceImage.setBackgroundColor(0xff008504);
+        } else {
+            keyPriceImage.setBackgroundColor(0xff850000);
+        }
+        if (Utility.getDouble(prefs, getString(R.string.pref_buds_diff), 0.0) > 0) {
+            budsPriceImage.setBackgroundColor(0xff008504);
+        } else {
+            budsPriceImage.setBackgroundColor(0xff850000);
+        }
 
         return rootView;
     }
@@ -178,6 +201,9 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                 GetPriceList task = new GetPriceList(getActivity(), false, false);
                 task.setOnPriceListFetchListener(this);
                 task.execute();
+
+                //Show the progress dialog
+                loadingDialog = ProgressDialog.show(getActivity(), null, "Downloading data...", true);
             } else {
                 //Quit the app if the download failed.
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -298,13 +324,28 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     @Override
-    public void onPriceListFetchFinished() {
+    public void onPriceListFinished() {
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
+        }
+
+        getLoaderManager().restartLoader(PRICE_LIST_LOADER, null, this);
+
+        //Update the header with currency prices
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        //Get the shared preferences
+        SharedPreferences.Editor editor = prefs.edit();
+
+        //Save when the update finished
+        editor.putLong(getActivity().getString(R.string.pref_last_price_list_update),
+                System.currentTimeMillis());
+        editor.putBoolean(getActivity().getString(R.string.pref_initial_load), false);
+        editor.apply();
+
         if (isAdded()) {
             //Stop animation
             mSwipeRefreshLayout.setRefreshing(false);
-
-            //Update the header with currency prices
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
             metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
             keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
@@ -325,6 +366,46 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
             } else {
                 budsPriceImage.setBackgroundColor(0xff850000);
             }
+        }
+    }
+
+    @Override
+    public void onPriceListUpdate(int max) {
+        if (loadingDialog != null && loadingDialog.isShowing()) {
+            if (loadingDialog.isIndeterminate()) {
+                loadingDialog.dismiss();
+                loadingDialog = new ProgressDialog(getActivity());
+                loadingDialog.setIndeterminate(false);
+                loadingDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                loadingDialog.setMessage(getActivity().getString(R.string.message_database_create));
+                loadingDialog.setMax(max);
+                loadingDialog.show();
+            } else {
+                loadingDialog.incrementProgressBy(1);
+            }
+        }
+    }
+
+    @Override
+    public void onPriceListFailed(String errorMesage) {
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
+
+            AlertDialog.Builder builder;
+            AlertDialog alertDialog;
+            builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(getActivity().getString(R.string.message_database_fail_network))
+                    .setCancelable(false)
+                    .setPositiveButton(getActivity().getString(R.string.action_close), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //Close app
+                            (getActivity()).finish();
+                        }
+                    });
+            alertDialog = builder.create();
+            loadingDialog.dismiss();
+            alertDialog.show();
         }
     }
 
