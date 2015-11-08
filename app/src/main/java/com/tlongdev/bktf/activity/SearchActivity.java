@@ -210,7 +210,6 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             searchTask.execute(searchQuery);
 
             MatrixCursor extras = new MatrixCursor(new String[]{
-                    PriceEntry._ID,
                     PriceEntry.COLUMN_DEFINDEX,
                     ItemSchemaEntry.COLUMN_ITEM_NAME,
                     PriceEntry.COLUMN_ITEM_QUALITY,
@@ -220,7 +219,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                     PriceEntry.COLUMN_CURRENCY,
                     PriceEntry.COLUMN_PRICE,
                     PriceEntry.COLUMN_PRICE_HIGH,});
-            extras.addRow(new String[]{"-1", null, null, null, null, null, null, null, null, null});
+            extras.addRow(new String[]{null, null, null, null, null, null, null, null, null});
             Cursor[] cursors = {extras, data};
             Cursor extendedCursor = new MergeCursor(cursors);
             adapter.setLoading(true);
@@ -372,7 +371,6 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                 //Insert an extra row to the cursor
                 // TODO: 2015. 10. 25. there is really no need to do this, all we need is a proper adapter
                 MatrixCursor extras = new MatrixCursor(new String[]{
-                        PriceEntry._ID,
                         PriceEntry.COLUMN_DEFINDEX,
                         ItemSchemaEntry.COLUMN_ITEM_NAME,
                         PriceEntry.COLUMN_ITEM_QUALITY,
@@ -382,7 +380,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                         PriceEntry.COLUMN_CURRENCY,
                         PriceEntry.COLUMN_PRICE,
                         PriceEntry.COLUMN_PRICE_HIGH,});
-                extras.addRow(new String[]{"-1", null, s[0], null, null, null, null, null, null, null});
+                extras.addRow(new String[]{null, s[0], null, null, null, null, null, null, null});
                 Cursor[] cursors = {extras, data};
                 Cursor extendedCursor = new MergeCursor(cursors);
                 adapter.setUserFound(true, s);

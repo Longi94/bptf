@@ -22,7 +22,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.ItemDetailActivity;
 import com.tlongdev.bktf.activity.UserBackpackActivity;
-import com.tlongdev.bktf.data.ItemSchemaDbHelper;
+import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.model.Item;
 
@@ -72,12 +72,6 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
     private int newItemSlots = 0;
 
     /**
-     * Database helper for getting the name of the item.
-     * TODO replace with a join after combining databases
-     */
-    private ItemSchemaDbHelper mDbHelper;
-
-    /**
      * Constructor
      *
      * @param context the context
@@ -86,7 +80,6 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
     public BackpackAdapter(Context context, boolean isGuest) {
         this.mContext = context;
         this.isGuest = isGuest;
-        mDbHelper = new ItemSchemaDbHelper(context);
     }
 
     @Override
@@ -198,14 +191,24 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                                 Intent i = new Intent(mContext, ItemDetailActivity.class);
                                 i.putExtra(ItemDetailActivity.EXTRA_ITEM_ID, id);
                                 i.putExtra(ItemDetailActivity.EXTRA_GUEST, isGuest);
-                                Cursor itemCursor = mDbHelper.getItem(item.getDefindex());
-                                if (itemCursor != null && itemCursor.moveToFirst()) {
-                                    i.putExtra(ItemDetailActivity.EXTRA_ITEM_NAME,
-                                            itemCursor.getString(0));
-                                    i.putExtra(ItemDetailActivity.EXTRA_ITEM_TYPE,
-                                            itemCursor.getString(1));
-                                    i.putExtra(ItemDetailActivity.EXTRA_PROPER_NAME,
-                                            itemCursor.getInt(2));
+
+                                Cursor itemCursor = mContext.getContentResolver().query(
+                                        ItemSchemaEntry.CONTENT_URI,
+                                        new String[]{ItemSchemaEntry.COLUMN_ITEM_NAME, ItemSchemaEntry.COLUMN_TYPE_NAME, ItemSchemaEntry.COLUMN_PROPER_NAME},
+                                        ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX + " = ?",
+                                        new String[]{String.valueOf(item.getDefindex())},
+                                        null
+                                );
+
+                                if (itemCursor != null) {
+                                    if (itemCursor.moveToFirst()) {
+                                        i.putExtra(ItemDetailActivity.EXTRA_ITEM_NAME,
+                                                itemCursor.getString(0));
+                                        i.putExtra(ItemDetailActivity.EXTRA_ITEM_TYPE,
+                                                itemCursor.getString(1));
+                                        i.putExtra(ItemDetailActivity.EXTRA_PROPER_NAME,
+                                                itemCursor.getInt(2));
+                                    }
                                     itemCursor.close();
                                 }
 
