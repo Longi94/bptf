@@ -7,7 +7,8 @@ import android.graphics.drawable.Drawable;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
-import com.tlongdev.bktf.data.ItemSchemaDbHelper;
+import com.tlongdev.bktf.data.DatabaseContract;
+import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -155,13 +156,21 @@ public class Item {
 
         //Handle strangifier names differently
         if (defindex == 6522) {
-            ItemSchemaDbHelper dbHelper = new ItemSchemaDbHelper(context);
-            Cursor itemCursor = dbHelper.getItem(defindex);
-            if (itemCursor != null && itemCursor.moveToFirst()) {
-                formattedName += itemCursor.getString(0) + " " + name;
+            Cursor itemCursor = context.getContentResolver().query(
+                    DatabaseContract.ItemSchemaEntry.CONTENT_URI,
+                    new String[]{ItemSchemaEntry.COLUMN_ITEM_NAME, ItemSchemaEntry.COLUMN_TYPE_NAME, ItemSchemaEntry.COLUMN_PROPER_NAME},
+                    ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX + " = ?",
+                    new String[]{String.valueOf(defindex)},
+                    null
+            );
+
+            if (itemCursor != null) {
+                if (itemCursor.moveToFirst()) {
+                    formattedName += itemCursor.getString(0) + " " + name;
+                }
                 itemCursor.close();
             }
-            dbHelper.close();
+
             return formattedName;
         } else
             //TODO Handle chemistry set names differently
