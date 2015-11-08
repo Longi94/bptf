@@ -24,6 +24,7 @@ public class DatabaseProvider extends ContentProvider {
     /**
      * URI matcher result codes
      */
+    public static final int RAW_QUERY = 99;
     public static final int PRICE_LIST = 100;
     public static final int ITEM_SCHEMA = 101;
     public static final int ORIGIN_NAMES = 102;
@@ -76,6 +77,11 @@ public class DatabaseProvider extends ContentProvider {
         Cursor retCursor;
         String tableName;
         switch (sUriMatcher.match(uri)) {
+            case RAW_QUERY:
+                retCursor = mOpenHelper.getReadableDatabase().rawQuery(selection, selectionArgs);
+                if (retCursor != null)
+                    retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+                return retCursor;
             case PRICE_LIST:
                 tableName = PriceEntry.TABLE_NAME;
                 break;
