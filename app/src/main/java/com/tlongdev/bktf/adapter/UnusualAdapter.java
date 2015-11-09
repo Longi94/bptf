@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.UnusualActivity;
@@ -96,6 +97,9 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             double rawKeyPrice = Utility.getDouble(prefs, mContext.getString(R.string.pref_key_raw), 1);
 
+            Picasso picasso = Picasso.with(mContext);
+            picasso.setIndicatorsEnabled(true);
+
             switch (type) {
                 //We are showing the hats, no effects
                 case TYPE_HATS:
@@ -105,13 +109,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                             Quality.UNUSUAL, false, false, false, 0, null
                     );
 
-                    try {
-                        holder.icon.setImageDrawable(item.getIconDrawable(mContext));
-                    } catch (IOException e) {
-                        if (Utility.isDebugging(mContext))
-                            e.printStackTrace();
-                        holder.icon.setImageDrawable(null);
-                    }
+                    picasso.load(item.getIconUrl(mContext)).into(holder.icon);
 
                     holder.root.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -171,13 +169,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
 
                     holder.price.setText(hat.getPrice().getFormattedPrice(mContext, Currency.KEY));
 
-                    try {
-                        holder.icon.setImageDrawable(hat.getIconDrawable(mContext));
-                    } catch (IOException e) {
-                        if (Utility.isDebugging(mContext))
-                            e.printStackTrace();
-                        holder.icon.setImageDrawable(null);
-                    }
+                    picasso.load(hat.getIconUrl(mContext)).into(holder.icon);
 
                     try {
                         //Load the effect icon

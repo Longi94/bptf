@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.DatabaseContract;
@@ -16,7 +17,6 @@ import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -144,15 +144,9 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
 
                 int count = ids.get(position).getY();
 
-                try {
-                    //Get the icon of the item
-                    holder.icon.setImageDrawable(item.getIconDrawable(mContext));
-                } catch (IOException e) {
-                    if (Utility.isDebugging(mContext)) {
-                        e.printStackTrace();
-                    }
-                    holder.icon.setImageDrawable(null);
-                }
+                Picasso picasso = Picasso.with(mContext);
+                picasso.setIndicatorsEnabled(true);
+                picasso.load(item.getIconUrl(mContext)).into(holder.icon);
 
                 holder.name.setText(item.getFormattedName(mContext));
 

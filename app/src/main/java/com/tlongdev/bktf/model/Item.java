@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.preference.PreferenceManager;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
@@ -1682,25 +1684,29 @@ public class Item {
     }
 
     /**
-     * Gets the icon of the item from file
+     * Returns the url link for the icon if the item.
      *
      * @param context the context
-     * @return icon drawable
-     * @throws IOException
+     * @return Uri object
      */
-    public Drawable getIconDrawable(Context context) throws IOException {
-        AssetManager assetManager = context.getAssets();
-        InputStream ims;
+    public Uri getIconUrl(Context context) {
+        String BASE_URL = "http://tlongdev.com/api/tf2_icon.php";
+        Uri.Builder builder = Uri.parse(BASE_URL).buildUpon()
+                .appendQueryParameter("defindex", String.valueOf(defindex));
 
-        //Get the icon of the item
-        if (defindex >= 15000 && defindex <= 15059) {
-            ims = assetManager.open("skins/" + getIconIndex() + "/" + weaponWear + ".png");
-        } else if (australium && defindex != 5037) {
-            ims = assetManager.open("items/" + getIconIndex() + "aus.png");
-        } else {
-            ims = assetManager.open("items/" + getIconIndex() + ".png");
+        // TODO: 2015. 11. 09.
+        boolean large = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("dummy", false);
+        if (large) {
+            builder.appendQueryParameter("large", "1");
         }
-        return Drawable.createFromStream(ims, null);
+
+        if (australium) {
+            builder.appendQueryParameter("australium", "1");
+        } else if (weaponWear >= 0) {
+            builder.appendQueryParameter("wear", String.valueOf(weaponWear));
+        }
+
+        return builder.build();
     }
 
     /**

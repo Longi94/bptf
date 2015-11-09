@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.ItemDetailActivity;
@@ -174,12 +175,16 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                         //Set the background to the color of the quality
                         holder.root.setCardBackgroundColor(item.getColor(mContext, true));
 
+                        Picasso picasso = Picasso.with(mContext);
+                        picasso.setIndicatorsEnabled(true);
+                        picasso.load(item.getIconUrl(mContext)).into(holder.icon);
+
                         //Load the image on a background thread to avoid hiccups
                         ImageLoader task = (ImageLoader) holder.icon.getTag();
                         if (task != null) {
                             task.cancel(true);
                         }
-                        task = new ImageLoader(mContext, holder.icon, holder.effect, holder.paint, item, paint);
+                        task = new ImageLoader(mContext, holder.effect, holder.paint, item, paint);
                         holder.icon.setTag(task);
                         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -329,7 +334,6 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
         /**
          * Image views to set the images to
          */
-        private ImageView icon;
         private ImageView effect;
         private ImageView paintView;
 
@@ -346,13 +350,11 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
          * Constructor
          *
          * @param context the context
-         * @param icon    the icon of the item
          * @param effect  the effect of the item
          * @param paint   the pain indicator of the item
          */
-        private ImageLoader(Context context, ImageView icon, ImageView effect, ImageView paintView, Item item, int paint) {
+        private ImageLoader(Context context, ImageView effect, ImageView paintView, Item item, int paint) {
             this.mContext = context;
-            this.icon = icon;
             this.effect = effect;
             this.paintView = paintView;
             this.item = item;
@@ -368,13 +370,12 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                 InputStream ims;
                 AssetManager assetManager = mContext.getAssets();
 
-                drawables[0] = item.getIconDrawable(mContext);
-                drawables[1] = item.getEffectDrawable(mContext);
+                drawables[0] = item.getEffectDrawable(mContext);
 
                 //Get the paint indicator if needed
                 if (BackpackItem.isPaint(paint)) {
                     ims = assetManager.open("paint/" + paint + ".png");
-                    drawables[2] = Drawable.createFromStream(ims, null);
+                    drawables[1] = Drawable.createFromStream(ims, null);
                 }
 
             } catch (IOException e) {
@@ -388,9 +389,8 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
         @Override
         protected void onPostExecute(Drawable[] drawables) {
             //Set the images
-            icon.setImageDrawable(drawables[0]);
-            effect.setImageDrawable(drawables[1]);
-            paintView.setImageDrawable(drawables[2]);
+            effect.setImageDrawable(drawables[0]);
+            paintView.setImageDrawable(drawables[1]);
         }
     }
 }
