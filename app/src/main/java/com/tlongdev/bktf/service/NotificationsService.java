@@ -222,8 +222,7 @@ public class NotificationsService extends Service {
             } catch (IOException | JSONException e) {
                 //There was an error, notify the user
                 Toast.makeText(mContext, "bptf: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                if (Utility.isDebugging(mContext))
-                    e.printStackTrace();
+                e.printStackTrace();
             }
             return 0;
         }

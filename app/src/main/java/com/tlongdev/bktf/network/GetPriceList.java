@@ -120,8 +120,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
             //Initialize the URL
             URL url = new URL(uri.toString());
 
-            /*if (Utility.isDebugging(mContext))
-                Log.v(LOG_TAG, "Built uri: " + uri.toString());*/
+            Log.v(LOG_TAG, "Built uri: " + uri.toString());
 
             //Open connection
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -141,8 +140,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
         } catch (IOException e) {
             //There was a network error
             errorMessage = mContext.getString(R.string.error_network);
-            if (Utility.isDebugging(mContext))
-                e.printStackTrace();
+            e.printStackTrace();
         } finally {
             //Close the connection
             if (urlConnection != null) {
@@ -405,8 +403,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
                     //Insert all the data into the database
                     rowsInserted = mContext.getContentResolver()
                             .bulkInsert(PriceEntry.CONTENT_URI, cvArray);
-                    if (Utility.isDebugging(mContext))
-                        Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
+                    Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
                 }
                 parser.close();
                 return 0;
@@ -421,8 +418,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
                     while (parser.nextToken() != JsonToken.END_OBJECT) {
                         if (parser.getCurrentName().equals(KEY_MESSAGE)) {
                             errorMessage = parser.getText();
-                            if (Utility.isDebugging(mContext))
-                                Log.e(LOG_TAG, errorMessage);
+                            Log.e(LOG_TAG, errorMessage);
                         }
                     }
                     parser.close();

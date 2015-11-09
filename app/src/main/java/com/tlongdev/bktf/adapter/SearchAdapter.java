@@ -13,11 +13,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.activity.UserActivity;
-import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.model.Item;
+import com.tlongdev.bktf.model.Price;
 
 import java.io.IOException;
 
@@ -165,16 +164,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     try {
                         holder.effect.setImageDrawable(item.getEffectDrawable(mContext));
                     } catch (IOException e) {
-                        if (Utility.isDebugging(mContext))
-                            e.printStackTrace();
+                        e.printStackTrace();
                         holder.effect.setImageDrawable(null);
                     }
 
                     try {
                         holder.price.setText(item.getPrice().getFormattedPrice(mContext));
                     } catch (Throwable throwable) {
-                        if (Utility.isDebugging(mContext))
-                            throwable.printStackTrace();
+                        throwable.printStackTrace();
                     }
                     break;
             }

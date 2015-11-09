@@ -259,15 +259,13 @@ public class GetUserInfo extends AsyncTask<String, Void, Void> implements
             //There was a network error
             errorMessage = mContext.getString(R.string.error_network);
             publishProgress();
-            if (Utility.isDebugging(mContext))
-                e.printStackTrace();
+            e.printStackTrace();
             return null;
         } catch (JSONException e) {
             //The JSON string was incorrectly formatted
             errorMessage = mContext.getString(R.string.error_data_parse);
             publishProgress();
-            if (Utility.isDebugging(mContext))
-                e.printStackTrace();
+            e.printStackTrace();
             return null;
         } finally {
             //Close the connection
@@ -282,8 +280,7 @@ public class GetUserInfo extends AsyncTask<String, Void, Void> implements
                     //This should never be reached
                     errorMessage = e.getMessage();
                     publishProgress();
-                    if (Utility.isDebugging(mContext))
-                        e.printStackTrace();
+                    e.printStackTrace();
                 }
             }
         }

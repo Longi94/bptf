@@ -123,9 +123,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
         //Retrieve steamId from intent
         steamId = i.getStringExtra(STEAM_ID_KEY);
-        if (Utility.isDebugging(this)) {
-            Log.d(LOG_TAG, "steamID: " + steamId);
-        }
+        Log.d(LOG_TAG, "steamID: " + steamId);
 
         //Start downloading remaining info if the user.
         new FetchUserInfoTask().execute(i.getStringExtra(JSON_USER_SUMMARIES_KEY));
@@ -291,9 +289,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
         //Return if JSON response is unsuccessful
         if (response.getInt(OWM_SUCCESS) == 0) {
-            if (Utility.isDebugging(this)) {
-                Log.e(LOG_TAG, "Response unsuccessful");
-            }
+            Log.e(LOG_TAG, "Response unsuccessful");
             return;
         }
 
@@ -554,9 +550,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                         .appendQueryParameter(KEY_COMPRESS, "1")
                         .build();
 
-                if (Utility.isDebugging(UserActivity.this)) {
                     Log.d(LOG_TAG, "Built uri: " + uri.toString());
-                }
 
                 URL url = new URL(uri.toString());
 
@@ -594,13 +588,11 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 //There was a network error
                 //TODO distinguish all network errors: timeout, connection refused, api down, etc.
                 publishProgress(getString(R.string.error_network));
-                if (Utility.isDebugging(UserActivity.this))
                     e.printStackTrace();
                 return null;
             } catch (JSONException e) {
                 //JSON was improperly formatted, pls no
                 publishProgress(getString(R.string.error_data_parse));
-                if (Utility.isDebugging(UserActivity.this))
                     e.printStackTrace();
                 return null;
             } finally {
@@ -615,9 +607,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                         reader.close();
                     } catch (final IOException e) {
                         publishProgress(e.getMessage());
-                        if (Utility.isDebugging(UserActivity.this)) {
-                            e.printStackTrace();
-                        }
+                        e.printStackTrace();
                     }
                 }
             }

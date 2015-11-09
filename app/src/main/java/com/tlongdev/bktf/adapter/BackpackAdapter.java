@@ -379,8 +379,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                 }
 
             } catch (IOException e) {
-                if (Utility.isDebugging(mContext))
-                    e.printStackTrace();
+                e.printStackTrace();
             }
 
             return drawables;

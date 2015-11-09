@@ -44,7 +44,6 @@
     <string name="pref_resolved_steam_id" translatable="false">pref_resolved_steam_id</string>
     <string name="pref_steam_id" translatable="false">Steam ID</string>
     <string name="pref_sync_interval" translatable="false">pref_sync_interval</string>
-    <string name="pref_user_developer" translatable="false">pref_user_developer</string>
     <string name="pref_user_items" translatable="false">pref_user_items</string>
     <string name="pref_user_raw_key" translatable="false">pref_user_raw_key</string>
     <string name="pref_user_raw_metal" translatable="false">pref_user_raw_metal</string>

@@ -133,8 +133,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                     try {
                         holder.icon.setImageDrawable(effect.getEffectDrawable(mContext));
                     } catch (IOException e) {
-                        if (Utility.isDebugging(mContext))
-                            e.printStackTrace();
+                        e.printStackTrace();
                         holder.icon.setImageDrawable(null);
                     }
 
@@ -175,8 +174,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                         //Load the effect icon
                         holder.effect.setImageDrawable(hat.getEffectDrawable(mContext));
                     } catch (IOException e) {
-                        if (Utility.isDebugging(mContext))
-                            e.printStackTrace();
+                        e.printStackTrace();
                         holder.effect.setImageDrawable(null);
                     }
                     break;

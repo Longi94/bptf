@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
@@ -73,10 +72,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
             return true;
         }
     };
-
-    //These variables are used for the hidden developer options
-    private boolean secretSwitch = true;
-    private int secretCounter = 0;
 
     /**
      * Binds a preference's summary to its value. More specifically, when the
@@ -147,12 +142,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         // use the older PreferenceActivity APIs.
 
         // Add 'general' preferences.
-        if (!PreferenceManager.getDefaultSharedPreferences(this)
-                .getBoolean(getString(R.string.pref_user_developer), false)) {
-            addPreferencesFromResource(R.xml.pref_general);
-        } else {
-            addPreferencesFromResource(R.xml.pref_general_dev);
-        }
+        addPreferencesFromResource(R.xml.pref_general);
 
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
@@ -210,44 +200,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         //Set the version name to the summary, so I don't have to change it manually every goddamn
         //update
         findPreference(getString(R.string.pref_title_version)).setSummary(BuildConfig.VERSION_NAME);
-
-        //Show the developer options when activated
-        if (!PreferenceManager.getDefaultSharedPreferences(this)
-                .getBoolean(getString(R.string.pref_user_developer), false)) {
-            findPreference(getString(R.string.pref_title_version)).setOnPreferenceClickListener(
-                    new Preference.OnPreferenceClickListener() {
-                        @Override
-                        public boolean onPreferenceClick(Preference preference) {
-                            if (secretSwitch) {
-                                secretCounter++;
-                                secretSwitch = false;
-                            }
-                            return true;
-                        }
-                    });
-
-            findPreference(getString(R.string.pref_title_developer)).setOnPreferenceClickListener(
-                    new Preference.OnPreferenceClickListener() {
-                        @Override
-                        public boolean onPreferenceClick(Preference preference) {
-                            if (!secretSwitch) {
-                                secretCounter++;
-                                secretSwitch = true;
-                                if (secretCounter == 6) {
-                                    //Show a toast that the user revealed the developer options.
-                                    Toast.makeText(SettingsActivity.this,
-                                            "You're now the developer of this app!", Toast.LENGTH_SHORT)
-                                            .show();
-                                    findPreference(getString(R.string.pref_title_developer)).setOnPreferenceClickListener(null);
-                                    findPreference(getString(R.string.pref_title_version)).setOnPreferenceClickListener(null);
-                                    PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this).
-                                            edit().putBoolean(getString(R.string.pref_user_developer), true).apply();
-                                }
-                            }
-                            return true;
-                        }
-                    });
-        }
     }
 
     /**

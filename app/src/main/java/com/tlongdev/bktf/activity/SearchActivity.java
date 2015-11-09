@@ -179,9 +179,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             selectionArgs = new String[]{"there is no such itme like thisasd"};
         }
 
-        if (Utility.isDebugging(this)) {
-            Log.d(LOG_TAG, "selection: " + sNameSearch + ", arguments: " + Arrays.toString(selectionArgs));
-        }
+        Log.d(LOG_TAG, "selection: " + sNameSearch + ", arguments: " + Arrays.toString(selectionArgs));
 
         return new CursorLoader(
                 this,
@@ -357,8 +355,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                     }
                 }
             } catch (IOException | JSONException e) {
-                if (Utility.isDebugging(mContext))
-                    e.printStackTrace();
+                e.printStackTrace();
             }
 
             return userData;
@@ -416,8 +413,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             } catch (IOException e) {
                 //There was an error, notify the user
                 publishProgress();
-                if (Utility.isDebugging(mContext))
-                    e.printStackTrace();
+                e.printStackTrace();
                 return null;
             }
         }
