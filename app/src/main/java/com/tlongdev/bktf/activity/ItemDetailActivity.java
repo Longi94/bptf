@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
@@ -306,12 +307,9 @@ public class ItemDetailActivity extends Activity {
                 }
 
                 //Set the icon and the background
-                try {
-                    icon.setImageDrawable(item.getIconDrawable(this));
-                } catch (IOException e) {
-                    if (Utility.isDebugging(this))
-                        e.printStackTrace();
-                }
+                Picasso picasso = Picasso.with(this);
+                picasso.setIndicatorsEnabled(true);
+                picasso.load(item.getIconUrl(this)).into(icon);
 
                 try {
                     effectView.setImageDrawable(item.getEffectDrawable(this));

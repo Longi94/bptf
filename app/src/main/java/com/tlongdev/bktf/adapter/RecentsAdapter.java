@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.fragment.RecentsFragment;
@@ -96,13 +97,9 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
             holder.effect.setBackgroundColor(item.getColor(mContext, true));
 
             //Set the item icon
-            try {
-                holder.icon.setImageDrawable(item.getIconDrawable(mContext));
-            } catch (IOException e) {
-                if (Utility.isDebugging(mContext))
-                    e.printStackTrace();
-                holder.icon.setImageDrawable(null);
-            }
+            Picasso picasso = Picasso.with(mContext);
+            picasso.setIndicatorsEnabled(true);
+            picasso.load(item.getIconUrl(mContext)).into(holder.icon);
 
             //Set the effect icon
             try {
