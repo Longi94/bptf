@@ -561,7 +561,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     //IO error, shouldn't reach
                     errorMessage = e.getMessage();
                     publishProgress();
-                    if (Utility.isDebugging(mContext))
                         e.printStackTrace();
                 }
             }
@@ -603,7 +602,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 //There was an error, notify the user
                 errorMessage = e.getMessage();
                 publishProgress();
-                if (Utility.isDebugging(mContext))
                     e.printStackTrace();
                 return null;
             }

@@ -232,8 +232,7 @@ public class GetUserBackpack extends AsyncTask<String, Void, Boolean> {
             //Convert the URI into a URL
             URL url = new URL(uri.toString());
 
-            if (Utility.isDebugging(mContext))
-                Log.v(LOG_TAG, "Built uri: " + uri.toString());
+            Log.v(LOG_TAG, "Built uri: " + uri.toString());
 
             //Open connection
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -268,8 +267,7 @@ public class GetUserBackpack extends AsyncTask<String, Void, Boolean> {
             //There was a network error, notify the user TODO, proper error handling
             errorMessage = mContext.getString(R.string.error_network);
             publishProgress();
-            if (Utility.isDebugging(mContext))
-                e.printStackTrace();
+            e.printStackTrace();
             return false;
         } finally {
             //Disconnect
@@ -283,8 +281,7 @@ public class GetUserBackpack extends AsyncTask<String, Void, Boolean> {
                 } catch (final IOException e) {
                     errorMessage = e.getMessage();
                     publishProgress();
-                    if (Utility.isDebugging(mContext))
-                        e.printStackTrace();
+                    e.printStackTrace();
                 }
 
             }
@@ -297,8 +294,7 @@ public class GetUserBackpack extends AsyncTask<String, Void, Boolean> {
             //Something went wrong while parsing the data
             errorMessage = mContext.getString(R.string.error_data_parse);
             publishProgress();
-            if (Utility.isDebugging(mContext))
-                e.printStackTrace();
+            e.printStackTrace();
             return false;
         }
     }
@@ -393,15 +389,13 @@ public class GetUserBackpack extends AsyncTask<String, Void, Boolean> {
                     //Clear the databse first
                     int rowsDeleted = mContext.getContentResolver().delete(contentUri, null, null);
 
-                    if (Utility.isDebugging(mContext))
-                        Log.v(LOG_TAG, "deleted " + rowsDeleted + " rows");
+                    Log.v(LOG_TAG, "deleted " + rowsDeleted + " rows");
 
                     //Insert all the data into the database
                     int rowsInserted = mContext.getContentResolver()
                             .bulkInsert(contentUri, cvArray);
 
-                    if (Utility.isDebugging(mContext))
-                        Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
+                    Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
                 }
                 return false;
             case 8: //Invalid ID, shouldn't reach

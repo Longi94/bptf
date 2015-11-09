@@ -314,8 +314,7 @@ public class ItemDetailActivity extends Activity {
                 try {
                     effectView.setImageDrawable(item.getEffectDrawable(this));
                 } catch (IOException e) {
-                    if (Utility.isDebugging(this))
-                        e.printStackTrace();
+                    e.printStackTrace();
                 }
 
                 try {
@@ -327,8 +326,7 @@ public class ItemDetailActivity extends Activity {
                         paintView.setImageDrawable(Drawable.createFromStream(ims, null));
                     }
                 } catch (IOException e) {
-                    if (Utility.isDebugging(this))
-                        e.printStackTrace();
+                    e.printStackTrace();
                 }
 
                 cardView.setCardBackgroundColor(item.getColor(this, true));

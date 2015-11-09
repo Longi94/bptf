@@ -213,9 +213,7 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
             priceBuds.setText(totalPrice.getFormattedPrice(getActivity(), Currency.BUD));
             priceUsd.setText(totalPrice.getFormattedPrice(getActivity(), Currency.USD));
         } catch (Throwable throwable) {
-            if (Utility.isDebugging(getActivity())) {
-                throwable.printStackTrace();
-            }
+            throwable.printStackTrace();
         }
     }
 
@@ -248,9 +246,7 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
             priceBuds.setText(totalPrice.getFormattedPrice(getActivity(), Currency.BUD));
             priceUsd.setText(totalPrice.getFormattedPrice(getActivity(), Currency.USD));
         } catch (Throwable throwable) {
-            if (Utility.isDebugging(getActivity())) {
-                throwable.printStackTrace();
-            }
+            throwable.printStackTrace();
         }
     }
 
@@ -281,9 +277,7 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
             priceBuds.setText(totalPrice.getFormattedPrice(getActivity(), Currency.BUD));
             priceUsd.setText(totalPrice.getFormattedPrice(getActivity(), Currency.USD));
         } catch (Throwable throwable) {
-            if (Utility.isDebugging(getActivity())) {
-                throwable.printStackTrace();
-            }
+            throwable.printStackTrace();
         }
     }
 

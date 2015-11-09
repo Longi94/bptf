@@ -120,8 +120,7 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                         }
                     }
                 } catch (Throwable throwable) {
-                    if (Utility.isDebugging(getActivity()))
-                        throwable.printStackTrace();
+                    throwable.printStackTrace();
                 }
             }
 
@@ -150,8 +149,7 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                         }
                     }
                 } catch (Throwable throwable) {
-                    if (Utility.isDebugging(getActivity()))
-                        throwable.printStackTrace();
+                    throwable.printStackTrace();
                 }
             }
 
@@ -180,8 +178,7 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                         }
                     }
                 } catch (Throwable throwable) {
-                    if (Utility.isDebugging(getActivity()))
-                        throwable.printStackTrace();
+                    throwable.printStackTrace();
                 }
             }
 
@@ -210,8 +207,7 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                         }
                     }
                 } catch (Throwable throwable) {
-                    if (Utility.isDebugging(getActivity()))
-                        throwable.printStackTrace();
+                    throwable.printStackTrace();
                 }
             }
 
@@ -229,8 +225,7 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
             inputMetal.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false), 2)));
             inputUsd.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.USD, false), 2)));
         } catch (Throwable throwable) {
-            if (Utility.isDebugging(getActivity()))
-                throwable.printStackTrace();
+            throwable.printStackTrace();
         }
 
         inputEarbuds.setOnFocusChangeListener(this);

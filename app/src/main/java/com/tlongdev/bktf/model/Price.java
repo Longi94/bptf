@@ -153,8 +153,7 @@ public class Price {
                 return "$" + product;
             default:
                 //App should never reach this code
-                if (Utility.isDebugging(context))
-                    Log.e(LOG_TAG, "Error formatting price");
+                Log.e(LOG_TAG, "Error formatting price");
                 throw new IllegalArgumentException("Error while formatting price");
         }
     }
@@ -235,8 +234,7 @@ public class Price {
             default:
                 //Unknown currency was given, throw an exception.
                 String error = "Unknown target currency: " + targetCurrency;
-                if (Utility.isDebugging(context))
-                    Log.e(LOG_TAG, error);
+                Log.e(LOG_TAG, error);
                 throw new IllegalArgumentException(error);
         }
     }

@@ -9,7 +9,6 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
 import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
@@ -66,7 +65,6 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
         } catch (IOException e) {
             //There was a network error
             errorMessage = mContext.getString(R.string.error_network);
-            if (Utility.isDebugging(mContext))
                 e.printStackTrace();
         } finally {
             //Close the connection
@@ -118,7 +116,6 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
                     while (parser.nextToken() != JsonToken.END_OBJECT) {
                         if (parser.getCurrentName().equals(KEY_MESSAGE)) {
                             errorMessage = parser.getText();
-                            if (Utility.isDebugging(mContext))
                                 Log.e(LOG_TAG, errorMessage);
                         }
                     }

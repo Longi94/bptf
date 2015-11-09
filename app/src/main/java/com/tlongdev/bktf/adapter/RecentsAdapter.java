@@ -11,10 +11,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.fragment.RecentsFragment;
-import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.model.Item;
+import com.tlongdev.bktf.model.Price;
 
 import java.io.IOException;
 
@@ -105,8 +104,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
             try {
                 holder.effect.setImageDrawable(item.getEffectDrawable(mContext));
             } catch (IOException e) {
-                if (Utility.isDebugging(mContext))
-                    e.printStackTrace();
+                e.printStackTrace();
                 holder.effect.setImageDrawable(null);
             }
 
@@ -114,8 +112,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
                 //Properly format the price
                 holder.price.setText(item.getPrice().getFormattedPrice(mContext));
             } catch (Throwable throwable) {
-                if (Utility.isDebugging(mContext))
-                    throwable.printStackTrace();
+                throwable.printStackTrace();
             }
         }
     }

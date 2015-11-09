@@ -265,6 +265,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Switches to another fragment.
+     *
      * @param position the position of the clicked item in the navigation view
      */
     public void switchFragment(int position) {
@@ -453,8 +454,7 @@ public class MainActivity extends AppCompatActivity {
                     //IO error, shouldn't reach
                     errorMessage = e.getMessage();
                     publishProgress();
-                    if (Utility.isDebugging(mContext))
-                        e.printStackTrace();
+                    e.printStackTrace();
                 }
             }
             return null;
@@ -495,8 +495,7 @@ public class MainActivity extends AppCompatActivity {
                 //There was an error, notify the user
                 errorMessage = e.getMessage();
                 publishProgress();
-                if (Utility.isDebugging(mContext))
-                    e.printStackTrace();
+                e.printStackTrace();
                 return null;
             }
         }

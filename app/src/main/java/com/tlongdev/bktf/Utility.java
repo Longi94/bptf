@@ -459,17 +459,6 @@ public class Utility {
     }
 
     /**
-     * Whether we should log or not. Should only be used by the developer preferences.
-     *
-     * @param context context for accessing shared preferences
-     * @return true if logging is turned on
-     */
-    public static boolean isDebugging(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context)
-                .getBoolean(context.getString(R.string.pref_debug), false);
-    }
-
-    /**
      * Rounds the given double.
      *
      * @param value  value tobe rounded
