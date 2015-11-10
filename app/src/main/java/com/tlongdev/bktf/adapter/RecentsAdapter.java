@@ -97,6 +97,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
 
             //Set the item icon
             Picasso picasso = Picasso.with(mContext);
+            picasso.setLoggingEnabled(true);
             picasso.setIndicatorsEnabled(true);
             picasso.load(item.getIconUrl(mContext)).into(holder.icon);
 

@@ -308,6 +308,7 @@ public class ItemDetailActivity extends Activity {
 
                 //Set the icon and the background
                 Picasso picasso = Picasso.with(this);
+                picasso.setLoggingEnabled(true);
                 picasso.setIndicatorsEnabled(true);
                 picasso.load(item.getIconUrl(this)).into(icon);
 
