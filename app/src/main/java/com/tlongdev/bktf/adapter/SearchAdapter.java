@@ -3,7 +3,7 @@ package com.tlongdev.bktf.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,8 +106,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                         //The name
                         holder.name.setText(mDataSet.getString(SearchActivity.COLUMN_NAME));
                         //The avatar of the user
-                        holder.icon.setImageDrawable(Drawable.
-                                createFromPath(mContext.getFilesDir().toString() + "/avatar_search.png"));
+                        String path = PreferenceManager.getDefaultSharedPreferences(mContext).
+                                getString(mContext.getString(R.string.pref_search_avatar_url), "");
+
+                        if (!path.equals("")) {
+                            Picasso picasso = Picasso.with(mContext);
+                            picasso.setLoggingEnabled(true);
+                            picasso.setIndicatorsEnabled(true);
+                            picasso.load(path).into(holder.icon);
+                        }
                     }
                     break;
                 //Lading view, searching for the user
