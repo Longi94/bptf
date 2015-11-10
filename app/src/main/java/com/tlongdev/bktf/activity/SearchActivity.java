@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -33,7 +34,6 @@ import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import org.json.JSONException;
 
 import java.io.BufferedReader;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -241,11 +241,6 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         private final String KEY_STEAM_ID = "steamids";
 
         /**
-         * Bitmap for the user avatar
-         */
-        private Bitmap bmp;
-
-        /**
          * The context
          */
         private Context mContext;
@@ -343,15 +338,10 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                         if (buffer.length() > 0) {
                             jsonString = userData[2] = buffer.toString();
                             userData[0] = Utility.parseUserNameFromJson(jsonString);
-                            bmp = getBitmapFromURL(Utility.parseAvatarUrlFromJson(jsonString));
+                            PreferenceManager.getDefaultSharedPreferences(mContext).edit()
+                                    .putString(mContext.getString(R.string.pref_search_avatar_url),
+                                            Utility.parseAvatarUrlFromJson(jsonString)).apply();
                         }
-
-                        if (bmp != null) {
-                            FileOutputStream fos = mContext.openFileOutput("avatar_search.png", Context.MODE_PRIVATE);
-                            bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                            fos.close();
-                        }
-
                     }
                 }
             } catch (IOException | JSONException e) {

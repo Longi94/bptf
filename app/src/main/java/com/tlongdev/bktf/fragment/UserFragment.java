@@ -1,14 +1,10 @@
 package com.tlongdev.bktf.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
@@ -28,19 +24,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.activity.UserBackpackActivity;
 import com.tlongdev.bktf.network.GetUserInfo;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 /**
  * Fragment for displaying the user profile.
@@ -296,10 +286,13 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         //Download avatar if needed.
         if (prefs.contains(getString(R.string.pref_new_avatar)) &&
                 Utility.isNetworkAvailable(getActivity())) {
-            //Start downloading the avatar in the background
-            new AvatarDownLoader(PreferenceManager.getDefaultSharedPreferences(getActivity()).
-                    getString(getString(R.string.pref_player_avatar_url), ""), getActivity()).
-                    execute();
+
+            Picasso picasso = Picasso.with(getActivity());
+            picasso.setLoggingEnabled(true);
+            picasso.setIndicatorsEnabled(true);
+            picasso.load(PreferenceManager.getDefaultSharedPreferences(getActivity()).
+                    getString(getString(R.string.pref_player_avatar_url), "")).into(avatar);
+
         }
 
         //Set the player name
@@ -505,123 +498,5 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void expandToolbar() {
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
         behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
-    }
-
-    /**
-     * Asynctask for downloading the avatar in the background.
-     */
-    private class AvatarDownLoader extends AsyncTask<Void, Void, Void> {
-
-        //The url of the avatar
-        private String url;
-
-        //The context the task was launched in
-        private Context mContext;
-
-        //Bitmap to store the image
-        private Bitmap bmp;
-
-        //Drawable for the avatar
-        private Drawable d;
-
-        //Error message to be shown to the user
-        private String errorMessage;
-
-        /**
-         * Constructor.
-         *
-         * @param url     url link for the avatar
-         * @param context the context the task was launched in
-         */
-        private AvatarDownLoader(String url, Context context) {
-            this.url = url;
-            this.mContext = context;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            //Check again if we really need to download the image
-            if (PreferenceManager.getDefaultSharedPreferences(mContext).
-                    getBoolean(mContext.getString(R.string.pref_new_avatar), false)) {
-
-                //Get the image
-                bmp = getBitmapFromURL(url);
-
-                try {
-                    //Save avatar as png into the private data folder
-                    FileOutputStream fos = mContext.openFileOutput("avatar.png",
-                            Context.MODE_PRIVATE);
-                    bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                    fos.close();
-                } catch (IOException e) {
-                    //IO error, shouldn't reach
-                    errorMessage = e.getMessage();
-                    publishProgress();
-                        e.printStackTrace();
-                }
-            }
-            return null;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            //There was an error, notify the user
-            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
-        }
-
-        /**
-         * Method to download the image.
-         *
-         * @param link the link to download the image from
-         * @return the bitmap object containing the image
-         */
-        public Bitmap getBitmapFromURL(String link) {
-
-            try {
-                //Open connection
-                URL url = new URL(link);
-                HttpURLConnection connection = (HttpURLConnection) url
-                        .openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-
-                //Get the input stream
-                InputStream input = connection.getInputStream();
-
-                //Decode the image
-                return BitmapFactory.decodeStream(input);
-
-            } catch (IOException e) {
-                //There was an error, notify the user
-                errorMessage = e.getMessage();
-                publishProgress();
-                    e.printStackTrace();
-                return null;
-            }
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            if (isAdded()) {
-                //Get the avatar from the private data folder and set it to the image view
-                File path = mContext.getFilesDir();
-                d = Drawable.createFromPath(path.toString() + "/avatar.png");
-                avatar.setImageDrawable(d);
-
-                //Save to preferences that we don't need to download the avatar again.
-                PreferenceManager.getDefaultSharedPreferences(mContext).edit().putBoolean(
-                        mContext.getString(R.string.pref_new_avatar), false).apply();
-            }
-        }
     }
 }
