@@ -176,6 +176,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                         holder.root.setCardBackgroundColor(item.getColor(mContext, true));
 
                         Picasso picasso = Picasso.with(mContext);
+                        picasso.setLoggingEnabled(true);
                         picasso.setIndicatorsEnabled(true);
                         picasso.load(item.getIconUrl(mContext)).into(holder.icon);
 

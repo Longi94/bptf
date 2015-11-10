@@ -98,6 +98,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
             double rawKeyPrice = Utility.getDouble(prefs, mContext.getString(R.string.pref_key_raw), 1);
 
             Picasso picasso = Picasso.with(mContext);
+            picasso.setLoggingEnabled(true);
             picasso.setIndicatorsEnabled(true);
 
             switch (type) {

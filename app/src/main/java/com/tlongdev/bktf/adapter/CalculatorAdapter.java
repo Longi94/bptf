@@ -145,6 +145,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                 int count = ids.get(position).getY();
 
                 Picasso picasso = Picasso.with(mContext);
+                picasso.setLoggingEnabled(true);
                 picasso.setIndicatorsEnabled(true);
                 picasso.load(item.getIconUrl(mContext)).into(holder.icon);
 
