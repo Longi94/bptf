@@ -400,5 +400,6 @@
     <string name="message_item_schema_create">Creating item schema database...</string>
     <string name="pref_last_item_schema_update">pref_last_item_schema_update</string>
     <string name="pref_search_avatar_url">pref_search_avatar_url</string>
+    <string name="title_user">User Profile</string>
 
 </resources>

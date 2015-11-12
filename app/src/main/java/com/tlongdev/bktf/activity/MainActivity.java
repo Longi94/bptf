@@ -88,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView name;
     private TextView backpack;
     private ImageView avatar;
-    private View navigationHeader;
     private View headerLayout;
 
     /**
@@ -100,19 +99,6 @@ public class MainActivity extends AppCompatActivity {
             //Close the drawers and handle item clicks
             mDrawerLayout.closeDrawers();
             switch (menuItem.getItemId()) {
-                // TODO: 2015. 10. 25. fragment selections in the navigation view is incorrect when selecting the user fragment
-                case R.id.nav_recents:
-                    switchFragment(0);
-                    break;
-                case R.id.nav_unusuals:
-                    switchFragment(1);
-                    break;
-                case R.id.nav_converter:
-                    switchFragment(2);
-                    break;
-                case R.id.nav_calculator:
-                    switchFragment(3);
-                    break;
                 case R.id.nav_settings:
                     Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivityForResult(settingsIntent, REQUEST_SETTINGS);
@@ -127,18 +113,11 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                     break;
+                default:
+                    switchFragment(menuItem.getItemId());
+                    break;
             }
             return true;
-        }
-    };
-
-    /**
-     * On click listener for the navigation header view.
-     */
-    private View.OnClickListener headerListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switchFragment(-1);
         }
     };
 
@@ -162,8 +141,7 @@ public class MainActivity extends AppCompatActivity {
         mNavigationView.setNavigationItemSelectedListener(navigationListener);
 
         //User clicked on the header
-        navigationHeader = mNavigationView.inflateHeaderView(R.layout.navigation_drawer_header);
-        navigationHeader.setOnClickListener(headerListener);
+        View navigationHeader = mNavigationView.inflateHeaderView(R.layout.navigation_drawer_header);
 
         //Find the views of the navigation drawer header
         name = (TextView) navigationHeader.findViewById(R.id.user_name);
@@ -270,28 +248,28 @@ public class MainActivity extends AppCompatActivity {
 
         //Initialize fragments and add them is the drawer listener
         switch (position) {
-            case -1:
+            case R.id.nav_user:
                 newFragment = new UserFragment();
                 drawerListener = (UserFragment) newFragment;
                 break;
-            case 0:
+            case R.id.nav_recents:
                 newFragment = new RecentsFragment();
                 drawerListener = (RecentsFragment) newFragment;
                 break;
-            case 1:
+            case R.id.nav_unusuals:
                 newFragment = new UnusualFragment();
                 drawerListener = (UnusualFragment) newFragment;
                 break;
-            case 2:
+            case R.id.nav_converter:
                 newFragment = new ConverterFragment();
                 drawerListener = null;
                 break;
-            case 3:
+            case R.id.nav_calculator:
                 newFragment = new CalculatorFragment();
                 drawerListener = (CalculatorFragment) newFragment;
                 break;
             default:
-                return;
+                throw new IllegalArgumentException("unknown fragment to switch to");
         }
 
         //Commit the transaction
@@ -327,7 +305,6 @@ public class MainActivity extends AppCompatActivity {
                         getString(getString(R.string.pref_player_avatar_url), "")).into(avatar);
 
             }
-            navigationHeader.setOnClickListener(headerListener);
             headerLayout.setVisibility(View.VISIBLE);
         } else {
             // TODO navigationHeader.setOnClickListener(null); right now the header is not updated
