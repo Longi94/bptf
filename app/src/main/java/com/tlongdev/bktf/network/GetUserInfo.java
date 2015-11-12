@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.util.Profile;
 import com.tlongdev.bktf.util.Utility;
 
 import org.json.JSONArray;
@@ -102,10 +103,10 @@ public class GetUserInfo extends AsyncTask<String, Void, Void> implements
                     mContext.getString(R.string.steam_get_player_summaries_url);
 
             //Check if there is a resolve steamId saved
-            steamId = Utility.getResolvedSteamId(mContext);
+            steamId = Profile.getResolvedSteamId(mContext);
             if (steamId == null || steamId.equals("")) {
                 //There is no resolved steam id saved
-                steamId = Utility.getSteamId(mContext);
+                steamId = Profile.getSteamId(mContext);
                 if (steamId == null) {
                     //There is no steam id saved
                     errorMessage = mContext.getString(R.string.error_no_steam_id);
