@@ -99,6 +99,22 @@ public class MainActivity extends AppCompatActivity {
             //Close the drawers and handle item clicks
             mDrawerLayout.closeDrawers();
             switch (menuItem.getItemId()) {
+                // TODO: 2015. 10. 25. fragment selections in the navigation view is incorrect when selecting the user fragment
+                case R.id.nav_recents:
+                    switchFragment(0);
+                    break;
+                case R.id.nav_unusuals:
+                    switchFragment(1);
+                    break;
+                case R.id.nav_user:
+                    switchFragment(2);
+                    break;
+                case R.id.nav_converter:
+                    switchFragment(3);
+                    break;
+                case R.id.nav_calculator:
+                    switchFragment(4);
+                    break;
                 case R.id.nav_settings:
                     Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivityForResult(settingsIntent, REQUEST_SETTINGS);
@@ -112,9 +128,6 @@ public class MainActivity extends AppCompatActivity {
                     if (intent.resolveActivity(getPackageManager()) != null) {
                         startActivity(intent);
                     }
-                    break;
-                default:
-                    switchFragment(menuItem.getItemId());
                     break;
             }
             return true;
@@ -248,28 +261,28 @@ public class MainActivity extends AppCompatActivity {
 
         //Initialize fragments and add them is the drawer listener
         switch (position) {
-            case R.id.nav_user:
-                newFragment = new UserFragment();
-                drawerListener = (UserFragment) newFragment;
-                break;
-            case R.id.nav_recents:
+            case 0:
                 newFragment = new RecentsFragment();
                 drawerListener = (RecentsFragment) newFragment;
                 break;
-            case R.id.nav_unusuals:
+            case 1:
                 newFragment = new UnusualFragment();
                 drawerListener = (UnusualFragment) newFragment;
                 break;
-            case R.id.nav_converter:
+            case 2:
+                newFragment = new UserFragment();
+                drawerListener = (UserFragment) newFragment;
+                break;
+            case 3:
                 newFragment = new ConverterFragment();
                 drawerListener = null;
                 break;
-            case R.id.nav_calculator:
+            case 4:
                 newFragment = new CalculatorFragment();
                 drawerListener = (CalculatorFragment) newFragment;
                 break;
             default:
-                throw new IllegalArgumentException("unknown fragment to switch to");
+                throw new IllegalArgumentException("unknown fragment to switch to: " + position);
         }
 
         //Commit the transaction
