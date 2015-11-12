@@ -15,6 +15,7 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.util.Profile;
 import com.tlongdev.bktf.util.Utility;
 
 import org.json.JSONException;
@@ -176,7 +177,7 @@ public class NotificationsService extends Service {
                 final String KEY_COMPRESS = "compress";
 
                 //Get the resolved steamid
-                String steamId = Utility.getResolvedSteamId(mContext);
+                String steamId = Profile.getResolvedSteamId(mContext);
 
                 if (steamId == null) {
                     //Thre is no resolved steamid, no ontifications
