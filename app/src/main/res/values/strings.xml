@@ -397,9 +397,12 @@
     <string name="notification_unread_title" formatted="false" translatable="true">%d unread notifications on bp.tf</string>
     <string name="notification_unread_description" translatable="true">Tap to open in browser.</string>
     <string name="title_converter">Converter</string>
-    <string name="message_item_schema_create">Creating item schema database...</string>
+    <string name="message_item_schema_create">Creating item schema database…</string>
     <string name="pref_last_item_schema_update">pref_last_item_schema_update</string>
     <string name="pref_search_avatar_url">pref_search_avatar_url</string>
     <string name="title_user">User Profile</string>
+    <string name="title_activity_login">Login</string>
+    <string name="login_steam_id"><u>What is my steam ID?</u></string>
+    <string name="pref_key_login">pref_key_login</string>
 
 </resources>
