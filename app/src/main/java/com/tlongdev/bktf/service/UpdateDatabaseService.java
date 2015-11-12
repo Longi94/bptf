@@ -8,7 +8,7 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.network.GetPriceList;
 
 /**

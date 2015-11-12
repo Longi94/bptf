@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 
 import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.service.NotificationsService;
 import com.tlongdev.bktf.service.UpdateDatabaseService;
 

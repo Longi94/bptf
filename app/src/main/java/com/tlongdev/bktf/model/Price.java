@@ -6,7 +6,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.util.Utility;
 
 import java.text.DecimalFormat;
 

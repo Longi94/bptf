@@ -13,7 +13,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;

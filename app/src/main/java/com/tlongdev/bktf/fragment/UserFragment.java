@@ -26,7 +26,7 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.activity.UserBackpackActivity;

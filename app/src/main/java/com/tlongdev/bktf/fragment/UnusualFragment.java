@@ -21,7 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.adapter.UnusualAdapter;

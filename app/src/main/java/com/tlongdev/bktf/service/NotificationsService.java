@@ -15,7 +15,7 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.util.Utility;
 
 import org.json.JSONException;
 import org.json.JSONObject;
