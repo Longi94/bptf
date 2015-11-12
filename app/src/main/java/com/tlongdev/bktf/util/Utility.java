@@ -1,4 +1,4 @@
-package com.tlongdev.bktf;
+package com.tlongdev.bktf.util;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -7,8 +7,8 @@ import android.content.res.ColorStateList;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
-import android.preference.PreferenceManager;
 
+import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Price;
@@ -53,34 +53,6 @@ public class Utility {
             //noinspection deprecation
             return context.getResources().getColor(id);
         }
-    }
-
-    /**
-     * Convenient method for getting the steamId (or vanity user name) of the user.
-     *
-     * @param context context for getting the shared preferences
-     * @return user's steam id
-     */
-    public static String getSteamId(Context context) {
-        //get the steamID from shared preferences if present
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String steamId = prefs.getString(context.getString(R.string.pref_steam_id), null);
-        //if steamId is null, steamId.equals will crash
-        if (steamId != null && steamId.equals("")) {
-            return null;
-        }
-        return steamId;
-    }
-
-    /**
-     * Convenient method for getting the resolved steamId of the user.
-     *
-     * @param context context for getting the shared preferences
-     * @return user's resolved steam id
-     */
-    public static String getResolvedSteamId(Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getString(context.getString(R.string.pref_resolved_steam_id), null);
     }
 
     /**

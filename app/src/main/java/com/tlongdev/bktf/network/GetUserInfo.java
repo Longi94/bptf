@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.util.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;

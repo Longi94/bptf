@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.Utility;
+import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.activity.UnusualActivity;
 import com.tlongdev.bktf.fragment.UnusualFragment;
 import com.tlongdev.bktf.model.Currency;
