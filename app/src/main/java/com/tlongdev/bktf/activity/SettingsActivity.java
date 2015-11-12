@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 
 import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.util.Profile;
 import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.service.NotificationsService;
 import com.tlongdev.bktf.service.UpdateDatabaseService;
@@ -152,6 +153,23 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         // to reflect the new value, per the Android Design guidelines.
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_notification_interval)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_sync_interval)));
+
+        Preference login = findPreference(getString(R.string.pref_key_login));
+
+        if (Profile.isSignedIn(this)) {
+            login.setTitle("Log out");
+            login.setSummary(Profile.getSteamId(this));
+        } else {
+            login.setTitle("Log in");
+        }
+
+        login.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                startActivity(new Intent(SettingsActivity.this, LoginActivity.class));
+                return true;
+            }
+        });
 
         findPreference(getString(R.string.pref_title_feedback)).setOnPreferenceClickListener(
                 new Preference.OnPreferenceClickListener() {
