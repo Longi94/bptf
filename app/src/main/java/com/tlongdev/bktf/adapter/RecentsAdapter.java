@@ -101,6 +101,8 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
 
             if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
                 picasso.load(item.getEffectUrl(mContext)).into(holder.effect);
+            } else {
+                holder.effect.setImageDrawable(null);
             }
 
             try {

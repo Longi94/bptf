@@ -182,6 +182,8 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
 
                         if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
                             picasso.load(item.getEffectUrl(mContext)).into(holder.effect);
+                        } else {
+                            holder.effect.setImageDrawable(null);
                         }
 
                         //Load the image on a background thread to avoid hiccups
