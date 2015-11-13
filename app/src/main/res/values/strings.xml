@@ -12,7 +12,6 @@
     <string name="pref_buds_diff" translatable="false">pref_buds_diff_v2</string>
     <string name="pref_buds_price" translatable="false">pref_buds_price</string>
     <string name="pref_buds_raw" translatable="false">pref_buds_raw_v2</string>
-    <string name="pref_debug" translatable="false">pref_debug</string>
     <string name="pref_initial_load" translatable="false">initial_load</string>
     <string name="pref_key_diff" translatable="false">pref_key_diff_v2</string>
     <string name="pref_key_price" translatable="false">pref_key_price</string>
@@ -83,7 +82,6 @@
     <string name="pref_summary_developer" translatable="false">Long Tran</string>
     <string name="pref_category_about" translatable="true">About</string>
     <string name="pref_category_account" translatable="true">Account</string>
-    <string name="pref_category_dev" translatable="true">Developer</string>
     <string name="pref_category_notification" translatable="true">Notifications</string>
     <string name="pref_category_sync" translatable="true">Syncing</string>
     <string name="pref_hint_steam_id" translatable="true">Steam ID</string>
@@ -96,7 +94,6 @@
     <string name="pref_title_background_sync" translatable="true">Sync in the background</string>
     <string name="pref_title_changelog" translatable="true">Changelogs</string>
     <string name="pref_title_credits" translatable="true">Credits</string>
-    <string name="pref_title_debug_logs" translatable="true">Enable debug logs</string>
     <string name="pref_title_developer" translatable="true">Developer</string>
     <string name="pref_title_feedback" translatable="true">Send feedback or bug report</string>
     <string name="pref_title_jackson" translatable="true">Jackson JSON Processor</string>
