@@ -75,7 +75,7 @@
             android:id="@+id/image_view_delete"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/simple_selector_white"
+            android:foreground="?attr/selectableItemBackground"
             android:contentDescription="@string/description_delete"
             android:padding="8dp"
             android:src="@drawable/ic_delete_white_24dp" />

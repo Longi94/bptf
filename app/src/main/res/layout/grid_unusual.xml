@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
-    android:foreground="@drawable/simple_selector_white"
+    android:foreground="?attr/selectableItemBackground"
     card_view:cardBackgroundColor="@color/card_color">
 
     <LinearLayout

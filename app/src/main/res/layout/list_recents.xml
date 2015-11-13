@@ -7,7 +7,7 @@
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
     android:layout_marginTop="4dp"
-    android:foreground="@drawable/simple_selector_white"
+    android:foreground="?android:attr/selectableItemBackground"
     card_view:cardBackgroundColor="@color/card_color">
 
     <LinearLayout

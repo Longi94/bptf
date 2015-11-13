@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="1.5dp"
-    android:foreground="@drawable/simple_selector_white"
+    android:foreground="?attr/selectableItemBackground"
     card_view:cardBackgroundColor="@color/card_color">
 
     <com.tlongdev.bktf.view.RatioHeightImageView

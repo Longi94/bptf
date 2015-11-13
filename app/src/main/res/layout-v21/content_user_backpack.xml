@@ -23,7 +23,7 @@
             android:id="@+id/backpack"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:background="?android:attr/selectableItemBackground"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:padding="16dp"
             android:src="@drawable/ic_arrow_forward_white_24dp"
             android:tint="@color/accent" />
