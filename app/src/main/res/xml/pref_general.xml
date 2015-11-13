@@ -71,9 +71,15 @@
 
         </PreferenceScreen>
 
-        <Preference
+        <PreferenceScreen
             android:key="@string/pref_title_changelog"
-            android:title="@string/pref_title_changelog" />
+            android:title="@string/pref_title_changelog" >
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/Longi94/bptf/releases" />
+
+        </PreferenceScreen>
 
         <Preference
             android:key="@string/pref_title_feedback"

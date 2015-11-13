@@ -206,17 +206,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
                     }
                 });
 
-        findPreference(getString(R.string.pref_title_changelog)).setOnPreferenceClickListener(
-                new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        //Open the GitHub changelog page in the browser
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
-                                getString(R.string.link_github_help))));
-                        return true;
-                    }
-                });
-
         //Set the version name to the summary, so I don't have to change it manually every goddamn
         //update
         findPreference(getString(R.string.pref_title_version)).setSummary(BuildConfig.VERSION_NAME);
