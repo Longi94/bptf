@@ -419,6 +419,6 @@
     <string name="header_page" formatted="false" translatable="true">Page %d</string>
     <string name="notification_unread_title" formatted="false" translatable="true">%d unread notifications on bp.tf</string>
     <string name="notification_unread_description" translatable="true">Tap to open in browser.</string>
-    <string name="pref_promo">pref_promo</string>
+    <string name="pref_promo">pref_promo_v2</string>
 
 </resources>
