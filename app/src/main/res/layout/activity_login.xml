@@ -39,11 +39,12 @@
         android:textSize="16sp" />
 
     <android.support.design.widget.TextInputLayout
-        android:layout_margin="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp">
 
         <EditText
+            android:id="@+id/steam_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="steam ID"
@@ -53,6 +54,7 @@
     </android.support.design.widget.TextInputLayout>
 
     <Button
+        android:id="@+id/enter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="ENTER" />
@@ -61,5 +63,6 @@
         android:id="@+id/what_is_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="@string/login_steam_id" />
 </LinearLayout>

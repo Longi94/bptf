@@ -32,6 +32,7 @@ import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.activity.UserBackpackActivity;
 import com.tlongdev.bktf.network.GetUserBackpack;
 import com.tlongdev.bktf.network.GetUserInfo;
+import com.tlongdev.bktf.util.Profile;
 import com.tlongdev.bktf.util.Utility;
 
 /**
@@ -162,7 +163,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             //Start the task and listne for the end
             GetUserInfo task = new GetUserInfo(getActivity(), false);
             task.registerFetchUserInfoListener(this);
-            task.execute();
+            task.execute(Profile.getSteamId(getActivity()), Profile.getResolvedSteamId(getActivity()));
 
             //Workaround for the circle not appearing
             mSwipeRefreshLayout.post(new Runnable() {
@@ -184,7 +185,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             //Start fetching the data and listen for the end
             GetUserInfo fetchTask = new GetUserInfo(getActivity(), true);
             fetchTask.registerFetchUserInfoListener(this);
-            fetchTask.execute();
+            fetchTask.execute(Profile.getSteamId(getActivity()), Profile.getResolvedSteamId(getActivity()));
         } else {
             //There is no internet connection, notify the user
             Toast.makeText(getActivity(), "bptf: " + getString(R.string.error_no_network),
@@ -561,7 +562,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             mSwipeRefreshLayout.setRefreshing(false);
         }
 
-        Toast.makeText(getActivity(), "failed", Toast.LENGTH_SHORT);
+        Toast.makeText(getActivity(), "failed", Toast.LENGTH_SHORT).show();
     }
 
     /**

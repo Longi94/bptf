@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.util.Profile;
 import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.fragment.CalculatorFragment;
 import com.tlongdev.bktf.fragment.ConverterFragment;
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Variables used for managing fragments.
      */
-    private boolean restartUserFragment = false;
+    private boolean userStateChanged = false;
 
     /**
      * Listener to be notified when the drawer opens. Mainly for fragments with toolbars so we can
@@ -185,12 +186,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         //If needed (mostly when the steamId was changed) reload a new instance of the UserFragment
-        if (restartUserFragment) {
+        if (userStateChanged) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, new UserFragment())
-                    .commit();
-            restartUserFragment = false;
+            if (Profile.isSignedIn(this)) {
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, new UserFragment())
+                        .commit();
+            } else {
+                mCurrentSelectedPosition = 0;
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, new RecentsFragment())
+                        .commit();
+            }
+            userStateChanged = false;
         }
         updateHeader();
         super.onResume();
@@ -208,10 +216,10 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_SETTINGS) {
             //User returned from the settings activity
             if (resultCode == RESULT_OK) {
-                if (mCurrentSelectedPosition == -1) {
-                    if (data != null && data.getBooleanExtra("preference_changed", false)) {
+                if (mCurrentSelectedPosition == 2) {
+                    if (data != null && data.getBooleanExtra("login_changed", false)) {
                         //User fragment needs to be reloaded if the steamId was changed
-                        restartUserFragment = true;
+                        userStateChanged = true;
                     }
                 }
             }
