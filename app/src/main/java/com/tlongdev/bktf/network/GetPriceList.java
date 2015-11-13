@@ -482,7 +482,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
     }
 
     /**
-     * Listener interface for listening for the end of the fetch.
+     * Listener interface
      */
     public interface OnPriceListListener {
 

@@ -21,8 +21,8 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.network.GetUserBackpack;
+import com.tlongdev.bktf.util.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,7 +39,7 @@ import java.net.URL;
  * Profile page activity.
  */
 public class UserActivity extends AppCompatActivity implements View.OnClickListener,
-        GetUserBackpack.OnFetchUserBackpackListener {
+        GetUserBackpack.OnUserBackpackListener {
 
     /**
      * Log tag for logging.
@@ -97,10 +97,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     private long profileCreated = -1;
     private String playerNameString = "";
 
-    //Booleans to indicate whether that task are running or not
-    private boolean backpackFetching = false;
-    private boolean userFetching = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,14 +123,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         Log.d(LOG_TAG, "steamID: " + steamId);
 
         //Start downloading remaining info if the user.
-        new FetchUserInfoTask().execute(i.getStringExtra(JSON_USER_SUMMARIES_KEY));
-        GetUserBackpack fetchTask = new GetUserBackpack(this);
-        fetchTask.registerOnFetchUserBackpackListener(this);
-        fetchTask.execute(steamId);
-
-        //Indicate that the tasks have started
-        backpackFetching = true;
-        userFetching = true;
+        new DownloadUserInfoTask().execute(i.getStringExtra(JSON_USER_SUMMARIES_KEY));
 
         //Find all the views
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
@@ -220,20 +209,15 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onFetchFinished(int rawKeys, double rawMetal, int backpackSlots, int itemNumber) {
+    public void onUserBackpackFinished(int rawKeys, double rawMetal, int backpackSlots, int itemNumber) {
         //Store all the data
         this.rawKeys = rawKeys;
         this.rawMetal = rawMetal;
         this.backpackSlotNumber = backpackSlots;
         this.itemNumber = itemNumber;
 
-        //Backpack fetching finished
-        backpackFetching = false;
-
         //Update the UI if both tasks have stopped
-        if (!userFetching) {
-            updateUI();
-        }
+        updateUI();
     }
 
     @Override
@@ -245,16 +229,16 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         itemNumber = -1;
         backpackValue = -1;
 
-        //Backpack fetshing finished
-        backpackFetching = false;
-
         //Backpack is private
         privateBackpack = true;
 
         //Update the UI if both tasks have stopped
-        if (!userFetching) {
-            updateUI();
-        }
+        updateUI();
+    }
+
+    @Override
+    public void onUserBackpackFailed(String errorMessage) {
+
     }
 
     /**
@@ -524,9 +508,9 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * Task the retrieves all the necessary user data in the background.
      */
-    private class FetchUserInfoTask extends AsyncTask<String, String, Void> {
+    private class DownloadUserInfoTask extends AsyncTask<String, String, Void> {
 
-        public final String LOG_TAG = FetchUserInfoTask.class.getSimpleName();
+        public final String LOG_TAG = DownloadUserInfoTask.class.getSimpleName();
 
         /**
          * {@inheritDoc}
@@ -554,7 +538,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                         .appendQueryParameter(KEY_COMPRESS, "1")
                         .build();
 
-                    Log.d(LOG_TAG, "Built uri: " + uri.toString());
+                Log.d(LOG_TAG, "Built uri: " + uri.toString());
 
                 URL url = new URL(uri.toString());
 
@@ -592,12 +576,12 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 //There was a network error
                 //TODO distinguish all network errors: timeout, connection refused, api down, etc.
                 publishProgress(getString(R.string.error_network));
-                    e.printStackTrace();
+                e.printStackTrace();
                 return null;
             } catch (JSONException e) {
                 //JSON was improperly formatted, pls no
                 publishProgress(getString(R.string.error_data_parse));
-                    e.printStackTrace();
+                e.printStackTrace();
                 return null;
             } finally {
 
@@ -629,10 +613,9 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            userFetching = false;
-            //Populate the UI with the new data
-            if (!backpackFetching)
-                updateUI();
+            GetUserBackpack fetchTask = new GetUserBackpack(UserActivity.this);
+            fetchTask.registerOnFetchUserBackpackListener(UserActivity.this);
+            fetchTask.execute(steamId);
         }
     }
 }

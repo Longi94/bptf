@@ -1,5 +1,6 @@
 package com.tlongdev.bktf.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
@@ -26,18 +27,19 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.activity.UserBackpackActivity;
+import com.tlongdev.bktf.network.GetUserBackpack;
 import com.tlongdev.bktf.network.GetUserInfo;
+import com.tlongdev.bktf.util.Utility;
 
 /**
  * Fragment for displaying the user profile.
  */
 public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
-        View.OnClickListener, GetUserInfo.OnFetchUserInfoListener, MainActivity.OnDrawerOpenedListener,
-        AppBarLayout.OnOffsetChangedListener {
+        View.OnClickListener, GetUserInfo.OnUserInfoListener, MainActivity.OnDrawerOpenedListener,
+        AppBarLayout.OnOffsetChangedListener, GetUserBackpack.OnUserBackpackListener {
 
     /**
      * Log tag for logging.
@@ -64,9 +66,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     //Swipe refresh layout for refreshing the user data manually
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
-    //The task for fetching user info
-    private GetUserInfo fetchTask;
 
     //Stores whether the backpack is private or not
     private boolean privateBackpack = false;
@@ -161,9 +160,9 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 .getLong(getString(R.string.pref_last_user_data_update), 0) >= 3600000L) {
 
             //Start the task and listne for the end
-            fetchTask = new GetUserInfo(getActivity(), false);
-            fetchTask.registerFetchUserInfoListener(this);
-            fetchTask.execute();
+            GetUserInfo task = new GetUserInfo(getActivity(), false);
+            task.registerFetchUserInfoListener(this);
+            task.execute();
 
             //Workaround for the circle not appearing
             mSwipeRefreshLayout.post(new Runnable() {
@@ -183,7 +182,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onRefresh() {
         if (Utility.isNetworkAvailable(getActivity())) {
             //Start fetching the data and listen for the end
-            fetchTask = new GetUserInfo(getActivity(), true);
+            GetUserInfo fetchTask = new GetUserInfo(getActivity(), true);
             fetchTask.registerFetchUserInfoListener(this);
             fetchTask.execute();
         } else {
@@ -462,19 +461,28 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             backpackSlots.setText("?/?");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void onFetchFinished(boolean privateBackpack) {
-        this.privateBackpack = privateBackpack;
+    public void onUserInfoFinished(String steamId) {
+
+        //Save the update time
+        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
+                .putLong(getActivity().getString(R.string.pref_last_user_data_update),
+                        System.currentTimeMillis()).apply();
+
+        GetUserBackpack task = new GetUserBackpack(getActivity());
+        task.registerOnFetchUserBackpackListener(this);
+        task.execute(steamId);
+    }
+
+    @Override
+    public void onUserInfoFailed(String errorMessage) {
         //Stop the refreshing animation and update the UI
         if (isAdded()) {
             updateUserPage();
             mSwipeRefreshLayout.setRefreshing(false);
         }
 
-        ((MainActivity) getActivity()).updateHeader();
+        Toast.makeText(getActivity(), "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -492,6 +500,70 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         expandToolbar();
     }
 
+    @Override
+    public void onUserBackpackFinished(int rawKeys, double rawMetal, int backpackSlots, int itemNumber) {
+
+        Context context = getActivity();
+
+        //Start editing the preferences
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        //Save all the data passed
+        editor.putInt(context.getString(R.string.pref_user_slots), backpackSlots);
+        editor.putInt(context.getString(R.string.pref_user_items), itemNumber);
+        editor.putInt(context.getString(R.string.pref_user_raw_key), rawKeys);
+        Utility.putDouble(editor, context.getString(R.string.pref_user_raw_metal), rawMetal);
+        editor.apply();
+
+        privateBackpack = false;
+        //Stop the refreshing animation and update the UI
+        if (isAdded()) {
+            updateUserPage();
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+
+        ((MainActivity) getActivity()).updateHeader();
+    }
+
+    @Override
+    public void onPrivateBackpack() {
+
+        Context context = getActivity();
+
+        //Start editing the preferences
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        //Save all data that represent a private backpack
+        editor.putInt(context.getString(R.string.pref_user_slots), -1);
+        editor.putInt(context.getString(R.string.pref_user_items), -1);
+        editor.putInt(context.getString(R.string.pref_user_raw_key), -1);
+        Utility.putDouble(editor, context.getString(R.string.pref_user_raw_metal), -1);
+        Utility.putDouble(editor, context.getString(R.string.pref_player_backpack_value_tf2), -1);
+        editor.apply();
+
+        privateBackpack = true;
+        //Stop the refreshing animation and update the UI
+        if (isAdded()) {
+            updateUserPage();
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+
+        ((MainActivity) getActivity()).updateHeader();
+    }
+
+    @Override
+    public void onUserBackpackFailed(String errorMessage) {
+        //Stop the refreshing animation and update the UI
+        if (isAdded()) {
+            updateUserPage();
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+
+        Toast.makeText(getActivity(), "failed", Toast.LENGTH_SHORT);
+    }
+
     /**
      * Fully expand the toolbar with animation.
      */
@@ -499,4 +571,5 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
         behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
     }
+
 }
