@@ -186,6 +186,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
                 //Show the progress dialog
                 loadingDialog = ProgressDialog.show(getActivity(), null, "Downloading prices...", true);
+                loadingDialog.setCancelable(false);
             } else {
                 //Quit the app if the download failed.
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -314,6 +315,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
             loadingDialog.dismiss();
 
             loadingDialog = ProgressDialog.show(getActivity(), null, "Downloading item schema...", true);
+            loadingDialog.setCancelable(false);
 
             GetItemSchema task = new GetItemSchema(getActivity());
             task.setListener(this);
@@ -360,6 +362,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                 loadingDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 loadingDialog.setMessage(getActivity().getString(R.string.message_database_create));
                 loadingDialog.setMax(max);
+                loadingDialog.setCancelable(false);
                 loadingDialog.show();
             } else {
                 loadingDialog.incrementProgressBy(1);
@@ -369,8 +372,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onPriceListFailed(String errorMessage) {
-        if (loadingDialog != null) {
-            loadingDialog.dismiss();
+        if (loadingDialog != null && loadingDialog.isShowing()) {
 
             AlertDialog.Builder builder;
             AlertDialog alertDialog;
@@ -394,7 +396,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onItemSchemaFinished() {
-        if (loadingDialog != null) {
+        if (loadingDialog != null && loadingDialog.isShowing()) {
             loadingDialog.dismiss();
             loadingDialog = null;
         }
@@ -424,6 +426,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                 loadingDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 loadingDialog.setMessage(getActivity().getString(R.string.message_item_schema_create));
                 loadingDialog.setMax(max);
+                loadingDialog.setCancelable(false);
                 loadingDialog.show();
             } else {
                 loadingDialog.incrementProgressBy(1);
@@ -433,8 +436,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onItemSchemaFailed(String errorMessage) {
-        if (loadingDialog != null) {
-            loadingDialog.dismiss();
+        if (loadingDialog != null && loadingDialog.isShowing()) {
 
             AlertDialog.Builder builder;
             AlertDialog alertDialog;
