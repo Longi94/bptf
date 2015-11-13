@@ -18,8 +18,6 @@ import com.tlongdev.bktf.activity.UserActivity;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 
-import java.io.IOException;
-
 /**
  * Adapter for the recycler view in the search activity
  */
@@ -167,14 +165,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     picasso.setLoggingEnabled(true);
                     picasso.setIndicatorsEnabled(true);
                     picasso.load(item.getIconUrl(mContext)).into(holder.icon);
-
-                    //Set the effect icon
-                    try {
-                        holder.effect.setImageDrawable(item.getEffectDrawable(mContext));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        holder.effect.setImageDrawable(null);
-                    }
+                    picasso.load(item.getEffectUrl(mContext)).into(holder.effect);
 
                     try {
                         holder.price.setText(item.getPrice().getFormattedPrice(mContext));

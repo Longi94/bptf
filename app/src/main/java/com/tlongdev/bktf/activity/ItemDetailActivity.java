@@ -310,12 +310,7 @@ public class ItemDetailActivity extends Activity {
                 picasso.setLoggingEnabled(true);
                 picasso.setIndicatorsEnabled(true);
                 picasso.load(item.getIconUrl(this)).into(icon);
-
-                try {
-                    effectView.setImageDrawable(item.getEffectDrawable(this));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                picasso.load(item.getEffectUrl(this)).into(effectView);
 
                 try {
                     InputStream ims;

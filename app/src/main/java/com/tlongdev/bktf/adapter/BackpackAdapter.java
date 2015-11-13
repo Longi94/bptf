@@ -179,13 +179,14 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                         picasso.setLoggingEnabled(true);
                         picasso.setIndicatorsEnabled(true);
                         picasso.load(item.getIconUrl(mContext)).into(holder.icon);
+                        picasso.load(item.getEffectUrl(mContext)).into(holder.effect);
 
                         //Load the image on a background thread to avoid hiccups
                         ImageLoader task = (ImageLoader) holder.icon.getTag();
                         if (task != null) {
                             task.cancel(true);
                         }
-                        task = new ImageLoader(mContext, holder.effect, holder.paint, item, paint);
+                        task = new ImageLoader(mContext, holder.paint, paint);
                         holder.icon.setTag(task);
                         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -330,15 +331,12 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
     /**
      * A task te loads images in the background.
      */
-    private class ImageLoader extends AsyncTask<Void, Void, Drawable[]> {
+    private class ImageLoader extends AsyncTask<Void, Void, Drawable> {
 
         /**
          * Image views to set the images to
          */
-        private ImageView effect;
         private ImageView paintView;
-
-        private Item item;
 
         private int paint;
 
@@ -351,19 +349,16 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
          * Constructor
          *
          * @param context the context
-         * @param effect  the effect of the item
          * @param paint   the pain indicator of the item
          */
-        private ImageLoader(Context context, ImageView effect, ImageView paintView, Item item, int paint) {
+        private ImageLoader(Context context, ImageView paintView, int paint) {
             this.mContext = context;
-            this.effect = effect;
             this.paintView = paintView;
-            this.item = item;
             this.paint = paint;
         }
 
         @Override
-        protected Drawable[] doInBackground(Void... params) {
+        protected Drawable doInBackground(Void... params) {
             //Three drawables will be returned at most
             Drawable[] drawables = new Drawable[3];
 
@@ -371,26 +366,23 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                 InputStream ims;
                 AssetManager assetManager = mContext.getAssets();
 
-                drawables[0] = item.getEffectDrawable(mContext);
-
                 //Get the paint indicator if needed
                 if (BackpackItem.isPaint(paint)) {
                     ims = assetManager.open("paint/" + paint + ".png");
-                    drawables[1] = Drawable.createFromStream(ims, null);
+                    return Drawable.createFromStream(ims, null);
                 }
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            return drawables;
+            return null;
         }
 
         @Override
-        protected void onPostExecute(Drawable[] drawables) {
+        protected void onPostExecute(Drawable drawable) {
             //Set the images
-            effect.setImageDrawable(drawables[0]);
-            paintView.setImageDrawable(drawables[1]);
+            paintView.setImageDrawable(drawable);
         }
     }
 }

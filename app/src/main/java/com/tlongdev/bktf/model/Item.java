@@ -1,19 +1,14 @@
 package com.tlongdev.bktf.model;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.data.DatabaseContract;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
-
-import java.io.IOException;
-import java.io.InputStream;
+import com.tlongdev.bktf.util.Utility;
 
 /**
  * Item class
@@ -609,22 +604,22 @@ public class Item {
     }
 
     /**
-     * Gets the effect of the item from file
+     * Returns the url link for the effect if the item.
      *
      * @param context the context
-     * @return icon drawable
-     * @throws IOException
+     * @return Uri object
      */
-    public Drawable getEffectDrawable(Context context) throws IOException {
-        AssetManager assetManager = context.getAssets();
-        InputStream ims;
+    public Uri getEffectUrl(Context context) {
+        String BASE_URL = "http://tlongdev.com/api/tf2_icon.php";
+        Uri.Builder builder = Uri.parse(BASE_URL).buildUpon()
+                .appendQueryParameter("effect", String.valueOf(priceIndex));
 
-        //Get the icon if the effect if needed
-        if (priceIndex != 0 && canHaveEffects()) {
-            ims = assetManager.open("effects/" + priceIndex + "_188x188.png");
-            return Drawable.createFromStream(ims, null);
-        } else {
-            return null;
+        // TODO: 2015. 11. 09.
+        boolean large = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("dummy", false);
+        if (large) {
+            builder.appendQueryParameter("large", "1");
         }
+
+        return builder.build();
     }
 }
