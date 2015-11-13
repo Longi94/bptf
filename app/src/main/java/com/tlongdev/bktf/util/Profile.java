@@ -50,4 +50,39 @@ public class Profile {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getString(context.getString(R.string.pref_resolved_steam_id), null);
     }
+
+    /**
+     * Deletes data about the user
+     *
+     * @param context the context
+     */
+    public static void logOut(Context context) {
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+
+        editor.remove(context.getString(R.string.pref_steam_id));
+        editor.remove(context.getString(R.string.pref_resolved_steam_id));
+        editor.remove(context.getString(R.string.pref_player_avatar_url));
+        editor.remove(context.getString(R.string.pref_player_name));
+        editor.remove(context.getString(R.string.pref_player_reputation));
+        editor.remove(context.getString(R.string.pref_player_profile_created));
+        editor.remove(context.getString(R.string.pref_player_state));
+        editor.remove(context.getString(R.string.pref_player_last_online));
+        editor.remove(context.getString(R.string.pref_player_banned));
+        editor.remove(context.getString(R.string.pref_player_scammer));
+        editor.remove(context.getString(R.string.pref_player_economy_banned));
+        editor.remove(context.getString(R.string.pref_player_vac_banned));
+        editor.remove(context.getString(R.string.pref_player_community_banned));
+        editor.remove(context.getString(R.string.pref_player_backpack_value_tf2));
+        editor.remove(context.getString(R.string.pref_new_avatar));
+        editor.remove(context.getString(R.string.pref_last_user_data_update));
+        editor.remove(context.getString(R.string.pref_resolved_steam_id));
+        editor.remove(context.getString(R.string.pref_player_trust_negative));
+        editor.remove(context.getString(R.string.pref_player_trust_positive));
+        editor.remove(context.getString(R.string.pref_user_raw_key));
+        editor.remove(context.getString(R.string.pref_user_raw_metal));
+        editor.remove(context.getString(R.string.pref_user_slots));
+        editor.remove(context.getString(R.string.pref_user_items));
+
+        editor.apply();
+    }
 }

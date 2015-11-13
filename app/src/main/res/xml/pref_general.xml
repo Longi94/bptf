@@ -3,10 +3,6 @@
 
     <PreferenceCategory android:title="@string/pref_category_account">
 
-        <com.tlongdev.bktf.preference.SteamIdPreference
-            android:key="@string/pref_steam_id"
-            android:title="@string/pref_steam_id" />
-
         <Preference
             android:key="@string/pref_key_login"/>
 

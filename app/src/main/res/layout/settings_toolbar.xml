@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:background="@color/primary"
         android:minHeight="?attr/actionBarSize"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:title="@string/action_settings" />
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:title="@string/action_settings" />
 
 </android.support.design.widget.AppBarLayout>

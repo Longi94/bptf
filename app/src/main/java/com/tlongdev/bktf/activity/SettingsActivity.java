@@ -154,19 +154,21 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_notification_interval)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_sync_interval)));
 
-        Preference login = findPreference(getString(R.string.pref_key_login));
 
-        if (Profile.isSignedIn(this)) {
-            login.setTitle("Log out");
-            login.setSummary(Profile.getSteamId(this));
-        } else {
-            login.setTitle("Log in");
-        }
+        updateLoginPreference();
 
-        login.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        findPreference(getString(R.string.pref_key_login)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(SettingsActivity.this, LoginActivity.class));
+                if (Profile.isSignedIn(SettingsActivity.this)) {
+                    Profile.logOut(SettingsActivity.this);
+                    updateLoginPreference();
+                    Intent i = new Intent();
+                    i.putExtra("login_changed", true);
+                    setResult(RESULT_OK, i);
+                } else {
+                    startActivityForResult(new Intent(SettingsActivity.this, LoginActivity.class), 0);
+                }
                 return true;
             }
         });
@@ -226,49 +228,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-        if (key.equals(getString(R.string.pref_steam_id))) {
-
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-
-            if (Utility.isSteamId(sharedPreferences.getString(key, ""))) {
-                //If the user entered the 64bit steamId, save it
-                editor.putString(getString(R.string.pref_resolved_steam_id),
-                        sharedPreferences.getString(key, ""));
-            }
-
-            //Remove all data assosiaged with the previous id
-            editor.remove(getString(R.string.pref_player_avatar_url));
-            editor.remove(getString(R.string.pref_player_name));
-            editor.remove(getString(R.string.pref_player_reputation));
-            editor.remove(getString(R.string.pref_player_profile_created));
-            editor.remove(getString(R.string.pref_player_state));
-            editor.remove(getString(R.string.pref_player_last_online));
-            editor.remove(getString(R.string.pref_player_banned));
-            editor.remove(getString(R.string.pref_player_scammer));
-            editor.remove(getString(R.string.pref_player_economy_banned));
-            editor.remove(getString(R.string.pref_player_vac_banned));
-            editor.remove(getString(R.string.pref_player_community_banned));
-            editor.remove(getString(R.string.pref_player_backpack_value_tf2));
-            editor.remove(getString(R.string.pref_new_avatar));
-            editor.remove(getString(R.string.pref_last_user_data_update));
-            editor.remove(getString(R.string.pref_resolved_steam_id));
-            editor.remove(getString(R.string.pref_player_trust_negative));
-            editor.remove(getString(R.string.pref_player_trust_positive));
-            editor.remove(getString(R.string.pref_user_raw_key));
-            editor.remove(getString(R.string.pref_user_raw_metal));
-            editor.remove(getString(R.string.pref_user_slots));
-            editor.remove(getString(R.string.pref_user_items));
-
-            editor.apply();
-
-            //Inform the main activity, that the steam is has been changed
-            Intent i = new Intent();
-            i.putExtra("preference_changed", true);
-            setResult(RESULT_OK, i);
-        }
-
         //Start the appropiate services if these settings have been changed
-        else if (key.equals(getString(R.string.pref_notification))) {
+        if (key.equals(getString(R.string.pref_notification))) {
             if (sharedPreferences.getBoolean(key, false)) {
                 startService(new Intent(this, NotificationsService.class));
             }
@@ -284,6 +245,29 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
             if (sharedPreferences.getBoolean(getString(R.string.pref_background_sync), false)) {
                 startService(new Intent(this, UpdateDatabaseService.class));
             }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        updateLoginPreference();
+
+        if (resultCode == RESULT_OK) {
+            Intent i = new Intent();
+            i.putExtra("login_changed", true);
+            setResult(RESULT_OK, i);
+        }
+    }
+
+    private void updateLoginPreference() {
+        Preference login = findPreference(getString(R.string.pref_key_login));
+        if (Profile.isSignedIn(this)) {
+            login.setTitle("Log out");
+            login.setSummary(Profile.getSteamId(this));
+        } else {
+            login.setTitle("Log in");
+            login.setSummary(null);
         }
     }
 }
