@@ -14,15 +14,14 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.activity.UnusualActivity;
 import com.tlongdev.bktf.fragment.UnusualFragment;
 import com.tlongdev.bktf.model.Currency;
+import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.model.Quality;
-import com.tlongdev.bktf.model.Item;
+import com.tlongdev.bktf.util.Utility;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 
 /**
@@ -131,12 +130,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                     final Item effect = new Item(1, null, Quality.UNUSUAL, false, false, false,
                             mDataSet.getInt(UnusualFragment.COL_PRICE_LIST_INDE), null);
 
-                    try {
-                        holder.icon.setImageDrawable(effect.getEffectDrawable(mContext));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        holder.icon.setImageDrawable(null);
-                    }
+                    picasso.load(effect.getEffectUrl(mContext)).into(holder.icon);
 
                     holder.root.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -170,14 +164,8 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                     holder.price.setText(hat.getPrice().getFormattedPrice(mContext, Currency.KEY));
 
                     picasso.load(hat.getIconUrl(mContext)).into(holder.icon);
+                    picasso.load(hat.getEffectUrl(mContext)).into(holder.effect);
 
-                    try {
-                        //Load the effect icon
-                        holder.effect.setImageDrawable(hat.getEffectDrawable(mContext));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        holder.effect.setImageDrawable(null);
-                    }
                     break;
             }
         }
