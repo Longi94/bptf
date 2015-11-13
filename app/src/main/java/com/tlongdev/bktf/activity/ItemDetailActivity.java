@@ -310,7 +310,10 @@ public class ItemDetailActivity extends Activity {
                 picasso.setLoggingEnabled(true);
                 picasso.setIndicatorsEnabled(true);
                 picasso.load(item.getIconUrl(this)).into(icon);
-                picasso.load(item.getEffectUrl(this)).into(effectView);
+
+                if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
+                    picasso.load(item.getEffectUrl(this)).into(effectView);
+                }
 
                 try {
                     InputStream ims;
