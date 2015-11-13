@@ -4,11 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
+import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Price;
@@ -62,195 +65,53 @@ public class Utility {
      * @return the name of the unusual effect
      */
     public static String getUnusualEffectName(Context context, int index) {
-        //Just a huge switch-case that needs to be extended everytime a new effect is added.
-        switch (index) {
-            case 4:
-                return context.getString(R.string.array_effects_community_sparkle);
-            case 5:
-                return context.getString(R.string.array_effects_holy_glow);
-            case 6:
-                return context.getString(R.string.array_effects_green_confetti);
-            case 7:
-                return context.getString(R.string.array_effects_purple_confetti);
-            case 8:
-                return context.getString(R.string.array_effects_haunted_ghosts);
-            case 9:
-                return context.getString(R.string.array_effects_green_energy);
-            case 10:
-                return context.getString(R.string.array_effects_purple_energy);
-            case 11:
-                return context.getString(R.string.array_effects_circling_tf_logo);
-            case 12:
-                return context.getString(R.string.array_effects_massed_flies);
-            case 13:
-                return context.getString(R.string.array_effects_burning_flames);
-            case 14:
-                return context.getString(R.string.array_effects_scorching_flames);
-            case 15:
-                return context.getString(R.string.array_effects_searing_plasma);
-            case 16:
-                return context.getString(R.string.array_effects_vivid_plasma);
-            case 17:
-                return context.getString(R.string.array_effects_sunbeams);
-            case 18:
-                return context.getString(R.string.array_effects_circling_peace_sign);
-            case 19:
-                return context.getString(R.string.array_effects_circling_heart);
-            case 29:
-                return context.getString(R.string.array_effects_stormy_storm);
-            case 30:
-                return context.getString(R.string.array_effects_blizzardy_storm);
-            case 31:
-                return context.getString(R.string.array_effects_nuts_n_bolts);
-            case 32:
-                return context.getString(R.string.array_effects_orbiting_planets);
-            case 33:
-                return context.getString(R.string.array_effects_orbiting_fire);
-            case 34:
-                return context.getString(R.string.array_effects_bubbling);
-            case 35:
-                return context.getString(R.string.array_effects_smoking);
-            case 36:
-                return context.getString(R.string.array_effects_steaming);
-            case 37:
-                return context.getString(R.string.array_effects_flaming_lantern);
-            case 38:
-                return context.getString(R.string.array_effects_cloudy_moon);
-            case 39:
-                return context.getString(R.string.array_effects_cauldron_bubbles);
-            case 40:
-                return context.getString(R.string.array_effects_eerie_orbiting_fire);
-            case 43:
-                return context.getString(R.string.array_effects_knifestorm);
-            case 44:
-                return context.getString(R.string.array_effects_misty_skull);
-            case 45:
-                return context.getString(R.string.array_effects_harvest_moon);
-            case 46:
-                return context.getString(R.string.array_effects_secret);
-            case 47:
-                return context.getString(R.string.array_effects_stormy_13th_hour);
-            case 56:
-                return context.getString(R.string.array_effects_kill_a_watt);
-            case 57:
-                return context.getString(R.string.array_effects_terror_watt);
-            case 58:
-                return context.getString(R.string.array_effects_cloud_9);
-            case 59:
-                return context.getString(R.string.array_effects_aces_high);
-            case 60:
-                return context.getString(R.string.array_effects_dead_presidents);
-            case 61:
-                return context.getString(R.string.array_effects_miami_nights);
-            case 62:
-                return context.getString(R.string.array_effects_disco_beat_down);
-            case 63:
-                return context.getString(R.string.array_effects_phosphorous);
-            case 64:
-                return context.getString(R.string.array_effects_sulphurous);
-            case 65:
-                return context.getString(R.string.array_effects_memory_leak);
-            case 66:
-                return context.getString(R.string.array_effects_overclocked);
-            case 67:
-                return context.getString(R.string.array_effects_electrostatic);
-            case 68:
-                return context.getString(R.string.array_effects_power_surge);
-            case 69:
-                return context.getString(R.string.array_effects_anti_freeze);
-            case 70:
-                return context.getString(R.string.array_effects_time_warp);
-            case 71:
-                return context.getString(R.string.array_effects_green_black_hole);
-            case 72:
-                return context.getString(R.string.array_effects_roboactive);
-            case 73:
-                return context.getString(R.string.array_effects_arcana);
-            case 74:
-                return context.getString(R.string.array_effects_spellbound);
-            case 75:
-                return context.getString(R.string.array_effects_chiroptera_venenata);
-            case 76:
-                return context.getString(R.string.array_effects_poisoned_shadows);
-            case 77:
-                return context.getString(R.string.array_effects_something_burning);
-            case 78:
-                return context.getString(R.string.array_effects_hellfire);
-            case 79:
-                return context.getString(R.string.array_effects_darkblaze);
-            case 80:
-                return context.getString(R.string.array_effects_demonflame);
-            case 81:
-                return context.getString(R.string.array_effects_bonzo);
-            case 82:
-                return context.getString(R.string.array_effects_amaranthine);
-            case 83:
-                return context.getString(R.string.array_effects_stare_from_beyond);
-            case 84:
-                return context.getString(R.string.array_effects_the_ooze);
-            case 85:
-                return context.getString(R.string.array_effects_ghastly_ghosts_jr);
-            case 86:
-                return context.getString(R.string.array_effects_haunted_phantasm_jr);
-            case 87:
-                return context.getString(R.string.array_effects_frostbite);
-            case 88:
-                return context.getString(R.string.array_effects_molten_mallard);
-            case 89:
-                return context.getString(R.string.array_effects_morning_glory);
-            case 90:
-                return context.getString(R.string.array_effects_death_at_dusk);
-            case 91:
-                return context.getString(R.string.array_effects_abduction);
-            case 92:
-                return context.getString(R.string.array_effects_atomic);
-            case 93:
-                return context.getString(R.string.array_effects_subatomic);
-            case 94:
-                return context.getString(R.string.array_effects_electric_protector);
-            case 95:
-                return context.getString(R.string.array_effects_magnetic_protector);
-            case 96:
-                return context.getString(R.string.array_effects_voltaic_protector);
-            case 97:
-                return context.getString(R.string.array_effects_galactic_codex);
-            case 98:
-                return context.getString(R.string.array_effects_ancient_codex);
-            case 99:
-                return context.getString(R.string.array_effects_nebula);
-            case 701:
-                return context.getString(R.string.array_effects_hot);
-            case 702:
-                return context.getString(R.string.array_effects_isotope);
-            case 703:
-                return context.getString(R.string.array_effects_cool);
-            case 704:
-                return context.getString(R.string.array_effects_energy_orb);
-            case 3001:
-                return context.getString(R.string.array_effects_showstopper);
-            case 3003:
-                return context.getString(R.string.array_effects_holy_grail);
-            case 3004:
-                return context.getString(R.string.array_effects_72);
-            case 3005:
-                return context.getString(R.string.array_effects_fountain_of_delight);
-            case 3006:
-                return context.getString(R.string.array_effects_screaming_tiger);
-            case 3007:
-                return context.getString(R.string.array_effects_skill_gotten_gains);
-            case 3008:
-                return context.getString(R.string.array_effects_midnight_whirlwind);
-            case 3009:
-                return context.getString(R.string.array_effects_silver_cyclone);
-            case 3010:
-                return context.getString(R.string.array_effects_mega_strike);
-            case 3011:
-                return context.getString(R.string.array_effects_haunted_phantasm);
-            case 3012:
-                return context.getString(R.string.array_effects_ghastly_ghosts);
-            default:
-                return "";
+
+        Cursor cursor = context.getContentResolver().query(
+                UnusualSchemaEntry.CONTENT_URI,
+                new String[]{UnusualSchemaEntry.COLUMN_NAME},
+                UnusualSchemaEntry.COLUMN_ID + " = ?",
+                new String[]{String.valueOf(index)},
+                null
+        );
+
+        String name = "";
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                name = cursor.getString(0);
+            }
+            cursor.close();
         }
+
+        return name;
+    }
+
+    /**
+     * Get the name of the origin.
+     *
+     * @param index index corresponding origin name
+     * @return the name of origin
+     */
+    public static String getOriginName(Context context, int index) {
+
+        Cursor cursor = context.getContentResolver().query(
+                OriginEntry.CONTENT_URI,
+                new String[]{OriginEntry.COLUMN_NAME},
+                OriginEntry.COLUMN_ID + " = ?",
+                new String[]{String.valueOf(index)},
+                null
+        );
+
+        String name = "";
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                name = cursor.getString(0);
+            }
+            cursor.close();
+        }
+
+        return name;
     }
 
     /**

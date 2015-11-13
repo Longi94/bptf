@@ -222,6 +222,10 @@ public class Item {
                 break;
         }
 
+        if (australium) {
+            formattedName += "Australium ";
+        }
+
         //Append the item name to the end.
         return isProper ? formattedName + "The " + name : formattedName + name;
     }
