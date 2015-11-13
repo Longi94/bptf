@@ -9,7 +9,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 30
-        versionName "2.0.0-beta"
+        versionName "2.0.0-beta0"
     }
     buildTypes {
         release {
