@@ -396,6 +396,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     public void onItemSchemaFinished() {
         if (loadingDialog != null) {
             loadingDialog.dismiss();
+            loadingDialog = null;
         }
 
         getLoaderManager().restartLoader(PRICE_LIST_LOADER, null, this);
