@@ -14,7 +14,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @SuppressWarnings("unused")
     private static final String LOG_TAG = DatabaseHelper.class.getSimpleName();
 
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
     public static final String DATABASE_NAME = "bptf.db";
 
     private Context mContext;
@@ -26,6 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
         final String SQL_CREATE_PRICE_LIST_TABLE =
                 "CREATE TABLE " + PriceEntry.TABLE_NAME + " (" +
                         PriceEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -151,6 +152,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + PriceEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ItemSchemaEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + UnusualSchemaEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + OriginEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + UserBackpackEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + UserBackpackEntry.TABLE_NAME_GUEST);
 
         if (newVersion >= 7 && oldVersion < 7) {
             mContext.deleteDatabase("pricelist.db");
