@@ -27,6 +27,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
+        if (mContext.databaseList().length > 1) {
+            mContext.deleteDatabase("pricelist.db");
+            mContext.deleteDatabase("items.db");
+            mContext.deleteDatabase("backpack.db");
+        }
+
         final String SQL_CREATE_PRICE_LIST_TABLE =
                 "CREATE TABLE " + PriceEntry.TABLE_NAME + " (" +
                         PriceEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
