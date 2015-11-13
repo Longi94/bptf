@@ -8,10 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
-import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
-import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
-import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
+import com.tlongdev.bktf.data.DatabaseContract.*;
 
 public class DatabaseProvider extends ContentProvider {
 
@@ -29,6 +26,8 @@ public class DatabaseProvider extends ContentProvider {
     public static final int ITEM_SCHEMA = 101;
     public static final int ORIGIN_NAMES = 102;
     public static final int UNUSUAL_SCHEMA = 103;
+    public static final int BACKPACK = 104;
+    public static final int BACKPACK_GUEST = 105;
 
     /**
      * The URI Matcher used by this content provider
@@ -61,6 +60,8 @@ public class DatabaseProvider extends ContentProvider {
         matcher.addURI(authority, DatabaseContract.PATH_ITEM_SCHEMA, ITEM_SCHEMA);
         matcher.addURI(authority, DatabaseContract.PATH_UNUSUAL_SCHEMA, UNUSUAL_SCHEMA);
         matcher.addURI(authority, DatabaseContract.PATH_ORIGIN_NAMES, ORIGIN_NAMES);
+        matcher.addURI(authority, DatabaseContract.PATH_BACKPACK, BACKPACK);
+        matcher.addURI(authority, DatabaseContract.PATH_BACKPACK + "/guest", BACKPACK_GUEST);
 
         return matcher;
     }
@@ -95,6 +96,12 @@ public class DatabaseProvider extends ContentProvider {
             case ORIGIN_NAMES:
                 tableName = OriginEntry.TABLE_NAME;
                 break;
+            case BACKPACK:
+                tableName = UserBackpackEntry.TABLE_NAME;
+                break;
+            case BACKPACK_GUEST:
+                tableName = UserBackpackEntry.TABLE_NAME_GUEST;
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -125,6 +132,10 @@ public class DatabaseProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_UNUSUAL_SCHEMA;
             case ORIGIN_NAMES:
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_ORIGIN_NAMES;
+            case BACKPACK:
+                return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_BACKPACK;
+            case BACKPACK_GUEST:
+                return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_BACKPACK;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -139,26 +150,37 @@ public class DatabaseProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
             case PRICE_LIST:
                 tableName = PriceEntry.TABLE_NAME;
+                returnUri = PriceEntry.CONTENT_URI;
                 break;
             case ITEM_SCHEMA:
                 tableName = ItemSchemaEntry.TABLE_NAME;
+                returnUri = ItemSchemaEntry.CONTENT_URI;
                 break;
             case UNUSUAL_SCHEMA:
                 tableName = UnusualSchemaEntry.TABLE_NAME;
+                returnUri = UnusualSchemaEntry.CONTENT_URI;
                 break;
             case ORIGIN_NAMES:
                 tableName = OriginEntry.TABLE_NAME;
+                returnUri = OriginEntry.CONTENT_URI;
+                break;
+            case BACKPACK:
+                tableName = UserBackpackEntry.TABLE_NAME;
+                returnUri = UserBackpackEntry.CONTENT_URI;
+                break;
+            case BACKPACK_GUEST:
+                tableName = UserBackpackEntry.TABLE_NAME_GUEST;
+                returnUri = UserBackpackEntry.CONTENT_URI_GUEST;
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
-        _id = db.insert(PriceEntry.TABLE_NAME, null, values);
+        _id = db.insert(tableName, null, values);
         if (_id > 0)
-            returnUri = PriceEntry.buildUri(_id);
+            return returnUri;
         else
             throw new android.database.SQLException("Failed to insert row into " + uri);
-        return returnUri;
     }
 
     @Override
@@ -178,6 +200,12 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             case ORIGIN_NAMES:
                 rowsDeleted = db.delete(OriginEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case BACKPACK:
+                rowsDeleted = db.delete(UserBackpackEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case BACKPACK_GUEST:
+                rowsDeleted = db.delete(UserBackpackEntry.TABLE_NAME_GUEST, selection, selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -209,6 +237,12 @@ public class DatabaseProvider extends ContentProvider {
             case ORIGIN_NAMES:
                 rowsUpdated = db.update(OriginEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
+            case BACKPACK:
+                rowsUpdated = db.update(UserBackpackEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
+            case BACKPACK_GUEST:
+                rowsUpdated = db.update(UserBackpackEntry.TABLE_NAME_GUEST, values, selection, selectionArgs);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -236,6 +270,12 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             case ORIGIN_NAMES:
                 tableName = OriginEntry.TABLE_NAME;
+                break;
+            case BACKPACK:
+                tableName = UserBackpackEntry.TABLE_NAME;
+                break;
+            case BACKPACK_GUEST:
+                tableName = UserBackpackEntry.TABLE_NAME_GUEST;
                 break;
             default:
                 return super.bulkInsert(uri, values);

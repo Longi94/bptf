@@ -21,7 +21,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.data.DatabaseHelper;
-import com.tlongdev.bktf.data.UserBackpackContract.UserBackpackEntry;
+import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
 import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.model.Price;
 
