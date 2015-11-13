@@ -22,4 +22,27 @@
 
     </PreferenceScreen>
 
+    <PreferenceScreen
+        android:key="@string/pref_title_picasso"
+        android:summary="@string/pref_summary_picasso"
+        android:title="@string/pref_title_picasso">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="http://square.github.io/picasso/" />
+
+    </PreferenceScreen>
+
+    <PreferenceScreen
+        android:key="@string/pref_title_material_icons"
+        android:summary="@string/pref_summary_material_icons"
+        android:title="@string/pref_title_material_icons">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://materialdesignicons.com/" />
+
+    </PreferenceScreen>
+
+
 </PreferenceScreen>

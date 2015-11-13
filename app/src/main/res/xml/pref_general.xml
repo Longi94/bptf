@@ -66,7 +66,7 @@
 
             <intent
                 android:action="android.intent.action.VIEW"
-                android:targetClass="com.tlongdev.bktf.CreditsActivity"
+                android:targetClass="com.tlongdev.bktf.activity.CreditsActivity"
                 android:targetPackage="com.tlongdev.bktf" />
 
         </PreferenceScreen>

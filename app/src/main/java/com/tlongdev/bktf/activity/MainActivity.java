@@ -121,9 +121,8 @@ public class MainActivity extends AppCompatActivity {
                     Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivityForResult(settingsIntent, REQUEST_SETTINGS);
                     break;
-                case R.id.nav_help:
-                    // TODO: 2015. 10. 25. needs a proper help section (not a web page)
-                    Uri webPage = Uri.parse("https://github.com/Longi94/bptf/wiki/Help");
+                case R.id.nav_steam:
+                    Uri webPage = Uri.parse("http://steamcommunity.com/groups/bptfandroid");
 
                     //Open link in the device default web browser
                     Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
