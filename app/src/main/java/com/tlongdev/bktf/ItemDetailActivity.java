@@ -263,9 +263,14 @@ public class ItemDetailActivity extends Activity {
             }
 
             //Set the origin of the item. Get the origin from the string array resource
-            origin.setText(getString(R.string.item_detail_origin) + ": " +
-                    getResources().getStringArray(R.array.array_origins)
-                            [itemCursor.getInt(COL_BACKPACK_ORIGIN)]);
+            try {
+                origin.setText(getString(R.string.item_detail_origin) + ": " +
+                        getResources().getStringArray(R.array.array_origins)
+                                [itemCursor.getInt(COL_BACKPACK_ORIGIN)]);
+            } catch (Exception e) {
+                origin.setText(getString(R.string.item_detail_origin) + ": " +
+                getString(R.string.array_origin_unkown));
+            }
 
             //Set the effect of the item (if any)
             if (priceIndex != 0 && (quality == 5 || quality == 7 || quality == 9)) {
