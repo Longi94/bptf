@@ -6,12 +6,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.data.UserBackpackContract.UserBackpackEntry;
 import com.tlongdev.bktf.model.Item;
+import com.tlongdev.bktf.util.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,7 +28,7 @@ import java.util.Vector;
 /**
  * Task for fetchin the user's backpack in the background
  */
-public class GetUserBackpack extends AsyncTask<String, Void, Boolean> {
+public class GetUserBackpack extends AsyncTask<String, Void, Integer> {
 
     /**
      * Log tag for logging.
@@ -81,7 +80,7 @@ public class GetUserBackpack extends AsyncTask<String, Void, Boolean> {
     private int itemNumber = 0;
 
     //The listener that will be notified when the fetching finishes
-    private OnFetchUserBackpackListener listener = null;
+    private OnUserBackpackListener listener = null;
 
     /**
      * Constructor
@@ -203,7 +202,7 @@ public class GetUserBackpack extends AsyncTask<String, Void, Boolean> {
      * {@inheritDoc}
      */
     @Override
-    protected Boolean doInBackground(String... params) {
+    protected Integer doInBackground(String... params) {
         //if the given steam id is not the same as the saved resolved steam_id, then this is a guest
         //backpack
         isGuest = !params[0].equals(PreferenceManager.getDefaultSharedPreferences(mContext)
@@ -245,7 +244,7 @@ public class GetUserBackpack extends AsyncTask<String, Void, Boolean> {
 
             if (inputStream == null) {
                 // Stream was empty. Nothing to do.
-                return false;
+                return -1;
             }
 
             reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -258,7 +257,7 @@ public class GetUserBackpack extends AsyncTask<String, Void, Boolean> {
 
             if (buffer.length() == 0) {
                 //Stream was empty, nothing to do.
-                return false;
+                return -1;
             }
             //Get the json string
             jsonStr = buffer.toString();
@@ -266,9 +265,8 @@ public class GetUserBackpack extends AsyncTask<String, Void, Boolean> {
         } catch (IOException e) {
             //There was a network error, notify the user TODO, proper error handling
             errorMessage = mContext.getString(R.string.error_network);
-            publishProgress();
             e.printStackTrace();
-            return false;
+            return -1;
         } finally {
             //Disconnect
             if (urlConnection != null) {
@@ -280,7 +278,6 @@ public class GetUserBackpack extends AsyncTask<String, Void, Boolean> {
                     reader.close();
                 } catch (final IOException e) {
                     errorMessage = e.getMessage();
-                    publishProgress();
                     e.printStackTrace();
                 }
 
@@ -293,9 +290,8 @@ public class GetUserBackpack extends AsyncTask<String, Void, Boolean> {
         } catch (JSONException e) {
             //Something went wrong while parsing the data
             errorMessage = mContext.getString(R.string.error_data_parse);
-            publishProgress();
             e.printStackTrace();
-            return false;
+            return -1;
         }
     }
 
@@ -303,26 +299,19 @@ public class GetUserBackpack extends AsyncTask<String, Void, Boolean> {
      * {@inheritDoc}
      */
     @Override
-    protected void onPostExecute(Boolean isPrivate) {
+    protected void onPostExecute(Integer integer) {
         if (listener != null) {
-            if (isPrivate) {
+            if (integer == 0) {
                 //Notify the listener that the backpack was private
                 listener.onPrivateBackpack();
-            } else {
+            } else if (integer >= 1){
                 //Notify the user that the fetching finished and pass on the data
-                listener.onFetchFinished(rawKeys, Utility.getRawMetal(rawRef, rawRec, rawScraps),
+                listener.onUserBackpackFinished(rawKeys, Utility.getRawMetal(rawRef, rawRec, rawScraps),
                         backpackSlots, itemNumber);
+            } else {
+                listener.onUserBackpackFailed(errorMessage);
             }
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onProgressUpdate(Void... values) {
-        //only used for showing error messages to the user
-        Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -333,7 +322,7 @@ public class GetUserBackpack extends AsyncTask<String, Void, Boolean> {
      * @return true if the backpack is private
      * @throws JSONException
      */
-    private boolean getItemsFromJson(String jsonStr, String steamId) throws JSONException {
+    private Integer getItemsFromJson(String jsonStr, String steamId) throws JSONException {
 
         //JSON keys
         final String OWM_RESULT = "result";
@@ -397,12 +386,12 @@ public class GetUserBackpack extends AsyncTask<String, Void, Boolean> {
 
                     Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
                 }
-                return false;
+                return 1;
             case 8: //Invalid ID, shouldn't reach
                 throw new IllegalStateException(
                         "Steam ID provided for backpack fetching was invalid: " + steamId);
             case 15: //Backpack is private
-                return true;
+                return 2;
             case 18: //ID doesn't exist, shouldn't reach
                 throw new IllegalStateException(
                         "Steam ID provided for backpack fetching doesn't exist: " + steamId);
@@ -539,14 +528,14 @@ public class GetUserBackpack extends AsyncTask<String, Void, Boolean> {
      *
      * @param listener the listener to be notified
      */
-    public void registerOnFetchUserBackpackListener(OnFetchUserBackpackListener listener) {
+    public void registerOnFetchUserBackpackListener(OnUserBackpackListener listener) {
         this.listener = listener;
     }
 
     /**
      * Listener interface for listening for the end of the fetch.
      */
-    public interface OnFetchUserBackpackListener {
+    public interface OnUserBackpackListener {
 
         /**
          * Notify the listener, that the fetchin has finished. The backpack is public.
@@ -556,11 +545,13 @@ public class GetUserBackpack extends AsyncTask<String, Void, Boolean> {
          * @param backpackSlots the number of backpack slots
          * @param itemNumber    the number of items in the backpack
          */
-        void onFetchFinished(int rawKeys, double rawMetal, int backpackSlots, int itemNumber);
+        void onUserBackpackFinished(int rawKeys, double rawMetal, int backpackSlots, int itemNumber);
 
         /**
          * Notify the listener that the backpack was private.
          */
         void onPrivateBackpack();
+
+        void onUserBackpackFailed(String errorMessage);
     }
 }

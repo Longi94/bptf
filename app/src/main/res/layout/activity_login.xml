@@ -38,13 +38,19 @@
         android:textColor="@color/text_primary"
         android:textSize="16sp" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <android.support.design.widget.TextInputLayout
         android:layout_margin="16dp"
-        android:hint="steam ID"
-        android:inputType="textNoSuggestions"
-        android:lines="1" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="steam ID"
+            android:inputType="textNoSuggestions"
+            android:lines="1" />
+
+    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:layout_width="wrap_content"

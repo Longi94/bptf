@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.util.Profile;
@@ -25,8 +24,7 @@ import java.net.URL;
 /**
  * Task for fetching data about the user in the background.
  */
-public class GetUserInfo extends AsyncTask<String, Void, Void> implements
-        GetUserBackpack.OnFetchUserBackpackListener {
+public class GetUserInfo extends AsyncTask<String, Void, Integer> {
 
     /**
      * Log tag for logging.
@@ -44,16 +42,9 @@ public class GetUserInfo extends AsyncTask<String, Void, Void> implements
     private String errorMessage;
 
     //The listenere that will be notified when the fetching finishes
-    private OnFetchUserInfoListener listener = null;
+    private OnUserInfoListener listener = null;
 
-    //Indicates whether backpack fetching is currently running
-    private boolean backpackFetching = false;
-
-    //Indicates if this task is running or not
-    private boolean isRunning = true;
-
-    //Indicates that the backpack of the user is private
-    private boolean privateBackpack = false;
+    private String steamId;
 
     /**
      * Contructor.
@@ -70,12 +61,12 @@ public class GetUserInfo extends AsyncTask<String, Void, Void> implements
      * {@inheritDoc}
      */
     @Override
-    protected Void doInBackground(String... params) {
+    protected Integer doInBackground(String... params) {
         if (System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(mContext)
                 .getLong(mContext.getString(R.string.pref_last_user_data_update), 0) < 3600000L &&
                 !manualSync) {
             //This task ran less than an hour ago and wasn't a manual sync, nothing to do.
-            return null;
+            return -1;
         }
 
         // These two need to be declared outside the try/catch
@@ -85,7 +76,6 @@ public class GetUserInfo extends AsyncTask<String, Void, Void> implements
 
         // Will contain the raw JSON response as a string.
         String jsonString;
-        String steamId;
 
         try {
             //The vanity api and input keys
@@ -110,8 +100,7 @@ public class GetUserInfo extends AsyncTask<String, Void, Void> implements
                 if (steamId == null) {
                     //There is no steam id saved
                     errorMessage = mContext.getString(R.string.error_no_steam_id);
-                    publishProgress();
-                    return null;
+                    return -1;
                 }
             }
             Uri uri;
@@ -163,17 +152,8 @@ public class GetUserInfo extends AsyncTask<String, Void, Void> implements
                 //Still couldn't get the steamId, there was an error. Nothing to do.
                 //The errore message is stored in the steamid variable.
                 errorMessage = steamId;
-                publishProgress();
-                return null;
+                return -1;
             }
-
-            //SteamID successfully acquired. Start fatching the backpack.
-            GetUserBackpack fetchTask = new GetUserBackpack(mContext);
-            //Register a listener to be notified
-            fetchTask.registerOnFetchUserBackpackListener(this);
-            fetchTask.execute(steamId);
-            //Fetching started
-            backpackFetching = true;
 
             //Save the resolved steamId
             PreferenceManager.getDefaultSharedPreferences(mContext).edit()
@@ -247,27 +227,20 @@ public class GetUserInfo extends AsyncTask<String, Void, Void> implements
                 if (buffer.length() > 0) {
                     jsonString = buffer.toString();
                     //Parse the JSON
-                    parseUserSummariesJson(jsonString);
+                    return parseUserSummariesJson(jsonString);
                 }
             }
-
-            //Save the update time
-            PreferenceManager.getDefaultSharedPreferences(mContext).edit()
-                    .putLong(mContext.getString(R.string.pref_last_user_data_update),
-                            System.currentTimeMillis()).apply();
 
         } catch (IOException e) {
             //There was a network error
             errorMessage = mContext.getString(R.string.error_network);
-            publishProgress();
             e.printStackTrace();
-            return null;
+            return -1;
         } catch (JSONException e) {
             //The JSON string was incorrectly formatted
             errorMessage = mContext.getString(R.string.error_data_parse);
-            publishProgress();
             e.printStackTrace();
-            return null;
+            return -1;
         } finally {
             //Close the connection
             if (urlConnection != null) {
@@ -280,34 +253,26 @@ public class GetUserInfo extends AsyncTask<String, Void, Void> implements
                 } catch (final IOException e) {
                     //This should never be reached
                     errorMessage = e.getMessage();
-                    publishProgress();
                     e.printStackTrace();
                 }
             }
         }
-        return null;
+        return -1;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void onProgressUpdate(Void... values) {
-        //Only used for displaying error messages
-        Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onPostExecute(Void param) {
+    protected void onPostExecute(Integer integer) {
         //Finished fetching the backpack
-        isRunning = false;
-        if (!backpackFetching && listener != null) {
-            //If the backpack fetching finished too, notify the listener, that the fetching has
-            //finished.
-            listener.onFetchFinished(privateBackpack);
+        if (listener != null) {
+            if (integer >= 0) {
+                //notify the listener, that the fetching has finished.
+                listener.onUserInfoFinished(steamId);
+            } else {
+                listener.onUserInfoFailed(errorMessage);
+            }
         }
     }
 
@@ -317,7 +282,7 @@ public class GetUserInfo extends AsyncTask<String, Void, Void> implements
      * @param jsonString the json string to be parsed
      * @throws JSONException
      */
-    private void parseUserSummariesJson(String jsonString) throws JSONException {
+    private Integer parseUserSummariesJson(String jsonString) throws JSONException {
 
         //All the JSON keys needed to parse
         final String OWM_RESPONSE = "response";
@@ -353,8 +318,7 @@ public class GetUserInfo extends AsyncTask<String, Void, Void> implements
 
         //Only save the avatarUrl if it's different from the previous url
         String avatarUrl = prefs.getString(mContext.getString(R.string.pref_player_avatar_url), "");
-        if (player.has(OWM_AVATAR) && avatarUrl != null
-                && !avatarUrl.equals(player.getString(OWM_AVATAR))) {
+        if (player.has(OWM_AVATAR) && !avatarUrl.equals(player.getString(OWM_AVATAR))) {
             //We also need to notify that app that the user has a new avatar
             editor.putBoolean(mContext.getString(R.string.pref_new_avatar), true);
             editor.putString(mContext.getString(R.string.pref_player_avatar_url),
@@ -380,6 +344,8 @@ public class GetUserInfo extends AsyncTask<String, Void, Void> implements
 
         //Save the edits
         editor.apply();
+
+        return 0;
     }
 
     /**
@@ -442,7 +408,7 @@ public class GetUserInfo extends AsyncTask<String, Void, Void> implements
             }
 
             //Save the value of the user's backpack if not private
-            if (!privateBackpack && current_user.has(OWM_BACKPACK_VALUE) &&
+            if (current_user.has(OWM_BACKPACK_VALUE) &&
                     current_user.getJSONObject(OWM_BACKPACK_VALUE).has(OWM_BACKPACK_VALUE_TF2)) {
                 Utility.putDouble(editor, mContext.getString(R.string.pref_player_backpack_value_tf2),
                         current_user.getJSONObject(OWM_BACKPACK_VALUE).getDouble(OWM_BACKPACK_VALUE_TF2));
@@ -507,79 +473,22 @@ public class GetUserInfo extends AsyncTask<String, Void, Void> implements
      *
      * @param listener the listener to be registered
      */
-    public void registerFetchUserInfoListener(OnFetchUserInfoListener listener) {
+    public void registerFetchUserInfoListener(OnUserInfoListener listener) {
         this.listener = listener;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onFetchFinished(int rawKeys, double rawMetal, int backpackSlots, int itemNumber) {
-
-        //Fetching finished
-        backpackFetching = false;
-
-        //Backpack is not private because this callback was called
-        privateBackpack = false;
-
-        //Start editing the preferences
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        //Save all the data passed
-        editor.putInt(mContext.getString(R.string.pref_user_slots), backpackSlots);
-        editor.putInt(mContext.getString(R.string.pref_user_items), itemNumber);
-        editor.putInt(mContext.getString(R.string.pref_user_raw_key), rawKeys);
-        Utility.putDouble(editor, mContext.getString(R.string.pref_user_raw_metal), rawMetal);
-        editor.apply();
-
-        if (!isRunning && listener != null) {
-            //If both tasks have finished, notify the listener
-            listener.onFetchFinished(false);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onPrivateBackpack() {
-
-        //Fetching finished
-        backpackFetching = false;
-
-        //Backpack is private because this callback was called
-        privateBackpack = true;
-
-        //Start editing the preferences
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        //Save all data that represent a private backpack
-        editor.putInt(mContext.getString(R.string.pref_user_slots), -1);
-        editor.putInt(mContext.getString(R.string.pref_user_items), -1);
-        editor.putInt(mContext.getString(R.string.pref_user_raw_key), -1);
-        Utility.putDouble(editor, mContext.getString(R.string.pref_user_raw_metal), -1);
-        Utility.putDouble(editor, mContext.getString(R.string.pref_player_backpack_value_tf2), -1);
-        editor.apply();
-
-        if (!isRunning && listener != null) {
-            //If both tasks have finished, notify the listener
-            listener.onFetchFinished(true);
-        }
     }
 
     /**
      * Listener interface.
      */
-    public interface OnFetchUserInfoListener {
+    public interface OnUserInfoListener {
 
         /**
          * Callback which will be called when both tasks finish.
          *
-         * @param privateBackpack indicates whether the backpack is private or not
+         * @param steamId the steamid of the zser
          */
-        void onFetchFinished(boolean privateBackpack);
+        void onUserInfoFinished(String steamId);
+
+        void onUserInfoFailed(String errorMessage);
     }
 }
