@@ -10,6 +10,12 @@ android {
         targetSdkVersion 23
         versionCode 30
         versionName "2.0.0-beta0"
+
+        applicationVariants.all { variant ->
+            variant.outputs.each { output ->
+                output.outputFile = new File(output.outputFile.parent, "bptf-" + versionName + ".apk")
+            }
+        }
     }
     buildTypes {
         release {
