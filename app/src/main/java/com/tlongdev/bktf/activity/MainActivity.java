@@ -91,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageView avatar;
     private View headerLayout;
 
+    private MenuItem userMenuItem;
+
     /**
      * Listener for the navigation drawer.
      */
@@ -179,6 +181,8 @@ public class MainActivity extends AppCompatActivity {
         }
         mNavigationView.getMenu().getItem(mCurrentSelectedPosition).setChecked(true);
 
+        userMenuItem = mNavigationView.getMenu().getItem(2);
+
         // Select either the default item (0) or the last selected item.
         switchFragment(mCurrentSelectedPosition);
     }
@@ -193,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
                         .replace(R.id.container, new UserFragment())
                         .commit();
             } else {
+                mNavigationView.getMenu().getItem(0).setChecked(true);
                 mCurrentSelectedPosition = 0;
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, new RecentsFragment())
@@ -200,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
             }
             userStateChanged = false;
         }
-        updateHeader();
+        updateDrawer();
         super.onResume();
     }
 
@@ -301,12 +306,10 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Updates the information in the navigation drawer header.
      */
-    public void updateHeader() {
+    public void updateDrawer() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        //Check if the user is logged in
-        String steamId = prefs.getString(getString(R.string.pref_resolved_steam_id), "");
-        if (!steamId.equals("")) {
+        if (Profile.isSignedIn(this)) {
             //Set the name
             name.setText(prefs.getString(getString(R.string.pref_player_name), null));
 
@@ -327,10 +330,12 @@ public class MainActivity extends AppCompatActivity {
 
             }
             headerLayout.setVisibility(View.VISIBLE);
+
+            userMenuItem.setEnabled(true);
         } else {
-            // TODO navigationHeader.setOnClickListener(null); right now the header is not updated
-            // TODO when the user provide's his steam ID
+
             headerLayout.setVisibility(View.GONE);
+            userMenuItem.setEnabled(false);
         }
     }
 

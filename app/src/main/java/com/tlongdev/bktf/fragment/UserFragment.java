@@ -524,7 +524,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             mSwipeRefreshLayout.setRefreshing(false);
         }
 
-        ((MainActivity) getActivity()).updateHeader();
+        ((MainActivity) getActivity()).updateDrawer();
     }
 
     @Override
@@ -551,7 +551,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             mSwipeRefreshLayout.setRefreshing(false);
         }
 
-        ((MainActivity) getActivity()).updateHeader();
+        ((MainActivity) getActivity()).updateDrawer();
     }
 
     @Override
