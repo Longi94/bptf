@@ -165,7 +165,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     picasso.setLoggingEnabled(true);
                     picasso.setIndicatorsEnabled(true);
                     picasso.load(item.getIconUrl(mContext)).into(holder.icon);
-                    picasso.load(item.getEffectUrl(mContext)).into(holder.effect);
+
+                    if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
+                        picasso.load(item.getEffectUrl(mContext)).into(holder.effect);
+                    }
 
                     try {
                         holder.price.setText(item.getPrice().getFormattedPrice(mContext));
