@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ import com.tlongdev.bktf.adapter.ItemChooserAdapter;
 import com.tlongdev.bktf.data.DatabaseContract;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
 
 /**
  * Dialog style activity for selecting items to be added to the calculator list.
@@ -74,6 +76,8 @@ public class ItemChooserActivity extends FragmentActivity implements
     //Adapter for the listview
     private ItemChooserAdapter adapter;
 
+    private SimpleCursorAdapter spinnerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,14 +115,24 @@ public class ItemChooserActivity extends FragmentActivity implements
         effectTypeSpinner.setEnabled(false);
 
         // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> effectsAdapter = ArrayAdapter.createFromResource(this,
-                R.array.array_effects, android.R.layout.simple_spinner_item);
+        Cursor cursor = getContentResolver().query(
+                UnusualSchemaEntry.CONTENT_URI,
+                new String[]{UnusualSchemaEntry._ID, UnusualSchemaEntry.COLUMN_ID, UnusualSchemaEntry.COLUMN_NAME},
+                null, null,
+                UnusualSchemaEntry.COLUMN_NAME + " ASC"
+        );
 
-        // Specify the layout to use when the list of choices appears
-        effectsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        if (cursor != null) {
+            spinnerAdapter = new SimpleCursorAdapter(this,
+                    android.R.layout.simple_spinner_item, cursor,
+                    new String[]{UnusualSchemaEntry.COLUMN_NAME}, new int[]{android.R.id.text1}, 0);
 
-        // Apply the adapter to the spinner
-        effectTypeSpinner.setAdapter(effectsAdapter);
+            // Specify the layout to use when the list of choices appears
+            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            // Apply the adapter to the spinner
+            effectTypeSpinner.setAdapter(spinnerAdapter);
+        }
 
         //Listen for selection in the spinner
         effectTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -277,9 +291,8 @@ public class ItemChooserActivity extends FragmentActivity implements
                 //Searching fro normal items
                 selectionArgs = new String[]{"%" + query + "%"};
             } else {
-                //Searching for unusual items, get the unusual index from the array resource
-                int[] indexes = getResources().getIntArray(R.array.array_effects_indexes);
-                selectionArgs = new String[]{"%" + query + "%", String.valueOf(indexes[effectTypeSpinner.getSelectedItemPosition()])};
+                Cursor selected = (Cursor)effectTypeSpinner.getSelectedItem();
+                selectionArgs = new String[]{"%" + query + "%", String.valueOf(selected.getInt(1))};
             }
         }
 

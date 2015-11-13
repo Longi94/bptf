@@ -262,8 +262,7 @@ public class ItemDetailActivity extends Activity {
                 }
 
                 //Set the origin of the item. Get the origin from the string array resource
-                origin.setText(String.format("%s: %s", getString(R.string.item_detail_origin),
-                        getResources().getStringArray(R.array.array_origins)[item.getOrigin()]));
+                origin.setText(String.format("%s: %s", getString(R.string.item_detail_origin), Utility.getOriginName(this, item.getOrigin())));
 
                 //Set the effect of the item (if any)
                 if (item.getPriceIndex() != 0 && (item.getQuality() == 5 || item.getQuality() == 7 || item.getQuality() == 9)) {
