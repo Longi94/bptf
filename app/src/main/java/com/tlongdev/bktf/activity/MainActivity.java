@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView name;
     private TextView backpack;
     private ImageView avatar;
-    private View headerLayout;
 
     private MenuItem userMenuItem;
 
@@ -157,13 +156,12 @@ public class MainActivity extends AppCompatActivity {
         mNavigationView.setNavigationItemSelectedListener(navigationListener);
 
         //User clicked on the header
-        View navigationHeader = mNavigationView.inflateHeaderView(R.layout.navigation_drawer_header);
+        View navigationHeader = mNavigationView.getHeaderView(0);
 
         //Find the views of the navigation drawer header
         name = (TextView) navigationHeader.findViewById(R.id.user_name);
         backpack = (TextView) navigationHeader.findViewById(R.id.backpack_value);
         avatar = (ImageView) navigationHeader.findViewById(R.id.avatar);
-        headerLayout = navigationHeader.findViewById(R.id.linear_layout);
 
         //Start services if option is on
         if (PreferenceManager.getDefaultSharedPreferences(this)
@@ -316,7 +314,11 @@ public class MainActivity extends AppCompatActivity {
             //Set the backpack value
             double bpValue = Utility.getDouble(prefs,
                     getString(R.string.pref_player_backpack_value_tf2), -1);
-            backpack.setText(getString(R.string.currency_metal, String.valueOf(Math.round(bpValue))));
+            if (bpValue >= 0) {
+                backpack.setText("Backpack: " + getString(R.string.currency_metal, String.valueOf(Math.round(bpValue))));
+            } else {
+                backpack.setText("Private backpack");
+            }
 
             //Download the avatar (if needed) and set it
             if (prefs.contains(getString(R.string.pref_new_avatar)) &&
@@ -326,15 +328,18 @@ public class MainActivity extends AppCompatActivity {
                 picasso.setLoggingEnabled(true);
                 picasso.setIndicatorsEnabled(true);
                 picasso.load(PreferenceManager.getDefaultSharedPreferences(this).
-                        getString(getString(R.string.pref_player_avatar_url), "")).into(avatar);
+                        getString(getString(R.string.pref_player_avatar_url), ""))
+                        .placeholder(R.drawable.steam_default_avatar)
+                        .error(R.drawable.steam_default_avatar)
+                        .into(avatar);
 
             }
-            headerLayout.setVisibility(View.VISIBLE);
-
             userMenuItem.setEnabled(true);
         } else {
+            name.setText(null);
+            backpack.setText(null);
+            avatar.setImageDrawable(getResources().getDrawable(R.drawable.steam_default_avatar));
 
-            headerLayout.setVisibility(View.GONE);
             userMenuItem.setEnabled(false);
         }
     }

@@ -22,7 +22,8 @@
             android:id="@+id/avatar"
             android:layout_width="wrap_content"
             android:layout_height="64dp"
-            android:scaleType="fitXY" />
+            android:scaleType="fitXY"
+            android:src="@drawable/steam_default_avatar"/>
 
         <View
             android:layout_width="wrap_content"
