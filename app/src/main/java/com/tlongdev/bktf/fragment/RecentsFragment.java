@@ -178,9 +178,9 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         //Download whole database when the app is first opened.
-        if (prefs.getBoolean(getString(R.string.pref_initial_load), true)) {
+        if (prefs.getBoolean(getString(R.string.pref_initial_load_v2), true)) {
             if (Utility.isNetworkAvailable(getActivity())) {
-                GetPriceList task = new GetPriceList(getActivity(), false, false);
+                GetPriceList task = new GetPriceList(getActivity(), false, true);
                 task.setOnPriceListFetchListener(this);
                 task.execute();
 
@@ -339,7 +339,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         //Save when the update finished
         editor.putLong(getActivity().getString(R.string.pref_last_price_list_update),
                 System.currentTimeMillis());
-        editor.putBoolean(getActivity().getString(R.string.pref_initial_load), false);
+        editor.putBoolean(getActivity().getString(R.string.pref_initial_load_v2), false);
         editor.apply();
 
         if (isAdded()) {
@@ -409,7 +409,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         //Save when the update finished
         editor.putLong(getActivity().getString(R.string.pref_last_item_schema_update),
                 System.currentTimeMillis());
-        editor.putBoolean(getActivity().getString(R.string.pref_initial_load), false);
+        editor.putBoolean(getActivity().getString(R.string.pref_initial_load_v2), false);
         editor.apply();
     }
 
