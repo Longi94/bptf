@@ -71,10 +71,6 @@ public final class DatabaseContract {
         public static final String COLUMN_TYPE_NAME = "type_name";
         public static final String COLUMN_PROPER_NAME = "proper_name";
         public static final String COLUMN_DESCRIPTION = "description";
-
-        public static Uri buildUri(long id) {
-            return CONTENT_URI.buildUpon().appendPath("id").appendPath("" + id).build();
-        }
     }
 
     public static final class UnusualSchemaEntry implements BaseColumns {
@@ -85,10 +81,6 @@ public final class DatabaseContract {
 
         public static final String COLUMN_ID = "id";
         public static final String COLUMN_NAME = "name";
-
-        public static Uri buildUri(long id) {
-            return CONTENT_URI.buildUpon().appendPath("id").appendPath("" + id).build();
-        }
     }
 
     public static final class OriginEntry implements BaseColumns {
@@ -99,10 +91,6 @@ public final class DatabaseContract {
 
         public static final String COLUMN_ID = "id";
         public static final String COLUMN_NAME = "name";
-
-        public static Uri buildUri(long id) {
-            return CONTENT_URI.buildUpon().appendPath("id").appendPath("" + id).build();
-        }
     }
 
     public static final class UserBackpackEntry implements BaseColumns {
@@ -141,9 +129,5 @@ public final class DatabaseContract {
         public static final String COLUMN_CONTAINED_ITEM = "contained_item";
         public static final String COLUMN_AUSTRALIUM = "australium";
         public static final String COLUMN_DECORATED_WEAPON_WEAR = "weapon_wear";
-
-        public static Uri buildUri(long id) {
-            return CONTENT_URI.buildUpon().appendPath("id").appendPath("" + id).build();
-        }
     }
 }

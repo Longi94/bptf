@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.UserBackpackContract.UserBackpackEntry;
+import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.util.Utility;
 

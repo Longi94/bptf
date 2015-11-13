@@ -16,7 +16,7 @@ import android.view.MenuItem;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.BackpackAdapter;
-import com.tlongdev.bktf.data.UserBackpackContract.UserBackpackEntry;
+import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
 
 /**
  * Activity for viewing user backpacks.
