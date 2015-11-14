@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
@@ -131,6 +132,13 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
         mRecyclerView.setAdapter(adapter);
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mTracker.setScreenName("Unusual Prices");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override

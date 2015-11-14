@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.BptfApplication;
@@ -197,6 +198,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        mTracker.setScreenName(String.valueOf(getTitle()));
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+
         //If needed (mostly when the steamId was changed) reload a new instance of the UserFragment
         if (userStateChanged) {
             FragmentManager fragmentManager = getSupportFragmentManager();

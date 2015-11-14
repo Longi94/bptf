@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.BptfApplication;
@@ -199,6 +200,13 @@ public class ItemDetailActivity extends Activity {
         paintView = (ImageView) findViewById(R.id.paint);
 
         queryItemDetails();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mTracker.setScreenName(String.valueOf(getTitle()));
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     /**

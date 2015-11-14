@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
@@ -73,6 +74,13 @@ public class LoginActivity extends AppCompatActivity implements GetUserInfo.OnUs
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mTracker.setScreenName(String.valueOf(getTitle()));
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override

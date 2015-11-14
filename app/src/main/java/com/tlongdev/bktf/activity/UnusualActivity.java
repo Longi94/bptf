@@ -13,6 +13,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
@@ -115,6 +116,13 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
         //Start loading the data for the cursor
         getSupportLoaderManager().initLoader(PRICE_LIST_LOADER, null, this);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mTracker.setScreenName(String.valueOf(getTitle()));
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override

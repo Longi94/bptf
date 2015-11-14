@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.BuildConfig;
@@ -136,6 +137,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         super.onPostCreate(savedInstanceState);
 
         setupSimplePreferencesScreen();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        mTracker.setScreenName(String.valueOf(getTitle()));
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override
