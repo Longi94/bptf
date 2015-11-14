@@ -1,16 +1,20 @@
 package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.fragment.RecentsFragment;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
@@ -55,7 +59,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         if (mDataSet != null && mDataSet.moveToPosition(position)) {
 
             holder.root.setOnClickListener(new View.OnClickListener() {
@@ -66,7 +70,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
             });
 
             //Get all the data from the cursor
-            Item item = new Item(
+            final Item item = new Item(
                     mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_DEFI),
                     mDataSet.getString(RecentsFragment.COL_PRICE_LIST_NAME),
                     mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_QUAL),
@@ -83,6 +87,39 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
                             mDataSet.getString(RecentsFragment.COL_PRICE_LIST_CURR)
                     )
             );
+
+            holder.more.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    PopupMenu menu = new PopupMenu(mContext, holder.more);
+
+                    menu.getMenuInflater().inflate(R.menu.popup_recents, menu.getMenu());
+
+                    menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            switch (menuItem.getItemId()) {
+                                case R.id.history:
+
+                                    Intent i = new Intent(mContext, PriceHistoryActivity.class);
+
+                                    i.putExtra(PriceHistoryActivity.EXTRA_DEFINDEX, item.getDefindex());
+                                    i.putExtra(PriceHistoryActivity.EXTRA_QUALITY, item.getQuality());
+                                    i.putExtra(PriceHistoryActivity.EXTRA_CRAFTABLE, item.isCraftable());
+                                    i.putExtra(PriceHistoryActivity.EXTRA_TRADABLE, item.isTradable());
+                                    i.putExtra(PriceHistoryActivity.EXTRA_PRICE_INDEX, item.getPriceIndex());
+
+                                    mContext.startActivity(i);
+                                    break;
+                            }
+                            return true;
+                        }
+                    });
+
+                    menu.show();
+                }
+            });
 
             holder.name.setText(item.getFormattedName(mContext, false));
 
@@ -137,6 +174,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public final View root;
+        public final View more;
 
         public final ImageView icon;
         public final ImageView effect;
@@ -153,6 +191,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
         public ViewHolder(View view) {
             super(view);
             root = view;
+            more = view.findViewById(R.id.more);
             icon = (ImageView) view.findViewById(R.id.icon);
             effect = (ImageView) view.findViewById(R.id.effect);
             name = (TextView) view.findViewById(R.id.name);

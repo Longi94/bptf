@@ -285,5 +285,6 @@
     <string name="pref_title_material_icons">Material Design Icons</string>
     <string name="title_steam_group">Steam Group</string>
     <string name="pref_initial_load_v2">pref_initial_load_v2</string>
+    <string name="title_activity_price_history">History</string>
 
 </resources>
