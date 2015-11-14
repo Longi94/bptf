@@ -20,6 +20,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.google.android.gms.analytics.Tracker;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.activity.SearchActivity;
@@ -36,6 +38,11 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
      */
     @SuppressWarnings("unused")
     private static final String LOG_TAG = ConverterFragment.class.getSimpleName();
+
+    /**
+     * The {@link Tracker} used to record screen views.
+     */
+    private Tracker mTracker;
 
     /**
      * Inputs
@@ -81,6 +88,11 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // Obtain the shared Tracker instance.
+        BptfApplication application = (BptfApplication) (getActivity()).getApplication();
+        mTracker = application.getDefaultTracker();
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_converter, container, false);
 

@@ -21,6 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.Tracker;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.activity.ItemChooserActivity;
@@ -63,6 +65,11 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
      */
     public static final String mSelection = PriceEntry.TABLE_NAME +
             "." + PriceEntry._ID + " = ?";
+
+    /**
+     * The {@link Tracker} used to record screen views.
+     */
+    private Tracker mTracker;
 
     /**
      * the adapter of the recycler view
@@ -111,6 +118,11 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // Obtain the shared Tracker instance.
+        BptfApplication application = (BptfApplication) (getActivity()).getApplication();
+        mTracker = application.getDefaultTracker();
+
         View rootView = inflater.inflate(R.layout.fragment_calculator, container, false);
 
         //Set the toolbar to the main activity's action bar

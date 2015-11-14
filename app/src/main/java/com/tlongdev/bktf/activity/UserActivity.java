@@ -19,7 +19,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.Tracker;
 import com.squareup.picasso.Picasso;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.network.GetUserBackpack;
 import com.tlongdev.bktf.util.Utility;
@@ -50,6 +52,11 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     //Keys for extra data in the intent.
     public static final String STEAM_ID_KEY = "steamid";
     public static final String JSON_USER_SUMMARIES_KEY = "json_user_summaries";
+
+    /**
+     * The {@link Tracker} used to record screen views.
+     */
+    private Tracker mTracker;
 
     //Progress bar that indicates downloading user data.
     private ProgressBar progressBar;
@@ -101,6 +108,10 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
+
+        // Obtain the shared Tracker instance.
+        BptfApplication application = (BptfApplication) getApplication();
+        mTracker = application.getDefaultTracker();
 
         //Set the color of the status bar
         if (Build.VERSION.SDK_INT >= 21) {

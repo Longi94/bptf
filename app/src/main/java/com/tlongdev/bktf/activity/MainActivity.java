@@ -21,7 +21,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.Tracker;
 import com.squareup.picasso.Picasso;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.util.Profile;
 import com.tlongdev.bktf.util.Utility;
@@ -55,6 +57,11 @@ public class MainActivity extends AppCompatActivity {
      * Remember the position of the selected item.
      */
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
+
+    /**
+     * The {@link Tracker} used to record screen views.
+     */
+    private Tracker mTracker;
 
     /**
      * Helper component that ties the action bar to the navigation drawer.
@@ -139,6 +146,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Obtain the shared Tracker instance.
+        BptfApplication application = (BptfApplication) getApplication();
+        mTracker = application.getDefaultTracker();
 
         //Set the default values for all preferences when the app is first loaded
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);

@@ -19,6 +19,8 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.Tracker;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.ItemChooserAdapter;
 import com.tlongdev.bktf.data.DatabaseContract;
@@ -65,6 +67,11 @@ public class ItemChooserActivity extends FragmentActivity implements
                     PriceEntry.COLUMN_ITEM_QUALITY + " = 5 AND " +
                     PriceEntry.COLUMN_PRICE_INDEX + " = ?";
 
+    /**
+     * The {@link Tracker} used to record screen views.
+     */
+    private Tracker mTracker;
+
     //References to all the views in the activity
     private Button addButton;
     private EditText numberInput;
@@ -82,6 +89,10 @@ public class ItemChooserActivity extends FragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_chooser);
+
+        // Obtain the shared Tracker instance.
+        BptfApplication application = (BptfApplication) getApplication();
+        mTracker = application.getDefaultTracker();
 
         //Prevent closing the activity by touching outside
         setFinishOnTouchOutside(false);

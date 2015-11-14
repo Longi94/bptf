@@ -25,7 +25,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.Tracker;
 import com.squareup.picasso.Picasso;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.activity.SearchActivity;
@@ -47,6 +49,11 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
      */
     @SuppressWarnings("unused")
     private static final String LOG_TAG = UserFragment.class.getSimpleName();
+
+    /**
+     * The {@link Tracker} used to record screen views.
+     */
+    private Tracker mTracker;
 
     //Reference too all the views that need to be updated
     private TextView playerReputation;
@@ -101,6 +108,11 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // Obtain the shared Tracker instance.
+        BptfApplication application = (BptfApplication) (getActivity()).getApplication();
+        mTracker = application.getDefaultTracker();
+
         View rootView = inflater.inflate(R.layout.fragment_user, container, false);
 
         //Set the toolbar to the main activity's action bar

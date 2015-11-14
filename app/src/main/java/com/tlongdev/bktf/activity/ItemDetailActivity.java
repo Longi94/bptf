@@ -16,7 +16,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.Tracker;
 import com.squareup.picasso.Picasso;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
@@ -109,6 +111,11 @@ public class ItemDetailActivity extends Activity {
             UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR
     };
 
+    /**
+     * The {@link Tracker} used to record screen views.
+     */
+    private Tracker mTracker;
+
     //This decides which table to load data from.
     private boolean isGuest;
 
@@ -140,6 +147,10 @@ public class ItemDetailActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
+
+        // Obtain the shared Tracker instance.
+        BptfApplication application = (BptfApplication) getApplication();
+        mTracker = application.getDefaultTracker();
 
         //Store the intent
         mIntent = getIntent();

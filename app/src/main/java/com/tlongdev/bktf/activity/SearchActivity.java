@@ -24,6 +24,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.analytics.Tracker;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.adapter.SearchAdapter;
@@ -70,6 +72,11 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             PriceEntry.COLUMN_ITEM_QUALITY + " = 5 AND " +
             PriceEntry.COLUMN_PRICE_INDEX + " != 0)";
 
+    /**
+     * The {@link Tracker} used to record screen views.
+     */
+    private Tracker mTracker;
+
     //The search query string
     private String searchQuery;
 
@@ -87,6 +94,10 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        // Obtain the shared Tracker instance.
+        BptfApplication application = (BptfApplication) getApplication();
+        mTracker = application.getDefaultTracker();
 
         //Set the color of the status bar
         if (Build.VERSION.SDK_INT >= 21) {

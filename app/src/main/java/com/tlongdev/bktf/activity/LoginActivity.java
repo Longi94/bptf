@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.Tracker;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.network.GetUserBackpack;
 import com.tlongdev.bktf.network.GetUserInfo;
@@ -20,6 +22,11 @@ import com.tlongdev.bktf.util.Profile;
 import com.tlongdev.bktf.util.Utility;
 
 public class LoginActivity extends AppCompatActivity implements GetUserInfo.OnUserInfoListener, GetUserBackpack.OnUserBackpackListener {
+
+    /**
+     * The {@link Tracker} used to record screen views.
+     */
+    private Tracker mTracker;
 
     private EditText steamIdInput;
 
@@ -29,6 +36,11 @@ public class LoginActivity extends AppCompatActivity implements GetUserInfo.OnUs
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // Obtain the shared Tracker instance.
+        BptfApplication application = (BptfApplication) getApplication();
+        mTracker = application.getDefaultTracker();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

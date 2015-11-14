@@ -14,6 +14,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.google.android.gms.analytics.Tracker;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.BackpackAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
@@ -78,6 +80,12 @@ public class UserBackpackActivity extends AppCompatActivity implements LoaderMan
             UserBackpackEntry.COLUMN_AUSTRALIUM,
             UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR
     };
+
+    /**
+     * The {@link Tracker} used to record screen views.
+     */
+    private Tracker mTracker;
+
     //Adapters used for the listview
     private BackpackAdapter adapter;
 
@@ -95,6 +103,10 @@ public class UserBackpackActivity extends AppCompatActivity implements LoaderMan
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_backpack);
+
+        // Obtain the shared Tracker instance.
+        BptfApplication application = (BptfApplication) getApplication();
+        mTracker = application.getDefaultTracker();
 
         //Set the color of the status bar
         if (Build.VERSION.SDK_INT >= 21) {
