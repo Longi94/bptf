@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.analytics.Tracker;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.util.Profile;
@@ -75,6 +77,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
     };
 
     /**
+     * The {@link Tracker} used to record screen views.
+     */
+    private Tracker mTracker;
+
+    /**
      * Binds a preference's summary to its value. More specifically, when the
      * preference's value is changed, its summary (line of text below the
      * preference title) is updated to reflect the value. The summary is also
@@ -98,6 +105,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Obtain the shared Tracker instance.
+        BptfApplication application = (BptfApplication) getApplication();
+        mTracker = application.getDefaultTracker();
 
         //Set the color of the status bar
         if (Build.VERSION.SDK_INT >= 21) {

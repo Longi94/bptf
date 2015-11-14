@@ -31,6 +31,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.Tracker;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.activity.MainActivity;
@@ -75,6 +77,11 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     public static final int COL_PRICE_LIST_PRAW = 9;
     public static final int COL_PRICE_LIST_DIFF = 10;
     public static final int COL_AUSTRALIUM = 11;
+
+    /**
+     * The {@link Tracker} used to record screen views.
+     */
+    private Tracker mTracker;
 
     /**
      * Loading indicator
@@ -132,6 +139,11 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // Obtain the shared Tracker instance.
+        BptfApplication application = (BptfApplication) (getActivity()).getApplication();
+        mTracker = application.getDefaultTracker();
+
         View rootView = inflater.inflate(R.layout.fragment_recents, container, false);
 
         //Set the toolbar to the main activity's action bar

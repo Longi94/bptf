@@ -13,6 +13,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
+import com.google.android.gms.analytics.Tracker;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.adapter.UnusualAdapter;
@@ -59,6 +61,11 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
             PriceEntry.COLUMN_DIFFERENCE,
     };
 
+    /**
+     * The {@link Tracker} used to record screen views.
+     */
+    private Tracker mTracker;
+
     //Adapter for the gridView
     private UnusualAdapter adapter;
 
@@ -70,6 +77,10 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unusual);
+
+        // Obtain the shared Tracker instance.
+        BptfApplication application = (BptfApplication) getApplication();
+        mTracker = application.getDefaultTracker();
 
         //Set the color of the status bar
         if (Build.VERSION.SDK_INT >= 21) {
