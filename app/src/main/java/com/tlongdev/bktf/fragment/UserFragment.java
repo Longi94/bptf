@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.BptfApplication;
@@ -167,6 +168,9 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onResume() {
         super.onResume();
+        mTracker.setScreenName("User Profile");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+
         //Update user info if last update was more than 30 minutes ago
         if (Utility.isNetworkAvailable(getActivity()) && System.currentTimeMillis()
                 - PreferenceManager.getDefaultSharedPreferences(getActivity())

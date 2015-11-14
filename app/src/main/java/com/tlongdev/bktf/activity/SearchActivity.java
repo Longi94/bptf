@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
@@ -122,6 +123,9 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     protected void onResume() {
+        mTracker.setScreenName(String.valueOf(getTitle()));
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+
         super.onResume();
         getSupportLoaderManager().initLoader(PRICE_LIST_LOADER, null, this);
     }

@@ -2,6 +2,7 @@ package com.tlongdev.bktf.activity;
 
 import android.os.Bundle;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
@@ -31,5 +32,13 @@ public class CreditsActivity extends AppCompatPreferenceActivity {
         mTracker = application.getDefaultTracker();
 
         addPreferencesFromResource(R.xml.pref_credits);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+
+        mTracker.setScreenName(String.valueOf(getTitle()));
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 }

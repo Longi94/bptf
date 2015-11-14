@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
@@ -172,6 +173,13 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         priceUsd.setText("$0");
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mTracker.setScreenName("Calculator");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override

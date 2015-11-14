@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
@@ -258,6 +259,13 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
         rootView.findViewById(R.id.calculator_dot).setOnClickListener(this);
         rootView.findViewById(R.id.calculator_delete).setOnClickListener(this);
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mTracker.setScreenName("Converter");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override

@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
@@ -157,6 +158,13 @@ public class UserBackpackActivity extends AppCompatActivity implements LoaderMan
         //Start loading data from the database
         getSupportLoaderManager().initLoader(LOADER_NORMAL, null, this);
         getSupportLoaderManager().initLoader(LOADER_NEW, null, this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mTracker.setScreenName(String.valueOf(getTitle()));
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     /**

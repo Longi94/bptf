@@ -31,6 +31,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
@@ -187,6 +188,8 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onResume() {
         super.onResume();
+        mTracker.setScreenName("Latest Changes");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         //Download whole database when the app is first opened.

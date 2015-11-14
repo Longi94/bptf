@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.BptfApplication;
@@ -162,6 +163,13 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.button_steam_community).setOnClickListener(this);
         findViewById(R.id.backpack).setOnClickListener(this);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mTracker.setScreenName(String.valueOf(getTitle()));
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override
