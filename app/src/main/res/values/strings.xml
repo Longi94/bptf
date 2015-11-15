@@ -286,5 +286,7 @@
     <string name="title_steam_group">Steam Group</string>
     <string name="pref_initial_load_v2">pref_initial_load_v2</string>
     <string name="title_activity_price_history">History</string>
+    <string name="pref_title_mp_chart">MPAndroidChart</string>
+    <string name="pref_summary_mp_chart">a powerful Android chart / graph library</string>
 
 </resources>
