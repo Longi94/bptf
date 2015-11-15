@@ -77,7 +77,7 @@ public class PriceHistoryActivity extends AppCompatActivity implements GetPriceH
                 null
         );
 
-        GetPriceHistory task = new GetPriceHistory(mItem);
+        GetPriceHistory task = new GetPriceHistory(this, mItem);
         task.setListener(this);
         task.execute();
     }
@@ -99,7 +99,6 @@ public class PriceHistoryActivity extends AppCompatActivity implements GetPriceH
 
     @Override
     public void onPriceHistoryFinished(List<Price> prices) {
-        Log.d(LOG_TAG, "woooop");
     }
 
     @Override
