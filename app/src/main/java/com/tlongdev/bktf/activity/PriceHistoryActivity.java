@@ -44,12 +44,7 @@ public class PriceHistoryActivity extends AppCompatActivity implements GetPriceH
     @SuppressWarnings("unused")
     private static final String LOG_TAG = GetPriceHistory.class.getSimpleName();
 
-    public static final String EXTRA_DEFINDEX = "defindex";
-    public static final String EXTRA_QUALITY = "quality";
-    public static final String EXTRA_TRADABLE = "tradable";
-    public static final String EXTRA_CRAFTABLE = "craftable";
-    public static final String EXTRA_PRICE_INDEX = "price_index";
-    public static final String EXTRA_CURRENCY = "currency";
+    public static final String EXTRA_ITEM = "item";
 
     /**
      * The {@link Tracker} used to record screen views.
@@ -90,18 +85,7 @@ public class PriceHistoryActivity extends AppCompatActivity implements GetPriceH
 
         Intent i = getIntent();
 
-        final String currency = i.getStringExtra(EXTRA_CURRENCY);
-
-        mItem = new Item(
-                i.getIntExtra(EXTRA_DEFINDEX, 0),
-                null,
-                i.getIntExtra(EXTRA_QUALITY, 0),
-                i.getBooleanExtra(EXTRA_TRADABLE, true),
-                i.getBooleanExtra(EXTRA_CRAFTABLE, true),
-                false,
-                i.getIntExtra(EXTRA_PRICE_INDEX, 0),
-                new Price(0, currency)
-        );
+        mItem = (Item) i.getSerializableExtra(EXTRA_ITEM);
 
         GetPriceHistory task = new GetPriceHistory(this, mItem);
         task.setListener(this);
@@ -141,7 +125,7 @@ public class PriceHistoryActivity extends AppCompatActivity implements GetPriceH
         yAxis.setValueFormatter(new YAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, YAxis yAxis) {
-                return String.format("%s %s", Utility.formatDouble(value), currency);
+                return String.format("%s %s", Utility.formatDouble(value), mItem.getPrice().getCurrency());
             }
         });
     }
@@ -208,8 +192,8 @@ public class PriceHistoryActivity extends AppCompatActivity implements GetPriceH
 
             for (Price price : prices) {
 
-                int day = (int)TimeUnit.MILLISECONDS.toDays(price.getLastUpdate() - first);
-                entries.add(new Entry((float)price.getConvertedPrice(this, mItem.getPrice().getCurrency(), false), day));
+                int day = (int) TimeUnit.MILLISECONDS.toDays(price.getLastUpdate() - first);
+                entries.add(new Entry((float) price.getConvertedPrice(this, mItem.getPrice().getCurrency(), false), day));
 
             }
 

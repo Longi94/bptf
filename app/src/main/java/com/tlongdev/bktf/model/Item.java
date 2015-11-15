@@ -10,10 +10,12 @@ import com.tlongdev.bktf.data.DatabaseContract;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.util.Utility;
 
+import java.io.Serializable;
+
 /**
  * Item class
  */
-public class Item {
+public class Item implements Serializable{
 
     /**
      * Log tag for logging.
