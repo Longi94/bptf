@@ -44,5 +44,15 @@
 
     </PreferenceScreen>
 
+    <PreferenceScreen
+        android:key="@string/pref_title_mp_chart"
+        android:summary="@string/pref_summary_mp_chart"
+        android:title="@string/pref_title_mp_chart">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://github.com/PhilJay/MPAndroidChart" />
+
+    </PreferenceScreen>
 
 </PreferenceScreen>
