@@ -11,8 +11,8 @@ import android.os.Build;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
-import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Price;
 
@@ -20,8 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -292,34 +291,14 @@ public class Utility {
     }
 
     /**
-     * Rounds the given double.
-     *
-     * @param value  value tobe rounded
-     * @param places number of decimal places
-     * @return rounded double
+     * Format floating point numbers to 2 decimal places
+     * @param value the number to format
+     * @return the formatted string
      */
-    public static double roundDouble(double value, int places) {
-        if (places < 0)
-            throw new IllegalArgumentException();
-
-        BigDecimal bd = new BigDecimal(value);
-        //Half up is the standard rounding technique
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
+    public static String formatDouble(double value) {
+        return new DecimalFormat("#.##").format(value);
     }
 
-    /**
-     * Round to certain number of decimals
-     *
-     * @param d
-     * @param decimalPlace
-     * @return
-     */
-    public static float roundFloat(float d, int decimalPlace) {
-        BigDecimal bd = new BigDecimal(Float.toString(d));
-        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
-        return bd.floatValue();
-    }
 
     /**
      * Calculate the total raw metal.

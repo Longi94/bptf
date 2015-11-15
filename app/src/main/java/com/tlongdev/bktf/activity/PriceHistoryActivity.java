@@ -141,7 +141,7 @@ public class PriceHistoryActivity extends AppCompatActivity implements GetPriceH
         yAxis.setValueFormatter(new YAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, YAxis yAxis) {
-                return String.format("%s %s", Utility.roundFloat(value, 2), currency);
+                return String.format("%s %s", Utility.formatDouble(value), currency);
             }
         });
     }

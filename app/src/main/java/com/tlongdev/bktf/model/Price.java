@@ -120,7 +120,7 @@ public class Price {
             product += (int) low;
             //Check if the double has fraction smaller than 0.01, if so we need to format the double
         else if ((String.valueOf(low)).substring((String.valueOf(low)).indexOf('.') + 1).length() > 2)
-            product += new DecimalFormat("#0.00").format(low);
+            product += new DecimalFormat("#.##").format(low);
         else
             product += low;
 
@@ -130,7 +130,7 @@ public class Price {
                 product += "-" + (int) high;
                 //Check if the double has fraction smaller than 0.01, if so we need to format the double
             else if ((String.valueOf(high)).substring((String.valueOf(high)).indexOf('.') + 1).length() > 2)
-                product += "-" + new DecimalFormat("#0.00").format(high);
+                product += "-" + new DecimalFormat("#.##").format(high);
             else
                 product += "-" + high;
         }

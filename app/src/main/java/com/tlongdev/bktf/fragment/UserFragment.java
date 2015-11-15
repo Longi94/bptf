@@ -462,10 +462,9 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             backpackRawKeys.setText("?");
 
         //Raw metal
-        double rawMetal = Utility.roundDouble(Utility.getDouble(prefs,
-                getString(R.string.pref_user_raw_metal), -1), 2);
+        double rawMetal = Utility.getDouble(prefs, getString(R.string.pref_user_raw_metal), -1);
         if (rawMetal >= 0)
-            backpackRawMetal.setText(String.valueOf(Utility.roundDouble(rawMetal, 2)));
+            backpackRawMetal.setText(String.valueOf(Utility.formatDouble(rawMetal)));
         else
             backpackRawMetal.setText("?");
 
