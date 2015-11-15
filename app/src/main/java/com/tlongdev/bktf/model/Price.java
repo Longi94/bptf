@@ -8,12 +8,13 @@ import android.util.Log;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.util.Utility;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 
 /**
  * Price class
  */
-public class Price {
+public class Price implements Serializable {
 
     /**
      * Log tag for logging.
