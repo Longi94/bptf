@@ -127,9 +127,9 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                             inputUsd.setText(null);
                         } else {
                             Price price = new Price(Double.parseDouble(s.toString()), Currency.BUD);
-                            inputKeys.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false), 2)));
-                            inputMetal.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false), 2)));
-                            inputUsd.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.USD, false), 2)));
+                            inputKeys.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false))));
+                            inputMetal.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false))));
+                            inputUsd.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.USD, false))));
                         }
                     }
                 } catch (Throwable throwable) {
@@ -156,9 +156,9 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                             inputUsd.setText(null);
                         } else {
                             Price price = new Price(Double.parseDouble(s.toString()), Currency.KEY);
-                            inputEarbuds.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.BUD, false), 2)));
-                            inputMetal.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false), 2)));
-                            inputUsd.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.USD, false), 2)));
+                            inputEarbuds.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.BUD, false))));
+                            inputMetal.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false))));
+                            inputUsd.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.USD, false))));
                         }
                     }
                 } catch (Throwable throwable) {
@@ -185,9 +185,9 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                             inputUsd.setText(null);
                         } else {
                             Price price = new Price(Double.parseDouble(s.toString()), Currency.METAL);
-                            inputKeys.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false), 2)));
-                            inputEarbuds.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.BUD, false), 2)));
-                            inputUsd.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.USD, false), 2)));
+                            inputKeys.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false))));
+                            inputEarbuds.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.BUD, false))));
+                            inputUsd.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.USD, false))));
                         }
                     }
                 } catch (Throwable throwable) {
@@ -214,9 +214,9 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                             inputEarbuds.setText(null);
                         } else {
                             Price price = new Price(Double.parseDouble(s.toString()), Currency.USD);
-                            inputKeys.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false), 2)));
-                            inputMetal.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false), 2)));
-                            inputEarbuds.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.BUD, false), 2)));
+                            inputKeys.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false))));
+                            inputMetal.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false))));
+                            inputEarbuds.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.BUD, false))));
                         }
                     }
                 } catch (Throwable throwable) {
@@ -234,9 +234,9 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
         inputEarbuds.setText("1");
         inputEarbuds.setSelection(inputEarbuds.length());
         try {
-            inputKeys.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false), 2)));
-            inputMetal.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false), 2)));
-            inputUsd.setText(String.valueOf(Utility.roundDouble(price.getConvertedPrice(getActivity(), Currency.USD, false), 2)));
+            inputKeys.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false))));
+            inputMetal.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false))));
+            inputUsd.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.USD, false))));
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }

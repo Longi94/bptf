@@ -509,7 +509,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
         //Raw metal
         if (rawMetal >= 0)
-            backpackRawMetal.setText(String.valueOf(Utility.roundDouble(rawMetal, 2)));
+            backpackRawMetal.setText(String.valueOf(Utility.formatDouble(rawMetal)));
         else
             backpackRawMetal.setText("?");
 
