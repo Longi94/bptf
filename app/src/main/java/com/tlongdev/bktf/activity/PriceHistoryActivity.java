@@ -181,7 +181,7 @@ public class PriceHistoryActivity extends AppCompatActivity implements GetPriceH
         //Setup the X axis of the chart
         ArrayList<String> xValues = new ArrayList<>();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
 
         for (long day = 0; day < days * 1.1; day++) {
             xValues.add(dateFormat.format(new Date(first + (day * 86400000L))));
