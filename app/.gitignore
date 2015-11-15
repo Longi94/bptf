@@ -1,1 +1,4 @@
 /build
+
+# bptf project
+src/main/res/values/sensitive.xml

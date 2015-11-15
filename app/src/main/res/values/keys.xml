@@ -10,6 +10,7 @@
     <string name="steam_get_player_items_url" translatable="false">http://api.steampowered.com/IEconItems_440/GetPlayerItems/v0001/</string>
     <string name="steam_get_player_summaries_url" translatable="false">http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/</string>
     <string name="steam_resolve_vanity_url"  translatable="false">http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/</string>
+    <string name="tlongdev_item_schema" translatable="false">http://tlongdev.com/item_schema.php</string>
 
     <!--URLs-->
     <string name="link_bazaar_tf" translatable="false">http://bazaar.tf/profiles/</string>
@@ -19,6 +20,5 @@
     <string name="link_steam_community" translatable="false">http://steamcommunity.com/profiles/</string>
     <string name="link_one_sky" translatable="false">https://tlongdev.oneskyapp.com/</string>
     <string name="link_github_help" translatable="false">https://github.com/Longi94/bptf/wiki/Changelog</string>
-    <string name="tlongdev_item_schema">http://tlongdev.com/item_schema.php</string>
 
 </resources>

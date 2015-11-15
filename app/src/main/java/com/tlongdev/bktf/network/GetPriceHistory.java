@@ -1,5 +1,6 @@
 package com.tlongdev.bktf.network;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -7,6 +8,7 @@ import android.util.Log;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 
@@ -25,6 +27,8 @@ public class GetPriceHistory extends AsyncTask<Void, Void, Integer> {
     @SuppressWarnings("unused")
     private static final String LOG_TAG = GetPriceHistory.class.getSimpleName();
 
+    private Context mContext;
+
     private int defindex;
     private int quality;
     private int craftable;
@@ -37,20 +41,22 @@ public class GetPriceHistory extends AsyncTask<Void, Void, Integer> {
 
     private List<Price> result = new LinkedList<>();
 
-    public GetPriceHistory(Item item) {
+    public GetPriceHistory(Context context, Item item) {
         this.defindex = item.getDefindex();
         this.quality = item.getQuality();
         this.craftable = item.isCraftable() ? 1 : 0;
         this.tradable = item.isTradable() ? 1 : 0;
         this.priceIndex = item.getPriceIndex();
+        mContext = context;
     }
 
-    public GetPriceHistory(int defindex, int quality, boolean craftable, boolean tradable, int priceIndex) {
+    public GetPriceHistory(Context context, int defindex, int quality, boolean craftable, boolean tradable, int priceIndex) {
         this.defindex = defindex;
         this.quality = quality;
         this.craftable = craftable ? 1 : 0;
         this.tradable = tradable ? 1 : 0;
         this.priceIndex = priceIndex;
+        mContext = context;
     }
 
     @Override
@@ -71,7 +77,7 @@ public class GetPriceHistory extends AsyncTask<Void, Void, Integer> {
 
             //Build the URI
             Uri.Builder builder = Uri.parse(BASE_URL).buildUpon()
-                    .appendQueryParameter(KEY_DEV, "KEY_HERE") // TODO api key
+                    .appendQueryParameter(KEY_DEV, mContext.getString(R.string.backpack_tf_api_key))
                     .appendQueryParameter(KEY_DEFINDEX, String.valueOf(defindex))
                     .appendQueryParameter(KEY_QUALITY, String.valueOf(quality))
                     .appendQueryParameter(KEY_TRADABLE, String.valueOf(tradable))
