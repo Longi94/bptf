@@ -109,6 +109,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
                                     i.putExtra(PriceHistoryActivity.EXTRA_CRAFTABLE, item.isCraftable());
                                     i.putExtra(PriceHistoryActivity.EXTRA_TRADABLE, item.isTradable());
                                     i.putExtra(PriceHistoryActivity.EXTRA_PRICE_INDEX, item.getPriceIndex());
+                                    i.putExtra(PriceHistoryActivity.EXTRA_CURRENCY, item.getPrice().getCurrency());
 
                                     mContext.startActivity(i);
                                     break;

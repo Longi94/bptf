@@ -187,12 +187,15 @@ public class GetPriceHistory extends AsyncTask<Void, Void, Integer> {
                                 currency = parser.getText();
                                 break;
                             case KEY_TIMESTAMP:
-                                timestamp = parser.getLongValue();
+                                timestamp = parser.getLongValue() * 1000L;
                                 break;
                         }
                     }
 
-                    result.add(new Price(value, valueHigh, -1, timestamp, -1, currency));
+                    // TODO: 2015. 11. 15. don't know what to do with hat currencies yet
+                    if (currency != null && !currency.equals("hat")) {
+                        result.add(new Price(value, valueHigh, -1, timestamp, -1, currency));
+                    }
                 }
 
                 return 0;

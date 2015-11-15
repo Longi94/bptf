@@ -233,7 +233,7 @@ public class Price {
                 }
             default:
                 //Unknown currency was given, throw an exception.
-                String error = "Unknown target currency: " + targetCurrency;
+                String error = "Unknown target currency: " + currency;
                 Log.e(LOG_TAG, error);
                 throw new IllegalArgumentException(error);
         }
