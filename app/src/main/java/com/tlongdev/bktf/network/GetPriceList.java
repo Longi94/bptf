@@ -254,53 +254,42 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
 
                     //Parse an attribute and get the value of it
                     while (parser.nextToken() != JsonToken.END_OBJECT) {
+                        parser.nextToken();
                         switch (parser.getCurrentName()) {
                             case KEY_DEFINDEX:
-                                parser.nextToken();
                                 defindex = parser.getIntValue();
                                 break;
                             case KEY_QUALITY:
-                                parser.nextToken();
                                 quality = parser.getIntValue();
                                 break;
                             case KEY_TRADABLE:
-                                parser.nextToken();
                                 tradable = parser.getIntValue();
                                 break;
                             case KEY_CRAFTABLE:
-                                parser.nextToken();
                                 craftable = parser.getIntValue();
                                 break;
                             case KEY_PRICE_INDEX:
-                                parser.nextToken();
                                 priceIndex = parser.getIntValue();
                                 break;
                             case KEY_AUSTRALIUM:
-                                parser.nextToken();
                                 australium = parser.getIntValue();
                                 break;
                             case KEY_CURRENCY:
-                                parser.nextToken();
                                 currency = parser.getText();
                                 break;
                             case KEY_VALUE:
-                                parser.nextToken();
                                 value = parser.getDoubleValue();
                                 break;
                             case KEY_VALUE_HIGH:
-                                parser.nextToken();
                                 high = parser.getDoubleValue();
                                 break;
                             case KEY_VALUE_RAW:
-                                parser.nextToken();
                                 raw = parser.getDoubleValue();
                                 break;
                             case KEY_LAST_UPDATE:
-                                parser.nextToken();
                                 lastUpdate = parser.getLongValue();
                                 break;
                             case KEY_DIFFERENCE:
-                                parser.nextToken();
                                 difference = parser.getDoubleValue();
                                 break;
                         }
