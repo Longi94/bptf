@@ -1,25 +1,40 @@
 package com.tlongdev.bktf.activity;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.model.Item;
+import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.network.GetPriceHistory;
 import com.tlongdev.bktf.util.Utility;
 
-public class PriceHistoryActivity extends AppCompatActivity {
+import java.util.List;
+
+public class PriceHistoryActivity extends AppCompatActivity implements GetPriceHistory.OnPriceHistoryListener {
+
+    /**
+     * Log tag for logging.
+     */
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = GetPriceHistory.class.getSimpleName();
 
     public static final String EXTRA_DEFINDEX = "defindex";
     public static final String EXTRA_QUALITY = "quality";
     public static final String EXTRA_TRADABLE = "tradable";
     public static final String EXTRA_CRAFTABLE = "craftable";
     public static final String EXTRA_PRICE_INDEX = "price_index";
+
+    private Item mItem;
 
     /**
      * The {@link Tracker} used to record screen views.
@@ -48,6 +63,23 @@ public class PriceHistoryActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
         }
+
+        Intent i = getIntent();
+
+        mItem = new Item(
+                i.getIntExtra(EXTRA_DEFINDEX, 0),
+                null,
+                i.getIntExtra(EXTRA_QUALITY, 0),
+                i.getBooleanExtra(EXTRA_TRADABLE, true),
+                i.getBooleanExtra(EXTRA_CRAFTABLE, true),
+                false,
+                i.getIntExtra(EXTRA_PRICE_INDEX, 0),
+                null
+        );
+
+        GetPriceHistory task = new GetPriceHistory(mItem);
+        task.setListener(this);
+        task.execute();
     }
 
     @Override
@@ -63,5 +95,15 @@ public class PriceHistoryActivity extends AppCompatActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPriceHistoryFinished(List<Price> prices) {
+        Log.d(LOG_TAG, "woooop");
+    }
+
+    @Override
+    public void onPriceHistoryFailed(String errorMessage) {
+        Log.d(LOG_TAG, errorMessage);
     }
 }
