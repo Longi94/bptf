@@ -56,15 +56,17 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
      * Constructor
      *
      * @param context context
-     * @param prices the data set
-     * @param item the item
+     * @param prices  the data set
+     * @param item    the item
      */
     public HistoryAdapter(Context context, List<Price> prices, Item item) {
         this.mDataSet = prices;
         this.mContext = context;
         this.mItem = item;
 
-        buildDataSet();
+        if (prices != null && prices.size() > 1) {
+            buildDataSet();
+        }
     }
 
     /**
@@ -196,44 +198,49 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     private void buildChart(LineChart chart) {
 
-        chart.setLogEnabled(true);
+        if (mDataSet != null && mDataSet.size() > 1) {
 
-        chart.setDescription(null);
+            chart.setLogEnabled(true);
 
-        chart.setDrawGridBackground(false);
+            chart.setDescription(null);
 
-        chart.setTouchEnabled(true);
+            chart.setDrawGridBackground(false);
 
-        chart.setDragEnabled(true);
-        chart.setScaleYEnabled(false);
-        chart.setScaleXEnabled(true);
+            chart.setTouchEnabled(true);
 
-        chart.setPinchZoom(true);
+            chart.setDragEnabled(true);
+            chart.setScaleYEnabled(false);
+            chart.setScaleXEnabled(true);
 
-        chart.getAxisRight().setEnabled(false);
-        chart.getLegend().setEnabled(false);
+            chart.setPinchZoom(true);
 
-        int textColor = Utility.getColor(mContext, R.color.text_primary);
+            chart.getAxisRight().setEnabled(false);
+            chart.getLegend().setEnabled(false);
 
-        XAxis xAxis = chart.getXAxis();
-        xAxis.setAvoidFirstLastClipping(true);
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setTextColor(textColor);
+            int textColor = Utility.getColor(mContext, R.color.text_primary);
 
-        YAxis yAxis = chart.getAxisLeft();
-        yAxis.setTextColor(textColor);
-        yAxis.setStartAtZero(false);
-        yAxis.setValueFormatter(new YAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, YAxis yAxis) {
-                return String.format("%s %s", Utility.formatDouble(value), mItem.getPrice().getCurrency());
-            }
-        });
+            XAxis xAxis = chart.getXAxis();
+            xAxis.setAvoidFirstLastClipping(true);
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setTextColor(textColor);
 
-        chart.setData(mData);
+            YAxis yAxis = chart.getAxisLeft();
+            yAxis.setTextColor(textColor);
+            yAxis.setStartAtZero(false);
+            yAxis.setValueFormatter(new YAxisValueFormatter() {
+                @Override
+                public String getFormattedValue(float value, YAxis yAxis) {
+                    return String.format("%s %s", Utility.formatDouble(value), mItem.getPrice().getCurrency());
+                }
+            });
 
-        chart.notifyDataSetChanged();
-        chart.animateY(1000, Easing.EasingOption.EaseOutCubic);
+            chart.setData(mData);
+
+            chart.notifyDataSetChanged();
+            chart.animateY(1000, Easing.EasingOption.EaseOutCubic);
+        } else {
+            chart.setNoDataTextDescription("The price is new.");
+        }
     }
 
     /**

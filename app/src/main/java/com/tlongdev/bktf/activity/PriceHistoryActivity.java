@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -49,6 +50,7 @@ public class PriceHistoryActivity extends AppCompatActivity implements GetPriceH
      */
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
+    private TextView failText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,13 +79,19 @@ public class PriceHistoryActivity extends AppCompatActivity implements GetPriceH
 
         mItem = (Item) i.getSerializableExtra(EXTRA_ITEM);
 
-        GetPriceHistory task = new GetPriceHistory(this, mItem);
-        task.setListener(this);
-        task.execute();
-
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        failText = (TextView) findViewById(R.id.fail_text);
+        if (Utility.isNetworkAvailable(this)) {
+            GetPriceHistory task = new GetPriceHistory(this, mItem);
+            task.setListener(this);
+            task.execute();
+        } else {
+            progressBar.setVisibility(View.GONE);
+            failText.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -122,6 +130,21 @@ public class PriceHistoryActivity extends AppCompatActivity implements GetPriceH
 
     @Override
     public void onPriceHistoryFailed(String errorMessage) {
-        Log.d(LOG_TAG, errorMessage);
+        if (errorMessage != null) {
+            Log.d(LOG_TAG, errorMessage);
+        }
+
+        //Animate in the recycler view, so it's not that abrupt
+        Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.simple_fade_in);
+        Animation fadeOut = AnimationUtils.loadAnimation(this, R.anim.simple_fade_in);
+
+        fadeIn.setDuration(500);
+        fadeOut.setDuration(500);
+
+        failText.startAnimation(fadeIn);
+        failText.setVisibility(View.VISIBLE);
+
+        progressBar.startAnimation(fadeOut);
+        progressBar.setVisibility(View.GONE);
     }
 }
