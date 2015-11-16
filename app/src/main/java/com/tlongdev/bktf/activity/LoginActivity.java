@@ -74,6 +74,14 @@ public class LoginActivity extends AppCompatActivity implements GetUserInfo.OnUs
                 }
             }
         });
+
+        findViewById(R.id.what_is_id).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: 2015. 11. 17.
+                Toast.makeText(LoginActivity.this, "Under construction :)", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
