@@ -287,4 +287,13 @@ public class Price implements Serializable {
             return String.format("- %s", differencePrice.getFormattedPrice(context, currency));
         }
     }
+
+    public double getConvertedAveragePrice(Context context, String currency) {
+
+        if (highValue > 0) {
+            return (getConvertedPrice(context, currency, false) + getConvertedPrice(context, currency, true)) / 2.0;
+        } else {
+            return getConvertedPrice(context, currency, false);
+        }
+    }
 }
