@@ -11,6 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 
 import com.google.android.gms.analytics.HitBuilders;
@@ -103,7 +105,18 @@ public class PriceHistoryActivity extends AppCompatActivity implements GetPriceH
     public void onPriceHistoryFinished(List<Price> prices) {
         HistoryAdapter adapter = new HistoryAdapter(this, prices, mItem);
         recyclerView.setAdapter(adapter);
+
+        //Animate in the recycler view, so it's not that abrupt
+        Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.simple_fade_in);
+        Animation fadeOut = AnimationUtils.loadAnimation(this, R.anim.simple_fade_in);
+
+        fadeIn.setDuration(500);
+        fadeOut.setDuration(500);
+
+        recyclerView.startAnimation(fadeIn);
         recyclerView.setVisibility(View.VISIBLE);
+
+        progressBar.startAnimation(fadeOut);
         progressBar.setVisibility(View.GONE);
     }
 

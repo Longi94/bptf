@@ -1,6 +1,7 @@
 package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.YAxisValueFormatter;
+import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
@@ -105,9 +107,25 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         switch (getItemViewType(position)) {
             case VIEW_TYPE_HEADER:
                 buildChart(holder.historyChart);
+
+                holder.iconCard.setCardBackgroundColor(mItem.getColor(mContext, true));
+
+                Picasso picasso = Picasso.with(mContext);
+                picasso.load(mItem.getIconUrl(mContext)).into(holder.icon);
+                picasso.load(mItem.getEffectUrl(mContext)).into(holder.effect);
+
+                holder.name.setText(mItem.getFormattedName(mContext));
                 break;
             case VIEW_TYPE_NORMAL:
-                holder.price.setText(mDataSet.get(position - 1).getFormattedPrice(mContext));
+                Price price = mDataSet.get(position - 1);
+                holder.price.setText(price.getFormattedPrice(mContext));
+                holder.date.setText(new SimpleDateFormat("dd-MM-yyyy").format(new Date(price.getLastUpdate())));
+
+                if (position == 1) {
+                    holder.separator.setVisibility(View.GONE);
+                } else {
+                    holder.separator.setVisibility(View.VISIBLE);
+                }
                 break;
         }
     }
@@ -157,7 +175,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             for (Price price : mDataSet) {
 
                 int day = (int) TimeUnit.MILLISECONDS.toDays(price.getLastUpdate() - first);
-                entries.add(new Entry((float) price.getConvertedPrice(mContext, mItem.getPrice().getCurrency(), false), day));
+                entries.add(new Entry((float) price.getConvertedAveragePrice(mContext, mItem.getPrice().getCurrency()), day));
 
             }
 
@@ -169,8 +187,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             set.setCircleColor(textColor);
             set.setHighLightColor(textColor);
             set.setAxisDependency(YAxis.AxisDependency.LEFT);
-            set.setDrawCubic(true);
-            set.setCubicIntensity(0.1f);
             set.setDrawValues(false);
 
             //Add data to the chart
@@ -232,8 +248,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         ImageView icon;
         TextView name;
         LineChart historyChart;
+        CardView iconCard;
 
         TextView price;
+        TextView date;
+        View separator;
 
         /**
          * Constructor
@@ -248,9 +267,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                     icon = (ImageView) view.findViewById(R.id.icon);
                     name = (TextView) view.findViewById(R.id.name);
                     historyChart = (LineChart) view.findViewById(R.id.history_chart);
+                    iconCard = (CardView) view.findViewById(R.id.icon_card);
                     break;
                 default:
-                    price = (TextView) view.findViewById(R.id.text);
+                    separator = view.findViewById(R.id.separator);
+                    price = (TextView) view.findViewById(R.id.price);
+                    date = (TextView) view.findViewById(R.id.date);
                     break;
             }
         }
