@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.R;
@@ -107,6 +108,10 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
                                     i.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
 
                                     mContext.startActivity(i);
+                                    break;
+                                case R.id.favorite:
+                                    // TODO: 2015. 11. 17.
+                                    Toast.makeText(mContext, "Under construction :)", Toast.LENGTH_SHORT).show();
                                     break;
                             }
                             return true;
