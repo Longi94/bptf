@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -17,7 +19,6 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.YAxisValueFormatter;
-import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
@@ -112,9 +113,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
                 holder.iconCard.setCardBackgroundColor(mItem.getColor(mContext, true));
 
-                Picasso picasso = Picasso.with(mContext);
-                picasso.load(mItem.getIconUrl(mContext)).into(holder.icon);
-                picasso.load(mItem.getEffectUrl(mContext)).into(holder.effect);
+                Glide.with(mContext)
+                        .load(mItem.getIconUrl(mContext))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(holder.icon);
+                Glide.with(mContext)
+                        .load(mItem.getEffectUrl(mContext))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(holder.effect);
 
                 holder.name.setText(mItem.getFormattedName(mContext));
                 break;

@@ -16,17 +16,18 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
-import com.tlongdev.bktf.data.DatabaseHelper;
 import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
+import com.tlongdev.bktf.data.DatabaseHelper;
 import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.util.Utility;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -325,13 +326,16 @@ public class ItemDetailActivity extends Activity {
                 }
 
                 //Set the icon and the background
-                Picasso picasso = Picasso.with(this);
-                picasso.setLoggingEnabled(true);
-                picasso.setIndicatorsEnabled(true);
-                picasso.load(item.getIconUrl(this)).into(icon);
+                Glide.with(this)
+                        .load(item.getIconUrl(this))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(icon);
 
                 if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
-                    picasso.load(item.getEffectUrl(this)).into(effectView);
+                    Glide.with(this)
+                            .load(item.getEffectUrl(this))
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(effectView);
                 }
 
                 try {

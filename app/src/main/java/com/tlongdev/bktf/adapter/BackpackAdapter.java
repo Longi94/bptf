@@ -18,14 +18,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.activity.ItemDetailActivity;
 import com.tlongdev.bktf.activity.UserBackpackActivity;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.model.Item;
+import com.tlongdev.bktf.util.Utility;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -175,13 +176,16 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                         //Set the background to the color of the quality
                         holder.root.setCardBackgroundColor(item.getColor(mContext, true));
 
-                        Picasso picasso = Picasso.with(mContext);
-                        picasso.setLoggingEnabled(true);
-                        picasso.setIndicatorsEnabled(true);
-                        picasso.load(item.getIconUrl(mContext)).into(holder.icon);
+                        Glide.with(mContext)
+                                .load(item.getIconUrl(mContext))
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(holder.icon);
 
                         if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
-                            picasso.load(item.getEffectUrl(mContext)).into(holder.effect);
+                            Glide.with(mContext)
+                                    .load(item.getEffectUrl(mContext))
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .into(holder.effect);
                         } else {
                             holder.effect.setImageDrawable(null);
                         }

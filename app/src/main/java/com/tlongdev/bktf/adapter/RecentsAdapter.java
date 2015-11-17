@@ -14,7 +14,8 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.fragment.RecentsFragment;
@@ -116,7 +117,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
                                     break;
                                 case R.id.backpack_tf:
                                     mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
-                                    item.getBackpackTfUrl())));
+                                            item.getBackpackTfUrl())));
                                     break;
                             }
                             return true;
@@ -134,16 +135,19 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
             holder.difference.setText(item.getPrice().getFormattedDifference(mContext));
 
             holder.icon.setImageDrawable(null);
-            holder.effect.setBackgroundColor(item.getColor(mContext, true));
+            holder.background.setBackgroundColor(item.getColor(mContext, true));
 
             //Set the item icon
-            Picasso picasso = Picasso.with(mContext);
-            picasso.setLoggingEnabled(true);
-            picasso.setIndicatorsEnabled(true);
-            picasso.load(item.getIconUrl(mContext)).into(holder.icon);
+            Glide.with(mContext)
+                    .load(item.getIconUrl(mContext))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(holder.icon);
 
             if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
-                picasso.load(item.getEffectUrl(mContext)).into(holder.effect);
+                Glide.with(mContext)
+                        .load(item.getEffectUrl(mContext))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(holder.effect);
             } else {
                 holder.effect.setImageDrawable(null);
             }
@@ -181,6 +185,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
 
         public final View root;
         public final View more;
+        public final View background;
 
         public final ImageView icon;
         public final ImageView effect;
@@ -198,6 +203,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
             super(view);
             root = view;
             more = view.findViewById(R.id.more);
+            background = view.findViewById(R.id.icon_background);
             icon = (ImageView) view.findViewById(R.id.icon);
             effect = (ImageView) view.findViewById(R.id.effect);
             name = (TextView) view.findViewById(R.id.name);

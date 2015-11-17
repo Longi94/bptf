@@ -12,7 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.activity.UnusualActivity;
 import com.tlongdev.bktf.fragment.UnusualFragment;
@@ -96,10 +97,6 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             double rawKeyPrice = Utility.getDouble(prefs, mContext.getString(R.string.pref_key_raw), 1);
 
-            Picasso picasso = Picasso.with(mContext);
-            picasso.setLoggingEnabled(true);
-            picasso.setIndicatorsEnabled(true);
-
             switch (type) {
                 //We are showing the hats, no effects
                 case TYPE_HATS:
@@ -109,7 +106,10 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                             Quality.UNUSUAL, false, false, false, 0, null
                     );
 
-                    picasso.load(item.getIconUrl(mContext)).into(holder.icon);
+                    Glide.with(mContext)
+                            .load(item.getIconUrl(mContext))
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(holder.icon);
 
                     holder.root.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -130,7 +130,10 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                     final Item effect = new Item(1, null, Quality.UNUSUAL, false, false, false,
                             mDataSet.getInt(UnusualFragment.COL_PRICE_LIST_INDE), null);
 
-                    picasso.load(effect.getEffectUrl(mContext)).into(holder.icon);
+                    Glide.with(mContext)
+                            .load(effect.getEffectUrl(mContext))
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(holder.icon);
 
                     holder.root.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -163,8 +166,14 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
 
                     holder.price.setText(hat.getPrice().getFormattedPrice(mContext, Currency.KEY));
 
-                    picasso.load(hat.getIconUrl(mContext)).into(holder.icon);
-                    picasso.load(hat.getEffectUrl(mContext)).into(holder.effect);
+                    Glide.with(mContext)
+                            .load(hat.getIconUrl(mContext))
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(holder.icon);
+                    Glide.with(mContext)
+                            .load(hat.getEffectUrl(mContext))
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(holder.effect);
 
                     break;
             }

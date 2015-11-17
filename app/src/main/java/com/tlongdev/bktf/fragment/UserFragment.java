@@ -25,9 +25,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.activity.MainActivity;
@@ -302,12 +303,11 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         //Download avatar if needed.
         if (prefs.contains(getString(R.string.pref_new_avatar)) &&
                 Utility.isNetworkAvailable(getActivity())) {
-
-            Picasso picasso = Picasso.with(getActivity());
-            picasso.setLoggingEnabled(true);
-            picasso.setIndicatorsEnabled(true);
-            picasso.load(PreferenceManager.getDefaultSharedPreferences(getActivity()).
-                    getString(getString(R.string.pref_player_avatar_url), "")).into(avatar);
+            Glide.with(this)
+                    .load(PreferenceManager.getDefaultSharedPreferences(getActivity()).
+                            getString(getString(R.string.pref_player_avatar_url), ""))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(avatar);
 
         }
 
