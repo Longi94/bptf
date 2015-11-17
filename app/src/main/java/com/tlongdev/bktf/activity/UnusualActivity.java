@@ -17,10 +17,12 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.adapter.UnusualAdapter;
 import com.tlongdev.bktf.data.DatabaseContract;
+import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
+import com.tlongdev.bktf.util.Utility;
 
 /**
  * Activity for showing unusual prices for specific effects or hats.
@@ -39,28 +41,17 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
     public static final String PRICE_INDEX_KEY = "index";
 
     //Index of the columns below
-    public static final int COL_PRICE_LIST_DEFI = 1;
-    public static final int COL_PRICE_LIST_INDE = 2;
-    public static final int COL_PRICE_LIST_CURR = 3;
-    public static final int COL_PRICE_LIST_PRIC = 4;
-    public static final int COL_PRICE_LIST_PMAX = 5;
-    public static final int COL_PRICE_LIST_UPDA = 6; // TODO: 2015. 10. 25.
-    public static final int COL_PRICE_LIST_DIFF = 7;
+    public static final int COLUMN_DEFINDEX = 1;
+    public static final int COLUMN_PRICE_INDEX = 2;
+    public static final int COLUMN_CURRENCY = 3;
+    public static final int COLUMN_PRICE = 4;
+    public static final int COLUMN_PRICE_MAX = 5;
+    public static final int COLUMN_LAST_UDPATE = 6; // TODO: 2015. 10. 25.
+    public static final int COLUMN_DIFFRENCE = 7;
+    public static final int COLUMN_NAME = 8;
 
     //Default loader id
     private static final int PRICE_LIST_LOADER = 0;
-
-    //Columns to query from database
-    private static final String[] PRICE_LIST_COLUMNS = {
-            PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
-            PriceEntry.COLUMN_DEFINDEX,
-            PriceEntry.COLUMN_PRICE_INDEX,
-            PriceEntry.COLUMN_CURRENCY,
-            PriceEntry.COLUMN_PRICE,
-            PriceEntry.COLUMN_PRICE_HIGH,
-            PriceEntry.COLUMN_LAST_UPDATE,
-            PriceEntry.COLUMN_DIFFERENCE,
-    };
 
     /**
      * The {@link Tracker} used to record screen views.
@@ -85,7 +76,7 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
 
         //Set the color of the status bar
         if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.primary_dark));
+            getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -131,23 +122,57 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
         String selection = PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + " = ?";
         String[] selectionArgs;
 
+        String sql;
+
         //If defindex is -1, user is browsing by effects
         if (defindex != -1) {
-            selection = selection + " AND " + PriceEntry.COLUMN_DEFINDEX + " = ?";
+            selection = selection + " AND " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = ?";
             selectionArgs = new String[]{"5", String.valueOf(defindex)};
+
+            sql = "SELECT " +
+                    PriceEntry.TABLE_NAME + "." + PriceEntry._ID + "," +
+                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + "," +
+                    PriceEntry.COLUMN_PRICE_INDEX + "," +
+                    PriceEntry.COLUMN_CURRENCY + "," +
+                    PriceEntry.COLUMN_PRICE + "," +
+                    PriceEntry.COLUMN_PRICE_HIGH + "," +
+                    PriceEntry.COLUMN_LAST_UPDATE + "," +
+                    PriceEntry.COLUMN_DIFFERENCE + "," +
+                    UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_NAME +
+                    " FROM " + PriceEntry.TABLE_NAME +
+                    " LEFT JOIN " + UnusualSchemaEntry.TABLE_NAME +
+                    " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + " = " + UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_ID +
+                    " WHERE " + selection +
+                    " ORDER BY " + Utility.getRawPriceQueryString(this) + " DESC";
         } else {
-            selection = selection + " AND " + PriceEntry.COLUMN_PRICE_INDEX + " = ?";
+            selection = selection + " AND " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + " = ?";
             selectionArgs = new String[]{"5", String.valueOf(index)};
+
+            sql = "SELECT " +
+                    PriceEntry.TABLE_NAME + "." + PriceEntry._ID + "," +
+                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + "," +
+                    PriceEntry.COLUMN_PRICE_INDEX + "," +
+                    PriceEntry.COLUMN_CURRENCY + "," +
+                    PriceEntry.COLUMN_PRICE + "," +
+                    PriceEntry.COLUMN_PRICE_HIGH + "," +
+                    PriceEntry.COLUMN_LAST_UPDATE + "," +
+                    PriceEntry.COLUMN_DIFFERENCE + "," +
+                    ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME +
+                    " FROM " + PriceEntry.TABLE_NAME +
+                    " LEFT JOIN " + ItemSchemaEntry.TABLE_NAME +
+                    " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
+                    " WHERE " + selection +
+                    " ORDER BY " + Utility.getRawPriceQueryString(this) + " DESC";
         }
 
         //Load
         return new CursorLoader(
                 this,
-                DatabaseContract.PriceEntry.CONTENT_URI,
-                PRICE_LIST_COLUMNS,
-                selection,
+                DatabaseContract.RAW_QUERY_URI,
+                null,
+                sql,
                 selectionArgs,
-                Utility.getRawPriceQueryString(this) + " DESC" //order by raw price
+                null
         );
     }
 

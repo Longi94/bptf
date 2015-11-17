@@ -4,17 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.activity.UnusualActivity;
 import com.tlongdev.bktf.fragment.UnusualFragment;
 import com.tlongdev.bktf.model.Currency;
@@ -22,8 +27,6 @@ import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.model.Quality;
 import com.tlongdev.bktf.util.Utility;
-
-import java.text.DecimalFormat;
 
 /**
  * Adapter for the recycler view in the unusual fragment and activity.
@@ -90,7 +93,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         if (mDataSet != null && mDataSet.moveToPosition(position)) {
 
             //Get the raw key price
@@ -101,9 +104,9 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                 //We are showing the hats, no effects
                 case TYPE_HATS:
                     final Item item = new Item(
-                            mDataSet.getInt(UnusualFragment.COL_PRICE_LIST_DEFI),
-                            mDataSet.getString(UnusualFragment.COL_PRICE_LIST_NAME),
-                            Quality.UNUSUAL, false, false, false, 0, null
+                            mDataSet.getInt(UnusualFragment.COLUMN_DEFINDEX),
+                            mDataSet.getString(UnusualFragment.COLUMN_NAME),
+                            Quality.UNIQUE, true, true, false, 0, null
                     );
 
                     Glide.with(mContext)
@@ -121,14 +124,18 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                         }
                     });
                     holder.price.setText(mContext.getString(R.string.currency_key_plural,
-                            new DecimalFormat("#0.00").format(mDataSet.getDouble(
-                                    UnusualFragment.COL_PRICE_LIST_AVG_PRICE) / rawKeyPrice)));
+                            Utility.formatDouble(mDataSet.getDouble(
+                                    UnusualFragment.COLUMN_AVERAGE_PRICE) / rawKeyPrice)));
+
+                    holder.name.setText(mDataSet.getString(UnusualFragment.COLUMN_NAME));
+
+                    holder.more.setVisibility(View.GONE);
                     break;
                 //We are showing the effects, no hats
                 case TYPE_EFFECTS:
 
-                    final Item effect = new Item(1, null, Quality.UNUSUAL, false, false, false,
-                            mDataSet.getInt(UnusualFragment.COL_PRICE_LIST_INDE), null);
+                    final Item effect = new Item(1, null, Quality.UNUSUAL, true, true, false,
+                            mDataSet.getInt(UnusualFragment.COLUMN_INDEX), null);
 
                     Glide.with(mContext)
                             .load(effect.getEffectUrl(mContext))
@@ -146,25 +153,31 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                     });
 
                     holder.price.setText(mContext.getString(R.string.currency_key_plural,
-                            new DecimalFormat("#0.00").format(mDataSet.getDouble(
-                                    UnusualFragment.COL_PRICE_LIST_AVG_PRICE) / rawKeyPrice)));
+                            Utility.formatDouble(mDataSet.getDouble(
+                                    UnusualFragment.COLUMN_AVERAGE_PRICE) / rawKeyPrice)));
+
+                    holder.name.setText(mDataSet.getString(UnusualFragment.COLUMN_NAME));
+
+                    holder.more.setVisibility(View.GONE);
                     break;
                 //We are showing both that icon and the effect for a specific hat or effect
                 case TYPE_SPECIFIC_HAT:
-                    Item hat = new Item(
-                            mDataSet.getInt(UnusualActivity.COL_PRICE_LIST_DEFI),
+                    final Item hat = new Item(
+                            mDataSet.getInt(UnusualActivity.COLUMN_DEFINDEX),
                             null,
-                            Quality.UNUSUAL, false, false, false,
-                            mDataSet.getInt(UnusualActivity.COL_PRICE_LIST_INDE),
+                            Quality.UNUSUAL, true, true, false,
+                            mDataSet.getInt(UnusualActivity.COLUMN_PRICE_INDEX),
                             new Price(
-                                    mDataSet.getDouble(UnusualActivity.COL_PRICE_LIST_PRIC),
-                                    mDataSet.getDouble(UnusualActivity.COL_PRICE_LIST_PMAX),
+                                    mDataSet.getDouble(UnusualActivity.COLUMN_PRICE),
+                                    mDataSet.getDouble(UnusualActivity.COLUMN_PRICE_MAX),
                                     0, 0, 0,
-                                    mDataSet.getString(UnusualActivity.COL_PRICE_LIST_CURR)
+                                    mDataSet.getString(UnusualActivity.COLUMN_CURRENCY)
                             )
                     );
 
                     holder.price.setText(hat.getPrice().getFormattedPrice(mContext, Currency.KEY));
+
+                    holder.name.setText(mDataSet.getString(UnusualActivity.COLUMN_NAME));
 
                     Glide.with(mContext)
                             .load(hat.getIconUrl(mContext))
@@ -174,6 +187,42 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                             .load(hat.getEffectUrl(mContext))
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(holder.effect);
+
+                    holder.more.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            PopupMenu menu = new PopupMenu(mContext, holder.more);
+
+                            menu.getMenuInflater().inflate(R.menu.popup_recents, menu.getMenu());
+
+                            menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem menuItem) {
+                                    switch (menuItem.getItemId()) {
+                                        case R.id.history:
+
+                                            Intent i = new Intent(mContext, PriceHistoryActivity.class);
+
+                                            i.putExtra(PriceHistoryActivity.EXTRA_ITEM, hat);
+
+                                            mContext.startActivity(i);
+                                            break;
+                                        case R.id.favorite:
+                                            // TODO: 2015. 11. 17.
+                                            Toast.makeText(mContext, "Under construction :)", Toast.LENGTH_SHORT).show();
+                                            break;
+                                        case R.id.backpack_tf:
+                                            mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
+                                                    hat.getBackpackTfUrl())));
+                                            break;
+                                    }
+                                    return true;
+                                }
+                            });
+
+                            menu.show();
+                        }
+                    });
 
                     break;
             }
@@ -214,8 +263,10 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
         public final ImageView icon;
         public final ImageView effect;
         public final TextView price;
+        public final TextView name;
 
         public final View root;
+        public final View more;
 
         /**
          * Constructor.
@@ -226,10 +277,12 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
             super(view);
 
             root = view;
+            more = view.findViewById(R.id.more);
 
             icon = (ImageView) view.findViewById(R.id.icon);
-            effect = (ImageView) view.findViewById(R.id.image_view_item_effect);
-            price = (TextView) view.findViewById(R.id.grid_item_price);
+            effect = (ImageView) view.findViewById(R.id.effect);
+            price = (TextView) view.findViewById(R.id.price);
+            name = (TextView) view.findViewById(R.id.name);
         }
     }
 }
