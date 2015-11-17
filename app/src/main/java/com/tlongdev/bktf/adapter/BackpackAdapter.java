@@ -187,6 +187,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .into(holder.effect);
                         } else {
+                            Glide.clear(holder.effect);
                             holder.effect.setImageDrawable(null);
                         }
 
