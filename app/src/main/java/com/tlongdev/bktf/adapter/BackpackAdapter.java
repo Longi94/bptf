@@ -4,10 +4,7 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -24,12 +21,8 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.activity.ItemDetailActivity;
 import com.tlongdev.bktf.activity.UserBackpackActivity;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
-import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.util.Utility;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Adapter for the recycler view in the backpack activity-
@@ -191,15 +184,6 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                             holder.effect.setImageDrawable(null);
                         }
 
-                        //Load the image on a background thread to avoid hiccups
-                        ImageLoader task = (ImageLoader) holder.icon.getTag();
-                        if (task != null) {
-                            task.cancel(true);
-                        }
-                        task = new ImageLoader(mContext, holder.paint, paint);
-                        holder.icon.setTag(task);
-                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
                         //The on click listener for an item
                         holder.root.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -229,15 +213,21 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                                     itemCursor.close();
                                 }
 
-                                if (Build.VERSION.SDK_INT >= 21) {
+                                if (Build.VERSION.SDK_INT >= 23) {
                                     //Fancy shared elements transition if above 20
                                     @SuppressWarnings("unchecked")
                                     ActivityOptions options = ActivityOptions
                                             .makeSceneTransitionAnimation((Activity) mContext,
-                                                    /*Pair.create((View) holder.icon, "icon_transition"),
+                                                    Pair.create((View) holder.icon, "icon_transition"),
                                                     Pair.create((View) holder.effect, "effect_transition"),
-                                                    Pair.create((View) holder.paint, "paint_transition"),*/
+                                                    Pair.create((View) holder.paint, "paint_transition"),
                                                     Pair.create((View) holder.root, "background_transition"));
+                                    mContext.startActivity(i, options.toBundle());
+                                } else if (Build.VERSION.SDK_INT >= 21) {
+                                    //Fancy shared elements transition if above 20
+                                    @SuppressWarnings("unchecked")
+                                    ActivityOptions options = ActivityOptions
+                                            .makeSceneTransitionAnimation((Activity) mContext, holder.root, "background_transition");
                                     mContext.startActivity(i, options.toBundle());
                                 } else {
                                     mContext.startActivity(i);
@@ -335,64 +325,6 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                     root = (CardView) view;
                     break;
             }
-        }
-    }
-
-    /**
-     * A task te loads images in the background.
-     */
-    private class ImageLoader extends AsyncTask<Void, Void, Drawable> {
-
-        /**
-         * Image views to set the images to
-         */
-        private ImageView paintView;
-
-        private int paint;
-
-        /**
-         * The context
-         */
-        private Context mContext;
-
-        /**
-         * Constructor
-         *
-         * @param context the context
-         * @param paint   the pain indicator of the item
-         */
-        private ImageLoader(Context context, ImageView paintView, int paint) {
-            this.mContext = context;
-            this.paintView = paintView;
-            this.paint = paint;
-        }
-
-        @Override
-        protected Drawable doInBackground(Void... params) {
-            //Three drawables will be returned at most
-            Drawable[] drawables = new Drawable[3];
-
-            try {
-                InputStream ims;
-                AssetManager assetManager = mContext.getAssets();
-
-                //Get the paint indicator if needed
-                if (BackpackItem.isPaint(paint)) {
-                    ims = assetManager.open("paint/" + paint + ".png");
-                    return Drawable.createFromStream(ims, null);
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Drawable drawable) {
-            //Set the images
-            paintView.setImageDrawable(drawable);
         }
     }
 }

@@ -329,12 +329,14 @@ public class ItemDetailActivity extends Activity {
                 Glide.with(this)
                         .load(item.getIconUrl(this))
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .dontAnimate()
                         .into(icon);
 
                 if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
                     Glide.with(this)
                             .load(item.getEffectUrl(this))
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .dontAnimate()
                             .into(effectView);
                 }
 
