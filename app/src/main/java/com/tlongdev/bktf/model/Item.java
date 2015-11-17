@@ -624,4 +624,10 @@ public class Item implements Serializable{
 
         return builder.build();
     }
+
+    public String getBackpackTfUrl() {
+        String url = String.format("http://backpack.tf/stats/%d/%d/%d/%d", quality, defindex, tradable ? 1 : 0, craftable ? 1 : 0);
+
+        return priceIndex > 0 ? url + "/" + priceIndex : url;
+    }
 }

@@ -3,6 +3,7 @@ package com.tlongdev.bktf.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -112,6 +113,10 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
                                 case R.id.favorite:
                                     // TODO: 2015. 11. 17.
                                     Toast.makeText(mContext, "Under construction :)", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case R.id.backpack_tf:
+                                    mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
+                                    item.getBackpackTfUrl())));
                                     break;
                             }
                             return true;
