@@ -149,6 +149,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(holder.effect);
             } else {
+                Glide.clear(holder.effect);
                 holder.effect.setImageDrawable(null);
             }
 

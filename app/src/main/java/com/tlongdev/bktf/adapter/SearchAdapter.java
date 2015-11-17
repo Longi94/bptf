@@ -173,6 +173,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(holder.effect);
                     } else {
+                        Glide.clear(holder.effect);
                         holder.effect.setImageDrawable(null);
                     }
 
