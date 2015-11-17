@@ -190,8 +190,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             LineDataSet set = new LineDataSet(entries, mItem.getPrice().getCurrency());
 
             set.setColor(textColor);
-            set.setLineWidth(2.0f);
-            set.setCircleSize(2.2f);
             set.setCircleColor(textColor);
             set.setHighLightColor(textColor);
             set.setAxisDependency(YAxis.AxisDependency.LEFT);
@@ -205,6 +203,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     private void buildChart(LineChart chart) {
 
         if (mDataSet != null && mDataSet.size() > 1) {
+
+            chart.setData(mData);
 
             chart.setLogEnabled(true);
 
@@ -240,7 +240,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                 }
             });
 
-            chart.setData(mData);
+            chart.getLineData().getDataSetByIndex(0).setLineWidth(2.0f);
+            chart.getLineData().getDataSetByIndex(0).setCircleSize(2.2f);
 
             chart.notifyDataSetChanged();
             chart.animateY(1000, Easing.EasingOption.EaseOutCubic);
