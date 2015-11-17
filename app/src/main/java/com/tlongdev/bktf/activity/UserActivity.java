@@ -19,9 +19,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.network.GetUserBackpack;
@@ -495,11 +496,11 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         trustNegative.setText(String.format("-%d", ratingNegative));
 
         //Image should be available in data folder by the time this method is called.
-        Picasso picasso = Picasso.with(this);
-        picasso.setLoggingEnabled(true);
-        picasso.setIndicatorsEnabled(true);
-        picasso.load(PreferenceManager.getDefaultSharedPreferences(this).
-                getString(getString(R.string.pref_search_avatar_url), "")).into(avatar);
+        Glide.with(this)
+                .load(PreferenceManager.getDefaultSharedPreferences(this).
+                        getString(getString(R.string.pref_search_avatar_url), ""))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(avatar);
 
         //Raw keys
         if (rawKeys >= 0)

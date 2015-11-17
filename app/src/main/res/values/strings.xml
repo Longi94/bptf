@@ -279,8 +279,8 @@
     <string name="title_activity_login">Login</string>
     <string name="login_steam_id"><u>What is my steam ID?</u></string>
     <string name="pref_key_login">pref_key_login</string>
-    <string name="pref_title_picasso">Picasso</string>
-    <string name="pref_summary_picasso">hassle-free image loading</string>
+    <string name="pref_title_glide">Glide</string>
+    <string name="pref_summary_glide">an image loading and caching library for Android focused on smooth scrolling</string>
     <string name="pref_summary_material_icons">growing collection of material design icons</string>
     <string name="pref_title_material_icons">Material Design Icons</string>
     <string name="title_steam_group">Steam Group</string>

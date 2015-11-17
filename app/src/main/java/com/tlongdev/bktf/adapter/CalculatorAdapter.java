@@ -9,13 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.data.DatabaseContract;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.util.Utility;
 
 import java.util.ArrayList;
 
@@ -144,10 +145,10 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
 
                 int count = ids.get(position).getY();
 
-                Picasso picasso = Picasso.with(mContext);
-                picasso.setLoggingEnabled(true);
-                picasso.setIndicatorsEnabled(true);
-                picasso.load(item.getIconUrl(mContext)).into(holder.icon);
+                Glide.with(mContext)
+                        .load(item.getIconUrl(mContext))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(holder.icon);
 
                 holder.name.setText(item.getFormattedName(mContext));
 

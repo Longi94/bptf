@@ -21,13 +21,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.squareup.picasso.Picasso;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.util.Profile;
-import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.fragment.CalculatorFragment;
 import com.tlongdev.bktf.fragment.ConverterFragment;
 import com.tlongdev.bktf.fragment.RecentsFragment;
@@ -35,6 +34,8 @@ import com.tlongdev.bktf.fragment.UnusualFragment;
 import com.tlongdev.bktf.fragment.UserFragment;
 import com.tlongdev.bktf.service.NotificationsService;
 import com.tlongdev.bktf.service.UpdateDatabaseService;
+import com.tlongdev.bktf.util.Profile;
+import com.tlongdev.bktf.util.Utility;
 
 /**
  * Tha main activity if the application. Navigation drawer is used. This is where most of the
@@ -329,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
             double bpValue = Utility.getDouble(prefs,
                     getString(R.string.pref_player_backpack_value_tf2), -1);
             if (bpValue >= 0) {
-                backpack.setText("Backpack: " + getString(R.string.currency_metal, String.valueOf(Math.round(bpValue))));
+                backpack.setText(String.format("Backpack: %s", getString(R.string.currency_metal, String.valueOf(Math.round(bpValue)))));
             } else {
                 backpack.setText("Private backpack");
             }
@@ -337,12 +338,10 @@ public class MainActivity extends AppCompatActivity {
             //Download the avatar (if needed) and set it
             if (prefs.contains(getString(R.string.pref_new_avatar)) &&
                     Utility.isNetworkAvailable(this)) {
-
-                Picasso picasso = Picasso.with(this);
-                picasso.setLoggingEnabled(true);
-                picasso.setIndicatorsEnabled(true);
-                picasso.load(PreferenceManager.getDefaultSharedPreferences(this).
-                        getString(getString(R.string.pref_player_avatar_url), ""))
+                Glide.with(this)
+                        .load(PreferenceManager.getDefaultSharedPreferences(this).
+                                getString(getString(R.string.pref_player_avatar_url), ""))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .placeholder(R.drawable.steam_default_avatar)
                         .error(R.drawable.steam_default_avatar)
                         .into(avatar);

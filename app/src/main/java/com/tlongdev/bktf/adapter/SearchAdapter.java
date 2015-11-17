@@ -11,7 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.activity.UserActivity;
@@ -108,10 +109,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                                 getString(mContext.getString(R.string.pref_search_avatar_url), "");
 
                         if (!path.equals("")) {
-                            Picasso picasso = Picasso.with(mContext);
-                            picasso.setLoggingEnabled(true);
-                            picasso.setIndicatorsEnabled(true);
-                            picasso.load(path).into(holder.icon);
+                            Glide.with(mContext)
+                                    .load(path)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .into(holder.icon);
                         }
                     }
                     break;
@@ -161,13 +162,16 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     holder.icon.setBackgroundColor(item.getColor(mContext, true));
 
                     //Set the item icon
-                    Picasso picasso = Picasso.with(mContext);
-                    picasso.setLoggingEnabled(true);
-                    picasso.setIndicatorsEnabled(true);
-                    picasso.load(item.getIconUrl(mContext)).into(holder.icon);
+                    Glide.with(mContext)
+                            .load(item.getIconUrl(mContext))
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(holder.icon);
 
                     if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
-                        picasso.load(item.getEffectUrl(mContext)).into(holder.effect);
+                        Glide.with(mContext)
+                                .load(item.getEffectUrl(mContext))
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(holder.effect);
                     } else {
                         holder.effect.setImageDrawable(null);
                     }
