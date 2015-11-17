@@ -3,17 +3,22 @@ package com.tlongdev.bktf.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.activity.UserActivity;
 import com.tlongdev.bktf.model.Item;
@@ -81,7 +86,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         if (mDataSet != null && mDataSet.moveToPosition(position)) {
             switch (getItemViewType(position)) {
                 //We found a user, show some info
@@ -138,7 +143,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     });
 
                     //Get all the data from the cursor
-                    Item item = new Item(
+                    final Item item = new Item(
                             mDataSet.getInt(SearchActivity.COLUMN_DEFINDEX),
                             mDataSet.getString(SearchActivity.COLUMN_NAME),
                             mDataSet.getInt(SearchActivity.COLUMN_QUALITY),
@@ -155,6 +160,43 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                                     mDataSet.getString(SearchActivity.COLUMN_CURRENCY)
                             )
                     );
+
+                    holder.more.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            PopupMenu menu = new PopupMenu(mContext, holder.more);
+
+                            menu.getMenuInflater().inflate(R.menu.popup_recents, menu.getMenu());
+
+                            menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem menuItem) {
+                                    switch (menuItem.getItemId()) {
+                                        case R.id.history:
+
+                                            Intent i = new Intent(mContext, PriceHistoryActivity.class);
+
+                                            i.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
+
+                                            mContext.startActivity(i);
+                                            break;
+                                        case R.id.favorite:
+                                            // TODO: 2015. 11. 17.
+                                            Toast.makeText(mContext, "Under construction :)", Toast.LENGTH_SHORT).show();
+                                            break;
+                                        case R.id.backpack_tf:
+                                            mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
+                                                    item.getBackpackTfUrl())));
+                                            break;
+                                    }
+                                    return true;
+                                }
+                            });
+
+                            menu.show();
+                        }
+                    });
 
                     holder.name.setText(item.getFormattedName(mContext));
 

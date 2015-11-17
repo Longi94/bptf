@@ -24,13 +24,14 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.adapter.UnusualAdapter;
 import com.tlongdev.bktf.data.DatabaseContract;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
+import com.tlongdev.bktf.util.Utility;
 
 /**
  * The unusual fragment, that shows a list of unusual item categories. Either categorized by
@@ -59,10 +60,10 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
     /**
      * The IDs of the columns above
      */
-    public static final int COL_PRICE_LIST_INDE = 0;
-    public static final int COL_PRICE_LIST_DEFI = 0;
-    public static final int COL_PRICE_LIST_NAME = 1;
-    public static final int COL_PRICE_LIST_AVG_PRICE = 2;
+    public static final int COLUMN_INDEX = 0;
+    public static final int COLUMN_DEFINDEX = 0;
+    public static final int COLUMN_NAME = 1;
+    public static final int COLUMN_AVERAGE_PRICE = 2;
 
     /**
      * The {@link Tracker} used to record screen views.
@@ -195,11 +196,11 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
 
                 sql = "SELECT " +
                         PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + "," +
-                        ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
+                        UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_NAME + "," +
                         Utility.getRawPriceQueryString(getActivity()) +
                         " FROM " + PriceEntry.TABLE_NAME +
-                        " LEFT JOIN " + ItemSchemaEntry.TABLE_NAME +
-                        " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
+                        " LEFT JOIN " + UnusualSchemaEntry.TABLE_NAME +
+                        " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + " = " + UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_ID +
                         " WHERE " + selection +
                         " ORDER BY AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC";
 
