@@ -34,6 +34,7 @@ import com.tlongdev.bktf.fragment.UnusualFragment;
 import com.tlongdev.bktf.fragment.UserFragment;
 import com.tlongdev.bktf.service.NotificationsService;
 import com.tlongdev.bktf.service.UpdateDatabaseService;
+import com.tlongdev.bktf.util.CircleTransform;
 import com.tlongdev.bktf.util.Profile;
 import com.tlongdev.bktf.util.Utility;
 
@@ -342,8 +343,7 @@ public class MainActivity extends AppCompatActivity {
                         .load(PreferenceManager.getDefaultSharedPreferences(this).
                                 getString(getString(R.string.pref_player_avatar_url), ""))
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .placeholder(R.drawable.steam_default_avatar)
-                        .error(R.drawable.steam_default_avatar)
+                        .transform(new CircleTransform(this))
                         .into(avatar);
 
             }
@@ -351,8 +351,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             name.setText(null);
             backpack.setText(null);
-            avatar.setImageDrawable(getResources().getDrawable(R.drawable.steam_default_avatar));
-
             userMenuItem.setEnabled(false);
         }
     }
