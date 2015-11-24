@@ -19,6 +19,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.YAxisValueFormatter;
+import com.github.mikephil.charting.utils.Utils;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
@@ -64,6 +65,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         this.mDataSet = prices;
         this.mContext = context;
         this.mItem = item;
+
+        Utils.init(context);
 
         if (prices != null && prices.size() > 1) {
             buildDataSet();
