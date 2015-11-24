@@ -6,8 +6,11 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+import com.google.android.gms.analytics.HitBuilders;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
@@ -62,10 +65,25 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
             }
 
             return parseJson(inputStream);
+        } catch (JsonParseException e) {
+            //There was a network error
+            errorMessage = mContext.getString(R.string.error_data_parse);
+            e.printStackTrace();
+
+            ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                    .setDescription("JSON exception:GetItemSchema, Message: " + e.getMessage())
+                    .setFatal(true)
+                    .build());
+
         } catch (IOException e) {
             //There was a network error
             errorMessage = mContext.getString(R.string.error_network);
-                e.printStackTrace();
+            e.printStackTrace();
+
+            ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                    .setDescription("Network exception:GetItemSchema, Message: " + e.getMessage())
+                    .setFatal(false)
+                    .build());
         } finally {
             //Close the connection
             if (urlConnection != null) {

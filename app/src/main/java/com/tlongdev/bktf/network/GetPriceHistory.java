@@ -6,8 +6,11 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+import com.google.android.gms.analytics.HitBuilders;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
@@ -106,10 +109,23 @@ public class GetPriceHistory extends AsyncTask<Void, Void, Integer> {
 
             return parseJsonString(inputStream);
             
+        } catch (JsonParseException e) {
+            e.printStackTrace();
+
+            ((BptfApplication)mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                    .setDescription("JSON exception:GetPriceHistory, Message: " + e.getMessage())
+                    .setFatal(true)
+                    .build());
+
         } catch (IOException e) {
             e.printStackTrace();
+
+            ((BptfApplication)mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                    .setDescription("Network exception:GetPriceHistory, Message: " + e.getMessage())
+                    .setFatal(false)
+                    .build());
         }
-        
+
         return -1;
     }
 

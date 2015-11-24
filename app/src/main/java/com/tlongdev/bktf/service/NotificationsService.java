@@ -236,10 +236,25 @@ public class NotificationsService extends Service {
                         return getNotificationCount(jsonString, steamId);
                     }
                 }
-            } catch (IOException | JSONException e) {
+            } catch (IOException e) {
                 //There was an error, notify the user
                 Toast.makeText(mContext, "bptf: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
+
+                mTracker.send(new HitBuilders.ExceptionBuilder()
+                        .setDescription("Network exception:NotificationService, Message: " + e.getMessage())
+                        .setFatal(false)
+                        .build());
+
+            } catch (JSONException e) {
+                //There was an error, notify the user
+                Toast.makeText(mContext, "bptf: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+
+                mTracker.send(new HitBuilders.ExceptionBuilder()
+                        .setDescription("JSON exception:NotificationService, Message: " + e.getMessage())
+                        .setFatal(true)
+                        .build());
             }
             return 0;
         }

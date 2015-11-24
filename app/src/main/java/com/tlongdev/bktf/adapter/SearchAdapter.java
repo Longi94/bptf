@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.analytics.HitBuilders;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.activity.SearchActivity;
@@ -221,8 +223,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
                     try {
                         holder.price.setText(item.getPrice().getFormattedPrice(mContext));
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+
+                        ((BptfApplication)mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                                .setDescription("Formatter exception:SearchAdapter, Message: " + t.getMessage())
+                                .setFatal(false)
+                                .build());
                     }
                     break;
             }

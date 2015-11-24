@@ -232,8 +232,13 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
             priceKeys.setText(totalPrice.getFormattedPrice(getActivity(), Currency.KEY));
             priceBuds.setText(totalPrice.getFormattedPrice(getActivity(), Currency.BUD));
             priceUsd.setText(totalPrice.getFormattedPrice(getActivity(), Currency.USD));
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Throwable t) {
+            t.printStackTrace();
+
+            ((BptfApplication)getActivity().getApplication()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                    .setDescription("Formatter exception:CalculatorFragment, Message: " + t.getMessage())
+                    .setFatal(false)
+                    .build());
         }
     }
 
@@ -265,8 +270,13 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
             priceKeys.setText(totalPrice.getFormattedPrice(getActivity(), Currency.KEY));
             priceBuds.setText(totalPrice.getFormattedPrice(getActivity(), Currency.BUD));
             priceUsd.setText(totalPrice.getFormattedPrice(getActivity(), Currency.USD));
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Throwable t) {
+            t.printStackTrace();
+
+            ((BptfApplication)getActivity().getApplication()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                    .setDescription("Formatter exception:CalculatorFragment, Message: " + t.getMessage())
+                    .setFatal(false)
+                    .build());
         }
     }
 
@@ -296,8 +306,13 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
             priceKeys.setText(totalPrice.getFormattedPrice(getActivity(), Currency.KEY));
             priceBuds.setText(totalPrice.getFormattedPrice(getActivity(), Currency.BUD));
             priceUsd.setText(totalPrice.getFormattedPrice(getActivity(), Currency.USD));
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Throwable t) {
+            t.printStackTrace();
+
+            ((BptfApplication)getActivity().getApplication()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                    .setDescription("Formatter exception:CalculatorFragment, Message: " + t.getMessage())
+                    .setFatal(false)
+                    .build());
         }
     }
 
