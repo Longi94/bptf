@@ -138,6 +138,11 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         //Start downloading remaining info if the user.
         new DownloadUserInfoTask().execute(i.getStringExtra(JSON_USER_SUMMARIES_KEY));
 
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Request")
+                .setAction("UserDataGuest")
+                .build());
+
         //Find all the views
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         playerReputation = (TextView) findViewById(R.id.text_view_player_reputation);
@@ -633,9 +638,14 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            GetUserBackpack fetchTask = new GetUserBackpack(UserActivity.this);
-            fetchTask.registerOnFetchUserBackpackListener(UserActivity.this);
-            fetchTask.execute(steamId);
+            GetUserBackpack task = new GetUserBackpack(UserActivity.this);
+            task.registerOnFetchUserBackpackListener(UserActivity.this);
+            task.execute(steamId);
+
+            mTracker.send(new HitBuilders.EventBuilder()
+                    .setCategory("Request")
+                    .setAction("UserBackpackGuest")
+                    .build());
         }
     }
 }

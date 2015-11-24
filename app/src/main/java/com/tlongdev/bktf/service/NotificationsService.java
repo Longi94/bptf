@@ -14,6 +14,9 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.util.Profile;
 import com.tlongdev.bktf.util.Utility;
@@ -42,6 +45,14 @@ public class NotificationsService extends Service {
     //Intent extra keys for indicating the need for the notification check
     private static final String CHECK_FOR_NOTIFICATIONS = "notification";
 
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mTracker = ((BptfApplication) getApplication()).getDefaultTracker();
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -56,6 +67,11 @@ public class NotificationsService extends Service {
 
             //Start checking for notifications
             new CheckNotificationTask(this).execute();
+
+            mTracker.send(new HitBuilders.EventBuilder()
+                    .setCategory("Check")
+                    .setAction("Notification")
+                    .build());
         }
         return START_NOT_STICKY;
     }

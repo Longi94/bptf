@@ -88,6 +88,11 @@ public class PriceHistoryActivity extends AppCompatActivity implements GetPriceH
             GetPriceHistory task = new GetPriceHistory(this, mItem);
             task.setListener(this);
             task.execute();
+
+            mTracker.send(new HitBuilders.EventBuilder()
+                    .setCategory("Request")
+                    .setAction("PriceHistory")
+                    .build());
         } else {
             progressBar.setVisibility(View.GONE);
             failText.setVisibility(View.VISIBLE);

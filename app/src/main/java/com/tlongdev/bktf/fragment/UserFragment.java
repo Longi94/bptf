@@ -189,6 +189,11 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     mSwipeRefreshLayout.setRefreshing(true);
                 }
             });
+
+            mTracker.send(new HitBuilders.EventBuilder()
+                    .setCategory("Request")
+                    .setAction("UserData")
+                    .build());
         }
 
     }
@@ -203,6 +208,11 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             GetUserInfo fetchTask = new GetUserInfo(getActivity(), true);
             fetchTask.registerFetchUserInfoListener(this);
             fetchTask.execute(Profile.getSteamId(getActivity()), Profile.getResolvedSteamId(getActivity()));
+
+            mTracker.send(new HitBuilders.EventBuilder()
+                    .setCategory("Request")
+                    .setAction("UserData")
+                    .build());
         } else {
             //There is no internet connection, notify the user
             Toast.makeText(getActivity(), "bptf: " + getString(R.string.error_no_network),
@@ -488,6 +498,11 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         GetUserBackpack task = new GetUserBackpack(getActivity());
         task.registerOnFetchUserBackpackListener(this);
         task.execute(steamId);
+
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Request")
+                .setAction("UserBackpack")
+                .build());
     }
 
     @Override

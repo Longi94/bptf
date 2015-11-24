@@ -35,7 +35,6 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.adapter.RecentsAdapter;
@@ -44,6 +43,7 @@ import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.network.GetItemSchema;
 import com.tlongdev.bktf.network.GetPriceList;
+import com.tlongdev.bktf.util.Utility;
 
 /**
  * recents fragment. Shows a list of all the prices orderd by the time of the price update.
@@ -202,6 +202,12 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                 //Show the progress dialog
                 loadingDialog = ProgressDialog.show(getActivity(), null, "Downloading prices...", true);
                 loadingDialog.setCancelable(false);
+
+                mTracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Request")
+                        .setAction("Refresh")
+                        .setLabel("Prices")
+                        .build());
             } else {
                 //Quit the app if the download failed.
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -231,6 +237,12 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                         mSwipeRefreshLayout.setRefreshing(true);
                     }
                 });
+
+                mTracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Request")
+                        .setAction("Refresh")
+                        .setLabel("Prices")
+                        .build());
             }
         }
     }
@@ -264,7 +276,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_CURRENCY + "," +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE + "," +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_HIGH + "," +
-                Utility.getRawPriceQueryString(getActivity()) +  "," +
+                Utility.getRawPriceQueryString(getActivity()) + "," +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DIFFERENCE + "," +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM +
                 " FROM " + PriceEntry.TABLE_NAME +
@@ -314,6 +326,12 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
             GetPriceList task = new GetPriceList(getActivity(), true, true);
             task.setOnPriceListFetchListener(this);
             task.execute();
+
+            mTracker.send(new HitBuilders.EventBuilder()
+                    .setCategory("Request")
+                    .setAction("Refresh")
+                    .setLabel("Prices")
+                    .build());
         } else {
             Toast.makeText(getActivity(), "bptf: " + getString(R.string.error_no_network),
                     Toast.LENGTH_SHORT).show();
@@ -335,6 +353,12 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
             GetItemSchema task = new GetItemSchema(getActivity());
             task.setListener(this);
             task.execute();
+
+            mTracker.send(new HitBuilders.EventBuilder()
+                    .setCategory("Request")
+                    .setAction("Refresh")
+                    .setLabel("ItemSchema")
+                    .build());
         } else {
             if (newItems > 0) {
                 getLoaderManager().restartLoader(PRICE_LIST_LOADER, null, this);
@@ -347,6 +371,12 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                 GetItemSchema task = new GetItemSchema(getActivity());
                 task.setListener(this);
                 task.execute();
+
+                mTracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Request")
+                        .setAction("Refresh")
+                        .setLabel("ItemSchema")
+                        .build());
             }
         }
 
