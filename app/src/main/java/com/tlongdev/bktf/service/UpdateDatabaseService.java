@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.network.GetPriceList;
@@ -25,6 +28,14 @@ public class UpdateDatabaseService extends Service {
     //Intent extra keys for indicating the need for the update
     private static final String UPDATE_DATABASE = "update";
 
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mTracker = ((BptfApplication) getApplication()).getDefaultTracker();
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -39,6 +50,12 @@ public class UpdateDatabaseService extends Service {
 
             //Start updating the database
             new GetPriceList(this, true, true).execute();
+
+            mTracker.send(new HitBuilders.EventBuilder()
+                    .setCategory("Request")
+                    .setAction("RefreshBackground")
+                    .setLabel("Prices")
+                    .build());
         }
 
         //Stop the service

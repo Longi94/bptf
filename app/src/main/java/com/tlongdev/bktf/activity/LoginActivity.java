@@ -71,6 +71,11 @@ public class LoginActivity extends AppCompatActivity implements GetUserInfo.OnUs
                     task.execute(steamId, null);
 
                     loadingDialog = ProgressDialog.show(LoginActivity.this, null, "Please wait...", true, false);
+
+                    mTracker.send(new HitBuilders.EventBuilder()
+                            .setCategory("Request")
+                            .setAction("UserData")
+                            .build());
                 }
             }
         });
@@ -113,6 +118,11 @@ public class LoginActivity extends AppCompatActivity implements GetUserInfo.OnUs
         GetUserBackpack task = new GetUserBackpack(this);
         task.registerOnFetchUserBackpackListener(this);
         task.execute(steamId);
+
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Request")
+                .setAction("UserBackpack")
+                .build());
     }
 
     @Override
