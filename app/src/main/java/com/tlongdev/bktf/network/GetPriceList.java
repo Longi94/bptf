@@ -10,13 +10,16 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+import com.google.android.gms.analytics.HitBuilders;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.util.Utility;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -137,10 +140,23 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
 
             return getItemsFromJson(inputStream);
 
+        } catch (JsonParseException e) {
+            errorMessage = mContext.getString(R.string.error_data_parse);
+            e.printStackTrace();
+
+            ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                    .setDescription("JSON exception:GetPriceList, Message: " + e.getMessage())
+                    .setFatal(true)
+                    .build());
         } catch (IOException e) {
             //There was a network error
             errorMessage = mContext.getString(R.string.error_network);
             e.printStackTrace();
+
+            ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                    .setDescription("Network exception:GetPriceList, Message: " + e.getMessage())
+                    .setFatal(false)
+                    .build());
         } finally {
             //Close the connection
             if (urlConnection != null) {

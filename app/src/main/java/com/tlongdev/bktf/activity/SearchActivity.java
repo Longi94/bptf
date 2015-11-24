@@ -4,8 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.MergeCursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -28,11 +26,11 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.adapter.SearchAdapter;
 import com.tlongdev.bktf.data.DatabaseContract;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.util.Utility;
 
 import org.json.JSONException;
 
@@ -359,8 +357,20 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                         }
                     }
                 }
-            } catch (IOException | JSONException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
+
+                mTracker.send(new HitBuilders.ExceptionBuilder()
+                        .setDescription("Network exception:SearchActivity, Message: " + e.getMessage())
+                        .setFatal(false)
+                        .build());
+            } catch (JSONException e) {
+                e.printStackTrace();
+
+                mTracker.send(new HitBuilders.ExceptionBuilder()
+                        .setDescription("JSON exception:SearchActivity, Message: " + e.getMessage())
+                        .setFatal(true)
+                        .build());
             }
 
             return userData;
@@ -390,36 +400,6 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             } else {
                 adapter.swapCursor(data, false);
                 adapter.setLoading(false);
-            }
-        }
-
-        /**
-         * Method to download the image.
-         *
-         * @param link the link to download the image from
-         * @return the bitmap object containing the image
-         */
-        public Bitmap getBitmapFromURL(String link) {
-
-            try {
-                //Open connection
-                URL url = new URL(link);
-                HttpURLConnection connection = (HttpURLConnection) url
-                        .openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-
-                //Get the input stream
-                InputStream input = connection.getInputStream();
-
-                //Decode the image
-                return BitmapFactory.decodeStream(input);
-
-            } catch (IOException e) {
-                //There was an error, notify the user
-                publishProgress();
-                e.printStackTrace();
-                return null;
             }
         }
     }

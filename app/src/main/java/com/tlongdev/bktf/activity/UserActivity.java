@@ -602,11 +602,21 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 //TODO distinguish all network errors: timeout, connection refused, api down, etc.
                 publishProgress(getString(R.string.error_network));
                 e.printStackTrace();
+
+                mTracker.send(new HitBuilders.ExceptionBuilder()
+                        .setDescription("Network exception:UserActivity, Message: " + e.getMessage())
+                        .setFatal(false)
+                        .build());
                 return null;
             } catch (JSONException e) {
                 //JSON was improperly formatted, pls no
                 publishProgress(getString(R.string.error_data_parse));
                 e.printStackTrace();
+
+                mTracker.send(new HitBuilders.ExceptionBuilder()
+                        .setDescription("JSON exception:UserActivity, Message: " + e.getMessage())
+                        .setFatal(true)
+                        .build());
                 return null;
             } finally {
 
@@ -618,9 +628,14 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 if (reader != null) {
                     try {
                         reader.close();
-                    } catch (final IOException e) {
+                    } catch (IOException e) {
                         publishProgress(e.getMessage());
                         e.printStackTrace();
+
+                        mTracker.send(new HitBuilders.ExceptionBuilder()
+                                .setDescription("Buffered reader exception:UserActivity, Message: " + e.getMessage())
+                                .setFatal(false)
+                                .build());
                     }
                 }
             }

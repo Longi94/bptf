@@ -350,6 +350,11 @@ public class ItemDetailActivity extends Activity {
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+
+                    mTracker.send(new HitBuilders.ExceptionBuilder()
+                            .setDescription("Failed to load painT " + item.getPaint() + ", Message: " + e.getMessage())
+                            .setFatal(false)
+                            .build());
                 }
 
                 cardView.setCardBackgroundColor(item.getColor(this, true));

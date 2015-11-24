@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.util.Utility;
 
@@ -234,11 +236,23 @@ public class GetUserInfo extends AsyncTask<String, Void, Integer> {
             //There was a network error
             errorMessage = mContext.getString(R.string.error_network);
             e.printStackTrace();
+
+            ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                    .setDescription("Network exception:GetUserInfo, Message: " + e.getMessage())
+                    .setFatal(false)
+                    .build());
+
             return -1;
         } catch (JSONException e) {
             //The JSON string was incorrectly formatted
             errorMessage = mContext.getString(R.string.error_data_parse);
             e.printStackTrace();
+
+            ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                    .setDescription("JSON exception:GetUserInfo, Message: " + e.getMessage())
+                    .setFatal(true)
+                    .build());
+
             return -1;
         } finally {
             //Close the connection
@@ -249,10 +263,15 @@ public class GetUserInfo extends AsyncTask<String, Void, Integer> {
                 //Close the reader
                 try {
                     reader.close();
-                } catch (final IOException e) {
+                } catch (IOException e) {
                     //This should never be reached
                     errorMessage = e.getMessage();
                     e.printStackTrace();
+
+                    ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                            .setDescription("Buffered reader exception:GetUserInfo, Message: " + e.getMessage())
+                            .setFatal(false)
+                            .build());
                 }
             }
         }

@@ -132,8 +132,13 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                             inputUsd.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.USD, false))));
                         }
                     }
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
+                } catch (Throwable t) {
+                    t.printStackTrace();
+
+                    ((BptfApplication)getActivity().getApplication()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                            .setDescription("Converter exception:ConverterFragment, Message: " + t.getMessage())
+                            .setFatal(false)
+                            .build());
                 }
             }
 
@@ -161,8 +166,13 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                             inputUsd.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.USD, false))));
                         }
                     }
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
+                } catch (Throwable t) {
+                    t.printStackTrace();
+
+                    ((BptfApplication)getActivity().getApplication()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                            .setDescription("Converter exception:ConverterFragment, Message: " + t.getMessage())
+                            .setFatal(false)
+                            .build());
                 }
             }
 
@@ -190,8 +200,13 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                             inputUsd.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.USD, false))));
                         }
                     }
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
+                } catch (Throwable t) {
+                    t.printStackTrace();
+
+                    ((BptfApplication)getActivity().getApplication()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                            .setDescription("Converter exception:ConverterFragment, Message: " + t.getMessage())
+                            .setFatal(false)
+                            .build());
                 }
             }
 
@@ -219,8 +234,13 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                             inputEarbuds.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.BUD, false))));
                         }
                     }
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
+                } catch (Throwable t) {
+                    t.printStackTrace();
+
+                    ((BptfApplication)getActivity().getApplication()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                            .setDescription("Converter exception:ConverterFragment, Message: " + t.getMessage())
+                            .setFatal(false)
+                            .build());
                 }
             }
 
@@ -237,8 +257,13 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
             inputKeys.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false))));
             inputMetal.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false))));
             inputUsd.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.USD, false))));
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Throwable t) {
+            t.printStackTrace();
+
+            ((BptfApplication)getActivity().getApplication()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                    .setDescription("Converter exception:ConverterFragment, Message: " + t.getMessage())
+                    .setFatal(false)
+                    .build());
         }
 
         inputEarbuds.setOnFocusChangeListener(this);

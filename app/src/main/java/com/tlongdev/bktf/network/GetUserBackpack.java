@@ -7,6 +7,8 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
 import com.tlongdev.bktf.model.Item;
@@ -262,10 +264,30 @@ public class GetUserBackpack extends AsyncTask<String, Void, Integer> {
             //Get the json string
             jsonStr = buffer.toString();
 
+            //Start parsing the json String
+            return getItemsFromJson(jsonStr, params[0]);
+
         } catch (IOException e) {
             //There was a network error, notify the user TODO, proper error handling
             errorMessage = mContext.getString(R.string.error_network);
             e.printStackTrace();
+
+            ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                    .setDescription("Network exception:GetUserBackpack, Message: " + e.getMessage())
+                    .setFatal(false)
+                    .build());
+
+            return -1;
+        } catch (JSONException e) {
+
+            errorMessage = mContext.getString(R.string.error_data_parse);
+            e.printStackTrace();
+
+            ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                    .setDescription("JSON exception:GetUserBackpack, Message: " + e.getMessage())
+                    .setFatal(true)
+                    .build());
+
             return -1;
         } finally {
             //Disconnect
@@ -276,22 +298,17 @@ public class GetUserBackpack extends AsyncTask<String, Void, Integer> {
                 //Close the input stream
                 try {
                     reader.close();
-                } catch (final IOException e) {
+                } catch (IOException e) {
                     errorMessage = e.getMessage();
                     e.printStackTrace();
+
+                    ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                            .setDescription("Buffered reader exception:GetUserBackpack, Message: " + e.getMessage())
+                            .setFatal(false)
+                            .build());
                 }
 
             }
-        }
-
-        try {
-            //Start parsing the json String
-            return getItemsFromJson(jsonStr, params[0]);
-        } catch (JSONException e) {
-            //Something went wrong while parsing the data
-            errorMessage = mContext.getString(R.string.error_data_parse);
-            e.printStackTrace();
-            return -1;
         }
     }
 
