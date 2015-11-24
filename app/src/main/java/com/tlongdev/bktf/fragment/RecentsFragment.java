@@ -50,7 +50,7 @@ import com.tlongdev.bktf.util.Utility;
  */
 public class RecentsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
         SwipeRefreshLayout.OnRefreshListener, GetPriceList.OnPriceListListener,
-        AppBarLayout.OnOffsetChangedListener, MainActivity.OnDrawerOpenedListener, GetItemSchema.OnItemSchemaListener {
+        MainActivity.OnDrawerOpenedListener, GetItemSchema.OnItemSchemaListener {
 
     /**
      * Log tag for logging.
@@ -152,7 +152,6 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
         //Views used for toolbar behavior
         mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar_layout);
-        mAppBarLayout.addOnOffsetChangedListener(this);
         mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator_layout);
 
         adapter = new RecentsAdapter(getActivity(), null);
@@ -500,16 +499,6 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
             alertDialog.show();
         } else {
             Toast.makeText(getActivity(), "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-        //Disable the swipe refresh layout when the toolbar is not fully visible
-        if (i == 0) {
-            mSwipeRefreshLayout.setEnabled(true);
-        } else {
-            mSwipeRefreshLayout.setEnabled(false);
         }
     }
 
