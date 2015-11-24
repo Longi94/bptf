@@ -44,7 +44,7 @@ import com.tlongdev.bktf.util.Utility;
  */
 public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
         View.OnClickListener, GetUserInfo.OnUserInfoListener, MainActivity.OnDrawerOpenedListener,
-        AppBarLayout.OnOffsetChangedListener, GetUserBackpack.OnUserBackpackListener {
+        GetUserBackpack.OnUserBackpackListener {
 
     /**
      * Log tag for logging.
@@ -122,7 +122,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         //Views used for toolbar behavior
         mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar_layout);
-        mAppBarLayout.addOnOffsetChangedListener(this);
         mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator_layout);
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsing_toolbar);
 
@@ -514,16 +513,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         Toast.makeText(getActivity(), "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-        //Disable the swipe refresh layout when the toolbar is not fully visible
-        if (i == 0) {
-            mSwipeRefreshLayout.setEnabled(true);
-        } else {
-            mSwipeRefreshLayout.setEnabled(false);
-        }
     }
 
     @Override
