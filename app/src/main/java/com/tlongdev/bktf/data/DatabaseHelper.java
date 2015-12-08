@@ -14,7 +14,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @SuppressWarnings("unused")
     private static final String LOG_TAG = DatabaseHelper.class.getSimpleName();
 
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
     public static final String DATABASE_NAME = "bptf.db";
 
     private Context mContext;
@@ -88,6 +88,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
                         " UNIQUE (" + OriginEntry.COLUMN_ID + ") ON CONFLICT REPLACE);";
 
+        final String SQL_CREATE_FAVORITES_TABLE =
+                "CREATE TABLE " + FavoritesEntry.TABLE_NAME + " (" +
+                        FavoritesEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+
+                        FavoritesEntry.COLUMN_DEFINDEX + " INTEGER NOT NULL, " +
+                        FavoritesEntry.COLUMN_ITEM_QUALITY + " INTEGER NOT NULL, " +
+                        FavoritesEntry.COLUMN_ITEM_TRADABLE + " INTEGER NOT NULL, " +
+                        FavoritesEntry.COLUMN_ITEM_CRAFTABLE + " INTEGER NOT NULL, " +
+                        FavoritesEntry.COLUMN_PRICE_INDEX + " INTEGER NOT NULL, " +
+                        FavoritesEntry.COLUMN_AUSTRALIUM + " INTEGER NOT NULL, " +
+                        FavoritesEntry.COLUMN_WEAPON_WEAR + " INTEGER NOT NULL, " +
+
+                        " UNIQUE (" + FavoritesEntry.COLUMN_DEFINDEX + ", " +
+                        FavoritesEntry.COLUMN_ITEM_QUALITY + ", " +
+                        FavoritesEntry.COLUMN_ITEM_TRADABLE + ", " +
+                        FavoritesEntry.COLUMN_ITEM_CRAFTABLE + ", " +
+                        FavoritesEntry.COLUMN_PRICE_INDEX + ", " +
+                        FavoritesEntry.COLUMN_AUSTRALIUM + ", " +
+                        FavoritesEntry.COLUMN_WEAPON_WEAR + ") ON CONFLICT REPLACE);";
+
         final String SQL_CREATE_BACKPACK_TABLE =
                 "CREATE TABLE " + UserBackpackEntry.TABLE_NAME + " (" +
                         UserBackpackEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -150,6 +170,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_ITEM_SCHEMA_TABLE);
         db.execSQL(SQL_CREATE_UNUSUAL_SCHEMA_TABLE);
         db.execSQL(SQL_CREATE_ORIGIN_NAMES_TABLE);
+        db.execSQL(SQL_CREATE_FAVORITES_TABLE);
         db.execSQL(SQL_CREATE_BACKPACK_TABLE);
         db.execSQL(SQL_CREATE_GUEST_BACKPACK_TABLE);
     }
@@ -160,10 +181,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + ItemSchemaEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + UnusualSchemaEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + OriginEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + FavoritesEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + UserBackpackEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + UserBackpackEntry.TABLE_NAME_GUEST);
 
-        if (newVersion >= 7 && oldVersion < 7) {
+        if (oldVersion < 7) {
             mContext.deleteDatabase("pricelist.db");
             mContext.deleteDatabase("items.db");
             mContext.deleteDatabase("backpack.db");
