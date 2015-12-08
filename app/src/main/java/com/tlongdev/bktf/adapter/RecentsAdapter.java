@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -23,6 +22,7 @@ import com.tlongdev.bktf.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.fragment.RecentsFragment;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.util.Utility;
 
 /**
  * Adapter for the recycler view in the recents fragment.
@@ -101,6 +101,9 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
 
                     menu.getMenuInflater().inflate(R.menu.popup_recents, menu.getMenu());
 
+                    menu.getMenu().getItem(0).setTitle(
+                            Utility.isFavorite(mContext, item) ? "Remove from favorites" : "Add to favorites");
+
                     menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem menuItem) {
@@ -114,8 +117,11 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
                                     mContext.startActivity(i);
                                     break;
                                 case R.id.favorite:
-                                    // TODO: 2015. 11. 17.
-                                    Toast.makeText(mContext, "Under construction :)", Toast.LENGTH_SHORT).show();
+                                    if (Utility.isFavorite(mContext, item)) {
+                                        Utility.removeFromFavorites(mContext, item);
+                                    } else {
+                                        Utility.addToFavorites(mContext, item);
+                                    }
                                     break;
                                 case R.id.backpack_tf:
                                     mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
