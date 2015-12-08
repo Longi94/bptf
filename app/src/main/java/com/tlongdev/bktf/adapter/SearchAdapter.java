@@ -169,7 +169,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                         public void onClick(View v) {
                             PopupMenu menu = new PopupMenu(mContext, holder.more);
 
-                            menu.getMenuInflater().inflate(R.menu.popup_recents, menu.getMenu());
+                            menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
 
                             menu.getMenu().getItem(0).setTitle(
                                     Utility.isFavorite(mContext, item) ? "Remove from favorites" : "Add to favorites");

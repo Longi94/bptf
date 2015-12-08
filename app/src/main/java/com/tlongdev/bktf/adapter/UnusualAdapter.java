@@ -192,7 +192,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                         public void onClick(View v) {
                             PopupMenu menu = new PopupMenu(mContext, holder.more);
 
-                            menu.getMenuInflater().inflate(R.menu.popup_recents, menu.getMenu());
+                            menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
 
                             menu.getMenu().getItem(0).setTitle(
                                     Utility.isFavorite(mContext, hat) ? "Remove from favorites" : "Add to favorites");
