@@ -1,6 +1,7 @@
 package com.tlongdev.bktf.util;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
@@ -10,10 +11,12 @@ import android.net.NetworkInfo;
 import android.os.Build;
 
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
 import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
 import com.tlongdev.bktf.model.Currency;
+import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 
 import org.json.JSONArray;
@@ -292,6 +295,7 @@ public class Utility {
 
     /**
      * Format floating point numbers to 2 decimal places
+     *
      * @param value the number to format
      * @return the formatted string
      */
@@ -348,6 +352,72 @@ public class Utility {
                 " ( " + PriceEntry.COLUMN_PRICE + " + " + PriceEntry.COLUMN_PRICE_HIGH + ") / 2 " +
                 " ) END " +
                 " ) END ";
+    }
+
+    public static void addToFavorites(Context context, Item item) {
+
+        ContentValues cv = new ContentValues();
+
+        cv.put(FavoritesEntry.COLUMN_DEFINDEX, item.getDefindex());
+        cv.put(FavoritesEntry.COLUMN_ITEM_QUALITY, item.getQuality());
+        cv.put(FavoritesEntry.COLUMN_ITEM_TRADABLE, item.isTradable() ? 1 : 0);
+        cv.put(FavoritesEntry.COLUMN_ITEM_CRAFTABLE, item.isCraftable() ? 1 : 0);
+        cv.put(FavoritesEntry.COLUMN_PRICE_INDEX, item.getPriceIndex());
+        cv.put(FavoritesEntry.COLUMN_AUSTRALIUM, item.isAustralium() ? 1 : 0);
+        cv.put(FavoritesEntry.COLUMN_WEAPON_WEAR, item.getWeaponWear());
+
+        context.getContentResolver().insert(FavoritesEntry.CONTENT_URI, cv);
+    }
+
+    public static void removeFromFavorites(Context context, Item item) {
+        context.getContentResolver().delete(FavoritesEntry.CONTENT_URI,
+                FavoritesEntry.COLUMN_DEFINDEX + " = ? AND " +
+                        FavoritesEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
+                        FavoritesEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
+                        FavoritesEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
+                        FavoritesEntry.COLUMN_PRICE_INDEX + " = ? AND " +
+                        FavoritesEntry.COLUMN_AUSTRALIUM + " = ? AND " +
+                        FavoritesEntry.COLUMN_WEAPON_WEAR + " = ?",
+                new String[]{String.valueOf(item.getDefindex()),
+                        String.valueOf(item.getQuality()),
+                        item.isTradable() ? "1" : "0",
+                        item.isCraftable() ? "1" : "0",
+                        String.valueOf(item.getPriceIndex()),
+                        item.isAustralium() ? "1" : "0",
+                        String.valueOf(item.getWeaponWear())
+                });
+    }
+
+    public static boolean isFavorite(Context context, Item item) {
+        Cursor cursor = context.getContentResolver().query(
+                FavoritesEntry.CONTENT_URI,
+                null,
+                FavoritesEntry.COLUMN_DEFINDEX + " = ? AND " +
+                        FavoritesEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
+                        FavoritesEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
+                        FavoritesEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
+                        FavoritesEntry.COLUMN_PRICE_INDEX + " = ? AND " +
+                        FavoritesEntry.COLUMN_AUSTRALIUM + " = ? AND " +
+                        FavoritesEntry.COLUMN_WEAPON_WEAR + " = ?",
+                new String[]{String.valueOf(item.getDefindex()),
+                        String.valueOf(item.getQuality()),
+                        item.isTradable() ? "1" : "0",
+                        item.isCraftable() ? "1" : "0",
+                        String.valueOf(item.getPriceIndex()),
+                        item.isAustralium() ? "1" : "0",
+                        String.valueOf(item.getWeaponWear())
+                },
+                null
+        );
+
+        boolean result = false;
+
+        if (cursor != null) {
+            result = cursor.getCount() > 0;
+            cursor.close();
+        }
+
+        return result;
     }
 
     /**

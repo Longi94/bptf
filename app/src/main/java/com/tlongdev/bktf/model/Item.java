@@ -46,7 +46,7 @@ public class Item implements Serializable{
     }
 
     public Item(int defindex, String name, int quality, boolean tradable, boolean craftable, boolean australium, int priceIndex, Price price) {
-        this(defindex, name, quality, tradable, craftable, australium, priceIndex, -1, price);
+        this(defindex, name, quality, tradable, craftable, australium, priceIndex, 0, price);
     }
 
     public Item(int defindex, String name, int quality, boolean tradable, boolean craftable, boolean australium, int priceIndex, int weaponWear, Price price) {
