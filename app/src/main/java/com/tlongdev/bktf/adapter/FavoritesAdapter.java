@@ -79,6 +79,8 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
                                     break;
                                 case R.id.favorite:
                                     Utility.removeFromFavorites(mContext, item);
+                                    notifyItemRemoved(mDataSet.indexOf(item));
+                                    mDataSet.remove(item);
                                     break;
                                 case R.id.backpack_tf:
                                     mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
