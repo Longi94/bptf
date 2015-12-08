@@ -8,7 +8,20 @@
     android:padding="16dp"
     tools:context=".activity.ItemChooserActivity">
 
-    <Spinner
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <AutoCompleteTextView
+            android:id="@+id/item_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:hint="Item Name"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <!--<Spinner
         android:id="@+id/spinner_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -89,6 +102,6 @@
             android:text="@string/action_add"
             android:textColor="@color/accent" />
 
-    </LinearLayout>
+    </LinearLayout>-->
 
 </LinearLayout>
