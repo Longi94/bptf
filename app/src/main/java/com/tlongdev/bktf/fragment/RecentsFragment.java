@@ -376,6 +376,13 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                         .setAction("Refresh")
                         .setLabel("ItemSchema")
                         .build());
+            } else {
+                if (isAdded()) {
+                    //Stop animation
+                    mSwipeRefreshLayout.setRefreshing(false);
+
+                    updateCurrencyHeader(prefs);
+                }
             }
         }
 
@@ -387,13 +394,6 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                 System.currentTimeMillis());
         editor.putBoolean(getActivity().getString(R.string.pref_initial_load_v2), false);
         editor.apply();
-
-        if (isAdded()) {
-            //Stop animation
-            mSwipeRefreshLayout.setRefreshing(false);
-
-            updateCurrencyHeader(prefs);
-        }
     }
 
     @Override
@@ -458,6 +458,13 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                 System.currentTimeMillis());
         editor.putBoolean(getActivity().getString(R.string.pref_initial_load_v2), false);
         editor.apply();
+
+        if (isAdded()) {
+            //Stop animation
+            mSwipeRefreshLayout.setRefreshing(false);
+
+            updateCurrencyHeader(prefs);
+        }
     }
 
     @Override
