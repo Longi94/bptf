@@ -16,6 +16,10 @@
             android:icon="@drawable/ic_account_white_24dp"
             android:title="@string/title_user" />
         <item
+            android:id="@+id/nav_favorites"
+            android:icon="@drawable/ic_favorite_white_24dp"
+            android:title="@string/title_favorites" />
+        <item
             android:id="@+id/nav_converter"
             android:icon="@drawable/ic_swap_horiz_white_24dp"
             android:title="@string/title_converter" />

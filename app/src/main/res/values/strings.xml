@@ -289,4 +289,8 @@
     <string name="pref_title_mp_chart">MPAndroidChart</string>
     <string name="pref_summary_mp_chart">a powerful Android chart / graph library</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_favorites">Favorites</string>
+
 </resources>

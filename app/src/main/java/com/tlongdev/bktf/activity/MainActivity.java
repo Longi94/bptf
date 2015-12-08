@@ -29,6 +29,7 @@ import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.fragment.CalculatorFragment;
 import com.tlongdev.bktf.fragment.ConverterFragment;
+import com.tlongdev.bktf.fragment.FavoritesFragment;
 import com.tlongdev.bktf.fragment.RecentsFragment;
 import com.tlongdev.bktf.fragment.UnusualFragment;
 import com.tlongdev.bktf.fragment.UserFragment;
@@ -121,11 +122,14 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.nav_user:
                     switchFragment(2);
                     break;
-                case R.id.nav_converter:
+                case R.id.nav_favorites:
                     switchFragment(3);
                     break;
-                case R.id.nav_calculator:
+                case R.id.nav_converter:
                     switchFragment(4);
+                    break;
+                case R.id.nav_calculator:
+                    switchFragment(5);
                     break;
                 case R.id.nav_settings:
                     Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
@@ -301,10 +305,14 @@ public class MainActivity extends AppCompatActivity {
                 drawerListener = (UserFragment) newFragment;
                 break;
             case 3:
+                newFragment = new FavoritesFragment();
+                drawerListener = (FavoritesFragment) newFragment;
+                break;
+            case 4:
                 newFragment = new ConverterFragment();
                 drawerListener = null;
                 break;
-            case 4:
+            case 5:
                 newFragment = new CalculatorFragment();
                 drawerListener = (CalculatorFragment) newFragment;
                 break;
