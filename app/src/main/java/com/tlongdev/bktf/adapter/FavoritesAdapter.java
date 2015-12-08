@@ -2,7 +2,6 @@ package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,54 +18,34 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.activity.PriceHistoryActivity;
-import com.tlongdev.bktf.fragment.RecentsFragment;
 import com.tlongdev.bktf.model.Item;
-import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.util.Utility;
 
+import java.util.ArrayList;
+
 /**
- * Adapter for the recycler view in the recents fragment.
+ * Created by Long on 2015. 12. 08..
  */
-public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHolder> {
+public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.ViewHolder> {
 
-    /**
-     * Log tag for logging.
-     */
-    @SuppressWarnings("unused")
-    private static final String LOG_TAG = RecentsAdapter.class.getSimpleName();
-
-    /**
-     * The context
-     */
     private Context mContext;
+    private ArrayList<Item> mDataSet;
 
-    /**
-     * The data set
-     */
-    private Cursor mDataSet;
-
-    /**
-     * Constructor.
-     *
-     * @param context the context
-     * @param dataSet the data set
-     */
-    public RecentsAdapter(Context context, Cursor dataSet) {
-        this.mContext = context;
-        this.mDataSet = dataSet;
+    public FavoritesAdapter(Context mContext, ArrayList<Item> mDataSet) {
+        this.mContext = mContext;
+        this.mDataSet = mDataSet;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_recents, parent, false);
+                .inflate(R.layout.list_favorites, parent, false);
         return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        if (mDataSet != null && mDataSet.moveToPosition(position)) {
-
+        if (mDataSet != null && mDataSet.size() > position) {
             holder.root.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -74,24 +53,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
                 }
             });
 
-            //Get all the data from the cursor
-            final Item item = new Item(
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_DEFI),
-                    mDataSet.getString(RecentsFragment.COL_PRICE_LIST_NAME),
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_QUAL),
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_TRAD) == 1,
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_CRAF) == 1,
-                    mDataSet.getInt(RecentsFragment.COL_AUSTRALIUM) == 1,
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_INDE),
-                    new Price(
-                            mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PRIC),
-                            mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PMAX),
-                            mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PRAW),
-                            0 /* TODO last update */,
-                            mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_DIFF),
-                            mDataSet.getString(RecentsFragment.COL_PRICE_LIST_CURR)
-                    )
-            );
+            final Item item = mDataSet.get(position);
 
             holder.more.setOnClickListener(new View.OnClickListener() {
 
@@ -101,8 +63,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
 
                     menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
 
-                    menu.getMenu().getItem(0).setTitle(
-                            Utility.isFavorite(mContext, item) ? "Remove from favorites" : "Add to favorites");
+                    menu.getMenu().getItem(0).setTitle("Remove from favorites");
 
                     menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
@@ -117,11 +78,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
                                     mContext.startActivity(i);
                                     break;
                                 case R.id.favorite:
-                                    if (Utility.isFavorite(mContext, item)) {
-                                        Utility.removeFromFavorites(mContext, item);
-                                    } else {
-                                        Utility.addToFavorites(mContext, item);
-                                    }
+                                    Utility.removeFromFavorites(mContext, item);
                                     break;
                                 case R.id.backpack_tf:
                                     mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
@@ -167,7 +124,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
             } catch (Throwable t) {
                 t.printStackTrace();
 
-                ((BptfApplication)mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
                         .setDescription("Formatter exception:RecentsAdapter, Message: " + t.getMessage())
                         .setFatal(false)
                         .build());
@@ -177,25 +134,14 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return mDataSet == null ? 0 : mDataSet.getCount();
+        return mDataSet == null ? 0 : mDataSet.size();
     }
 
-    /**
-     * Replaces the cursor of the adapter
-     *
-     * @param data          the cursor that will replace the current one
-     * @param closePrevious whether to close the previous cursor
-     */
-    public void swapCursor(Cursor data, boolean closePrevious) {
-        if (closePrevious && mDataSet != null) mDataSet.close();
-        mDataSet = data;
-        notifyDataSetChanged();
+    public void setDataSet(ArrayList<Item> dataSet) {
+        this.mDataSet = dataSet;
     }
 
-    /**
-     * The view holder.
-     */
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         public final View root;
         public final View more;
