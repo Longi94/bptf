@@ -80,14 +80,8 @@
         </activity>
         <activity
             android:name=".activity.ItemChooserActivity"
-            android:excludeFromRecents="true"
             android:label="@string/title_activity_item_chooser"
-            android:parentActivityName=".activity.MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dialog" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.MainActivity" />
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activity.CreditsActivity"

@@ -1,7 +1,6 @@
 package com.tlongdev.bktf.fragment;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -25,7 +24,6 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.activity.ItemChooserActivity;
 import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.activity.SearchActivity;
@@ -33,6 +31,7 @@ import com.tlongdev.bktf.adapter.CalculatorAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.util.Utility;
 
 import java.util.ArrayList;
 
@@ -187,14 +186,14 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         // Check which request we're responding to
         if (requestCode == MainActivity.REQUEST_NEW_ITEM) {
             // Make sure the request was successful
-            if (resultCode == Activity.RESULT_OK) {
+            /*if (resultCode == Activity.RESULT_OK) {
                 int id = data.getIntExtra(ItemChooserActivity.EXTRA_ITEM_ID, -1);
                 if (id >= 0) {
                     ids.add(new Utility.IntegerPair(id, data.getIntExtra(ItemChooserActivity.EXTRA_ITEM_COUNT, 0)));
                     mAdapter.notifyDataSetChanged();
                     addItem(id, data.getIntExtra(ItemChooserActivity.EXTRA_ITEM_COUNT, 0));
                 }
-            }
+            }*/
         }
     }
 
