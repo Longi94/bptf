@@ -28,6 +28,7 @@ public class DatabaseProvider extends ContentProvider {
     public static final int UNUSUAL_SCHEMA = 103;
     public static final int BACKPACK = 104;
     public static final int BACKPACK_GUEST = 105;
+    public static final int FAVORITES = 106;
 
     /**
      * The URI Matcher used by this content provider
@@ -61,6 +62,7 @@ public class DatabaseProvider extends ContentProvider {
         matcher.addURI(authority, DatabaseContract.PATH_UNUSUAL_SCHEMA, UNUSUAL_SCHEMA);
         matcher.addURI(authority, DatabaseContract.PATH_ORIGIN_NAMES, ORIGIN_NAMES);
         matcher.addURI(authority, DatabaseContract.PATH_BACKPACK, BACKPACK);
+        matcher.addURI(authority, DatabaseContract.PATH_FAVORITES, FAVORITES);
         matcher.addURI(authority, DatabaseContract.PATH_BACKPACK + "/guest", BACKPACK_GUEST);
 
         return matcher;
@@ -102,6 +104,9 @@ public class DatabaseProvider extends ContentProvider {
             case BACKPACK_GUEST:
                 tableName = UserBackpackEntry.TABLE_NAME_GUEST;
                 break;
+            case FAVORITES:
+                tableName = FavoritesEntry.TABLE_NAME;
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -136,6 +141,8 @@ public class DatabaseProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_BACKPACK;
             case BACKPACK_GUEST:
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_BACKPACK;
+            case FAVORITES:
+                return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_FAVORITES;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -172,6 +179,10 @@ public class DatabaseProvider extends ContentProvider {
                 tableName = UserBackpackEntry.TABLE_NAME_GUEST;
                 returnUri = UserBackpackEntry.CONTENT_URI_GUEST;
                 break;
+            case FAVORITES:
+                tableName = FavoritesEntry.TABLE_NAME;
+                returnUri = FavoritesEntry.CONTENT_URI;
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -206,6 +217,9 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             case BACKPACK_GUEST:
                 rowsDeleted = db.delete(UserBackpackEntry.TABLE_NAME_GUEST, selection, selectionArgs);
+                break;
+            case FAVORITES:
+                rowsDeleted = db.delete(FavoritesEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -243,6 +257,9 @@ public class DatabaseProvider extends ContentProvider {
             case BACKPACK_GUEST:
                 rowsUpdated = db.update(UserBackpackEntry.TABLE_NAME_GUEST, values, selection, selectionArgs);
                 break;
+            case FAVORITES:
+                rowsUpdated = db.update(FavoritesEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -276,6 +293,9 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             case BACKPACK_GUEST:
                 tableName = UserBackpackEntry.TABLE_NAME_GUEST;
+                break;
+            case FAVORITES:
+                tableName = FavoritesEntry.TABLE_NAME;
                 break;
             default:
                 return super.bulkInsert(uri, values);

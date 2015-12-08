@@ -28,6 +28,7 @@ public final class DatabaseContract {
     public static final String PATH_ITEM_SCHEMA = "schema";
     public static final String PATH_UNUSUAL_SCHEMA = "unusual_schema";
     public static final String PATH_ORIGIN_NAMES = "origin_names";
+    public static final String PATH_FAVORITES = "favorites";
     public static final String PATH_BACKPACK = "backpack";
 
     public static final Uri RAW_QUERY_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_RAW_QUERY).build();
@@ -91,6 +92,22 @@ public final class DatabaseContract {
 
         public static final String COLUMN_ID = "id";
         public static final String COLUMN_NAME = "name";
+    }
+
+    public static final class FavoritesEntry implements BaseColumns {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_FAVORITES).build();
+
+        public static final String TABLE_NAME = "favorites";
+
+        public static final String COLUMN_DEFINDEX = "defindex";
+        public static final String COLUMN_ITEM_QUALITY = "quality";
+        public static final String COLUMN_ITEM_TRADABLE = "tradable";
+        public static final String COLUMN_ITEM_CRAFTABLE = "craftable";
+        public static final String COLUMN_PRICE_INDEX = "price_index";
+        public static final String COLUMN_AUSTRALIUM = "australium";
+        public static final String COLUMN_WEAPON_WEAR = "weapon_wear";
+
     }
 
     public static final class UserBackpackEntry implements BaseColumns {
