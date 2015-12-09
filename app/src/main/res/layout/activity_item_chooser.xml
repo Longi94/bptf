@@ -16,15 +16,70 @@
             android:id="@+id/item_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lines="1"
-            android:hint="Item Name"/>
+            android:hint="Item Name"
+            android:lines="1" />
 
     </android.support.design.widget.TextInputLayout>
 
-    <!--<Spinner
-        android:id="@+id/spinner_item"
+    <Spinner
+        android:id="@+id/quality"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <Spinner
+        android:id="@+id/effect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <CheckBox
+                android:id="@+id/tradable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:checked="true"
+                android:text="Tradable" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <CheckBox
+                android:id="@+id/craftable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:checked="true"
+                android:text="Craftable" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/australium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:checked="false"
+        android:text="Australium" />
+
+
+    <!--<Spinner
+        android:id="@+id/spinner_iSSSpin     android:layout_height="wrap_content" />
 
     <Spinner
         android:id="@+id/spinner_effect"
