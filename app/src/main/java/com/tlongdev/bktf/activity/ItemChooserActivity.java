@@ -28,6 +28,7 @@ import com.tlongdev.bktf.model.Quality;
 import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Dialog style activity for selecting items to be added to the calculator list.
@@ -82,6 +83,7 @@ public class ItemChooserActivity extends FragmentActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_chooser);
+        ButterKnife.bind(this);
 
         // Obtain the shared Tracker instance.
         BptfApplication application = (BptfApplication) getApplication();

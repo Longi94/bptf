@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
@@ -23,6 +24,9 @@ import com.tlongdev.bktf.activity.UserBackpackActivity;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.util.Utility;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Adapter for the recycler view in the backpack activity-
@@ -300,11 +304,11 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
         /**
          * Views
          */
-        public TextView header = null;
-        public ImageView icon = null;
-        public ImageView effect = null;
-        public ImageView paint = null;
-        public CardView root = null;
+        @Nullable @Bind(R.id.text_view_header) TextView header = null;
+        @Nullable @Bind(R.id.icon) ImageView icon = null;
+        @Nullable @Bind(R.id.effect) ImageView effect = null;
+        @Nullable @Bind(R.id.paint) ImageView paint = null;
+        CardView root = null;
 
         /**
          * Constructor
@@ -314,16 +318,9 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
          */
         public ViewHolder(View view, int viewType) {
             super(view);
-            switch (viewType) {
-                case VIEW_TYPE_HEADER:
-                    header = (TextView) view.findViewById(R.id.text_view_header);
-                    break;
-                case VIEW_TYPE_ITEM:
-                    icon = (ImageView) view.findViewById(R.id.icon);
-                    effect = (ImageView) view.findViewById(R.id.effect);
-                    paint = (ImageView) view.findViewById(R.id.paint);
-                    root = (CardView) view;
-                    break;
+            ButterKnife.bind(this, view);
+            if (viewType == VIEW_TYPE_ITEM) {
+                root = (CardView) view;
             }
         }
     }

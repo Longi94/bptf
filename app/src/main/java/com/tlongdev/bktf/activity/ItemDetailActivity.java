@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * The (dialog) activity for showing info about an item in a backpack.
@@ -151,6 +152,7 @@ public class ItemDetailActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
+        ButterKnife.bind(this);
 
         // Obtain the shared Tracker instance.
         BptfApplication application = (BptfApplication) getApplication();

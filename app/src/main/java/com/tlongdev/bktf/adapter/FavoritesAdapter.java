@@ -23,6 +23,9 @@ import com.tlongdev.bktf.util.Utility;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by Long on 2015. 12. 08..
  */
@@ -145,16 +148,16 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public final View root;
-        public final View more;
-        public final View background;
+        View root;
+        @Bind(R.id.more) View more;
+        @Bind(R.id.icon_background) View background;
 
-        public final ImageView icon;
-        public final ImageView effect;
+        @Bind(R.id.icon) ImageView icon;
+        @Bind(R.id.effect) ImageView effect;
 
-        public final TextView name;
-        public final TextView price;
-        public final TextView difference;
+        @Bind(R.id.name) TextView name;
+        @Bind(R.id.price) TextView price;
+        @Bind(R.id.difference) TextView difference;
 
         /**
          * Constructor.
@@ -164,13 +167,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         public ViewHolder(View view) {
             super(view);
             root = view;
-            more = view.findViewById(R.id.more);
-            background = view.findViewById(R.id.icon_background);
-            icon = (ImageView) view.findViewById(R.id.icon);
-            effect = (ImageView) view.findViewById(R.id.effect);
-            name = (TextView) view.findViewById(R.id.name);
-            price = (TextView) view.findViewById(R.id.price);
-            difference = (TextView) view.findViewById(R.id.difference);
+            ButterKnife.bind(this, view);
         }
     }
 }

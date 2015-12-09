@@ -23,6 +23,7 @@ import com.tlongdev.bktf.util.Profile;
 import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class LoginActivity extends AppCompatActivity implements GetUserInfo.OnUserInfoListener, GetUserBackpack.OnUserBackpackListener {
 
@@ -39,6 +40,7 @@ public class LoginActivity extends AppCompatActivity implements GetUserInfo.OnUs
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
 
         // Obtain the shared Tracker instance.
         BptfApplication application = (BptfApplication) getApplication();

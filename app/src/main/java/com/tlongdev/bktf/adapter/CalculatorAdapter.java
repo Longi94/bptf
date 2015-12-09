@@ -20,6 +20,9 @@ import com.tlongdev.bktf.util.Utility;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Adapter for the recycler view of the calculator.
  */
@@ -196,11 +199,11 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public final ImageView icon;
-        public final TextView name;
-        public final TextView price;
-        public final ImageView effect;
-        public final ImageView delete;
+        @Bind(R.id.icon) ImageView icon;
+        @Bind(R.id.text_view_item_name) TextView name;
+        @Bind(R.id.text_view_item_price) TextView price;
+        @Bind(R.id.effect) ImageView effect;
+        @Bind(R.id.image_view_delete) ImageView delete;
 
         /**
          * Constructor
@@ -209,11 +212,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
          */
         public ViewHolder(View view) {
             super(view);
-            icon = (ImageView) view.findViewById(R.id.icon);
-            effect = (ImageView) view.findViewById(R.id.effect);
-            name = (TextView) view.findViewById(R.id.text_view_item_name);
-            price = (TextView) view.findViewById(R.id.text_view_item_price);
-            delete = (ImageView) view.findViewById(R.id.image_view_delete);
+            ButterKnife.bind(this, view);
         }
     }
 
