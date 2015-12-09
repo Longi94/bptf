@@ -39,6 +39,9 @@ import com.tlongdev.bktf.util.CircleTransform;
 import com.tlongdev.bktf.util.Profile;
 import com.tlongdev.bktf.util.Utility;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Tha main activity if the application. Navigation drawer is used. This is where most of the
  * fragments are shown.
@@ -75,8 +78,8 @@ public class MainActivity extends AppCompatActivity {
     /**
      * The drawer layout and the navigation drawer
      */
-    private DrawerLayout mDrawerLayout;
-    private NavigationView mNavigationView;
+    @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @Bind(R.id.navigation_view) NavigationView mNavigationView;
 
     /**
      * The index of the current fragment.
@@ -153,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         // Obtain the shared Tracker instance.
         BptfApplication application = (BptfApplication) getApplication();
@@ -162,14 +166,12 @@ public class MainActivity extends AppCompatActivity {
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
 
         //Setup the drawer
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setStatusBarBackgroundColor(Utility.getColor(this, R.color.primary_dark));
 
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         //The navigation view
-        mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
         mNavigationView.setNavigationItemSelectedListener(navigationListener);
 
         //User clicked on the header

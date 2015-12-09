@@ -28,6 +28,9 @@ import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class PriceHistoryActivity extends AppCompatActivity implements GetPriceHistory.OnPriceHistoryListener {
 
     /**
@@ -48,14 +51,15 @@ public class PriceHistoryActivity extends AppCompatActivity implements GetPriceH
     /**
      * Views
      */
-    private RecyclerView recyclerView;
-    private ProgressBar progressBar;
-    private TextView failText;
+    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
+    @Bind(R.id.progress_bar) ProgressBar progressBar;
+    @Bind(R.id.fail_text) TextView failText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_price_history);
+        ButterKnife.bind(this);
 
         // Obtain the shared Tracker instance.
         BptfApplication application = (BptfApplication) getApplication();
@@ -79,11 +83,8 @@ public class PriceHistoryActivity extends AppCompatActivity implements GetPriceH
 
         mItem = (Item) i.getSerializableExtra(EXTRA_ITEM);
 
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        failText = (TextView) findViewById(R.id.fail_text);
         if (Utility.isNetworkAvailable(this)) {
             GetPriceHistory task = new GetPriceHistory(this, mItem);
             task.setListener(this);
@@ -117,7 +118,7 @@ public class PriceHistoryActivity extends AppCompatActivity implements GetPriceH
     @Override
     public void onPriceHistoryFinished(List<Price> prices) {
         HistoryAdapter adapter = new HistoryAdapter(this, prices, mItem);
-        recyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(adapter);
 
         //Animate in the recycler view, so it's not that abrupt
         Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.simple_fade_in);
@@ -126,8 +127,8 @@ public class PriceHistoryActivity extends AppCompatActivity implements GetPriceH
         fadeIn.setDuration(500);
         fadeOut.setDuration(500);
 
-        recyclerView.startAnimation(fadeIn);
-        recyclerView.setVisibility(View.VISIBLE);
+        mRecyclerView.startAnimation(fadeIn);
+        mRecyclerView.setVisibility(View.VISIBLE);
 
         progressBar.startAnimation(fadeOut);
         progressBar.setVisibility(View.GONE);

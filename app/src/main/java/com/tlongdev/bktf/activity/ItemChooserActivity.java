@@ -21,11 +21,13 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
+import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Quality;
 import com.tlongdev.bktf.util.Utility;
+
+import butterknife.Bind;
 
 /**
  * Dialog style activity for selecting items to be added to the calculator list.
@@ -69,12 +71,12 @@ public class ItemChooserActivity extends FragmentActivity{
      */
     private Tracker mTracker;
 
-    private AutoCompleteTextView itemName;
+    @Bind(R.id.item_name) AutoCompleteTextView itemName;
 
     private SimpleCursorAdapter nameAdapter;
 
-    private Spinner qualitySpinner;
-    private Spinner effectSpinner;
+    @Bind(R.id.quality) Spinner qualitySpinner;
+    @Bind(R.id.effect)  Spinner effectSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +91,6 @@ public class ItemChooserActivity extends FragmentActivity{
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
         }
-
-        itemName = (AutoCompleteTextView) findViewById(R.id.item_name);
 
         nameAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_dropdown_item_1line,
                 null, new String[]{ItemSchemaEntry.COLUMN_ITEM_NAME}, new int[]{android.R.id.text1}, 0);
@@ -115,7 +115,6 @@ public class ItemChooserActivity extends FragmentActivity{
 
         itemName.setAdapter(nameAdapter);
 
-        qualitySpinner = (Spinner) findViewById(R.id.quality);
         QualityAdapter qualityAdapter = new QualityAdapter(this,
                 R.layout.quality_spinner_item, QUALITIES);
 
@@ -131,7 +130,6 @@ public class ItemChooserActivity extends FragmentActivity{
         );
         EffectAdapter effectAdapter = new EffectAdapter(this, R.layout.effect_spinner_item, effectCursor);
 
-        effectSpinner = (Spinner)findViewById(R.id.effect);
         effectSpinner.setAdapter(effectAdapter);
     }
 

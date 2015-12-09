@@ -22,6 +22,8 @@ import com.tlongdev.bktf.network.GetUserInfo;
 import com.tlongdev.bktf.util.Profile;
 import com.tlongdev.bktf.util.Utility;
 
+import butterknife.Bind;
+
 public class LoginActivity extends AppCompatActivity implements GetUserInfo.OnUserInfoListener, GetUserBackpack.OnUserBackpackListener {
 
     /**
@@ -29,7 +31,7 @@ public class LoginActivity extends AppCompatActivity implements GetUserInfo.OnUs
      */
     private Tracker mTracker;
 
-    private EditText steamIdInput;
+    @Bind(R.id.steam_id) EditText steamIdInput;
 
     private ProgressDialog loadingDialog;
 
@@ -55,8 +57,6 @@ public class LoginActivity extends AppCompatActivity implements GetUserInfo.OnUs
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
         }
-
-        steamIdInput = (EditText) findViewById(R.id.steam_id);
 
         findViewById(R.id.enter).setOnClickListener(new View.OnClickListener() {
             @Override
