@@ -55,4 +55,15 @@
 
     </PreferenceScreen>
 
+    <PreferenceScreen
+        android:key="@string/pref_title_butter_knife"
+        android:summary="@string/pref_summary_butter_knife"
+        android:title="@string/pref_title_butter_knife">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="http://jakewharton.github.io/butterknife/" />
+
+    </PreferenceScreen>
+
 </PreferenceScreen>

@@ -292,5 +292,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_favorites">Favorites</string>
+    <string name="pref_title_butter_knife">Butter Knife</string>
+    <string name="pref_summary_butter_knife">Field and method binding for Android views which uses annotation processing to generate boilerplate code for you.</string>
 
 </resources>
