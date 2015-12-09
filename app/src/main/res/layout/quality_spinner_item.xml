@@ -12,4 +12,4 @@
     android:drawablePadding="8dp"
     android:drawableStart="@drawable/dot"
     android:ellipsize="marquee"
-    android:singleLine="true"/>
+    android:singleLine="true" />
