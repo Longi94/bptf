@@ -41,12 +41,12 @@ import java.net.URL;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Profile page activity.
  */
-public class UserActivity extends AppCompatActivity implements View.OnClickListener,
-        GetUserBackpack.OnUserBackpackListener {
+public class UserActivity extends AppCompatActivity implements GetUserBackpack.OnUserBackpackListener {
 
     /**
      * Log tag for logging.
@@ -146,15 +146,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 .setCategory("Request")
                 .setAction("UserDataGuest")
                 .build());
-
-        //Register this onclicklistener
-        findViewById(R.id.button_bazaar_tf).setOnClickListener(this);
-        findViewById(R.id.button_steamrep).setOnClickListener(this);
-        findViewById(R.id.button_tf2op).setOnClickListener(this);
-        findViewById(R.id.button_tf2tp).setOnClickListener(this);
-        findViewById(R.id.button_steam_community).setOnClickListener(this);
-        findViewById(R.id.backpack).setOnClickListener(this);
-
     }
 
     @Override
@@ -164,8 +155,9 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
-    @Override
-    public void onClick(View v) {
+    @OnClick({R.id.button_bazaar_tf, R.id.button_steamrep, R.id.button_tf2op, R.id.button_tf2tp,
+            R.id.button_steam_community, R.id.backpack})
+    public void onLinkClick(View v) {
 
         //All buttons (except the backpack one) open a link in the browser
         if (v.getId() != R.id.backpack) {
