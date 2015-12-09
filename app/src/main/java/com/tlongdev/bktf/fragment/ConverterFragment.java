@@ -31,6 +31,9 @@ import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnFocusChange;
+import butterknife.OnTouch;
 
 /**
  * Converter fragment. Let's the user quickly convert between currencies.
@@ -62,21 +65,6 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
     private EditText focus;
 
     /**
-     * This disables the soft keyboard because we don't need it
-     */
-    private View.OnTouchListener inputListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            v.onTouchEvent(event);
-            InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-            }
-            return true;
-        }
-    };
-
-    /**
      * Constructor.
      */
     public ConverterFragment() {
@@ -104,12 +92,6 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
 
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
-
-        //Handle the touch events inside the fragment
-        inputEarbuds.setOnTouchListener(inputListener);
-        inputKeys.setOnTouchListener(inputListener);
-        inputMetal.setOnTouchListener(inputListener);
-        inputUsd.setOnTouchListener(inputListener);
 
         //Whenever a text of a input changes, update the value of the other three
         inputEarbuds.addTextChangedListener(new TextWatcher() {
@@ -266,23 +248,6 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                     .build());
         }
 
-        inputEarbuds.setOnFocusChangeListener(this);
-        inputKeys.setOnFocusChangeListener(this);
-        inputMetal.setOnFocusChangeListener(this);
-        inputUsd.setOnFocusChangeListener(this);
-
-        rootView.findViewById(R.id.calculator_0).setOnClickListener(this);
-        rootView.findViewById(R.id.calculator_1).setOnClickListener(this);
-        rootView.findViewById(R.id.calculator_2).setOnClickListener(this);
-        rootView.findViewById(R.id.calculator_3).setOnClickListener(this);
-        rootView.findViewById(R.id.calculator_4).setOnClickListener(this);
-        rootView.findViewById(R.id.calculator_5).setOnClickListener(this);
-        rootView.findViewById(R.id.calculator_6).setOnClickListener(this);
-        rootView.findViewById(R.id.calculator_7).setOnClickListener(this);
-        rootView.findViewById(R.id.calculator_8).setOnClickListener(this);
-        rootView.findViewById(R.id.calculator_9).setOnClickListener(this);
-        rootView.findViewById(R.id.calculator_dot).setOnClickListener(this);
-        rootView.findViewById(R.id.calculator_delete).setOnClickListener(this);
         return rootView;
     }
 
@@ -312,7 +277,9 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
     }
 
     @SuppressLint("SetTextI18n")
-    @Override
+    @OnClick({R.id.calculator_0, R.id.calculator_1, R.id.calculator_2, R.id.calculator_3,
+            R.id.calculator_4, R.id.calculator_5, R.id.calculator_6, R.id.calculator_7,
+            R.id.calculator_8, R.id.calculator_9, R.id.calculator_dot, R.id.calculator_delete})
     public void onClick(View v) {
         //Handle all the clicks
         String s = null;
@@ -378,7 +345,8 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
         }
     }
 
-    @Override
+    @OnFocusChange({R.id.edit_text_earbuds, R.id.edit_text_keys, R.id.edit_text_metal,
+            R.id.edit_text_usd})
     public void onFocusChange(View v, boolean hasFocus) {
         if (hasFocus) {
             switch (v.getId()) {
@@ -396,5 +364,19 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                     break;
             }
         }
+    }
+
+    /**
+     * This disables the soft keyboard because we don't need it
+     */
+    @OnTouch({R.id.edit_text_earbuds, R.id.edit_text_keys, R.id.edit_text_metal,
+            R.id.edit_text_usd})
+    public boolean onTouch(View v, MotionEvent event){
+        v.onTouchEvent(event);
+        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
+        return true;
     }
 }

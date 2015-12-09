@@ -36,6 +36,7 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Calculator fragment. Let's the user create a list of items and it will calculate the total value
@@ -148,15 +149,6 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
 
-        //Init the FAB
-        rootView.findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getActivity(), ItemChooserActivity.class);
-                startActivityForResult(i, MainActivity.REQUEST_NEW_ITEM);
-            }
-        });
-
         totalPrice.setCurrency(Currency.METAL);
 
         priceMetal.setText(getString(R.string.currency_metal, "0"));
@@ -172,6 +164,12 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         super.onResume();
         mTracker.setScreenName("Calculator");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    @OnClick(R.id.fab)
+    public void addItem() {
+        Intent i = new Intent(getActivity(), ItemChooserActivity.class);
+        startActivityForResult(i, MainActivity.REQUEST_NEW_ITEM);
     }
 
     @Override
