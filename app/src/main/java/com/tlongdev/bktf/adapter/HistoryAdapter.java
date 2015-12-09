@@ -1,6 +1,7 @@
 package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -32,6 +33,9 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Adapter for the bar code read history list.
@@ -90,7 +94,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         }
         // create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
-        return new ViewHolder(v, viewType);
+        return new ViewHolder(v);
     }
 
     /**
@@ -261,37 +265,24 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         /**
          * The views of the element
          */
-        ImageView effect;
-        ImageView icon;
-        TextView name;
-        LineChart historyChart;
-        CardView iconCard;
+        @Nullable @Bind(R.id.effect) ImageView effect;
+        @Nullable @Bind(R.id.icon) ImageView icon;
+        @Nullable @Bind(R.id.name) TextView name;
+        @Nullable @Bind(R.id.history_chart) LineChart historyChart;
+        @Nullable @Bind(R.id.icon_card) CardView iconCard;
 
-        TextView price;
-        TextView date;
-        View separator;
+        @Nullable @Bind(R.id.price) TextView price;
+        @Nullable @Bind(R.id.date) TextView date;
+        @Nullable @Bind(R.id.separator) View separator;
 
         /**
          * Constructor
          *
          * @param view the element
          */
-        public ViewHolder(View view, int type) {
+        public ViewHolder(View view) {
             super(view);
-            switch (type) {
-                case HistoryAdapter.VIEW_TYPE_HEADER:
-                    effect = (ImageView) view.findViewById(R.id.effect);
-                    icon = (ImageView) view.findViewById(R.id.icon);
-                    name = (TextView) view.findViewById(R.id.name);
-                    historyChart = (LineChart) view.findViewById(R.id.history_chart);
-                    iconCard = (CardView) view.findViewById(R.id.icon_card);
-                    break;
-                default:
-                    separator = view.findViewById(R.id.separator);
-                    price = (TextView) view.findViewById(R.id.price);
-                    date = (TextView) view.findViewById(R.id.date);
-                    break;
-            }
+            ButterKnife.bind(this, view);
         }
     }
 }

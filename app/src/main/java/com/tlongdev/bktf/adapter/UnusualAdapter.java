@@ -27,6 +27,9 @@ import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.model.Quality;
 import com.tlongdev.bktf.util.Utility;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Adapter for the recycler view in the unusual fragment and activity.
  */
@@ -265,13 +268,13 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
      */
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        public final ImageView icon;
-        public final ImageView effect;
-        public final TextView price;
-        public final TextView name;
+        View root;
 
-        public final View root;
-        public final View more;
+        @Bind(R.id.icon) ImageView icon;
+        @Bind(R.id.effect) ImageView effect;
+        @Bind(R.id.price) TextView price;
+        @Bind(R.id.name) TextView name;
+        @Bind(R.id.more) View more;
 
         /**
          * Constructor.
@@ -280,14 +283,8 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
          */
         public ViewHolder(View view) {
             super(view);
-
             root = view;
-            more = view.findViewById(R.id.more);
-
-            icon = (ImageView) view.findViewById(R.id.icon);
-            effect = (ImageView) view.findViewById(R.id.effect);
-            price = (TextView) view.findViewById(R.id.price);
-            name = (TextView) view.findViewById(R.id.name);
+            ButterKnife.bind(this, view);
         }
     }
 }

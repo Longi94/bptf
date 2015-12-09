@@ -26,6 +26,9 @@ import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.util.Utility;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Adapter for the recycler view in the search activity
  */
@@ -298,17 +301,17 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
      */
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        public final View root;
+        View root;
 
-        public final View loading;
-        public final View priceLayout;
+        @Bind(R.id.loading_layout) View loading;
+        @Bind(R.id.price_layout) View priceLayout;
 
-        public final ImageView icon;
-        public final ImageView effect;
-        public final ImageView more;
+        @Bind(R.id.icon) ImageView icon;
+        @Bind(R.id.effect) ImageView effect;
+        @Bind(R.id.more) ImageView more;
 
-        public final TextView name;
-        public final TextView price;
+        @Bind(R.id.name) TextView name;
+        @Bind(R.id.price) TextView price;
 
         /**
          * Constructor.
@@ -318,13 +321,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         public ViewHolder(View view) {
             super(view);
             root = view;
-            loading = view.findViewById(R.id.loading_layout);
-            priceLayout = view.findViewById(R.id.price_layout);
-            icon = (ImageView) view.findViewById(R.id.icon);
-            effect = (ImageView) view.findViewById(R.id.effect);
-            more = (ImageView) view.findViewById(R.id.more);
-            name = (TextView) view.findViewById(R.id.name);
-            price = (TextView) view.findViewById(R.id.price);
+            ButterKnife.bind(this, view);
         }
     }
 }
