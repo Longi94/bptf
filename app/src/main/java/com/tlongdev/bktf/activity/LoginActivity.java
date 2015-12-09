@@ -9,7 +9,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -24,6 +23,7 @@ import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class LoginActivity extends AppCompatActivity implements GetUserInfo.OnUserInfoListener, GetUserBackpack.OnUserBackpackListener {
 
@@ -59,36 +59,6 @@ public class LoginActivity extends AppCompatActivity implements GetUserInfo.OnUs
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
         }
-
-        findViewById(R.id.enter).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (steamIdInput.getText().toString().isEmpty()) {
-                    steamIdInput.setError("You didn't enter anything!");
-                } else {
-                    String steamId = steamIdInput.getText().toString();
-
-                    GetUserInfo task = new GetUserInfo(LoginActivity.this, true);
-                    task.registerFetchUserInfoListener(LoginActivity.this);
-                    task.execute(steamId, null);
-
-                    loadingDialog = ProgressDialog.show(LoginActivity.this, null, "Please wait...", true, false);
-
-                    mTracker.send(new HitBuilders.EventBuilder()
-                            .setCategory("Request")
-                            .setAction("UserData")
-                            .build());
-                }
-            }
-        });
-
-        findViewById(R.id.what_is_id).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: 2015. 11. 17.
-                Toast.makeText(LoginActivity.this, "Under construction :)", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
@@ -108,6 +78,32 @@ public class LoginActivity extends AppCompatActivity implements GetUserInfo.OnUs
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnClick(R.id.what_is_id)
+    public void showSteamIdInstructions() {
+        // TODO: 2015. 11. 17.
+        Toast.makeText(LoginActivity.this, "Under construction :)", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.enter)
+    public void submit() {
+        if (steamIdInput.getText().toString().isEmpty()) {
+            steamIdInput.setError("You didn't enter anything!");
+        } else {
+            String steamId = steamIdInput.getText().toString();
+
+            GetUserInfo task = new GetUserInfo(LoginActivity.this, true);
+            task.registerFetchUserInfoListener(LoginActivity.this);
+            task.execute(steamId, null);
+
+            loadingDialog = ProgressDialog.show(LoginActivity.this, null, "Please wait...", true, false);
+
+            mTracker.send(new HitBuilders.EventBuilder()
+                    .setCategory("Request")
+                    .setAction("UserData")
+                    .build());
+        }
     }
 
     @Override
