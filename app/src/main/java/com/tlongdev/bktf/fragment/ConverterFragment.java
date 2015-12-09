@@ -24,10 +24,13 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.util.Utility;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Converter fragment. Let's the user quickly convert between currencies.
@@ -48,10 +51,10 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
     /**
      * Inputs
      */
-    private EditText inputEarbuds;
-    private EditText inputKeys;
-    private EditText inputMetal;
-    private EditText inputUsd;
+    @Bind(R.id.edit_text_earbuds) EditText inputEarbuds;
+    @Bind(R.id.edit_text_keys) EditText inputKeys;
+    @Bind(R.id.edit_text_metal) EditText inputMetal;
+    @Bind(R.id.edit_text_usd) EditText inputUsd;
 
     /**
      * the view that is currently in focus
@@ -97,13 +100,10 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_converter, container, false);
 
+        ButterKnife.bind(this, rootView);
+
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
-
-        inputEarbuds = (EditText) rootView.findViewById(R.id.edit_text_earbuds);
-        inputKeys = (EditText) rootView.findViewById(R.id.edit_text_keys);
-        inputMetal = (EditText) rootView.findViewById(R.id.edit_text_metal);
-        inputUsd = (EditText) rootView.findViewById(R.id.edit_text_usd);
 
         //Handle the touch events inside the fragment
         inputEarbuds.setOnTouchListener(inputListener);

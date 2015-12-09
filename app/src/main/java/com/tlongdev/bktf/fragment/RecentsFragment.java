@@ -45,6 +45,9 @@ import com.tlongdev.bktf.network.GetItemSchema;
 import com.tlongdev.bktf.network.GetPriceList;
 import com.tlongdev.bktf.util.Utility;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * recents fragment. Shows a list of all the prices orderd by the time of the price update.
  */
@@ -87,7 +90,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     /**
      * Loading indicator
      */
-    private ProgressBar progressBar;
+    @Bind(R.id.progress_bar) ProgressBar progressBar;
 
     /**
      * Adapter of the recycler view
@@ -97,28 +100,28 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     /**
      * the swipe refresh layout
      */
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    @Bind(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
 
     /**
      * The recycler view
      */
-    private RecyclerView mRecyclerView;
+    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
 
     /**
      * Only needed for manually expanding the toolbar
      */
-    private AppBarLayout mAppBarLayout;
-    private CoordinatorLayout mCoordinatorLayout;
+    @Bind(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
+    @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
 
     /**
      * Views
      */
-    private TextView metalPrice;
-    private TextView keyPrice;
-    private TextView budsPrice;
-    private View metalPriceImage;
-    private View keyPriceImage;
-    private View budsPriceImage;
+    @Bind(R.id.text_view_metal_price) TextView metalPrice;
+    @Bind(R.id.text_view_key_price) TextView keyPrice;
+    @Bind(R.id.text_view_buds_price) TextView budsPrice;
+    @Bind(R.id.image_view_metal_price) View metalPriceImage;
+    @Bind(R.id.image_view_key_price) View keyPriceImage;
+    @Bind(R.id.image_view_buds_price) View budsPriceImage;
 
     //Dialog to indicate the download progress
     private ProgressDialog loadingDialog;
@@ -147,36 +150,21 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
         View rootView = inflater.inflate(R.layout.fragment_recents, container, false);
 
+        ButterKnife.bind(this, rootView);
+
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
-
-        //Views used for toolbar behavior
-        mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar_layout);
-        mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator_layout);
 
         adapter = new RecentsAdapter(getActivity(), null);
 
         //Setup the recycler view
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.setVisibility(View.GONE);
 
         //Set up the swipe refresh layout (color and listener)
-        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
         mSwipeRefreshLayout.setColorSchemeColors(Utility.getColor(getActivity(), R.color.accent));
         mSwipeRefreshLayout.setOnRefreshListener(this);
-
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
-
-        //Views of in the toolbar
-        metalPrice = (TextView) rootView.findViewById(R.id.text_view_metal_price);
-        keyPrice = (TextView) rootView.findViewById(R.id.text_view_key_price);
-        budsPrice = (TextView) rootView.findViewById(R.id.text_view_buds_price);
-
-        metalPriceImage = rootView.findViewById(R.id.image_view_metal_price);
-        keyPriceImage = rootView.findViewById(R.id.image_view_key_price);
-        budsPriceImage = rootView.findViewById(R.id.image_view_buds_price);
 
         //Populate the toolbar header
         updateCurrencyHeader(PreferenceManager.getDefaultSharedPreferences(getActivity()));

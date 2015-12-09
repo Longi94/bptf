@@ -39,6 +39,9 @@ import com.tlongdev.bktf.network.GetUserInfo;
 import com.tlongdev.bktf.util.Profile;
 import com.tlongdev.bktf.util.Utility;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Fragment for displaying the user profile.
  */
@@ -58,24 +61,24 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private Tracker mTracker;
 
     //Reference too all the views that need to be updated
-    private TextView playerReputation;
-    private TextView trustPositive;
-    private TextView trustNegative;
-    private ImageView steamRepStatus;
-    private ImageView vacStatus;
-    private ImageView tradeStatus;
-    private ImageView communityStatus;
-    private TextView backpackValueRefined;
-    private TextView backpackRawMetal;
-    private TextView backpackRawKeys;
-    private TextView backpackValueUsd;
-    private TextView backpackSlots;
-    private TextView userSinceText;
-    private TextView lastOnlineText;
-    private ImageView avatar;
+    @Bind(R.id.text_view_player_reputation) TextView playerReputation;
+    @Bind(R.id.trust_positive) TextView trustPositive;
+    @Bind(R.id.trust_negative) TextView trustNegative;
+    @Bind(R.id.steamrep_status) ImageView steamRepStatus;
+    @Bind(R.id.vac_status) ImageView vacStatus;
+    @Bind(R.id.trade_status) ImageView tradeStatus;
+    @Bind(R.id.community_status) ImageView communityStatus;
+    @Bind(R.id.text_view_bp_refined) TextView backpackValueRefined;
+    @Bind(R.id.text_view_bp_raw_metal) TextView backpackRawMetal;
+    @Bind(R.id.text_view_bp_raw_keys) TextView backpackRawKeys;
+    @Bind(R.id.text_view_bp_usd) TextView backpackValueUsd;
+    @Bind(R.id.text_view_bp_slots) TextView backpackSlots;
+    @Bind(R.id.text_view_user_since) TextView userSinceText;
+    @Bind(R.id.text_view_user_last_online) TextView lastOnlineText;
+    @Bind(R.id.avatar) ImageView avatar;
 
     //Swipe refresh layout for refreshing the user data manually
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    @Bind(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
 
     //Stores whether the backpack is private or not
     private boolean privateBackpack = false;
@@ -83,13 +86,13 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     /**
      * Only needed for manually expanding the toolbar
      */
-    private AppBarLayout mAppBarLayout;
-    private CoordinatorLayout mCoordinatorLayout;
+    @Bind(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
+    @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
 
     /**
      * the collapsing toolbar layout
      */
-    private CollapsingToolbarLayout mCollapsingToolbarLayout;
+    @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbarLayout;
 
     /**
      * Constructor
@@ -117,32 +120,10 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         View rootView = inflater.inflate(R.layout.fragment_user, container, false);
 
+        ButterKnife.bind(this, rootView);
+
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
-
-        //Views used for toolbar behavior
-        mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar_layout);
-        mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator_layout);
-        mCollapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsing_toolbar);
-
-        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
-
-        //Find all the views
-        playerReputation = (TextView) rootView.findViewById(R.id.text_view_player_reputation);
-        trustPositive = (TextView) rootView.findViewById(R.id.trust_positive);
-        trustNegative = (TextView) rootView.findViewById(R.id.trust_negative);
-        steamRepStatus = (ImageView) rootView.findViewById(R.id.steamrep_status);
-        vacStatus = (ImageView) rootView.findViewById(R.id.vac_status);
-        tradeStatus = (ImageView) rootView.findViewById(R.id.trade_status);
-        communityStatus = (ImageView) rootView.findViewById(R.id.community_status);
-        backpackValueRefined = (TextView) rootView.findViewById(R.id.text_view_bp_refined);
-        backpackRawMetal = (TextView) rootView.findViewById(R.id.text_view_bp_raw_metal);
-        backpackRawKeys = (TextView) rootView.findViewById(R.id.text_view_bp_raw_keys);
-        backpackValueUsd = (TextView) rootView.findViewById(R.id.text_view_bp_usd);
-        backpackSlots = (TextView) rootView.findViewById(R.id.text_view_bp_slots);
-        userSinceText = (TextView) rootView.findViewById(R.id.text_view_user_since);
-        lastOnlineText = (TextView) rootView.findViewById(R.id.text_view_user_last_online);
-        avatar = (ImageView) rootView.findViewById(R.id.avatar);
 
         //Set the color of the refreshing animation
         mSwipeRefreshLayout.setColorSchemeColors(Utility.getColor(getActivity(), R.color.accent));

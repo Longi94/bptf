@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -39,6 +38,9 @@ import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.util.Utility;
 
 import java.util.ArrayList;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -78,20 +80,13 @@ public class FavoritesFragment extends Fragment implements MainActivity.OnDrawer
      */
     private Tracker mTracker;
 
-    /**
-     * The recycler view
-     */
-    private RecyclerView mRecyclerView;
-
     private FavoritesAdapter mAdapter;
 
     /**
      * Only needed for manually expanding the toolbar
      */
-    private AppBarLayout mAppBarLayout;
-    private CoordinatorLayout mCoordinatorLayout;
-
-    private FloatingActionButton fab;
+    @Bind(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
+    @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
 
     /**
      * Constructor
@@ -118,21 +113,18 @@ public class FavoritesFragment extends Fragment implements MainActivity.OnDrawer
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_favorites, container, false);
-        ;
+
+        ButterKnife.bind(this, rootView);
 
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
-        //Views used for toolbar behavior
-        mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar_layout);
-        mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator_layout);
-
         mAdapter = new FavoritesAdapter(getActivity(), null);
 
         //Setup the recycler view
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setAdapter(mAdapter);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(mAdapter);
 
         rootView.findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
