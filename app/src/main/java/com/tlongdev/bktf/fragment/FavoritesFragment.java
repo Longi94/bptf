@@ -41,6 +41,7 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -126,13 +127,6 @@ public class FavoritesFragment extends Fragment implements MainActivity.OnDrawer
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(mAdapter);
 
-        rootView.findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(new Intent(getActivity(), ItemChooserActivity.class), MainActivity.REQUEST_NEW_ITEM);
-            }
-        });
-
         return rootView;
     }
 
@@ -141,6 +135,11 @@ public class FavoritesFragment extends Fragment implements MainActivity.OnDrawer
         super.onResume();
         mTracker.setScreenName("Favorites");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    @OnClick(R.id.fab)
+    public void addItem() {
+        startActivityForResult(new Intent(getActivity(), ItemChooserActivity.class), MainActivity.REQUEST_NEW_ITEM);
     }
 
     @Override

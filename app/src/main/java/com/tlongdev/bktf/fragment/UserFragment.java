@@ -41,6 +41,7 @@ import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Fragment for displaying the user profile.
@@ -129,14 +130,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mSwipeRefreshLayout.setColorSchemeColors(Utility.getColor(getActivity(), R.color.accent));
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        //Set the on click listeners for the buttons
-        rootView.findViewById(R.id.button_bazaar_tf).setOnClickListener(this);
-        rootView.findViewById(R.id.button_steamrep).setOnClickListener(this);
-        rootView.findViewById(R.id.button_tf2op).setOnClickListener(this);
-        rootView.findViewById(R.id.button_tf2tp).setOnClickListener(this);
-        rootView.findViewById(R.id.button_steam_community).setOnClickListener(this);
-        rootView.findViewById(R.id.backpack).setOnClickListener(this);
-
         //Update all the views to show te user data
         updateUserPage();
 
@@ -219,10 +212,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+    @OnClick({R.id.button_bazaar_tf, R.id.button_steamrep, R.id.button_tf2op, R.id.button_tf2tp,
+            R.id.button_steam_community, R.id.backpack})
     public void onClick(View v) {
         //Handle all the buttons here
 
