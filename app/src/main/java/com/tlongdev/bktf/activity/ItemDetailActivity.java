@@ -32,6 +32,8 @@ import com.tlongdev.bktf.util.Utility;
 import java.io.IOException;
 import java.io.InputStream;
 
+import butterknife.Bind;
+
 /**
  * The (dialog) activity for showing info about an item in a backpack.
  */
@@ -125,25 +127,25 @@ public class ItemDetailActivity extends Activity {
     private int id;
 
     //References to all the text views in the view
-    private TextView name;
-    private TextView level;
-    private TextView effect;
-    private TextView customName;
-    private TextView customDesc;
-    private TextView crafterName;
-    private TextView gifterName;
-    private TextView origin;
-    private TextView paint;
-    private TextView priceView;
+    @Bind(R.id.text_view_name) TextView name;
+    @Bind(R.id.text_view_level) TextView level;
+    @Bind(R.id.text_view_effect_name) TextView effect;
+    @Bind(R.id.text_view_custom_name) TextView customName;
+    @Bind(R.id.text_view_custom_desc) TextView customDesc;
+    @Bind(R.id.text_view_crafted) TextView crafterName;
+    @Bind(R.id.text_view_gifted) TextView gifterName;
+    @Bind(R.id.text_view_origin) TextView origin;
+    @Bind(R.id.text_view_paint) TextView paint;
+    @Bind(R.id.text_view_price) TextView priceView;
 
     //References to the image view
-    private ImageView icon;
-    private ImageView effectView;
-    private ImageView paintView;
+    @Bind(R.id.icon) ImageView icon;
+    @Bind(R.id.effect) ImageView effectView;
+    @Bind(R.id.paint) ImageView paintView;
 
     //Store the intent that came
     private Intent mIntent;
-    private CardView cardView;
+    @Bind(R.id.card_view)  CardView cardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,9 +170,6 @@ public class ItemDetailActivity extends Activity {
         layout.getLayoutParams().height = screenWidth / 3;
         layout.requestLayout();
 
-        //Card view which makes it look like a dialog
-        cardView = (CardView) findViewById(R.id.card_view);
-
         //Return to the previous activity if the user taps outside te dialog.
         ((View) cardView.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,22 +182,6 @@ public class ItemDetailActivity extends Activity {
         });
         //Do nothing if the user taps on the card view itself
         cardView.setOnClickListener(null);
-
-        //Find all the views
-        name = (TextView) findViewById(R.id.text_view_name);
-        level = (TextView) findViewById(R.id.text_view_level);
-        effect = (TextView) findViewById(R.id.text_view_effect_name);
-        customName = (TextView) findViewById(R.id.text_view_custom_name);
-        customDesc = (TextView) findViewById(R.id.text_view_custom_desc);
-        crafterName = (TextView) findViewById(R.id.text_view_crafted);
-        gifterName = (TextView) findViewById(R.id.text_view_gifted);
-        origin = (TextView) findViewById(R.id.text_view_origin);
-        paint = (TextView) findViewById(R.id.text_view_paint);
-        priceView = (TextView) findViewById(R.id.text_view_price);
-
-        icon = (ImageView) findViewById(R.id.icon);
-        effectView = (ImageView) findViewById(R.id.effect);
-        paintView = (ImageView) findViewById(R.id.paint);
 
         queryItemDetails();
     }
