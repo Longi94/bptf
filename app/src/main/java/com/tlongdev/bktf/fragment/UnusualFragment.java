@@ -33,6 +33,9 @@ import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
 import com.tlongdev.bktf.util.Utility;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * The unusual fragment, that shows a list of unusual item categories. Either categorized by
  * hats or effects.
@@ -83,8 +86,8 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
     /**
      * Only needed for manually expanding the toolbar
      */
-    private AppBarLayout mAppBarLayout;
-    private CoordinatorLayout mCoordinatorLayout;
+    @Bind(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
+    @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
 
     /**
      * the current sort type
@@ -119,18 +122,16 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
 
         View rootView = inflater.inflate(R.layout.fragment_unusual, container, false);
 
+        ButterKnife.bind(this, rootView);
+
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
-        //Views used for toolbar behavior
-        mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar_layout);
-        mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator_layout);
-
         //init the recycler view
-        RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         adapter = new UnusualAdapter(getActivity(), null);
-        mRecyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
 
         return rootView;
     }

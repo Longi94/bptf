@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,6 +33,9 @@ import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.util.Utility;
 
 import java.util.ArrayList;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Calculator fragment. Let's the user create a list of items and it will calculate the total value
@@ -84,10 +86,10 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
     /**
      * Views of the results
      */
-    private TextView priceMetal;
-    private TextView priceKeys;
-    private TextView priceBuds;
-    private TextView priceUsd;
+    @Bind(R.id.text_view_price_metal) TextView priceMetal;
+    @Bind(R.id.text_view_price_keys) TextView priceKeys;
+    @Bind(R.id.text_view_price_buds) TextView priceBuds;
+    @Bind(R.id.text_view_price_usd) TextView priceUsd;
 
     /**
      * The sum of the price of items in the list
@@ -97,8 +99,8 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
     /**
      * Only needed for manually expanding the toolbar
      */
-    private AppBarLayout mAppBarLayout;
-    private CoordinatorLayout mCoordinatorLayout;
+    @Bind(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
+    @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
 
     /**
      * Constrctor.
@@ -125,15 +127,13 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
 
         View rootView = inflater.inflate(R.layout.fragment_calculator, container, false);
 
+        ButterKnife.bind(this, rootView);
+
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
-        //Views used for toolbar behavior
-        mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar_layout);
-        mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator_layout);
-
         //Init the recycler view
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         mAdapter = new CalculatorAdapter(getActivity(), ids);
         mAdapter.setOnItemDeletedListener(new CalculatorAdapter.OnItemEditListener() {
@@ -143,28 +143,21 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
             }
         });
 
-        RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(mAdapter);
 
         //Init the FAB
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), ItemChooserActivity.class);
                 startActivityForResult(i, MainActivity.REQUEST_NEW_ITEM);
-                getActivity().overridePendingTransition(R.anim.item_chooser_animation, 0);
             }
         });
 
         totalPrice.setCurrency(Currency.METAL);
-
-        priceMetal = (TextView) rootView.findViewById(R.id.text_view_price_metal);
-        priceKeys = (TextView) rootView.findViewById(R.id.text_view_price_keys);
-        priceBuds = (TextView) rootView.findViewById(R.id.text_view_price_buds);
-        priceUsd = (TextView) rootView.findViewById(R.id.text_view_price_usd);
 
         priceMetal.setText(getString(R.string.currency_metal, "0"));
         priceKeys.setText(getString(R.string.currency_key_plural, "0"));
