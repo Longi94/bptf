@@ -59,7 +59,15 @@ public class ItemChooserActivity extends FragmentActivity{
             Quality.SELF_MADE, Quality.STRANGE, Quality.UNIQUE, Quality.UNUSUAL, Quality.VINTAGE
     };
 
-    public static String[] EFFECT_COLUMNS = {
+    public static final String[] WEAPON_WEARS = {
+            "Factory New", "Minimal Wear", "Field-Tested", "Well Worn", "Battle Scarred"
+    };
+
+    public static final int[] WEAPON_WEAR_IDS = {
+            1045220557, 1053609165, 1058642330, 1061997773, 1065353216
+    };
+
+    public static final String[] EFFECT_COLUMNS = {
             UnusualSchemaEntry._ID,
             UnusualSchemaEntry.COLUMN_ID,
             UnusualSchemaEntry.COLUMN_NAME
@@ -77,7 +85,9 @@ public class ItemChooserActivity extends FragmentActivity{
     private SimpleCursorAdapter nameAdapter;
 
     @Bind(R.id.quality) Spinner qualitySpinner;
-    @Bind(R.id.effect)  Spinner effectSpinner;
+    @Bind(R.id.effect) Spinner effectSpinner;
+    @Bind(R.id.weapon_wear) Spinner wearSpinner;
+    private Cursor effectCursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,16 +124,13 @@ public class ItemChooserActivity extends FragmentActivity{
                 );
             }
         });
-
         itemName.setAdapter(nameAdapter);
 
         QualityAdapter qualityAdapter = new QualityAdapter(this,
                 R.layout.quality_spinner_item, QUALITIES);
-
         qualitySpinner.setAdapter(qualityAdapter);
 
-
-        Cursor effectCursor = getContentResolver().query(
+        effectCursor = getContentResolver().query(
                 UnusualSchemaEntry.CONTENT_URI,
                 EFFECT_COLUMNS,
                 null,
@@ -131,8 +138,11 @@ public class ItemChooserActivity extends FragmentActivity{
                 UnusualSchemaEntry.COLUMN_NAME + " ASC"
         );
         EffectAdapter effectAdapter = new EffectAdapter(this, R.layout.effect_spinner_item, effectCursor);
-
         effectSpinner.setAdapter(effectAdapter);
+
+        ArrayAdapter<String> wearAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, WEAPON_WEARS);
+        wearSpinner.setAdapter(wearAdapter);
     }
 
     @Override
@@ -140,6 +150,12 @@ public class ItemChooserActivity extends FragmentActivity{
         super.onResume();
         mTracker.setScreenName(String.valueOf(getTitle()));
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        effectCursor.close();
     }
 
     private class QualityAdapter extends ArrayAdapter<String> {
