@@ -425,19 +425,19 @@ public class Item implements Serializable{
         String wearStr;
         switch (weaponWear) {
             case 1045220557:
-                wearStr = "(Factory New)";
+                wearStr = "Factory New";
                 break;
             case 1053609165:
-                wearStr = "(Minimal Wear)";
+                wearStr = "Minimal Wear";
                 break;
             case 1058642330:
-                wearStr = "(Field-Tested)";
+                wearStr = "Field-Tested";
                 break;
             case 1061997773:
-                wearStr = "(Well Worn)";
+                wearStr = "Well Worn";
                 break;
             case 1065353216:
-                wearStr = "(Battle Scarred)";
+                wearStr = "Battle Scarred";
                 break;
             default:
                 throw new IllegalArgumentException("Invalid wear: " + weaponWear);
