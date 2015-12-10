@@ -4,11 +4,14 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.FilterQueryProvider;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -26,7 +29,7 @@ import butterknife.ButterKnife;
 /**
  * Dialog style activity for selecting items to be added to the calculator list.
  */
-public class ItemChooserActivity extends FragmentActivity{
+public class ItemChooserActivity extends FragmentActivity {
 
     /**
      * Log tag for logging.
@@ -65,12 +68,13 @@ public class ItemChooserActivity extends FragmentActivity{
     private Tracker mTracker;
 
     @Bind(R.id.item_name) AutoCompleteTextView itemName;
-
-    private SimpleCursorAdapter nameAdapter;
-
     @Bind(R.id.quality) Spinner qualitySpinner;
     @Bind(R.id.effect) Spinner effectSpinner;
     @Bind(R.id.weapon_wear) Spinner wearSpinner;
+    @Bind(R.id.title_effect) TextView titleEffect;
+    @Bind(R.id.title_wear) TextView titleWear;
+
+    private SimpleCursorAdapter nameAdapter;
     private Cursor effectCursor;
 
     @Override
@@ -113,6 +117,33 @@ public class ItemChooserActivity extends FragmentActivity{
         QualityAdapter qualityAdapter = new QualityAdapter(this,
                 R.layout.quality_spinner_item);
         qualitySpinner.setAdapter(qualityAdapter);
+        qualitySpinner.setSelection(7);
+        qualitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                effectSpinner.setVisibility(View.GONE);
+                wearSpinner.setVisibility(View.GONE);
+                titleEffect.setVisibility(View.GONE);
+                titleWear.setVisibility(View.GONE);
+                switch (position) {
+                    case 8:
+                        effectSpinner.setVisibility(View.VISIBLE);
+                        titleEffect.setVisibility(View.VISIBLE);
+                        break;
+                    case 1:
+                        wearSpinner.setVisibility(View.VISIBLE);
+                        titleWear.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //huh?
+            }
+        });
 
         effectCursor = getContentResolver().query(
                 UnusualSchemaEntry.CONTENT_URI,
