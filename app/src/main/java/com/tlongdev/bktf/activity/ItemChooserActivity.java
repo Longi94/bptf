@@ -1,30 +1,23 @@
 package com.tlongdev.bktf.activity;
 
-import android.content.Context;
 import android.database.Cursor;
-import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.FilterQueryProvider;
-import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.adapter.spinner.EffectAdapter;
+import com.tlongdev.bktf.adapter.spinner.QualityAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
-import com.tlongdev.bktf.model.Item;
-import com.tlongdev.bktf.model.Quality;
 import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
@@ -49,15 +42,6 @@ public class ItemChooserActivity extends FragmentActivity{
 
     public static final int COLUMN_DEFINDEX = 1;
     public static final int COLUMN_NAME = 2;
-
-    public static final String[] QUALITIES = {
-            "Collector's", "Decorated Weapon", "Genuine", "Haunted", "Normal", "Self-Made",
-            "Strange", "Unique", "Unusual", "Vintage"
-    };
-    public static final int[] QUALITY_IDS = {
-            Quality.COLLECTORS, Quality.PAINTKITWEAPON, Quality.GENUINE, Quality.HAUNTED, Quality.NORMAL,
-            Quality.SELF_MADE, Quality.STRANGE, Quality.UNIQUE, Quality.UNUSUAL, Quality.VINTAGE
-    };
 
     public static final String[] WEAPON_WEARS = {
             "Factory New", "Minimal Wear", "Field-Tested", "Well Worn", "Battle Scarred"
@@ -127,7 +111,7 @@ public class ItemChooserActivity extends FragmentActivity{
         itemName.setAdapter(nameAdapter);
 
         QualityAdapter qualityAdapter = new QualityAdapter(this,
-                R.layout.quality_spinner_item, QUALITIES);
+                R.layout.quality_spinner_item);
         qualitySpinner.setAdapter(qualityAdapter);
 
         effectCursor = getContentResolver().query(
@@ -156,94 +140,5 @@ public class ItemChooserActivity extends FragmentActivity{
     protected void onDestroy() {
         super.onDestroy();
         effectCursor.close();
-    }
-
-    private class QualityAdapter extends ArrayAdapter<String> {
-
-        private Item quality;
-
-        public QualityAdapter(Context context, int resource, String[] objects) {
-            super(context, resource, objects);
-            quality = new Item();
-            quality.setDefindex(15059);
-        }
-
-        @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            View rootView = super.getView(position, convertView, parent);
-
-            TextView text = (TextView)rootView.findViewById(R.id.text1);
-            text.setText(getItem(position));
-
-            quality.setQuality(QUALITY_IDS[position]);
-
-            text.getCompoundDrawables()[0].setColorFilter(quality.getColor(ItemChooserActivity.this, false), PorterDuff.Mode.MULTIPLY);
-
-            return rootView;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View rootView = super.getDropDownView(position, convertView, parent);
-
-            TextView text = (TextView)rootView.findViewById(R.id.text1);
-            text.setText(getItem(position));
-
-            quality.setQuality(QUALITY_IDS[position]);
-
-            text.getCompoundDrawables()[0].setColorFilter(quality.getColor(ItemChooserActivity.this, false), PorterDuff.Mode.MULTIPLY);
-
-            return rootView;
-        }
-    }
-
-    private class EffectAdapter extends SimpleCursorAdapter {
-
-        private Item effect;
-
-        public EffectAdapter(Context context, int layout, Cursor c) {
-            super(context, layout, c, new String[]{}, new int[]{}, 0);
-            effect = new Item();
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View rootView = super.getView(position, convertView, parent);
-
-            Cursor cursor = getCursor();
-            if (cursor.moveToPosition(position)) {
-
-                TextView text = (TextView) rootView.findViewById(R.id.text1);
-                text.setText(cursor.getString(COLUMN_NAME));
-
-                effect.setPriceIndex(cursor.getInt(COLUMN_INDEX));
-
-                Glide.with(ItemChooserActivity.this)
-                        .load(effect.getEffectUrl(ItemChooserActivity.this))
-                        .into((ImageView) rootView.findViewById(R.id.effect));
-            }
-
-            return rootView;
-        }
-
-        @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            View rootView = super.getDropDownView(position, convertView, parent);
-
-            Cursor cursor = getCursor();
-            if (cursor.moveToPosition(position)) {
-
-                TextView text = (TextView) rootView.findViewById(R.id.text1);
-                text.setText(cursor.getString(COLUMN_NAME));
-
-                effect.setPriceIndex(cursor.getInt(COLUMN_INDEX));
-
-                Glide.with(ItemChooserActivity.this)
-                        .load(effect.getEffectUrl(ItemChooserActivity.this))
-                        .into((ImageView) rootView.findViewById(R.id.effect));
-            }
-
-            return rootView;
-        }
     }
 }
