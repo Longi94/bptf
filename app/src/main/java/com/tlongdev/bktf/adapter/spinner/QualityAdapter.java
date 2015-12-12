@@ -26,8 +26,8 @@ public class QualityAdapter extends ArrayAdapter<String> {
 
     private Context mContext;
 
-    public QualityAdapter(Context context, int resource) {
-        super(context, resource, QUALITIES);
+    public QualityAdapter(Context context) {
+        super(context, R.layout.quality_spinner_item, QUALITIES);
         quality = new Item();
         quality.setDefindex(15059);
         mContext = context;

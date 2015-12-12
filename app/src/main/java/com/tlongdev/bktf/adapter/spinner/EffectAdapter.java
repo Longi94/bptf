@@ -19,8 +19,8 @@ public class EffectAdapter extends SimpleCursorAdapter {
 
     private Context mContext;
 
-    public EffectAdapter(Context context, int layout, Cursor c) {
-        super(context, layout, c, new String[]{}, new int[]{}, 0);
+    public EffectAdapter(Context context, Cursor c) {
+        super(context, R.layout.effect_spinner_item, c, new String[]{}, new int[]{}, 0);
         effect = new Item();
         mContext = context;
     }

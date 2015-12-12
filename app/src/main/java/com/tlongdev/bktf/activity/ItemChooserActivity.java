@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.FilterQueryProvider;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -19,12 +19,14 @@ import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.spinner.EffectAdapter;
 import com.tlongdev.bktf.adapter.spinner.QualityAdapter;
+import com.tlongdev.bktf.adapter.spinner.WeaponWearAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
 import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Dialog style activity for selecting items to be added to the calculator list.
@@ -45,14 +47,6 @@ public class ItemChooserActivity extends FragmentActivity {
 
     public static final int COLUMN_DEFINDEX = 1;
     public static final int COLUMN_NAME = 2;
-
-    public static final String[] WEAPON_WEARS = {
-            "Factory New", "Minimal Wear", "Field-Tested", "Well Worn", "Battle Scarred"
-    };
-
-    public static final int[] WEAPON_WEAR_IDS = {
-            1045220557, 1053609165, 1058642330, 1061997773, 1065353216
-    };
 
     public static final String[] EFFECT_COLUMNS = {
             UnusualSchemaEntry._ID,
@@ -114,8 +108,7 @@ public class ItemChooserActivity extends FragmentActivity {
         });
         itemName.setAdapter(nameAdapter);
 
-        QualityAdapter qualityAdapter = new QualityAdapter(this,
-                R.layout.quality_spinner_item);
+        QualityAdapter qualityAdapter = new QualityAdapter(this);
         qualitySpinner.setAdapter(qualityAdapter);
         qualitySpinner.setSelection(7);
         qualitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -152,11 +145,10 @@ public class ItemChooserActivity extends FragmentActivity {
                 null,
                 UnusualSchemaEntry.COLUMN_NAME + " ASC"
         );
-        EffectAdapter effectAdapter = new EffectAdapter(this, R.layout.effect_spinner_item, effectCursor);
+        EffectAdapter effectAdapter = new EffectAdapter(this, effectCursor);
         effectSpinner.setAdapter(effectAdapter);
 
-        ArrayAdapter<String> wearAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, WEAPON_WEARS);
+        WeaponWearAdapter wearAdapter = new WeaponWearAdapter(this);
         wearSpinner.setAdapter(wearAdapter);
     }
 
@@ -171,5 +163,16 @@ public class ItemChooserActivity extends FragmentActivity {
     protected void onDestroy() {
         super.onDestroy();
         effectCursor.close();
+    }
+
+    @OnClick(R.id.button_add)
+    public void submit() {
+        Toast.makeText(this, "add", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.button_cancel)
+    public void cancel() {
+        setResult(RESULT_CANCELED);
+        finish();
     }
 }
