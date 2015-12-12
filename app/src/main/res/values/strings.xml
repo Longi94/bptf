@@ -294,5 +294,6 @@
     <string name="title_favorites">Favorites</string>
     <string name="pref_title_butter_knife">Butter Knife</string>
     <string name="pref_summary_butter_knife">Field and method binding for Android views which uses annotation processing to generate boilerplate code for you.</string>
+    <string name="title_activity_select_item">SelectItemActivity</string>
 
 </resources>
