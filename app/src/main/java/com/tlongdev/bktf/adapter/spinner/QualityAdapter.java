@@ -55,4 +55,8 @@ public class QualityAdapter extends ArrayAdapter<String> {
 
         text.getCompoundDrawables()[0].setColorFilter(quality.getColor(mContext, false), PorterDuff.Mode.MULTIPLY);
     }
+
+    public int getQualityId(int selectedItemPosition) {
+        return QUALITY_IDS[selectedItemPosition];
+    }
 }

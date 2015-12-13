@@ -4,13 +4,17 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.analytics.HitBuilders;
@@ -22,6 +26,7 @@ import com.tlongdev.bktf.adapter.spinner.QualityAdapter;
 import com.tlongdev.bktf.adapter.spinner.WeaponWearAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
 import com.tlongdev.bktf.model.Item;
+import com.tlongdev.bktf.model.Quality;
 import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
@@ -31,7 +36,7 @@ import butterknife.OnClick;
 /**
  * Dialog style activity for selecting items to be added to the calculator list.
  */
-public class ItemChooserActivity extends FragmentActivity {
+public class ItemChooserActivity extends AppCompatActivity {
 
     /**
      * Log tag for logging.
@@ -40,6 +45,7 @@ public class ItemChooserActivity extends FragmentActivity {
     private static final String LOG_TAG = ItemChooserActivity.class.getSimpleName();
 
     private static final int SELECT_ITEM = 100;
+    public static final String EXTRA_ITEM = "item";
 
     public static final String[] EFFECT_COLUMNS = {
             UnusualSchemaEntry._ID,
@@ -63,10 +69,18 @@ public class ItemChooserActivity extends FragmentActivity {
     @Bind(R.id.icon) ImageView icon;
     @Bind(R.id.item_text) TextView itemText;
     @Bind(R.id.item_name) TextView itemName;
+    @Bind(R.id.tradable) CheckBox tradable;
+    @Bind(R.id.craftable) CheckBox craftable;
+    @Bind(R.id.australium) CheckBox australium;
+    @Bind(R.id.fab) FloatingActionButton fab;
 
     private Cursor effectCursor;
 
     private Item item;
+
+    private QualityAdapter qualityAdapter;
+    private EffectAdapter effectAdapter;
+    private WeaponWearAdapter wearAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +96,17 @@ public class ItemChooserActivity extends FragmentActivity {
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
         }
+        setTitle(null);
 
-        QualityAdapter qualityAdapter = new QualityAdapter(this);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+
+        //Show the home button as back button
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        qualityAdapter = new QualityAdapter(this);
         qualitySpinner.setAdapter(qualityAdapter);
         qualitySpinner.setSelection(7);
         qualitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -120,13 +143,15 @@ public class ItemChooserActivity extends FragmentActivity {
                 null,
                 UnusualSchemaEntry.COLUMN_NAME + " ASC"
         );
-        EffectAdapter effectAdapter = new EffectAdapter(this, effectCursor);
+        effectAdapter = new EffectAdapter(this, effectCursor);
         effectSpinner.setAdapter(effectAdapter);
 
-        WeaponWearAdapter wearAdapter = new WeaponWearAdapter(this);
+        wearAdapter = new WeaponWearAdapter(this);
         wearSpinner.setAdapter(wearAdapter);
 
         item = new Item();
+
+        fab.hide();
     }
 
     @Override
@@ -143,6 +168,17 @@ public class ItemChooserActivity extends FragmentActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                setResult(RESULT_CANCELED);
+                finish();
+                break;
+        }
+        return true;
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case SELECT_ITEM:
@@ -150,20 +186,29 @@ public class ItemChooserActivity extends FragmentActivity {
                     item.setDefindex(data.getIntExtra(SelectItemActivity.EXTRA_DEFINDEX, -1));
                     item.setName(data.getStringExtra(SelectItemActivity.EXTRA_NAME));
                     updateItemIcon();
+                    fab.show();
                 }
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @OnClick(R.id.button_add)
+    @OnClick(R.id.fab)
     public void submit() {
-        Toast.makeText(this, "add", Toast.LENGTH_SHORT).show();
-    }
+        item.setQuality(qualityAdapter.getQualityId(qualitySpinner.getSelectedItemPosition()));
+        if (item.getQuality() == Quality.UNUSUAL) {
+            item.setPriceIndex(effectAdapter.getEffectId(effectSpinner.getSelectedItemPosition()));
+        } else if (item.getQuality() == Quality.PAINTKITWEAPON) {
+            item.setWeaponWear(wearAdapter.getWearId(wearSpinner.getSelectedItemPosition()));
+        }
 
-    @OnClick(R.id.button_cancel)
-    public void cancel() {
-        setResult(RESULT_CANCELED);
+        item.setTradable(tradable.isChecked());
+        item.setCraftable(craftable.isChecked());
+        item.setAustralium(australium.isChecked());
+
+        Intent result = new Intent();
+        result.putExtra(EXTRA_ITEM, item);
+        setResult(RESULT_OK, result);
         finish();
     }
 
