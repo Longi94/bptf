@@ -53,4 +53,13 @@ public class EffectAdapter extends SimpleCursorAdapter {
                     .into((ImageView) view.findViewById(R.id.effect));
         }
     }
+
+    public int getEffectId(int selectedItemPosition) {
+        Cursor cursor = getCursor();
+        if (cursor.moveToPosition(selectedItemPosition)) {
+            return cursor.getInt(ItemChooserActivity.COLUMN_INDEX);
+        } else {
+            return 0;
+        }
+    }
 }

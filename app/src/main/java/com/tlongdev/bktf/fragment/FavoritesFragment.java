@@ -1,6 +1,7 @@
 package com.tlongdev.bktf.fragment;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -135,6 +136,18 @@ public class FavoritesFragment extends Fragment implements MainActivity.OnDrawer
         super.onResume();
         mTracker.setScreenName("Favorites");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case MainActivity.REQUEST_NEW_ITEM:
+                if (resultCode == Activity.RESULT_OK) {
+                    Utility.addToFavorites(getActivity(), (Item) data.getSerializableExtra(ItemChooserActivity.EXTRA_ITEM));
+                    getLoaderManager().restartLoader(FAVORITES_LOADER, null, this);
+                }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @OnClick(R.id.fab)

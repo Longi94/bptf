@@ -19,4 +19,8 @@ public class WeaponWearAdapter extends ArrayAdapter<String> {
     public WeaponWearAdapter(Context context) {
         super(context, android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, WEAPON_WEARS);
     }
+
+    public int getWearId(int selectedItemPosition) {
+        return WEAPON_WEAR_IDS[selectedItemPosition];
+    }
 }

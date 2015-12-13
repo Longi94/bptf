@@ -2,17 +2,31 @@
 <LinearLayout
     android:id="@+id/list_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
     tools:context=".activity.ItemChooserActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+    </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:orientation="horizontal">
 
         <View
@@ -52,11 +66,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
+                    android:background="@drawable/shadow_gradient_top"
                     android:gravity="center"
+                    android:padding="8dp"
                     android:textColor="@color/text_primary"
                     android:textSize="16sp"
-                    android:background="@drawable/shadow_gradient_top"
-                    android:padding="8dp"
                     android:visibility="gone"/>
 
             </com.tlongdev.bktf.view.RatioHeightFrameLayout>
@@ -70,115 +84,107 @@
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Quality"
-        android:textColor="@color/accent"/>
-
-    <Spinner
-        android:id="@+id/quality"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <TextView
-        android:id="@+id/title_effect"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Unusual Effect"
-        android:textColor="@color/accent"
-        android:visibility="gone"/>
-
-    <Spinner
-        android:id="@+id/effect"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"/>
-
-    <TextView
-        android:id="@+id/title_wear"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Weapon Wear"
-        android:textColor="@color/accent"
-        android:visibility="gone"/>
-
-    <Spinner
-        android:id="@+id/weapon_wear"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <CheckBox
-                android:id="@+id/tradable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:checked="true"
-                android:text="Tradable"/>
-
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <CheckBox
-                android:id="@+id/craftable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:checked="true"
-                android:text="Craftable"/>
-
-        </FrameLayout>
-
-    </LinearLayout>
-
-    <CheckBox
-        android:id="@+id/australium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:checked="false"
-        android:text="Australium"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:gravity="bottom|end"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <ImageButton
-            android:id="@+id/button_cancel"
-            style="?android:attr/buttonBarButtonStyle"
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Quality"
+            android:textColor="@color/accent"/>
+
+        <Spinner
+            android:id="@+id/quality"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/title_effect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Unusual Effect"
+            android:textColor="@color/accent"
+            android:visibility="gone"/>
+
+        <Spinner
+            android:id="@+id/effect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/title_wear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Weapon Wear"
+            android:textColor="@color/accent"
+            android:visibility="gone"/>
+
+        <Spinner
+            android:id="@+id/weapon_wear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <CheckBox
+                    android:id="@+id/tradable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:checked="true"
+                    android:text="Tradable"/>
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <CheckBox
+                    android:id="@+id/craftable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:checked="true"
+                    android:text="Craftable"/>
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/australium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_close_white_48dp"
-            android:tint="@color/accent"/>
-
-        <ImageButton
-            android:id="@+id/button_add"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_done_white_48dp"
-            android:tint="@color/accent"/>
+            android:layout_gravity="center"
+            android:checked="false"
+            android:text="Australium"/>
 
     </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_done_white_48dp"/>
 
 </LinearLayout>
