@@ -38,6 +38,7 @@ public class SelectItemActivity extends AppCompatActivity implements LoaderManag
 
     private static final String QUERY_KEY = "query";
     public static final String EXTRA_DEFINDEX = "defindex";
+    public static final String EXTRA_NAME = "name";
 
     /**
      * The {@link Tracker} used to record screen views.
@@ -145,9 +146,10 @@ public class SelectItemActivity extends AppCompatActivity implements LoaderManag
     }
 
     @Override
-    public void onItemSelected(int defindex) {
+    public void onItemSelected(int defindex, String name) {
         Intent result = new Intent();
         result.putExtra(EXTRA_DEFINDEX, defindex);
+        result.putExtra(EXTRA_NAME, name);
         setResult(RESULT_OK, result);
         finish();
     }

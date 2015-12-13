@@ -62,7 +62,7 @@ public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.Vi
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
-                        listener.onItemSelected(item.getDefindex());
+                        listener.onItemSelected(item.getDefindex(), item.getName());
                     }
                 }
             });
@@ -104,6 +104,6 @@ public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.Vi
     }
 
     public interface OnItemSelectedListener {
-        void onItemSelected(int defindex);
+        void onItemSelected(int defindex, String name);
     }
 }
