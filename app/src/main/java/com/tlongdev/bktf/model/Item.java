@@ -598,7 +598,7 @@ public class Item implements Serializable{
 
         if (australium) {
             builder.appendQueryParameter("australium", "1");
-        } else if (weaponWear >= 0) {
+        } else if (weaponWear > 0) {
             builder.appendQueryParameter("wear", String.valueOf(weaponWear));
         }
 
