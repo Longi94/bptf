@@ -108,6 +108,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         FavoritesEntry.COLUMN_AUSTRALIUM + ", " +
                         FavoritesEntry.COLUMN_WEAPON_WEAR + ") ON CONFLICT REPLACE);";
 
+        final String SQL_CREATE_CALCULATOR_TABLE =
+                "CREATE TABLE " + CalculatorEntry.TABLE_NAME + " (" +
+                        CalculatorEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+
+                        CalculatorEntry.COLUMN_DEFINDEX + " INTEGER NOT NULL, " +
+                        CalculatorEntry.COLUMN_ITEM_QUALITY + " INTEGER NOT NULL, " +
+                        CalculatorEntry.COLUMN_ITEM_TRADABLE + " INTEGER NOT NULL, " +
+                        CalculatorEntry.COLUMN_ITEM_CRAFTABLE + " INTEGER NOT NULL, " +
+                        CalculatorEntry.COLUMN_PRICE_INDEX + " INTEGER NOT NULL, " +
+                        CalculatorEntry.COLUMN_AUSTRALIUM + " INTEGER NOT NULL, " +
+                        CalculatorEntry.COLUMN_WEAPON_WEAR + " INTEGER NOT NULL, " +
+                        CalculatorEntry.COLUMN_COUNT + " INTEGER NOT NULL, " +
+
+                        " UNIQUE (" + CalculatorEntry.COLUMN_DEFINDEX + ", " +
+                        CalculatorEntry.COLUMN_ITEM_QUALITY + ", " +
+                        CalculatorEntry.COLUMN_ITEM_TRADABLE + ", " +
+                        CalculatorEntry.COLUMN_ITEM_CRAFTABLE + ", " +
+                        CalculatorEntry.COLUMN_PRICE_INDEX + ", " +
+                        CalculatorEntry.COLUMN_AUSTRALIUM + ", " +
+                        CalculatorEntry.COLUMN_WEAPON_WEAR + ") ON CONFLICT REPLACE);";
+
         final String SQL_CREATE_BACKPACK_TABLE =
                 "CREATE TABLE " + UserBackpackEntry.TABLE_NAME + " (" +
                         UserBackpackEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -182,6 +203,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + UnusualSchemaEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + OriginEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + FavoritesEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + CalculatorEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + UserBackpackEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + UserBackpackEntry.TABLE_NAME_GUEST);
 

@@ -35,11 +35,6 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
     private static final String LOG_TAG = CalculatorAdapter.class.getSimpleName();
 
     /**
-     * Pairs of prices table IDs and count numbers.
-     */
-    private ArrayList<Utility.IntegerPair> ids;
-
-    /**
      * The context
      */
     private Context mContext;
@@ -53,17 +48,17 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
     /**
      * Indexes for the columns above
      */
-    public static final int COL_PRICE_LIST_DEFI = 0;
-    public static final int COL_PRICE_LIST_NAME = 1;
-    public static final int COL_PRICE_LIST_QUAL = 2;
-    public static final int COL_PRICE_LIST_TRAD = 3;
-    public static final int COL_PRICE_LIST_CRAF = 4;
-    public static final int COL_PRICE_LIST_INDE = 5;
-    public static final int COL_PRICE_LIST_CURR = 6;
-    public static final int COL_PRICE_LIST_PRIC = 7;
-    public static final int COL_PRICE_LIST_PMAX = 8;
-    public static final int COL_PRICE_LIST_PRAW = 9;
-    public static final int COL_AUSTRALIUM = 10;
+    public static final int COLUMN_DEFINDEX = 0;
+    public static final int COLUMN_NAME = 1;
+    public static final int COLUMN_QUALITY = 2;
+    public static final int COLUMN_TRADABLE = 3;
+    public static final int COLUMN_CRAFTABLE = 4;
+    public static final int COLUMN_PRICE_INDEX = 5;
+    public static final int COLUMN_CURRENCY = 6;
+    public static final int COLUMN_PRICE = 7;
+    public static final int COLUMN_PRICE_MAX = 8;
+    public static final int COLUMN_PRICE_RAW = 9;
+    public static final int COLUMN_AUSTRALIUM = 10;
 
     /**
      * The selection
@@ -84,7 +79,6 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
      */
     public CalculatorAdapter(Context context, ArrayList<Utility.IntegerPair> ids) {
         mContext = context;
-        this.ids = ids;
 
         sql = "SELECT " +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + "," +
@@ -130,19 +124,19 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
 
                 //Get the data from the cursor
                 Item item = new Item(
-                        cursor.getInt(COL_PRICE_LIST_DEFI),
-                        cursor.getString(COL_PRICE_LIST_NAME),
-                        cursor.getInt(COL_PRICE_LIST_QUAL),
-                        cursor.getInt(COL_PRICE_LIST_TRAD) == 1,
-                        cursor.getInt(COL_PRICE_LIST_CRAF) == 1,
-                        cursor.getInt(COL_AUSTRALIUM) == 1,
-                        cursor.getInt(COL_PRICE_LIST_INDE),
+                        cursor.getInt(COLUMN_DEFINDEX),
+                        cursor.getString(COLUMN_NAME),
+                        cursor.getInt(COLUMN_QUALITY),
+                        cursor.getInt(COLUMN_TRADABLE) == 1,
+                        cursor.getInt(COLUMN_CRAFTABLE) == 1,
+                        cursor.getInt(COLUMN_AUSTRALIUM) == 1,
+                        cursor.getInt(COLUMN_PRICE_INDEX),
                         new Price(
-                                cursor.getDouble(COL_PRICE_LIST_PRIC),
-                                cursor.getDouble(COL_PRICE_LIST_PMAX),
-                                cursor.getDouble(COL_PRICE_LIST_PRAW),
+                                cursor.getDouble(COLUMN_PRICE),
+                                cursor.getDouble(COLUMN_PRICE_MAX),
+                                cursor.getDouble(COLUMN_PRICE_RAW),
                                 0, 0,
-                                cursor.getString(COL_PRICE_LIST_CURR)
+                                cursor.getString(COLUMN_CURRENCY)
                         )
                 );
 

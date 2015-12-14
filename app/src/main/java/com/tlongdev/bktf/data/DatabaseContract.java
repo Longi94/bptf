@@ -29,6 +29,7 @@ public final class DatabaseContract {
     public static final String PATH_UNUSUAL_SCHEMA = "unusual_schema";
     public static final String PATH_ORIGIN_NAMES = "origin_names";
     public static final String PATH_FAVORITES = "favorites";
+    public static final String PATH_CALCULATOR = "calculator";
     public static final String PATH_BACKPACK = "backpack";
 
     public static final Uri RAW_QUERY_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_RAW_QUERY).build();
@@ -107,7 +108,22 @@ public final class DatabaseContract {
         public static final String COLUMN_PRICE_INDEX = "price_index";
         public static final String COLUMN_AUSTRALIUM = "australium";
         public static final String COLUMN_WEAPON_WEAR = "weapon_wear";
+    }
 
+    public static final class CalculatorEntry implements BaseColumns {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_CALCULATOR).build();
+
+        public static final String TABLE_NAME = "calculator";
+
+        public static final String COLUMN_DEFINDEX = "defindex";
+        public static final String COLUMN_ITEM_QUALITY = "quality";
+        public static final String COLUMN_ITEM_TRADABLE = "tradable";
+        public static final String COLUMN_ITEM_CRAFTABLE = "craftable";
+        public static final String COLUMN_PRICE_INDEX = "price_index";
+        public static final String COLUMN_AUSTRALIUM = "australium";
+        public static final String COLUMN_WEAPON_WEAR = "weapon_wear";
+        public static final String COLUMN_COUNT = "item_count";
     }
 
     public static final class UserBackpackEntry implements BaseColumns {
