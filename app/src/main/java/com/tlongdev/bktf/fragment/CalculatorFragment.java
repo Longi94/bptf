@@ -2,12 +2,16 @@ package com.tlongdev.bktf.fragment;
 
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +32,9 @@ import com.tlongdev.bktf.activity.ItemChooserActivity;
 import com.tlongdev.bktf.activity.MainActivity;
 import com.tlongdev.bktf.activity.SearchActivity;
 import com.tlongdev.bktf.adapter.CalculatorAdapter;
+import com.tlongdev.bktf.data.DatabaseContract;
+import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
+import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Item;
@@ -44,7 +51,7 @@ import butterknife.OnClick;
  * Calculator fragment. Let's the user create a list of items and it will calculate the total value
  * of the items
  */
-public class CalculatorFragment extends Fragment implements MainActivity.OnDrawerOpenedListener {
+public class CalculatorFragment extends Fragment implements MainActivity.OnDrawerOpenedListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     /**
      * Log tag for logging.
@@ -66,10 +73,33 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
     public static final int COL_PRICE_LIST_PRAW = 1;
 
     /**
+     * Indexes
+     */
+    public static final int COLUMN_DEFINDEX = 0;
+    public static final int COLUMN_NAME = 1;
+    public static final int COLUMN_QUALITY = 2;
+    public static final int COLUMN_TRADABLE = 3;
+    public static final int COLUMN_CRAFTABLE = 4;
+    public static final int COLUMN_PRICE_INDEX = 5;
+    public static final int COLUMN_COUNT = 6;
+    public static final int COLUMN_CURRENCY = 7;
+    public static final int COLUMN_PRICE = 8;
+    public static final int COLUMN_PRICE_MAX = 9;
+    public static final int COLUMN_PRICE_RAW = 10;
+    public static final int COLUMN_DIFFERENCE = 11;
+    public static final int COLUMN_AUSTRALIUM = 12;
+
+    /**
      * the selection
      */
-    public static final String mSelection = PriceEntry.TABLE_NAME +
-            "." + PriceEntry._ID + " = ?";
+    public static final String mSelection =
+            PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = ? AND " +
+                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
+                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
+                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
+                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + " = ? AND " +
+                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM + " = ? AND " +
+                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_WEAPON_WEAR + " = ?";
 
     /**
      * The {@link Tracker} used to record screen views.
@@ -80,11 +110,6 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
      * the adapter of the recycler view
      */
     private CalculatorAdapter mAdapter;
-
-    /**
-     * Pairs of prices table IDs and count numbers.
-     */
-    private ArrayList<Utility.IntegerPair> ids = new ArrayList<>();
 
     /**
      * Views of the results
@@ -106,7 +131,7 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
     @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
 
     /**
-     * Constrctor.
+     * Constructor.
      */
     public CalculatorFragment() {
         // Required empty public constructor
@@ -116,8 +141,8 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
         PRICE_LIST_COLUMNS[COL_PRICE_LIST_PRAW] = Utility.getRawPriceQueryString(getActivity());
+        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
@@ -129,26 +154,22 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         mTracker = application.getDefaultTracker();
 
         View rootView = inflater.inflate(R.layout.fragment_calculator, container, false);
-
         ButterKnife.bind(this, rootView);
 
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
-        //Init the recycler view
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-
-        mAdapter = new CalculatorAdapter(getActivity(), ids);
+        mAdapter = new CalculatorAdapter(getActivity(), null);
         mAdapter.setOnItemDeletedListener(new CalculatorAdapter.OnItemEditListener() {
             @Override
-            public void onItemDeleted(int id, int count) {
-                deleteItem(id, count);
+            public void onItemDeleted(Item item, int count) {
+                deleteItem(item, count);
             }
         });
 
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(mAdapter);
 
         totalPrice.setCurrency(Currency.METAL);
@@ -180,11 +201,31 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         if (requestCode == MainActivity.REQUEST_NEW_ITEM) {
             if (resultCode == Activity.RESULT_OK) {
                 Item item = (Item) data.getSerializableExtra(ItemChooserActivity.EXTRA_ITEM);
-                if (id >= 0) {
-                    ids.add(new Utility.IntegerPair(id, data.getIntExtra(ItemChooserActivity.EXTRA_ITEM_COUNT, 0)));
-                    mAdapter.notifyDataSetChanged();
-                    addItem(id, data.getIntExtra(ItemChooserActivity.EXTRA_ITEM_COUNT, 0));
+                Cursor cursor = getActivity().getContentResolver().query(
+                        PriceEntry.CONTENT_URI,
+                        PRICE_LIST_COLUMNS,
+                        mSelection,
+                        new String[]{
+                                String.valueOf(item.getDefindex()),
+                                String.valueOf(item.getQuality()),
+                                String.valueOf(item.isTradable() ? 1 : 0),
+                                String.valueOf(item.isCraftable() ? 1 : 0),
+                                String.valueOf(item.getWeaponWear()),
+                                String.valueOf(item.isAustralium() ? 1 : 0),
+                        },
+                        null
+                );
+
+                if (cursor != null) {
+                    if (cursor.moveToFirst()) {
+                        Price price = new Price();
+                        price.setRawValue(cursor.getDouble(COL_PRICE_LIST_PRAW));
+                        item.setPrice(price);
+                    }
+                    cursor.close();
                 }
+
+                addItem(item, 1);
             }
         }
     }
@@ -205,12 +246,93 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
                 break;
             case R.id.action_clear:
                 //Clear the items
-                ids.clear();
                 mAdapter.notifyDataSetChanged();
                 deleteAllItems();
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onDrawerOpened() {
+        expandToolbar();
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String sql = "SELECT " +
+                CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_DEFINDEX + "," +
+                ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
+                CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_ITEM_QUALITY + "," +
+                CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_ITEM_TRADABLE + "," +
+                CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_ITEM_CRAFTABLE + "," +
+                CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_PRICE_INDEX + "," +
+                CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_COUNT + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_CURRENCY + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_HIGH + "," +
+                Utility.getRawPriceQueryString(getActivity()) + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DIFFERENCE + "," +
+                CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_AUSTRALIUM +
+                " FROM " + CalculatorEntry.TABLE_NAME +
+                " LEFT JOIN " + PriceEntry.TABLE_NAME +
+                " ON " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_DEFINDEX + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX +
+                " AND " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_ITEM_TRADABLE + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_TRADABLE +
+                " AND " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_ITEM_CRAFTABLE + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_CRAFTABLE +
+                " AND " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_PRICE_INDEX + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX +
+                " AND " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_ITEM_QUALITY + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY +
+                " AND " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_AUSTRALIUM + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM +
+                " LEFT JOIN " + ItemSchemaEntry.TABLE_NAME +
+                " ON " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
+                " ORDER BY " + ItemSchemaEntry.COLUMN_ITEM_NAME + " ASC";
+
+        return new CursorLoader(
+                getActivity(),
+                DatabaseContract.RAW_QUERY_URI,
+                null,
+                sql,
+                null,
+                null
+        );
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        ArrayList<Item> items = new ArrayList<>();
+        ArrayList<Integer> count = new ArrayList<>();
+
+        if (data != null) {
+            while (data.moveToNext()) {
+                items.add(new Item(
+                        data.getInt(COLUMN_DEFINDEX),
+                        data.getString(COLUMN_NAME),
+                        data.getInt(COLUMN_QUALITY),
+                        data.getInt(COLUMN_TRADABLE) == 1,
+                        data.getInt(COLUMN_CRAFTABLE) == 1,
+                        data.getInt(COLUMN_AUSTRALIUM) == 1,
+                        data.getInt(COLUMN_PRICE_INDEX),
+                        new Price(
+                                data.getDouble(COLUMN_PRICE),
+                                data.getDouble(COLUMN_PRICE_MAX),
+                                data.getDouble(COLUMN_PRICE_RAW),
+                                0,
+                                data.getDouble(COLUMN_DIFFERENCE),
+                                data.getString(COLUMN_CURRENCY)
+                        )
+                ));
+
+                count.add(data.getInt(COLUMN_COUNT));
+            }
+        }
+
+        mAdapter.setDataSet(items, count);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mAdapter.setDataSet(null, null);
+        mAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -226,34 +348,27 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         } catch (Throwable t) {
             t.printStackTrace();
 
-            ((BptfApplication)getActivity().getApplication()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+            ((BptfApplication) getActivity().getApplication()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
                     .setDescription("Formatter exception:CalculatorFragment, Message: " + t.getMessage())
                     .setFatal(false)
                     .build());
         }
+
+        getActivity().getContentResolver().delete(CalculatorEntry.CONTENT_URI, null, null);
+
+        getLoaderManager().restartLoader(0, null, this);
     }
 
     /**
      * Adds an element into the list
      *
-     * @param id    the id of the item
+     * @param item  the id of the item
      * @param count the number of the item(s)
      */
-    private void addItem(int id, int count) {
-        Cursor cursor = getActivity().getContentResolver().query(
-                PriceEntry.CONTENT_URI,
-                PRICE_LIST_COLUMNS,
-                mSelection,
-                new String[]{"" + id},
-                null
-        );
+    private void addItem(Item item, int count) {
 
-        //The value to the total price
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                totalPrice.setValue(totalPrice.getValue() + cursor.getDouble(COL_PRICE_LIST_PRAW) * count);
-            }
-            cursor.close();
+        if (item.getPrice() != null) {
+            totalPrice.setValue(totalPrice.getValue() + item.getPrice().getRawValue() * count);
         }
 
         try {
@@ -264,32 +379,38 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         } catch (Throwable t) {
             t.printStackTrace();
 
-            ((BptfApplication)getActivity().getApplication()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+            ((BptfApplication) getActivity().getApplication()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
                     .setDescription("Formatter exception:CalculatorFragment, Message: " + t.getMessage())
                     .setFatal(false)
                     .build());
         }
+
+        ContentValues cv = new ContentValues();
+
+        cv.put(CalculatorEntry.COLUMN_DEFINDEX, item.getDefindex());
+        cv.put(CalculatorEntry.COLUMN_ITEM_QUALITY, item.getQuality());
+        cv.put(CalculatorEntry.COLUMN_ITEM_TRADABLE, item.isTradable() ? 1 : 0);
+        cv.put(CalculatorEntry.COLUMN_ITEM_CRAFTABLE, item.isCraftable() ? 1 : 0);
+        cv.put(CalculatorEntry.COLUMN_PRICE_INDEX, item.getPriceIndex());
+        cv.put(CalculatorEntry.COLUMN_AUSTRALIUM, item.isAustralium() ? 1 : 0);
+        cv.put(CalculatorEntry.COLUMN_WEAPON_WEAR, item.getWeaponWear());
+        cv.put(CalculatorEntry.COLUMN_COUNT, 1);
+
+        getActivity().getContentResolver().insert(CalculatorEntry.CONTENT_URI, cv);
+
+        getLoaderManager().restartLoader(0, null, this);
     }
 
     /**
      * Deletes a single element from the list
      *
-     * @param id    the id of the item
+     * @param item  the id of the item
      * @param count the number of the item(s)
      */
-    private void deleteItem(int id, int count) {
-        Cursor cursor = getActivity().getContentResolver().query(
-                PriceEntry.CONTENT_URI,
-                PRICE_LIST_COLUMNS,
-                mSelection,
-                new String[]{"" + id},
-                null
-        );
+    private void deleteItem(Item item, int count) {
 
-        //Subtract the value from the sum
-        if (cursor != null && cursor.moveToFirst()) {
-            totalPrice.setValue(totalPrice.getValue() - cursor.getDouble(COL_PRICE_LIST_PRAW) * count);
-            cursor.close();
+        if (item.getPrice() != null) {
+            totalPrice.setValue(totalPrice.getValue() - item.getPrice().getRawValue() * count);
         }
 
         try {
@@ -300,7 +421,7 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         } catch (Throwable t) {
             t.printStackTrace();
 
-            ((BptfApplication)getActivity().getApplication()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+            ((BptfApplication) getActivity().getApplication()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
                     .setDescription("Formatter exception:CalculatorFragment, Message: " + t.getMessage())
                     .setFatal(false)
                     .build());
@@ -313,10 +434,5 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
     public void expandToolbar() {
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
         behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
-    }
-
-    @Override
-    public void onDrawerOpened() {
-        expandToolbar();
     }
 }

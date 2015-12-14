@@ -192,6 +192,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_UNUSUAL_SCHEMA_TABLE);
         db.execSQL(SQL_CREATE_ORIGIN_NAMES_TABLE);
         db.execSQL(SQL_CREATE_FAVORITES_TABLE);
+        db.execSQL(SQL_CREATE_CALCULATOR_TABLE);
         db.execSQL(SQL_CREATE_BACKPACK_TABLE);
         db.execSQL(SQL_CREATE_GUEST_BACKPACK_TABLE);
     }

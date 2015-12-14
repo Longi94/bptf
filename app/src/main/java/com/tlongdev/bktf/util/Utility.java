@@ -419,53 +419,5 @@ public class Utility {
 
         return result;
     }
-
-    /**
-     * Convenience class for storing in pairs.
-     */
-    public static class IntegerPair {
-
-        int x;
-        int y;
-
-        /**
-         * Double parameter contructor.
-         *
-         * @param x first integer
-         * @param y second integer
-         */
-        public IntegerPair(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        /**
-         * @return X
-         */
-        public int getX() {
-            return x;
-        }
-
-        /**
-         * @param x to be set
-         */
-        public void setX(int x) {
-            this.x = x;
-        }
-
-        /**
-         * @return Y
-         */
-        public int getY() {
-            return y;
-        }
-
-        /**
-         * @param y to be set
-         */
-        public void setY(int y) {
-            this.y = y;
-        }
-    }
 }
 
