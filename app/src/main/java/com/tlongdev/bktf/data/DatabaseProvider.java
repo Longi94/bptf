@@ -29,6 +29,7 @@ public class DatabaseProvider extends ContentProvider {
     public static final int BACKPACK = 104;
     public static final int BACKPACK_GUEST = 105;
     public static final int FAVORITES = 106;
+    public static final int CALCULATOR = 107;
 
     /**
      * The URI Matcher used by this content provider
@@ -63,6 +64,7 @@ public class DatabaseProvider extends ContentProvider {
         matcher.addURI(authority, DatabaseContract.PATH_ORIGIN_NAMES, ORIGIN_NAMES);
         matcher.addURI(authority, DatabaseContract.PATH_BACKPACK, BACKPACK);
         matcher.addURI(authority, DatabaseContract.PATH_FAVORITES, FAVORITES);
+        matcher.addURI(authority, DatabaseContract.PATH_CALCULATOR, CALCULATOR);
         matcher.addURI(authority, DatabaseContract.PATH_BACKPACK + "/guest", BACKPACK_GUEST);
 
         return matcher;
@@ -107,6 +109,9 @@ public class DatabaseProvider extends ContentProvider {
             case FAVORITES:
                 tableName = FavoritesEntry.TABLE_NAME;
                 break;
+            case CALCULATOR:
+                tableName = CalculatorEntry.TABLE_NAME;
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -143,6 +148,8 @@ public class DatabaseProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_BACKPACK;
             case FAVORITES:
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_FAVORITES;
+            case CALCULATOR:
+                return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_CALCULATOR;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -183,6 +190,10 @@ public class DatabaseProvider extends ContentProvider {
                 tableName = FavoritesEntry.TABLE_NAME;
                 returnUri = FavoritesEntry.CONTENT_URI;
                 break;
+            case CALCULATOR:
+                tableName = CalculatorEntry.TABLE_NAME;
+                returnUri = CalculatorEntry.CONTENT_URI;
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -220,6 +231,9 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             case FAVORITES:
                 rowsDeleted = db.delete(FavoritesEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case CALCULATOR:
+                rowsDeleted = db.delete(CalculatorEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -260,6 +274,9 @@ public class DatabaseProvider extends ContentProvider {
             case FAVORITES:
                 rowsUpdated = db.update(FavoritesEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
+            case CALCULATOR:
+                rowsUpdated = db.update(CalculatorEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -296,6 +313,9 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             case FAVORITES:
                 tableName = FavoritesEntry.TABLE_NAME;
+                break;
+            case CALCULATOR:
+                tableName = CalculatorEntry.TABLE_NAME;
                 break;
             default:
                 return super.bulkInsert(uri, values);
