@@ -34,9 +34,9 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
     private Context mContext;
     private ArrayList<Item> mDataSet;
 
-    public FavoritesAdapter(Context mContext, ArrayList<Item> mDataSet) {
-        this.mContext = mContext;
-        this.mDataSet = mDataSet;
+    public FavoritesAdapter(Context context, ArrayList<Item> dataSet) {
+        this.mContext = context;
+        this.mDataSet = dataSet;
     }
 
     @Override

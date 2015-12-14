@@ -1,7 +1,6 @@
 package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract;
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
-import com.tlongdev.bktf.model.Price;
-import com.tlongdev.bktf.util.Utility;
 
 import java.util.ArrayList;
 
@@ -39,32 +34,8 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
      */
     private Context mContext;
 
-    /**
-     * The columns to load
-     * TODO there is really no need to query for every single item...
-     */
-    private String sql;
-
-    /**
-     * Indexes for the columns above
-     */
-    public static final int COLUMN_DEFINDEX = 0;
-    public static final int COLUMN_NAME = 1;
-    public static final int COLUMN_QUALITY = 2;
-    public static final int COLUMN_TRADABLE = 3;
-    public static final int COLUMN_CRAFTABLE = 4;
-    public static final int COLUMN_PRICE_INDEX = 5;
-    public static final int COLUMN_CURRENCY = 6;
-    public static final int COLUMN_PRICE = 7;
-    public static final int COLUMN_PRICE_MAX = 8;
-    public static final int COLUMN_PRICE_RAW = 9;
-    public static final int COLUMN_AUSTRALIUM = 10;
-
-    /**
-     * The selection
-     */
-    public static final String mSelection = PriceEntry.TABLE_NAME +
-            "." + PriceEntry._ID + " = ?";
+    private ArrayList<Item> mDataSet;
+    private ArrayList<Integer> mCountSet;
 
     /**
      * The listener that will be notified when an items is edited.
@@ -75,27 +46,10 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
      * Constructor.
      *
      * @param context the context
-     * @param ids     the ids and counts if the items
      */
-    public CalculatorAdapter(Context context, ArrayList<Utility.IntegerPair> ids) {
+    public CalculatorAdapter(Context context, ArrayList<Item> dataSet) {
         mContext = context;
-
-        sql = "SELECT " +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + "," +
-                DatabaseContract.ItemSchemaEntry.TABLE_NAME + "." + DatabaseContract.ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_TRADABLE + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_CRAFTABLE + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_CURRENCY + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_HIGH + "," +
-                Utility.getRawPriceQueryString(context) + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM +
-                " FROM " + PriceEntry.TABLE_NAME +
-                " LEFT JOIN " + DatabaseContract.ItemSchemaEntry.TABLE_NAME +
-                " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + DatabaseContract.ItemSchemaEntry.TABLE_NAME + "." + DatabaseContract.ItemSchemaEntry.COLUMN_DEFINDEX +
-                " WHERE " + mSelection;
+        mDataSet = dataSet;
     }
 
     @Override
@@ -109,74 +63,49 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
-        //Query data of the item
-        Cursor cursor = mContext.getContentResolver().query(
-                DatabaseContract.RAW_QUERY_URI,
-                null,
-                sql,
-                new String[]{"" + ids.get(position).getX()},
-                null
-        );
+        if (mDataSet != null && mDataSet.size() > position) {
 
-        if (cursor != null) {
+            final Item item = mDataSet.get(position);
 
-            if (cursor.moveToFirst()) {
+            int count = mCountSet.get(position);
 
-                //Get the data from the cursor
-                Item item = new Item(
-                        cursor.getInt(COLUMN_DEFINDEX),
-                        cursor.getString(COLUMN_NAME),
-                        cursor.getInt(COLUMN_QUALITY),
-                        cursor.getInt(COLUMN_TRADABLE) == 1,
-                        cursor.getInt(COLUMN_CRAFTABLE) == 1,
-                        cursor.getInt(COLUMN_AUSTRALIUM) == 1,
-                        cursor.getInt(COLUMN_PRICE_INDEX),
-                        new Price(
-                                cursor.getDouble(COLUMN_PRICE),
-                                cursor.getDouble(COLUMN_PRICE_MAX),
-                                cursor.getDouble(COLUMN_PRICE_RAW),
-                                0, 0,
-                                cursor.getString(COLUMN_CURRENCY)
-                        )
-                );
+            Glide.with(mContext)
+                    .load(item.getIconUrl(mContext))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(holder.icon);
 
-                int count = ids.get(position).getY();
+            holder.name.setText(item.getFormattedName(mContext));
 
-                Glide.with(mContext)
-                        .load(item.getIconUrl(mContext))
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(holder.icon);
-
-                holder.name.setText(item.getFormattedName(mContext));
-
-                //Put the number of items behind the name if it is higher than 1
-                if (count > 1) {
-                    holder.name.append(String.format(" %dx", count));
-                }
-
-                holder.price.setText(item.getPrice().getFormattedPrice(mContext));
-
-                holder.effect.setBackgroundColor(item.getColor(mContext, true));
-
-                holder.delete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (listener != null) {
-                            //Notify listener that an item was deleted
-                            listener.onItemDeleted(ids.get(position).getX(), ids.get(position).getY());
-                        }
-                        ids.remove(position);
-                        notifyDataSetChanged();
-                    }
-                });
+            //Put the number of items behind the name if it is higher than 1
+            if (count > 1) {
+                holder.name.append(String.format(" %dx", count));
             }
-            cursor.close();
+
+            holder.price.setText(item.getPrice().getFormattedPrice(mContext));
+
+            holder.effect.setBackgroundColor(item.getColor(mContext, true));
+
+            holder.delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        //Notify listener that an item was deleted
+                        listener.onItemDeleted(item, 1);
+                    }
+                    notifyDataSetChanged();
+                }
+            });
         }
     }
 
     @Override
     public int getItemCount() {
-        return ids == null ? 0 : ids.size();
+        return mDataSet == null ? 0 : mDataSet.size();
+    }
+
+    public void setDataSet(ArrayList<Item> dataSet, ArrayList<Integer> count) {
+        mDataSet = dataSet;
+        mCountSet = count;
     }
 
     /**
@@ -217,9 +146,9 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
         /**
          * Called when an item is deleted.
          *
-         * @param itemId the id of the item
+         * @param item the id of the item
          * @param count  the number of the item(s)
          */
-        void onItemDeleted(int itemId, int count);
+        void onItemDeleted(Item item, int count);
     }
 }

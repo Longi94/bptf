@@ -115,7 +115,6 @@ public class FavoritesFragment extends Fragment implements MainActivity.OnDrawer
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_favorites, container, false);
-
         ButterKnife.bind(this, rootView);
 
         //Set the toolbar to the main activity's action bar
@@ -150,11 +149,6 @@ public class FavoritesFragment extends Fragment implements MainActivity.OnDrawer
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @OnClick(R.id.fab)
-    public void addItem() {
-        startActivityForResult(new Intent(getActivity(), ItemChooserActivity.class), MainActivity.REQUEST_NEW_ITEM);
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_favorites, menu);
@@ -175,14 +169,6 @@ public class FavoritesFragment extends Fragment implements MainActivity.OnDrawer
     @Override
     public void onDrawerOpened() {
         expandToolbar();
-    }
-
-    /**
-     * Fully expand the toolbar with animation.
-     */
-    public void expandToolbar() {
-        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
-        behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
     }
 
     @Override
@@ -257,5 +243,18 @@ public class FavoritesFragment extends Fragment implements MainActivity.OnDrawer
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.setDataSet(null);
         mAdapter.notifyDataSetChanged();
+    }
+
+    @OnClick(R.id.fab)
+    public void addItem() {
+        startActivityForResult(new Intent(getActivity(), ItemChooserActivity.class), MainActivity.REQUEST_NEW_ITEM);
+    }
+
+    /**
+     * Fully expand the toolbar with animation.
+     */
+    public void expandToolbar() {
+        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
+        behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
     }
 }
