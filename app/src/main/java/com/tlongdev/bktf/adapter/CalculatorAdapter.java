@@ -91,6 +91,8 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                     if (listener != null) {
                         //Notify listener that an item was deleted
                         listener.onItemDeleted(item, 1);
+                        notifyItemRemoved(mDataSet.indexOf(item));
+                        mDataSet.remove(item);
                     }
                     notifyDataSetChanged();
                 }

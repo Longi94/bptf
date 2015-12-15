@@ -210,8 +210,9 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
                                 String.valueOf(item.getQuality()),
                                 String.valueOf(item.isTradable() ? 1 : 0),
                                 String.valueOf(item.isCraftable() ? 1 : 0),
-                                String.valueOf(item.getWeaponWear()),
+                                String.valueOf(item.getPriceIndex()),
                                 String.valueOf(item.isAustralium() ? 1 : 0),
+                                String.valueOf(item.getWeaponWear()),
                         },
                         null
                 );
@@ -426,6 +427,23 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
                     .setFatal(false)
                     .build());
         }
+
+        getActivity().getContentResolver().delete(CalculatorEntry.CONTENT_URI,
+                CalculatorEntry.COLUMN_DEFINDEX + " = ? AND " +
+                        CalculatorEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
+                        CalculatorEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
+                        CalculatorEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
+                        CalculatorEntry.COLUMN_PRICE_INDEX + " = ? AND " +
+                        CalculatorEntry.COLUMN_AUSTRALIUM + " = ? AND " +
+                        CalculatorEntry.COLUMN_WEAPON_WEAR + " = ?",
+                new String[]{String.valueOf(item.getDefindex()),
+                        String.valueOf(item.getQuality()),
+                        item.isTradable() ? "1" : "0",
+                        item.isCraftable() ? "1" : "0",
+                        String.valueOf(item.getPriceIndex()),
+                        item.isAustralium() ? "1" : "0",
+                        String.valueOf(item.getWeaponWear())
+                });
     }
 
     /**
