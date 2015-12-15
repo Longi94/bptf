@@ -81,8 +81,6 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                 holder.name.append(String.format(" %dx", count));
             }
 
-            holder.price.setText(item.getPrice().getFormattedPrice(mContext));
-
             holder.effect.setBackgroundColor(item.getColor(mContext, true));
 
             holder.delete.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +95,12 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                     notifyDataSetChanged();
                 }
             });
+
+            if (item.getPrice() != null) {
+                holder.price.setText(item.getPrice().getFormattedPrice(mContext));
+            } else {
+                holder.price.setText("Price unknown");
+            }
         }
     }
 
