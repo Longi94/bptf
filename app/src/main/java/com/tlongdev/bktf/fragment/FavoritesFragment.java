@@ -215,23 +215,26 @@ public class FavoritesFragment extends Fragment implements MainActivity.OnDrawer
 
         if (data != null) {
             while (data.moveToNext()) {
-                items.add(new Item(
-                        data.getInt(COLUMN_DEFINDEX),
+                Item item = new Item(data.getInt(COLUMN_DEFINDEX),
                         data.getString(COLUMN_NAME),
                         data.getInt(COLUMN_QUALITY),
                         data.getInt(COLUMN_TRADABLE) == 1,
                         data.getInt(COLUMN_CRAFTABLE) == 1,
                         data.getInt(COLUMN_AUSTRALIUM) == 1,
                         data.getInt(COLUMN_PRICE_INDEX),
-                        new Price(
-                            data.getDouble(COLUMN_PRICE),
-                                data.getDouble(COLUMN_PRICE_MAX),
-                                data.getDouble(COLUMN_PRICE_RAW),
-                                0,
-                                data.getDouble(COLUMN_DIFFERENCE),
-                                data.getString(COLUMN_CURRENCY)
-                        )
-                ));
+                        null
+                        );
+
+                if (data.getString(COLUMN_CURRENCY) != null) {
+                    item.setPrice(new Price(data.getDouble(COLUMN_PRICE),
+                            data.getDouble(COLUMN_PRICE_MAX),
+                            data.getDouble(COLUMN_PRICE_RAW),
+                            0,
+                            data.getDouble(COLUMN_DIFFERENCE),
+                            data.getString(COLUMN_CURRENCY)));
+                }
+
+                items.add(item);
             }
         }
 

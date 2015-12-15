@@ -100,10 +100,6 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
 
             holder.name.setText(item.getFormattedName(mContext, false));
 
-            //Set the change indicator of the item
-            holder.difference.setTextColor(item.getPrice().getDifferenceColor());
-            holder.difference.setText(item.getPrice().getFormattedDifference(mContext));
-
             holder.icon.setImageDrawable(null);
             holder.background.setBackgroundColor(item.getColor(mContext, true));
 
@@ -123,16 +119,26 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
                 holder.effect.setImageDrawable(null);
             }
 
-            try {
-                //Properly format the price
-                holder.price.setText(item.getPrice().getFormattedPrice(mContext));
-            } catch (Throwable t) {
-                t.printStackTrace();
+            if (item.getPrice() != null) {
+                //Set the change indicator of the item
+                holder.difference.setVisibility(View.VISIBLE);
+                holder.difference.setTextColor(item.getPrice().getDifferenceColor());
+                holder.difference.setText(item.getPrice().getFormattedDifference(mContext));
 
-                ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
-                        .setDescription("Formatter exception:RecentsAdapter, Message: " + t.getMessage())
-                        .setFatal(false)
-                        .build());
+                try {
+                    //Properly format the price
+                    holder.price.setText(item.getPrice().getFormattedPrice(mContext));
+                } catch (Throwable t) {
+                    t.printStackTrace();
+
+                    ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                            .setDescription("Formatter exception:RecentsAdapter, Message: " + t.getMessage())
+                            .setFatal(false)
+                            .build());
+                }
+            } else {
+                holder.price.setText("Price Unkown");
+                holder.difference.setVisibility(View.GONE);
             }
         }
     }
