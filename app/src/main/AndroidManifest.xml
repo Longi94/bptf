@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tlongdev.bktf">
+<manifest
+    package="com.tlongdev.bktf"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+
+    <permission android:name="com.tlongdev.bktf.permission.C2D_MESSAGE"/>
+
+    <uses-permission android:name="com.tlongdev.bktf.permission.C2D_MESSAGE"/>
 
     <application
         android:name=".BptfApplication"
@@ -14,29 +21,29 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.tlongdev.bktf.util.GlideConfiguration"
-            android:value="GlideModule" />
+            android:value="GlideModule"/>
 
         <provider
             android:name=".data.DatabaseProvider"
             android:authorities="com.tlongdev.bktf"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false"/>
 
         <service
             android:name=".service.NotificationsService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false"/>
         <service
             android:name=".service.UpdateDatabaseService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false"/>
 
         <receiver
             android:name=".broadcastreceiver.BootBroadcastReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 
@@ -46,9 +53,9 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
@@ -58,7 +65,7 @@
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.MainActivity" />
+                android:value=".activity.MainActivity"/>
         </activity>
         <activity
             android:name=".activity.UnusualActivity"
@@ -67,7 +74,7 @@
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.MainActivity" />
+                android:value=".activity.MainActivity"/>
         </activity>
         <activity
             android:name=".activity.UserActivity"
@@ -76,7 +83,7 @@
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.SearchActivity" />
+                android:value=".activity.SearchActivity"/>
         </activity>
         <activity
             android:name=".activity.ItemChooserActivity"
@@ -91,12 +98,12 @@
             android:theme="@style/AppTheme.Dialog">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.SettingsActivity" />
+                android:value=".activity.SettingsActivity"/>
         </activity>
         <activity
             android:name=".activity.UserBackpackActivity"
             android:label="@string/title_activity_user_backpack"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.ItemDetailActivity"
             android:label="@string/title_activity_item_detail"
@@ -105,7 +112,7 @@
             android:theme="@style/AppTheme.Transparent">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.UserBackpackActivity" />
+                android:value=".activity.UserBackpackActivity"/>
         </activity>
         <activity
             android:name=".activity.SearchActivity"
@@ -115,7 +122,7 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.tlongdev.bktf.activity.MainActivity" />
+                android:value="com.tlongdev.bktf.activity.MainActivity"/>
         </activity>
         <activity
             android:name=".activity.LoginActivity"
@@ -127,13 +134,47 @@
             android:theme="@style/AppTheme"/>
         <activity
             android:name=".activity.SelectItemActivity"
-            android:parentActivityName=".activity.ItemChooserActivity"
             android:excludeFromRecents="true"
+            android:parentActivityName=".activity.ItemChooserActivity"
             android:theme="@style/AppTheme.Transparent">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.tlongdev.bktf.activity.ItemChooserActivity" />
+                android:value="com.tlongdev.bktf.activity.ItemChooserActivity"/>
         </activity>
+
+
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
+
+                <category android:name="com.tlongdev.bktf"/>
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".gcm.GcmMessageHandler"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".gcm.BptfInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name=".gcm.GcmRegisterPriceUpdatesService"
+            android:exported="false">
+        </service>
+
     </application>
 
 </manifest>

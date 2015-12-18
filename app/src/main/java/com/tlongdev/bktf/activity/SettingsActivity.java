@@ -20,6 +20,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.gcm.GcmRegisterPriceUpdatesService;
 import com.tlongdev.bktf.util.Profile;
 import com.tlongdev.bktf.util.Utility;
 import com.tlongdev.bktf.service.NotificationsService;
@@ -228,6 +229,16 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         //Set the version name to the summary, so I don't have to change it manually every goddamn
         //update
         findPreference(getString(R.string.pref_title_version)).setSummary(BuildConfig.VERSION_NAME);
+
+        findPreference("gcm_test").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                // Fetch updated Instance ID token and notify of changes
+                Intent intent = new Intent(SettingsActivity.this, GcmRegisterPriceUpdatesService.class);
+                startService(intent);
+                return true;
+            }
+        });
     }
 
     /**
