@@ -29,15 +29,6 @@
             android:enabled="true"
             android:exported="false"/>
 
-        <service
-            android:name=".service.NotificationsService"
-            android:enabled="true"
-            android:exported="false"/>
-        <service
-            android:name=".service.UpdateDatabaseService"
-            android:enabled="true"
-            android:exported="false"/>
-
         <receiver
             android:name=".broadcastreceiver.BootBroadcastReceiver"
             android:enabled="true"

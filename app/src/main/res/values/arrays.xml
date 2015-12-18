@@ -1,46 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--Titles for the sync interval preference-->
-    <string-array name="array_pref_sync_interval_titles">
-        <item>@string/array_sync_interval_30_minutes</item>
-        <item>@string/array_sync_interval_hourly</item>
-        <item>@string/array_sync_interval_3_hours</item>
-        <item>@string/array_sync_interval_6_hours</item>
-        <item>@string/array_sync_interval_daily</item>
-    </string-array>
-
-    <!--Values for the sync interval preference-->
-    <string-array name="array_pref_sync_interval_values">
-        <item>1800000</item>
-        <item>3600000</item>
-        <item>10800000</item>
-        <item>21600000</item>
-        <item>86400000</item>
-    </string-array>
-
-    <!--Titles for the notification interval preference-->
-    <string-array name="array_pref_notification_interval_titles">
-        <item>@string/array_sync_interval_5_minutes</item>
-        <item>@string/array_sync_interval_15_minutes</item>
-        <item>@string/array_sync_interval_30_minutes</item>
-        <item>@string/array_sync_interval_hourly</item>
-        <item>@string/array_sync_interval_3_hours</item>
-        <item>@string/array_sync_interval_6_hours</item>
-        <item>@string/array_sync_interval_daily</item>
-    </string-array>
-
-    <!--Values for the notification interval preference-->
-    <string-array name="array_pref_notification_interval_values">
-        <item>300000</item>
-        <item>900000</item>
-        <item>1800000</item>
-        <item>3600000</item>
-        <item>10800000</item>
-        <item>21600000</item>
-        <item>86400000</item>
-    </string-array>
-
     <!--Simple array for the spinner in the item chooser dialog-->
     <string-array name="array_item_chooser_spinner">
         <item>@string/array_item_chooser_spinner_regular</item>

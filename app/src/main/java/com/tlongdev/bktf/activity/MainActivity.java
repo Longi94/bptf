@@ -33,8 +33,6 @@ import com.tlongdev.bktf.fragment.FavoritesFragment;
 import com.tlongdev.bktf.fragment.RecentsFragment;
 import com.tlongdev.bktf.fragment.UnusualFragment;
 import com.tlongdev.bktf.fragment.UserFragment;
-import com.tlongdev.bktf.service.NotificationsService;
-import com.tlongdev.bktf.service.UpdateDatabaseService;
 import com.tlongdev.bktf.util.CircleTransform;
 import com.tlongdev.bktf.util.Profile;
 import com.tlongdev.bktf.util.Utility;
@@ -181,16 +179,6 @@ public class MainActivity extends AppCompatActivity {
         name = (TextView) navigationHeader.findViewById(R.id.user_name);
         backpack = (TextView) navigationHeader.findViewById(R.id.backpack_value);
         avatar = (ImageView) navigationHeader.findViewById(R.id.avatar);
-
-        //Start services if option is on
-        if (PreferenceManager.getDefaultSharedPreferences(this)
-                .getBoolean(getString(R.string.pref_notification), false)) {
-            startService(new Intent(this, NotificationsService.class));
-        }
-        if (PreferenceManager.getDefaultSharedPreferences(this)
-                .getBoolean(getString(R.string.pref_background_sync), false)) {
-            startService(new Intent(this, UpdateDatabaseService.class));
-        }
 
         //Check if there is a fragment to be restored
         if (savedInstanceState != null) {

@@ -22,8 +22,6 @@
     <string name="pref_metal_price" translatable="false">pref_metal_price</string>
     <string name="pref_metal_raw_usd" translatable="false">pref_metal_raw_v2</string>
     <string name="pref_new_avatar" translatable="false">pref_new_avatar</string>
-    <string name="pref_notification" translatable="false">pref_notification</string>
-    <string name="pref_notification_interval" translatable="false">pref_notification_interval</string>
     <string name="pref_player_avatar_url" translatable="false">pref_player_avatar_url</string>
     <string name="pref_player_backpack_value_tf2" translatable="false">pref_player_backpack_value_tf2_v2</string>
     <string name="pref_player_banned" translatable="false">pref_player_banned</string>
@@ -41,7 +39,6 @@
     <string name="pref_player_vac_banned" translatable="false">pref_player_vac_banned</string>
     <string name="pref_resolved_steam_id" translatable="false">pref_resolved_steam_id</string>
     <string name="pref_steam_id" translatable="false">pref_steam_id</string>
-    <string name="pref_sync_interval" translatable="false">pref_sync_interval</string>
     <string name="pref_user_items" translatable="false">pref_user_items</string>
     <string name="pref_user_raw_key" translatable="false">pref_user_raw_key</string>
     <string name="pref_user_raw_metal" translatable="false">pref_user_raw_metal</string>
@@ -96,11 +93,8 @@
     <string name="pref_title_developer" translatable="true">Developer</string>
     <string name="pref_title_feedback" translatable="true">Send feedback or bug report</string>
     <string name="pref_title_jackson" translatable="true">Jackson JSON Processor</string>
-    <string name="pref_title_notification" translatable="true">backpack.tf Notifications</string>
-    <string name="pref_title_notification_interval" translatable="true">Check for notifications</string>
     <string name="pref_title_particles" translatable="true">Particle effect images</string>
     <string name="pref_title_rate" translatable="true">Rate the app on Google Play</string>
-    <string name="pref_title_sync_interval" translatable="true">Sync frequency</string>
     <string name="pref_title_translate" translatable="true">Would you like to help translate the app?</string>
     <string name="pref_title_version" translatable="true">Version</string>
 
