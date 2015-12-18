@@ -10,6 +10,9 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.google.android.gms.analytics.HitBuilders;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
@@ -51,13 +54,12 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
             //Initialize the URL
             URL url = new URL(BASE_URL);
 
-            //Open connection
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder().url(url).build();
+            Response response = client.newCall(request).execute();
 
             //Get the input stream
-            InputStream inputStream = urlConnection.getInputStream();
+            InputStream inputStream = response.body().byteStream();
 
             if (inputStream == null) {
                 // Stream was empty. Nothing to do.
