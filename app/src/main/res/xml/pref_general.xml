@@ -26,31 +26,6 @@
             android:key="@string/pref_background_sync"
             android:title="@string/pref_title_background_sync" />
 
-        <ListPreference
-            android:defaultValue="3600000"
-            android:dependency="@string/pref_background_sync"
-            android:entries="@array/array_pref_sync_interval_titles"
-            android:entryValues="@array/array_pref_sync_interval_values"
-            android:key="@string/pref_sync_interval"
-            android:title="@string/pref_title_sync_interval" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="@string/pref_category_notification">
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/pref_notification"
-            android:title="@string/pref_title_notification" />
-
-        <ListPreference
-            android:defaultValue="3600000"
-            android:dependency="@string/pref_notification"
-            android:entries="@array/array_pref_notification_interval_titles"
-            android:entryValues="@array/array_pref_notification_interval_values"
-            android:key="@string/pref_notification_interval"
-            android:title="@string/pref_title_notification_interval" />
-
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_category_about">

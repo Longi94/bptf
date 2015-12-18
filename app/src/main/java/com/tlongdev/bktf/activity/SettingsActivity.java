@@ -23,8 +23,6 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.gcm.GcmRegisterPriceUpdatesService;
 import com.tlongdev.bktf.util.Profile;
 import com.tlongdev.bktf.util.Utility;
-import com.tlongdev.bktf.service.NotificationsService;
-import com.tlongdev.bktf.service.UpdateDatabaseService;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -171,8 +169,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         // Bind the summaries of EditText/List/Dialog/Ringtone preferences to
         // their values. When their values change, their summaries are updated
         // to reflect the new value, per the Android Design guidelines.
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_notification_interval)));
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_sync_interval)));
 
 
         updateLoginPreference();
@@ -246,23 +242,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
      */
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
         //Start the appropiate services if these settings have been changed
-        if (key.equals(getString(R.string.pref_notification))) {
+        if (key.equals(getString(R.string.pref_background_sync))) {
             if (sharedPreferences.getBoolean(key, false)) {
-                startService(new Intent(this, NotificationsService.class));
-            }
-        } else if (key.equals(getString(R.string.pref_notification_interval))) {
-            if (sharedPreferences.getBoolean(getString(R.string.pref_notification), false)) {
-                startService(new Intent(this, NotificationsService.class));
-            }
-        } else if (key.equals(getString(R.string.pref_background_sync))) {
-            if (sharedPreferences.getBoolean(key, false)) {
-                startService(new Intent(this, UpdateDatabaseService.class));
-            }
-        } else if (key.equals(getString(R.string.pref_notification_interval))) {
-            if (sharedPreferences.getBoolean(getString(R.string.pref_background_sync), false)) {
-                startService(new Intent(this, UpdateDatabaseService.class));
+                // TODO: 2015. 12. 18. subscribe to topic
             }
         }
     }
