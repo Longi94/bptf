@@ -6,6 +6,10 @@
         <Preference
             android:key="@string/pref_key_login"/>
 
+        <Preference
+            android:title="Registert to /prices/updates topic"
+            android:key="gcm_test"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_category_sync">
