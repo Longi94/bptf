@@ -7,6 +7,9 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
 import com.google.android.gms.analytics.HitBuilders;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.util.Utility;
@@ -15,11 +18,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
@@ -70,11 +70,6 @@ public class GetUserInfo extends AsyncTask<String, Void, Integer> {
             return -1;
         }
 
-        // These two need to be declared outside the try/catch
-        // so that they can be closed in the finally block.
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-
         // Will contain the raw JSON response as a string.
         String jsonString;
 
@@ -121,32 +116,15 @@ public class GetUserInfo extends AsyncTask<String, Void, Integer> {
                 //Initialize the URL
                 url = new URL(uri.toString());
 
-                //Open connection.
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
+                //Open connection
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder().url(url).build();
+                Response response = client.newCall(request).execute();
 
-                //Get the input stream
-                inputStream = urlConnection.getInputStream();
-                buffer = new StringBuffer();
-
-                // Nothing to do if the stream was empty.
-                if (inputStream != null) {
-                    reader = new BufferedReader(new InputStreamReader(inputStream));
-                    //Read the input
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        buffer.append(line);
-                    }
-
-                    if (buffer.length() != 0) {
-                        // If the stream was empty there is no point in parsing.
-                        jsonString = buffer.toString();
-                        //Get the resolved steamid from the returned json data
-                        steamId = Utility.parseSteamIdFromVanityJson(jsonString);
-                    }
-
-                }
+                // If the stream was empty there is no point in parsing.
+                jsonString = response.body().string();
+                //Get the resolved steamid from the returned json data
+                steamId = Utility.parseSteamIdFromVanityJson(jsonString);
             }
 
             if (!Utility.isSteamId(steamId)) {
@@ -171,32 +149,13 @@ public class GetUserInfo extends AsyncTask<String, Void, Integer> {
             url = new URL(uri.toString());
 
             //Open connection
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder().url(url).build();
+            Response response = client.newCall(request).execute();
 
-            //Get the input stream
-            inputStream = urlConnection.getInputStream();
-            buffer = new StringBuffer();
-
-            String line;
-            //Parse only if the stream isn't empty
-            if (inputStream != null) {
-
-                reader = new BufferedReader(new InputStreamReader(inputStream));
-
-                //Read the input
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line);
-                }
-
-                //Only parse if the input isn't empty
-                if (buffer.length() > 0) {
-                    jsonString = buffer.toString();
-                    //Parse the JSON
-                    parseUserInfoJson(jsonString, steamId);
-                }
-            }
+            jsonString = response.body().string();
+            //Parse the JSON
+            parseUserInfoJson(jsonString, steamId);
 
             //Build user summaries uri
             uri = Uri.parse(USER_SUMMARIES_BASE_URL).buildUpon()
@@ -208,29 +167,13 @@ public class GetUserInfo extends AsyncTask<String, Void, Integer> {
             url = new URL(uri.toString());
 
             //Open connection
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
+            client = new OkHttpClient();
+            request = new Request.Builder().url(url).build();
+            response = client.newCall(request).execute();
 
-            //Get the input stream
-            inputStream = urlConnection.getInputStream();
-            buffer = new StringBuffer();
-
-            //Parse only if the stream isn't empty
-            if (inputStream != null) {
-                reader = new BufferedReader(new InputStreamReader(inputStream));
-
-                //Read the input
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line);
-                }
-
-                if (buffer.length() > 0) {
-                    jsonString = buffer.toString();
-                    //Parse the JSON
-                    return parseUserSummariesJson(jsonString);
-                }
-            }
+            jsonString = response.body().string();
+            //Parse the JSON
+            return parseUserSummariesJson(jsonString);
 
         } catch (IOException e) {
             //There was a network error
@@ -254,28 +197,7 @@ public class GetUserInfo extends AsyncTask<String, Void, Integer> {
                     .build());
 
             return -1;
-        } finally {
-            //Close the connection
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            if (reader != null) {
-                //Close the reader
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    //This should never be reached
-                    errorMessage = e.getMessage();
-                    e.printStackTrace();
-
-                    ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
-                            .setDescription("Buffered reader exception:GetUserInfo, Message: " + e.getMessage())
-                            .setFatal(false)
-                            .build());
-                }
-            }
         }
-        return -1;
     }
 
     /**

@@ -14,6 +14,9 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.google.android.gms.analytics.HitBuilders;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
@@ -23,7 +26,6 @@ import com.tlongdev.bktf.util.Utility;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Vector;
 
@@ -87,10 +89,6 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
             return 0;
         }
 
-        // These two need to be declared outside the try/catch
-        // so that they can be closed in the finally block.
-        HttpURLConnection urlConnection = null;
-
         try {
             //The prices api and input keys
             final String PRICES_BASE_URL = mContext.getString(R.string.tlongdev_prices);
@@ -125,13 +123,12 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
 
             Log.v(LOG_TAG, "Built uri: " + uri.toString());
 
-            //Open connection
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder().url(url).build();
+            Response response = client.newCall(request).execute();
 
             //Get the input stream
-            InputStream inputStream = urlConnection.getInputStream();
+            InputStream inputStream = response.body().byteStream();
 
             if (inputStream == null) {
                 // Stream was empty. Nothing to do.
@@ -157,11 +154,6 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
                     .setDescription("Network exception:GetPriceList, Message: " + e.getMessage())
                     .setFatal(false)
                     .build());
-        } finally {
-            //Close the connection
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
         }
 
         return null;

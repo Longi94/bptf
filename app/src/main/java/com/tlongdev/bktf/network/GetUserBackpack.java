@@ -8,6 +8,9 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.gms.analytics.HitBuilders;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
@@ -18,11 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -210,13 +209,8 @@ public class GetUserBackpack extends AsyncTask<String, Void, Integer> {
         isGuest = !params[0].equals(PreferenceManager.getDefaultSharedPreferences(mContext)
                 .getString(mContext.getString(R.string.pref_resolved_steam_id), ""));
 
-        // These two need to be declared outside the try/catch
-        // so that they can be closed in the finally block.
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-
         // Will contain the raw JSON response as a string.
-        String jsonStr = null;
+        String jsonStr;
 
         try {
             //Keys of the input parameters
@@ -236,33 +230,12 @@ public class GetUserBackpack extends AsyncTask<String, Void, Integer> {
             Log.v(LOG_TAG, "Built uri: " + uri.toString());
 
             //Open connection
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder().url(url).build();
+            Response response = client.newCall(request).execute();
 
-            //Get the input stream
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuilder buffer = new StringBuilder();
-
-            if (inputStream == null) {
-                // Stream was empty. Nothing to do.
-                return -1;
-            }
-
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            //Read the input
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line);
-            }
-
-            if (buffer.length() == 0) {
-                //Stream was empty, nothing to do.
-                return -1;
-            }
             //Get the json string
-            jsonStr = buffer.toString();
+            jsonStr = response.body().string();
 
             //Start parsing the json String
             return getItemsFromJson(jsonStr, params[0]);
@@ -289,26 +262,6 @@ public class GetUserBackpack extends AsyncTask<String, Void, Integer> {
                     .build());
 
             return -1;
-        } finally {
-            //Disconnect
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            if (reader != null) {
-                //Close the input stream
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    errorMessage = e.getMessage();
-                    e.printStackTrace();
-
-                    ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
-                            .setDescription("Buffered reader exception:GetUserBackpack, Message: " + e.getMessage())
-                            .setFatal(false)
-                            .build());
-                }
-
-            }
         }
     }
 

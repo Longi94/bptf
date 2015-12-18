@@ -10,6 +10,9 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.google.android.gms.analytics.HitBuilders;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Item;
@@ -17,7 +20,6 @@ import com.tlongdev.bktf.model.Price;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
@@ -65,10 +67,6 @@ public class GetPriceHistory extends AsyncTask<Void, Void, Integer> {
     @Override
     protected Integer doInBackground(Void... params) {
 
-        // These two need to be declared outside the try/catch
-        // so that they can be closed in the finally block.
-        HttpURLConnection urlConnection;
-
         try {
             final String BASE_URL = "http://backpack.tf/api/IGetPriceHistory/v1/";
             final String KEY_DEV = "key";
@@ -94,13 +92,12 @@ public class GetPriceHistory extends AsyncTask<Void, Void, Integer> {
 
             Log.v(LOG_TAG, "Built uri: " + uri.toString());
 
-            //Open connection
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder().url(url).build();
+            Response response = client.newCall(request).execute();
 
             //Get the input stream
-            InputStream inputStream = urlConnection.getInputStream();
+            InputStream inputStream = response.body().byteStream();
 
             if (inputStream == null) {
                 // Stream was empty. Nothing to do.
