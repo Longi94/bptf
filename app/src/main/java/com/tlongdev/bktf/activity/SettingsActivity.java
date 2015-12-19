@@ -158,7 +158,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
      * shown.
      */
     private void setupSimplePreferencesScreen() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Add 'general' preferences.
         addPreferencesFromResource(R.xml.pref_general);
@@ -181,6 +181,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 String value = (String) newValue;
                 notifPref.setEnabled(!value.equals("0"));
+
+                if (prefs.getBoolean(getString(R.string.pref_registered_topic_price_updates), false) == value.equals("0")) {
+                    Intent intent = new Intent(SettingsActivity.this, GcmRegisterPriceUpdatesService.class);
+                    intent.putExtra(GcmRegisterPriceUpdatesService.EXTRA_SUBSCRIBE, !value.equals("0"));
+                    startService(intent);
+                }
                 return true;
             }
         });
@@ -237,16 +243,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         //Set the version name to the summary, so I don't have to change it manually every goddamn
         //update
         findPreference(getString(R.string.pref_title_version)).setSummary(BuildConfig.VERSION_NAME);
-
-        findPreference("gcm_test").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                // Fetch updated Instance ID token and notify of changes
-                Intent intent = new Intent(SettingsActivity.this, GcmRegisterPriceUpdatesService.class);
-                startService(intent);
-                return true;
-            }
-        });
     }
 
     /**
