@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -157,8 +158,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
      * shown.
      */
     private void setupSimplePreferencesScreen() {
-        // In the simplified UI, fragments are not used at all and we instead
-        // use the older PreferenceActivity APIs.
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Add 'general' preferences.
         addPreferencesFromResource(R.xml.pref_general);
@@ -169,9 +169,21 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         // Bind the summaries of EditText/List/Dialog/Ringtone preferences to
         // their values. When their values change, their summaries are updated
         // to reflect the new value, per the Android Design guidelines.
-
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_auto_sync)));
 
         updateLoginPreference();
+
+        final CheckBoxPreference notifPref = (CheckBoxPreference) findPreference(getString(R.string.pref_price_notification));
+        notifPref.setEnabled(!prefs.getString(getString(R.string.pref_auto_sync), "1").equals("0"));
+
+        findPreference(getString(R.string.pref_auto_sync)).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                String value = (String) newValue;
+                notifPref.setEnabled(!value.equals("0"));
+                return true;
+            }
+        });
 
         findPreference(getString(R.string.pref_key_login)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -243,11 +255,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         //Start the appropiate services if these settings have been changed
-        if (key.equals(getString(R.string.pref_background_sync))) {
-            if (sharedPreferences.getBoolean(key, false)) {
-                // TODO: 2015. 12. 18. subscribe to topic
-            }
-        }
+        // TODO: 2015. 12. 18. subscribe to topic
     }
 
     @Override

@@ -8,7 +8,6 @@
     <!--Preference keys-->
 
     <string name="pref_auto_sync" translatable="false">pref_auto_sync</string>
-    <string name="pref_background_sync" translatable="false">pref_background_sync</string>
     <string name="pref_buds_diff" translatable="false">pref_buds_diff_v2</string>
     <string name="pref_buds_price" translatable="false">pref_buds_price</string>
     <string name="pref_buds_raw" translatable="false">pref_buds_raw_v2</string>
@@ -86,8 +85,7 @@
     <string name="pref_summary_on_auto_sync" translatable="true">Auto-update database</string>
     <string name="pref_summary_jackson" translatable="true">fast and memory efficient JSON processing</string>
     <string name="pref_summary_particles" translatable="true">provided by backpack.tf</string>
-    <string name="pref_title_auto_sync" translatable="true">Auto-update database</string>
-    <string name="pref_title_background_sync" translatable="true">Sync in the background</string>
+    <string name="pref_title_auto_sync" translatable="true">Auto-update prices</string>
     <string name="pref_title_changelog" translatable="true">Changelogs</string>
     <string name="pref_title_credits" translatable="true">Credits</string>
     <string name="pref_title_developer" translatable="true">Developer</string>
@@ -289,5 +287,8 @@
     <string name="pref_title_butter_knife">Butter Knife</string>
     <string name="pref_summary_butter_knife">Field and method binding for Android views which uses annotation processing to generate boilerplate code for you.</string>
     <string name="title_activity_select_item">SelectItemActivity</string>
+    <string name="pref_price_notification">pref_price_notification</string>
+    <string name="pref_title_price_notification">Price update notification</string>
+    <string name="pref_summary_price_notification">Notify when a price of a favorite item is updated</string>
 
 </resources>

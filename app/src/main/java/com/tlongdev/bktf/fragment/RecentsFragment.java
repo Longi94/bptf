@@ -211,8 +211,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         } else {
 
             //Update database if the last update happened more than an hour ago
-            if (prefs.getBoolean(getString(R.string.pref_auto_sync), false) &&
-                    System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_price_list_update), 0) >= 3600000L
+            if (System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_price_list_update), 0) >= 3600000L
                     && Utility.isNetworkAvailable(getActivity())) {
                 GetPriceList task = new GetPriceList(getActivity(), true, false);
                 task.setOnPriceListFetchListener(this);
@@ -352,8 +351,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
             }
 
 
-            if (prefs.getBoolean(getString(R.string.pref_auto_sync), false) &&
-                    System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_item_schema_update), 0) >= 172800000L //2days
+            if (System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_item_schema_update), 0) >= 172800000L //2days
                     && Utility.isNetworkAvailable(getActivity())) {
                 GetItemSchema task = new GetItemSchema(getActivity());
                 task.setListener(this);

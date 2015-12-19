@@ -14,17 +14,18 @@
 
     <PreferenceCategory android:title="@string/pref_category_sync">
 
-        <SwitchPreference
-            android:defaultValue="true"
+        <ListPreference
+            android:defaultValue="1"
             android:key="@string/pref_auto_sync"
-            android:summaryOff="@string/pref_summary_off_auto_sync"
-            android:summaryOn="@string/pref_summary_on_auto_sync"
+            android:entryValues="@array/pref_auto_sync_values"
+            android:entries="@array/pref_auto_sync_entries"
             android:title="@string/pref_title_auto_sync" />
 
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/pref_background_sync"
-            android:title="@string/pref_title_background_sync" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_price_notification"
+            android:title="@string/pref_title_price_notification"
+            android:summary="@string/pref_summary_price_notification" />
 
     </PreferenceCategory>
 

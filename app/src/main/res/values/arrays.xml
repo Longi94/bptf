@@ -7,5 +7,17 @@
         <item>@string/array_item_chooser_spinner_unusual</item>
     </string-array>
 
+    <string-array name="pref_auto_sync_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="pref_auto_sync_entries">
+        <item>Don\'t update prices in the background</item>
+        <item>Update prices in the background over Wi-Fi only</item>
+        <item>Update prices in the background anytime (data charges may apply)</item>
+    </string-array>
+
     <string name="array_origin_unknown">Unknown</string>
 </resources>

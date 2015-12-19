@@ -17,7 +17,7 @@ public class BackpackItem extends Item {
     private int craftNumber;
 
     private String customName;
-    private String customDescription;;
+    private String customDescription;
     private String creatorName;
     private String gifterName;
     private String containedItem;
