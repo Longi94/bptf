@@ -33,6 +33,7 @@ import com.tlongdev.bktf.fragment.FavoritesFragment;
 import com.tlongdev.bktf.fragment.RecentsFragment;
 import com.tlongdev.bktf.fragment.UnusualFragment;
 import com.tlongdev.bktf.fragment.UserFragment;
+import com.tlongdev.bktf.gcm.GcmRegisterPriceUpdatesService;
 import com.tlongdev.bktf.util.CircleTransform;
 import com.tlongdev.bktf.util.Profile;
 import com.tlongdev.bktf.util.Utility;
@@ -214,6 +215,16 @@ public class MainActivity extends AppCompatActivity {
             userStateChanged = false;
         }
         updateDrawer();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean autoSync = !prefs.getString(getString(R.string.pref_auto_sync), "1").equals("0");
+
+        if (prefs.getBoolean(getString(R.string.pref_registered_topic_price_updates), false) != autoSync) {
+            Intent intent = new Intent(this, GcmRegisterPriceUpdatesService.class);
+            intent.putExtra(GcmRegisterPriceUpdatesService.EXTRA_SUBSCRIBE, autoSync);
+            startService(intent);
+        }
+
         super.onResume();
     }
 
