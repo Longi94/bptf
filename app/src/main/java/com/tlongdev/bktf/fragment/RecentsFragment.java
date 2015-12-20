@@ -326,7 +326,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     @Override
-    public void onPriceListFinished(int newItems) {
+    public void onPriceListFinished(int newItems, long sinceParam) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
