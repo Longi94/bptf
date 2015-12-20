@@ -57,7 +57,7 @@ public class GcmMessageHandler extends GcmListenerService implements GetPriceLis
 
         String sql = "SELECT " +
                 FavoritesEntry.TABLE_NAME + "." + FavoritesEntry._ID + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_LAST_UPDATE + "," +
+                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_LAST_UPDATE +
                 " FROM " + FavoritesEntry.TABLE_NAME +
                 " LEFT JOIN " + PriceEntry.TABLE_NAME +
                 " ON " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_DEFINDEX + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX +
@@ -76,7 +76,7 @@ public class GcmMessageHandler extends GcmListenerService implements GetPriceLis
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                long update = cursor.getLong(2);
+                long update = cursor.getLong(1);
                 newPrice = newPrice || update > sinceParam;
             }
             cursor.close();
