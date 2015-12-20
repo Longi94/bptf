@@ -180,7 +180,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
         if (listener != null) {
             if (integer >= 0) {
                 //Notify the listener that the update finished
-                listener.onPriceListFinished(rowsInserted);
+                listener.onPriceListFinished(rowsInserted, latestUpdate);
             } else {
                 listener.onPriceListFailed(errorMessage);
             }
@@ -486,7 +486,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
         /**
          * Notify the listener, that the fetching has stopped.
          */
-        void onPriceListFinished(int newItems);
+        void onPriceListFinished(int newItems, long sinceParam);
 
         void onPriceListUpdate(int max);
 
