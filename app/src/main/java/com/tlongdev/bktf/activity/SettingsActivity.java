@@ -179,6 +179,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         findPreference(getString(R.string.pref_auto_sync)).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
+
+                sBindPreferenceSummaryToValueListener.onPreferenceChange(preference, newValue);
+
                 String value = (String) newValue;
                 notifPref.setEnabled(!value.equals("0"));
 
@@ -187,6 +190,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
                     intent.putExtra(GcmRegisterPriceUpdatesService.EXTRA_SUBSCRIBE, !value.equals("0"));
                     startService(intent);
                 }
+
                 return true;
             }
         });
