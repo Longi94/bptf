@@ -1,8 +1,9 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="@dimen/widget_margin"
-    android:background="@android:color/background_dark">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/card_color"
+    android:padding="@dimen/widget_margin">
 
     <ListView
         android:id="@+id/list_view"
@@ -11,12 +12,12 @@
         android:scrollbars="vertical"/>
 
     <TextView
-              android:id="@+id/empty_view"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:gravity="center"
-              android:textColor="#ffffff"
-              android:textStyle="bold"
-              android:text="There are no favorites"
-              android:textSize="20sp" />
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="There are no favorites"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
 </FrameLayout>

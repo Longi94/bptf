@@ -51,6 +51,13 @@ public class GcmMessageHandler extends GcmListenerService implements GetPriceLis
 
     @Override
     public void onPriceListFinished(int newItems, long sinceParam) {
+
+        if (newItems > 0) {
+            Utility.notifyPricesWidgets(this);
+        } else {
+            return;
+        }
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (!prefs.getBoolean(getString(R.string.pref_price_notification), false)) return;

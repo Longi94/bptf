@@ -328,6 +328,10 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onPriceListFinished(int newItems, long sinceParam) {
 
+        if (newItems > 0) {
+            Utility.notifyPricesWidgets(getActivity());
+        }
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         if (loadingDialog != null) {

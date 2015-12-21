@@ -56,6 +56,8 @@ public class FavoritesWidgetService extends RemoteViewsService {
 
         private int widgetId;
 
+        private String sql;
+
         public FavoritesRemoteViewsFactory(Context context, Intent intent) {
             mContext = context;
             widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0);
@@ -63,7 +65,7 @@ public class FavoritesWidgetService extends RemoteViewsService {
 
         @Override
         public void onCreate() {
-            String sql = "SELECT " +
+            sql = "SELECT " +
                     DatabaseContract.FavoritesEntry.TABLE_NAME + "." + DatabaseContract.FavoritesEntry.COLUMN_DEFINDEX + "," +
                     DatabaseContract.ItemSchemaEntry.TABLE_NAME + "." + DatabaseContract.ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
                     DatabaseContract.FavoritesEntry.TABLE_NAME + "." + DatabaseContract.FavoritesEntry.COLUMN_ITEM_QUALITY + "," +
@@ -102,12 +104,25 @@ public class FavoritesWidgetService extends RemoteViewsService {
 
         @Override
         public void onDataSetChanged() {
-
+            if (mDataSet != null) {
+                mDataSet.close();
+            }
+            final long token = Binder.clearCallingIdentity();
+            try {
+                mDataSet = mContext.getContentResolver().query(
+                        DatabaseContract.RAW_QUERY_URI,
+                        null, sql, null, null
+                );
+            } finally {
+                Binder.restoreCallingIdentity(token);
+            }
         }
 
         @Override
         public void onDestroy() {
-
+            if (mDataSet != null) {
+                mDataSet.close();
+            }
         }
 
         @Override
@@ -148,6 +163,8 @@ public class FavoritesWidgetService extends RemoteViewsService {
 
                 if (item.getPrice() != null) {
                     rv.setTextViewText(R.id.price, item.getPrice().getFormattedPrice(mContext));
+                } else {
+                    rv.setTextViewText(R.id.price, "Price Unknown");
                 }
 
                 try {
@@ -157,9 +174,23 @@ public class FavoritesWidgetService extends RemoteViewsService {
                             .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                             .get();
                     rv.setImageViewBitmap(R.id.icon, bitmap);
+
+                    if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
+                        bitmap = Glide.with(mContext)
+                                .load(item.getEffectUrl(mContext))
+                                .asBitmap()
+                                .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                                .get();
+                        rv.setImageViewBitmap(R.id.effect, bitmap);
+                    } else {
+                        rv.setImageViewBitmap(R.id.effect, null);
+                    }
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
+                    rv.setImageViewBitmap(R.id.effect, null);
                 }
+
+                rv.setInt(R.id.effect, "setBackgroundColor", item.getColor(mContext, false));
             }
             return rv;
         }

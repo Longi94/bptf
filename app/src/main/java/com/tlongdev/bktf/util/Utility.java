@@ -3,6 +3,8 @@ package com.tlongdev.bktf.util;
 import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +27,7 @@ import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.widget.FavoritesWidget;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -374,6 +377,8 @@ public class Utility {
         cv.put(FavoritesEntry.COLUMN_WEAPON_WEAR, item.getWeaponWear());
 
         context.getContentResolver().insert(FavoritesEntry.CONTENT_URI, cv);
+
+        notifyPricesWidgets(context);
     }
 
     public static void removeFromFavorites(Context context, Item item) {
@@ -393,6 +398,8 @@ public class Utility {
                         item.isAustralium() ? "1" : "0",
                         String.valueOf(item.getWeaponWear())
                 });
+
+        notifyPricesWidgets(context);
     }
 
     public static boolean isFavorite(Context context, Item item) {
@@ -460,6 +467,12 @@ public class Utility {
 
         // mId allows you to update the notification later on.
         mNotificationManager.notify(id, builder.build());
+    }
+
+    public static void notifyPricesWidgets(Context context) {
+        AppWidgetManager manager = AppWidgetManager.getInstance(context);
+        int[] appWidgetIds = manager.getAppWidgetIds(new ComponentName(context.getApplicationContext(), FavoritesWidget.class));
+        manager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.list_view);
     }
 }
 
