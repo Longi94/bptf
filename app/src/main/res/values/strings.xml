@@ -291,5 +291,7 @@
     <string name="pref_title_price_notification">Price update notification</string>
     <string name="pref_summary_price_notification">Notify when a price of a favorite item is updated</string>
     <string name="pref_registered_topic_price_updates">pref_registered_topic_price_updates</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 
 </resources>
