@@ -302,6 +302,8 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         ArrayList<Item> items = new ArrayList<>();
         ArrayList<Integer> count = new ArrayList<>();
 
+        double value = 0;
+
         if (data != null) {
             while (data.moveToNext()) {
                 Item item = new Item(data.getInt(COLUMN_DEFINDEX),
@@ -326,8 +328,13 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
                 items.add(item);
 
                 count.add(data.getInt(COLUMN_COUNT));
+
+                value += item.getPrice().getRawValue() * data.getInt(COLUMN_COUNT);
             }
         }
+
+        totalPrice.setValue(value);
+        updatePrices();
 
         mAdapter.setDataSet(items, count);
         mAdapter.notifyDataSetChanged();
@@ -339,11 +346,7 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         mAdapter.notifyDataSetChanged();
     }
 
-    /**
-     * Deletes all the items from the list
-     */
-    private void deleteAllItems() {
-        totalPrice.setValue(0);
+    private void updatePrices() {
         try {
             priceMetal.setText(totalPrice.getFormattedPrice(getActivity(), Currency.METAL));
             priceKeys.setText(totalPrice.getFormattedPrice(getActivity(), Currency.KEY));
@@ -357,6 +360,14 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
                     .setFatal(false)
                     .build());
         }
+    }
+
+    /**
+     * Deletes all the items from the list
+     */
+    private void deleteAllItems() {
+        totalPrice.setValue(0);
+        updatePrices();
 
         getActivity().getContentResolver().delete(CalculatorEntry.CONTENT_URI, null, null);
 
@@ -375,19 +386,7 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
             totalPrice.setValue(totalPrice.getValue() + item.getPrice().getRawValue() * count);
         }
 
-        try {
-            priceMetal.setText(totalPrice.getFormattedPrice(getActivity(), Currency.METAL));
-            priceKeys.setText(totalPrice.getFormattedPrice(getActivity(), Currency.KEY));
-            priceBuds.setText(totalPrice.getFormattedPrice(getActivity(), Currency.BUD));
-            priceUsd.setText(totalPrice.getFormattedPrice(getActivity(), Currency.USD));
-        } catch (Throwable t) {
-            t.printStackTrace();
-
-            ((BptfApplication) getActivity().getApplication()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
-                    .setDescription("Formatter exception:CalculatorFragment, Message: " + t.getMessage())
-                    .setFatal(false)
-                    .build());
-        }
+        updatePrices();
 
         ContentValues cv = new ContentValues();
 
@@ -417,19 +416,7 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
             totalPrice.setValue(totalPrice.getValue() - item.getPrice().getRawValue() * count);
         }
 
-        try {
-            priceMetal.setText(totalPrice.getFormattedPrice(getActivity(), Currency.METAL));
-            priceKeys.setText(totalPrice.getFormattedPrice(getActivity(), Currency.KEY));
-            priceBuds.setText(totalPrice.getFormattedPrice(getActivity(), Currency.BUD));
-            priceUsd.setText(totalPrice.getFormattedPrice(getActivity(), Currency.USD));
-        } catch (Throwable t) {
-            t.printStackTrace();
-
-            ((BptfApplication) getActivity().getApplication()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
-                    .setDescription("Formatter exception:CalculatorFragment, Message: " + t.getMessage())
-                    .setFatal(false)
-                    .build());
-        }
+        updatePrices();
 
         getActivity().getContentResolver().delete(CalculatorEntry.CONTENT_URI,
                 CalculatorEntry.COLUMN_DEFINDEX + " = ? AND " +
