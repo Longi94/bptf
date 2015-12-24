@@ -28,6 +28,13 @@
                 android:layout_height="wrap_content">
 
                 <com.tlongdev.bktf.view.RatioHeightImageView
+                    android:id="@+id/quality"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone"/>
+
+                <com.tlongdev.bktf.view.RatioHeightImageView
                     android:id="@+id/effect"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

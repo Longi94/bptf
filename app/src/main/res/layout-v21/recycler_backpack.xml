@@ -9,6 +9,14 @@
     card_view:cardBackgroundColor="@color/card_color">
 
     <com.tlongdev.bktf.view.RatioHeightImageView
+        android:id="@+id/quality"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        android:transitionName="quality_transition" />
+
+    <com.tlongdev.bktf.view.RatioHeightImageView
         android:id="@+id/effect"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

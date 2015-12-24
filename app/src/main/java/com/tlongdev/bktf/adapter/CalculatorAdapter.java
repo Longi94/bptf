@@ -96,6 +96,20 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                 }
             });
 
+            if (!item.isTradable()) {
+                holder.quality.setVisibility(View.VISIBLE);
+                if (!item.isCraftable()) {
+                    holder.quality.setImageResource(R.drawable.uncraft_untrad);
+                } else {
+                    holder.quality.setImageResource(R.drawable.untrad);
+                }
+            } else if (!item.isCraftable()) {
+                holder.quality.setVisibility(View.VISIBLE);
+                holder.quality.setImageResource(R.drawable.uncraft);
+            } else {
+                holder.quality.setVisibility(View.GONE);
+            }
+
             if (item.getPrice() != null) {
                 holder.price.setText(item.getPrice().getFormattedPrice(mContext));
             } else {
@@ -133,6 +147,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
         @Bind(R.id.text_view_item_price) TextView price;
         @Bind(R.id.effect) ImageView effect;
         @Bind(R.id.image_view_delete) ImageView delete;
+        @Bind(R.id.quality) ImageView quality;
 
         /**
          * Constructor
