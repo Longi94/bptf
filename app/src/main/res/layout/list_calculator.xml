@@ -21,6 +21,16 @@
             android:layout_height="match_parent">
 
             <ImageView
+                android:id="@+id/quality"
+                android:layout_width="84dp"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/description_icon"
+                android:minHeight="84dp"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:visibility="gone"/>
+
+            <ImageView
                 android:id="@+id/effect"
                 android:layout_width="84dp"
                 android:layout_height="match_parent"

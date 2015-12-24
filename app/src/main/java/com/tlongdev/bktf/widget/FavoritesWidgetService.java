@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Binder;
+import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -190,7 +191,21 @@ public class FavoritesWidgetService extends RemoteViewsService {
                     rv.setImageViewBitmap(R.id.effect, null);
                 }
 
-                rv.setInt(R.id.effect, "setBackgroundColor", item.getColor(mContext, false));
+                if (!item.isTradable()) {
+                    rv.setViewVisibility(R.id.quality, View.VISIBLE);
+                    if (!item.isCraftable()) {
+                        rv.setImageViewResource(R.id.quality, R.drawable.uncraft_untrad);
+                    } else {
+                        rv.setImageViewResource(R.id.quality, R.drawable.untrad);
+                    }
+                } else if (!item.isCraftable()) {
+                    rv.setViewVisibility(R.id.quality, View.VISIBLE);
+                    rv.setImageViewResource(R.id.quality, R.drawable.uncraft);
+                } else {
+                    rv.setViewVisibility(R.id.quality, View.GONE);
+                }
+
+                rv.setInt(R.id.frame_layout, "setBackgroundColor", item.getColor(mContext, false));
             }
             return rv;
         }

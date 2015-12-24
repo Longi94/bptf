@@ -148,6 +148,20 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
             holder.icon.setImageDrawable(null);
             holder.background.setBackgroundColor(item.getColor(mContext, true));
 
+            if (!item.isTradable()) {
+                holder.quality.setVisibility(View.VISIBLE);
+                if (!item.isCraftable()) {
+                    holder.quality.setImageResource(R.drawable.uncraft_untrad);
+                } else {
+                    holder.quality.setImageResource(R.drawable.untrad);
+                }
+            } else if (!item.isCraftable()) {
+                holder.quality.setVisibility(View.VISIBLE);
+                holder.quality.setImageResource(R.drawable.uncraft);
+            } else {
+                holder.quality.setVisibility(View.GONE);
+            }
+
             //Set the item icon
             Glide.with(mContext)
                     .load(item.getIconUrl(mContext))
@@ -206,6 +220,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
 
         @Bind(R.id.icon) ImageView icon;
         @Bind(R.id.effect) ImageView effect;
+        @Bind(R.id.quality) ImageView quality;
 
         @Bind(R.id.name) TextView name;
         @Bind(R.id.price) TextView price;

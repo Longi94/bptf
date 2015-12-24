@@ -150,6 +150,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                 holder.paint.setImageDrawable(null);
                 holder.root.setCardBackgroundColor(Utility.getColor(mContext, R.color.card_color));
                 holder.root.setOnClickListener(null);
+                holder.quality.setVisibility(View.GONE);
 
                 if (currentCursor.moveToPosition(cursorPosition)) {
                     //Get all the data from the cursor
@@ -186,6 +187,18 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                         } else {
                             Glide.clear(holder.effect);
                             holder.effect.setImageDrawable(null);
+                        }
+
+                        if (!item.isTradable()) {
+                            holder.quality.setVisibility(View.VISIBLE);
+                            if (!item.isCraftable()) {
+                                holder.quality.setImageResource(R.drawable.uncraft_untrad);
+                            } else {
+                                holder.quality.setImageResource(R.drawable.untrad);
+                            }
+                        } else if (!item.isCraftable()) {
+                            holder.quality.setVisibility(View.VISIBLE);
+                            holder.quality.setImageResource(R.drawable.uncraft);
                         }
 
                         //The on click listener for an item
@@ -308,6 +321,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
         @Nullable @Bind(R.id.icon) ImageView icon = null;
         @Nullable @Bind(R.id.effect) ImageView effect = null;
         @Nullable @Bind(R.id.paint) ImageView paint = null;
+        @Nullable @Bind(R.id.quality) ImageView quality;
         CardView root = null;
 
         /**

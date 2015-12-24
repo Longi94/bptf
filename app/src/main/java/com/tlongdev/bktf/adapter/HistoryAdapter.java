@@ -130,6 +130,18 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                         .into(holder.effect);
 
                 holder.name.setText(mItem.getFormattedName(mContext));
+
+                if (!mItem.isTradable()) {
+                    holder.quality.setVisibility(View.VISIBLE);
+                    if (!mItem.isCraftable()) {
+                        holder.quality.setImageResource(R.drawable.uncraft_untrad);
+                    } else {
+                        holder.quality.setImageResource(R.drawable.untrad);
+                    }
+                } else if (!mItem.isCraftable()) {
+                    holder.quality.setVisibility(View.VISIBLE);
+                    holder.quality.setImageResource(R.drawable.uncraft);
+                }
                 break;
             case VIEW_TYPE_NORMAL:
                 Price price = mDataSet.get(position - 1);
@@ -267,6 +279,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
          */
         @Nullable @Bind(R.id.effect) ImageView effect;
         @Nullable @Bind(R.id.icon) ImageView icon;
+        @Nullable @Bind(R.id.quality) ImageView quality;
         @Nullable @Bind(R.id.name) TextView name;
         @Nullable @Bind(R.id.history_chart) LineChart historyChart;
         @Nullable @Bind(R.id.icon_card) CardView iconCard;
