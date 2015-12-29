@@ -61,6 +61,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
      */
     private Tracker mTracker;
 
+    private Context mContext;
+
     //Reference too all the views that need to be updated
     @Bind(R.id.text_view_player_reputation) TextView playerReputation;
     @Bind(R.id.trust_positive) TextView trustPositive;
@@ -119,15 +121,17 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         BptfApplication application = (BptfApplication) (getActivity()).getApplication();
         mTracker = application.getDefaultTracker();
 
+        mContext = getActivity();
+
         View rootView = inflater.inflate(R.layout.fragment_user, container, false);
 
         ButterKnife.bind(this, rootView);
 
         //Set the toolbar to the main activity's action bar
-        ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
+        ((AppCompatActivity) mContext).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
         //Set the color of the refreshing animation
-        mSwipeRefreshLayout.setColorSchemeColors(Utility.getColor(getActivity(), R.color.accent));
+        mSwipeRefreshLayout.setColorSchemeColors(Utility.getColor(mContext, R.color.accent));
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         //Update all the views to show te user data
@@ -146,14 +150,14 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
         //Update user info if last update was more than 30 minutes ago
-        if (Utility.isNetworkAvailable(getActivity()) && System.currentTimeMillis()
-                - PreferenceManager.getDefaultSharedPreferences(getActivity())
+        if (Utility.isNetworkAvailable(mContext) && System.currentTimeMillis()
+                - PreferenceManager.getDefaultSharedPreferences(mContext)
                 .getLong(getString(R.string.pref_last_user_data_update), 0) >= 3600000L) {
 
             //Start the task and listne for the end
-            GetUserInfo task = new GetUserInfo(getActivity(), false);
+            GetUserInfo task = new GetUserInfo(mContext, false);
             task.registerFetchUserInfoListener(this);
-            task.execute(Profile.getSteamId(getActivity()), Profile.getResolvedSteamId(getActivity()));
+            task.execute(Profile.getSteamId(mContext), Profile.getResolvedSteamId(mContext));
 
             //Workaround for the circle not appearing
             mSwipeRefreshLayout.post(new Runnable() {
@@ -176,11 +180,11 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
      */
     @Override
     public void onRefresh() {
-        if (Utility.isNetworkAvailable(getActivity())) {
+        if (Utility.isNetworkAvailable(mContext)) {
             //Start fetching the data and listen for the end
-            GetUserInfo fetchTask = new GetUserInfo(getActivity(), true);
+            GetUserInfo fetchTask = new GetUserInfo(mContext, true);
             fetchTask.registerFetchUserInfoListener(this);
-            fetchTask.execute(Profile.getSteamId(getActivity()), Profile.getResolvedSteamId(getActivity()));
+            fetchTask.execute(Profile.getSteamId(mContext), Profile.getResolvedSteamId(mContext));
 
             mTracker.send(new HitBuilders.EventBuilder()
                     .setCategory("Request")
@@ -188,7 +192,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     .build());
         } else {
             //There is no internet connection, notify the user
-            Toast.makeText(getActivity(), "bptf: " + getString(R.string.error_no_network),
+            Toast.makeText(mContext, "bptf: " + getString(R.string.error_no_network),
                     Toast.LENGTH_SHORT).show();
             mSwipeRefreshLayout.setRefreshing(false);
         }
@@ -206,7 +210,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         switch (itemId) {
             case R.id.action_search:
                 //Start the search activity
-                startActivity(new Intent(getActivity(), SearchActivity.class));
+                startActivity(new Intent(mContext, SearchActivity.class));
                 break;
         }
         return true;
@@ -218,10 +222,10 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         //Handle all the buttons here
 
         //Get the steam id, do nothing if there is no steam id
-        String steamId = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(
+        String steamId = PreferenceManager.getDefaultSharedPreferences(mContext).getString(
                 getString(R.string.pref_resolved_steam_id), "");
         if (steamId.equals("")) {
-            Toast.makeText(getActivity(), "bptf: " + getString(R.string.error_no_steam_id),
+            Toast.makeText(mContext, "bptf: " + getString(R.string.error_no_steam_id),
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -255,18 +259,18 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
             //Open link in the device default web browser
             Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
-            if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            if (intent.resolveActivity(mContext.getPackageManager()) != null) {
                 startActivity(intent);
             }
         } else {
             if (privateBackpack) {
                 //The backpack is private, do nothing
-                Toast.makeText(getActivity(), getString(R.string.message_private_backpack_own),
+                Toast.makeText(mContext, getString(R.string.message_private_backpack_own),
                         Toast.LENGTH_SHORT).show();
             } else {
                 //Else the user clicked on the backpack button. Start the backpack activity. Pass
                 //the steamId and whether it's the user's backpack or not
-                Intent i = new Intent(getActivity(), UserBackpackActivity.class);
+                Intent i = new Intent(mContext, UserBackpackActivity.class);
                 i.putExtra(UserBackpackActivity.EXTRA_NAME, mCollapsingToolbarLayout.getTitle());
                 i.putExtra(UserBackpackActivity.EXTRA_GUEST, false);
                 startActivity(i);
@@ -279,13 +283,13 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
      */
     public void updateUserPage() {
         //Get the default shared preferences
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         //Download avatar if needed.
         if (prefs.contains(getString(R.string.pref_new_avatar)) &&
-                Utility.isNetworkAvailable(getActivity())) {
+                Utility.isNetworkAvailable(mContext)) {
             Glide.with(this)
-                    .load(PreferenceManager.getDefaultSharedPreferences(getActivity()).
+                    .load(PreferenceManager.getDefaultSharedPreferences(mContext).
                             getString(getString(R.string.pref_player_avatar_url), ""))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(avatar);
@@ -321,38 +325,38 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     lastOnlineText.setText(String.format("%s %s", getString(R.string.user_page_last_online), getString(R.string.filler_unknown)));
                 } else {
                     //Player is offline, show how long was it since the player was last online
-                    lastOnlineText.setText(String.format("%s %s", getString(R.string.user_page_last_online), Utility.formatLastOnlineTime(getActivity(),
+                    lastOnlineText.setText(String.format("%s %s", getString(R.string.user_page_last_online), Utility.formatLastOnlineTime(mContext,
                             System.currentTimeMillis() - lastOnline * 1000L)));
                 }
-                lastOnlineText.setTextColor(Utility.getColor(getActivity(), R.color.text_primary));
+                lastOnlineText.setTextColor(Utility.getColor(mContext, R.color.text_primary));
                 break;
             case 1:
                 lastOnlineText.setText(getString(R.string.user_page_status_online));
-                lastOnlineText.setTextColor(Utility.getColor(getActivity(), R.color.player_online));
+                lastOnlineText.setTextColor(Utility.getColor(mContext, R.color.player_online));
                 break;
             case 2:
                 lastOnlineText.setText(getString(R.string.user_page_status_busy));
-                lastOnlineText.setTextColor(Utility.getColor(getActivity(), R.color.player_online));
+                lastOnlineText.setTextColor(Utility.getColor(mContext, R.color.player_online));
                 break;
             case 3:
                 lastOnlineText.setText(getString(R.string.user_page_status_away));
-                lastOnlineText.setTextColor(Utility.getColor(getActivity(), R.color.player_online));
+                lastOnlineText.setTextColor(Utility.getColor(mContext, R.color.player_online));
                 break;
             case 4:
                 lastOnlineText.setText(getString(R.string.user_page_status_snooze));
-                lastOnlineText.setTextColor(Utility.getColor(getActivity(), R.color.player_online));
+                lastOnlineText.setTextColor(Utility.getColor(mContext, R.color.player_online));
                 break;
             case 5:
                 lastOnlineText.setText(getString(R.string.user_page_status_trade));
-                lastOnlineText.setTextColor(Utility.getColor(getActivity(), R.color.player_online));
+                lastOnlineText.setTextColor(Utility.getColor(mContext, R.color.player_online));
                 break;
             case 6:
                 lastOnlineText.setText(getString(R.string.user_page_status_play));
-                lastOnlineText.setTextColor(Utility.getColor(getActivity(), R.color.player_online));
+                lastOnlineText.setTextColor(Utility.getColor(mContext, R.color.player_online));
                 break;
             case 7:
                 lastOnlineText.setText(getString(R.string.user_page_status_in_game));
-                lastOnlineText.setTextColor(Utility.getColor(getActivity(), R.color.player_in_game));
+                lastOnlineText.setTextColor(Utility.getColor(mContext, R.color.player_in_game));
                 break;
         }
 
@@ -462,11 +466,11 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onUserInfoFinished(String steamId) {
 
         //Save the update time
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
-                .putLong(getActivity().getString(R.string.pref_last_user_data_update),
+        PreferenceManager.getDefaultSharedPreferences(mContext).edit()
+                .putLong(mContext.getString(R.string.pref_last_user_data_update),
                         System.currentTimeMillis()).apply();
 
-        GetUserBackpack task = new GetUserBackpack(getActivity());
+        GetUserBackpack task = new GetUserBackpack(mContext);
         task.registerOnFetchUserBackpackListener(this);
         task.execute(steamId);
 
@@ -484,7 +488,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             mSwipeRefreshLayout.setRefreshing(false);
         }
 
-        Toast.makeText(getActivity(), "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -495,17 +499,15 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onUserBackpackFinished(int rawKeys, double rawMetal, int backpackSlots, int itemNumber) {
 
-        Context context = getActivity();
-
         //Start editing the preferences
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor editor = prefs.edit();
 
         //Save all the data passed
-        editor.putInt(context.getString(R.string.pref_user_slots), backpackSlots);
-        editor.putInt(context.getString(R.string.pref_user_items), itemNumber);
-        editor.putInt(context.getString(R.string.pref_user_raw_key), rawKeys);
-        Utility.putDouble(editor, context.getString(R.string.pref_user_raw_metal), rawMetal);
+        editor.putInt(mContext.getString(R.string.pref_user_slots), backpackSlots);
+        editor.putInt(mContext.getString(R.string.pref_user_items), itemNumber);
+        editor.putInt(mContext.getString(R.string.pref_user_raw_key), rawKeys);
+        Utility.putDouble(editor, mContext.getString(R.string.pref_user_raw_metal), rawMetal);
         editor.apply();
 
         privateBackpack = false;
@@ -515,24 +517,22 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             mSwipeRefreshLayout.setRefreshing(false);
         }
 
-        ((MainActivity) getActivity()).updateDrawer();
+        ((MainActivity) mContext).updateDrawer();
     }
 
     @Override
     public void onPrivateBackpack() {
 
-        Context context = getActivity();
-
         //Start editing the preferences
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor editor = prefs.edit();
 
         //Save all data that represent a private backpack
-        editor.putInt(context.getString(R.string.pref_user_slots), -1);
-        editor.putInt(context.getString(R.string.pref_user_items), -1);
-        editor.putInt(context.getString(R.string.pref_user_raw_key), -1);
-        Utility.putDouble(editor, context.getString(R.string.pref_user_raw_metal), -1);
-        Utility.putDouble(editor, context.getString(R.string.pref_player_backpack_value_tf2), -1);
+        editor.putInt(mContext.getString(R.string.pref_user_slots), -1);
+        editor.putInt(mContext.getString(R.string.pref_user_items), -1);
+        editor.putInt(mContext.getString(R.string.pref_user_raw_key), -1);
+        Utility.putDouble(editor, mContext.getString(R.string.pref_user_raw_metal), -1);
+        Utility.putDouble(editor, mContext.getString(R.string.pref_player_backpack_value_tf2), -1);
         editor.apply();
 
         privateBackpack = true;
@@ -542,7 +542,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             mSwipeRefreshLayout.setRefreshing(false);
         }
 
-        ((MainActivity) getActivity()).updateDrawer();
+        ((MainActivity) mContext).updateDrawer();
     }
 
     @Override
@@ -553,7 +553,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             mSwipeRefreshLayout.setRefreshing(false);
         }
 
-        Toast.makeText(getActivity(), "failed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, "failed", Toast.LENGTH_SHORT).show();
     }
 
     /**
