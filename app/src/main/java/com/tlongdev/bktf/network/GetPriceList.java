@@ -156,7 +156,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
                     .build());
         }
 
-        return null;
+        return -1;
     }
 
     /**

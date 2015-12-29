@@ -21,7 +21,6 @@ import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Vector;
 
@@ -45,8 +44,6 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
     @Override
     protected Integer doInBackground(Void... params) {
 
-        HttpURLConnection urlConnection = null;
-
         try {
             //The prices api and input keys
             final String BASE_URL = mContext.getString(R.string.tlongdev_item_schema);
@@ -63,7 +60,7 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
 
             if (inputStream == null) {
                 // Stream was empty. Nothing to do.
-                return null;
+                return -1;
             }
 
             return parseJson(inputStream);
@@ -86,14 +83,9 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
                     .setDescription("Network exception:GetItemSchema, Message: " + e.getMessage())
                     .setFatal(false)
                     .build());
-        } finally {
-            //Close the connection
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
         }
 
-        return null;
+        return -1;
     }
 
     private int parseJson(InputStream inputStream) throws IOException {
