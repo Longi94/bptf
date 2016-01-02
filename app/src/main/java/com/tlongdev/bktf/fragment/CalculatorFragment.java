@@ -247,7 +247,6 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
                 break;
             case R.id.action_clear:
                 //Clear the items
-                mAdapter.notifyDataSetChanged();
                 deleteAllItems();
                 break;
         }
@@ -370,8 +369,7 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         updatePrices();
 
         getActivity().getContentResolver().delete(CalculatorEntry.CONTENT_URI, null, null);
-
-        getLoaderManager().restartLoader(0, null, this);
+        mAdapter.notifyItemRangeRemoved(0, mAdapter.getItemCount());
     }
 
     /**
