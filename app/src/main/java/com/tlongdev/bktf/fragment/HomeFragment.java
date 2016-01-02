@@ -1,6 +1,8 @@
 package com.tlongdev.bktf.fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,11 +29,11 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.Utility;
 import com.tlongdev.bktf.adapter.PriceListCursorAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.network.FetchPriceList;
 import com.tlongdev.bktf.quickreturn.AbsListViewQuickReturnAttacher;
 import com.tlongdev.bktf.quickreturn.QuickReturnAttacher;
 import com.tlongdev.bktf.quickreturn.widget.QuickReturnAdapter;
 import com.tlongdev.bktf.quickreturn.widget.QuickReturnTargetView;
-import com.tlongdev.bktf.network.FetchPriceList;
 
 /**
  * Main fragment the shows the latest price changes.
@@ -74,6 +76,8 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     public static final int COL_PRICE_LIST_DIFF = 11;
     public static final int COL_AUSTRALIUM = 12;
 
+    private Context mContext;
+
     private ProgressBar progressBar;
 
     private PriceListCursorAdapter cursorAdapter;
@@ -93,6 +97,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(PRICE_LIST_LOADER, null, this);
+
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -101,7 +106,9 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mContext = getActivity();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         metalPrice = (TextView) rootView.findViewById(R.id.text_view_metal_price);
         keyPrice = (TextView) rootView.findViewById(R.id.text_view_key_price);
@@ -131,7 +138,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             budsPriceImage.setBackgroundColor(0xff850000);
         }
 
-        cursorAdapter = new PriceListCursorAdapter(getActivity(), null, 0);
+        cursorAdapter = new PriceListCursorAdapter(mContext, null, 0);
 
         // Get a reference to the ListView, and attach this adapter to it.
         ListView mListView = (ListView) rootView.findViewById(R.id.list_view_changes);
@@ -164,21 +171,21 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onResume() {
         super.onResume();
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         //Download whole database when the app is first opened.
         if (prefs.getBoolean(getString(R.string.pref_initial_load), true)) {
-            if (Utility.isNetworkAvailable(getActivity())) {
-                FetchPriceList task = new FetchPriceList(getActivity(), false, false);
+            if (Utility.isNetworkAvailable(mContext)) {
+                FetchPriceList task = new FetchPriceList(mContext, false, false);
                 task.setOnPriceListFetchListener(this);
                 task.execute();
             } else {
                 //Quit the app if the download failed.
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setMessage(getString(R.string.message_database_fail_network)).setCancelable(false).
                         setPositiveButton(getString(R.string.action_close), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                getActivity().finish();
+                                ((Activity) mContext).finish();
                             }
                         });
                 AlertDialog alertDialog = builder.create();
@@ -189,8 +196,8 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             //Update database if the last update happened more than an hour ago
             if (prefs.getBoolean(getString(R.string.pref_auto_sync), false) &&
                     System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_price_list_update), 0) >= 3600000L
-                    && Utility.isNetworkAvailable(getActivity())) {
-                FetchPriceList task = new FetchPriceList(getActivity(), true, false);
+                    && Utility.isNetworkAvailable(mContext)) {
+                FetchPriceList task = new FetchPriceList(mContext, true, false);
                 task.setOnPriceListFetchListener(this);
                 task.execute();
                 mSwipeRefreshLayout.setRefreshing(true);
@@ -198,7 +205,7 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
             if (prefs.getBoolean(getString(R.string.pref_promo), true)) {
                 prefs.edit().putBoolean(getString(R.string.pref_promo), false).apply();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle("Beta is now available!")
                         .setMessage("You can now participate in beta testing. Sign up to get the latest updates and features!")
                         .setPositiveButton("More info", new DialogInterface.OnClickListener() {
@@ -218,10 +225,10 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
         String sortOrder = PriceEntry.COLUMN_LAST_UPDATE + " DESC";
 
-        PRICE_LIST_COLUMNS[COL_PRICE_LIST_PRAW] = Utility.getRawPriceQueryString(getActivity());
+        PRICE_LIST_COLUMNS[COL_PRICE_LIST_PRAW] = Utility.getRawPriceQueryString(mContext);
 
         return new CursorLoader(
-                getActivity(),
+                mContext,
                 PriceEntry.CONTENT_URI,
                 PRICE_LIST_COLUMNS,
                 null,
@@ -245,12 +252,12 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onRefresh() {
         //Manual update
-        if (Utility.isNetworkAvailable(getActivity())) {
-            FetchPriceList task = new FetchPriceList(getActivity(), true, true);
+        if (Utility.isNetworkAvailable(mContext)) {
+            FetchPriceList task = new FetchPriceList(mContext, true, true);
             task.setOnPriceListFetchListener(this);
             task.execute();
         } else {
-            Toast.makeText(getActivity(), "bptf: " + getString(R.string.error_no_network),
+            Toast.makeText(mContext, "bptf: " + getString(R.string.error_no_network),
                     Toast.LENGTH_SHORT).show();
             mSwipeRefreshLayout.setRefreshing(false);
         }
@@ -263,34 +270,34 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             mSwipeRefreshLayout.setRefreshing(false);
 
             //Update the header with currency prices
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-            metalPrice.setText(prefs.getString(getActivity().getString(R.string.pref_metal_price), ""));
-            keyPrice.setText(prefs.getString(getActivity().getString(R.string.pref_key_price), ""));
-            budsPrice.setText(prefs.getString(getActivity().getString(R.string.pref_buds_price), ""));
+            metalPrice.setText(prefs.getString(mContext.getString(R.string.pref_metal_price), ""));
+            keyPrice.setText(prefs.getString(mContext.getString(R.string.pref_key_price), ""));
+            budsPrice.setText(prefs.getString(mContext.getString(R.string.pref_buds_price), ""));
 
-            if (Utility.getDouble(prefs, getActivity().getString(R.string.pref_metal_diff), 0.0) > 0.0) {
+            if (Utility.getDouble(prefs, mContext.getString(R.string.pref_metal_diff), 0.0) > 0.0) {
                 metalPriceImage.setBackgroundColor(0xff008504);
             } else {
                 metalPriceImage.setBackgroundColor(0xff850000);
             }
-            if (Utility.getDouble(prefs, getActivity().getString(R.string.pref_key_diff), 0.0) > 0.0) {
+            if (Utility.getDouble(prefs, mContext.getString(R.string.pref_key_diff), 0.0) > 0.0) {
                 keyPriceImage.setBackgroundColor(0xff008504);
             } else {
                 keyPriceImage.setBackgroundColor(0xff850000);
             }
-            if (Utility.getDouble(prefs, getActivity().getString(R.string.pref_buds_diff), 0.0) > 0) {
+            if (Utility.getDouble(prefs, mContext.getString(R.string.pref_buds_diff), 0.0) > 0) {
                 budsPriceImage.setBackgroundColor(0xff008504);
             } else {
                 budsPriceImage.setBackgroundColor(0xff850000);
             }
         }
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-        if (prefs.getBoolean(getString(R.string.pref_promo), true)) {
+        if (prefs.getBoolean(mContext.getString(R.string.pref_promo), true)) {
             prefs.edit().putBoolean(getString(R.string.pref_promo), false).apply();
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setTitle("Beta is now available!")
                     .setMessage("You can now participate in beta testing. Sign up to get the latest updates and features!")
                     .setPositiveButton("More info", new DialogInterface.OnClickListener() {
