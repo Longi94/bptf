@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * The index of the current fragment.
      */
-    private int mCurrentSelectedPosition = 0;
+    private int mCurrentSelectedPosition = -1;
 
     /**
      * Variables used for managing fragments.
@@ -184,13 +184,15 @@ public class MainActivity extends AppCompatActivity {
         //Check if there is a fragment to be restored
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
+            mNavigationView.getMenu().getItem(mCurrentSelectedPosition).setChecked(true);
+        } else {
+            mNavigationView.getMenu().getItem(0).setChecked(true);
         }
-        mNavigationView.getMenu().getItem(mCurrentSelectedPosition).setChecked(true);
 
         userMenuItem = mNavigationView.getMenu().getItem(2);
 
         // Select either the default item (0) or the last selected item.
-        switchFragment(mCurrentSelectedPosition);
+        switchFragment(0);
     }
 
     @Override
@@ -280,6 +282,11 @@ public class MainActivity extends AppCompatActivity {
      * @param position the position of the clicked item in the navigation view
      */
     public void switchFragment(int position) {
+
+        if (mCurrentSelectedPosition == position) {
+            return;
+        }
+
         mCurrentSelectedPosition = position;
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mNavigationView);
