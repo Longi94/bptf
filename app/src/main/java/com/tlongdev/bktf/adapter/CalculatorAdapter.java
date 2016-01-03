@@ -137,6 +137,11 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
         this.listener = listener;
     }
 
+    public void clearDataSet() {
+        mDataSet.clear();
+        mCountSet.clear();
+    }
+
     /**
      * The view holder
      */

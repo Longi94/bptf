@@ -369,7 +369,9 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         updatePrices();
 
         getActivity().getContentResolver().delete(CalculatorEntry.CONTENT_URI, null, null);
-        mAdapter.notifyItemRangeRemoved(0, mAdapter.getItemCount());
+        int count = mAdapter.getItemCount();
+        mAdapter.clearDataSet();
+        mAdapter.notifyItemRangeRemoved(0, count);
     }
 
     /**
