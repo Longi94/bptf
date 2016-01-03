@@ -116,6 +116,17 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
             } else {
                 holder.price.setText("Price unknown");
             }
+
+            holder.count.setText(String.valueOf(mCountSet.get(position)));
+
+            holder.count.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+
+                    }
+                }
+            });
         }
     }
 
