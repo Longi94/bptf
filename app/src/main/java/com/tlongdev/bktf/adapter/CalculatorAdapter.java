@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -61,7 +62,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         if (mDataSet != null && mDataSet.size() > position) {
 
@@ -148,11 +149,12 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         @Bind(R.id.icon) ImageView icon;
-        @Bind(R.id.text_view_item_name) TextView name;
-        @Bind(R.id.text_view_item_price) TextView price;
+        @Bind(R.id.name) TextView name;
+        @Bind(R.id.price) TextView price;
         @Bind(R.id.effect) ImageView effect;
-        @Bind(R.id.image_view_delete) ImageView delete;
+        @Bind(R.id.delete) ImageView delete;
         @Bind(R.id.quality) ImageView quality;
+        @Bind(R.id.count) EditText count;
 
         /**
          * Constructor
@@ -172,8 +174,8 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
         /**
          * Called when an item is deleted.
          *
-         * @param item the id of the item
-         * @param count  the number of the item(s)
+         * @param item  the id of the item
+         * @param count the number of the item(s)
          */
         void onItemDeleted(Item item, int count);
     }
