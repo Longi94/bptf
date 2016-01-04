@@ -68,8 +68,6 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
 
             final Item item = mDataSet.get(position);
 
-            int count = mCountSet.get(position);
-
             Glide.with(mContext)
                     .load(item.getIconUrl(mContext))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -87,7 +85,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
 
             holder.name.setText(item.getFormattedName(mContext));
 
-            holder.effect.setBackgroundColor(item.getColor(mContext, true));
+            holder.background.setBackgroundColor(item.getColor(mContext, true));
 
             holder.delete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -185,6 +183,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
         @Bind(R.id.delete) ImageView delete;
         @Bind(R.id.quality) ImageView quality;
         @Bind(R.id.count) EditText count;
+        @Bind(R.id.icon_background) View background;
 
         /**
          * Constructor
