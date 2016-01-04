@@ -187,6 +187,7 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
     @OnClick(R.id.fab)
     public void addItem() {
         Intent i = new Intent(getActivity(), ItemChooserActivity.class);
+        i.putExtra(ItemChooserActivity.EXTRA_IS_FROM_CALCULATOR, true);
         startActivityForResult(i, MainActivity.REQUEST_NEW_ITEM);
     }
 
@@ -317,13 +318,13 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
                             0,
                             data.getDouble(COLUMN_DIFFERENCE),
                             data.getString(COLUMN_CURRENCY)));
+
+                    value += item.getPrice().getRawValue() * data.getInt(COLUMN_COUNT);
                 }
 
                 items.add(item);
 
                 count.add(data.getInt(COLUMN_COUNT));
-
-                value += item.getPrice().getRawValue() * data.getInt(COLUMN_COUNT);
             }
         }
 

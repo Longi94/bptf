@@ -15,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.analytics.HitBuilders;
@@ -24,6 +25,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.spinner.EffectAdapter;
 import com.tlongdev.bktf.adapter.spinner.QualityAdapter;
 import com.tlongdev.bktf.adapter.spinner.WeaponWearAdapter;
+import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
 import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Quality;
@@ -46,6 +48,7 @@ public class ItemChooserActivity extends AppCompatActivity {
 
     private static final int SELECT_ITEM = 100;
     public static final String EXTRA_ITEM = "item";
+    public static final String EXTRA_IS_FROM_CALCULATOR = "calculator";
 
     public static final String[] EFFECT_COLUMNS = {
             UnusualSchemaEntry._ID,
@@ -82,6 +85,8 @@ public class ItemChooserActivity extends AppCompatActivity {
     private EffectAdapter effectAdapter;
     private WeaponWearAdapter wearAdapter;
 
+    private boolean isFromCalculator = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +104,8 @@ public class ItemChooserActivity extends AppCompatActivity {
         setTitle(null);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+
+        isFromCalculator = getIntent().getBooleanExtra(EXTRA_IS_FROM_CALCULATOR, false);
 
         //Show the home button as back button
         ActionBar actionBar = getSupportActionBar();
@@ -205,6 +212,38 @@ public class ItemChooserActivity extends AppCompatActivity {
         item.setTradable(tradable.isChecked());
         item.setCraftable(craftable.isChecked());
         item.setAustralium(australium.isChecked());
+
+        if (isFromCalculator) {
+            Cursor cursor = getContentResolver().query(
+                    CalculatorEntry.CONTENT_URI,
+                    null,
+                    CalculatorEntry.COLUMN_DEFINDEX + " = ? AND " +
+                            CalculatorEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
+                            CalculatorEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
+                            CalculatorEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
+                            CalculatorEntry.COLUMN_PRICE_INDEX + " = ? AND " +
+                            CalculatorEntry.COLUMN_AUSTRALIUM + " = ? AND " +
+                            CalculatorEntry.COLUMN_WEAPON_WEAR + " = ?",
+                    new String[]{String.valueOf(item.getDefindex()),
+                            String.valueOf(item.getQuality()),
+                            item.isTradable() ? "1" : "0",
+                            item.isCraftable() ? "1" : "0",
+                            String.valueOf(item.getPriceIndex()),
+                            item.isAustralium() ? "1" : "0",
+                            String.valueOf(item.getWeaponWear())
+                    },
+                    null
+            );
+
+            if (cursor != null) {
+                if (cursor.getCount() > 0) {
+                    cursor.close();
+                    Toast.makeText(this, "You have already added this item", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                cursor.close();
+            }
+        }
 
         Intent result = new Intent();
         result.putExtra(EXTRA_ITEM, item);
