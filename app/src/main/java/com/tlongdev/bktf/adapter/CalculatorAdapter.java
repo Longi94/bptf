@@ -75,12 +75,17 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.icon);
 
-            holder.name.setText(item.getFormattedName(mContext));
-
-            //Put the number of items behind the name if it is higher than 1
-            if (count > 1) {
-                holder.name.append(String.format(" %dx", count));
+            if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
+                Glide.with(mContext)
+                        .load(item.getEffectUrl(mContext))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(holder.effect);
+            } else {
+                Glide.clear(holder.effect);
+                holder.effect.setImageDrawable(null);
             }
+
+            holder.name.setText(item.getFormattedName(mContext));
 
             holder.effect.setBackgroundColor(item.getColor(mContext, true));
 
