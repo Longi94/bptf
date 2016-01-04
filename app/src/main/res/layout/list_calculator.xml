@@ -36,7 +36,7 @@
                 android:layout_height="match_parent"
                 android:contentDescription="@string/description_icon"
                 android:minHeight="84dp"
-                android:scaleType="centerCrop"/>
+                android:scaleType="fitCenter"/>
 
             <ImageView
                 android:id="@+id/icon"
@@ -44,7 +44,7 @@
                 android:layout_height="match_parent"
                 android:contentDescription="@string/description_icon"
                 android:minHeight="84dp"
-                android:scaleType="centerCrop"/>
+                android:scaleType="fitCenter"/>
 
         </FrameLayout>
 
@@ -94,10 +94,11 @@
                     android:id="@+id/count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
+                    android:inputType="number"
                     android:text="1"
                     android:imeOptions="actionDone"
-                    android:lines="1"/>
+                    android:lines="1"
+                    android:paddingTop="0dp"/>
 
             </LinearLayout>
 
