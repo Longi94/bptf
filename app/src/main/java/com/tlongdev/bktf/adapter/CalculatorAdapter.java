@@ -92,11 +92,10 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                 public void onClick(View v) {
                     if (listener != null) {
                         //Notify listener that an item was deleted
-                        listener.onItemDeleted(item, 1);
-                        notifyItemRemoved(mDataSet.indexOf(item));
-                        mDataSet.remove(item);
+                        listener.onItemDeleted(item, mCountSet.get(position));
                     }
-                    notifyDataSetChanged();
+                    notifyItemRemoved(mDataSet.indexOf(item));
+                    mDataSet.remove(item);
                 }
             });
 
@@ -131,6 +130,12 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                         int count = 1;
                         try {
                             count = Integer.parseInt(countStr);
+
+                            if (count < 1) {
+                                count = 1;
+                            }
+
+                            holder.count.setText(String.valueOf(count));
                         } catch (NumberFormatException e) {
                             holder.count.setText("1");
                         }

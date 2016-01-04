@@ -293,5 +293,6 @@
     <string name="pref_registered_topic_price_updates">pref_registered_topic_price_updates</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="add_currencies_title">Add currencies</string>
 
 </resources>

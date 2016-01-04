@@ -2,6 +2,7 @@ package com.tlongdev.bktf.fragment;
 
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,9 +38,11 @@ import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.model.Quality;
 import com.tlongdev.bktf.util.Utility;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -161,6 +165,38 @@ public class FavoritesFragment extends Fragment implements MainActivity.OnDrawer
             case R.id.action_search:
                 //Start the search activity
                 startActivity(new Intent(getActivity(), SearchActivity.class));
+                break;
+            case R.id.action_add_currencies:
+
+                //Iterator that will iterate through the items
+                Vector<ContentValues> cVVector = new Vector<>();
+
+                int[] defindexes = new int[]{143, 5002, 5021};
+
+                for (int defindex : defindexes) {
+
+                    ContentValues cv = new ContentValues();
+
+                    cv.put(FavoritesEntry.COLUMN_DEFINDEX, defindex);
+                    cv.put(FavoritesEntry.COLUMN_ITEM_QUALITY, Quality.UNIQUE);
+                    cv.put(FavoritesEntry.COLUMN_ITEM_TRADABLE, 1);
+                    cv.put(FavoritesEntry.COLUMN_ITEM_CRAFTABLE, 1);
+                    cv.put(FavoritesEntry.COLUMN_PRICE_INDEX, 0);
+                    cv.put(FavoritesEntry.COLUMN_AUSTRALIUM, 0);
+                    cv.put(FavoritesEntry.COLUMN_WEAPON_WEAR, 0);
+
+                    cVVector.add(cv);
+                }
+
+                ContentValues[] cvArray = new ContentValues[cVVector.size()];
+                cVVector.toArray(cvArray);
+                //Insert all the data into the database
+                int rowsInserted = getActivity().getContentResolver()
+                        .bulkInsert(FavoritesEntry.CONTENT_URI, cvArray);
+                Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
+
+                getLoaderManager().restartLoader(FAVORITES_LOADER, null, this);
+
                 break;
         }
         return super.onOptionsItemSelected(item);
