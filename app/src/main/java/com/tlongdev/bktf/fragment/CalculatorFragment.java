@@ -51,7 +51,7 @@ import butterknife.OnClick;
  * Calculator fragment. Let's the user create a list of items and it will calculate the total value
  * of the items
  */
-public class CalculatorFragment extends Fragment implements MainActivity.OnDrawerOpenedListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class CalculatorFragment extends Fragment implements MainActivity.OnDrawerOpenedListener, LoaderManager.LoaderCallbacks<Cursor>, CalculatorAdapter.OnItemEditListener {
 
     /**
      * Log tag for logging.
@@ -160,12 +160,7 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
         mAdapter = new CalculatorAdapter(getActivity(), null);
-        mAdapter.setOnItemDeletedListener(new CalculatorAdapter.OnItemEditListener() {
-            @Override
-            public void onItemDeleted(Item item, int count) {
-                deleteItem(item, count);
-            }
-        });
+        mAdapter.setListener(this);
 
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -405,13 +400,15 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
     }
 
     /**
-     * Deletes a single element from the list
-     *
-     * @param item  the id of the item
-     * @param count the number of the item(s)
+     * Fully expand the toolbar with animation.
      */
-    private void deleteItem(Item item, int count) {
+    public void expandToolbar() {
+        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
+        behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
+    }
 
+    @Override
+    public void onItemDeleted(Item item, int count) {
         if (item.getPrice() != null) {
             totalPrice.setValue(totalPrice.getValue() - item.getPrice().getRawValue() * count);
         }
@@ -436,11 +433,33 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
                 });
     }
 
-    /**
-     * Fully expand the toolbar with animation.
-     */
-    public void expandToolbar() {
-        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
-        behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
+    @Override
+    public void onItemEdited(Item item, int oldCount, int newCount) {
+        int diff = newCount - oldCount;
+        if (diff == 0) return;
+
+        totalPrice.setValue(totalPrice.getValue() + diff * item.getPrice().getRawValue());
+        updatePrices();
+
+        ContentValues values = new ContentValues();
+        values.put(CalculatorEntry.COLUMN_COUNT, newCount);
+
+        getActivity().getContentResolver().update(CalculatorEntry.CONTENT_URI,
+                values,
+                CalculatorEntry.COLUMN_DEFINDEX + " = ? AND " +
+                        CalculatorEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
+                        CalculatorEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
+                        CalculatorEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
+                        CalculatorEntry.COLUMN_PRICE_INDEX + " = ? AND " +
+                        CalculatorEntry.COLUMN_AUSTRALIUM + " = ? AND " +
+                        CalculatorEntry.COLUMN_WEAPON_WEAR + " = ?",
+                new String[]{String.valueOf(item.getDefindex()),
+                        String.valueOf(item.getQuality()),
+                        item.isTradable() ? "1" : "0",
+                        item.isCraftable() ? "1" : "0",
+                        String.valueOf(item.getPriceIndex()),
+                        item.isAustralium() ? "1" : "0",
+                        String.valueOf(item.getWeaponWear())
+                });
     }
 }

@@ -123,7 +123,21 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
                     if (!hasFocus) {
+                        String countStr = holder.count.getText().toString();
 
+                        int count = 1;
+                        try {
+                            count = Integer.parseInt(countStr);
+                        } catch (NumberFormatException e) {
+                            holder.count.setText("1");
+                        }
+
+                        int oldCount = mCountSet.get(position);
+                        if (listener != null && oldCount != count) {
+                            listener.onItemEdited(item, oldCount, count);
+                        }
+
+                        mCountSet.set(position, count);
                     }
                 }
             });
@@ -145,7 +159,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
      *
      * @param listener the listener to be set
      */
-    public void setOnItemDeletedListener(OnItemEditListener listener) {
+    public void setListener(OnItemEditListener listener) {
         this.listener = listener;
     }
 
@@ -189,5 +203,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
          * @param count the number of the item(s)
          */
         void onItemDeleted(Item item, int count);
+
+        void onItemEdited(Item item, int oldCount, int newCount);
     }
 }
