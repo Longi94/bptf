@@ -2,10 +2,8 @@ package com.tlongdev.bktf.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,9 +26,6 @@ import com.tlongdev.bktf.data.DatabaseHelper;
 import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.util.Utility;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -143,6 +138,7 @@ public class ItemDetailActivity extends Activity {
     @Bind(R.id.icon) ImageView icon;
     @Bind(R.id.effect) ImageView effectView;
     @Bind(R.id.paint) ImageView paintView;
+    @Bind(R.id.quality) ImageView quality;
 
     //Store the intent that came
     private Intent mIntent;
@@ -325,21 +321,22 @@ public class ItemDetailActivity extends Activity {
                             .into(effectView);
                 }
 
-                try {
-                    InputStream ims;
-                    AssetManager assetManager = getAssets();
-                    if (BackpackItem.isPaint(item.getPaint())) {
-                        //Load the paint indicator dot
-                        ims = assetManager.open("paint/" + item.getPaint() + ".png");
-                        paintView.setImageDrawable(Drawable.createFromStream(ims, null));
+                if (!item.isTradable()) {
+                    quality.setVisibility(View.VISIBLE);
+                    if (!item.isCraftable()) {
+                        quality.setImageResource(R.drawable.uncraft_untrad);
+                    } else {
+                        quality.setImageResource(R.drawable.untrad);
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } else if (!item.isCraftable()) {
+                    quality.setVisibility(View.VISIBLE);
+                    quality.setImageResource(R.drawable.uncraft);
+                }
 
-                    mTracker.send(new HitBuilders.ExceptionBuilder()
-                            .setDescription("Failed to load painT " + item.getPaint() + ", Message: " + e.getMessage())
-                            .setFatal(false)
-                            .build());
+                if (BackpackItem.isPaint(item.getPaint())) {
+                    Glide.with(this)
+                            .load("file:///android_asset/paint/" + item.getPaint() + ".png")
+                            .into(paintView);
                 }
 
                 cardView.setCardBackgroundColor(item.getColor(this, true));
