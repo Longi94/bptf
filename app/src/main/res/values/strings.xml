@@ -7,7 +7,7 @@
 
     <!--Preference keys-->
 
-    <string name="pref_auto_sync" translatable="false">pref_auto_sync</string>
+    <string name="pref_auto_sync" translatable="false">pref_auto_sync_v2</string>
     <string name="pref_buds_diff" translatable="false">pref_buds_diff_v2</string>
     <string name="pref_buds_price" translatable="false">pref_buds_price</string>
     <string name="pref_buds_raw" translatable="false">pref_buds_raw_v2</string>
