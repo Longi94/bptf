@@ -7,9 +7,6 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.util.Utility;
@@ -21,6 +18,10 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Task for fetching data about the user in the background.

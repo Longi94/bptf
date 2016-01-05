@@ -8,9 +8,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
@@ -25,6 +22,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Vector;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Task for fetchin the user's backpack in the background
