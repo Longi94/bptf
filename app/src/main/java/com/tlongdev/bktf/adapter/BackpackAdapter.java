@@ -22,7 +22,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.activity.ItemDetailActivity;
 import com.tlongdev.bktf.activity.UserBackpackActivity;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
-import com.tlongdev.bktf.model.Item;
+import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
@@ -144,6 +144,10 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                     cursorPosition = (position - (position / 51) - 1);
                 }
 
+                Glide.clear(holder.icon);
+                Glide.clear(holder.effect);
+                Glide.clear(holder.paint);
+
                 //Reset item slot to an empty slot
                 holder.icon.setImageDrawable(null);
                 holder.effect.setImageDrawable(null);
@@ -154,7 +158,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
 
                 if (currentCursor.moveToPosition(cursorPosition)) {
                     //Get all the data from the cursor
-                    final Item item = new Item(
+                    final BackpackItem item = new BackpackItem(
                             currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_DEFI),
                             null,
                             currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_QUAL),
@@ -163,11 +167,12 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                             currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_AUS) == 1,
                             currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_INDE),
                             currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_WEAR),
-                            null
+                            null, 0, 0, 0, 0,
+                            currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_PAIN),
+                            0, null, null, null, null, null, false
                     );
 
                     final int id = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_ID);
-                    int paint = currentCursor.getInt(UserBackpackActivity.COL_BACKPACK_PAIN);
 
                     if (item.getDefindex() != 0) {
 
@@ -184,9 +189,6 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                                     .load(item.getEffectUrl(mContext))
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .into(holder.effect);
-                        } else {
-                            Glide.clear(holder.effect);
-                            holder.effect.setImageDrawable(null);
                         }
 
                         if (!item.isTradable()) {
@@ -199,6 +201,12 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                         } else if (!item.isCraftable()) {
                             holder.quality.setVisibility(View.VISIBLE);
                             holder.quality.setImageResource(R.drawable.uncraft);
+                        }
+
+                        if (BackpackItem.isPaint(item.getPaint())) {
+                            Glide.with(mContext)
+                                    .load("file:///android_asset/paint/" + item.getPaint() + ".png")
+                                    .into(holder.paint);
                         }
 
                         //The on click listener for an item
@@ -238,6 +246,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                                                     Pair.create((View) holder.icon, "icon_transition"),
                                                     Pair.create((View) holder.effect, "effect_transition"),
                                                     Pair.create((View) holder.paint, "paint_transition"),
+                                                    Pair.create((View) holder.quality, "quality_transition"),
                                                     Pair.create((View) holder.root, "background_transition"));
                                     mContext.startActivity(i, options.toBundle());
                                 } else if (Build.VERSION.SDK_INT >= 21) {
