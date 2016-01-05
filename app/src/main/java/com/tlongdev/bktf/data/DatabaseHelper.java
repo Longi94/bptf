@@ -1,10 +1,19 @@
 package com.tlongdev.bktf.data;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.preference.PreferenceManager;
 
-import com.tlongdev.bktf.data.DatabaseContract.*;
+import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
+import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
+import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
+import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
+import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
+import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -207,6 +216,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + CalculatorEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + UserBackpackEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + UserBackpackEntry.TABLE_NAME_GUEST);
+
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+
+        editor.remove(mContext.getString(R.string.pref_last_item_schema_update));
+        editor.remove(mContext.getString(R.string.pref_last_price_list_update));
+        editor.remove(mContext.getString(R.string.pref_last_user_data_update));
+
+        editor.apply();
 
         if (oldVersion < 7) {
             mContext.deleteDatabase("pricelist.db");
