@@ -26,7 +26,7 @@
 
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetClass="com.tlongdev.bktf.activity.CreditsActivity"
+            android:targetClass="com.tlongdev.bktf.activity.LicensesActivity"
             android:targetPackage="com.tlongdev.bktf"/>
 
     </PreferenceScreen>
