@@ -36,8 +36,8 @@
             android:icon="@drawable/ic_settings_white_24dp"
             android:title="@string/title_activity_settings" />
         <item
-            android:id="@+id/nav_steam"
-            android:icon="@drawable/ic_steam_white_24dp"
-            android:title="@string/title_steam_group" />
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_info_white_24dp"
+            android:title="@string/title_activity_about" />
     </group>
 </menu>

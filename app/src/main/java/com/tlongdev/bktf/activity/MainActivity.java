@@ -3,7 +3,6 @@ package com.tlongdev.bktf.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
@@ -137,14 +136,8 @@ public class MainActivity extends AppCompatActivity {
                     Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivityForResult(settingsIntent, REQUEST_SETTINGS);
                     break;
-                case R.id.nav_steam:
-                    Uri webPage = Uri.parse("http://steamcommunity.com/groups/bptfandroid");
-
-                    //Open link in the device default web browser
-                    Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
-                    if (intent.resolveActivity(getPackageManager()) != null) {
-                        startActivity(intent);
-                    }
+                case R.id.nav_about:
+                    startActivity(new Intent(MainActivity.this, AboutActivity.class));
                     break;
             }
             return true;

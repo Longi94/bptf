@@ -25,46 +25,4 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_category_about">
-
-        <Preference
-            android:key="@string/pref_title_developer"
-            android:summary="@string/pref_summary_developer"
-            android:title="@string/pref_title_developer" />
-
-        <Preference
-            android:key="@string/pref_title_version"
-            android:title="@string/pref_title_version" />
-
-        <PreferenceScreen
-            android:key="@string/pref_title_credits"
-            android:title="@string/pref_title_credits">
-
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:targetClass="com.tlongdev.bktf.activity.CreditsActivity"
-                android:targetPackage="com.tlongdev.bktf" />
-
-        </PreferenceScreen>
-
-        <PreferenceScreen
-            android:key="@string/pref_title_changelog"
-            android:title="@string/pref_title_changelog" >
-
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="https://github.com/Longi94/bptf/releases" />
-
-        </PreferenceScreen>
-
-        <Preference
-            android:key="@string/pref_title_feedback"
-            android:title="@string/pref_title_feedback" />
-
-        <Preference
-            android:key="@string/pref_title_rate"
-            android:title="@string/pref_title_rate" />
-
-    </PreferenceCategory>
-
 </PreferenceScreen>
