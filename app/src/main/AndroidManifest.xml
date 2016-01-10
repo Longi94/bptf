@@ -80,17 +80,6 @@
             android:label="@string/title_activity_item_chooser"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.CreditsActivity"
-            android:excludeFromRecents="true"
-            android:label="@string/title_activity_credits"
-            android:parentActivityName=".activity.SettingsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dialog">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.SettingsActivity"/>
-        </activity>
-        <activity
             android:name=".activity.UserBackpackActivity"
             android:label="@string/title_activity_user_backpack"
             android:screenOrientation="portrait"/>
@@ -189,6 +178,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tlongdev.bktf.activity.MainActivity"/>
+        </activity>
+        <activity
+            android:name=".activity.LicensesActivity"
+            android:label="@string/title_activity_licenses"
+            android:parentActivityName=".activity.AboutActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tlongdev.bktf.activity.AboutActivity"/>
         </activity>
     </application>
 
