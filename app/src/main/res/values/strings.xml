@@ -87,12 +87,12 @@
     <string name="pref_summary_particles" translatable="true">provided by backpack.tf</string>
     <string name="pref_title_auto_sync" translatable="true">Auto-update prices</string>
     <string name="pref_title_changelog" translatable="true">Changelogs</string>
-    <string name="pref_title_credits" translatable="true">Credits</string>
+    <string name="pref_title_licenses" translatable="true">Open source licenses</string>
     <string name="pref_title_developer" translatable="true">Developer</string>
-    <string name="pref_title_feedback" translatable="true">Send feedback or bug report</string>
+    <string name="pref_title_feedback" translatable="true">Feedback or bug report</string>
     <string name="pref_title_jackson" translatable="true">Jackson JSON Processor</string>
     <string name="pref_title_particles" translatable="true">Particle effect images</string>
-    <string name="pref_title_rate" translatable="true">Rate the app on Google Play</string>
+    <string name="pref_title_rate" translatable="true">Rate the app</string>
     <string name="pref_title_translate" translatable="true">Would you like to help translate the app?</string>
     <string name="pref_title_version" translatable="true">Version</string>
 
@@ -294,5 +294,65 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="add_currencies_title">Add currencies</string>
+    <string name="title_activity_about">About</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="pref_title_steam">Steam group</string>
 
 </resources>
