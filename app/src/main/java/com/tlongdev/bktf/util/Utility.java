@@ -1,6 +1,7 @@
 package com.tlongdev.bktf.util;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -17,6 +18,8 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.activity.MainActivity;
@@ -473,6 +476,14 @@ public class Utility {
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
         int[] appWidgetIds = manager.getAppWidgetIds(new ComponentName(context.getApplicationContext(), FavoritesWidget.class));
         manager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.list_view);
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        View view = activity.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }
 
