@@ -13,12 +13,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -41,7 +44,7 @@ import butterknife.ButterKnife;
  * hats or effects.
  */
 public class UnusualFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
-        MainActivity.OnDrawerOpenedListener {
+        MainActivity.OnDrawerOpenedListener, TextWatcher {
 
     /**
      * Log tag for logging.
@@ -99,6 +102,8 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
      */
     private boolean showEffect = false;
 
+    @Bind(R.id.search) EditText searchInput;
+
     /**
      * Constructor.
      */
@@ -133,6 +138,8 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
         adapter = new UnusualAdapter(getActivity(), null);
         recyclerView.setAdapter(adapter);
 
+        searchInput.addTextChangedListener(this);
+
         return rootView;
     }
 
@@ -162,11 +169,14 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
         String sql;
         String[] selectionArgs = {"5"};
 
+        String filter = searchInput.getText().toString();
+
+
         switch (id) {
             case PRICE_LIST_LOADER:
 
-                selection = PriceEntry.TABLE_NAME +
-                        "." + PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
+                selection =  ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + " LIKE '%" + filter + "%' AND " +
+                        PriceEntry.TABLE_NAME +"." + PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
                         PriceEntry.COLUMN_PRICE_INDEX + " != 0 GROUP BY " +
                         PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX;
 
@@ -190,8 +200,8 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
                 );
             case EFFECT_LIST_LOADER:
 
-                selection = PriceEntry.TABLE_NAME +
-                        "." + PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
+                selection = UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_NAME + " LIKE '%" + filter + "%' AND " +
+                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
                         PriceEntry.COLUMN_PRICE_INDEX + " != 0 GROUP BY " +
                         PriceEntry.COLUMN_PRICE_INDEX;
 
@@ -263,14 +273,20 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
                 effectMenuItem.setIcon(R.drawable.ic_star_outline_white_24dp);
                 Bundle args = new Bundle();
                 args.putString(QUERY_KEY, "AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC");
-                getLoaderManager().initLoader(PRICE_LIST_LOADER, args, this);
+                getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
                 getActivity().setTitle(getString(R.string.title_unusuals));
+
+                searchInput.setHint("Name");
+                searchInput.setText("");
             } else {
                 //Show effects
                 showEffect = true;
                 effectMenuItem.setIcon(R.drawable.ic_star_white_24dp);
-                getLoaderManager().initLoader(EFFECT_LIST_LOADER, null, this);
+                getLoaderManager().restartLoader(EFFECT_LIST_LOADER, null, this);
                 getActivity().setTitle(getString(R.string.title_effects));
+
+                searchInput.setHint("Effect");
+                searchInput.setText("");
             }
         } else if (id == R.id.action_search) {
             //Start the search activity
@@ -290,5 +306,33 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onDrawerOpened() {
         expandToolbar();
+        Utility.hideKeyboard(getActivity());
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        if (showEffect) {
+            getLoaderManager().restartLoader(EFFECT_LIST_LOADER, null, this);
+        } else {
+            if (currentSort != 1) {
+                Bundle args = new Bundle();
+                args.putString(QUERY_KEY, "AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC");
+                getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
+            } else {
+                Bundle args = new Bundle();
+                args.putString(QUERY_KEY, ItemSchemaEntry.COLUMN_ITEM_NAME + " ASC");
+                getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
+            }
+        }
     }
 }

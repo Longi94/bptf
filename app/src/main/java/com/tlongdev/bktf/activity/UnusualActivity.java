@@ -12,6 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -24,10 +27,13 @@ import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
 import com.tlongdev.bktf.util.Utility;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Activity for showing unusual prices for specific effects or hats.
  */
-public class UnusualActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class UnusualActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, TextWatcher {
 
     /**
      * Log tag for logging.
@@ -65,10 +71,13 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
     private int defindex;
     private int index;
 
+    @Bind(R.id.search) EditText searchInput;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unusual);
+        ButterKnife.bind(this);
 
         // Obtain the shared Tracker instance.
         BptfApplication application = (BptfApplication) getApplication();
@@ -104,6 +113,9 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
         adapter = new UnusualAdapter(this, null, UnusualAdapter.TYPE_SPECIFIC_HAT);
         recyclerView.setAdapter(adapter);
 
+        searchInput.addTextChangedListener(this);
+        searchInput.setHint(defindex != -1 ? "Effect" : "Name");
+
         //Start loading the data for the cursor
         getSupportLoaderManager().initLoader(PRICE_LIST_LOADER, null, this);
 
@@ -121,12 +133,14 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
         //Select only items with unusual quelity
         String selection = PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + " = ?";
         String[] selectionArgs;
+        String filter = searchInput.getText().toString();
 
         String sql;
 
         //If defindex is -1, user is browsing by effects
         if (defindex != -1) {
-            selection = selection + " AND " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = ?";
+            selection = selection + " AND " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = ? AND " +
+                    UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_NAME + " LIKE '%" + filter + "%'";
             selectionArgs = new String[]{"5", String.valueOf(defindex)};
 
             sql = "SELECT " +
@@ -145,7 +159,8 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
                     " WHERE " + selection +
                     " ORDER BY " + Utility.getRawPriceQueryString(this) + " DESC";
         } else {
-            selection = selection + " AND " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + " = ?";
+            selection = selection + " AND " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + " = ? AND " +
+                    ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + " LIKE '%" + filter + "%'";
             selectionArgs = new String[]{"5", String.valueOf(index)};
 
             sql = "SELECT " +
@@ -187,5 +202,20 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
         //This is never reached, but it's here just in case
         //Remove all data from the adapter
         adapter.swapCursor(null, false);
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        getSupportLoaderManager().restartLoader(PRICE_LIST_LOADER, null, this);
     }
 }
