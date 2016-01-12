@@ -10,8 +10,6 @@
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="name"
         android:textColor="@color/text_primary"
         android:textIsSelectable="true"
         android:textSize="16sp"
@@ -21,8 +19,8 @@
         android:id="@+id/link"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="Link"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
         android:textColor="@color/accent"
         android:textIsSelectable="true"
         android:textSize="16sp"/>
@@ -32,9 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#505050"
-        android:text="lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum"
         android:textIsSelectable="true"
-        android:typeface="monospace"
-        android:layout_marginBottom="16dp"/>
+        android:typeface="monospace"/>
 
 </LinearLayout>

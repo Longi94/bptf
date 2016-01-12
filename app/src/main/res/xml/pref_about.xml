@@ -21,6 +21,16 @@
     </PreferenceScreen>
 
     <PreferenceScreen
+        android:title="@string/pref_title_github_repo"
+        android:icon="@drawable/ic_github_circle_white_24dp">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://github.com/Longi94/bptf"/>
+
+    </PreferenceScreen>
+
+    <PreferenceScreen
         android:title="@string/pref_title_licenses"
         android:icon="@drawable/ic_info_outline_white_24dp">
 
