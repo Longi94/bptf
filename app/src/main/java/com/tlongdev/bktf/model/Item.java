@@ -412,7 +412,7 @@ public class Item implements Serializable {
                 colorResource = isDark ? R.color.tf2_decorated_weapon_elite_dark : R.color.tf2_decorated_weapon_elite;
                 break;
         }
-        return Utility.getColor(context, colorResource);
+        return colorResource == 0 ? Utility.getColor(context, R.color.tf2_normal_color) : Utility.getColor(context, colorResource);
     }
 
     /**
