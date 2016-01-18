@@ -15,7 +15,7 @@ import java.io.Serializable;
 /**
  * Item class
  */
-public class Item implements Serializable{
+public class Item implements Serializable {
 
     /**
      * Log tag for logging.
@@ -615,7 +615,8 @@ public class Item implements Serializable{
     public Uri getEffectUrl(Context context) {
         String BASE_URL = "http://tlongdev.com/api/tf2_icon.php";
         Uri.Builder builder = Uri.parse(BASE_URL).buildUpon()
-                .appendQueryParameter("effect", String.valueOf(priceIndex));
+                .appendQueryParameter("effect", String.valueOf(priceIndex))
+                .appendQueryParameter("filetype", "webp");
 
         // TODO: 2015. 11. 09.
         boolean large = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("dummy", false);
