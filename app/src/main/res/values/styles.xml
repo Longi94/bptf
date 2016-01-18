@@ -13,7 +13,10 @@
     </style>
 
     <!--Dialog theme-->
-    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Dialog" />
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Dialog">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 
     <!--Simple style for horizontal dividers. 1dp wide-->
     <style name="DividerHorizontal">
