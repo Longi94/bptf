@@ -212,7 +212,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     holder.name.setText(item.getFormattedName(mContext));
 
                     holder.icon.setImageDrawable(null);
-                    holder.icon.setBackgroundColor(item.getColor(mContext, true));
+                    holder.background.setBackgroundColor(item.getColor(mContext, true));
 
                     if (!item.isTradable()) {
                         holder.quality.setVisibility(View.VISIBLE);
@@ -321,6 +321,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         @Bind(R.id.price_layout) View priceLayout;
 
         @Bind(R.id.icon) ImageView icon;
+        @Bind(R.id.icon_background) View background;
         @Bind(R.id.effect) ImageView effect;
         @Bind(R.id.more) ImageView more;
         @Bind(R.id.quality) ImageView quality;
