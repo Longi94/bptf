@@ -17,7 +17,7 @@ public class QualityAdapter extends ArrayAdapter<String> {
             "Collector's", "Decorated Weapon", "Genuine", "Haunted", "Normal", "Self-Made",
             "Strange", "Unique", "Unusual", "Vintage"
     };
-    public static final int[] QUALITY_IDS = {
+    public static final Integer[] QUALITY_IDS = {
             Quality.COLLECTORS, Quality.PAINTKITWEAPON, Quality.GENUINE, Quality.HAUNTED, Quality.NORMAL,
             Quality.SELF_MADE, Quality.STRANGE, Quality.UNIQUE, Quality.UNUSUAL, Quality.VINTAGE
     };

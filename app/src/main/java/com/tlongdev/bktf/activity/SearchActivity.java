@@ -1,6 +1,7 @@
 package com.tlongdev.bktf.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.MergeCursor;
@@ -21,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -30,6 +32,7 @@ import com.tlongdev.bktf.adapter.SearchAdapter;
 import com.tlongdev.bktf.data.DatabaseContract;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.model.Quality;
 import com.tlongdev.bktf.util.Utility;
 
 import org.json.JSONException;
@@ -41,6 +44,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class SearchActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -71,6 +77,13 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             PriceEntry.COLUMN_ITEM_QUALITY + " = 5 AND " +
             PriceEntry.COLUMN_PRICE_INDEX + " != 0)";
 
+    private static final String sFilterSearch = ItemSchemaEntry.TABLE_NAME +
+            "." + ItemSchemaEntry.COLUMN_ITEM_NAME + " LIKE ? AND " +
+            PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
+            PriceEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
+            PriceEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
+            PriceEntry.COLUMN_AUSTRALIUM + " = ?";
+
     /**
      * The {@link Tracker} used to record screen views.
      */
@@ -89,10 +102,17 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     //Cursor of the adapter
     private Cursor data;
 
+    private boolean filterEnabled = false;
+    private boolean filterTradable = true;
+    private boolean filterCraftable = true;
+    private boolean filterAustralium = false;
+    private int filterQuality = Quality.UNIQUE;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        ButterKnife.bind(this);
 
         // Obtain the shared Tracker instance.
         BptfApplication application = (BptfApplication) getApplication();
@@ -176,18 +196,37 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                 " FROM " + PriceEntry.TABLE_NAME +
                 " LEFT JOIN " + ItemSchemaEntry.TABLE_NAME +
                 " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
-                " WHERE " + sNameSearch;
+                " WHERE ";
+
+        if (filterEnabled) {
+            sql += sFilterSearch;
+        } else {
+            sql += sNameSearch;
+        }
 
         String query;
         String[] selectionArgs;
 
         //Build the query selection argument
         if (args != null) {
-            query = args.getString(QUERY_KEY);
-            if (query != null && query.length() > 0)
-                selectionArgs = new String[]{"%" + query + "%"};
-            else
-                selectionArgs = new String[]{"there is no such itme like thisasd"}; //stupid
+
+            if (filterEnabled) {
+                selectionArgs = new String[]{null, String.valueOf(filterQuality),
+                        filterTradable ? "1" : "0", filterCraftable ? "1" : "0",
+                        filterAustralium ? "1" : "0"};
+
+                query = args.getString(QUERY_KEY);
+                if (query != null && query.length() > 0)
+                    selectionArgs[0] = "%" + query + "%";
+                else
+                    selectionArgs[0] = "there is no such itme like thisasd"; //stupid
+            } else {
+                query = args.getString(QUERY_KEY);
+                if (query != null && query.length() > 0)
+                    selectionArgs = new String[]{"%" + query + "%"};
+                else
+                    selectionArgs = new String[]{"there is no such itme like thisasd"}; //stupid
+            }
         } else {
             selectionArgs = new String[]{"there is no such itme like thisasd"};
         }
@@ -241,6 +280,31 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         adapter.swapCursor(null, false);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            filterEnabled = data.getBooleanExtra(SearchFilterActivity.EXTRA_ENABLED, false);
+            filterQuality = data.getIntExtra(SearchFilterActivity.EXTRA_QUALITY, Quality.UNIQUE);
+            filterTradable = data.getBooleanExtra(SearchFilterActivity.EXTRA_TRADABLE, true);
+            filterCraftable = data.getBooleanExtra(SearchFilterActivity.EXTRA_CRAFTABLE, true);
+            filterAustralium = data.getBooleanExtra(SearchFilterActivity.EXTRA_AUSTRALIUM, false);
+
+            restartLoader(searchQuery);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @OnClick(R.id.fab)
+    public void onClick(View v) {
+        Intent intent = new Intent(this, SearchFilterActivity.class);
+        intent.putExtra(SearchFilterActivity.EXTRA_ENABLED, filterEnabled);
+        intent.putExtra(SearchFilterActivity.EXTRA_TRADABLE, filterTradable);
+        intent.putExtra(SearchFilterActivity.EXTRA_CRAFTABLE, filterCraftable);
+        intent.putExtra(SearchFilterActivity.EXTRA_QUALITY, filterQuality);
+        intent.putExtra(SearchFilterActivity.EXTRA_AUSTRALIUM, filterAustralium);
+        startActivityForResult(intent, 0);
     }
 
     /**
