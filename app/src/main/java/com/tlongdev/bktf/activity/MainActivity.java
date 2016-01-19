@@ -387,6 +387,11 @@ public class MainActivity extends AppCompatActivity {
             }
             userMenuItem.setEnabled(true);
         } else {
+            Glide.with(this)
+                    .load(R.drawable.steam_default_avatar)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .transform(new CircleTransform(this))
+                    .into(avatar);
             name.setText(null);
             backpack.setText(null);
             userMenuItem.setEnabled(false);
