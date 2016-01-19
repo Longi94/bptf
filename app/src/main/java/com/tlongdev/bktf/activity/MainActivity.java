@@ -174,6 +174,8 @@ public class MainActivity extends AppCompatActivity {
         backpack = (TextView) navigationHeader.findViewById(R.id.backpack_value);
         avatar = (ImageView) navigationHeader.findViewById(R.id.avatar);
 
+        userMenuItem = mNavigationView.getMenu().getItem(2);
+
         //Check if there is a fragment to be restored
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
@@ -182,10 +184,8 @@ public class MainActivity extends AppCompatActivity {
             mNavigationView.getMenu().getItem(0).setChecked(true);
         }
 
-        userMenuItem = mNavigationView.getMenu().getItem(2);
-
         // Select either the default item (0) or the last selected item.
-        switchFragment(0);
+        switchFragment(Math.max(0, mCurrentSelectedPosition));
     }
 
     @Override

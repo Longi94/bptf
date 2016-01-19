@@ -141,13 +141,12 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         getLoaderManager().initLoader(PRICE_LIST_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-
-        mContext = getActivity();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mContext = getActivity();
 
         // Obtain the shared Tracker instance.
         BptfApplication application = (BptfApplication) getActivity().getApplication();
