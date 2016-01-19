@@ -75,6 +75,7 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        setRetainInstance(true);
     }
 
     @Override

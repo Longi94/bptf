@@ -142,6 +142,7 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        setRetainInstance(true);
         PRICE_LIST_COLUMNS[COL_PRICE_LIST_PRAW] = Utility.getRawPriceQueryString(getActivity());
         getLoaderManager().initLoader(0, null, this);
     }

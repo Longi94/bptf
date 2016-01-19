@@ -103,12 +103,12 @@ public class FavoritesFragment extends Fragment implements MainActivity.OnDrawer
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         getLoaderManager().initLoader(FAVORITES_LOADER, null, this);
         setHasOptionsMenu(true);
+        setRetainInstance(true);
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

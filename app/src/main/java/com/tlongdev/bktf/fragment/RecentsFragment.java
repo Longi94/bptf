@@ -138,6 +138,18 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(PRICE_LIST_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
@@ -147,14 +159,11 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mContext = getActivity();
-
         // Obtain the shared Tracker instance.
         BptfApplication application = (BptfApplication) getActivity().getApplication();
         mTracker = application.getDefaultTracker();
 
         View rootView = inflater.inflate(R.layout.fragment_recents, container, false);
-
         ButterKnife.bind(this, rootView);
 
         //Set the toolbar to the main activity's action bar

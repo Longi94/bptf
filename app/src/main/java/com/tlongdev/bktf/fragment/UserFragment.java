@@ -108,6 +108,13 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        setRetainInstance(true);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
     }
 
     /**
@@ -120,8 +127,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         // Obtain the shared Tracker instance.
         BptfApplication application = (BptfApplication) (getActivity()).getApplication();
         mTracker = application.getDefaultTracker();
-
-        mContext = getActivity();
 
         View rootView = inflater.inflate(R.layout.fragment_user, container, false);
 
