@@ -129,6 +129,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     private ProgressDialog loadingDialog;
 
     private Context mContext;
+    private boolean layoutRefreshing = false;
 
     /**
      * Constructor
@@ -247,6 +248,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                         mSwipeRefreshLayout.setRefreshing(true);
                     }
                 });
+                layoutRefreshing = true;
 
                 mTracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Request")
@@ -331,6 +333,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onRefresh() {
+        layoutRefreshing = true;
         //Manual update
         if (Utility.isNetworkAvailable(mContext)) {
             GetPriceList task = new GetPriceList(mContext, true, true);
@@ -346,6 +349,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
             Toast.makeText(mContext, "bptf: " + getString(R.string.error_no_network),
                     Toast.LENGTH_SHORT).show();
             mSwipeRefreshLayout.setRefreshing(false);
+            layoutRefreshing = false;
         }
     }
 
@@ -394,6 +398,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                 if (isAdded()) {
                     //Stop animation
                     mSwipeRefreshLayout.setRefreshing(false);
+                    layoutRefreshing = false;
 
                     updateCurrencyHeader(prefs);
                 }
@@ -476,6 +481,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         if (isAdded()) {
             //Stop animation
             mSwipeRefreshLayout.setRefreshing(false);
+            layoutRefreshing = false;
 
             updateCurrencyHeader(prefs);
         }
