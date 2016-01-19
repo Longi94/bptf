@@ -58,6 +58,13 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_SETTINGS = 100;
     public static final int REQUEST_NEW_ITEM = 101;
 
+    public static final String FRAGMENT_TAG_RECENTS = "recents";
+    public static final String FRAGMENT_TAG_UNUSUALS = "unusuals";
+    public static final String FRAGMENT_TAG_USER = "user";
+    public static final String FRAGMENT_TAG_FAVORITES = "favorites";
+    public static final String FRAGMENT_TAG_CONVERTER = "converter";
+    public static final String FRAGMENT_TAG_CALCULATOR = "calculator";
+
     /**
      * Remember the position of the selected item.
      */
@@ -293,35 +300,58 @@ public class MainActivity extends AppCompatActivity {
         //Initialize fragments and add them is the drawer listener
         switch (position) {
             case 0:
-                newFragment = new RecentsFragment();
+                newFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_RECENTS);
+                if (newFragment == null) {
+                    newFragment = new RecentsFragment();
+                }
                 drawerListener = (RecentsFragment) newFragment;
+                transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_RECENTS);
                 break;
             case 1:
-                newFragment = new UnusualFragment();
+                newFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_UNUSUALS);
+                if (newFragment == null) {
+                    newFragment = new UnusualFragment();
+                }
                 drawerListener = (UnusualFragment) newFragment;
+                transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_UNUSUALS);
                 break;
             case 2:
-                newFragment = new UserFragment();
+                newFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_USER);
+                if (newFragment == null) {
+                    newFragment = new UserFragment();
+                }
                 drawerListener = (UserFragment) newFragment;
+                transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_USER);
                 break;
             case 3:
-                newFragment = new FavoritesFragment();
+                newFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_FAVORITES);
+                if (newFragment == null) {
+                    newFragment = new FavoritesFragment();
+                }
                 drawerListener = (FavoritesFragment) newFragment;
+                transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_FAVORITES);
                 break;
             case 4:
-                newFragment = new ConverterFragment();
+                newFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_CONVERTER);
+                if (newFragment == null) {
+                    newFragment = new ConverterFragment();
+                }
                 drawerListener = null;
+                transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_CONVERTER);
                 break;
             case 5:
-                newFragment = new CalculatorFragment();
+                newFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_CALCULATOR);
+                if (newFragment == null) {
+                    newFragment = new CalculatorFragment();
+                }
                 drawerListener = (CalculatorFragment) newFragment;
+                transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_CALCULATOR);
                 break;
             default:
                 throw new IllegalArgumentException("unknown fragment to switch to: " + position);
         }
 
         //Commit the transaction
-        transaction.replace(R.id.container, newFragment);
         transaction.commit();
     }
 
