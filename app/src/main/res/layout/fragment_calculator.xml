@@ -108,7 +108,7 @@
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
         android:scrollbars="vertical"
-        android:scrollbarStyle="outsideInset"
+        android:scrollbarStyle="outsideOverlay"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.FloatingActionButton
