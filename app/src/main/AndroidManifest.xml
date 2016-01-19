@@ -41,8 +41,7 @@
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait">
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -52,8 +51,7 @@
         <activity
             android:name=".activity.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".activity.MainActivity"
-            android:screenOrientation="portrait">
+            android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity"/>
@@ -61,8 +59,7 @@
         <activity
             android:name=".activity.UnusualActivity"
             android:label="@string/title_activity_unusual"
-            android:parentActivityName=".activity.MainActivity"
-            android:screenOrientation="portrait">
+            android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity"/>
@@ -70,25 +67,21 @@
         <activity
             android:name=".activity.UserActivity"
             android:label=""
-            android:parentActivityName=".activity.SearchActivity"
-            android:screenOrientation="portrait">
+            android:parentActivityName=".activity.SearchActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.SearchActivity"/>
         </activity>
         <activity
             android:name=".activity.ItemChooserActivity"
-            android:label="@string/title_activity_item_chooser"
-            android:screenOrientation="portrait"/>
+            android:label="@string/title_activity_item_chooser"/>
         <activity
             android:name=".activity.UserBackpackActivity"
-            android:label="@string/title_activity_user_backpack"
-            android:screenOrientation="portrait"/>
+            android:label="@string/title_activity_user_backpack"/>
         <activity
             android:name=".activity.ItemDetailActivity"
             android:label="@string/title_activity_item_detail"
             android:parentActivityName=".activity.UserBackpackActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Transparent">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

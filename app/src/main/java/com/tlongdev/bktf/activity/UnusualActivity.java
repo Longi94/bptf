@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.widget.EditText;
 
 import com.google.android.gms.analytics.HitBuilders;
@@ -105,9 +106,13 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
         //Set the action bar title to the current hat/effect name
         setTitle(i.getStringExtra(NAME_KEY));
 
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int columnCount = Math.max(3, (int)Math.floor(dpWidth / 120.0));
+
         //The rootview is the gridview
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, columnCount));
 
         //Initialize adapter
         adapter = new UnusualAdapter(this, null, UnusualAdapter.TYPE_SPECIFIC_HAT);
