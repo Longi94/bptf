@@ -178,14 +178,13 @@ public class MainActivity extends AppCompatActivity {
 
         //Check if there is a fragment to be restored
         if (savedInstanceState != null) {
-            mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
+            switchFragment(savedInstanceState.getInt(STATE_SELECTED_POSITION));
             mNavigationView.getMenu().getItem(mCurrentSelectedPosition).setChecked(true);
         } else {
             mNavigationView.getMenu().getItem(0).setChecked(true);
+            // Select either the default item (0) or the last selected item.
+            switchFragment(0);
         }
-
-        // Select either the default item (0) or the last selected item.
-        switchFragment(Math.max(0, mCurrentSelectedPosition));
     }
 
     @Override
