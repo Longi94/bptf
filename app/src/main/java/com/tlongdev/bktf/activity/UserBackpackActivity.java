@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.MenuItem;
 
 import com.google.android.gms.analytics.HitBuilders;
@@ -138,12 +139,16 @@ public class UserBackpackActivity extends AppCompatActivity implements LoaderMan
         listView.setHasFixedSize(true);
         adapter = new BackpackAdapter(this, isGuest);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 5);
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        final int columnCount = dpWidth >= 600 ? 10 : 5;
+
+        GridLayoutManager layoutManager = new GridLayoutManager(this, columnCount);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
                 if (adapter.getItemViewType(position) == BackpackAdapter.VIEW_TYPE_HEADER) {
-                    return 5;
+                    return columnCount;
                 } else {
                     return 1;
                 }
