@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?><!--Layout resource for the latest changes fragment-->
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinator_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragment.RecentsFragment">
+<android.support.design.widget.CoordinatorLayout android:id="@+id/coordinator_layout"
+                                                 xmlns:android="http://schemas.android.com/apk/res/android"
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 tools:context=".fragment.RecentsFragment">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
@@ -20,7 +20,7 @@
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="@string/title_home" />
+            app:title="@string/title_home"/>
 
         <LinearLayout
             android:id="@+id/list_changes_header"
@@ -46,13 +46,13 @@
                     android:drawableStart="@drawable/ic_metal_white_18dp"
                     android:gravity="center"
                     android:textColor="#fff"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
 
                 <View
                     android:id="@+id/image_view_metal_price"
                     android:layout_width="match_parent"
                     android:layout_height="4dp"
-                    android:background="#ff850000" />
+                    android:background="#ff850000"/>
 
             </LinearLayout>
 
@@ -72,13 +72,13 @@
                     android:drawableStart="@drawable/ic_vpn_key_white_18dp"
                     android:gravity="center"
                     android:textColor="#fff"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
 
                 <View
                     android:id="@+id/image_view_key_price"
                     android:layout_width="match_parent"
                     android:layout_height="4dp"
-                    android:background="#ff850000" />
+                    android:background="#ff850000"/>
 
             </LinearLayout>
 
@@ -98,13 +98,13 @@
                     android:drawableStart="@drawable/ic_earbuds_18dp"
                     android:gravity="center"
                     android:textColor="#fff"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
 
                 <View
                     android:id="@+id/image_view_buds_price"
                     android:layout_width="match_parent"
                     android:layout_height="4dp"
-                    android:background="#ff850000" />
+                    android:background="#ff850000"/>
 
             </LinearLayout>
 
@@ -128,9 +128,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp"
-                android:scrollbars="none" />
+                android:padding="4dp"
+                android:scrollbars="none"/>
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -141,6 +140,6 @@
         style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"/>
 
 </android.support.design.widget.CoordinatorLayout>
