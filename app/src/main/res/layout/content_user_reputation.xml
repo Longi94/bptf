@@ -115,8 +115,7 @@
                 <ImageView
                     android:id="@+id/steamrep_status"
                     android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_check_circle_white_48dp" />
+                    android:layout_height="48dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -138,8 +137,7 @@
                 <ImageView
                     android:id="@+id/trade_status"
                     android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_check_circle_white_48dp" />
+                    android:layout_height="48dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -168,8 +166,7 @@
                 <ImageView
                     android:id="@+id/vac_status"
                     android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_check_circle_white_48dp" />
+                    android:layout_height="48dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -191,8 +188,7 @@
                 <ImageView
                     android:id="@+id/community_status"
                     android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_check_circle_white_48dp" />
+                    android:layout_height="48dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
