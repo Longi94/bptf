@@ -105,6 +105,8 @@
         android:clipToPadding="false"
         android:paddingBottom="84dp"
         android:paddingTop="4dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
         android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 

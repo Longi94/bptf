@@ -13,9 +13,10 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -126,9 +127,19 @@ public class FavoritesFragment extends Fragment implements MainActivity.OnDrawer
 
         mAdapter = new FavoritesAdapter(getActivity(), null);
 
+        DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+
+        int columnCount = 1;
+        if (dpWidth >= 720) {
+            columnCount = 3;
+        } else if (dpWidth >= 600) {
+            columnCount = 2;
+        }
+
         //Setup the recycler view
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), columnCount));
         recyclerView.setAdapter(mAdapter);
 
         return rootView;
