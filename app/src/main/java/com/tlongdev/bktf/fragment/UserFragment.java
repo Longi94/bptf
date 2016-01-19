@@ -97,6 +97,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
      */
     @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbarLayout;
 
+    private boolean layoutRefreshing = false;
+
     /**
      * Constructor
      */
@@ -139,6 +141,14 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mSwipeRefreshLayout.setColorSchemeColors(Utility.getColor(mContext, R.color.accent));
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(layoutRefreshing);
+            }
+        });
+
+
         //Update all the views to show te user data
         updateUserPage();
 
@@ -171,6 +181,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     mSwipeRefreshLayout.setRefreshing(true);
                 }
             });
+            layoutRefreshing = true;
 
             mTracker.send(new HitBuilders.EventBuilder()
                     .setCategory("Request")
@@ -185,6 +196,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
      */
     @Override
     public void onRefresh() {
+        layoutRefreshing = true;
         if (Utility.isNetworkAvailable(mContext)) {
             //Start fetching the data and listen for the end
             GetUserInfo fetchTask = new GetUserInfo(mContext, true);
@@ -200,6 +212,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             Toast.makeText(mContext, "bptf: " + getString(R.string.error_no_network),
                     Toast.LENGTH_SHORT).show();
             mSwipeRefreshLayout.setRefreshing(false);
+            layoutRefreshing = false;
         }
     }
 
@@ -491,6 +504,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         if (isAdded()) {
             updateUserPage();
             mSwipeRefreshLayout.setRefreshing(false);
+            layoutRefreshing = false;
         }
 
         Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
@@ -520,6 +534,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         if (isAdded()) {
             updateUserPage();
             mSwipeRefreshLayout.setRefreshing(false);
+            layoutRefreshing = false;
         }
 
         ((MainActivity) mContext).updateDrawer();
@@ -545,6 +560,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         if (isAdded()) {
             updateUserPage();
             mSwipeRefreshLayout.setRefreshing(false);
+            layoutRefreshing = false;
         }
 
         ((MainActivity) mContext).updateDrawer();
@@ -556,6 +572,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         if (isAdded()) {
             updateUserPage();
             mSwipeRefreshLayout.setRefreshing(false);
+            layoutRefreshing = false;
         }
 
         Toast.makeText(mContext, "failed", Toast.LENGTH_SHORT).show();
