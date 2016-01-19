@@ -45,9 +45,7 @@
 
     <!--Action Bar icons-->
 
-    <string name="action_add" translatable="true">Add</string>
     <string name="action_browse_effect" translatable="true">Browse by effect</string>
-    <string name="action_cancel" translatable="true">Cancel</string>
     <string name="action_close" translatable="true">Close</string>
     <string name="action_clear" translatable="true">Clear items</string>
     <string name="action_settings" translatable="true">Settings</string>
@@ -59,7 +57,6 @@
 
     <!--Activity/Fragment titles-->
 
-    <string name="title_activity_credits" translatable="false">Credits</string>
     <string name="title_activity_item_chooser" translatable="false">ItemChooserActivity</string>
     <string name="title_activity_item_detail" translatable="false">ItemDetailActivity</string>
     <string name="title_activity_settings" translatable="false">Settings</string>
@@ -75,25 +72,14 @@
     <!--Preference titles and summaries-->
 
     <string name="pref_summary_developer" translatable="false">Long Tran</string>
-    <string name="pref_category_about" translatable="true">About</string>
     <string name="pref_category_account" translatable="true">Account</string>
-    <string name="pref_category_notification" translatable="true">Notifications</string>
     <string name="pref_category_sync" translatable="true">Syncing</string>
-    <string name="pref_hint_steam_id" translatable="true">Steam ID</string>
-    <string name="pref_policy_steam_id" translatable="true">Your id will not be shared with anyone.</string>
-    <string name="pref_summary_off_auto_sync" translatable="true">Manual refresh</string>
-    <string name="pref_summary_on_auto_sync" translatable="true">Auto-update database</string>
-    <string name="pref_summary_jackson" translatable="true">fast and memory efficient JSON processing</string>
-    <string name="pref_summary_particles" translatable="true">provided by backpack.tf</string>
     <string name="pref_title_auto_sync" translatable="true">Auto-update prices</string>
     <string name="pref_title_changelog" translatable="true">Changelogs</string>
     <string name="pref_title_licenses" translatable="true">Open source licenses</string>
     <string name="pref_title_developer" translatable="true">Developer</string>
     <string name="pref_title_feedback" translatable="true">Feedback or bug report</string>
-    <string name="pref_title_jackson" translatable="true">Jackson JSON Processor</string>
-    <string name="pref_title_particles" translatable="true">Particle effect images</string>
     <string name="pref_title_rate" translatable="true">Rate the app</string>
-    <string name="pref_title_translate" translatable="true">Would you like to help translate the app?</string>
     <string name="pref_title_version" translatable="true">Version</string>
 
     <!--Content descriptions-->
@@ -139,31 +125,10 @@
     <string name="item_detail_paint" translatable="true">Paint</string>
     <string name="item_detail_suggested_price" translatable="true">Suggested price</string>
 
-    <!--Resources for calculator-->
-
-    <string name="item_chooser_count" translatable="false">1</string>
-    <string name="item_chooser_hint" translatable="true">Start typing…</string>
-    <string name="item_chooser_no_match" translatable="true">No match or item has no price</string>
-
     <!--Menu resources-->
 
     <string name="menu_name" translatable="true">Name</string>
     <string name="menu_average_price" translatable="true">Average price</string>
-
-    <!--Strings for the arrays-->
-
-    <string name="array_sync_interval_5_minutes" translatable="true">Every 5 minutes</string>
-    <string name="array_sync_interval_15_minutes" translatable="true">Every 15 minutes</string>
-    <string name="array_sync_interval_30_minutes" translatable="true">Every 30 minutes</string>
-    <string name="array_sync_interval_hourly" translatable="true">Every hour</string>
-    <string name="array_sync_interval_3_hours" translatable="true">Every 3 hours</string>
-    <string name="array_sync_interval_6_hours" translatable="true">Every 6 hours</string>
-    <string name="array_sync_interval_daily" translatable="true">Daily</string>
-
-    <!--Strings for the spinner in the item chooser-->
-
-    <string name="array_item_chooser_spinner_regular" translatable="true">Regular items</string>
-    <string name="array_item_chooser_spinner_unusual" translatable="true">Unusuals</string>
 
     <!--Parametrized currencies-->
 
@@ -253,16 +218,11 @@
     <!--Other string resources-->
 
     <string name="navigation_drawer_close" translatable="true">Close navigation drawer</string>
-    <string name="navigation_drawer_help" translatable="true">Help</string>
     <string name="navigation_drawer_open" translatable="true">Open navigation drawer</string>
     <string name="placeholder_slots_used" translatable="false">\?/?</string>
     <string name="placeholder_unknown" translatable="false">\?</string>
-    <string name="preference_dialog_steam_id" translatable="true">64bit SteamId:</string>
-    <string name="preference_dialog_vanity_name" translatable="true">Vanity name:</string>
     <string name="header_new_items" translatable="true">New items</string>
     <string name="header_page" formatted="false" translatable="true">Page %d</string>
-    <string name="notification_unread_title" formatted="false" translatable="true">%d unread notifications on bp.tf</string>
-    <string name="notification_unread_description" translatable="true">Tap to open in browser.</string>
     <string name="title_converter">Converter</string>
     <string name="message_item_schema_create">Creating item schema database…</string>
     <string name="pref_last_item_schema_update">pref_last_item_schema_update</string>
@@ -271,28 +231,15 @@
     <string name="title_activity_login">Login</string>
     <string name="login_steam_id"><u>What is my steam ID?</u></string>
     <string name="pref_key_login">pref_key_login</string>
-    <string name="pref_title_glide">Glide</string>
-    <string name="pref_summary_glide">an image loading and caching library for Android focused on smooth scrolling</string>
-    <string name="pref_summary_material_icons">growing collection of material design icons</string>
-    <string name="pref_title_material_icons">Material Design Icons</string>
-    <string name="title_steam_group">Steam Group</string>
     <string name="pref_initial_load_v2">pref_initial_load_v2</string>
     <string name="title_activity_price_history">History</string>
-    <string name="pref_title_mp_chart">MPAndroidChart</string>
-    <string name="pref_summary_mp_chart">a powerful Android chart / graph library</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_favorites">Favorites</string>
-    <string name="pref_title_butter_knife">Butter Knife</string>
-    <string name="pref_summary_butter_knife">Field and method binding for Android views which uses annotation processing to generate boilerplate code for you.</string>
-    <string name="title_activity_select_item">SelectItemActivity</string>
     <string name="pref_price_notification">pref_price_notification</string>
     <string name="pref_title_price_notification">Price update notification</string>
     <string name="pref_summary_price_notification">Notify when a price of a favorite item is updated</string>
     <string name="pref_registered_topic_price_updates">pref_registered_topic_price_updates</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
     <string name="add_currencies_title">Add currencies</string>
     <string name="title_activity_about">About</string>
 
