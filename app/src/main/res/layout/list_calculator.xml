@@ -111,7 +111,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:contentDescription="@string/description_delete"
-            android:foreground="?attr/selectableItemBackground"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
             android:src="@drawable/ic_close_white_48dp"/>
 
