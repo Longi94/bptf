@@ -2,6 +2,7 @@ package com.tlongdev.bktf.fragment;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -126,6 +127,8 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     //Dialog to indicate the download progress
     private ProgressDialog loadingDialog;
 
+    private Context mContext;
+
     /**
      * Constructor
      */
@@ -138,6 +141,8 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         getLoaderManager().initLoader(PRICE_LIST_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
+
+        mContext = getActivity();
     }
 
     @Override
@@ -145,7 +150,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                              Bundle savedInstanceState) {
 
         // Obtain the shared Tracker instance.
-        BptfApplication application = (BptfApplication) (getActivity()).getApplication();
+        BptfApplication application = (BptfApplication) getActivity().getApplication();
         mTracker = application.getDefaultTracker();
 
         View rootView = inflater.inflate(R.layout.fragment_recents, container, false);
@@ -153,21 +158,21 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         ButterKnife.bind(this, rootView);
 
         //Set the toolbar to the main activity's action bar
-        ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
+        ((AppCompatActivity) mContext).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
-        adapter = new RecentsAdapter(getActivity(), null);
+        adapter = new RecentsAdapter(mContext, null);
 
         //Setup the recycler view
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.setVisibility(View.GONE);
 
         //Set up the swipe refresh layout (color and listener)
-        mSwipeRefreshLayout.setColorSchemeColors(Utility.getColor(getActivity(), R.color.accent));
+        mSwipeRefreshLayout.setColorSchemeColors(Utility.getColor(mContext, R.color.accent));
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         //Populate the toolbar header
-        updateCurrencyHeader(PreferenceManager.getDefaultSharedPreferences(getActivity()));
+        updateCurrencyHeader(PreferenceManager.getDefaultSharedPreferences(mContext));
 
         return rootView;
     }
@@ -178,16 +183,16 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         mTracker.setScreenName("Latest Changes");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         //Download whole database when the app is first opened.
         if (prefs.getBoolean(getString(R.string.pref_initial_load_v2), true)) {
-            if (Utility.isNetworkAvailable(getActivity())) {
-                GetPriceList task = new GetPriceList(getActivity(), false, true);
+            if (Utility.isNetworkAvailable(mContext)) {
+                GetPriceList task = new GetPriceList(mContext, false, true);
                 task.setOnPriceListFetchListener(this);
                 task.execute();
 
                 //Show the progress dialog
-                loadingDialog = ProgressDialog.show(getActivity(), null, "Downloading prices...", true);
+                loadingDialog = ProgressDialog.show(mContext, null, "Downloading prices...", true);
                 loadingDialog.setCancelable(false);
 
                 mTracker.send(new HitBuilders.EventBuilder()
@@ -197,7 +202,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                         .build());
             } else {
                 //Quit the app if the download failed.
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setMessage(getString(R.string.message_database_fail_network)).setCancelable(false).
                         setPositiveButton(getString(R.string.action_close), new DialogInterface.OnClickListener() {
                             @Override
@@ -212,8 +217,8 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
             //Update database if the last update happened more than an hour ago
             if (System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_price_list_update), 0) >= 3600000L
-                    && Utility.isNetworkAvailable(getActivity())) {
-                GetPriceList task = new GetPriceList(getActivity(), true, false);
+                    && Utility.isNetworkAvailable(mContext)) {
+                GetPriceList task = new GetPriceList(mContext, true, false);
                 task.setOnPriceListFetchListener(this);
                 task.execute();
                 //Workaround for the circle not appearing
@@ -244,7 +249,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         switch (item.getItemId()) {
             case R.id.action_search:
                 //Start the search activity
-                startActivity(new Intent(getActivity(), SearchActivity.class));
+                startActivity(new Intent(mContext, SearchActivity.class));
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -262,7 +267,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_CURRENCY + "," +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE + "," +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_HIGH + "," +
-                Utility.getRawPriceQueryString(getActivity()) + "," +
+                Utility.getRawPriceQueryString(mContext) + "," +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DIFFERENCE + "," +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM +
                 " FROM " + PriceEntry.TABLE_NAME +
@@ -271,7 +276,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                 " ORDER BY " + PriceEntry.COLUMN_LAST_UPDATE + " DESC";
 
         return new CursorLoader(
-                getActivity(),
+                mContext,
                 DatabaseContract.RAW_QUERY_URI,
                 null,
                 sql,
@@ -285,8 +290,8 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         adapter.swapCursor(data, false);
 
         //Animate in the recycler view, so it's not that abrupt
-        Animation fadeIn = AnimationUtils.loadAnimation(getActivity(), R.anim.simple_fade_in);
-        Animation fadeOut = AnimationUtils.loadAnimation(getActivity(), R.anim.simple_fade_in);
+        Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.simple_fade_in);
+        Animation fadeOut = AnimationUtils.loadAnimation(mContext, R.anim.simple_fade_in);
 
         fadeIn.setDuration(500);
         fadeOut.setDuration(500);
@@ -308,8 +313,8 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onRefresh() {
         //Manual update
-        if (Utility.isNetworkAvailable(getActivity())) {
-            GetPriceList task = new GetPriceList(getActivity(), true, true);
+        if (Utility.isNetworkAvailable(mContext)) {
+            GetPriceList task = new GetPriceList(mContext, true, true);
             task.setOnPriceListFetchListener(this);
             task.execute();
 
@@ -319,7 +324,7 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
                     .setLabel("Prices")
                     .build());
         } else {
-            Toast.makeText(getActivity(), "bptf: " + getString(R.string.error_no_network),
+            Toast.makeText(mContext, "bptf: " + getString(R.string.error_no_network),
                     Toast.LENGTH_SHORT).show();
             mSwipeRefreshLayout.setRefreshing(false);
         }
@@ -329,18 +334,18 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     public void onPriceListFinished(int newItems, long sinceParam) {
 
         if (newItems > 0) {
-            Utility.notifyPricesWidgets(getActivity());
+            Utility.notifyPricesWidgets(mContext);
         }
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         if (loadingDialog != null) {
             loadingDialog.dismiss();
 
-            loadingDialog = ProgressDialog.show(getActivity(), null, "Downloading item schema...", true);
+            loadingDialog = ProgressDialog.show(mContext, null, "Downloading item schema...", true);
             loadingDialog.setCancelable(false);
 
-            GetItemSchema task = new GetItemSchema(getActivity());
+            GetItemSchema task = new GetItemSchema(mContext);
             task.setListener(this);
             task.execute();
 
@@ -356,8 +361,8 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
 
             if (System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_item_schema_update), 0) >= 172800000L //2days
-                    && Utility.isNetworkAvailable(getActivity())) {
-                GetItemSchema task = new GetItemSchema(getActivity());
+                    && Utility.isNetworkAvailable(mContext)) {
+                GetItemSchema task = new GetItemSchema(mContext);
                 task.setListener(this);
                 task.execute();
 
@@ -380,9 +385,9 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         SharedPreferences.Editor editor = prefs.edit();
 
         //Save when the update finished
-        editor.putLong(getActivity().getString(R.string.pref_last_price_list_update),
+        editor.putLong(mContext.getString(R.string.pref_last_price_list_update),
                 System.currentTimeMillis());
-        editor.putBoolean(getActivity().getString(R.string.pref_initial_load_v2), false);
+        editor.putBoolean(mContext.getString(R.string.pref_initial_load_v2), false);
         editor.apply();
     }
 
@@ -391,10 +396,10 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         if (loadingDialog != null && loadingDialog.isShowing()) {
             if (loadingDialog.isIndeterminate()) {
                 loadingDialog.dismiss();
-                loadingDialog = new ProgressDialog(getActivity());
+                loadingDialog = new ProgressDialog(mContext);
                 loadingDialog.setIndeterminate(false);
                 loadingDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                loadingDialog.setMessage(getActivity().getString(R.string.message_database_create));
+                loadingDialog.setMessage(mContext.getString(R.string.message_database_create));
                 loadingDialog.setMax(max);
                 loadingDialog.setCancelable(false);
                 loadingDialog.show();
@@ -410,21 +415,21 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
             AlertDialog.Builder builder;
             AlertDialog alertDialog;
-            builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage(getActivity().getString(R.string.message_database_fail_network))
+            builder = new AlertDialog.Builder(mContext);
+            builder.setMessage(mContext.getString(R.string.message_database_fail_network))
                     .setCancelable(false)
-                    .setPositiveButton(getActivity().getString(R.string.action_close), new DialogInterface.OnClickListener() {
+                    .setPositiveButton(mContext.getString(R.string.action_close), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //Close app
-                            (getActivity()).finish();
+                            getActivity().finish();
                         }
                     });
             alertDialog = builder.create();
             loadingDialog.dismiss();
             alertDialog.show();
         } else {
-            Toast.makeText(getActivity(), "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -438,15 +443,15 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         getLoaderManager().restartLoader(PRICE_LIST_LOADER, null, this);
 
         //Update the header with currency prices
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         //Get the shared preferences
         SharedPreferences.Editor editor = prefs.edit();
 
         //Save when the update finished
-        editor.putLong(getActivity().getString(R.string.pref_last_item_schema_update),
+        editor.putLong(mContext.getString(R.string.pref_last_item_schema_update),
                 System.currentTimeMillis());
-        editor.putBoolean(getActivity().getString(R.string.pref_initial_load_v2), false);
+        editor.putBoolean(mContext.getString(R.string.pref_initial_load_v2), false);
         editor.apply();
 
         if (isAdded()) {
@@ -462,10 +467,10 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         if (loadingDialog != null && loadingDialog.isShowing()) {
             if (loadingDialog.isIndeterminate()) {
                 loadingDialog.dismiss();
-                loadingDialog = new ProgressDialog(getActivity());
+                loadingDialog = new ProgressDialog(mContext);
                 loadingDialog.setIndeterminate(false);
                 loadingDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                loadingDialog.setMessage(getActivity().getString(R.string.message_item_schema_create));
+                loadingDialog.setMessage(mContext.getString(R.string.message_item_schema_create));
                 loadingDialog.setMax(max);
                 loadingDialog.setCancelable(false);
                 loadingDialog.show();
@@ -481,21 +486,21 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
             AlertDialog.Builder builder;
             AlertDialog alertDialog;
-            builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage(getActivity().getString(R.string.message_database_fail_network))
+            builder = new AlertDialog.Builder(mContext);
+            builder.setMessage(mContext.getString(R.string.message_database_fail_network))
                     .setCancelable(false)
-                    .setPositiveButton(getActivity().getString(R.string.action_close), new DialogInterface.OnClickListener() {
+                    .setPositiveButton(mContext.getString(R.string.action_close), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //Close app
-                            (getActivity()).finish();
+                            getActivity().finish();
                         }
                     });
             alertDialog = builder.create();
             loadingDialog.dismiss();
             alertDialog.show();
         } else {
-            Toast.makeText(getActivity(), "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
         }
     }
 
