@@ -1,6 +1,7 @@
 package com.tlongdev.bktf.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -82,8 +83,7 @@ public class LoginActivity extends AppCompatActivity implements GetUserInfo.OnUs
 
     @OnClick(R.id.what_is_id)
     public void showSteamIdInstructions() {
-        // TODO: 2015. 11. 17.
-        Toast.makeText(LoginActivity.this, "Under construction :)", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, SteamIdActivity.class));
     }
 
     @OnClick(R.id.enter)
