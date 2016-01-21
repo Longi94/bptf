@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Window;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
 import com.google.android.gms.analytics.HitBuilders;
@@ -45,7 +46,14 @@ public class SteamIdActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        webView.loadUrl("http://tlongdev.com/");
+        webView.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int progress) {
+                // Activities and WebViews measure progress with different scales.
+                // The progress meter will automatically disappear when we reach 100%
+                setProgress(progress * 1000);
+            }
+        });
+        webView.loadUrl("http://tlongdev.com/steamid.html");
     }
 
     @Override
