@@ -586,7 +586,7 @@ public class Item implements Serializable {
      * @return Uri object
      */
     public Uri getIconUrl(Context context) {
-        String BASE_URL = "http://tlongdev.com/api/tf2_icon.php";
+        String BASE_URL = context.getString(R.string.tlongdev_tf2_icons);
         Uri.Builder builder = Uri.parse(BASE_URL).buildUpon()
                 .appendQueryParameter("defindex", String.valueOf(defindex))
                 .appendQueryParameter("filetype", "webp");
@@ -613,7 +613,7 @@ public class Item implements Serializable {
      * @return Uri object
      */
     public Uri getEffectUrl(Context context) {
-        String BASE_URL = "http://tlongdev.com/api/tf2_icon.php";
+        String BASE_URL = context.getString(R.string.tlongdev_tf2_icons);
         Uri.Builder builder = Uri.parse(BASE_URL).buildUpon()
                 .appendQueryParameter("effect", String.valueOf(priceIndex))
                 .appendQueryParameter("filetype", "webp");
