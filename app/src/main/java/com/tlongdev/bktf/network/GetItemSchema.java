@@ -118,155 +118,147 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
         Vector<ContentValues> cVVectorOrigins = new Vector<>();
         Vector<ContentValues> cVVectorParticles = new Vector<>();
 
-        JsonToken token;
-        while ((token = parser.nextToken()) != JsonToken.END_OBJECT) {
+        while (parser.nextToken() != JsonToken.END_OBJECT) {
 
-            //success object
-            if (parser.getCurrentName().equals(KEY_SUCCESS)) {
-                parser.nextToken();
-                if (parser.getIntValue() == 0) {
+            String currentName = parser.getCurrentName();
+            switch (currentName) {
+                case KEY_SUCCESS:
+                    parser.nextToken();
+                    if (parser.getIntValue() == 0) {
 
-                    while (parser.nextToken() != JsonToken.END_OBJECT) {
-                        if (parser.getCurrentName().equals(KEY_MESSAGE)) {
-                            errorMessage = parser.getText();
+                        while (parser.nextToken() != JsonToken.END_OBJECT) {
+                            if (parser.getCurrentName().equals(KEY_MESSAGE)) {
+                                errorMessage = parser.getText();
                                 Log.e(LOG_TAG, errorMessage);
+                            }
                         }
+                        parser.close();
+                        return -1;
                     }
-                    parser.close();
-                    return -1;
-                }
-            }
+                    break;
+                case KEY_ITEMS:
+                    parser.nextToken();
 
-            //success object
-            if (parser.getCurrentName().equals(KEY_ITEMS)) {
+                    //Keep iterating while the array hasn't ended
+                    while (parser.nextToken() != JsonToken.END_ARRAY) {
+                        //Initial values
+                        int defindex = 0;
+                        String name = null;
+                        String description = null;
+                        String typeName = null;
+                        int properName = 0;
 
-                parser.nextToken();
-
-                //Keep iterating while the array hasn't ended
-                while (parser.nextToken() != JsonToken.END_ARRAY) {
-                    //Initial values
-                    int defindex = 0;
-                    String name = null;
-                    String description = null;
-                    String typeName = null;
-                    int properName = 0;
-
-                    //Parse an attribute and get the value of it
-                    while (parser.nextToken() != JsonToken.END_OBJECT) {
-                        switch (parser.getCurrentName()) {
-                            case KEY_DEFINDEX:
-                                parser.nextToken();
-                                defindex = parser.getIntValue();
-                                break;
-                            case KEY_NAME:
-                                parser.nextToken();
-                                name = parser.getText();
-                                break;
-                            case KEY_DESCRIPTION:
-                                parser.nextToken();
-                                description = parser.getText();
-                                if (description != null && description.equals("null")) {
-                                    description = null;
-                                }
-                                break;
-                            case KEY_TYPE_NAME:
-                                parser.nextToken();
-                                typeName = parser.getText();
-                                break;
-                            case KEY_PROPER_NAME:
-                                parser.nextToken();
-                                properName = parser.getIntValue();
-                                break;
+                        //Parse an attribute and get the value of it
+                        while (parser.nextToken() != JsonToken.END_OBJECT) {
+                            switch (parser.getCurrentName()) {
+                                case KEY_DEFINDEX:
+                                    parser.nextToken();
+                                    defindex = parser.getIntValue();
+                                    break;
+                                case KEY_NAME:
+                                    parser.nextToken();
+                                    name = parser.getText();
+                                    break;
+                                case KEY_DESCRIPTION:
+                                    parser.nextToken();
+                                    description = parser.getText();
+                                    if (description != null && description.equals("null")) {
+                                        description = null;
+                                    }
+                                    break;
+                                case KEY_TYPE_NAME:
+                                    parser.nextToken();
+                                    typeName = parser.getText();
+                                    break;
+                                case KEY_PROPER_NAME:
+                                    parser.nextToken();
+                                    properName = parser.getIntValue();
+                                    break;
+                            }
                         }
-                    }
 
-                    //The DV that will contain all the data
-                    ContentValues itemValues = new ContentValues();
-                    itemValues.put(ItemSchemaEntry.COLUMN_DEFINDEX, defindex);
-                    itemValues.put(ItemSchemaEntry.COLUMN_ITEM_NAME, name);
-                    itemValues.put(ItemSchemaEntry.COLUMN_TYPE_NAME, typeName);
-                    itemValues.put(ItemSchemaEntry.COLUMN_DESCRIPTION, description);
-                    itemValues.put(ItemSchemaEntry.COLUMN_PROPER_NAME, properName);
+                        //The DV that will contain all the data
+                        ContentValues itemValues = new ContentValues();
+                        itemValues.put(ItemSchemaEntry.COLUMN_DEFINDEX, defindex);
+                        itemValues.put(ItemSchemaEntry.COLUMN_ITEM_NAME, name);
+                        itemValues.put(ItemSchemaEntry.COLUMN_TYPE_NAME, typeName);
+                        itemValues.put(ItemSchemaEntry.COLUMN_DESCRIPTION, description);
+                        itemValues.put(ItemSchemaEntry.COLUMN_PROPER_NAME, properName);
 
-                    //Add the price to the CV vector
-                    cVVectorItems.add(itemValues);
-                }
-
-                publishProgress();
-            }
-
-            //success object
-            if (parser.getCurrentName().equals(KEY_ORIGINS)) {
-
-                parser.nextToken();
-
-                //Keep iterating while the array hasn't ended
-                while (parser.nextToken() != JsonToken.END_ARRAY) {
-                    //Initial values
-                    int id = 0;
-                    String name = null;
-
-                    //Parse an attribute and get the value of it
-                    while (parser.nextToken() != JsonToken.END_OBJECT) {
-                        switch (parser.getCurrentName()) {
-                            case KEY_ID:
-                                parser.nextToken();
-                                id = parser.getIntValue();
-                                break;
-                            case KEY_NAME:
-                                parser.nextToken();
-                                name = parser.getText();
-                                break;
-                        }
+                        //Add the price to the CV vector
+                        cVVectorItems.add(itemValues);
                     }
 
-                    //The DV that will contain all the data
-                    ContentValues itemValues = new ContentValues();
-                    itemValues.put(OriginEntry.COLUMN_ID, id);
-                    itemValues.put(OriginEntry.COLUMN_NAME, name);
+                    publishProgress();
+                    break;
+                case KEY_ORIGINS:
+                    parser.nextToken();
 
-                    //Add the price to the CV vector
-                    cVVectorOrigins.add(itemValues);
-                }
+                    //Keep iterating while the array hasn't ended
+                    while (parser.nextToken() != JsonToken.END_ARRAY) {
+                        //Initial values
+                        int id = 0;
+                        String name = null;
 
-                publishProgress();
-            }
-
-            //success object
-            if (parser.getCurrentName().equals(KEY_PARTICLES)) {
-
-                parser.nextToken();
-
-                //Keep iterating while the array hasn't ended
-                while (parser.nextToken() != JsonToken.END_ARRAY) {
-                    //Initial values
-                    int id = 0;
-                    String name = null;
-
-                    //Parse an attribute and get the value of it
-                    while (parser.nextToken() != JsonToken.END_OBJECT) {
-                        switch (parser.getCurrentName()) {
-                            case KEY_ID:
-                                parser.nextToken();
-                                id = parser.getIntValue();
-                                break;
-                            case KEY_NAME:
-                                parser.nextToken();
-                                name = parser.getText();
-                                break;
+                        //Parse an attribute and get the value of it
+                        while (parser.nextToken() != JsonToken.END_OBJECT) {
+                            switch (parser.getCurrentName()) {
+                                case KEY_ID:
+                                    parser.nextToken();
+                                    id = parser.getIntValue();
+                                    break;
+                                case KEY_NAME:
+                                    parser.nextToken();
+                                    name = parser.getText();
+                                    break;
+                            }
                         }
+
+                        //The DV that will contain all the data
+                        ContentValues itemValues = new ContentValues();
+                        itemValues.put(OriginEntry.COLUMN_ID, id);
+                        itemValues.put(OriginEntry.COLUMN_NAME, name);
+
+                        //Add the price to the CV vector
+                        cVVectorOrigins.add(itemValues);
                     }
 
-                    //The DV that will contain all the data
-                    ContentValues itemValues = new ContentValues();
-                    itemValues.put(UnusualSchemaEntry.COLUMN_ID, id);
-                    itemValues.put(UnusualSchemaEntry.COLUMN_NAME, name);
+                    publishProgress();
+                    break;
+                case KEY_PARTICLES:
+                    parser.nextToken();
 
-                    //Add the price to the CV vector
-                    cVVectorParticles.add(itemValues);
-                }
+                    //Keep iterating while the array hasn't ended
+                    while (parser.nextToken() != JsonToken.END_ARRAY) {
+                        //Initial values
+                        int id = 0;
+                        String name = null;
 
-                publishProgress();
+                        //Parse an attribute and get the value of it
+                        while (parser.nextToken() != JsonToken.END_OBJECT) {
+                            switch (parser.getCurrentName()) {
+                                case KEY_ID:
+                                    parser.nextToken();
+                                    id = parser.getIntValue();
+                                    break;
+                                case KEY_NAME:
+                                    parser.nextToken();
+                                    name = parser.getText();
+                                    break;
+                            }
+                        }
+
+                        //The DV that will contain all the data
+                        ContentValues itemValues = new ContentValues();
+                        itemValues.put(UnusualSchemaEntry.COLUMN_ID, id);
+                        itemValues.put(UnusualSchemaEntry.COLUMN_NAME, name);
+
+                        //Add the price to the CV vector
+                        cVVectorParticles.add(itemValues);
+                    }
+
+                    publishProgress();
+                    break;
             }
         }
 
