@@ -53,6 +53,7 @@ public class SteamIdActivity extends AppCompatActivity {
                 setProgress(progress * 1000);
             }
         });
+        webView.getSettings().setBuiltInZoomControls(true);
         webView.loadUrl("http://tlongdev.com/steamid.html");
     }
 
