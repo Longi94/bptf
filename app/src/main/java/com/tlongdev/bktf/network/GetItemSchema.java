@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.data.DatabaseContract.DecoratedWeaponEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
 import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
@@ -51,6 +52,8 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
 
             //Initialize the URL
             URL url = new URL(BASE_URL);
+
+            Log.v(LOG_TAG, "Built uri: " + url.toString());
 
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder().url(url).build();
@@ -97,12 +100,14 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
         final String KEY_ITEMS = "items";
         final String KEY_ORIGINS = "origins";
         final String KEY_PARTICLES = "particle_names";
+        final String KEY_DEC_WEAPONS = "decorated_weapons";
         final String KEY_DEFINDEX = "defindex";
         final String KEY_NAME = "name";
         final String KEY_DESCRIPTION = "description";
         final String KEY_TYPE_NAME = "type_name";
         final String KEY_PROPER_NAME = "proper_name";
         final String KEY_ID = "id";
+        final String KEY_GRADE = "grade";
 
         //Create a parser from the input stream for fast parsing and low impact on memory
         JsonFactory factory = new JsonFactory();
@@ -117,6 +122,7 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
         Vector<ContentValues> cVVectorItems = new Vector<>();
         Vector<ContentValues> cVVectorOrigins = new Vector<>();
         Vector<ContentValues> cVVectorParticles = new Vector<>();
+        Vector<ContentValues> cVVectorWeapons = new Vector<>();
 
         while (parser.nextToken() != JsonToken.END_OBJECT) {
 
@@ -259,6 +265,39 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
 
                     publishProgress();
                     break;
+                case KEY_DEC_WEAPONS:
+                    parser.nextToken();
+
+                    //Keep iterating while the array hasn't ended
+                    while (parser.nextToken() != JsonToken.END_ARRAY) {
+                        int defindex = 0;
+                        int grade = 0;
+
+                        //Parse an attribute and get the value of it
+                        while (parser.nextToken() != JsonToken.END_OBJECT) {
+                            switch (parser.getCurrentName()) {
+                                case KEY_DEFINDEX:
+                                    parser.nextToken();
+                                    defindex = parser.getIntValue();
+                                    break;
+                                case KEY_GRADE:
+                                    parser.nextToken();
+                                    grade = parser.getIntValue();
+                                    break;
+                            }
+                        }
+
+                        //The DV that will contain all the data
+                        ContentValues weaponValues = new ContentValues();
+                        weaponValues.put(DecoratedWeaponEntry.COLUMN_DEFINDEX, defindex);
+                        weaponValues.put(DecoratedWeaponEntry.COLUMN_GRADE, grade);
+
+                        //Add the price to the CV vector
+                        cVVectorWeapons.add(weaponValues);
+
+                    }
+                    publishProgress();
+                    break;
             }
         }
 
@@ -289,6 +328,15 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
             int rowsInserted = mContext.getContentResolver()
                     .bulkInsert(UnusualSchemaEntry.CONTENT_URI, cvArray);
             Log.v(LOG_TAG, "inserted " + rowsInserted + " rows into unusual_schema");
+        }
+
+        if (cVVectorWeapons.size() > 0) {
+            ContentValues[] cvArray = new ContentValues[cVVectorWeapons.size()];
+            cVVectorWeapons.toArray(cvArray);
+            //Insert all the data into the database
+            int rowsInserted = mContext.getContentResolver()
+                    .bulkInsert(DecoratedWeaponEntry.CONTENT_URI, cvArray);
+            Log.v(LOG_TAG, "inserted " + rowsInserted + " rows into decorated_weapons");
         }
 
         return 0;

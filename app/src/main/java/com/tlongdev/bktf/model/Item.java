@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract;
+import com.tlongdev.bktf.data.DatabaseContract.DecoratedWeaponEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.util.Utility;
 
@@ -337,80 +338,40 @@ public class Item implements Serializable {
      * @return the desired color
      */
     private int getDecoratedWeaponColor(Context context, boolean isDark) {
+        Cursor cursor = context.getContentResolver().query(
+                DecoratedWeaponEntry.CONTENT_URI,
+                new String[]{DecoratedWeaponEntry._ID, DecoratedWeaponEntry.COLUMN_GRADE},
+                DecoratedWeaponEntry.COLUMN_DEFINDEX + " = ?",
+                new String[]{String.valueOf(defindex)},
+                null
+        );
+
         int colorResource = 0;
-        switch (defindex) {
-            case 15025:
-            case 15026:
-            case 15027:
-            case 15028:
-            case 15029:
-            case 15039:
-            case 15040:
-            case 15041:
-            case 15042:
-            case 15043:
-            case 15044:
-                colorResource = isDark ? R.color.tf2_decorated_weapon_civilian_dark : R.color.tf2_decorated_weapon_civilian;
-                break;
-            case 15020:
-            case 15021:
-            case 15022:
-            case 15023:
-            case 15024:
-            case 15035:
-            case 15036:
-            case 15037:
-            case 15038:
-                colorResource = isDark ? R.color.tf2_decorated_weapon_freelance_dark : R.color.tf2_decorated_weapon_freelance;
-                break;
-            case 15000:
-            case 15001:
-            case 15003:
-            case 15004:
-            case 15005:
-            case 15008:
-            case 15016:
-            case 15017:
-            case 15018:
-            case 15032:
-            case 15033:
-            case 15034:
-            case 15047:
-            case 15054:
-            case 15055:
-            case 15057:
-            case 15058:
-                colorResource = isDark ? R.color.tf2_decorated_weapon_mercenary_dark : R.color.tf2_decorated_weapon_mercenary;
-                break;
-            case 15002:
-            case 15006:
-            case 15010:
-            case 15012:
-            case 15015:
-            case 15019:
-            case 15030:
-            case 15031:
-            case 15046:
-            case 15049:
-            case 15050:
-            case 15051:
-            case 15056:
-                colorResource = isDark ? R.color.tf2_decorated_weapon_commando_dark : R.color.tf2_decorated_weapon_commando;
-                break;
-            case 15007:
-            case 15009:
-            case 15011:
-            case 15048:
-            case 15052:
-            case 15053:
-                colorResource = isDark ? R.color.tf2_decorated_weapon_assassin_dark : R.color.tf2_decorated_weapon_assassin;
-                break;
-            case 15013:
-            case 15014:
-            case 15045:
-            case 15059:
-                colorResource = isDark ? R.color.tf2_decorated_weapon_elite_dark : R.color.tf2_decorated_weapon_elite;
-                break;
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                int grade = cursor.getInt(1);
+                switch (grade) {
+                    case 0:
+                        colorResource = isDark ? R.color.tf2_decorated_weapon_civilian_dark : R.color.tf2_decorated_weapon_civilian;
+                        break;
+                    case 1:
+                        colorResource = isDark ? R.color.tf2_decorated_weapon_freelance_dark : R.color.tf2_decorated_weapon_freelance;
+                        break;
+                    case 2:
+                        colorResource = isDark ? R.color.tf2_decorated_weapon_mercenary_dark : R.color.tf2_decorated_weapon_mercenary;
+                        break;
+                    case 3:
+                        colorResource = isDark ? R.color.tf2_decorated_weapon_commando_dark : R.color.tf2_decorated_weapon_commando;
+                        break;
+                    case 4:
+                        colorResource = isDark ? R.color.tf2_decorated_weapon_assassin_dark : R.color.tf2_decorated_weapon_assassin;
+                        break;
+                    case 5:
+                        colorResource = isDark ? R.color.tf2_decorated_weapon_elite_dark : R.color.tf2_decorated_weapon_elite;
+                        break;
+                }
+            }
+            cursor.close();
         }
         return colorResource == 0 ? Utility.getColor(context, R.color.tf2_normal_color) : Utility.getColor(context, colorResource);
     }
@@ -421,7 +382,7 @@ public class Item implements Serializable {
      * @param type the type of the decorated weapon
      * @return the formatted description string
      */
-    public String getDecoratedWeaponDesc(String type) {
+    public String getDecoratedWeaponDesc(Context context, String type) {
         String wearStr;
         switch (weaponWear) {
             case 1045220557:
@@ -443,76 +404,38 @@ public class Item implements Serializable {
                 throw new IllegalArgumentException("Invalid wear: " + weaponWear);
         }
 
-        switch (defindex) {
-            case 15025:
-            case 15026:
-            case 15027:
-            case 15028:
-            case 15029:
-            case 15039:
-            case 15040:
-            case 15041:
-            case 15042:
-            case 15043:
-            case 15044:
-                return "Civilian Grade " + type + " " + wearStr;
-            case 15020:
-            case 15021:
-            case 15022:
-            case 15023:
-            case 15024:
-            case 15035:
-            case 15036:
-            case 15037:
-            case 15038:
-                return "Freelance Grade " + type + " " + wearStr;
-            case 15000:
-            case 15001:
-            case 15003:
-            case 15004:
-            case 15005:
-            case 15008:
-            case 15016:
-            case 15017:
-            case 15018:
-            case 15032:
-            case 15033:
-            case 15034:
-            case 15047:
-            case 15054:
-            case 15055:
-            case 15057:
-            case 15058:
-                return "Mercenary Grade " + type + " " + wearStr;
-            case 15002:
-            case 15006:
-            case 15010:
-            case 15012:
-            case 15015:
-            case 15019:
-            case 15030:
-            case 15031:
-            case 15046:
-            case 15049:
-            case 15050:
-            case 15051:
-            case 15056:
-                return "Commando Grade " + type + " " + wearStr;
-            case 15007:
-            case 15009:
-            case 15011:
-            case 15048:
-            case 15052:
-            case 15053:
-                return "Assassin Grade " + type + " " + wearStr;
-            case 15013:
-            case 15014:
-            case 15045:
-            case 15059:
-                return "Elite Grade " + type + " " + wearStr;
-            default:
-                throw new IllegalArgumentException("Invalid defindex: " + defindex);
+        Cursor cursor = context.getContentResolver().query(
+                DecoratedWeaponEntry.CONTENT_URI,
+                new String[]{DecoratedWeaponEntry._ID, DecoratedWeaponEntry.COLUMN_GRADE},
+                DecoratedWeaponEntry.COLUMN_DEFINDEX + " = ?",
+                new String[]{String.valueOf(defindex)},
+                null
+        );
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                int grade = cursor.getInt(1);
+                switch (grade) {
+                    case 0:
+                        return "Civilian Grade " + type + " " + wearStr;
+                    case 1:
+                        return "Freelance Grade " + type + " " + wearStr;
+                    case 2:
+                        return "Mercenary Grade " + type + " " + wearStr;
+                    case 3:
+                        return "Commando Grade " + type + " " + wearStr;
+                    case 4:
+                        return "Assassin Grade " + type + " " + wearStr;
+                    case 5:
+                        return "Elite Grade " + type + " " + wearStr;
+                    default:
+                        throw new IllegalArgumentException("Invalid defindex: " + defindex);
+                }
+            }
+            cursor.close();
         }
+
+        return type + " " + wearStr;
     }
 
     /**

@@ -401,7 +401,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
                     //Insert all the data into the database
                     rowsInserted = mContext.getContentResolver()
                             .bulkInsert(PriceEntry.CONTENT_URI, cvArray);
-                    Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
+                    Log.v(LOG_TAG, "inserted " + rowsInserted + " rows into prices table");
                 }
                 parser.close();
                 return 0;
