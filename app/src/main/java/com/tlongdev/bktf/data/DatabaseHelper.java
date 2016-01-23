@@ -7,13 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.preference.PreferenceManager;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
-import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
-import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
-import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
-import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
-import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
+import com.tlongdev.bktf.data.DatabaseContract.*;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -23,7 +17,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @SuppressWarnings("unused")
     private static final String LOG_TAG = DatabaseHelper.class.getSimpleName();
 
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
     public static final String DATABASE_NAME = "bptf.db";
 
     private Context mContext;
@@ -96,6 +90,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         OriginEntry.COLUMN_NAME + " TEXT NOT NULL, " +
 
                         " UNIQUE (" + OriginEntry.COLUMN_ID + ") ON CONFLICT REPLACE);";
+
+        final String SQL_CREATE_DECORATED_WEAPONS_TABLE_TABLE =
+                "CREATE TABLE " + DecoratedWeaponEntry.TABLE_NAME + " (" +
+                        DecoratedWeaponEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+
+                        DecoratedWeaponEntry.COLUMN_DEFINDEX + " INTEGER NOT NULL, " +
+                        DecoratedWeaponEntry.COLUMN_GRADE + " INTEGER NOT NULL, " +
+
+                        " UNIQUE (" + DecoratedWeaponEntry.COLUMN_DEFINDEX + ") ON CONFLICT REPLACE);";
 
         final String SQL_CREATE_FAVORITES_TABLE =
                 "CREATE TABLE " + FavoritesEntry.TABLE_NAME + " (" +
@@ -200,6 +203,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_ITEM_SCHEMA_TABLE);
         db.execSQL(SQL_CREATE_UNUSUAL_SCHEMA_TABLE);
         db.execSQL(SQL_CREATE_ORIGIN_NAMES_TABLE);
+        db.execSQL(SQL_CREATE_DECORATED_WEAPONS_TABLE_TABLE);
         db.execSQL(SQL_CREATE_FAVORITES_TABLE);
         db.execSQL(SQL_CREATE_CALCULATOR_TABLE);
         db.execSQL(SQL_CREATE_BACKPACK_TABLE);
@@ -212,6 +216,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + ItemSchemaEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + UnusualSchemaEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + OriginEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DecoratedWeaponEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + FavoritesEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + CalculatorEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + UserBackpackEntry.TABLE_NAME);

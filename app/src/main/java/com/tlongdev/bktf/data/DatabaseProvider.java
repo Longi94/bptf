@@ -30,6 +30,7 @@ public class DatabaseProvider extends ContentProvider {
     public static final int BACKPACK_GUEST = 105;
     public static final int FAVORITES = 106;
     public static final int CALCULATOR = 107;
+    public static final int DECORATED_WEAPON = 108;
 
     /**
      * The URI Matcher used by this content provider
@@ -62,6 +63,7 @@ public class DatabaseProvider extends ContentProvider {
         matcher.addURI(authority, DatabaseContract.PATH_ITEM_SCHEMA, ITEM_SCHEMA);
         matcher.addURI(authority, DatabaseContract.PATH_UNUSUAL_SCHEMA, UNUSUAL_SCHEMA);
         matcher.addURI(authority, DatabaseContract.PATH_ORIGIN_NAMES, ORIGIN_NAMES);
+        matcher.addURI(authority, DatabaseContract.PATH_DECORATED_WEAPONS, DECORATED_WEAPON);
         matcher.addURI(authority, DatabaseContract.PATH_BACKPACK, BACKPACK);
         matcher.addURI(authority, DatabaseContract.PATH_FAVORITES, FAVORITES);
         matcher.addURI(authority, DatabaseContract.PATH_CALCULATOR, CALCULATOR);
@@ -112,6 +114,9 @@ public class DatabaseProvider extends ContentProvider {
             case CALCULATOR:
                 tableName = CalculatorEntry.TABLE_NAME;
                 break;
+            case DECORATED_WEAPON:
+                tableName = DecoratedWeaponEntry.TABLE_NAME;
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -150,6 +155,8 @@ public class DatabaseProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_FAVORITES;
             case CALCULATOR:
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_CALCULATOR;
+            case DECORATED_WEAPON:
+                return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_DECORATED_WEAPONS;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -194,6 +201,10 @@ public class DatabaseProvider extends ContentProvider {
                 tableName = CalculatorEntry.TABLE_NAME;
                 returnUri = CalculatorEntry.CONTENT_URI;
                 break;
+            case DECORATED_WEAPON:
+                tableName = DecoratedWeaponEntry.TABLE_NAME;
+                returnUri = DecoratedWeaponEntry.CONTENT_URI;
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -234,6 +245,9 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             case CALCULATOR:
                 rowsDeleted = db.delete(CalculatorEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case DECORATED_WEAPON:
+                rowsDeleted = db.delete(DecoratedWeaponEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -277,6 +291,9 @@ public class DatabaseProvider extends ContentProvider {
             case CALCULATOR:
                 rowsUpdated = db.update(CalculatorEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
+            case DECORATED_WEAPON:
+                rowsUpdated = db.update(DecoratedWeaponEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -316,6 +333,9 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             case CALCULATOR:
                 tableName = CalculatorEntry.TABLE_NAME;
+                break;
+            case DECORATED_WEAPON:
+                tableName = DecoratedWeaponEntry.TABLE_NAME;
                 break;
             default:
                 return super.bulkInsert(uri, values);
