@@ -28,6 +28,7 @@ public final class DatabaseContract {
     public static final String PATH_ITEM_SCHEMA = "schema";
     public static final String PATH_UNUSUAL_SCHEMA = "unusual_schema";
     public static final String PATH_ORIGIN_NAMES = "origin_names";
+    public static final String PATH_DECORATED_WEAPONS = "decorated_weapons";
     public static final String PATH_FAVORITES = "favorites";
     public static final String PATH_CALCULATOR = "calculator";
     public static final String PATH_BACKPACK = "backpack";
@@ -95,6 +96,15 @@ public final class DatabaseContract {
         public static final String COLUMN_NAME = "name";
     }
 
+    public static final class DecoratedWeaponEntry implements BaseColumns {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_DECORATED_WEAPONS).build();
+
+        public static final String TABLE_NAME = "decorated_weapons";
+
+        public static final String COLUMN_DEFINDEX = "defindex";
+        public static final String COLUMN_GRADE = "grade";
+    }
     public static final class FavoritesEntry implements BaseColumns {
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_FAVORITES).build();
