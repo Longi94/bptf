@@ -255,7 +255,7 @@ public class ItemDetailActivity extends Activity {
 
                 //Set the level of the item, get the type from the intent
                 if (item.getDefindex() >= 15000 && item.getDefindex() <= 15059) {
-                    level.setText(String.format("(%s)", item.getDecoratedWeaponDesc(mIntent.getStringExtra(EXTRA_ITEM_TYPE))));
+                    level.setText(String.format("(%s)", item.getDecoratedWeaponDesc(this, mIntent.getStringExtra(EXTRA_ITEM_TYPE))));
                 } else {
                     level.setText(getString(R.string.item_detail_level,
                             item.getLevel(),
