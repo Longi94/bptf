@@ -23,3 +23,7 @@
 -keepclasseswithmembernames class * {
     @butterknife.* <methods>;
 }
+
+-dontwarn com.github.mikephil.charting.**
+-keep class com.github.mikephil.charting.** { *; }
+-keep interface com.github.mikephil.charting.** { *; }
