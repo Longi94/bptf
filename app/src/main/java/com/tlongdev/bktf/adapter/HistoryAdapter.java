@@ -259,8 +259,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                 }
             });
 
-            chart.getLineData().getDataSetByIndex(0).setLineWidth(2.0f);
-            chart.getLineData().getDataSetByIndex(0).setCircleSize(2.2f);
+            ((LineDataSet) chart.getLineData().getDataSetByIndex(0)).setLineWidth(2.0f);
+            ((LineDataSet) chart.getLineData().getDataSetByIndex(0)).setCircleRadius(2.2f);
 
             chart.notifyDataSetChanged();
             chart.animateY(1000, Easing.EasingOption.EaseOutCubic);
