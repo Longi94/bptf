@@ -94,7 +94,6 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     private String searchQuery;
 
     //Store the task so it can be stopped when the user modifies the query
-    // TODO: 2015. 10. 25. might need to change it to submission based query
     private SearchForUserTask searchTask;
 
     //The adapter of the recyclerview

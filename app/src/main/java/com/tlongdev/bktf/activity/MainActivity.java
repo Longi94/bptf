@@ -120,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
             //Close the drawers and handle item clicks
             mDrawerLayout.closeDrawers();
             switch (menuItem.getItemId()) {
-                // TODO: 2015. 10. 25. fragment selections in the navigation view is incorrect when selecting the user fragment
                 case R.id.nav_recents:
                     switchFragment(0);
                     break;

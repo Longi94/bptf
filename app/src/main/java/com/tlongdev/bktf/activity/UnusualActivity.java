@@ -53,8 +53,8 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
     public static final int COLUMN_CURRENCY = 3;
     public static final int COLUMN_PRICE = 4;
     public static final int COLUMN_PRICE_MAX = 5;
-    public static final int COLUMN_LAST_UDPATE = 6; // TODO: 2015. 10. 25.
-    public static final int COLUMN_DIFFRENCE = 7;
+    // TODO: 2015. 10. 25. public static final int COLUMN_LAST_UDPATE = 6;
+    // TODO: 2015. 10. 25. public static final int COLUMN_DIFFRENCE = 7;
     public static final int COLUMN_NAME = 8;
 
     //Default loader id

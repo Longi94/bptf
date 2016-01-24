@@ -577,7 +577,6 @@ public class UserActivity extends AppCompatActivity implements GetUserBackpack.O
                 }
             } catch (IOException e) {
                 //There was a network error
-                //TODO distinguish all network errors: timeout, connection refused, api down, etc.
                 publishProgress(getString(R.string.error_network));
                 e.printStackTrace();
 
