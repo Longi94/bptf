@@ -215,6 +215,8 @@ public class Item implements Serializable {
             case Quality.COLLECTORS:
                 formattedName += context.getString(R.string.quality_collectors) + " ";
                 break;
+            case Quality.PAINTKITWEAPON:
+                break;
             default:
                 formattedName += context.getString(R.string.quality_normal) + " ";
                 break;
