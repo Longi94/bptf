@@ -240,14 +240,23 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
 
                                 if (Build.VERSION.SDK_INT >= 23) {
                                     //Fancy shared elements transition if above 20
-                                    @SuppressWarnings("unchecked")
-                                    ActivityOptions options = ActivityOptions
-                                            .makeSceneTransitionAnimation((Activity) mContext,
-                                                    Pair.create((View) holder.icon, "icon_transition"),
-                                                    Pair.create((View) holder.effect, "effect_transition"),
-                                                    Pair.create((View) holder.paint, "paint_transition"),
-                                                    Pair.create((View) holder.quality, "quality_transition"),
-                                                    Pair.create((View) holder.root, "background_transition"));
+                                    ActivityOptions options;
+                                    if (holder.quality.getVisibility() == View.VISIBLE) {
+                                        options = ActivityOptions
+                                                .makeSceneTransitionAnimation((Activity) mContext,
+                                                        Pair.create((View) holder.icon, "icon_transition"),
+                                                        Pair.create((View) holder.effect, "effect_transition"),
+                                                        Pair.create((View) holder.paint, "paint_transition"),
+                                                        Pair.create((View) holder.quality, "quality_transition"),
+                                                        Pair.create((View) holder.root, "background_transition"));
+                                    } else {
+                                        options = ActivityOptions
+                                                .makeSceneTransitionAnimation((Activity) mContext,
+                                                        Pair.create((View) holder.icon, "icon_transition"),
+                                                        Pair.create((View) holder.effect, "effect_transition"),
+                                                        Pair.create((View) holder.paint, "paint_transition"),
+                                                        Pair.create((View) holder.root, "background_transition"));
+                                    }
                                     mContext.startActivity(i, options.toBundle());
                                 } else if (Build.VERSION.SDK_INT >= 21) {
                                     //Fancy shared elements transition if above 20
