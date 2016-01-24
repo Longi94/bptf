@@ -234,7 +234,6 @@
     <string name="pref_initial_load_v2">pref_initial_load_v2</string>
     <string name="title_activity_price_history">History</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="title_favorites">Favorites</string>
     <string name="pref_price_notification">pref_price_notification</string>
     <string name="pref_title_price_notification">Price update notification</string>

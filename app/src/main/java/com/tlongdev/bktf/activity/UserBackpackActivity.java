@@ -41,7 +41,7 @@ public class UserBackpackActivity extends AppCompatActivity implements LoaderMan
     public static final int COL_BACKPACK_ID = 0;
     public static final int COL_BACKPACK_DEFI = 1;
     public static final int COL_BACKPACK_QUAL = 2;
-    public static final int COL_BACKPACK_CRFN = 3; // TODO unused
+    // TODO unused public static final int COL_BACKPACK_CRFN = 3;
     public static final int COL_BACKPACK_TRAD = 4;
     public static final int COL_BACKPACK_CRAF = 5;
     public static final int COL_BACKPACK_INDE = 6;

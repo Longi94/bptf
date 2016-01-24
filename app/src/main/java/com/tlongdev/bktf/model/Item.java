@@ -273,9 +273,6 @@ public class Item implements Serializable {
      * @return true if the item can have particle effects
      */
     public boolean canHaveEffects() {
-        if (defindex >= 15000 && defindex <= 15059) {
-            return false; //TODO weapon effects disabled for now
-        }
         //Unusuals, self-made and community items
         if (quality == 5 || quality == 7 || quality == 9) {
             return defindex != 267 && defindex != 266;
