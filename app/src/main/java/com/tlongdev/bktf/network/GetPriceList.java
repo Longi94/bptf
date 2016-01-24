@@ -408,13 +408,13 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
             }
 
             //success object
-            if (parser.getCurrentName().equals(KEY_SUCCESS)) {
+            if (parser.getCurrentName() != null && parser.getCurrentName().equals(KEY_SUCCESS)) {
                 parser.nextToken();
                 if (parser.getIntValue() == 0) {
                     //Unsuccessful query, nothing to do
 
                     while (parser.nextToken() != JsonToken.END_OBJECT) {
-                        if (parser.getCurrentName().equals(KEY_MESSAGE)) {
+                        if (parser.getCurrentName() != null && parser.getCurrentName().equals(KEY_MESSAGE)) {
                             errorMessage = parser.getText();
                             Log.e(LOG_TAG, errorMessage);
                         }
@@ -425,7 +425,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
             }
 
             //count object since with this type of parser we don't actually know how long the array is
-            if (parser.getCurrentName().equals(KEY_COUNT)) {
+            if (parser.getCurrentName() != null && parser.getCurrentName().equals(KEY_COUNT)) {
                 parser.nextToken();
                 //Notify the task that the download finished and the processing begins
                 count = parser.getIntValue();
