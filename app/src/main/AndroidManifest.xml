@@ -191,7 +191,6 @@
         </activity>
         <activity
             android:name=".activity.SteamIdActivity"
-            android:label="@string/title_activity_steam_id"
             android:parentActivityName=".activity.LoginActivity"
             android:theme="@style/AppTheme">
             <meta-data
