@@ -39,7 +39,7 @@
         android:minHeight="84dp"
         android:orientation="horizontal">
 
-        <FrameLayout
+        <RelativeLayout
             android:id="@+id/icon_background"
             android:layout_width="84dp"
             android:layout_height="match_parent">
@@ -47,9 +47,10 @@
             <ImageView
                 android:id="@+id/quality"
                 android:layout_width="84dp"
-                android:layout_height="wrap_content"
+                android:layout_height="84dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentTop="true"
                 android:layout_gravity="center"
-                android:adjustViewBounds="true"
                 android:contentDescription="@string/description_icon"
                 android:minHeight="84dp"
                 android:scaleType="centerCrop"
@@ -73,7 +74,7 @@
                 android:minHeight="84dp"
                 android:scaleType="fitCenter"/>
 
-        </FrameLayout>
+        </RelativeLayout>
 
         <ImageView
             android:layout_width="4dp"
