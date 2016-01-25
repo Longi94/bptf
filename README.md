@@ -1,23 +1,39 @@
 ## bptf - TF2 Price Checker
 The unofficial backpack.tf mobile application
 
-[![Google Play](http://developer.android.com/images/brand/en_generic_rgb_wo_60.png)](https://play.google.com/store/apps/details?id=com.tlongdev.bktf)
+[![Google Play](https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png)](https://play.google.com/store/apps/details?id=com.tlongdev.bktf)
 
 `master` [![Build Status](https://travis-ci.org/Longi94/bptf.svg?branch=master)](https://travis-ci.org/Longi94/bptf)
 
 `development` [![Build Status](https://travis-ci.org/Longi94/bptf.svg?branch=development)](https://travis-ci.org/Longi94/bptf)
 
-`v2.0.0-beta` [![Build Status](https://travis-ci.org/Longi94/bptf.svg?branch=v2.0.0-beta)](https://travis-ci.org/Longi94/bptf) [![codecov.io](https://codecov.io/github/Longi94/bptf/coverage.svg?branch=v2.0.0-beta)](https://codecov.io/github/Longi94/bptf?branch=v2.0.0-beta)
+`v2.0.0-beta` [![Build Status](https://travis-ci.org/Longi94/bptf.svg?branch=v2.0.0-beta)](https://travis-ci.org/Longi94/bptf)
 
 ### Contribute!
 Fork this repository and contribute by creating a pull request. Notable contributions will be credited in the application. See the [contributing guidelines](https://github.com/Longi94/bptf/blob/master/CONTRIBUTING.md) before contributing.
 
 ### 3rd party libraries
-- [QuickReturn](https://github.com/felipecsl/QuickReturn) (dropped in beta)
+- [Butter Knife](http://jakewharton.github.io/butterknife/)
+- [Glide](https://github.com/bumptech/glide)
 - [Jackson JSON Processor](http://wiki.fasterxml.com/JacksonHome)
+- [LicenseView](https://github.com/LarsWerkman/LicenseView)
+- [MPAndroidChart](https://github.com/PhilJay/MPAndroidChart)
+- [OkHttp](http://square.github.io/okhttp)
 
 ### License
 
-[Apache License 2.0](https://github.com/Longi94/bptf/blob/master/LICENSE.md)
+    Copyright 2015 Long Tran
+    
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+        http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 
 ### Docs (soon...)
