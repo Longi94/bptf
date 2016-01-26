@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--API Keys-->
-    <string name="steam_web_api_key" translatable="false">AA4BE494541ACA43379ADD02957B9F0E</string>
-
     <!--API URLs-->
     <string name="backpack_tf_get_users" translatable="false">http://backpack.tf/api/IGetUsers/v3/</string>
     <string name="steam_get_player_items_url" translatable="false">http://api.steampowered.com/IEconItems_440/GetPlayerItems/v0001/</string>

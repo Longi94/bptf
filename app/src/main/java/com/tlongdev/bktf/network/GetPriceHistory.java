@@ -27,7 +27,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 
@@ -95,7 +95,7 @@ public class GetPriceHistory extends AsyncTask<Void, Void, Integer> {
 
             //Build the URI
             Uri.Builder builder = Uri.parse(BASE_URL).buildUpon()
-                    .appendQueryParameter(KEY_DEV, mContext.getString(R.string.backpack_tf_api_key))
+                    .appendQueryParameter(KEY_DEV, BuildConfig.BACKPACK_TF_API_KEY)
                     .appendQueryParameter(KEY_DEFINDEX, String.valueOf(defindex))
                     .appendQueryParameter(KEY_QUALITY, String.valueOf(quality))
                     .appendQueryParameter(KEY_TRADABLE, String.valueOf(tradable))

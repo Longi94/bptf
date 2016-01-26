@@ -16,6 +16,9 @@ android {
                 output.outputFile = new File(output.outputFile.parent, "bptf-" + versionName + ".apk")
             }
         }
+
+        buildConfigField("String", "BACKPACK_TF_API_KEY", "\"${rootProject.property("BACKPACK_TF_API_KEY")}\"")
+        buildConfigField("String", "STEAM_WEB_API_KEY", "\"${rootProject.property("STEAM_WEB_API_KEY")}\"")
     }
     buildTypes {
         release {

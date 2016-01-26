@@ -44,6 +44,7 @@ import android.view.View;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
+import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.SearchAdapter;
 import com.tlongdev.bktf.data.DatabaseContract;
@@ -375,7 +376,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
 
                 if (!Utility.isSteamId(params[0])) {
                     uri = Uri.parse(mContext.getString(R.string.steam_resolve_vanity_url)).buildUpon()
-                            .appendQueryParameter(KEY_API, mContext.getString(R.string.steam_web_api_key))
+                            .appendQueryParameter(KEY_API, BuildConfig.STEAM_WEB_API_KEY)
                             .appendQueryParameter(KEY_VANITY_URL, params[0]).build();
                     url = new URL(uri.toString());
 
@@ -413,7 +414,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                     }
 
                     uri = Uri.parse(mContext.getString(R.string.steam_get_player_summaries_url)).buildUpon()
-                            .appendQueryParameter(KEY_API, mContext.getString(R.string.steam_web_api_key))
+                            .appendQueryParameter(KEY_API, BuildConfig.STEAM_WEB_API_KEY)
                             .appendQueryParameter(KEY_STEAM_ID, steamId)
                             .build();
 

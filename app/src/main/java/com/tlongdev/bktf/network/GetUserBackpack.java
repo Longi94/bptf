@@ -25,6 +25,7 @@ import android.util.Log;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.BptfApplication;
+import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
 import com.tlongdev.bktf.model.Item;
@@ -237,7 +238,7 @@ public class GetUserBackpack extends AsyncTask<String, Void, Integer> {
             //Build the URI
             Uri uri = Uri.parse(mContext.getString(R.string.steam_get_player_items_url))
                     .buildUpon()
-                    .appendQueryParameter(KEY_PARAM, mContext.getString(R.string.steam_web_api_key))
+                    .appendQueryParameter(KEY_PARAM, BuildConfig.STEAM_WEB_API_KEY)
                     .appendQueryParameter(ID_PARAM, params[0])
                     .build();
 
