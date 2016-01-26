@@ -24,6 +24,7 @@ import android.preference.PreferenceManager;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.BptfApplication;
+import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.util.Utility;
 
@@ -127,7 +128,7 @@ public class GetUserInfo extends AsyncTask<String, Void, Integer> {
 
                 //Build the URI
                 uri = Uri.parse(VANITY_BASE_URL).buildUpon()
-                        .appendQueryParameter(KEY_API, mContext.getString(R.string.steam_web_api_key))
+                        .appendQueryParameter(KEY_API, BuildConfig.STEAM_WEB_API_KEY)
                         .appendQueryParameter(KEY_VANITY_URL, steamId).build();
 
                 //Initialize the URL
@@ -176,7 +177,7 @@ public class GetUserInfo extends AsyncTask<String, Void, Integer> {
 
             //Build user summaries uri
             uri = Uri.parse(USER_SUMMARIES_BASE_URL).buildUpon()
-                    .appendQueryParameter(KEY_API, mContext.getString(R.string.steam_web_api_key))
+                    .appendQueryParameter(KEY_API, BuildConfig.STEAM_WEB_API_KEY)
                     .appendQueryParameter(KEY_STEAM_ID, steamId)
                     .build();
 
