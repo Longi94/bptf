@@ -120,9 +120,14 @@ public class FavoritesFragment extends Fragment implements MainActivity.OnDrawer
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLoaderManager().initLoader(FAVORITES_LOADER, null, this);
-        setHasOptionsMenu(true);
         setRetainInstance(true);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        getLoaderManager().initLoader(FAVORITES_LOADER, null, this);
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -275,8 +280,8 @@ public class FavoritesFragment extends Fragment implements MainActivity.OnDrawer
 
         ArrayList<Item> items = new ArrayList<>();
 
-        if (data != null) {
-            while (data.moveToNext()) {
+        if (data != null && data.moveToFirst()) {
+            do {
                 Item item = new Item(data.getInt(COLUMN_DEFINDEX),
                         data.getString(COLUMN_NAME),
                         data.getInt(COLUMN_QUALITY),
@@ -297,7 +302,7 @@ public class FavoritesFragment extends Fragment implements MainActivity.OnDrawer
                 }
 
                 items.add(item);
-            }
+            } while (data.moveToNext());
         }
 
         mAdapter.setDataSet(items);
