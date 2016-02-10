@@ -97,7 +97,7 @@ public class PriceHistoryActivity extends AppCompatActivity implements GetPriceH
 
         Intent i = getIntent();
 
-        mItem = (Item) i.getSerializableExtra(EXTRA_ITEM);
+        mItem = i.getParcelableExtra(EXTRA_ITEM);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 

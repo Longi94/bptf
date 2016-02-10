@@ -177,7 +177,7 @@ public class FavoritesFragment extends Fragment implements MainActivity.OnDrawer
         switch (requestCode) {
             case MainActivity.REQUEST_NEW_ITEM:
                 if (resultCode == Activity.RESULT_OK) {
-                    Utility.addToFavorites(getActivity(), (Item) data.getSerializableExtra(ItemChooserActivity.EXTRA_ITEM));
+                    Utility.addToFavorites(getActivity(), (Item) data.getParcelableExtra(ItemChooserActivity.EXTRA_ITEM));
                     getLoaderManager().restartLoader(FAVORITES_LOADER, null, this);
                 }
         }

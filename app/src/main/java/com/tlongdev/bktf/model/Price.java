@@ -18,19 +18,20 @@ package com.tlongdev.bktf.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.util.Utility;
 
-import java.io.Serializable;
 import java.text.DecimalFormat;
 
 /**
  * Price class
  */
-public class Price implements Serializable {
+public class Price implements Parcelable {
 
     /**
      * Log tag for logging.
@@ -49,6 +50,40 @@ public class Price implements Serializable {
     private double difference;
 
     private String currency;
+
+    public static final Parcelable.Creator<Price> CREATOR = new Creator<Price>() {
+        @Override
+        public Price createFromParcel(Parcel source) {
+            return new Price(source);
+        }
+
+        @Override
+        public Price[] newArray(int size) {
+            return new Price[0];
+        }
+    };
+
+    public Price(Parcel source) {
+        value = source.readDouble();
+        highValue = source.readDouble();
+        rawValue = source.readDouble();
+        lastUpdate = source.readLong();
+        currency = source.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeDouble(value);
+        dest.writeDouble(highValue);
+        dest.writeDouble(rawValue);
+        dest.writeLong(lastUpdate);
+        dest.writeString(currency);
+    }
 
     public Price() {
         this(0, 0, 0, 0, 0, null);

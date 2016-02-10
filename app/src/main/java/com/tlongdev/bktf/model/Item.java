@@ -19,6 +19,8 @@ package com.tlongdev.bktf.model;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 
 import com.tlongdev.bktf.R;
@@ -27,12 +29,10 @@ import com.tlongdev.bktf.data.DatabaseContract.DecoratedWeaponEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.util.Utility;
 
-import java.io.Serializable;
-
 /**
  * Item class
  */
-public class Item implements Serializable {
+public class Item implements Parcelable {
 
     /**
      * Log tag for logging.
@@ -57,6 +57,48 @@ public class Item implements Serializable {
     private int weaponWear;
 
     private Price price;
+
+    public static final Parcelable.Creator<Item> CREATOR = new Creator<Item>() {
+        @Override
+        public Item createFromParcel(Parcel source) {
+            return new Item(source);
+        }
+
+        @Override
+        public Item[] newArray(int size) {
+            return new Item[0];
+        }
+    };
+
+    public Item(Parcel source) {
+        defindex = source.readInt();
+        name = source.readString();
+        quality = source.readInt();
+        tradable = source.readByte() != 0;
+        craftable = source.readByte() != 0;
+        australium = source.readByte() != 0;
+        priceIndex = source.readInt();
+        weaponWear = source.readInt();
+        price = source.readParcelable(Price.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(defindex);
+        dest.writeString(name);
+        dest.writeInt(quality);
+        dest.writeByte((byte) (tradable ? 1 : 0));
+        dest.writeByte((byte) (craftable ? 1 : 0));
+        dest.writeByte((byte) (australium ? 1 : 0));
+        dest.writeInt(priceIndex);
+        dest.writeInt(weaponWear);
+        dest.writeParcelable(price, flags);
+    }
 
     public Item() {
         this(0, null, 0, false, false, false, 0, null);
