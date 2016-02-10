@@ -382,7 +382,7 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
     protected void onProgressUpdate(Void... values) {
         super.onProgressUpdate(values);
         if (listener != null) {
-            listener.onItemSchemaUpdate(3);
+            listener.onItemSchemaUpdate(4);
         }
     }
 
