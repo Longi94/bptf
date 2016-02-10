@@ -222,7 +222,7 @@ public class CalculatorFragment extends Fragment implements MainActivity.OnDrawe
         // Check which request we're responding to
         if (requestCode == MainActivity.REQUEST_NEW_ITEM) {
             if (resultCode == Activity.RESULT_OK) {
-                Item item = (Item) data.getSerializableExtra(ItemChooserActivity.EXTRA_ITEM);
+                Item item = data.getParcelableExtra(ItemChooserActivity.EXTRA_ITEM);
                 Cursor cursor = getActivity().getContentResolver().query(
                         PriceEntry.CONTENT_URI,
                         PRICE_LIST_COLUMNS,
