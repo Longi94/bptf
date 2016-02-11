@@ -1,103 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Layout resource for the item chooser dialog activity.-->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
     android:id="@+id/list_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
-    tools:context="com.tlongdev.bktf.ItemChooserActivity">
+    tools:context=".activity.ItemChooserActivity">
 
-    <!--Spinner for switching between normal and unusual items-->
-    <Spinner
-        android:id="@+id/spinner_item"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
 
-    <!--Spinner for choosing an effect-->
-    <Spinner
-        android:id="@+id/spinner_effect"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="false"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp" />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
-    <!--Listview containing the matches-->
-    <ListView
-        android:id="@+id/list_view_item_chooser"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:scrollbars="none" />
-
-    <!--Shows if there is not match-->
-    <TextView
-        android:id="@+id/text_view_no_match"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
-        android:text="@string/item_chooser_no_match"
-        android:textColor="@color/text_view_default" />
+    </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:orientation="horizontal">
 
-        <!--Input for searching-->
-        <EditText
-            android:id="@+id/edit_text_search"
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/item"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:hint="@string/item_chooser_hint"
-            android:inputType="text"
-            android:textColorHighlight="@color/bktf_main_blue_light"
-            android:textSize="16sp" />
+            android:foreground="?android:attr/selectableItemBackground"
+            card_view:cardBackgroundColor="@color/card_color">
 
-        <!--Number of items to be added-->
-        <EditText
-            android:id="@+id/edit_text_count"
+            <com.tlongdev.bktf.view.RatioHeightFrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.tlongdev.bktf.view.RatioHeightImageView
+                    android:id="@+id/icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/item_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="16dp"
+                    android:gravity="center"
+                    android:text="Tap here to choose an item."/>
+
+                <TextView
+                    android:id="@+id/item_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/shadow_gradient_top"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp"
+                    android:visibility="gone"/>
+
+            </com.tlongdev.bktf.view.RatioHeightFrameLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <View
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:inputType="number"
-            android:text="@string/item_chooser_count"
-            android:textColorHighlight="@color/bktf_main_blue_light"
-            android:textSize="16sp" />
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:orientation="horizontal">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <!--Cancel button-->
-        <Button
-            android:id="@+id/button_cancel"
-            style="?android:attr/buttonBarButtonStyle"
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Quality"
+            android:textColor="@color/accent"/>
+
+        <Spinner
+            android:id="@+id/quality"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/title_effect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Unusual Effect"
+            android:textColor="@color/accent"
+            android:visibility="gone"/>
+
+        <Spinner
+            android:id="@+id/effect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/title_wear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Weapon Wear"
+            android:textColor="@color/accent"
+            android:visibility="gone"/>
+
+        <Spinner
+            android:id="@+id/weapon_wear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <CheckBox
+                    android:id="@+id/tradable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:checked="true"
+                    android:text="Tradable"/>
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <CheckBox
+                    android:id="@+id/craftable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:checked="true"
+                    android:text="Craftable"/>
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/australium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/action_cancel"
-            android:textColor="@color/bptf_main_blue" />
-
-        <!--Add button-->
-        <Button
-            android:id="@+id/button_add"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:enabled="false"
-            android:text="@string/action_add"
-            android:textColor="@color/bptf_main_blue" />
+            android:layout_gravity="center"
+            android:checked="false"
+            android:text="Australium"/>
 
     </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_done_white_48dp"/>
 
 </LinearLayout>

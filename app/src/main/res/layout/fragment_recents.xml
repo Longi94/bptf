@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?><!--Layout resource for the latest changes fragment-->
+<android.support.design.widget.CoordinatorLayout android:id="@+id/coordinator_layout"
+                                                 xmlns:android="http://schemas.android.com/apk/res/android"
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 tools:context=".fragment.RecentsFragment">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="@string/title_home"/>
+
+        <LinearLayout
+            android:id="@+id/list_changes_header"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/primary"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/text_view_metal_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:drawableLeft="@drawable/ic_metal_white_18dp"
+                    android:drawablePadding="2dp"
+                    android:drawableStart="@drawable/ic_metal_white_18dp"
+                    android:gravity="center"
+                    android:textColor="#fff"
+                    android:textSize="14sp"/>
+
+                <View
+                    android:id="@+id/image_view_metal_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:background="#ff850000"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/text_view_key_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:drawableLeft="@drawable/ic_vpn_key_white_18dp"
+                    android:drawablePadding="2dp"
+                    android:drawableStart="@drawable/ic_vpn_key_white_18dp"
+                    android:gravity="center"
+                    android:textColor="#fff"
+                    android:textSize="14sp"/>
+
+                <View
+                    android:id="@+id/image_view_key_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:background="#ff850000"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/text_view_buds_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:drawableLeft="@drawable/ic_earbuds_18dp"
+                    android:drawablePadding="2dp"
+                    android:drawableStart="@drawable/ic_earbuds_18dp"
+                    android:gravity="center"
+                    android:textColor="#fff"
+                    android:textSize="14sp"/>
+
+                <View
+                    android:id="@+id/image_view_buds_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:background="#ff850000"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipChildren="false">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:padding="4dp"
+                android:scrollbars="none"/>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center"/>
+
+</android.support.design.widget.CoordinatorLayout>

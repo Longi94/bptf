@@ -3,18 +3,19 @@ android:
   components:
     # Uncomment the lines below if you want to
     # use the latest revision of Android SDK Tools
-    - platform-tools
+    # - platform-tools
     - tools
 
     # The BuildTools version used by your project
-    - build-tools-22.0.1
+    - build-tools-23.0.2
 
     # The SDK version used to compile your project
+    - android-23
     - android-22
 
     # Additional components
-    # - extra-google-google_play_services
-    # - extra-google-m2repository
+    - extra-google-google_play_services
+    - extra-google-m2repository
     - extra-android-m2repository
     # - addon-google_apis-google-19
     
@@ -28,19 +29,24 @@ env:
     - ADB_INSTALL_TIMEOUT=8
 
 before_install:
- - chmod +x gradlew
- - pip install --user codecov
+  - chmod +x gradlew
+  - pip install --user codecov
+  - android list sdk --no-ui --all --extended
+  - android list targets
 
 # Emulator Management: Create, Start and Wait
 before_script:
-  # - echo no | android create avd --force --name test --target android-22 --abi armeabi-v7a
-  # - emulator -avd test -no-skin -no-audio -no-window -gpu off -no-boot-anim &
-  # - android-wait-for-emulator
-  # - adb shell input keyevent 82 &
+  - echo no | android create avd --force --name test --target android-22 --abi armeabi-v7a
+  - emulator -avd test -no-skin -no-audio -no-window -gpu off &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
 
 script:
-  # - ./gradlew build connectedCheck
-  - ./gradlew assembleDebug
+  - ./gradlew build connectedCheck --stacktrace
+  #  - ./gradlew assembleDebug
   
 after_success:
   - codecov
+
+notifications:
+  email: false

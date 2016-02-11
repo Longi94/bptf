@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:id="@+id/primary_items"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_recents"
+            android:icon="@drawable/ic_new_releases_white_24dp"
+            android:title="@string/title_home" />
+        <item
+            android:id="@+id/nav_unusuals"
+            android:icon="@drawable/ic_weather_night_white_24dp"
+            android:title="@string/title_prices" />
+        <item
+            android:id="@+id/nav_user"
+            android:icon="@drawable/ic_account_white_24dp"
+            android:title="@string/title_user" />
+        <item
+            android:id="@+id/nav_favorites"
+            android:icon="@drawable/ic_favorite_white_24dp"
+            android:title="@string/title_favorites" />
+        <item
+            android:id="@+id/nav_converter"
+            android:icon="@drawable/ic_swap_horiz_white_24dp"
+            android:title="@string/title_converter" />
+        <item
+            android:id="@+id/nav_calculator"
+            android:icon="@drawable/ic_calculator_white_24dp"
+            android:title="@string/title_calculator" />
+    </group>
+    <group
+        android:id="@+id/secondary_items"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings_white_24dp"
+            android:title="@string/title_activity_settings" />
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_info_white_24dp"
+            android:title="@string/title_activity_about" />
+    </group>
+</menu>
