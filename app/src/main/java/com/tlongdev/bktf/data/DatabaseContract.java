@@ -1,3 +1,19 @@
+/**
+ * Copyright 2015 Long Tran
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.tlongdev.bktf.data;
 
 import android.net.Uri;
@@ -23,9 +39,17 @@ public final class DatabaseContract {
     // looking at weather data. content://com.example.android.sunshine.app/givemeroot/ will fail,
     // as the ContentProvider hasn't been given any information on what to do with "givemeroot".
     // At least, let's hope not.  Don't be that dev, reader.  Don't be that dev.
+    public static final String PATH_RAW_QUERY = "raw";
     public static final String PATH_PRICE_LIST = "pricelist";
-    public static final String PATH_ITEM_SCHEMA = "backpack";
+    public static final String PATH_ITEM_SCHEMA = "schema";
+    public static final String PATH_UNUSUAL_SCHEMA = "unusual_schema";
+    public static final String PATH_ORIGIN_NAMES = "origin_names";
+    public static final String PATH_DECORATED_WEAPONS = "decorated_weapons";
+    public static final String PATH_FAVORITES = "favorites";
+    public static final String PATH_CALCULATOR = "calculator";
     public static final String PATH_BACKPACK = "backpack";
+
+    public static final Uri RAW_QUERY_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_RAW_QUERY).build();
 
     /* Inner class that defines the table contents of the weather table */
     public static final class PriceEntry implements BaseColumns {
@@ -36,15 +60,14 @@ public final class DatabaseContract {
         public static final String TABLE_NAME = "pricelist";
 
         public static final String COLUMN_DEFINDEX = "defindex";
-        public static final String COLUMN_ITEM_NAME = "name";
         public static final String COLUMN_ITEM_QUALITY = "quality";
         public static final String COLUMN_ITEM_TRADABLE = "tradable";
         public static final String COLUMN_ITEM_CRAFTABLE = "craftable";
         public static final String COLUMN_PRICE_INDEX = "price_index";
         public static final String COLUMN_AUSTRALIUM = "australium";
-        public static final String COLUMN_ITEM_PRICE = "price";
-        public static final String COLUMN_ITEM_PRICE_MAX = "max";
-        public static final String COLUMN_ITEM_PRICE_CURRENCY = "currency";
+        public static final String COLUMN_PRICE = "price";
+        public static final String COLUMN_PRICE_HIGH = "max";
+        public static final String COLUMN_CURRENCY = "currency";
         public static final String COLUMN_LAST_UPDATE = "last_update";
         public static final String COLUMN_DIFFERENCE = "difference";
         public static final String COLUMN_WEAPON_WEAR = "weapon_wear";
@@ -66,12 +89,68 @@ public final class DatabaseContract {
         public static final String COLUMN_ITEM_NAME = "item_name";
         public static final String COLUMN_TYPE_NAME = "type_name";
         public static final String COLUMN_PROPER_NAME = "proper_name";
-
-        public static Uri buildUri(long id) {
-            return CONTENT_URI.buildUpon().appendPath("id").appendPath("" + id).build();
-        }
+        public static final String COLUMN_DESCRIPTION = "description";
     }
 
+    public static final class UnusualSchemaEntry implements BaseColumns {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_UNUSUAL_SCHEMA).build();
+
+        public static final String TABLE_NAME = "unusual_schema";
+
+        public static final String COLUMN_ID = "id";
+        public static final String COLUMN_NAME = "name";
+    }
+
+    public static final class OriginEntry implements BaseColumns {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_ORIGIN_NAMES).build();
+
+        public static final String TABLE_NAME = "origin_names";
+
+        public static final String COLUMN_ID = "id";
+        public static final String COLUMN_NAME = "name";
+    }
+
+    public static final class DecoratedWeaponEntry implements BaseColumns {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_DECORATED_WEAPONS).build();
+
+        public static final String TABLE_NAME = "decorated_weapons";
+
+        public static final String COLUMN_DEFINDEX = "defindex";
+        public static final String COLUMN_GRADE = "grade";
+    }
+    public static final class FavoritesEntry implements BaseColumns {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_FAVORITES).build();
+
+        public static final String TABLE_NAME = "favorites";
+
+        public static final String COLUMN_DEFINDEX = "defindex";
+        public static final String COLUMN_ITEM_QUALITY = "quality";
+        public static final String COLUMN_ITEM_TRADABLE = "tradable";
+        public static final String COLUMN_ITEM_CRAFTABLE = "craftable";
+        public static final String COLUMN_PRICE_INDEX = "price_index";
+        public static final String COLUMN_AUSTRALIUM = "australium";
+        public static final String COLUMN_WEAPON_WEAR = "weapon_wear";
+    }
+
+    public static final class CalculatorEntry implements BaseColumns {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_CALCULATOR).build();
+
+        public static final String TABLE_NAME = "calculator";
+
+        public static final String COLUMN_DEFINDEX = "defindex";
+        public static final String COLUMN_ITEM_QUALITY = "quality";
+        public static final String COLUMN_ITEM_TRADABLE = "tradable";
+        public static final String COLUMN_ITEM_CRAFTABLE = "craftable";
+        public static final String COLUMN_PRICE_INDEX = "price_index";
+        public static final String COLUMN_AUSTRALIUM = "australium";
+        public static final String COLUMN_WEAPON_WEAR = "weapon_wear";
+        public static final String COLUMN_COUNT = "item_count";
+    }
 
     public static final class UserBackpackEntry implements BaseColumns {
 
@@ -109,9 +188,5 @@ public final class DatabaseContract {
         public static final String COLUMN_CONTAINED_ITEM = "contained_item";
         public static final String COLUMN_AUSTRALIUM = "australium";
         public static final String COLUMN_DECORATED_WEAPON_WEAR = "weapon_wear";
-
-        public static Uri buildUri(long id) {
-            return CONTENT_URI.buildUpon().appendPath("id").appendPath("" + id).build();
-        }
     }
 }

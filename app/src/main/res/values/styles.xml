@@ -1,15 +1,22 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
 
         <item name="actionBarStyle">@style/bptfActionBar</item>
         <item name="android:windowContentOverlay">@null</item>
 
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+
     </style>
 
     <!--Dialog theme-->
-    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog" />
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Dialog">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 
     <!--Simple style for horizontal dividers. 1dp wide-->
     <style name="DividerHorizontal">
@@ -40,8 +47,8 @@
     </style>
 
     <!--Main Action Bar style-->
-    <style name="bptfActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
-        <item name="background">@color/bptf_main_blue</item>
+    <style name="bptfActionBar" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="background">@color/primary</item>
     </style>
 
 </resources>

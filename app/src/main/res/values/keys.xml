@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--API Keys-->
-    <string name="steam_web_api_key" translatable="false">AA4BE494541ACA43379ADD02957B9F0E</string>
-
     <!--API URLs-->
     <string name="backpack_tf_get_users" translatable="false">http://backpack.tf/api/IGetUsers/v3/</string>
-    <string name="tlongdev_prices" translatable="false">http://tlongdev.com/prices.php</string>
-    <string name="steam_get_schema_url" translatable="false">http://api.steampowered.com/IEconItems_440/GetSchema/v0001/</string>
     <string name="steam_get_player_items_url" translatable="false">http://api.steampowered.com/IEconItems_440/GetPlayerItems/v0001/</string>
     <string name="steam_get_player_summaries_url" translatable="false">http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/</string>
     <string name="steam_resolve_vanity_url"  translatable="false">http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/</string>
+    <string name="tlongdev_item_schema" translatable="false">http://tlongdev.com/api/v1/item_schema</string>
+    <string name="tlongdev_prices" translatable="false">http://tlongdev.com/api/v1/prices</string>
+    <string name="tlongdev_tf2_icons" translatable="false">http://tlongdev.com/api/v1/tf2_icon</string>
 
     <!--URLs-->
     <string name="link_bazaar_tf" translatable="false">http://bazaar.tf/profiles/</string>
@@ -18,7 +16,7 @@
     <string name="link_tf2op" translatable="false">http://www.tf2outpost.com/user/</string>
     <string name="link_tf2tp" translatable="false">http://tf2tp.com/user/</string>
     <string name="link_steam_community" translatable="false">http://steamcommunity.com/profiles/</string>
-    <string name="link_one_sky" translatable="false">https://tlongdev.oneskyapp.com/</string>
-    <string name="link_github_help" translatable="false">https://github.com/Longi94/bptf/wiki/Changelog</string>
+
+    <string name="gcm_sender_id" translatable="false">999648321586</string>
 
 </resources>

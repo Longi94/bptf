@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+        android:key="@string/pref_title_developer"
+        android:summary="@string/pref_summary_developer"
+        android:title="@string/pref_title_developer"/>
+
+    <Preference
+        android:key="@string/pref_title_version"
+        android:title="@string/pref_title_version"/>
+
+    <PreferenceScreen
+        android:icon="@drawable/ic_steam_white_24dp"
+        android:title="@string/pref_title_steam">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="http://steamcommunity.com/groups/bptfandroid"/>
+
+    </PreferenceScreen>
+
+    <PreferenceScreen
+        android:title="@string/pref_title_github_repo"
+        android:icon="@drawable/ic_github_circle_white_24dp">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://github.com/Longi94/bptf"/>
+
+    </PreferenceScreen>
+
+    <PreferenceScreen
+        android:title="@string/pref_title_licenses"
+        android:icon="@drawable/ic_info_outline_white_24dp">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.tlongdev.bktf.activity.LicensesActivity"
+            android:targetPackage="com.tlongdev.bktf"/>
+
+    </PreferenceScreen>
+
+    <PreferenceScreen
+        android:title="@string/pref_title_changelog"
+        android:icon="@drawable/ic_track_changes_white_24dp">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://github.com/Longi94/bptf/releases"/>
+
+    </PreferenceScreen>
+
+    <Preference
+        android:key="@string/pref_title_feedback"
+        android:title="@string/pref_title_feedback"
+        android:icon="@drawable/ic_feedback_white_24dp"/>
+
+    <Preference
+        android:key="@string/pref_title_rate"
+        android:title="@string/pref_title_rate"
+        android:icon="@drawable/ic_star_white_24dp"/>
+
+</PreferenceScreen>

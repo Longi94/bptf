@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Selector for the FAB. Pre-21-->
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/circular_button_pressed" android:state_pressed="true" />
-    <item android:drawable="@drawable/circular_button" />
-</selector>

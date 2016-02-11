@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--Slightly transparent colors for white ripples-->
-    <color name="white_ripple">#99ffffff</color>
-
     <!--Main colors-->
-    <color name="bptf_main_blue_dark">#ff5074ac</color>
-    <color name="bptf_main_blue">#ff5787c5</color>
-    <color name="bktf_main_blue_light">#ff60a2e8</color>
+    <color name="primary_dark">#303F9F</color>
+    <color name="primary">#3F51B5</color>
+    <color name="primary_light">#C5CAE9</color>
+    <color name="accent">#FF9800</color>
+
+
+    <color name="text_secondary">#BEBEBE</color>
+    <color name="text_primary">#FFFFFF</color>
 
     <!--Main item quality colors-->
     <color name="tf2_unusual_color">#8650AC</color>
@@ -49,8 +51,8 @@
 
     <!--Player state colors-->
     <color name="player_online">#ff24a9de</color>
-    <color name="player_offline">#ff6E6E6E</color>
     <color name="player_in_game">#ff8fb93b</color>
-    <color name="text_view_default">#ff666666</color>
+    <color name="card_color">#393939</color>
+    <color name="separator_color">#555555</color>
 
 </resources>

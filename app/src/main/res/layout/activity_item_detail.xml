@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Resource layout for item detail activity-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clipToPadding="false"
-    android:gravity="center"
-    android:padding="16dp">
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:gravity="center"
+                android:padding="16dp">
 
-    <!--Cardview for simulating dialogs-->
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        card_view:cardBackgroundColor="@color/card_color"
         card_view:cardCornerRadius="2dp"
         card_view:cardElevation="16dp">
 
@@ -23,30 +22,44 @@
             android:gravity="center"
             android:orientation="vertical"
             android:padding="16dp"
-            tools:context="com.tlongdev.bktf.ItemDetailActivity">
+            tools:context=".activity.ItemDetailActivity">
 
-            <!--Icon of the item-->
-            <com.tlongdev.bktf.view.SquareFrameLayout
+            <com.tlongdev.bktf.view.RatioHeightFrameLayout
                 android:id="@+id/relative_layout_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <com.tlongdev.bktf.view.SquareImageView
-                    android:id="@+id/image_view_item_background"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/item_background_blank" />
-
-                <com.tlongdev.bktf.view.SquareImageView
-                    android:id="@+id/image_view_item_icon"
+                <com.tlongdev.bktf.view.RatioHeightImageView
+                    android:id="@+id/quality"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"/>
 
-            </com.tlongdev.bktf.view.SquareFrameLayout>
+                <com.tlongdev.bktf.view.RatioHeightImageView
+                    android:id="@+id/effect"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"/>
 
-            <!--Name of the item-->
+                <com.tlongdev.bktf.view.RatioHeightImageView
+                    android:id="@+id/icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"/>
+
+                <com.tlongdev.bktf.view.RatioHeightImageView
+                    android:id="@+id/paint"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"/>
+
+            </com.tlongdev.bktf.view.RatioHeightFrameLayout>
+
             <TextView
                 android:id="@+id/text_view_name"
                 android:layout_width="wrap_content"
@@ -54,88 +67,79 @@
                 android:gravity="center"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
-                android:textColor="@color/text_view_default"
+                android:textColor="@color/text_primary"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
-            <!--Level of the item-->
             <TextView
                 android:id="@+id/text_view_level"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center" />
+                android:gravity="center"/>
 
-            <!--Name of the effect of the item-->
             <TextView
                 android:id="@+id/text_view_effect_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/text_view_default"
-                android:visibility="gone" />
+                android:textColor="@color/text_primary"
+                android:visibility="gone"/>
 
-            <!--Custom name of the item-->
             <TextView
                 android:id="@+id/text_view_custom_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/text_view_default"
-                android:visibility="gone" />
+                android:textColor="@color/text_primary"
+                android:visibility="gone"/>
 
-            <!--Custom description of the item-->
             <TextView
                 android:id="@+id/text_view_custom_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/text_view_default"
-                android:visibility="gone" />
+                android:textColor="@color/text_primary"
+                android:visibility="gone"/>
 
-            <!--Name of the crafter-->
             <TextView
                 android:id="@+id/text_view_crafted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/text_view_default"
-                android:visibility="gone" />
+                android:textColor="@color/text_primary"
+                android:visibility="gone"/>
 
-            <!--Name of the gifter-->
             <TextView
                 android:id="@+id/text_view_gifted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/text_view_default"
-                android:visibility="gone" />
+                android:textColor="@color/text_primary"
+                android:visibility="gone"/>
 
-            <!--The item's origin-->
             <TextView
                 android:id="@+id/text_view_origin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/text_view_default" />
+                android:textColor="@color/text_primary"/>
 
-            <!--Name of the paint-->
             <TextView
                 android:id="@+id/text_view_paint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/text_view_default"
-                android:visibility="gone" />
+                android:textColor="@color/text_primary"
+                android:visibility="gone"/>
 
-            <!--Price of the item-->
             <TextView
                 android:id="@+id/text_view_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingTop="8dp"
-                android:textColor="@color/text_view_default"
-                android:visibility="gone" />
+                android:textColor="@color/text_primary"
+                android:visibility="gone"/>
 
         </LinearLayout>
 
