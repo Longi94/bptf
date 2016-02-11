@@ -1,0 +1,98 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="@string/pref_main_preference_screen">
+
+    <PreferenceCategory android:title="@string/pref_category_account">
+
+        <com.tlongdev.bktf.preference.SteamIdPreference
+            android:key="@string/pref_steam_id"
+            android:title="@string/pref_steam_id" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_category_sync">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_auto_sync"
+            android:summaryOff="@string/pref_summary_off_auto_sync"
+            android:summaryOn="@string/pref_summary_on_auto_sync"
+            android:title="@string/pref_title_auto_sync" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_background_sync"
+            android:title="@string/pref_title_background_sync" />
+
+        <ListPreference
+            android:defaultValue="3600000"
+            android:dependency="@string/pref_background_sync"
+            android:entries="@array/array_pref_sync_interval_titles"
+            android:entryValues="@array/array_pref_sync_interval_values"
+            android:key="@string/pref_sync_interval"
+            android:title="@string/pref_title_sync_interval" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_category_notification">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_notification"
+            android:title="@string/pref_title_notification" />
+
+        <ListPreference
+            android:defaultValue="3600000"
+            android:dependency="@string/pref_notification"
+            android:entries="@array/array_pref_notification_interval_titles"
+            android:entryValues="@array/array_pref_notification_interval_values"
+            android:key="@string/pref_notification_interval"
+            android:title="@string/pref_title_notification_interval" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_category_about">
+
+        <Preference
+            android:key="@string/pref_title_developer"
+            android:summary="@string/pref_summary_developer"
+            android:title="@string/pref_title_developer" />
+
+        <Preference
+            android:key="@string/pref_title_version"
+            android:title="@string/pref_title_version" />
+
+        <PreferenceScreen
+            android:key="@string/pref_title_credits"
+            android:title="@string/pref_title_credits">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetClass="com.tlongdev.bktf.CreditsActivity"
+                android:targetPackage="com.tlongdev.bktf" />
+        </PreferenceScreen>
+
+        <Preference
+            android:key="@string/pref_title_changelog"
+            android:title="@string/pref_title_changelog" />
+
+        <Preference
+            android:key="@string/pref_title_feedback"
+            android:title="@string/pref_title_feedback" />
+
+        <Preference
+            android:key="@string/pref_title_rate"
+            android:title="@string/pref_title_rate" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="@string/pref_category_dev"
+        android:title="@string/pref_category_dev">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_debug"
+            android:title="@string/pref_title_debug_logs" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

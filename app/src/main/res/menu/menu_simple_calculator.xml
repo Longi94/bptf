@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Menu resource used in the simple fragment calculator-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.tlongdev.bktf.fragment.SimpleCalculatorFragment">
+
+    <!--Button for switching to advanced calculator.-->
+    <item
+        android:id="@+id/action_show_advanced"
+        android:orderInCategory="100"
+        android:title="@string/action_show_advanced"
+        app:showAsAction="never" />
+
+</menu>
