@@ -1,12 +1,12 @@
 /**
  * Copyright 2015 Long Tran
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -51,11 +51,7 @@ public class GetPriceHistory extends AsyncTask<Void, Void, Integer> {
 
     private Context mContext;
 
-    private int defindex;
-    private int quality;
-    private int craftable;
-    private int tradable;
-    private int priceIndex;
+    private Item item;
 
     private OnPriceHistoryListener listener;
 
@@ -64,20 +60,7 @@ public class GetPriceHistory extends AsyncTask<Void, Void, Integer> {
     private List<Price> result = new LinkedList<>();
 
     public GetPriceHistory(Context context, Item item) {
-        this.defindex = item.getDefindex();
-        this.quality = item.getQuality();
-        this.craftable = item.isCraftable() ? 1 : 0;
-        this.tradable = item.isTradable() ? 1 : 0;
-        this.priceIndex = item.getPriceIndex();
-        mContext = context;
-    }
-
-    public GetPriceHistory(Context context, int defindex, int quality, boolean craftable, boolean tradable, int priceIndex) {
-        this.defindex = defindex;
-        this.quality = quality;
-        this.craftable = craftable ? 1 : 0;
-        this.tradable = tradable ? 1 : 0;
-        this.priceIndex = priceIndex;
+        this.item = item;
         mContext = context;
     }
 
@@ -87,7 +70,7 @@ public class GetPriceHistory extends AsyncTask<Void, Void, Integer> {
         try {
             final String BASE_URL = "http://backpack.tf/api/IGetPriceHistory/v1/";
             final String KEY_DEV = "key";
-            final String KEY_DEFINDEX = "item";
+            final String KEY_ITEM = "item";
             final String KEY_QUALITY = "quality";
             final String KEY_TRADABLE = "tradable";
             final String KEY_CRAFTABLE = "craftable";
@@ -96,12 +79,12 @@ public class GetPriceHistory extends AsyncTask<Void, Void, Integer> {
             //Build the URI
             Uri.Builder builder = Uri.parse(BASE_URL).buildUpon()
                     .appendQueryParameter(KEY_DEV, BuildConfig.BACKPACK_TF_API_KEY)
-                    .appendQueryParameter(KEY_DEFINDEX, String.valueOf(defindex))
-                    .appendQueryParameter(KEY_QUALITY, String.valueOf(quality))
-                    .appendQueryParameter(KEY_TRADABLE, String.valueOf(tradable))
-                    .appendQueryParameter(KEY_CRAFTABLE, String.valueOf(craftable))
-                    .appendQueryParameter(KEY_PRICE_INDEX, String.valueOf(priceIndex));
-            
+                    .appendQueryParameter(KEY_ITEM, String.valueOf(item.isAustralium() ? "Australium " + item.getName() : item.getDefindex()))
+                    .appendQueryParameter(KEY_QUALITY, String.valueOf(item.getQuality()))
+                    .appendQueryParameter(KEY_TRADABLE, String.valueOf(item.isTradable() ? 1 : 0))
+                    .appendQueryParameter(KEY_CRAFTABLE, String.valueOf(item.isCraftable() ? 1 : 0))
+                    .appendQueryParameter(KEY_PRICE_INDEX, String.valueOf(item.getPriceIndex()));
+
             Uri uri = builder.build();
 
             //Initialize the URL
@@ -122,11 +105,11 @@ public class GetPriceHistory extends AsyncTask<Void, Void, Integer> {
             }
 
             return parseJsonString(inputStream);
-            
+
         } catch (JsonParseException e) {
             e.printStackTrace();
 
-            ((BptfApplication)mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+            ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
                     .setDescription("JSON exception:GetPriceHistory, Message: " + e.getMessage())
                     .setFatal(true)
                     .build());
@@ -134,7 +117,7 @@ public class GetPriceHistory extends AsyncTask<Void, Void, Integer> {
         } catch (IOException e) {
             e.printStackTrace();
 
-            ((BptfApplication)mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+            ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
                     .setDescription("Network exception:GetPriceHistory, Message: " + e.getMessage())
                     .setFatal(false)
                     .build());
@@ -154,7 +137,7 @@ public class GetPriceHistory extends AsyncTask<Void, Void, Integer> {
             }
         }
     }
-    
+
     private int parseJsonString(InputStream inputStream) throws IOException {
 
         //All the JSON keys needed to parse
