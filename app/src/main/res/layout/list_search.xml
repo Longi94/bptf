@@ -48,8 +48,6 @@
                 android:id="@+id/quality"
                 android:layout_width="84dp"
                 android:layout_height="84dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentTop="true"
                 android:layout_gravity="center"
                 android:contentDescription="@string/description_icon"
                 android:minHeight="84dp"
