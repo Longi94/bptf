@@ -252,6 +252,16 @@ public class GetUserBackpack extends AsyncTask<String, Void, Integer> {
             Request request = new Request.Builder().url(url).build();
             Response response = client.newCall(request).execute();
 
+            int statusCode = response.code();
+
+            if (statusCode >= 500) {
+                errorMessage = "Server error: " + statusCode;
+                return -1;
+            } else if (statusCode >= 400) {
+                errorMessage = "Client error: " + statusCode;
+                return -1;
+            }
+
             //Get the json string
             jsonStr = response.body().string();
 

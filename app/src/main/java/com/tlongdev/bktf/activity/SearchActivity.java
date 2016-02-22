@@ -55,16 +55,15 @@ import com.tlongdev.bktf.util.Utility;
 
 import org.json.JSONException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class SearchActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -361,93 +360,61 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         @Override
         protected String[] doInBackground(String... params) {
             String[] userData = new String[3];
-            // These two need to be declared outside the try/catch
-            // so that they can be closed in the finally block.
-            HttpURLConnection urlConnection;
-            BufferedReader reader;
-            Uri uri;
-            URL url;
-            InputStream inputStream;
-            StringBuffer buffer;
             String jsonString;
-            String steamId;
+            String steamId = params[0];
 
             try {
 
-                if (!Utility.isSteamId(params[0])) {
-                    uri = Uri.parse(mContext.getString(R.string.steam_resolve_vanity_url)).buildUpon()
+                if (!Utility.isSteamId(steamId)) {
+                    Uri uri = Uri.parse(mContext.getString(R.string.steam_resolve_vanity_url)).buildUpon()
                             .appendQueryParameter(KEY_API, BuildConfig.STEAM_WEB_API_KEY)
                             .appendQueryParameter(KEY_VANITY_URL, params[0]).build();
-                    url = new URL(uri.toString());
+                    URL url = new URL(uri.toString());
 
-                    urlConnection = (HttpURLConnection) url.openConnection();
-                    urlConnection.setRequestMethod("GET");
-                    urlConnection.connect();
+                    OkHttpClient client = new OkHttpClient();
+                    Request request = new Request.Builder().url(url).build();
+                    Response response = client.newCall(request).execute();
 
-                    inputStream = urlConnection.getInputStream();
-                    buffer = new StringBuffer();
+                    int statusCode = response.code();
 
-                    // Nothing to do.
-                    if (inputStream != null) {
-                        reader = new BufferedReader(new InputStreamReader(inputStream));
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                            // But it does make debugging a *lot* easier if you print out the completed
-                            // buffer for debugging.
-                            buffer.append(line);
-                        }
-
-                        if (buffer.length() == 0) {
-                            // Stream was empty.  No point in parsing.
-                            return null;
-                        }
-                        jsonString = buffer.toString();
-
-                        steamId = userData[1] = Utility.parseSteamIdFromVanityJson(jsonString);
-
-                        if (!Utility.isSteamId(steamId)) {
-                            return null;
-                        }
-                    } else {
-                        steamId = userData[1] = params[0];
+                    if (statusCode >= 500) {
+                        return null;
+                    } else if (statusCode >= 400) {
+                        return null;
                     }
 
-                    uri = Uri.parse(mContext.getString(R.string.steam_get_player_summaries_url)).buildUpon()
-                            .appendQueryParameter(KEY_API, BuildConfig.STEAM_WEB_API_KEY)
-                            .appendQueryParameter(KEY_STEAM_ID, steamId)
-                            .build();
+                    jsonString = response.body().string();
+                    steamId = userData[1] = Utility.parseSteamIdFromVanityJson(jsonString);
 
-                    url = new URL(uri.toString());
-
-                    urlConnection = (HttpURLConnection) url.openConnection();
-                    urlConnection.setRequestMethod("GET");
-                    urlConnection.connect();
-
-                    inputStream = urlConnection.getInputStream();
-                    buffer = new StringBuffer();
-
-                    String line;
-                    if (inputStream != null) {
-
-                        reader = new BufferedReader(new InputStreamReader(inputStream));
-
-                        while ((line = reader.readLine()) != null) {
-                            // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                            // But it does make debugging a *lot* easier if you print out the completed
-                            // buffer for debugging.
-                            buffer.append(line);
-                        }
-
-                        if (buffer.length() > 0) {
-                            jsonString = userData[2] = buffer.toString();
-                            userData[0] = Utility.parseUserNameFromJson(jsonString);
-                            PreferenceManager.getDefaultSharedPreferences(mContext).edit()
-                                    .putString(mContext.getString(R.string.pref_search_avatar_url),
-                                            Utility.parseAvatarUrlFromJson(jsonString)).apply();
-                        }
+                    if (!Utility.isSteamId(steamId)) {
+                        return null;
                     }
                 }
+
+                Uri uri = Uri.parse(mContext.getString(R.string.steam_get_player_summaries_url)).buildUpon()
+                        .appendQueryParameter(KEY_API, BuildConfig.STEAM_WEB_API_KEY)
+                        .appendQueryParameter(KEY_STEAM_ID, steamId)
+                        .build();
+                URL url = new URL(uri.toString());
+
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder().url(url).build();
+                Response response = client.newCall(request).execute();
+
+                int statusCode = response.code();
+
+                if (statusCode >= 500) {
+                    return null;
+                } else if (statusCode >= 400) {
+                    return null;
+                }
+
+                jsonString = userData[2] = response.body().string();
+                userData[0] = Utility.parseUserNameFromJson(jsonString);
+                PreferenceManager.getDefaultSharedPreferences(mContext).edit()
+                        .putString(mContext.getString(R.string.pref_search_avatar_url),
+                                Utility.parseAvatarUrlFromJson(jsonString)).apply();
+
             } catch (IOException e) {
                 e.printStackTrace();
 
@@ -468,8 +435,8 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         }
 
         @Override
-        protected void onPostExecute(final String[] s) {
-            if (s != null && s[0] != null) {
+        protected void onPostExecute(final String[] userData) {
+            if (userData != null && userData[0] != null) {
 
                 //Insert an extra row to the cursor
                 // TODO: 2015. 10. 25. there is really no need to do this, all we need is a proper adapter
@@ -483,10 +450,10 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                         PriceEntry.COLUMN_CURRENCY,
                         PriceEntry.COLUMN_PRICE,
                         PriceEntry.COLUMN_PRICE_HIGH,});
-                extras.addRow(new String[]{null, s[0], null, null, null, null, null, null, null});
+                extras.addRow(new String[]{null, userData[0], null, null, null, null, null, null, null});
                 Cursor[] cursors = {extras, data};
                 Cursor extendedCursor = new MergeCursor(cursors);
-                adapter.setUserFound(true, s);
+                adapter.setUserFound(true, userData);
                 adapter.swapCursor(extendedCursor, false);
             } else {
                 adapter.swapCursor(data, false);

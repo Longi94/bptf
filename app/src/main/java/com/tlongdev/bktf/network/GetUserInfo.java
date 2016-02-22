@@ -33,7 +33,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
 import okhttp3.OkHttpClient;
@@ -119,8 +118,6 @@ public class GetUserInfo extends AsyncTask<String, Void, Integer> {
             }
             Uri uri;
             URL url;
-            InputStream inputStream;
-            StringBuffer buffer;
 
             //Check if the given steamid is a resolved 64bit steamId
             if (!Utility.isSteamId(steamId)) {
@@ -138,6 +135,16 @@ public class GetUserInfo extends AsyncTask<String, Void, Integer> {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder().url(url).build();
                 Response response = client.newCall(request).execute();
+
+                int statusCode = response.code();
+
+                if (statusCode >= 500) {
+                    errorMessage = "Server error: " + statusCode;
+                    return -1;
+                } else if (statusCode >= 400) {
+                    errorMessage = "Client error: " + statusCode;
+                    return -1;
+                }
 
                 // If the stream was empty there is no point in parsing.
                 jsonString = response.body().string();
@@ -171,6 +178,16 @@ public class GetUserInfo extends AsyncTask<String, Void, Integer> {
             Request request = new Request.Builder().url(url).build();
             Response response = client.newCall(request).execute();
 
+            int statusCode = response.code();
+
+            if (statusCode >= 500) {
+                errorMessage = "Server error: " + statusCode;
+                return -1;
+            } else if (statusCode >= 400) {
+                errorMessage = "Client error: " + statusCode;
+                return -1;
+            }
+
             jsonString = response.body().string();
             //Parse the JSON
             parseUserInfoJson(jsonString, steamId);
@@ -188,6 +205,16 @@ public class GetUserInfo extends AsyncTask<String, Void, Integer> {
             client = new OkHttpClient();
             request = new Request.Builder().url(url).build();
             response = client.newCall(request).execute();
+
+            statusCode = response.code();
+
+            if (statusCode >= 500) {
+                errorMessage = "Server error: " + statusCode;
+                return -1;
+            } else if (statusCode >= 400) {
+                errorMessage = "Client error: " + statusCode;
+                return -1;
+            }
 
             jsonString = response.body().string();
             //Parse the JSON

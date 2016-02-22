@@ -144,6 +144,16 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
             Request request = new Request.Builder().url(url).build();
             Response response = client.newCall(request).execute();
 
+            int statusCode = response.code();
+
+            if (statusCode >= 500) {
+                errorMessage = "Server error: " + statusCode;
+                return -1;
+            } else if (statusCode >= 400) {
+                errorMessage = "Client error: " + statusCode;
+                return -1;
+            }
+
             //Get the input stream
             InputStream inputStream = response.body().byteStream();
 

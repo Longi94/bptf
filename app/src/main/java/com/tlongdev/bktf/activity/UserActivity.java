@@ -48,16 +48,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Profile page activity.
@@ -536,10 +535,6 @@ public class UserActivity extends AppCompatActivity implements GetUserBackpack.O
          */
         @Override
         protected Void doInBackground(String... params) {
-            // These two need to be declared outside the try/catch
-            // so that they can be closed in the finally block.
-            HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
 
             // Will contain the raw JSON response as a string.
             String jsonString;
@@ -561,36 +556,24 @@ public class UserActivity extends AppCompatActivity implements GetUserBackpack.O
 
                 URL url = new URL(uri.toString());
 
-                //Open connection
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder().url(url).build();
+                Response response = client.newCall(request).execute();
 
-                //Initialize input stream for reading
-                InputStream inputStream = urlConnection.getInputStream();
-                StringBuilder buffer = new StringBuilder();
+                int statusCode = response.code();
 
-                String line;
-
-                if (inputStream != null) {
-
-                    //Initialize the reader
-                    reader = new BufferedReader(new InputStreamReader(inputStream));
-
-                    //Read the input
-                    while ((line = reader.readLine()) != null) {
-                        buffer.append(line);
-                    }
-
-                    if (buffer.length() > 0) {
-                        //put the json string into a string and read the data out of it.
-                        jsonString = buffer.toString();
-                        parseUserInfoJson(jsonString, steamId);
-                    }
-
-                    //JSON that arrived with the intent
-                    parseUserSummariesJson(params[0]);
+                if (statusCode >= 500) {
+                    return null;
+                } else if (statusCode >= 400) {
+                    return null;
                 }
+
+                jsonString = response.body().string();
+                parseUserInfoJson(jsonString, steamId);
+
+                //JSON that arrived with the intent
+                parseUserSummariesJson(params[0]);
+
             } catch (IOException e) {
                 //There was a network error
                 publishProgress(getString(R.string.error_network));
@@ -611,27 +594,8 @@ public class UserActivity extends AppCompatActivity implements GetUserBackpack.O
                         .setFatal(true)
                         .build());
                 return null;
-            } finally {
-
-                //close the connection
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-                //close the input reader
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        publishProgress(e.getMessage());
-                        e.printStackTrace();
-
-                        mTracker.send(new HitBuilders.ExceptionBuilder()
-                                .setDescription("Buffered reader exception:UserActivity, Message: " + e.getMessage())
-                                .setFatal(false)
-                                .build());
-                    }
-                }
             }
+
             return null;
         }
 
