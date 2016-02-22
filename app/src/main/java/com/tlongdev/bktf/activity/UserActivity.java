@@ -560,6 +560,14 @@ public class UserActivity extends AppCompatActivity implements GetUserBackpack.O
                 Request request = new Request.Builder().url(url).build();
                 Response response = client.newCall(request).execute();
 
+                int statusCode = response.code();
+
+                if (statusCode >= 500) {
+                    return null;
+                } else if (statusCode >= 400) {
+                    return null;
+                }
+
                 jsonString = response.body().string();
                 parseUserInfoJson(jsonString, steamId);
 

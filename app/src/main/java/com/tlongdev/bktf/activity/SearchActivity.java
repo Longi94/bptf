@@ -375,6 +375,14 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                     Request request = new Request.Builder().url(url).build();
                     Response response = client.newCall(request).execute();
 
+                    int statusCode = response.code();
+
+                    if (statusCode >= 500) {
+                        return null;
+                    } else if (statusCode >= 400) {
+                        return null;
+                    }
+
                     jsonString = response.body().string();
                     steamId = userData[1] = Utility.parseSteamIdFromVanityJson(jsonString);
 
@@ -392,6 +400,14 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder().url(url).build();
                 Response response = client.newCall(request).execute();
+
+                int statusCode = response.code();
+
+                if (statusCode >= 500) {
+                    return null;
+                } else if (statusCode >= 400) {
+                    return null;
+                }
 
                 jsonString = userData[2] = response.body().string();
                 userData[0] = Utility.parseUserNameFromJson(jsonString);
