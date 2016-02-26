@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.fragment;
+package com.tlongdev.bktf.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -47,9 +47,9 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.activity.MainActivity;
-import com.tlongdev.bktf.activity.SearchActivity;
-import com.tlongdev.bktf.activity.UserBackpackActivity;
+import com.tlongdev.bktf.ui.activity.MainActivity;
+import com.tlongdev.bktf.ui.activity.SearchActivity;
+import com.tlongdev.bktf.ui.activity.UserBackpackActivity;
 import com.tlongdev.bktf.network.GetUserBackpack;
 import com.tlongdev.bktf.network.GetUserInfo;
 import com.tlongdev.bktf.util.Profile;

@@ -1,4 +1,4 @@
-package com.tlongdev.bktf.fragment;
+package com.tlongdev.bktf.ui.fragment;
 /**
  * Copyright 2015 Long Tran
  *
@@ -43,9 +43,9 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.activity.ItemChooserActivity;
-import com.tlongdev.bktf.activity.MainActivity;
-import com.tlongdev.bktf.activity.SearchActivity;
+import com.tlongdev.bktf.ui.activity.ItemChooserActivity;
+import com.tlongdev.bktf.ui.activity.MainActivity;
+import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.adapter.CalculatorAdapter;
 import com.tlongdev.bktf.data.DatabaseContract;
 import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;

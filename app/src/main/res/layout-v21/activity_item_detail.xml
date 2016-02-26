@@ -25,7 +25,7 @@
             android:orientation="vertical"
             android:padding="16dp"
             android:clipToPadding="false"
-            tools:context=".activity.ItemDetailActivity">
+            tools:context=".ui.activity.ItemDetailActivity">
 
             <com.tlongdev.bktf.view.RatioHeightFrameLayout
                 android:id="@+id/relative_layout_image"

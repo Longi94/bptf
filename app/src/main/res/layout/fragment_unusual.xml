@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
-    tools:context=".fragment.UnusualFragment">
+    tools:context=".ui.fragment.UnusualFragment">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"

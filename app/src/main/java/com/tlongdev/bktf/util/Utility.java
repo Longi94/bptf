@@ -38,7 +38,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.activity.MainActivity;
+import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
 import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;

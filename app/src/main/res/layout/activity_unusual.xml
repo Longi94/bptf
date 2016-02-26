@@ -8,7 +8,7 @@
     android:descendantFocusability="beforeDescendants"
     android:fitsSystemWindows="true"
     android:focusableInTouchMode="true"
-    tools:context=".activity.UnusualActivity">
+    tools:context=".ui.activity.UnusualActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.fragment;
+package com.tlongdev.bktf.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -39,7 +39,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.activity.SearchActivity;
+import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.util.Utility;

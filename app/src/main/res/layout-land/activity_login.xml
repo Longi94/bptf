@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context="com.tlongdev.bktf.activity.LoginActivity">
+    tools:context=".ui.activity.LoginActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

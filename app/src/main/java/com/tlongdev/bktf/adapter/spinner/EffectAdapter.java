@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.activity.ItemChooserActivity;
+import com.tlongdev.bktf.ui.activity.ItemChooserActivity;
 import com.tlongdev.bktf.model.Item;
 
 public class EffectAdapter extends SimpleCursorAdapter {

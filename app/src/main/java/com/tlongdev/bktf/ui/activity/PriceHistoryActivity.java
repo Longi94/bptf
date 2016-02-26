@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.activity;
+package com.tlongdev.bktf.ui.activity;
 
 import android.content.Intent;
 import android.os.Build;

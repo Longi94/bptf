@@ -14,53 +14,39 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.activity;
+package com.tlongdev.bktf.ui.activity;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Window;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.adapter.LicensesAdapter;
-import com.tlongdev.bktf.model.License;
-import com.tlongdev.bktf.util.ParseLicenseXml;
 import com.tlongdev.bktf.util.Utility;
-
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class LicensesActivity extends AppCompatActivity {
-
-    /**
-     * Log tag for logging.
-     */
-    @SuppressWarnings("unused")
-    private static final String LOG_TAG = LicensesActivity.class.getSimpleName();
+public class SteamIdActivity extends AppCompatActivity {
 
     /**
      * The {@link Tracker} used to record screen views.
      */
     private Tracker mTracker;
 
-    @Bind(R.id.recycler_view) RecyclerView recyclerView;
+    @Bind(R.id.web_view) WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_PROGRESS);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_licenses);
+        setContentView(R.layout.activity_steam_id);
         ButterKnife.bind(this);
 
         // Obtain the shared Tracker instance.
@@ -72,27 +58,19 @@ public class LicensesActivity extends AppCompatActivity {
             getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
         }
 
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //Show the home button as back button
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        List<License> licenses = new ArrayList<>();
-
-        try {
-            licenses = ParseLicenseXml.Parse(getResources()
-                    .getXml(R.xml.licenses));
-        } catch (XmlPullParserException | IOException e) {
-            e.printStackTrace();
-        }
-
-        LicensesAdapter adapter = new LicensesAdapter(licenses, this);
-        recyclerView.setAdapter(adapter);
+        webView.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int progress) {
+                // Activities and WebViews measure progress with different scales.
+                // The progress meter will automatically disappear when we reach 100%
+                setProgress(progress * 1000);
+            }
+        });
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.loadUrl("http://tlongdev.com/steamid.html");
     }
 
     @Override

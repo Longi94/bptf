@@ -27,7 +27,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.activity.SelectItemActivity;
+import com.tlongdev.bktf.ui.activity.SelectItemActivity;
 import com.tlongdev.bktf.model.Item;
 
 import butterknife.Bind;

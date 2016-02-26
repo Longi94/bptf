@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.activity;
+package com.tlongdev.bktf.ui.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -42,12 +42,12 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.fragment.CalculatorFragment;
-import com.tlongdev.bktf.fragment.ConverterFragment;
-import com.tlongdev.bktf.fragment.FavoritesFragment;
-import com.tlongdev.bktf.fragment.RecentsFragment;
-import com.tlongdev.bktf.fragment.UnusualFragment;
-import com.tlongdev.bktf.fragment.UserFragment;
+import com.tlongdev.bktf.ui.fragment.CalculatorFragment;
+import com.tlongdev.bktf.ui.fragment.ConverterFragment;
+import com.tlongdev.bktf.ui.fragment.FavoritesFragment;
+import com.tlongdev.bktf.ui.fragment.RecentsFragment;
+import com.tlongdev.bktf.ui.fragment.UnusualFragment;
+import com.tlongdev.bktf.ui.fragment.UserFragment;
 import com.tlongdev.bktf.gcm.GcmRegisterPriceUpdatesService;
 import com.tlongdev.bktf.util.CircleTransform;
 import com.tlongdev.bktf.util.Profile;
