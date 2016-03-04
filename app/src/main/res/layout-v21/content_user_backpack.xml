@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -28,7 +29,8 @@
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:padding="16dp"
             app:srcCompat="@drawable/ic_arrow_forward"
-            android:tint="@color/accent" />
+            android:tint="@color/accent"
+            tools:ignore="MissingPrefix"/>
 
     </LinearLayout>
 

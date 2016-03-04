@@ -27,3 +27,9 @@
 -dontwarn com.github.mikephil.charting.**
 -keep class com.github.mikephil.charting.** { *; }
 -keep interface com.github.mikephil.charting.** { *; }
+
+#Retrofit
+-dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions

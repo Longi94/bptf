@@ -66,7 +66,7 @@ public class Item implements Parcelable {
 
         @Override
         public Item[] newArray(int size) {
-            return new Item[0];
+            return new Item[size];
         }
     };
 

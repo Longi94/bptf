@@ -24,7 +24,9 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         Properties keys = new Properties()
-        keys.load(project.rootProject.file('keys.properties').newDataInputStream())
+        if (file('keys.properties').exists()) {
+            keys.load(project.rootProject.file('keys.properties').newDataInputStream())
+        }
 
         buildConfigField("String", "BACKPACK_TF_API_KEY", "\"${getKey(keys, "BACKPACK_TF_API_KEY")}\"")
         buildConfigField("String", "STEAM_WEB_API_KEY", "\"${getKey(keys, "STEAM_WEB_API_KEY")}\"")

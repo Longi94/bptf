@@ -17,6 +17,8 @@
 package com.tlongdev.bktf.model;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.tlongdev.bktf.R;
 
@@ -39,6 +41,61 @@ public class BackpackItem extends Item {
     private String containedItem;
 
     private boolean equipped;
+
+    public static final Parcelable.Creator<BackpackItem> CREATOR = new Creator<BackpackItem>() {
+        @Override
+        public BackpackItem createFromParcel(Parcel source) {
+            return new BackpackItem(source);
+        }
+
+        @Override
+        public BackpackItem[] newArray(int size) {
+            return new BackpackItem[size];
+        }
+    };
+
+    public BackpackItem(Parcel source) {
+        super(source);
+        uniqueId = source.readInt();
+        originalId = source.readInt();
+        level = source.readInt();
+        origin = source.readInt();
+        paint = source.readInt();
+        craftNumber = source.readInt();
+
+        customName = source.readString();
+        customDescription = source.readString();
+        creatorName = source.readString();
+        gifterName = source.readString();
+        containedItem = source.readString();
+
+        equipped = source.readByte() != 0;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+
+        dest.writeInt(uniqueId);
+        dest.writeInt(originalId);
+        dest.writeInt(level);
+        dest.writeInt(origin);
+        dest.writeInt(paint);
+        dest.writeInt(craftNumber);
+
+        dest.writeString(customName);
+        dest.writeString(customDescription);
+        dest.writeString(creatorName);
+        dest.writeString(gifterName);
+        dest.writeString(containedItem);
+
+        dest.writeByte((byte) (equipped ? 1 : 0));
+    }
 
     public BackpackItem() {
         this(0, null, 0, false, false, false, 0, null, 0, 0, 0, 0, 0, 0, null, null, null, null, null, false);
