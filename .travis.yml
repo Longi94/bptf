@@ -4,6 +4,8 @@ android:
     - tools
     - build-tools-23.0.2
     - android-23
+    - extra-google-google_play_services
+    - extra-google-m2repository
     - extra-android-m2repository
 
 before_install:
@@ -11,7 +13,7 @@ before_install:
   - pip install --user codecov
 
 script:
-  - ./gradlew jacocoFullReport
+  - ./gradlew build
 
 after_success:
   - codecov
