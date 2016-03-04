@@ -17,6 +17,8 @@ android {
             }
         }
 
+        vectorDrawables.useSupportLibrary = true
+
         buildConfigField("String", "BACKPACK_TF_API_KEY", "\"${rootProject.property("BACKPACK_TF_API_KEY")}\"")
         buildConfigField("String", "STEAM_WEB_API_KEY", "\"${rootProject.property("STEAM_WEB_API_KEY")}\"")
     }

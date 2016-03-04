@@ -35,9 +35,9 @@
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:drawableLeft="@drawable/ic_search_white_24dp"
+            android:drawableLeft="@drawable/ic_search_white_wrapper"
             android:drawablePadding="4dp"
-            android:drawableStart="@drawable/ic_search_white_24dp"
+            android:drawableStart="@drawable/ic_search_white_wrapper"
             android:hint="Name"
             android:lines="1"/>
 

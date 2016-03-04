@@ -442,8 +442,8 @@ public class UserActivity extends AppCompatActivity implements GetUserBackpack.O
                 break;
         }
 
-        Drawable statusOk = getResources().getDrawable(R.drawable.ic_done_white_48dp);
-        Drawable statusBad = getResources().getDrawable(R.drawable.ic_close_white_48dp);
+        Drawable statusOk = getResources().getDrawable(R.drawable.ic_done_white);
+        Drawable statusBad = getResources().getDrawable(R.drawable.ic_close_white);
         if (statusOk != null) statusOk.setColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY);
         if (statusBad != null) statusBad.setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
 

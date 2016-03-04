@@ -292,7 +292,7 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
             if (showEffect) {
                 //Show hats sorted by their average price
                 showEffect = false;
-                effectMenuItem.setIcon(R.drawable.ic_star_outline_white_24dp);
+                effectMenuItem.setIcon(R.drawable.ic_star_outline_white);
                 Bundle args = new Bundle();
                 args.putString(QUERY_KEY, "AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC");
                 getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
@@ -303,7 +303,7 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
             } else {
                 //Show effects
                 showEffect = true;
-                effectMenuItem.setIcon(R.drawable.ic_star_white_24dp);
+                effectMenuItem.setIcon(R.drawable.ic_star_white);
                 getLoaderManager().restartLoader(EFFECT_LIST_LOADER, null, this);
                 getActivity().setTitle(getString(R.string.title_effects));
 

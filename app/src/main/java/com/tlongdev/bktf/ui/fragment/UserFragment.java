@@ -395,9 +395,9 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         //Load drawables for palyer statuses
-        Drawable statusUnknown = getResources().getDrawable(R.drawable.ic_help_outline_white_48dp);
-        Drawable statusOk = getResources().getDrawable(R.drawable.ic_done_white_48dp);
-        Drawable statusBad = getResources().getDrawable(R.drawable.ic_close_white_48dp);
+        Drawable statusUnknown = getResources().getDrawable(R.drawable.ic_help_white);
+        Drawable statusOk = getResources().getDrawable(R.drawable.ic_done_white);
+        Drawable statusBad = getResources().getDrawable(R.drawable.ic_close_white);
         if (statusOk != null) statusOk.setColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY);
         if (statusBad != null) statusBad.setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
 
