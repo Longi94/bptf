@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
 
 def getKey(Properties properties, String name) {
     return properties.containsKey(name) ? properties.getProperty(name) : "DUMMY_KEY"
@@ -56,6 +57,9 @@ dependencies {
     testCompile 'org.mockito:mockito-core:1.10.19'
     testCompile "org.robolectric:robolectric:3.1-SNAPSHOT"
 
+    apt 'com.google.dagger:dagger-compiler:2.0.2'
+    compile 'com.google.dagger:dagger:2.0.2'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
     compile 'com.android.support:support-v4:23.2.0'
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'com.android.support:cardview-v7:23.2.0'
@@ -66,7 +70,6 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.squareup.okhttp3:okhttp:3.1.2'
     compile('com.squareup.okhttp3:okhttp:3.1.2') {
         exclude group: 'com.squareup.okio', module: 'okio'
     }
