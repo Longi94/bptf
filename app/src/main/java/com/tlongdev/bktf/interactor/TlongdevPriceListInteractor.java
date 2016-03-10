@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.network;
+package com.tlongdev.bktf.interactor;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -30,6 +30,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.network.TlongdevInterface;
 import com.tlongdev.bktf.network.converter.TlongdevModelConverter;
 import com.tlongdev.bktf.network.model.TlongdevPrice;
 import com.tlongdev.bktf.network.model.TlongdevPricesPayload;
@@ -46,13 +47,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Task for fetching all data for prices database and updating it in the background.
  */
-public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
+public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Integer> {
 
     /**
      * Log tag for logging.
      */
     @SuppressWarnings("unused")
-    private static final String LOG_TAG = GetPriceList.class.getSimpleName();
+    private static final String LOG_TAG = TlongdevPriceListInteractor.class.getSimpleName();
 
     //The context the task runs in
     private final Context mContext;
@@ -82,7 +83,7 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
      * @param updateDatabase whether the database only needs an update
      * @param manualSync     whether this task was user initiated
      */
-    public GetPriceList(Context context, boolean updateDatabase, boolean manualSync) {
+    public TlongdevPriceListInteractor(Context context, boolean updateDatabase, boolean manualSync) {
         this.mContext = context;
         this.updateDatabase = updateDatabase;
         this.manualSync = manualSync;
@@ -230,8 +231,6 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
                     editor.apply();
                 }
             }
-
-            publishProgress(prices.size());
         }
 
         if (cVVector.size() > 0) {
@@ -275,19 +274,6 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
      * {@inheritDoc}
      */
     @Override
-    protected void onProgressUpdate(Integer... values) {
-        if (listener != null) {
-            if (values.length > 0) {
-                itemCount = values[0];
-            }
-            listener.onPriceListUpdate(itemCount);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     protected void onPostExecute(Integer integer) {
         if (listener != null) {
             if (integer >= 0) {
@@ -317,8 +303,6 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
          * Notify the listener, that the fetching has stopped.
          */
         void onPriceListFinished(int newItems, long sinceParam);
-
-        void onPriceListUpdate(int max);
 
         void onPriceListFailed(String errorMessage);
     }

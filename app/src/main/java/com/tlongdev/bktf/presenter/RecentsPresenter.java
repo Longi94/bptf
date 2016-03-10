@@ -11,8 +11,8 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.interactor.LoadAllPricesInteractor;
-import com.tlongdev.bktf.network.GetItemSchema;
-import com.tlongdev.bktf.network.GetPriceList;
+import com.tlongdev.bktf.interactor.TlongdevItemSchemaInteractor;
+import com.tlongdev.bktf.interactor.TlongdevPriceListInteractor;
 import com.tlongdev.bktf.ui.RecentsView;
 import com.tlongdev.bktf.util.Utility;
 
@@ -20,7 +20,7 @@ import com.tlongdev.bktf.util.Utility;
  * @author Long
  * @since 2016. 03. 10.
  */
-public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInteractor.Callback, GetPriceList.OnPriceListListener, GetItemSchema.OnItemSchemaListener {
+public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInteractor.Callback, TlongdevPriceListInteractor.OnPriceListListener, TlongdevItemSchemaInteractor.OnItemSchemaListener {
 
     private Tracker mTracker;
 
@@ -66,7 +66,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
 
         //Manual update
         if (Utility.isNetworkAvailable(mView.getContext())) {
-            GetPriceList task = new GetPriceList(mView.getContext(), true, true);
+            TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(mView.getContext(), true, true);
             task.setOnPriceListFetchListener(this);
             task.execute();
 
@@ -88,7 +88,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
         //Download whole database when the app is first opened.
         if (prefs.getBoolean(mView.getContext().getString(R.string.pref_initial_load_v2), true)) {
             if (Utility.isNetworkAvailable(mView.getContext())) {
-                GetPriceList task = new GetPriceList(mView.getContext(), false, true);
+                TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(mView.getContext(), false, true);
                 task.setOnPriceListFetchListener(this);
                 task.execute();
 
@@ -118,7 +118,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
             //Update database if the last update happened more than an hour ago
             if (System.currentTimeMillis() - prefs.getLong(mView.getContext().getString(R.string.pref_last_price_list_update), 0) >= 3600000L
                     && Utility.isNetworkAvailable(mView.getContext())) {
-                GetPriceList task = new GetPriceList(mView.getContext(), true, false);
+                TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(mView.getContext(), true, false);
                 task.setOnPriceListFetchListener(this);
                 task.execute();
                 
@@ -147,7 +147,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
 
         if (prefs.getBoolean(mView.getContext().getString(R.string.pref_initial_load_v2), true)) {
 
-            GetItemSchema task = new GetItemSchema(mView.getContext());
+            TlongdevItemSchemaInteractor task = new TlongdevItemSchemaInteractor(mView.getContext());
             task.setListener(this);
             task.execute();
 
@@ -168,7 +168,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
 
             if (System.currentTimeMillis() - prefs.getLong(mView.getContext().getString(R.string.pref_last_item_schema_update), 0) >= 172800000L //2days
                     && Utility.isNetworkAvailable(mView.getContext())) {
-                GetItemSchema task = new GetItemSchema(mView.getContext());
+                TlongdevItemSchemaInteractor task = new TlongdevItemSchemaInteractor(mView.getContext());
                 task.setListener(this);
                 task.execute();
 
@@ -194,13 +194,6 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
                 System.currentTimeMillis());
         editor.putBoolean(mView.getContext().getString(R.string.pref_initial_load_v2), false);
         editor.apply();
-    }
-
-    @Override
-    public void onPriceListUpdate(int max) {
-        if (mView != null) {
-            mView.updateLoadingDialog(max, mView.getContext().getString(R.string.message_database_create));
-        }
     }
 
     @Override

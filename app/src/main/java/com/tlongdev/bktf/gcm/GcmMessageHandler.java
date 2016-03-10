@@ -30,13 +30,13 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract;
 import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
-import com.tlongdev.bktf.network.GetPriceList;
+import com.tlongdev.bktf.interactor.TlongdevPriceListInteractor;
 import com.tlongdev.bktf.util.Utility;
 
 /**
  * Created by Long on 2015. 12. 18..
  */
-public class GcmMessageHandler extends GcmListenerService implements GetPriceList.OnPriceListListener {
+public class GcmMessageHandler extends GcmListenerService implements TlongdevPriceListInteractor.OnPriceListListener {
 
     public static final String LOG_TAG = GcmMessageHandler.class.getSimpleName();
 
@@ -55,7 +55,7 @@ public class GcmMessageHandler extends GcmListenerService implements GetPriceLis
                 String autoSync = prefs.getString(getString(R.string.pref_auto_sync), "1");
 
                 if (autoSync.equals("2") || (autoSync.equals("1") && wifi.isConnected())) {
-                    GetPriceList task = new GetPriceList(this, true, true);
+                    TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(this, true, true);
                     task.setOnPriceListFetchListener(this);
                     task.execute();
                 }
@@ -108,11 +108,6 @@ public class GcmMessageHandler extends GcmListenerService implements GetPriceLis
         if (newPrice) {
             Utility.createSimpleNotification(this, NOTIFICATION_ID, "Prices updated", "The prices of your favorite items has been updated!");
         }
-    }
-
-    @Override
-    public void onPriceListUpdate(int max) {
-        //unused
     }
 
     @Override

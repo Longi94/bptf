@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.network;
+package com.tlongdev.bktf.interactor;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -28,6 +28,7 @@ import com.tlongdev.bktf.data.DatabaseContract.DecoratedWeaponEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
 import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
+import com.tlongdev.bktf.network.TlongdevInterface;
 import com.tlongdev.bktf.network.model.TlongdevDecoratedWeapon;
 import com.tlongdev.bktf.network.model.TlongdevItem;
 import com.tlongdev.bktf.network.model.TlongdevItemSchemaPayload;
@@ -42,20 +43,20 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
+public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer> {
 
     /**
      * Log tag for logging.
      */
     @SuppressWarnings("unused")
-    private static final String LOG_TAG = GetItemSchema.class.getSimpleName();
+    private static final String LOG_TAG = TlongdevItemSchemaInteractor.class.getSimpleName();
 
     private Context mContext;
 
     private OnItemSchemaListener listener;
     private String errorMessage;
 
-    public GetItemSchema(Context context) {
+    public TlongdevItemSchemaInteractor(Context context) {
         this.mContext = context;
     }
 
@@ -79,6 +80,7 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
                     insertOrigins(payload.getOrigins());
                     insertParticles(payload.getParticleName());
                     insertDecoratedWeapons(payload.getDecoratedWeapons());
+                    return 0;
                 } else {
                     errorMessage = payload.getMessage();
                 }
