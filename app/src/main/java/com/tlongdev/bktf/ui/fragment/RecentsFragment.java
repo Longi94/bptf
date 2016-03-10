@@ -25,12 +25,10 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -53,14 +51,11 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.adapter.RecentsAdapter;
+import com.tlongdev.bktf.presenter.RecentsPresenter;
+import com.tlongdev.bktf.ui.RecentsView;
 import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
-import com.tlongdev.bktf.adapter.RecentsAdapter;
-import com.tlongdev.bktf.data.DatabaseContract;
-import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
-import com.tlongdev.bktf.network.GetItemSchema;
-import com.tlongdev.bktf.network.GetPriceList;
 import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
@@ -69,20 +64,14 @@ import butterknife.ButterKnife;
 /**
  * recents fragment. Shows a list of all the prices orderd by the time of the price update.
  */
-public class RecentsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
-        SwipeRefreshLayout.OnRefreshListener, GetPriceList.OnPriceListListener,
-        MainActivity.OnDrawerOpenedListener, GetItemSchema.OnItemSchemaListener {
+public class RecentsFragment extends Fragment implements RecentsView,
+        SwipeRefreshLayout.OnRefreshListener, MainActivity.OnDrawerOpenedListener {
 
     /**
      * Log tag for logging.
      */
     @SuppressWarnings("unused")
     private static final String LOG_TAG = RecentsFragment.class.getSimpleName();
-
-    /**
-     * The ID of the loader
-     */
-    private static final int PRICE_LIST_LOADER = 0;
 
     /**
      * Indexes for the columns
@@ -145,7 +134,8 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     private ProgressDialog loadingDialog;
 
     private Context mContext;
-    private boolean layoutRefreshing = false;
+
+    private RecentsPresenter presenter;
 
     /**
      * Constructor
@@ -168,7 +158,6 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        getLoaderManager().initLoader(PRICE_LIST_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
     }
@@ -179,6 +168,10 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         // Obtain the shared Tracker instance.
         BptfApplication application = (BptfApplication) getActivity().getApplication();
         mTracker = application.getDefaultTracker();
+
+        presenter = new RecentsPresenter();
+        presenter.attachView(this);
+        presenter.setTracker(mTracker);
 
         View rootView = inflater.inflate(R.layout.fragment_recents, container, false);
         ButterKnife.bind(this, rootView);
@@ -208,9 +201,15 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         //Populate the toolbar header
-        updateCurrencyHeader(PreferenceManager.getDefaultSharedPreferences(mContext));
+        updateCurrencyHeader();
 
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        presenter.loadPrices();
     }
 
     @Override
@@ -219,60 +218,13 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
         mTracker.setScreenName("Latest Changes");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        //Download whole database when the app is first opened.
-        if (prefs.getBoolean(getString(R.string.pref_initial_load_v2), true)) {
-            if (Utility.isNetworkAvailable(mContext)) {
-                GetPriceList task = new GetPriceList(mContext, false, true);
-                task.setOnPriceListFetchListener(this);
-                task.execute();
+        presenter.downloadPricesIfNeeded();
+    }
 
-                //Show the progress dialog
-                loadingDialog = ProgressDialog.show(mContext, null, "Downloading prices...", true);
-                loadingDialog.setCancelable(false);
-
-                mTracker.send(new HitBuilders.EventBuilder()
-                        .setCategory("Request")
-                        .setAction("Refresh")
-                        .setLabel("Prices")
-                        .build());
-            } else {
-                //Quit the app if the download failed.
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setMessage(getString(R.string.message_database_fail_network)).setCancelable(false).
-                        setPositiveButton(getString(R.string.action_close), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                getActivity().finish();
-                            }
-                        });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            }
-        } else {
-
-            //Update database if the last update happened more than an hour ago
-            if (System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_price_list_update), 0) >= 3600000L
-                    && Utility.isNetworkAvailable(mContext)) {
-                GetPriceList task = new GetPriceList(mContext, true, false);
-                task.setOnPriceListFetchListener(this);
-                task.execute();
-                //Workaround for the circle not appearing
-                mSwipeRefreshLayout.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mSwipeRefreshLayout.setRefreshing(true);
-                    }
-                });
-                layoutRefreshing = true;
-
-                mTracker.send(new HitBuilders.EventBuilder()
-                        .setCategory("Request")
-                        .setAction("Refresh")
-                        .setLabel("Prices")
-                        .build());
-            }
-        }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.detachView();
     }
 
     @Override
@@ -293,38 +245,26 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String sql = "SELECT " +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + "," +
-                ItemSchemaEntry.TABLE_NAME + "." + DatabaseContract.ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_TRADABLE + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_CRAFTABLE + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_CURRENCY + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_HIGH + "," +
-                Utility.getRawPriceQueryString(mContext) + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DIFFERENCE + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM +
-                " FROM " + PriceEntry.TABLE_NAME +
-                " LEFT JOIN " + ItemSchemaEntry.TABLE_NAME +
-                " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
-                " ORDER BY " + PriceEntry.COLUMN_LAST_UPDATE + " DESC";
-
-        return new CursorLoader(
-                mContext,
-                DatabaseContract.RAW_QUERY_URI,
-                null,
-                sql,
-                null,
-                null
-        );
+    public void onRefresh() {
+        presenter.downloadPrices();
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        adapter.swapCursor(data, false);
+    public void onDrawerOpened() {
+        expandToolbar();
+    }
+
+    /**
+     * Fully expand the toolbar with animation.
+     */
+    public void expandToolbar() {
+        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
+        behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
+    }
+
+    @Override
+    public void showPrices(Cursor prices) {
+        adapter.swapCursor(prices, true);
 
         //Animate in the recycler view, so it's not that abrupt
         Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.simple_fade_in);
@@ -343,222 +283,35 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.swapCursor(null, false);
+    public void showError() {
+        adapter.swapCursor(null, true);
     }
 
     @Override
-    public void onRefresh() {
-        layoutRefreshing = true;
-        //Manual update
-        if (Utility.isNetworkAvailable(mContext)) {
-            GetPriceList task = new GetPriceList(mContext, true, true);
-            task.setOnPriceListFetchListener(this);
-            task.execute();
-
-            mTracker.send(new HitBuilders.EventBuilder()
-                    .setCategory("Request")
-                    .setAction("Refresh")
-                    .setLabel("Prices")
-                    .build());
-        } else {
-            Toast.makeText(mContext, "bptf: " + getString(R.string.error_no_network),
-                    Toast.LENGTH_SHORT).show();
-            mSwipeRefreshLayout.setRefreshing(false);
-            layoutRefreshing = false;
-        }
-    }
-
-    @Override
-    public void onPriceListFinished(int newItems, long sinceParam) {
-
-        if (newItems > 0) {
-            Utility.notifyPricesWidgets(mContext);
-        }
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-
-        if (loadingDialog != null) {
-            loadingDialog.dismiss();
-
-            loadingDialog = ProgressDialog.show(mContext, null, "Downloading item schema...", true);
-            loadingDialog.setCancelable(false);
-
-            GetItemSchema task = new GetItemSchema(mContext);
-            task.setListener(this);
-            task.execute();
-
-            mTracker.send(new HitBuilders.EventBuilder()
-                    .setCategory("Request")
-                    .setAction("Refresh")
-                    .setLabel("ItemSchema")
-                    .build());
-        } else {
-            if (newItems > 0) {
-                getLoaderManager().restartLoader(PRICE_LIST_LOADER, null, this);
+    public void showRefreshAnimation() {
+        //Workaround for the circle not appearing
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(true);
             }
-
-
-            if (System.currentTimeMillis() - prefs.getLong(getString(R.string.pref_last_item_schema_update), 0) >= 172800000L //2days
-                    && Utility.isNetworkAvailable(mContext)) {
-                GetItemSchema task = new GetItemSchema(mContext);
-                task.setListener(this);
-                task.execute();
-
-                mTracker.send(new HitBuilders.EventBuilder()
-                        .setCategory("Request")
-                        .setAction("Refresh")
-                        .setLabel("ItemSchema")
-                        .build());
-            } else {
-                if (isAdded()) {
-                    //Stop animation
-                    mSwipeRefreshLayout.setRefreshing(false);
-                    layoutRefreshing = false;
-
-                    updateCurrencyHeader(prefs);
-                }
-            }
-        }
-
-        //Get the shared preferences
-        SharedPreferences.Editor editor = prefs.edit();
-
-        //Save when the update finished
-        editor.putLong(mContext.getString(R.string.pref_last_price_list_update),
-                System.currentTimeMillis());
-        editor.putBoolean(mContext.getString(R.string.pref_initial_load_v2), false);
-        editor.apply();
+        });
     }
 
     @Override
-    public void onPriceListUpdate(int max) {
-        if (loadingDialog != null && loadingDialog.isShowing()) {
-            if (loadingDialog.isIndeterminate()) {
-                loadingDialog.dismiss();
-                loadingDialog = new ProgressDialog(mContext);
-                loadingDialog.setIndeterminate(false);
-                loadingDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                loadingDialog.setMessage(mContext.getString(R.string.message_database_create));
-                loadingDialog.setMax(max);
-                loadingDialog.setCancelable(false);
-                loadingDialog.show();
-            } else {
-                loadingDialog.incrementProgressBy(1);
-            }
-        }
+    public void hideRefreshingAnimation() {
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
-    public void onPriceListFailed(String errorMessage) {
-        if (loadingDialog != null && loadingDialog.isShowing()) {
-
-            AlertDialog.Builder builder;
-            AlertDialog alertDialog;
-            builder = new AlertDialog.Builder(mContext);
-            builder.setMessage(mContext.getString(R.string.message_database_fail_network))
-                    .setCancelable(false)
-                    .setPositiveButton(mContext.getString(R.string.action_close), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //Close app
-                            getActivity().finish();
-                        }
-                    });
-            alertDialog = builder.create();
-            loadingDialog.dismiss();
-            alertDialog.show();
-        } else {
-            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
-        }
+    public void finishActivity() {
+        getActivity().finish();
     }
 
     @Override
-    public void onItemSchemaFinished() {
-        if (loadingDialog != null && loadingDialog.isShowing()) {
-            loadingDialog.dismiss();
-            loadingDialog = null;
-        }
+    public void updateCurrencyHeader() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        getLoaderManager().restartLoader(PRICE_LIST_LOADER, null, this);
-
-        //Update the header with currency prices
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-
-        //Get the shared preferences
-        SharedPreferences.Editor editor = prefs.edit();
-
-        //Save when the update finished
-        editor.putLong(mContext.getString(R.string.pref_last_item_schema_update),
-                System.currentTimeMillis());
-        editor.putBoolean(mContext.getString(R.string.pref_initial_load_v2), false);
-        editor.apply();
-
-        if (isAdded()) {
-            //Stop animation
-            mSwipeRefreshLayout.setRefreshing(false);
-            layoutRefreshing = false;
-
-            updateCurrencyHeader(prefs);
-        }
-    }
-
-    @Override
-    public void onItemSchemaUpdate(int max) {
-        if (loadingDialog != null && loadingDialog.isShowing()) {
-            if (loadingDialog.isIndeterminate()) {
-                loadingDialog.dismiss();
-                loadingDialog = new ProgressDialog(mContext);
-                loadingDialog.setIndeterminate(false);
-                loadingDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                loadingDialog.setMessage(mContext.getString(R.string.message_item_schema_create));
-                loadingDialog.setMax(max);
-                loadingDialog.setCancelable(false);
-                loadingDialog.show();
-            } else {
-                loadingDialog.incrementProgressBy(1);
-            }
-        }
-    }
-
-    @Override
-    public void onItemSchemaFailed(String errorMessage) {
-        if (loadingDialog != null && loadingDialog.isShowing()) {
-
-            AlertDialog.Builder builder;
-            AlertDialog alertDialog;
-            builder = new AlertDialog.Builder(mContext);
-            builder.setMessage(mContext.getString(R.string.message_database_fail_network))
-                    .setCancelable(false)
-                    .setPositiveButton(mContext.getString(R.string.action_close), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //Close app
-                            getActivity().finish();
-                        }
-                    });
-            alertDialog = builder.create();
-            loadingDialog.dismiss();
-            alertDialog.show();
-        } else {
-            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onDrawerOpened() {
-        expandToolbar();
-    }
-
-    /**
-     * Fully expand the toolbar with animation.
-     */
-    public void expandToolbar() {
-        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
-        behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
-    }
-
-    private void updateCurrencyHeader(SharedPreferences prefs) {
         metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
         keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
         budsPrice.setText(prefs.getString(getString(R.string.pref_buds_price), ""));
@@ -577,6 +330,86 @@ public class RecentsFragment extends Fragment implements LoaderManager.LoaderCal
             budsPriceImage.setBackgroundColor(0xff008504);
         } else {
             budsPriceImage.setBackgroundColor(0xff850000);
+        }
+    }
+
+    @Override
+    public void dismissLoadingDialog() {
+        if (loadingDialog != null && loadingDialog.isShowing()) {
+            loadingDialog.dismiss();
+            loadingDialog = null;
+        }
+    }
+
+    @Override
+    public void showLoadingDialog(String message) {
+        loadingDialog = ProgressDialog.show(getActivity(), null, message, true);
+        loadingDialog.setCancelable(false);
+    }
+
+    @Override
+    public void updateLoadingDialog(int max, String message) {
+        if (loadingDialog != null && loadingDialog.isShowing()) {
+            if (loadingDialog.isIndeterminate()) {
+                loadingDialog.dismiss();
+                loadingDialog = new ProgressDialog(mContext);
+                loadingDialog.setIndeterminate(false);
+                loadingDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                loadingDialog.setMessage(message);
+                loadingDialog.setMax(max);
+                loadingDialog.setCancelable(false);
+                loadingDialog.show();
+            } else {
+                loadingDialog.incrementProgressBy(1);
+            }
+        }
+    }
+
+    @Override
+    public void showItemSchemaError(String errorMessage) {
+        if (loadingDialog != null && loadingDialog.isShowing()) {
+
+            AlertDialog.Builder builder;
+            AlertDialog alertDialog;
+            builder = new AlertDialog.Builder(mContext);
+            builder.setMessage(mContext.getString(R.string.message_database_fail_network))
+                    .setCancelable(false)
+                    .setPositiveButton(mContext.getString(R.string.action_close), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //Close app
+                            getActivity().finish();
+                        }
+                    });
+            alertDialog = builder.create();
+            loadingDialog.dismiss();
+            alertDialog.show();
+        } else {
+            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void showPricesError(String errorMessage) {
+        if (loadingDialog != null && loadingDialog.isShowing()) {
+
+            AlertDialog.Builder builder;
+            AlertDialog alertDialog;
+            builder = new AlertDialog.Builder(mContext);
+            builder.setMessage(mContext.getString(R.string.message_database_fail_network))
+                    .setCancelable(false)
+                    .setPositiveButton(mContext.getString(R.string.action_close), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //Close app
+                            getActivity().finish();
+                        }
+                    });
+            alertDialog = builder.create();
+            loadingDialog.dismiss();
+            alertDialog.show();
+        } else {
+            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
         }
     }
 }

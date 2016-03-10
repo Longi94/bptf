@@ -1,10 +1,12 @@
 package com.tlongdev.bktf.presenter;
 
+import com.tlongdev.bktf.ui.BaseView;
+
 /**
  * @author Long
  * @since 2016. 02. 26.
  */
-public interface Presenter<V> {
+public interface Presenter<V extends BaseView> {
     void attachView(V view);
     void detachView();
 }
