@@ -1,4 +1,4 @@
-package com.tlongdev.bktf.model;
+package com.tlongdev.bktf.network.model;
 
 import java.util.HashMap;
 
