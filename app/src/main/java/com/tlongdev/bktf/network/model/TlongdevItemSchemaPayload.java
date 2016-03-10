@@ -18,7 +18,19 @@ public class TlongdevItemSchemaPayload {
 
     @SerializedName("items")
     @Expose
-    private List<TlongdevItem> items = new ArrayList<TlongdevItem>();
+    private List<TlongdevItem> items = new ArrayList<>();
+
+    @SerializedName("origins")
+    @Expose
+    private List<TlongdevOrigin> origins = new ArrayList<>();
+
+    @SerializedName("particle_names")
+    @Expose
+    private List<TlongdevParticleName> particleName = new ArrayList<>();
+
+    @SerializedName("decorated_weapons")
+    @Expose
+    private List<TlongdevDecoratedWeapon> decoratedWeapons = new ArrayList<>();
 
     @SerializedName("message")
     @Expose
@@ -34,5 +46,17 @@ public class TlongdevItemSchemaPayload {
 
     public String getMessage() {
         return message;
+    }
+
+    public List<TlongdevOrigin> getOrigins() {
+        return origins;
+    }
+
+    public List<TlongdevParticleName> getParticleName() {
+        return particleName;
+    }
+
+    public List<TlongdevDecoratedWeapon> getDecoratedWeapons() {
+        return decoratedWeapons;
     }
 }

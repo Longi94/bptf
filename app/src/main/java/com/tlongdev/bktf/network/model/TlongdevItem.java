@@ -19,7 +19,7 @@ public class TlongdevItem {
 
     @SerializedName("description")
     @Expose
-    private Object description;
+    private String description;
 
     @SerializedName("type_name")
     @Expose
@@ -37,7 +37,7 @@ public class TlongdevItem {
         return name;
     }
 
-    public Object getDescription() {
+    public String getDescription() {
         return description;
     }
 

@@ -21,10 +21,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
@@ -32,15 +28,19 @@ import com.tlongdev.bktf.data.DatabaseContract.DecoratedWeaponEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
 import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
+import com.tlongdev.bktf.network.model.TlongdevDecoratedWeapon;
+import com.tlongdev.bktf.network.model.TlongdevItem;
+import com.tlongdev.bktf.network.model.TlongdevItemSchemaPayload;
+import com.tlongdev.bktf.network.model.TlongdevOrigin;
+import com.tlongdev.bktf.network.model.TlongdevParticleName;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import java.util.List;
 import java.util.Vector;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
 
@@ -63,47 +63,31 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
     protected Integer doInBackground(Void... params) {
 
         try {
-            //The prices api and input keys
-            final String BASE_URL = mContext.getString(R.string.tlongdev_item_schema);
 
-            //Initialize the URL
-            URL url = new URL(BASE_URL);
+            TlongdevInterface tlongdevInterface = new Retrofit.Builder()
+                    .baseUrl(TlongdevInterface.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+                    .create(TlongdevInterface.class);
 
-            Log.v(LOG_TAG, "Built uri: " + url.toString());
+            Response<TlongdevItemSchemaPayload> response = tlongdevInterface.getItemSchema().execute();
 
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder().url(url).build();
-            Response response = client.newCall(request).execute();
-
-            int statusCode = response.code();
-
-            if (statusCode >= 500) {
-                errorMessage = "Server error: " + statusCode;
-                return -1;
-            } else if (statusCode >= 400) {
-                errorMessage = "Client error: " + statusCode;
-                return -1;
+            if (response.body() != null) {
+                TlongdevItemSchemaPayload payload = response.body();
+                if (payload.getSuccess() == 1) {
+                    insertItems(payload.getItems());
+                    insertOrigins(payload.getOrigins());
+                    insertParticles(payload.getParticleName());
+                    insertDecoratedWeapons(payload.getDecoratedWeapons());
+                } else {
+                    errorMessage = payload.getMessage();
+                }
+            } else if (response.raw().code() >= 500) {
+                errorMessage = "Server error: " + response.raw().code();
+            } else if (response.raw().code() >= 400) {
+                errorMessage = "Client error: " + response.raw().code();
             }
-
-            //Get the input stream
-            InputStream inputStream = response.body().byteStream();
-
-            if (inputStream == null) {
-                // Stream was empty. Nothing to do.
-                return -1;
-            }
-
-            return parseJson(inputStream);
-        } catch (JsonParseException e) {
-            //There was a network error
-            errorMessage = mContext.getString(R.string.error_data_parse);
-            e.printStackTrace();
-
-            ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
-                    .setDescription("JSON exception:GetItemSchema, Message: " + e.getMessage())
-                    .setFatal(true)
-                    .build());
-
+            return -1;
         } catch (IOException e) {
             //There was a network error
             errorMessage = mContext.getString(R.string.error_network);
@@ -114,222 +98,24 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
                     .setFatal(false)
                     .build());
         }
-
         return -1;
     }
 
-    private int parseJson(InputStream inputStream) throws IOException {
-
-        //All the JSON keys needed to parse
-        final String KEY_SUCCESS = "success";
-        final String KEY_MESSAGE = "message";
-        final String KEY_ITEMS = "items";
-        final String KEY_ORIGINS = "origins";
-        final String KEY_PARTICLES = "particle_names";
-        final String KEY_DEC_WEAPONS = "decorated_weapons";
-        final String KEY_DEFINDEX = "defindex";
-        final String KEY_NAME = "name";
-        final String KEY_DESCRIPTION = "description";
-        final String KEY_TYPE_NAME = "type_name";
-        final String KEY_PROPER_NAME = "proper_name";
-        final String KEY_ID = "id";
-        final String KEY_GRADE = "grade";
-
-        //Create a parser from the input stream for fast parsing and low impact on memory
-        JsonFactory factory = new JsonFactory();
-        JsonParser parser = factory.createParser(inputStream);
-
-        //Not a JSON if it doesn't start with START OBJECT
-        if (parser.nextToken() != JsonToken.START_OBJECT) {
-            return -1;
-        }
-
-        //Iterator that will iterate through the items
+    private void insertItems(List<TlongdevItem> items) {
         Vector<ContentValues> cVVectorItems = new Vector<>();
-        Vector<ContentValues> cVVectorOrigins = new Vector<>();
-        Vector<ContentValues> cVVectorParticles = new Vector<>();
-        Vector<ContentValues> cVVectorWeapons = new Vector<>();
 
-        while (parser.nextToken() != JsonToken.END_OBJECT) {
+        for (TlongdevItem item : items) {
+            //The DV that will contain all the data
+            ContentValues itemValues = new ContentValues();
+            itemValues.put(ItemSchemaEntry.COLUMN_DEFINDEX, item.getDefindex());
+            itemValues.put(ItemSchemaEntry.COLUMN_ITEM_NAME, item.getName());
+            itemValues.put(ItemSchemaEntry.COLUMN_TYPE_NAME, item.getTypeName());
+            itemValues.put(ItemSchemaEntry.COLUMN_DESCRIPTION, item.getDescription());
+            itemValues.put(ItemSchemaEntry.COLUMN_PROPER_NAME, item.getProperName());
 
-            String currentName = parser.getCurrentName();
-            if (currentName != null) {
-                switch (currentName) {
-                    case KEY_SUCCESS:
-                        parser.nextToken();
-                        if (parser.getIntValue() == 0) {
-
-                            while (parser.nextToken() != JsonToken.END_OBJECT) {
-                                if (parser.getCurrentName().equals(KEY_MESSAGE)) {
-                                    errorMessage = parser.getText();
-                                    Log.e(LOG_TAG, errorMessage);
-                                }
-                            }
-                            parser.close();
-                            return -1;
-                        }
-                        break;
-                    case KEY_ITEMS:
-                        parser.nextToken();
-
-                        //Keep iterating while the array hasn't ended
-                        while (parser.nextToken() != JsonToken.END_ARRAY) {
-                            //Initial values
-                            int defindex = 0;
-                            String name = null;
-                            String description = null;
-                            String typeName = null;
-                            int properName = 0;
-
-                            //Parse an attribute and get the value of it
-                            while (parser.nextToken() != JsonToken.END_OBJECT) {
-                                switch (parser.getCurrentName()) {
-                                    case KEY_DEFINDEX:
-                                        parser.nextToken();
-                                        defindex = parser.getIntValue();
-                                        break;
-                                    case KEY_NAME:
-                                        parser.nextToken();
-                                        name = parser.getText();
-                                        break;
-                                    case KEY_DESCRIPTION:
-                                        parser.nextToken();
-                                        description = parser.getText();
-                                        if (description != null && description.equals("null")) {
-                                            description = null;
-                                        }
-                                        break;
-                                    case KEY_TYPE_NAME:
-                                        parser.nextToken();
-                                        typeName = parser.getText();
-                                        break;
-                                    case KEY_PROPER_NAME:
-                                        parser.nextToken();
-                                        properName = parser.getIntValue();
-                                        break;
-                                }
-                            }
-
-                            //The DV that will contain all the data
-                            ContentValues itemValues = new ContentValues();
-                            itemValues.put(ItemSchemaEntry.COLUMN_DEFINDEX, defindex);
-                            itemValues.put(ItemSchemaEntry.COLUMN_ITEM_NAME, name);
-                            itemValues.put(ItemSchemaEntry.COLUMN_TYPE_NAME, typeName);
-                            itemValues.put(ItemSchemaEntry.COLUMN_DESCRIPTION, description);
-                            itemValues.put(ItemSchemaEntry.COLUMN_PROPER_NAME, properName);
-
-                            //Add the price to the CV vector
-                            cVVectorItems.add(itemValues);
-                        }
-
-                        publishProgress();
-                        break;
-                    case KEY_ORIGINS:
-                        parser.nextToken();
-
-                        //Keep iterating while the array hasn't ended
-                        while (parser.nextToken() != JsonToken.END_ARRAY) {
-                            //Initial values
-                            int id = 0;
-                            String name = null;
-
-                            //Parse an attribute and get the value of it
-                            while (parser.nextToken() != JsonToken.END_OBJECT) {
-                                switch (parser.getCurrentName()) {
-                                    case KEY_ID:
-                                        parser.nextToken();
-                                        id = parser.getIntValue();
-                                        break;
-                                    case KEY_NAME:
-                                        parser.nextToken();
-                                        name = parser.getText();
-                                        break;
-                                }
-                            }
-
-                            //The DV that will contain all the data
-                            ContentValues itemValues = new ContentValues();
-                            itemValues.put(OriginEntry.COLUMN_ID, id);
-                            itemValues.put(OriginEntry.COLUMN_NAME, name);
-
-                            //Add the price to the CV vector
-                            cVVectorOrigins.add(itemValues);
-                        }
-
-                        publishProgress();
-                        break;
-                    case KEY_PARTICLES:
-                        parser.nextToken();
-
-                        //Keep iterating while the array hasn't ended
-                        while (parser.nextToken() != JsonToken.END_ARRAY) {
-                            //Initial values
-                            int id = 0;
-                            String name = null;
-
-                            //Parse an attribute and get the value of it
-                            while (parser.nextToken() != JsonToken.END_OBJECT) {
-                                switch (parser.getCurrentName()) {
-                                    case KEY_ID:
-                                        parser.nextToken();
-                                        id = parser.getIntValue();
-                                        break;
-                                    case KEY_NAME:
-                                        parser.nextToken();
-                                        name = parser.getText();
-                                        break;
-                                }
-                            }
-
-                            //The DV that will contain all the data
-                            ContentValues itemValues = new ContentValues();
-                            itemValues.put(UnusualSchemaEntry.COLUMN_ID, id);
-                            itemValues.put(UnusualSchemaEntry.COLUMN_NAME, name);
-
-                            //Add the price to the CV vector
-                            cVVectorParticles.add(itemValues);
-                        }
-
-                        publishProgress();
-                        break;
-                    case KEY_DEC_WEAPONS:
-                        parser.nextToken();
-
-                        //Keep iterating while the array hasn't ended
-                        while (parser.nextToken() != JsonToken.END_ARRAY) {
-                            int defindex = 0;
-                            int grade = 0;
-
-                            //Parse an attribute and get the value of it
-                            while (parser.nextToken() != JsonToken.END_OBJECT) {
-                                switch (parser.getCurrentName()) {
-                                    case KEY_DEFINDEX:
-                                        parser.nextToken();
-                                        defindex = parser.getIntValue();
-                                        break;
-                                    case KEY_GRADE:
-                                        parser.nextToken();
-                                        grade = parser.getIntValue();
-                                        break;
-                                }
-                            }
-
-                            //The DV that will contain all the data
-                            ContentValues weaponValues = new ContentValues();
-                            weaponValues.put(DecoratedWeaponEntry.COLUMN_DEFINDEX, defindex);
-                            weaponValues.put(DecoratedWeaponEntry.COLUMN_GRADE, grade);
-
-                            //Add the price to the CV vector
-                            cVVectorWeapons.add(weaponValues);
-
-                        }
-                        publishProgress();
-                        break;
-                }
-            }
+            //Add the price to the CV vector
+            cVVectorItems.add(itemValues);
         }
-
-        parser.close();
 
         if (cVVectorItems.size() > 0) {
             ContentValues[] cvArray = new ContentValues[cVVectorItems.size()];
@@ -338,6 +124,22 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
             int rowsInserted = mContext.getContentResolver()
                     .bulkInsert(ItemSchemaEntry.CONTENT_URI, cvArray);
             Log.v(LOG_TAG, "inserted " + rowsInserted + " rows into item_schema");
+        }
+
+        publishProgress();
+    }
+
+    private void insertOrigins(List<TlongdevOrigin> origins) {
+        Vector<ContentValues> cVVectorOrigins = new Vector<>();
+
+        for (TlongdevOrigin origin : origins) {
+            //The DV that will contain all the data
+            ContentValues itemValues = new ContentValues();
+            itemValues.put(OriginEntry.COLUMN_ID, origin.getId());
+            itemValues.put(OriginEntry.COLUMN_NAME, origin.getName());
+
+            //Add the price to the CV vector
+            cVVectorOrigins.add(itemValues);
         }
 
         if (cVVectorOrigins.size() > 0) {
@@ -349,6 +151,22 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
             Log.v(LOG_TAG, "inserted " + rowsInserted + " rows into origins");
         }
 
+        publishProgress();
+    }
+
+    private void insertParticles(List<TlongdevParticleName> particles) {
+        Vector<ContentValues> cVVectorParticles = new Vector<>();
+
+        for (TlongdevParticleName particle : particles) {
+            //The DV that will contain all the data
+            ContentValues itemValues = new ContentValues();
+            itemValues.put(UnusualSchemaEntry.COLUMN_ID, particle.getId());
+            itemValues.put(UnusualSchemaEntry.COLUMN_NAME, particle.getName());
+
+            //Add the price to the CV vector
+            cVVectorParticles.add(itemValues);
+        }
+
         if (cVVectorParticles.size() > 0) {
             ContentValues[] cvArray = new ContentValues[cVVectorParticles.size()];
             cVVectorParticles.toArray(cvArray);
@@ -356,6 +174,22 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
             int rowsInserted = mContext.getContentResolver()
                     .bulkInsert(UnusualSchemaEntry.CONTENT_URI, cvArray);
             Log.v(LOG_TAG, "inserted " + rowsInserted + " rows into unusual_schema");
+        }
+
+        publishProgress();
+    }
+
+    private void insertDecoratedWeapons(List<TlongdevDecoratedWeapon> weapons) {
+        Vector<ContentValues> cVVectorWeapons = new Vector<>();
+
+        for (TlongdevDecoratedWeapon weapon : weapons) {
+            //The DV that will contain all the data
+            ContentValues weaponValues = new ContentValues();
+            weaponValues.put(DecoratedWeaponEntry.COLUMN_DEFINDEX, weapon.getDefindex());
+            weaponValues.put(DecoratedWeaponEntry.COLUMN_GRADE, weapon.getGrade());
+
+            //Add the price to the CV vector
+            cVVectorWeapons.add(weaponValues);
         }
 
         if (cVVectorWeapons.size() > 0) {
@@ -367,7 +201,7 @@ public class GetItemSchema extends AsyncTask<Void, Void, Integer> {
             Log.v(LOG_TAG, "inserted " + rowsInserted + " rows into decorated_weapons");
         }
 
-        return 0;
+        publishProgress();
     }
 
     @Override

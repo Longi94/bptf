@@ -24,7 +24,6 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
@@ -122,12 +121,12 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
                     cursor.close();
                 }
             }
-            Retrofit retrofit = new Retrofit.Builder()
+
+            TlongdevInterface tlongdevInterface = new Retrofit.Builder()
                     .baseUrl(TlongdevInterface.BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-
-            TlongdevInterface tlongdevInterface = retrofit.create(TlongdevInterface.class);
+                    .build()
+                    .create(TlongdevInterface.class);
 
             Response<TlongdevPricesPayload> response = tlongdevInterface.getPrices(latestUpdate).execute();
 
@@ -145,14 +144,6 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
             }
             return -1;
 
-        } catch (JsonParseException e) {
-            errorMessage = mContext.getString(R.string.error_data_parse);
-            e.printStackTrace();
-
-            ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
-                    .setDescription("JSON exception:GetPriceList, Message: " + e.getMessage())
-                    .setFatal(true)
-                    .build());
         } catch (IOException e) {
             //There was a network error
             errorMessage = mContext.getString(R.string.error_network);
@@ -168,7 +159,6 @@ public class GetPriceList extends AsyncTask<Void, Integer, Integer> {
     }
 
     private Integer insertPrices(List<TlongdevPrice> prices) {
-
         //Iterator that will iterate through the items
         Vector<ContentValues> cVVector = new Vector<>();
 
