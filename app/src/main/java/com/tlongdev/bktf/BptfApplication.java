@@ -29,6 +29,8 @@ import com.tlongdev.bktf.component.FragmentComponent;
 import com.tlongdev.bktf.component.InteractorComponent;
 import com.tlongdev.bktf.component.PresenterComponent;
 import com.tlongdev.bktf.module.BptfAppModule;
+import com.tlongdev.bktf.module.NetworkModule;
+import com.tlongdev.bktf.module.StorageModule;
 
 /**
  * This is a subclass of {@link Application} used to provide shared objects for this app.
@@ -58,6 +60,8 @@ public class BptfApplication extends Application {
 
         mInteractorComponent = DaggerInteractorComponent.builder()
                 .bptfAppModule(new BptfAppModule(this))
+                .networkModule(new NetworkModule())
+                .storageModule(new StorageModule())
                 .build();
 
         mPresenterComponent = DaggerPresenterComponent.builder()

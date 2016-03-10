@@ -16,8 +16,12 @@
 
 package com.tlongdev.bktf.component;
 
+import com.tlongdev.bktf.interactor.LoadAllPricesInteractor;
+import com.tlongdev.bktf.interactor.TlongdevItemSchemaInteractor;
 import com.tlongdev.bktf.interactor.TlongdevPriceListInteractor;
 import com.tlongdev.bktf.module.BptfAppModule;
+import com.tlongdev.bktf.module.NetworkModule;
+import com.tlongdev.bktf.module.StorageModule;
 
 import javax.inject.Singleton;
 
@@ -28,7 +32,11 @@ import dagger.Component;
  * @since 2016. 03. 10.
  */
 @Singleton
-@Component(modules = BptfAppModule.class)
+@Component(modules = {BptfAppModule.class, NetworkModule.class, StorageModule.class})
 public interface InteractorComponent {
     void inject(TlongdevPriceListInteractor tlongdevPriceListInteractor);
+
+    void inject(TlongdevItemSchemaInteractor tlongdevItemSchemaInteractor);
+
+    void inject(LoadAllPricesInteractor loadAllPricesInteractor);
 }

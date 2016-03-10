@@ -24,6 +24,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
@@ -42,8 +43,6 @@ import java.util.Vector;
 import javax.inject.Inject;
 
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Task for fetching all data for prices database and updating it in the background.
@@ -58,6 +57,8 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
 
     @Inject SharedPreferences mPrefs;
     @Inject SharedPreferences.Editor mEditor;
+    @Inject TlongdevInterface mTlongdevInterface;
+    @Inject Tracker mTracker;
 
     //The context the task runs in
     private final Context mContext;
@@ -126,13 +127,7 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
                 }
             }
 
-            TlongdevInterface tlongdevInterface = new Retrofit.Builder()
-                    .baseUrl(TlongdevInterface.BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-                    .create(TlongdevInterface.class);
-
-            Response<TlongdevPricesPayload> response = tlongdevInterface.getPrices(latestUpdate).execute();
+            Response<TlongdevPricesPayload> response = mTlongdevInterface.getPrices(latestUpdate).execute();
 
             if (response.body() != null) {
                 TlongdevPricesPayload payload = response.body();
@@ -152,8 +147,7 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
             //There was a network error
             errorMessage = mContext.getString(R.string.error_network);
             e.printStackTrace();
-
-            ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+            mTracker.send(new HitBuilders.ExceptionBuilder()
                     .setDescription("Network exception:GetPriceList, Message: " + e.getMessage())
                     .setFatal(false)
                     .build());
@@ -238,7 +232,6 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
     }
 
     private ContentValues buildContentValues(TlongdevPrice price) {
-
         //Fix the defindex for pricing
         Item item = new Item(price.getDefindex(), null, 0, false, false, false, 0, null);
 
@@ -290,7 +283,6 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
      * Listener interface
      */
     public interface OnPriceListListener {
-
         /**
          * Notify the listener, that the fetching has stopped.
          */

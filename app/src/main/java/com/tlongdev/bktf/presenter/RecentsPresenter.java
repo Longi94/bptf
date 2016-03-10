@@ -77,6 +77,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
     public void loadPrices() {
         LoadAllPricesInteractor interactor = new LoadAllPricesInteractor(
                 mView.getContext(),
+                mView.getBptfApplication(),
                 this
         );
         interactor.execute();

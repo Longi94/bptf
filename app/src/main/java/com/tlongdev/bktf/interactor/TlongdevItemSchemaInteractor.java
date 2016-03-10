@@ -22,6 +22,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.DecoratedWeaponEntry;
@@ -39,17 +40,19 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
+import javax.inject.Inject;
+
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer> {
 
     /**
      * Log tag for logging.
      */
-    @SuppressWarnings("unused")
     private static final String LOG_TAG = TlongdevItemSchemaInteractor.class.getSimpleName();
+
+    @Inject TlongdevInterface mTlongdevInterface;
+    @Inject Tracker mTracker;
 
     private Context mContext;
 
@@ -58,19 +61,14 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
 
     public TlongdevItemSchemaInteractor(Context context, BptfApplication application) {
         this.mContext = context;
+        application.getInteractorComponent().inject(this);
     }
 
     @Override
     protected Integer doInBackground(Void... params) {
 
         try {
-            TlongdevInterface tlongdevInterface = new Retrofit.Builder()
-                    .baseUrl(TlongdevInterface.BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-                    .create(TlongdevInterface.class);
-
-            Response<TlongdevItemSchemaPayload> response = tlongdevInterface.getItemSchema().execute();
+            Response<TlongdevItemSchemaPayload> response = mTlongdevInterface.getItemSchema().execute();
 
             if (response.body() != null) {
                 TlongdevItemSchemaPayload payload = response.body();
@@ -94,7 +92,7 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
             errorMessage = mContext.getString(R.string.error_network);
             e.printStackTrace();
 
-            ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+            mTracker.send(new HitBuilders.ExceptionBuilder()
                     .setDescription("Network exception:GetItemSchema, Message: " + e.getMessage())
                     .setFatal(false)
                     .build());

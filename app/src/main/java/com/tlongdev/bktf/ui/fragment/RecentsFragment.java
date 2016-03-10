@@ -168,9 +168,8 @@ public class RecentsFragment extends Fragment implements RecentsView,
         BptfApplication application = (BptfApplication) getActivity().getApplication();
         application.getFragmentComponent().inject(this);
 
-        presenter = new RecentsPresenter();
+        presenter = new RecentsPresenter(application);
         presenter.attachView(this);
-        presenter.setTracker(mTracker);
 
         View rootView = inflater.inflate(R.layout.fragment_recents, container, false);
         ButterKnife.bind(this, rootView);
