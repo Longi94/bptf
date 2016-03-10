@@ -1,3 +1,19 @@
+/**
+ * Copyright 2015 Long Tran
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.tlongdev.bktf.presenter;
 
 import android.app.AlertDialog;
@@ -165,7 +181,6 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
                 loadPrices();
             }
 
-
             if (System.currentTimeMillis() - prefs.getLong(mView.getContext().getString(R.string.pref_last_item_schema_update), 0) >= 172800000L //2days
                     && Utility.isNetworkAvailable(mView.getContext())) {
                 TlongdevItemSchemaInteractor task = new TlongdevItemSchemaInteractor(mView.getContext());
@@ -190,8 +205,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
         SharedPreferences.Editor editor = prefs.edit();
 
         //Save when the update finished
-        editor.putLong(mView.getContext().getString(R.string.pref_last_price_list_update),
-                System.currentTimeMillis());
+        editor.putLong(mView.getContext().getString(R.string.pref_last_price_list_update), System.currentTimeMillis());
         editor.putBoolean(mView.getContext().getString(R.string.pref_initial_load_v2), false);
         editor.apply();
     }
@@ -219,8 +233,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
         SharedPreferences.Editor editor = prefs.edit();
 
         //Save when the update finished
-        editor.putLong(mView.getContext().getString(R.string.pref_last_item_schema_update),
-                System.currentTimeMillis());
+        editor.putLong(mView.getContext().getString(R.string.pref_last_item_schema_update), System.currentTimeMillis());
         editor.putBoolean(mView.getContext().getString(R.string.pref_initial_load_v2), false);
         editor.apply();
 
