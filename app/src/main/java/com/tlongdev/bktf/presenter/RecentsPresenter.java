@@ -20,11 +20,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.interactor.LoadAllPricesInteractor;
 import com.tlongdev.bktf.interactor.TlongdevItemSchemaInteractor;
@@ -32,15 +32,23 @@ import com.tlongdev.bktf.interactor.TlongdevPriceListInteractor;
 import com.tlongdev.bktf.ui.RecentsView;
 import com.tlongdev.bktf.util.Utility;
 
+import javax.inject.Inject;
+
 /**
  * @author Long
  * @since 2016. 03. 10.
  */
 public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInteractor.Callback, TlongdevPriceListInteractor.OnPriceListListener, TlongdevItemSchemaInteractor.OnItemSchemaListener {
 
-    private Tracker mTracker;
+    @Inject SharedPreferences mPrefs;
+    @Inject SharedPreferences.Editor mEditor;
+    @Inject Tracker mTracker;
 
     private RecentsView mView;
+
+    public RecentsPresenter(BptfApplication application) {
+        application.getPresenterComponent().inject(this);
+    }
 
     @Override
     public void attachView(RecentsView view) {
@@ -66,10 +74,6 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
         }
     }
 
-    public void setTracker(Tracker tracker) {
-        mTracker = tracker;
-    }
-
     public void loadPrices() {
         LoadAllPricesInteractor interactor = new LoadAllPricesInteractor(
                 mView.getContext(),
@@ -82,7 +86,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
 
         //Manual update
         if (Utility.isNetworkAvailable(mView.getContext())) {
-            TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(mView.getContext(), true, true);
+            TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(mView.getContext(), mView.getBptfApplication(), true, true);
             task.setOnPriceListFetchListener(this);
             task.execute();
 
@@ -100,11 +104,10 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
     }
 
     public void downloadPricesIfNeeded() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mView.getContext());
         //Download whole database when the app is first opened.
-        if (prefs.getBoolean(mView.getContext().getString(R.string.pref_initial_load_v2), true)) {
+        if (mPrefs.getBoolean(mView.getContext().getString(R.string.pref_initial_load_v2), true)) {
             if (Utility.isNetworkAvailable(mView.getContext())) {
-                TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(mView.getContext(), false, true);
+                TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(mView.getContext(), mView.getBptfApplication(), false, true);
                 task.setOnPriceListFetchListener(this);
                 task.execute();
 
@@ -132,9 +135,9 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
         } else {
 
             //Update database if the last update happened more than an hour ago
-            if (System.currentTimeMillis() - prefs.getLong(mView.getContext().getString(R.string.pref_last_price_list_update), 0) >= 3600000L
+            if (System.currentTimeMillis() - mPrefs.getLong(mView.getContext().getString(R.string.pref_last_price_list_update), 0) >= 3600000L
                     && Utility.isNetworkAvailable(mView.getContext())) {
-                TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(mView.getContext(), true, false);
+                TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(mView.getContext(), mView.getBptfApplication(), true, false);
                 task.setOnPriceListFetchListener(this);
                 task.execute();
                 
@@ -155,15 +158,13 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
             Utility.notifyPricesWidgets(mView.getContext());
         }
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mView.getContext());
-
         if (mView != null) {
             mView.dismissLoadingDialog();
         }
 
-        if (prefs.getBoolean(mView.getContext().getString(R.string.pref_initial_load_v2), true)) {
+        if (mPrefs.getBoolean(mView.getContext().getString(R.string.pref_initial_load_v2), true)) {
 
-            TlongdevItemSchemaInteractor task = new TlongdevItemSchemaInteractor(mView.getContext());
+            TlongdevItemSchemaInteractor task = new TlongdevItemSchemaInteractor(mView.getContext(), mView.getBptfApplication());
             task.setListener(this);
             task.execute();
 
@@ -181,9 +182,9 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
                 loadPrices();
             }
 
-            if (System.currentTimeMillis() - prefs.getLong(mView.getContext().getString(R.string.pref_last_item_schema_update), 0) >= 172800000L //2days
+            if (System.currentTimeMillis() - mPrefs.getLong(mView.getContext().getString(R.string.pref_last_item_schema_update), 0) >= 172800000L //2days
                     && Utility.isNetworkAvailable(mView.getContext())) {
-                TlongdevItemSchemaInteractor task = new TlongdevItemSchemaInteractor(mView.getContext());
+                TlongdevItemSchemaInteractor task = new TlongdevItemSchemaInteractor(mView.getContext(), mView.getBptfApplication());
                 task.setListener(this);
                 task.execute();
 
@@ -201,13 +202,10 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
             }
         }
 
-        //Get the shared preferences
-        SharedPreferences.Editor editor = prefs.edit();
-
         //Save when the update finished
-        editor.putLong(mView.getContext().getString(R.string.pref_last_price_list_update), System.currentTimeMillis());
-        editor.putBoolean(mView.getContext().getString(R.string.pref_initial_load_v2), false);
-        editor.apply();
+        mEditor.putLong(mView.getContext().getString(R.string.pref_last_price_list_update), System.currentTimeMillis());
+        mEditor.putBoolean(mView.getContext().getString(R.string.pref_initial_load_v2), false);
+        mEditor.apply();
     }
 
     @Override
@@ -226,16 +224,10 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
 
         loadPrices();
 
-        //Update the header with currency prices
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mView.getContext());
-
-        //Get the shared preferences
-        SharedPreferences.Editor editor = prefs.edit();
-
         //Save when the update finished
-        editor.putLong(mView.getContext().getString(R.string.pref_last_item_schema_update), System.currentTimeMillis());
-        editor.putBoolean(mView.getContext().getString(R.string.pref_initial_load_v2), false);
-        editor.apply();
+        mEditor.putLong(mView.getContext().getString(R.string.pref_last_item_schema_update), System.currentTimeMillis());
+        mEditor.putBoolean(mView.getContext().getString(R.string.pref_initial_load_v2), false);
+        mEditor.apply();
 
         if (mView != null) {
             //Stop animation

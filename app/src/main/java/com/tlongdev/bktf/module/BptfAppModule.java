@@ -20,6 +20,9 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.google.android.gms.analytics.Tracker;
+import com.tlongdev.bktf.BptfApplication;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -48,5 +51,17 @@ public class BptfAppModule {
     @Singleton
     SharedPreferences provideSharedPreferences(Application application) {
         return PreferenceManager.getDefaultSharedPreferences(application);
+    }
+
+    @Provides
+    @Singleton
+    Tracker provideTracker(Application application) {
+        return ((BptfApplication) application).getDefaultTracker();
+    }
+
+    @Provides
+    @Singleton
+    SharedPreferences.Editor provideEditor(SharedPreferences prefs) {
+        return prefs.edit();
     }
 }

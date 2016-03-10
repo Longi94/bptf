@@ -22,6 +22,12 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.component.ActivityComponent;
 import com.tlongdev.bktf.component.DaggerActivityComponent;
+import com.tlongdev.bktf.component.DaggerFragmentComponent;
+import com.tlongdev.bktf.component.DaggerInteractorComponent;
+import com.tlongdev.bktf.component.DaggerPresenterComponent;
+import com.tlongdev.bktf.component.FragmentComponent;
+import com.tlongdev.bktf.component.InteractorComponent;
+import com.tlongdev.bktf.component.PresenterComponent;
 import com.tlongdev.bktf.module.BptfAppModule;
 
 /**
@@ -32,11 +38,29 @@ public class BptfApplication extends Application {
 
     private ActivityComponent mActivityComponent;
 
+    private FragmentComponent mFragmentComponent;
+
+    private InteractorComponent mInteractorComponent;
+
+    private PresenterComponent mPresenterComponent;
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         mActivityComponent = DaggerActivityComponent.builder()
+                .bptfAppModule(new BptfAppModule(this))
+                .build();
+
+        mFragmentComponent = DaggerFragmentComponent.builder()
+                .bptfAppModule(new BptfAppModule(this))
+                .build();
+
+        mInteractorComponent = DaggerInteractorComponent.builder()
+                .bptfAppModule(new BptfAppModule(this))
+                .build();
+
+        mPresenterComponent = DaggerPresenterComponent.builder()
                 .bptfAppModule(new BptfAppModule(this))
                 .build();
     }
@@ -56,5 +80,17 @@ public class BptfApplication extends Application {
 
     public ActivityComponent getActivityComponent() {
         return mActivityComponent;
+    }
+
+    public FragmentComponent getFragmentComponent() {
+        return mFragmentComponent;
+    }
+
+    public InteractorComponent getInteractorComponent() {
+        return mInteractorComponent;
+    }
+
+    public PresenterComponent getPresenterComponent() {
+        return mPresenterComponent;
     }
 }

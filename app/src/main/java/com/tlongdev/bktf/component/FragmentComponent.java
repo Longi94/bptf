@@ -17,6 +17,7 @@
 package com.tlongdev.bktf.component;
 
 import com.tlongdev.bktf.module.BptfAppModule;
+import com.tlongdev.bktf.ui.fragment.RecentsFragment;
 
 import javax.inject.Singleton;
 
@@ -28,6 +29,6 @@ import dagger.Component;
  */
 @Singleton
 @Component(modules = BptfAppModule.class)
-public interface ActivityComponent {
-
+public interface FragmentComponent {
+    void inject(RecentsFragment recentsFragment);
 }

@@ -16,6 +16,7 @@
 
 package com.tlongdev.bktf.component;
 
+import com.tlongdev.bktf.interactor.TlongdevPriceListInteractor;
 import com.tlongdev.bktf.module.BptfAppModule;
 
 import javax.inject.Singleton;
@@ -28,6 +29,6 @@ import dagger.Component;
  */
 @Singleton
 @Component(modules = BptfAppModule.class)
-public interface ActivityComponent {
-
+public interface InteractorComponent {
+    void inject(TlongdevPriceListInteractor tlongdevPriceListInteractor);
 }

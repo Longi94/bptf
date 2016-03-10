@@ -56,7 +56,7 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
     private OnItemSchemaListener listener;
     private String errorMessage;
 
-    public TlongdevItemSchemaInteractor(Context context) {
+    public TlongdevItemSchemaInteractor(Context context, BptfApplication application) {
         this.mContext = context;
     }
 
@@ -64,7 +64,6 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
     protected Integer doInBackground(Void... params) {
 
         try {
-
             TlongdevInterface tlongdevInterface = new Retrofit.Builder()
                     .baseUrl(TlongdevInterface.BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())

@@ -24,7 +24,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -58,6 +57,8 @@ import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.util.Utility;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -89,20 +90,13 @@ public class RecentsFragment extends Fragment implements RecentsView,
     public static final int COL_PRICE_LIST_DIFF = 10;
     public static final int COL_AUSTRALIUM = 11;
 
-    /**
-     * The {@link Tracker} used to record screen views.
-     */
-    private Tracker mTracker;
+    @Inject Tracker mTracker;
+    @Inject SharedPreferences mPrefs;
 
     /**
      * Loading indicator
      */
     @Bind(R.id.progress_bar) ProgressBar progressBar;
-
-    /**
-     * Adapter of the recycler view
-     */
-    private RecentsAdapter adapter;
 
     /**
      * the swipe refresh layout
@@ -129,6 +123,11 @@ public class RecentsFragment extends Fragment implements RecentsView,
     @Bind(R.id.image_view_metal_price) View metalPriceImage;
     @Bind(R.id.image_view_key_price) View keyPriceImage;
     @Bind(R.id.image_view_buds_price) View budsPriceImage;
+
+    /**
+     * Adapter of the recycler view
+     */
+    private RecentsAdapter adapter;
 
     //Dialog to indicate the download progress
     private ProgressDialog loadingDialog;
@@ -167,7 +166,7 @@ public class RecentsFragment extends Fragment implements RecentsView,
                              Bundle savedInstanceState) {
         // Obtain the shared Tracker instance.
         BptfApplication application = (BptfApplication) getActivity().getApplication();
-        mTracker = application.getDefaultTracker();
+        application.getFragmentComponent().inject(this);
 
         presenter = new RecentsPresenter();
         presenter.attachView(this);
@@ -310,23 +309,21 @@ public class RecentsFragment extends Fragment implements RecentsView,
 
     @Override
     public void updateCurrencyHeader() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        metalPrice.setText(mPrefs.getString(getString(R.string.pref_metal_price), ""));
+        keyPrice.setText(mPrefs.getString(getString(R.string.pref_key_price), ""));
+        budsPrice.setText(mPrefs.getString(getString(R.string.pref_buds_price), ""));
 
-        metalPrice.setText(prefs.getString(getString(R.string.pref_metal_price), ""));
-        keyPrice.setText(prefs.getString(getString(R.string.pref_key_price), ""));
-        budsPrice.setText(prefs.getString(getString(R.string.pref_buds_price), ""));
-
-        if (Utility.getDouble(prefs, getString(R.string.pref_metal_diff), 0.0) > 0.0) {
+        if (Utility.getDouble(mPrefs, getString(R.string.pref_metal_diff), 0.0) > 0.0) {
             metalPriceImage.setBackgroundColor(0xff008504);
         } else {
             metalPriceImage.setBackgroundColor(0xff850000);
         }
-        if (Utility.getDouble(prefs, getString(R.string.pref_key_diff), 0.0) > 0.0) {
+        if (Utility.getDouble(mPrefs, getString(R.string.pref_key_diff), 0.0) > 0.0) {
             keyPriceImage.setBackgroundColor(0xff008504);
         } else {
             keyPriceImage.setBackgroundColor(0xff850000);
         }
-        if (Utility.getDouble(prefs, getString(R.string.pref_buds_diff), 0.0) > 0) {
+        if (Utility.getDouble(mPrefs, getString(R.string.pref_buds_diff), 0.0) > 0) {
             budsPriceImage.setBackgroundColor(0xff008504);
         } else {
             budsPriceImage.setBackgroundColor(0xff850000);
@@ -411,5 +408,10 @@ public class RecentsFragment extends Fragment implements RecentsView,
         } else {
             Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public BptfApplication getBptfApplication() {
+        return (BptfApplication) getActivity().getApplication();
     }
 }

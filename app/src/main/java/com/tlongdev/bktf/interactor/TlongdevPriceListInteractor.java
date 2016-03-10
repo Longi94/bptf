@@ -1,12 +1,12 @@
 /**
  * Copyright 2015 Long Tran
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.gms.analytics.HitBuilders;
@@ -40,6 +39,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
+import javax.inject.Inject;
+
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -54,6 +55,9 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
      */
     @SuppressWarnings("unused")
     private static final String LOG_TAG = TlongdevPriceListInteractor.class.getSimpleName();
+
+    @Inject SharedPreferences mPrefs;
+    @Inject SharedPreferences.Editor mEditor;
 
     //The context the task runs in
     private final Context mContext;
@@ -73,20 +77,21 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
     //the variable that contains the birth time of the youngest price
     private int latestUpdate = 0;
 
-    private int itemCount = -1;
     private int rowsInserted = 0;
 
     /**
      * Constructor
-     *
-     * @param context        the context the task was launched in
+     *  @param context        the context the task was launched in
+     * @param application
      * @param updateDatabase whether the database only needs an update
      * @param manualSync     whether this task was user initiated
      */
-    public TlongdevPriceListInteractor(Context context, boolean updateDatabase, boolean manualSync) {
+    public TlongdevPriceListInteractor(Context context, BptfApplication application, boolean updateDatabase, boolean manualSync) {
         this.mContext = context;
         this.updateDatabase = updateDatabase;
         this.manualSync = manualSync;
+
+        application.getInteractorComponent().inject(this);
     }
 
     /**
@@ -95,9 +100,7 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
     @Override
     protected Integer doInBackground(Void... params) {
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-
-        if (System.currentTimeMillis() - prefs.getLong(mContext
+        if (System.currentTimeMillis() - mPrefs.getLong(mContext
                 .getString(R.string.pref_last_price_list_update), 0) < 3600000L
                 && !manualSync) {
             //This task ran less than an hour ago and wasn't a manual sync, nothing to do.
@@ -169,66 +172,55 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
 
             if (price.getQuality() == 6 && price.getTradable() == 1 && price.getCraftable() == 1) {
                 if (price.getDefindex() == 143) { //buds
-                    //Get the sharedpreferences
-                    SharedPreferences.Editor editor = PreferenceManager
-                            .getDefaultSharedPreferences(mContext).edit();
-
                     //Store the price in a string so it can be displayed in the
                     //header in the latest changes page
                     Price budPrice = TlongdevModelConverter.convertToPrice(price);
 
                     String priceString = budPrice.getFormattedPrice(mContext);
-                    editor.putString(mContext.getString(R.string.pref_buds_price), priceString);
+                    mEditor.putString(mContext.getString(R.string.pref_buds_price), priceString);
 
                     //Save the difference
-                    Utility.putDouble(editor, mContext.getString(R.string.pref_buds_diff), price.getDifference());
+                    Utility.putDouble(mEditor, mContext.getString(R.string.pref_buds_diff), price.getDifference());
                     //Save the raw price
-                    Utility.putDouble(editor, mContext.getString(R.string.pref_buds_raw), price.getValueRaw());
+                    Utility.putDouble(mEditor, mContext.getString(R.string.pref_buds_raw), price.getValueRaw());
 
-                    editor.apply();
+                    mEditor.apply();
                 } else if (price.getDefindex() == 5002) { //metal
-                    //Get the sharedpreferences
-                    SharedPreferences.Editor editor = PreferenceManager
-                            .getDefaultSharedPreferences(mContext).edit();
-
                     //Store the price in a string so it can be displayed in the
                     //header in the latest changes page
                     double highPrice = price.getValueHigh() == null ? 0 : price.getValueHigh();
                     Price refPrice = TlongdevModelConverter.convertToPrice(price);
 
                     String priceString = refPrice.getFormattedPrice(mContext);
-                    editor.putString(mContext.getString(R.string.pref_metal_price), priceString);
+                    mEditor.putString(mContext.getString(R.string.pref_metal_price), priceString);
 
                     //Save the difference
-                    Utility.putDouble(editor, mContext.getString(R.string.pref_metal_diff), price.getDifference());
+                    Utility.putDouble(mEditor, mContext.getString(R.string.pref_metal_diff), price.getDifference());
 
                     if (highPrice > price.getValue()) {
                         //If the metal has a high price, save the average as raw.
-                        Utility.putDouble(editor, mContext.getString(R.string.pref_metal_raw_usd), ((price.getValue() + highPrice) / 2));
+                        Utility.putDouble(mEditor, mContext.getString(R.string.pref_metal_raw_usd), ((price.getValue() + highPrice) / 2));
                     } else {
                         //save as raw price
-                        Utility.putDouble(editor, mContext.getString(R.string.pref_metal_raw_usd), price.getValue());
+                        Utility.putDouble(mEditor, mContext.getString(R.string.pref_metal_raw_usd), price.getValue());
                     }
 
-                    editor.apply();
+                    mEditor.apply();
                 } else if (price.getDefindex() == 5021) { //key
-                    //Get the sharedpreferences
-                    SharedPreferences.Editor editor = PreferenceManager
-                            .getDefaultSharedPreferences(mContext).edit();
 
                     //Store the price in a string so it can be displayed in the
                     //header in the latest changes page
                     Price keyPrice = TlongdevModelConverter.convertToPrice(price);
 
                     String priceString = keyPrice.getFormattedPrice(mContext);
-                    editor.putString(mContext.getString(R.string.pref_key_price), priceString);
+                    mEditor.putString(mContext.getString(R.string.pref_key_price), priceString);
 
                     //Save the difference
-                    Utility.putDouble(editor, mContext.getString(R.string.pref_key_diff), price.getDifference());
+                    Utility.putDouble(mEditor, mContext.getString(R.string.pref_key_diff), price.getDifference());
                     //Save the raw price
-                    Utility.putDouble(editor, mContext.getString(R.string.pref_key_raw), price.getValueRaw());
+                    Utility.putDouble(mEditor, mContext.getString(R.string.pref_key_raw), price.getValueRaw());
 
-                    editor.apply();
+                    mEditor.apply();
                 }
             }
         }

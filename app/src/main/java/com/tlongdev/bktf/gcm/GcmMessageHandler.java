@@ -26,6 +26,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract;
 import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
@@ -55,7 +56,7 @@ public class GcmMessageHandler extends GcmListenerService implements TlongdevPri
                 String autoSync = prefs.getString(getString(R.string.pref_auto_sync), "1");
 
                 if (autoSync.equals("2") || (autoSync.equals("1") && wifi.isConnected())) {
-                    TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(this, true, true);
+                    TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(this, (BptfApplication) getApplication(), true, true);
                     task.setOnPriceListFetchListener(this);
                     task.execute();
                 }
