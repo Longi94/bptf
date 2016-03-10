@@ -14,26 +14,18 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.network;
 
-import com.tlongdev.bktf.network.model.TlongdevItemSchemaPayload;
-import com.tlongdev.bktf.network.model.TlongdevPricesPayload;
+package com.tlongdev.bktf.component;
 
-import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
+import com.tlongdev.bktf.module.BptfAppModule;
+
+import dagger.Component;
 
 /**
  * @author Long
  * @since 2016. 03. 10.
  */
-public interface TlongdevInterface {
+@Component(modules = BptfAppModule.class)
+public interface ActivityComponent {
 
-    String BASE_URL = "http://tlongdev.com/api/v1/";
-
-    @GET("prices")
-    Call<TlongdevPricesPayload> getPrices(@Query("since") long since);
-
-    @GET("item_schema")
-    Call<TlongdevItemSchemaPayload> getItemSchema();
 }
