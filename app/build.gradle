@@ -25,7 +25,7 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         Properties keys = new Properties()
-        if (file('keys.properties').exists()) {
+        if (project.rootProject.file('keys.properties').exists()) {
             keys.load(project.rootProject.file('keys.properties').newDataInputStream())
         }
 
