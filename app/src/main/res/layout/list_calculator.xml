@@ -93,7 +93,7 @@
                     android:textColor="@color/text_secondary"
                     android:textSize="14sp"/>
 
-                <com.tlongdev.bktf.view.LoseFocusEditText
+                <com.tlongdev.bktf.ui.view.LoseFocusEditText
                     android:id="@+id/count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

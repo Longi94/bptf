@@ -17,7 +17,9 @@
 package com.tlongdev.bktf.component;
 
 import com.tlongdev.bktf.module.BptfAppModule;
-import com.tlongdev.bktf.presenter.RecentsPresenter;
+import com.tlongdev.bktf.module.StorageModule;
+import com.tlongdev.bktf.presenter.fragment.CalculatorPresenter;
+import com.tlongdev.bktf.presenter.fragment.RecentsPresenter;
 
 import javax.inject.Singleton;
 
@@ -28,7 +30,9 @@ import dagger.Component;
  * @since 2016. 03. 10.
  */
 @Singleton
-@Component(modules = BptfAppModule.class)
+@Component(modules = {BptfAppModule.class, StorageModule.class})
 public interface PresenterComponent {
     void inject(RecentsPresenter presenter);
+
+    void inject(CalculatorPresenter calculatorPresenter);
 }

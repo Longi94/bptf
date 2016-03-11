@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.view;
+package com.tlongdev.bktf.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;

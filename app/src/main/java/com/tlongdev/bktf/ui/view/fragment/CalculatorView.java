@@ -14,34 +14,22 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.ui;
+package com.tlongdev.bktf.ui.view.fragment;
 
-import android.database.Cursor;
+import com.tlongdev.bktf.model.Item;
+import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.ui.view.BaseView;
+
+import java.util.List;
 
 /**
  * @author Long
- * @since 2016. 03. 10.
+ * @since 2016. 03. 11.
  */
-public interface RecentsView extends BaseView {
-    void showPrices(Cursor prices);
+public interface CalculatorView extends BaseView {
+    void showItems(List<Item> items, List<Integer> count, Price totalPrice);
 
-    void showError();
+    void updatePrices(Price totalPrice);
 
-    void showRefreshAnimation();
-
-    void hideRefreshingAnimation();
-
-    void finishActivity();
-
-    void updateCurrencyHeader();
-
-    void dismissLoadingDialog();
-
-    void showLoadingDialog(String message);
-
-    void updateLoadingDialog(int max, String message);
-
-    void showItemSchemaError(String errorMessage);
-
-    void showPricesError(String errorMessage);
+    void clearItems();
 }

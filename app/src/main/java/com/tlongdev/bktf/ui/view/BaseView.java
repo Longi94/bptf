@@ -14,24 +14,17 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.component;
+package com.tlongdev.bktf.ui.view;
 
-import com.tlongdev.bktf.module.BptfAppModule;
-import com.tlongdev.bktf.ui.fragment.CalculatorFragment;
-import com.tlongdev.bktf.ui.fragment.RecentsFragment;
+import android.content.Context;
 
-import javax.inject.Singleton;
-
-import dagger.Component;
+import com.tlongdev.bktf.BptfApplication;
 
 /**
  * @author Long
- * @since 2016. 03. 10.
+ * @since 2016. 02. 26.
  */
-@Singleton
-@Component(modules = BptfAppModule.class)
-public interface FragmentComponent {
-    void inject(RecentsFragment recentsFragment);
-
-    void inject(CalculatorFragment calculatorFragment);
+public interface BaseView {
+    Context getContext();
+    BptfApplication getBptfApplication();
 }

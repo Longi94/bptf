@@ -1,6 +1,7 @@
 package com.tlongdev.bktf.module;
 
 import android.app.Application;
+import android.content.ContentResolver;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.tlongdev.bktf.data.DatabaseHelper;
@@ -30,5 +31,11 @@ public class StorageModule {
     @Named("writable")
     SQLiteDatabase provideWritableDatabase(Application application) {
         return new DatabaseHelper(application).getWritableDatabase();
+    }
+
+    @Provides
+    @Singleton
+    ContentResolver provideContentResolver(Application application) {
+        return application.getContentResolver();
     }
 }

@@ -157,7 +157,7 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
     }
 
     private Integer insertPrices(List<TlongdevPrice> prices) {
-        //Iterator that will iterate through the items
+        //Iterator that will iterate through the mItems
         Vector<ContentValues> cVVector = new Vector<>();
 
         for (TlongdevPrice price : prices) {

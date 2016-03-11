@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.view;
+package com.tlongdev.bktf.ui.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.tlongdev.bktf.R;
 
 /**
- * An frame layout that allows to set that height of the view in ratio to its width.
+ * An image view that allows to set that width of the view in ratio to its height.
  * Ratio is 1:1 by default.
  */
-public class RatioHeightFrameLayout extends FrameLayout{
+public class RatioWidthImageView extends ImageView {
+
     private double mRatioWidth = 1;
     private double mRatioHeight = 1;
 
@@ -36,7 +37,7 @@ public class RatioHeightFrameLayout extends FrameLayout{
      *
      * @param context context
      */
-    public RatioHeightFrameLayout(Context context) {
+    public RatioWidthImageView(Context context) {
         super(context);
     }
 
@@ -46,7 +47,7 @@ public class RatioHeightFrameLayout extends FrameLayout{
      * @param context context
      * @param attrs   attributes
      */
-    public RatioHeightFrameLayout(Context context, AttributeSet attrs) {
+    public RatioWidthImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
@@ -58,7 +59,7 @@ public class RatioHeightFrameLayout extends FrameLayout{
      * @param attrs        attributes
      * @param defStyleAttr default style attributes
      */
-    public RatioHeightFrameLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public RatioWidthImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
@@ -83,6 +84,6 @@ public class RatioHeightFrameLayout extends FrameLayout{
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        setMeasuredDimension(getMeasuredWidth(), (int) (getMeasuredWidth() * mRatioHeight / mRatioWidth));
+        setMeasuredDimension((int) (getMeasuredHeight() * mRatioWidth / mRatioHeight), getMeasuredHeight());
     }
 }

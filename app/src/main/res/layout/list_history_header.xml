@@ -28,20 +28,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.tlongdev.bktf.view.RatioHeightImageView
+                <com.tlongdev.bktf.ui.view.RatioHeightImageView
                     android:id="@+id/quality"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitCenter"
                     android:visibility="gone"/>
 
-                <com.tlongdev.bktf.view.RatioHeightImageView
+                <com.tlongdev.bktf.ui.view.RatioHeightImageView
                     android:id="@+id/effect"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitCenter" />
 
-                <com.tlongdev.bktf.view.RatioHeightImageView
+                <com.tlongdev.bktf.ui.view.RatioHeightImageView
                     android:id="@+id/icon"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -73,7 +73,7 @@
         android:layout_margin="8dp"
         card_view:cardBackgroundColor="@color/card_color">
 
-        <com.tlongdev.bktf.view.SquareLineChart
+        <com.tlongdev.bktf.ui.view.SquareLineChart
             android:id="@+id/history_chart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

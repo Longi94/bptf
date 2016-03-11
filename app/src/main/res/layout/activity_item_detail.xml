@@ -25,12 +25,12 @@
             android:padding="16dp"
             tools:context=".ui.activity.ItemDetailActivity">
 
-            <com.tlongdev.bktf.view.RatioHeightFrameLayout
+            <com.tlongdev.bktf.ui.view.RatioHeightFrameLayout
                 android:id="@+id/relative_layout_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <com.tlongdev.bktf.view.RatioHeightImageView
+                <com.tlongdev.bktf.ui.view.RatioHeightImageView
                     android:id="@+id/quality"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -38,28 +38,28 @@
                     android:scaleType="centerCrop"
                     android:visibility="gone"/>
 
-                <com.tlongdev.bktf.view.RatioHeightImageView
+                <com.tlongdev.bktf.ui.view.RatioHeightImageView
                     android:id="@+id/effect"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"/>
 
-                <com.tlongdev.bktf.view.RatioHeightImageView
+                <com.tlongdev.bktf.ui.view.RatioHeightImageView
                     android:id="@+id/icon"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"/>
 
-                <com.tlongdev.bktf.view.RatioHeightImageView
+                <com.tlongdev.bktf.ui.view.RatioHeightImageView
                     android:id="@+id/paint"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"/>
 
-            </com.tlongdev.bktf.view.RatioHeightFrameLayout>
+            </com.tlongdev.bktf.ui.view.RatioHeightFrameLayout>
 
             <TextView
                 android:id="@+id/text_view_name"

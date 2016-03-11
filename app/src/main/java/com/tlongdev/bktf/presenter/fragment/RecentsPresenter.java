@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.presenter;
+package com.tlongdev.bktf.presenter.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -29,7 +29,8 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.interactor.LoadAllPricesInteractor;
 import com.tlongdev.bktf.interactor.TlongdevItemSchemaInteractor;
 import com.tlongdev.bktf.interactor.TlongdevPriceListInteractor;
-import com.tlongdev.bktf.ui.RecentsView;
+import com.tlongdev.bktf.presenter.Presenter;
+import com.tlongdev.bktf.ui.view.fragment.RecentsView;
 import com.tlongdev.bktf.util.Utility;
 
 import javax.inject.Inject;

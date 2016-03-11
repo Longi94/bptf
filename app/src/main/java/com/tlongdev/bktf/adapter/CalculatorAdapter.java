@@ -31,6 +31,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Item;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -51,8 +52,8 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
      */
     private Context mContext;
 
-    private ArrayList<Item> mDataSet;
-    private ArrayList<Integer> mCountSet;
+    private List<Item> mDataSet;
+    private List<Integer> mCountSet;
 
     /**
      * The listener that will be notified when an items is edited.
@@ -173,7 +174,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
         return mDataSet == null ? 0 : mDataSet.size();
     }
 
-    public void setDataSet(ArrayList<Item> dataSet, ArrayList<Integer> count) {
+    public void setDataSet(List<Item> dataSet, List<Integer> count) {
         mDataSet = dataSet;
         mCountSet = count;
     }

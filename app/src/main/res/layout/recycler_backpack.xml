@@ -8,28 +8,28 @@
     android:foreground="?attr/selectableItemBackground"
     card_view:cardBackgroundColor="@color/card_color">
 
-    <com.tlongdev.bktf.view.RatioHeightImageView
+    <com.tlongdev.bktf.ui.view.RatioHeightImageView
         android:id="@+id/quality"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:scaleType="centerCrop" />
 
-    <com.tlongdev.bktf.view.RatioHeightImageView
+    <com.tlongdev.bktf.ui.view.RatioHeightImageView
         android:id="@+id/effect"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:scaleType="centerCrop" />
 
-    <com.tlongdev.bktf.view.RatioHeightImageView
+    <com.tlongdev.bktf.ui.view.RatioHeightImageView
         android:id="@+id/icon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:scaleType="centerCrop" />
 
-    <com.tlongdev.bktf.view.RatioHeightImageView
+    <com.tlongdev.bktf.ui.view.RatioHeightImageView
         android:id="@+id/paint"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

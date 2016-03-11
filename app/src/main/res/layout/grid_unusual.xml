@@ -20,14 +20,14 @@
             android:layout_height="wrap_content"
             android:background="@color/tf2_unusual_color_dark">
 
-            <com.tlongdev.bktf.view.RatioHeightImageView
+            <com.tlongdev.bktf.ui.view.RatioHeightImageView
                 android:id="@+id/effect"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"/>
 
-            <com.tlongdev.bktf.view.RatioHeightImageView
+            <com.tlongdev.bktf.ui.view.RatioHeightImageView
                 android:id="@+id/icon"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

@@ -16,7 +16,7 @@
 
 package com.tlongdev.bktf.presenter;
 
-import com.tlongdev.bktf.ui.BaseView;
+import com.tlongdev.bktf.ui.view.BaseView;
 
 /**
  * @author Long

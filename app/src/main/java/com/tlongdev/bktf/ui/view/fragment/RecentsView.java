@@ -14,17 +14,36 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.ui;
+package com.tlongdev.bktf.ui.view.fragment;
 
-import android.content.Context;
+import android.database.Cursor;
 
-import com.tlongdev.bktf.BptfApplication;
+import com.tlongdev.bktf.ui.view.BaseView;
 
 /**
  * @author Long
- * @since 2016. 02. 26.
+ * @since 2016. 03. 10.
  */
-public interface BaseView {
-    Context getContext();
-    BptfApplication getBptfApplication();
+public interface RecentsView extends BaseView {
+    void showPrices(Cursor prices);
+
+    void showError();
+
+    void showRefreshAnimation();
+
+    void hideRefreshingAnimation();
+
+    void finishActivity();
+
+    void updateCurrencyHeader();
+
+    void dismissLoadingDialog();
+
+    void showLoadingDialog(String message);
+
+    void updateLoadingDialog(int max, String message);
+
+    void showItemSchemaError(String errorMessage);
+
+    void showPricesError(String errorMessage);
 }

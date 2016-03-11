@@ -23,7 +23,7 @@
             android:layout_width="64dp"
             android:layout_height="64dp">
 
-            <com.tlongdev.bktf.view.RoundedImageView
+            <com.tlongdev.bktf.ui.view.RoundedImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
