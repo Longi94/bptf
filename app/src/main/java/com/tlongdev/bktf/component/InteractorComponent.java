@@ -18,6 +18,7 @@ package com.tlongdev.bktf.component;
 
 import com.tlongdev.bktf.interactor.LoadAllPricesInteractor;
 import com.tlongdev.bktf.interactor.LoadCalculatorItemsInteractor;
+import com.tlongdev.bktf.interactor.LoadFavoritesInteractor;
 import com.tlongdev.bktf.interactor.TlongdevItemSchemaInteractor;
 import com.tlongdev.bktf.interactor.TlongdevPriceListInteractor;
 import com.tlongdev.bktf.module.BptfAppModule;
@@ -42,4 +43,6 @@ public interface InteractorComponent {
     void inject(LoadAllPricesInteractor loadAllPricesInteractor);
 
     void inject(LoadCalculatorItemsInteractor loadCalculatorItemsInteractor);
+
+    void inject(LoadFavoritesInteractor loadFavoritesInteractor);
 }

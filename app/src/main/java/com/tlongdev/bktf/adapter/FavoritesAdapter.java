@@ -33,11 +33,12 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.model.Item;
+import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.util.Utility;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,7 +49,7 @@ import butterknife.ButterKnife;
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.ViewHolder> {
 
     private Context mContext;
-    private ArrayList<Item> mDataSet;
+    private List<Item> mDataSet;
 
     public FavoritesAdapter(Context context, ArrayList<Item> dataSet) {
         this.mContext = context;
@@ -167,7 +168,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
                             .build());
                 }
             } else {
-                holder.price.setText("Price Unkown");
+                holder.price.setText("Price Unknown");
                 holder.difference.setVisibility(View.GONE);
             }
         }
@@ -178,7 +179,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         return mDataSet == null ? 0 : mDataSet.size();
     }
 
-    public void setDataSet(ArrayList<Item> dataSet) {
+    public void setDataSet(List<Item> dataSet) {
         this.mDataSet = dataSet;
     }
 
