@@ -27,63 +27,63 @@ public class BackpackTfPlayer {
 
     @SerializedName("steamid")
     @Expose
-    public String steamid;
+    private String steamid;
 
     @SerializedName("success")
     @Expose
-    public int success;
+    private int success;
 
     @SerializedName("backpack_value")
     @Expose
-    public BackpackTfBackpackValue backpackValue;
+    private BackpackTfBackpackValue backpackValue;
 
     @SerializedName("backpack_update")
     @Expose
-    public BackpackTfBackpackUpdate backpackUpdate;
+    private BackpackTfBackpackUpdate backpackUpdate;
 
     @SerializedName("name")
     @Expose
-    public String name;
+    private String name;
 
     @SerializedName("backpack_tf_reputation")
     @Expose
-    public int backpackTfReputation;
+    private int backpackTfReputation;
 
     @SerializedName("backpack_tf_group")
     @Expose
-    public boolean backpackTfGroup;
+    private boolean backpackTfGroup;
 
     @SerializedName("backpack_tf_banned")
     @Expose
-    public boolean backpackTfBanned;
+    private boolean backpackTfBanned;
 
     @SerializedName("backpack_tf_bans")
     @Expose
-    public BackpackTfBans backpackTfBans;
+    private BackpackTfBans backpackTfBans;
 
     @SerializedName("backpack_tf_trust")
     @Expose
-    public BackpackTfTrust backpackTfTrust;
+    private BackpackTfTrust backpackTfTrust;
 
     @SerializedName("steamrep_scammer")
     @Expose
-    public boolean steamrepScammer;
+    private boolean steamrepScammer;
 
     @SerializedName("ban_economy")
     @Expose
-    public boolean banEconomy;
+    private boolean banEconomy;
 
     @SerializedName("ban_community")
     @Expose
-    public boolean banCommunity;
+    private boolean banCommunity;
 
     @SerializedName("ban_vac")
     @Expose
-    public boolean banVac;
+    private boolean banVac;
 
     @SerializedName("notifications")
     @Expose
-    public int notifications;
+    private int notifications;
 
     public String getSteamid() {
         return steamid;

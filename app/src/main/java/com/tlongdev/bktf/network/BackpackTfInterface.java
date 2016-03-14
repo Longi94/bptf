@@ -30,7 +30,7 @@ public interface BackpackTfInterface {
 
     String BASE_URL = "http://backpack.tf/api/";
 
-    @GET("IGetUsers/v3")
+    @GET("IGetUsers/v3/")
     Call<BackpackTfPayload> getUserData(@Query("steamids") String steamId);
 
 }

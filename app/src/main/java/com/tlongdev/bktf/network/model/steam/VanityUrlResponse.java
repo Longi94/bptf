@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.network.model.bptf;
+package com.tlongdev.bktf.network.model.steam;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -23,21 +23,29 @@ import com.google.gson.annotations.SerializedName;
  * @author Long
  * @since 2016. 03. 14.
  */
-public class BackpackTfBackpackUpdate {
+public class VanityUrlResponse {
 
-    @SerializedName("440")
+    @SerializedName("steamid")
     @Expose
-    private long _440;
+    private String steamid;
 
-    @SerializedName("570")
+    @SerializedName("success")
     @Expose
-    private long _570;
+    private int success;
 
-    public long get440() {
-        return _440;
+    @SerializedName("message")
+    @Expose
+    private String message;
+
+    public String getSteamid() {
+        return steamid;
     }
 
-    public long get570() {
-        return _570;
+    public int getSuccess() {
+        return success;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

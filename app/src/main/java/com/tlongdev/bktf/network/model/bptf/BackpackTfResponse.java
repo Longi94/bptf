@@ -29,15 +29,15 @@ public class BackpackTfResponse {
 
     @SerializedName("success")
     @Expose
-    public int success;
+    private int success;
 
     @SerializedName("current_time")
     @Expose
-    public long currentTime;
+    private long currentTime;
 
     @SerializedName("players")
     @Expose
-    public Map<String, BackpackTfPlayer> players;
+    private Map<String, BackpackTfPlayer> players;
 
     public int getSuccess() {
         return success;

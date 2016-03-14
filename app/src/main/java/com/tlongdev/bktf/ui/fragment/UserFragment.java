@@ -47,7 +47,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.interactor.BackpackTfUserDataInteractor;
+import com.tlongdev.bktf.interactor.GetUserDataInteractor;
 import com.tlongdev.bktf.network.GetUserBackpack;
 import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
@@ -63,7 +63,7 @@ import butterknife.OnClick;
  * Fragment for displaying the user profile.
  */
 public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
-        View.OnClickListener, BackpackTfUserDataInteractor.OnUserInfoListener, MainActivity.OnDrawerOpenedListener,
+        View.OnClickListener, GetUserDataInteractor.OnUserInfoListener, MainActivity.OnDrawerOpenedListener,
         GetUserBackpack.OnUserBackpackListener {
 
     /**
@@ -186,7 +186,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 .getLong(getString(R.string.pref_last_user_data_update), 0) >= 3600000L) {
 
             //Start the task and listne for the end
-            BackpackTfUserDataInteractor task = new BackpackTfUserDataInteractor(mContext,(BptfApplication) getActivity().getApplication(), false);
+            GetUserDataInteractor task = new GetUserDataInteractor(mContext,(BptfApplication) getActivity().getApplication(), false);
             task.registerFetchUserInfoListener(this);
             task.execute(Profile.getSteamId(mContext), Profile.getResolvedSteamId(mContext));
 
@@ -215,7 +215,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         layoutRefreshing = true;
         if (Utility.isNetworkAvailable(mContext)) {
             //Start fetching the data and listen for the end
-            BackpackTfUserDataInteractor fetchTask = new BackpackTfUserDataInteractor(mContext, (BptfApplication) getActivity().getApplication(), true);
+            GetUserDataInteractor fetchTask = new GetUserDataInteractor(mContext, (BptfApplication) getActivity().getApplication(), true);
             fetchTask.registerFetchUserInfoListener(this);
             fetchTask.execute(Profile.getSteamId(mContext), Profile.getResolvedSteamId(mContext));
 

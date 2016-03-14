@@ -16,6 +16,7 @@
 
 package com.tlongdev.bktf.component;
 
+import com.tlongdev.bktf.interactor.GetUserDataInteractor;
 import com.tlongdev.bktf.interactor.LoadAllPricesInteractor;
 import com.tlongdev.bktf.interactor.LoadCalculatorItemsInteractor;
 import com.tlongdev.bktf.interactor.LoadFavoritesInteractor;
@@ -26,7 +27,6 @@ import com.tlongdev.bktf.interactor.TlongdevPriceListInteractor;
 import com.tlongdev.bktf.module.BptfAppModule;
 import com.tlongdev.bktf.module.NetworkModule;
 import com.tlongdev.bktf.module.StorageModule;
-import com.tlongdev.bktf.interactor.BackpackTfUserDataInteractor;
 
 import javax.inject.Singleton;
 
@@ -53,5 +53,5 @@ public interface InteractorComponent {
 
     void inject(LoadUnusualEffectsInteractor loadUnusualEffectsInteractor);
 
-    void inject(BackpackTfUserDataInteractor backpackTfUserDataInteractor);
+    void inject(GetUserDataInteractor getUserDataInteractor);
 }

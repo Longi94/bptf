@@ -27,11 +27,11 @@ public class BackpackTfBackpackValue {
 
     @SerializedName("440")
     @Expose
-    public double _440;
+    private double _440;
 
     @SerializedName("570")
     @Expose
-    public double _570;
+    private double _570;
 
     public double get440() {
         return _440;

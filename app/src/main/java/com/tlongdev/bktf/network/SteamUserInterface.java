@@ -14,30 +14,26 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.network.model.bptf;
+package com.tlongdev.bktf.network;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.tlongdev.bktf.network.model.steam.UserSummariesPayload;
+import com.tlongdev.bktf.network.model.steam.VanityUrl;
+
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 /**
  * @author Long
  * @since 2016. 03. 14.
  */
-public class BackpackTfBackpackUpdate {
+public interface SteamUserInterface {
 
-    @SerializedName("440")
-    @Expose
-    private long _440;
+    String BASE_URL = "http://api.steampowered.com/ISteamUser/";
 
-    @SerializedName("570")
-    @Expose
-    private long _570;
+    @GET("ResolveVanityURL/v0001/")
+    Call<VanityUrl> resolveVanityUrl(@Query("key") String apiKey, @Query("vanityurl") String vanityUrl);
 
-    public long get440() {
-        return _440;
-    }
-
-    public long get570() {
-        return _570;
-    }
+    @GET("GetPlayerSummaries/v0002/")
+    Call<UserSummariesPayload> getUserSummaries(@Query("key") String apiKey, @Query("steamids") String steamId);
 }

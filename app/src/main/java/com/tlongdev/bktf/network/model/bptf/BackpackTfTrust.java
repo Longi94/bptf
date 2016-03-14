@@ -27,11 +27,11 @@ public class BackpackTfTrust {
 
     @SerializedName("for")
     @Expose
-    public int _for;
+    private int _for;
 
     @SerializedName("against")
     @Expose
-    public int against;
+    private int against;
 
     public int getFor() {
         return _for;

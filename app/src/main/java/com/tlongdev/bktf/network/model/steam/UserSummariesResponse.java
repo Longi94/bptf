@@ -14,30 +14,25 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.network.model.bptf;
+package com.tlongdev.bktf.network.model.steam;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Long
  * @since 2016. 03. 14.
  */
-public class BackpackTfBackpackUpdate {
+public class UserSummariesResponse {
 
-    @SerializedName("440")
+    @SerializedName("players")
     @Expose
-    private long _440;
+    private List<UserSummariesPlayer> players = new ArrayList<>();
 
-    @SerializedName("570")
-    @Expose
-    private long _570;
-
-    public long get440() {
-        return _440;
-    }
-
-    public long get570() {
-        return _570;
+    public List<UserSummariesPlayer> getPlayers() {
+        return players;
     }
 }
