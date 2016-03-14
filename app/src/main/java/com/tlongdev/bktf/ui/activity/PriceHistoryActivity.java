@@ -39,7 +39,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.HistoryAdapter;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
-import com.tlongdev.bktf.network.GetPriceHistory;
+import com.tlongdev.bktf.interactor.BackpackTfPriceHistoryInteractor;
 import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
@@ -47,13 +47,13 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class PriceHistoryActivity extends AppCompatActivity implements GetPriceHistory.OnPriceHistoryListener {
+public class PriceHistoryActivity extends AppCompatActivity implements BackpackTfPriceHistoryInteractor.OnPriceHistoryListener {
 
     /**
      * Log tag for logging.
      */
     @SuppressWarnings("unused")
-    private static final String LOG_TAG = GetPriceHistory.class.getSimpleName();
+    private static final String LOG_TAG = BackpackTfPriceHistoryInteractor.class.getSimpleName();
 
     public static final String EXTRA_ITEM = "item";
 
@@ -102,7 +102,7 @@ public class PriceHistoryActivity extends AppCompatActivity implements GetPriceH
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         if (Utility.isNetworkAvailable(this)) {
-            GetPriceHistory task = new GetPriceHistory(this, mItem);
+            BackpackTfPriceHistoryInteractor task = new BackpackTfPriceHistoryInteractor(this, mItem);
             task.setListener(this);
             task.execute();
 

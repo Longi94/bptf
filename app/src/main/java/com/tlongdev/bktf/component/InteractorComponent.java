@@ -16,6 +16,7 @@
 
 package com.tlongdev.bktf.component;
 
+import com.tlongdev.bktf.interactor.BackpackTfPriceHistoryInteractor;
 import com.tlongdev.bktf.interactor.GetUserDataInteractor;
 import com.tlongdev.bktf.interactor.LoadAllPricesInteractor;
 import com.tlongdev.bktf.interactor.LoadCalculatorItemsInteractor;
@@ -54,4 +55,6 @@ public interface InteractorComponent {
     void inject(LoadUnusualEffectsInteractor loadUnusualEffectsInteractor);
 
     void inject(GetUserDataInteractor getUserDataInteractor);
+
+    void inject(BackpackTfPriceHistoryInteractor backpackTfPriceHistoryInteractor);
 }
