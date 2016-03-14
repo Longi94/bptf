@@ -44,6 +44,7 @@ public class Item implements Parcelable {
 
     private String name;
 
+    @Quality.Enum
     private int quality;
 
     private boolean tradable;
@@ -73,6 +74,7 @@ public class Item implements Parcelable {
     public Item(Parcel source) {
         defindex = source.readInt();
         name = source.readString();
+        //noinspection WrongConstant
         quality = source.readInt();
         tradable = source.readByte() != 0;
         craftable = source.readByte() != 0;
@@ -104,11 +106,11 @@ public class Item implements Parcelable {
         this(0, null, 0, false, false, false, 0, null);
     }
 
-    public Item(int defindex, String name, int quality, boolean tradable, boolean craftable, boolean australium, int priceIndex, Price price) {
+    public Item(int defindex, String name, @Quality.Enum int quality, boolean tradable, boolean craftable, boolean australium, int priceIndex, Price price) {
         this(defindex, name, quality, tradable, craftable, australium, priceIndex, 0, price);
     }
 
-    public Item(int defindex, String name, int quality, boolean tradable, boolean craftable, boolean australium, int priceIndex, int weaponWear, Price price) {
+    public Item(int defindex, String name, @Quality.Enum int quality, boolean tradable, boolean craftable, boolean australium, int priceIndex, int weaponWear, Price price) {
         this.defindex = defindex;
         this.name = name;
         this.quality = quality;
@@ -136,11 +138,12 @@ public class Item implements Parcelable {
         this.name = name;
     }
 
+    @Quality.Enum
     public int getQuality() {
         return quality;
     }
 
-    public void setQuality(int quality) {
+    public void setQuality( @Quality.Enum int quality) {
         this.quality = quality;
     }
 

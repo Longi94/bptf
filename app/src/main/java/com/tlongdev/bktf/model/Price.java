@@ -49,6 +49,7 @@ public class Price implements Parcelable {
 
     private double difference;
 
+    @Currency.Enum
     private String currency;
 
     public static final Parcelable.Creator<Price> CREATOR = new Creator<Price>() {
@@ -68,6 +69,7 @@ public class Price implements Parcelable {
         highValue = source.readDouble();
         rawValue = source.readDouble();
         lastUpdate = source.readLong();
+        //noinspection WrongConstant
         currency = source.readString();
     }
 
@@ -89,11 +91,11 @@ public class Price implements Parcelable {
         this(0, 0, 0, 0, 0, null);
     }
 
-    public Price(double value, String currency) {
+    public Price(double value, @Currency.Enum String currency) {
         this(value, 0, 0, 0, 0, currency);
     }
 
-    public Price(double value, double highValue, double rawValue, long lastUpdate, double difference, String currency) {
+    public Price(double value, double highValue, double rawValue, long lastUpdate, double difference, @Currency.Enum String currency) {
         this.value = value;
         this.highValue = highValue;
         this.rawValue = rawValue;
@@ -142,11 +144,12 @@ public class Price implements Parcelable {
         this.difference = difference;
     }
 
+    @Currency.Enum
     public String getCurrency() {
         return currency;
     }
 
-    public void setCurrency(String currency) {
+    public void setCurrency(@Currency.Enum String currency) {
         this.currency = currency;
     }
 
@@ -228,7 +231,7 @@ public class Price implements Parcelable {
      * @param isHigh         whether to convert the low or the high price
      * @return the converted price
      */
-    public double getConvertedPrice(Context context, String targetCurrency, boolean isHigh) {
+    public double getConvertedPrice(Context context, @Currency.Enum String targetCurrency, boolean isHigh) {
 
         double price = isHigh ? highValue : value;
 
@@ -339,7 +342,7 @@ public class Price implements Parcelable {
         }
     }
 
-    public double getConvertedAveragePrice(Context context, String currency) {
+    public double getConvertedAveragePrice(Context context, @Currency.Enum String currency) {
 
         if (highValue > 0) {
             return (getConvertedPrice(context, currency, false) + getConvertedPrice(context, currency, true)) / 2.0;
