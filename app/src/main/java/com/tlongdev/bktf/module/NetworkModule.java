@@ -19,6 +19,7 @@ package com.tlongdev.bktf.module;
 import com.google.gson.Gson;
 import com.tlongdev.bktf.network.BackpackTfInterface;
 import com.tlongdev.bktf.network.SteamUserInterface;
+import com.tlongdev.bktf.network.Tf2Interface;
 import com.tlongdev.bktf.network.TlongdevInterface;
 
 import javax.inject.Named;
@@ -74,6 +75,16 @@ public class NetworkModule {
 
     @Provides
     @Singleton
+    @Named("tf2")
+    Retrofit provideTf2Retrofit(Gson gson) {
+        return new Retrofit.Builder()
+                .baseUrl(Tf2Interface.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+    }
+
+    @Provides
+    @Singleton
     TlongdevInterface provideTlongdevInterface(@Named("tlongdev") Retrofit retrofit) {
         return retrofit.create(TlongdevInterface.class);
     }
@@ -88,5 +99,11 @@ public class NetworkModule {
     @Singleton
     SteamUserInterface provideSteamUserInterface(@Named("steam_user") Retrofit retrofit) {
         return retrofit.create(SteamUserInterface.class);
+    }
+
+    @Provides
+    @Singleton
+    Tf2Interface provideTf2Interface(@Named("tf2") Retrofit retrofit) {
+        return retrofit.create(Tf2Interface.class);
     }
 }

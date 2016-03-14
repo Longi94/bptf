@@ -41,7 +41,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.network.GetUserBackpack;
+import com.tlongdev.bktf.interactor.Tf2UserBackpackInteractor;
 import com.tlongdev.bktf.util.Utility;
 
 import org.json.JSONArray;
@@ -61,7 +61,7 @@ import okhttp3.Response;
 /**
  * Profile page activity.
  */
-public class UserActivity extends AppCompatActivity implements GetUserBackpack.OnUserBackpackListener {
+public class UserActivity extends AppCompatActivity implements Tf2UserBackpackInteractor.OnUserBackpackListener {
 
     /**
      * Log tag for logging.
@@ -610,7 +610,7 @@ public class UserActivity extends AppCompatActivity implements GetUserBackpack.O
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            GetUserBackpack task = new GetUserBackpack(UserActivity.this);
+            Tf2UserBackpackInteractor task = new Tf2UserBackpackInteractor(UserActivity.this, (BptfApplication) getApplication());
             task.registerOnFetchUserBackpackListener(UserActivity.this);
             task.execute(steamId);
 

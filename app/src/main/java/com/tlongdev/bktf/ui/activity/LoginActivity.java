@@ -34,7 +34,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.interactor.GetUserDataInteractor;
-import com.tlongdev.bktf.network.GetUserBackpack;
+import com.tlongdev.bktf.interactor.Tf2UserBackpackInteractor;
 import com.tlongdev.bktf.util.Profile;
 import com.tlongdev.bktf.util.Utility;
 
@@ -42,7 +42,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LoginActivity extends AppCompatActivity implements GetUserDataInteractor.OnUserInfoListener, GetUserBackpack.OnUserBackpackListener {
+public class LoginActivity extends AppCompatActivity implements GetUserDataInteractor.OnUserInfoListener, Tf2UserBackpackInteractor.OnUserBackpackListener {
 
     /**
      * The {@link Tracker} used to record screen views.
@@ -129,7 +129,7 @@ public class LoginActivity extends AppCompatActivity implements GetUserDataInter
                 .putLong(getString(R.string.pref_last_user_data_update),
                         System.currentTimeMillis()).apply();
 
-        GetUserBackpack task = new GetUserBackpack(this);
+        Tf2UserBackpackInteractor task = new Tf2UserBackpackInteractor(this, (BptfApplication) getApplication());
         task.registerOnFetchUserBackpackListener(this);
         task.execute(steamId);
 

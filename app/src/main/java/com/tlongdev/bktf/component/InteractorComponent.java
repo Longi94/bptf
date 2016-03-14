@@ -28,6 +28,7 @@ import com.tlongdev.bktf.interactor.TlongdevPriceListInteractor;
 import com.tlongdev.bktf.module.BptfAppModule;
 import com.tlongdev.bktf.module.NetworkModule;
 import com.tlongdev.bktf.module.StorageModule;
+import com.tlongdev.bktf.interactor.Tf2UserBackpackInteractor;
 
 import javax.inject.Singleton;
 
@@ -57,4 +58,6 @@ public interface InteractorComponent {
     void inject(GetUserDataInteractor getUserDataInteractor);
 
     void inject(BackpackTfPriceHistoryInteractor backpackTfPriceHistoryInteractor);
+
+    void inject(Tf2UserBackpackInteractor tf2UserBackpackInteractor);
 }

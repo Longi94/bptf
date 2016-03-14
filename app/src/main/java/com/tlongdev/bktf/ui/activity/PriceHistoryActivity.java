@@ -102,7 +102,7 @@ public class PriceHistoryActivity extends AppCompatActivity implements BackpackT
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         if (Utility.isNetworkAvailable(this)) {
-            BackpackTfPriceHistoryInteractor task = new BackpackTfPriceHistoryInteractor(this, mItem);
+            BackpackTfPriceHistoryInteractor task = new BackpackTfPriceHistoryInteractor((BptfApplication) getApplication(), mItem);
             task.setListener(this);
             task.execute();
 

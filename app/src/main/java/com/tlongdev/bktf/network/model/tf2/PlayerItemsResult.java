@@ -14,22 +14,40 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.network.model.steam;
+package com.tlongdev.bktf.network.model.tf2;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 /**
  * @author Long
  * @since 2016. 03. 14.
  */
-public class VanityUrl {
+public class PlayerItemsResult {
 
-    @SerializedName("response")
+    @SerializedName("status")
     @Expose
-    private VanityUrlResponse response;
+    private int status;
 
-    public VanityUrlResponse getResponse() {
-        return response;
+    @SerializedName("num_backpack_slots")
+    @Expose
+    private int numBackpackSlots;
+
+    @SerializedName("items")
+    @Expose
+    private List<PlayerItem> items;
+
+    public int getStatus() {
+        return status;
+    }
+
+    public int getNumBackpackSlots() {
+        return numBackpackSlots;
+    }
+
+    public List<PlayerItem> getItems() {
+        return items;
     }
 }
