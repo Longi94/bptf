@@ -131,7 +131,7 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
         recyclerView.setLayoutManager(new GridLayoutManager(this, columnCount));
 
         //Initialize adapter
-        adapter = new UnusualAdapter(this, null, UnusualAdapter.TYPE_SPECIFIC_HAT);
+        adapter = new UnusualAdapter(this/*, null, UnusualAdapter.TYPE_SPECIFIC_HAT*/);
         recyclerView.setAdapter(adapter);
 
         searchInput.addTextChangedListener(this);
@@ -215,14 +215,14 @@ public class UnusualActivity extends AppCompatActivity implements LoaderManager.
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         //pass the cursor to the adapter to show data
-        adapter.swapCursor(data, false);
+        //adapter.swapCursor(data, false);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         //This is never reached, but it's here just in case
         //Remove all data from the adapter
-        adapter.swapCursor(null, false);
+        //adapter.swapCursor(null, false);
     }
 
     @Override

@@ -21,6 +21,7 @@ import com.tlongdev.bktf.module.StorageModule;
 import com.tlongdev.bktf.presenter.fragment.CalculatorPresenter;
 import com.tlongdev.bktf.presenter.fragment.FavoritesPresenter;
 import com.tlongdev.bktf.presenter.fragment.RecentsPresenter;
+import com.tlongdev.bktf.presenter.fragment.UnusualPresenter;
 
 import javax.inject.Singleton;
 
@@ -38,4 +39,6 @@ public interface PresenterComponent {
     void inject(CalculatorPresenter calculatorPresenter);
 
     void inject(FavoritesPresenter favoritesPresenter);
+
+    void inject(UnusualPresenter unusualPresenter);
 }

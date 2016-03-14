@@ -18,30 +18,21 @@ package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
-import com.tlongdev.bktf.ui.activity.UnusualActivity;
-import com.tlongdev.bktf.ui.fragment.UnusualFragment;
-import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Item;
-import com.tlongdev.bktf.model.Price;
-import com.tlongdev.bktf.model.Quality;
+import com.tlongdev.bktf.ui.activity.UnusualActivity;
 import com.tlongdev.bktf.util.Utility;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -67,7 +58,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
     /**
      * The data set
      */
-    private Cursor mDataSet;
+    private List<Item> mDataSet;
 
     /**
      * The context
@@ -83,24 +74,9 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
      * Main constructor.
      *
      * @param context the context
-     * @param dataSet the data set
      */
-    public UnusualAdapter(Context context, Cursor dataSet) {
+    public UnusualAdapter(Context context) {
         this.mContext = context;
-        this.mDataSet = dataSet;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param context the context
-     * @param dataSet the data set
-     * @param type    the type of the adapter
-     */
-    public UnusualAdapter(Context context, Cursor dataSet, int type) {
-        this.mContext = context;
-        this.mDataSet = dataSet;
-        this.type = type;
     }
 
     @Override
@@ -112,20 +88,13 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        if (mDataSet != null && mDataSet.moveToPosition(position)) {
+        if (mDataSet != null) {
 
-            //Get the raw key price
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-            double rawKeyPrice = Utility.getDouble(prefs, mContext.getString(R.string.pref_key_raw), 1);
+            final Item item = mDataSet.get(position);
 
             switch (type) {
                 //We are showing the hats, no effects
                 case TYPE_HATS:
-                    final Item item = new Item(
-                            mDataSet.getInt(UnusualFragment.COLUMN_DEFINDEX),
-                            mDataSet.getString(UnusualFragment.COLUMN_NAME),
-                            Quality.UNIQUE, true, true, false, 0, null
-                    );
 
                     Glide.with(mContext)
                             .load(item.getIconUrl(mContext))
@@ -142,21 +111,17 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                         }
                     });
                     holder.price.setText(mContext.getString(R.string.currency_key_plural,
-                            Utility.formatDouble(mDataSet.getDouble(
-                                    UnusualFragment.COLUMN_AVERAGE_PRICE) / rawKeyPrice)));
+                            Utility.formatDouble(item.getPrice().getValue())));
 
-                    holder.name.setText(mDataSet.getString(UnusualFragment.COLUMN_NAME));
+                    holder.name.setText(item.getName());
 
                     holder.more.setVisibility(View.GONE);
                     break;
                 //We are showing the effects, no hats
                 case TYPE_EFFECTS:
 
-                    final Item effect = new Item(1, null, Quality.UNUSUAL, true, true, false,
-                            mDataSet.getInt(UnusualFragment.COLUMN_INDEX), null);
-
                     Glide.with(mContext)
-                            .load(effect.getEffectUrl(mContext))
+                            .load(item.getEffectUrl(mContext))
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(holder.icon);
 
@@ -164,23 +129,22 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                         @Override
                         public void onClick(View v) {
                             Intent i = new Intent(mContext, UnusualActivity.class);
-                            i.putExtra(UnusualActivity.PRICE_INDEX_KEY, effect.getPriceIndex());
-                            i.putExtra(UnusualActivity.NAME_KEY, Utility.getUnusualEffectName(mContext, effect.getPriceIndex()));
+                            i.putExtra(UnusualActivity.PRICE_INDEX_KEY, item.getPriceIndex());
+                            i.putExtra(UnusualActivity.NAME_KEY, Utility.getUnusualEffectName(mContext, item.getPriceIndex()));
                             mContext.startActivity(i);
                         }
                     });
 
                     holder.price.setText(mContext.getString(R.string.currency_key_plural,
-                            Utility.formatDouble(mDataSet.getDouble(
-                                    UnusualFragment.COLUMN_AVERAGE_PRICE) / rawKeyPrice)));
+                            Utility.formatDouble(item.getPrice().getValue())));
 
-                    holder.name.setText(mDataSet.getString(UnusualFragment.COLUMN_NAME));
+                    holder.name.setText(item.getName());
 
                     holder.more.setVisibility(View.GONE);
                     break;
                 //We are showing both that icon and the effect for a specific hat or effect
                 case TYPE_SPECIFIC_HAT:
-                    final Item hat = new Item(
+                    /*final Item hat = new Item(
                             mDataSet.getInt(UnusualActivity.COLUMN_DEFINDEX),
                             null,
                             Quality.UNUSUAL, true, true, false,
@@ -247,7 +211,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                             menu.show();
                         }
                     });
-
+*/
                     break;
             }
         }
@@ -255,19 +219,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return mDataSet == null ? 0 : mDataSet.getCount();
-    }
-
-    /**
-     * Replaces the cursor of the adapter
-     *
-     * @param data          the cursor that will replace the current one
-     * @param closePrevious whether to close the previous cursor
-     */
-    public void swapCursor(Cursor data, boolean closePrevious) {
-        if (closePrevious && mDataSet != null) mDataSet.close();
-        mDataSet = data;
-        notifyDataSetChanged();
+        return mDataSet == null ? 0 : mDataSet.size();
     }
 
     /**
@@ -277,6 +229,10 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
      */
     public void setType(int type) {
         this.type = type;
+    }
+
+    public void setDataSet(List<Item> dataSet) {
+        mDataSet = dataSet;
     }
 
     /**
@@ -292,11 +248,6 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
         @Bind(R.id.name) TextView name;
         @Bind(R.id.more) View more;
 
-        /**
-         * Constructor.
-         *
-         * @param view the root view
-         */
         public ViewHolder(View view) {
             super(view);
             root = view;

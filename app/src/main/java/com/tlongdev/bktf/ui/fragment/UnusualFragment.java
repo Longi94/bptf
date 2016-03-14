@@ -1,12 +1,12 @@
 /**
  * Copyright 2015 Long Tran
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,14 +17,11 @@
 package com.tlongdev.bktf.ui.fragment;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,14 +41,17 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.adapter.UnusualAdapter;
+import com.tlongdev.bktf.model.Item;
+import com.tlongdev.bktf.presenter.fragment.UnusualPresenter;
 import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
-import com.tlongdev.bktf.adapter.UnusualAdapter;
-import com.tlongdev.bktf.data.DatabaseContract;
-import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
-import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
+import com.tlongdev.bktf.ui.view.fragment.UnusualView;
 import com.tlongdev.bktf.util.Utility;
+
+import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -60,66 +60,43 @@ import butterknife.ButterKnife;
  * The unusual fragment, that shows a list of unusual item categories. Either categorized by
  * hats or effects.
  */
-public class UnusualFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+public class UnusualFragment extends Fragment implements UnusualView,
         MainActivity.OnDrawerOpenedListener, TextWatcher {
 
     /**
      * Log tag for logging.
      */
-    @SuppressWarnings("unused")
     private static final String LOG_TAG = UnusualFragment.class.getSimpleName();
 
-    /**
-     * Loader IDs
-     */
-    private static final int PRICE_LIST_LOADER = 0;
-    private static final int EFFECT_LIST_LOADER = 1;
+    @Inject Tracker mTracker;
 
-    /**
-     * Extra key for the query string
-     */
-    private static final String QUERY_KEY = "query";
-
-    /**
-     * The IDs of the columns above
-     */
-    public static final int COLUMN_INDEX = 0;
-    public static final int COLUMN_DEFINDEX = 0;
-    public static final int COLUMN_NAME = 1;
-    public static final int COLUMN_AVERAGE_PRICE = 2;
-
-    /**
-     * The {@link Tracker} used to record screen views.
-     */
-    private Tracker mTracker;
-
-    /**
-     * The adapter of the recycler view
-     */
-    private UnusualAdapter adapter;
-
-    /**
-     * the menu item that switches between effects and hats
-     */
-    private MenuItem effectMenuItem;
-
-    /**
-     * Only needed for manually expanding the toolbar
-     */
     @Bind(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
     @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
+    @Bind(R.id.search) EditText mSearchInput;
+    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
 
     /**
      * the current sort type
      */
-    private int currentSort = 0;
+    @UnusualPresenter.UnusualOrder
+    private int mCurrentSort = UnusualPresenter.ORDER_BY_PRICE;
 
     /**
      * Whether to show effects or hats
      */
     private boolean showEffect = false;
 
-    @Bind(R.id.search) EditText searchInput;
+    /**
+     * The adapter of the recycler view
+     */
+    private UnusualAdapter mAdapter;
+
+    /**
+     * the menu item that switches between effects and hats
+     */
+    private MenuItem effectMenuItem;
+
+    private UnusualPresenter mPresenter;
 
     /**
      * Constructor.
@@ -141,7 +118,10 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
 
         // Obtain the shared Tracker instance.
         BptfApplication application = (BptfApplication) (getActivity()).getApplication();
-        mTracker = application.getDefaultTracker();
+        application.getFragmentComponent().inject(this);
+
+        mPresenter = new UnusualPresenter(application);
+        mPresenter.attachView(this);
 
         View rootView = inflater.inflate(R.layout.fragment_unusual, container, false);
 
@@ -152,17 +132,22 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
 
         DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        int columnCount = Math.max(3, (int)Math.floor(dpWidth / 120.0));
+        int columnCount = Math.max(3, (int) Math.floor(dpWidth / 120.0));
 
         //init the recycler view
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), columnCount));
-        adapter = new UnusualAdapter(getActivity(), null);
-        recyclerView.setAdapter(adapter);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), columnCount));
+        mAdapter = new UnusualAdapter(getActivity());
+        mRecyclerView.setAdapter(mAdapter);
 
-        searchInput.addTextChangedListener(this);
+        mSearchInput.addTextChangedListener(this);
 
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mPresenter.loadUnusualHats("", UnusualPresenter.ORDER_BY_PRICE);
     }
 
     @Override
@@ -173,97 +158,23 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-
-        //Init the loader
-        Bundle args = new Bundle();
-        args.putString(QUERY_KEY, "AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC");
-        getLoaderManager().initLoader(PRICE_LIST_LOADER, args, this);
-
-        super.onActivityCreated(savedInstanceState);
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.detachView();
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
-        //Query stuff
-        String selection;
-        String sql;
-        String[] selectionArgs = {"5"};
-
-        String filter = searchInput.getText().toString();
-
-
-        switch (id) {
-            case PRICE_LIST_LOADER:
-
-                selection =  ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + " LIKE '%" + filter + "%' AND " +
-                        PriceEntry.TABLE_NAME +"." + PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
-                        PriceEntry.COLUMN_PRICE_INDEX + " != 0 GROUP BY " +
-                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX;
-
-                sql = "SELECT " +
-                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + "," +
-                        ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
-                        Utility.getRawPriceQueryString(getActivity()) +
-                        " FROM " + PriceEntry.TABLE_NAME +
-                        " LEFT JOIN " + ItemSchemaEntry.TABLE_NAME +
-                        " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
-                        " WHERE " + selection +
-                        " ORDER BY " + args.getString(QUERY_KEY);
-
-                return new CursorLoader(
-                        getActivity(),
-                        DatabaseContract.RAW_QUERY_URI,
-                        null,
-                        sql,
-                        selectionArgs,
-                        null
-                );
-            case EFFECT_LIST_LOADER:
-
-                selection = UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_NAME + " LIKE '%" + filter + "%' AND " +
-                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
-                        PriceEntry.COLUMN_PRICE_INDEX + " != 0 GROUP BY " +
-                        PriceEntry.COLUMN_PRICE_INDEX;
-
-                sql = "SELECT " +
-                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + "," +
-                        UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_NAME + "," +
-                        Utility.getRawPriceQueryString(getActivity()) +
-                        " FROM " + PriceEntry.TABLE_NAME +
-                        " LEFT JOIN " + UnusualSchemaEntry.TABLE_NAME +
-                        " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + " = " + UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_ID +
-                        " WHERE " + selection +
-                        " ORDER BY AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC";
-
-                return new CursorLoader(
-                        getActivity(),
-                        DatabaseContract.RAW_QUERY_URI,
-                        null,
-                        sql,
-                        selectionArgs,
-                        null
-                );
-            default:
-                return null;
-        }
+    public void showUnusualHats(List<Item> unusuals) {
+        mAdapter.setType(UnusualAdapter.TYPE_HATS);
+        mAdapter.setDataSet(unusuals);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if (loader.getId() == EFFECT_LIST_LOADER) {
-            adapter.setType(UnusualAdapter.TYPE_EFFECTS);
-        } else {
-            adapter.setType(UnusualAdapter.TYPE_HATS);
-        }
-        adapter.swapCursor(data, false);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.setType(UnusualAdapter.TYPE_HATS);
-        adapter.swapCursor(null, false);
+    public void showUnusualEffects(List<Item> unusuals) {
+        mAdapter.setType(UnusualAdapter.TYPE_EFFECTS);
+        mAdapter.setDataSet(unusuals);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -275,46 +186,63 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (!showEffect && id == R.id.menu_sort_name && currentSort != 1) {
-            //Show hats sorted by their name
-            Bundle args = new Bundle();
-            args.putString(QUERY_KEY, ItemSchemaEntry.COLUMN_ITEM_NAME + " ASC");
-            getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
-            currentSort = 1;
-        } else if (!showEffect && id == R.id.menu_sort_price && currentSort != 0) {
-            //Show hats sorted by their average price
-            Bundle args = new Bundle();
-            args.putString(QUERY_KEY, "AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC");
-            getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
-            currentSort = 0;
-        } else if (id == R.id.action_effect) {
-            if (showEffect) {
-                //Show hats sorted by their average price
-                showEffect = false;
-                effectMenuItem.setIcon(R.drawable.ic_star_outline_white);
-                Bundle args = new Bundle();
-                args.putString(QUERY_KEY, "AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC");
-                getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
-                getActivity().setTitle(getString(R.string.title_unusuals));
+        String filter = mSearchInput.getText().toString();
 
-                searchInput.setHint("Name");
-                searchInput.setText("");
-            } else {
-                //Show effects
-                showEffect = true;
-                effectMenuItem.setIcon(R.drawable.ic_star_white);
-                getLoaderManager().restartLoader(EFFECT_LIST_LOADER, null, this);
-                getActivity().setTitle(getString(R.string.title_effects));
+        switch (item.getItemId()) {
+            case R.id.menu_sort_name:
+                if (showEffect) {
+                    if (mCurrentSort != UnusualPresenter.ORDER_BY_NAME) {
+                        mCurrentSort = UnusualPresenter.ORDER_BY_NAME;
+                        mPresenter.loadUnusualEffects(filter, mCurrentSort);
+                    }
+                } else {
+                    if (mCurrentSort != UnusualPresenter.ORDER_BY_NAME) {
+                        mCurrentSort = UnusualPresenter.ORDER_BY_NAME;
+                        mPresenter.loadUnusualHats(filter, mCurrentSort);
+                    }
+                }
+                return true;
+            case R.id.menu_sort_price:
+                if (showEffect) {
+                    if (mCurrentSort != UnusualPresenter.ORDER_BY_NAME) {
+                        mCurrentSort = UnusualPresenter.ORDER_BY_NAME;
+                        mPresenter.loadUnusualEffects(filter, mCurrentSort);
+                    }
+                } else {
+                    if (mCurrentSort != UnusualPresenter.ORDER_BY_PRICE) {
+                        mCurrentSort = UnusualPresenter.ORDER_BY_PRICE;
+                        mPresenter.loadUnusualHats(filter, mCurrentSort);
+                    }
+                }
+                return true;
+            case R.id.action_effect:
+                if (showEffect) {
+                    //Show hats sorted by their average price
+                    mPresenter.loadUnusualHats("", mCurrentSort);
 
-                searchInput.setHint("Effect");
-                searchInput.setText("");
-            }
-        } else if (id == R.id.action_search) {
-            //Start the search activity
-            startActivity(new Intent(getActivity(), SearchActivity.class));
+                    effectMenuItem.setIcon(R.drawable.ic_star_outline_white);
+                    getActivity().setTitle(getString(R.string.title_unusuals));
+
+                    mSearchInput.setHint("Name");
+                } else {
+                    //Show effects
+                    mPresenter.loadUnusualEffects("", mCurrentSort);
+
+                    effectMenuItem.setIcon(R.drawable.ic_star_white);
+                    getActivity().setTitle(getString(R.string.title_effects));
+
+                    mSearchInput.setHint("Effect");
+                }
+                showEffect = !showEffect;
+                mSearchInput.setText("");
+                return true;
+            case R.id.action_search:
+                //Start the search activity
+                startActivity(new Intent(getActivity(), SearchActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -333,28 +261,24 @@ public class UnusualFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
     }
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-
     }
 
     @Override
     public void afterTextChanged(Editable s) {
+        String filter = s.toString();
         if (showEffect) {
-            getLoaderManager().restartLoader(EFFECT_LIST_LOADER, null, this);
+            mPresenter.loadUnusualEffects(filter, mCurrentSort);
         } else {
-            if (currentSort != 1) {
-                Bundle args = new Bundle();
-                args.putString(QUERY_KEY, "AVG(" + Utility.getRawPriceQueryString(getActivity()) + ") DESC");
-                getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
-            } else {
-                Bundle args = new Bundle();
-                args.putString(QUERY_KEY, ItemSchemaEntry.COLUMN_ITEM_NAME + " ASC");
-                getLoaderManager().restartLoader(PRICE_LIST_LOADER, args, this);
-            }
+            mPresenter.loadUnusualHats(filter, mCurrentSort);
         }
+    }
+
+    @Override
+    public BptfApplication getBptfApplication() {
+        return (BptfApplication) getActivity().getApplication();
     }
 }
