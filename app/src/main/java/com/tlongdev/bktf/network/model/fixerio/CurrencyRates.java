@@ -14,30 +14,40 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.network.model;
+package com.tlongdev.bktf.network.model.fixerio;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import java.util.HashMap;
 
 /**
  * @author Long
- * @since 2016. 03. 10.
+ * @since 2016. 02. 25.
  */
-public class TlongdevParticleName {
+public class CurrencyRates {
+    private String base;
+    private String date;
+    private HashMap<String, Double> rates;
 
-    @SerializedName("id")
-    @Expose
-    private int id;
-
-    @SerializedName("name")
-    @Expose
-    private String name;
-
-    public int getId() {
-        return id;
+    public String getBase() {
+        return base;
     }
 
-    public String getName() {
-        return name;
+    public void setBase(String base) {
+        this.base = base;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public HashMap<String, Double> getRates() {
+        return rates;
+    }
+
+    public void setRates(HashMap<String, Double> rates) {
+        this.rates = rates;
     }
 }

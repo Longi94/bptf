@@ -17,6 +17,7 @@
 package com.tlongdev.bktf.module;
 
 import com.google.gson.Gson;
+import com.tlongdev.bktf.network.BackpackTfInterface;
 import com.tlongdev.bktf.network.TlongdevInterface;
 
 import javax.inject.Named;
@@ -43,7 +44,7 @@ public class NetworkModule {
     @Provides
     @Singleton
     @Named("tlongdev")
-    Retrofit provideRetrofit(Gson gson) {
+    Retrofit provideTlongdevRetrofit(Gson gson) {
         return new Retrofit.Builder()
                 .baseUrl(TlongdevInterface.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
@@ -52,7 +53,23 @@ public class NetworkModule {
 
     @Provides
     @Singleton
+    @Named("backpack_tf")
+    Retrofit provideBackpackTfRetrofit(Gson gson) {
+        return new Retrofit.Builder()
+                .baseUrl(BackpackTfInterface.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+    }
+
+    @Provides
+    @Singleton
     TlongdevInterface provideTlongdevInterface(@Named("tlongdev") Retrofit retrofit) {
         return retrofit.create(TlongdevInterface.class);
+    }
+
+    @Provides
+    @Singleton
+    BackpackTfInterface provideBackpackTfInterface(@Named("backpack_tf") Retrofit retrofit) {
+        return retrofit.create(BackpackTfInterface.class);
     }
 }

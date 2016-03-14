@@ -1,12 +1,12 @@
 /**
  * Copyright 2015 Long Tran
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,18 +14,23 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.network;
+package com.tlongdev.bktf.interactor;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.network.BackpackTfInterface;
+import com.tlongdev.bktf.network.model.bptf.BackpackTfPayload;
+import com.tlongdev.bktf.network.model.bptf.BackpackTfPlayer;
 import com.tlongdev.bktf.util.Utility;
 
 import org.json.JSONArray;
@@ -35,6 +40,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URL;
 
+import javax.inject.Inject;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -42,13 +49,14 @@ import okhttp3.Response;
 /**
  * Task for fetching data about the user in the background.
  */
-public class GetUserInfo extends AsyncTask<String, Void, Integer> {
+public class BackpackTfUserDataInteractor extends AsyncTask<String, Void, Integer> {
 
-    /**
-     * Log tag for logging.
-     */
-    @SuppressWarnings("unused")
-    private static final String LOG_TAG = GetUserInfo.class.getSimpleName();
+    private static final String LOG_TAG = BackpackTfUserDataInteractor.class.getSimpleName();
+
+    @Inject BackpackTfInterface mBackpackTfInterface;
+    @Inject Tracker mTracker;
+    @Inject SharedPreferences.Editor mEditor;
+    @Inject SharedPreferences mPrefs;
 
     //The context the task is running in
     private Context mContext;
@@ -59,7 +67,7 @@ public class GetUserInfo extends AsyncTask<String, Void, Integer> {
     //The error message that will be presented to the user, when an error occurs
     private String errorMessage;
 
-    //The listenere that will be notified when the fetching finishes
+    //The listener that will be notified when the fetching finishes
     private OnUserInfoListener listener = null;
 
     private String steamId;
@@ -70,7 +78,8 @@ public class GetUserInfo extends AsyncTask<String, Void, Integer> {
      * @param context    the context the task will run in
      * @param manualSync whether the updated was initiated by the user
      */
-    public GetUserInfo(Context context, boolean manualSync) {
+    public BackpackTfUserDataInteractor(Context context, BptfApplication application, boolean manualSync) {
+        application.getInteractorComponent().inject(this);
         this.mContext = context;
         this.manualSync = manualSync;
     }
@@ -96,14 +105,11 @@ public class GetUserInfo extends AsyncTask<String, Void, Integer> {
             final String KEY_API = "key";
             final String KEY_VANITY_URL = "vanityurl";
 
-            //The GetUsers api and input keys
-            final String USER_INFO_BASE_URL = mContext.getString(R.string.backpack_tf_get_users);
-            final String KEY_STEAM_ID = "steamids";
-            final String KEY_COMPRESS = "compress";
 
             //The GetPlayerSummaries api url, all input keys have been defined above
             final String USER_SUMMARIES_BASE_URL =
                     mContext.getString(R.string.steam_get_player_summaries_url);
+            final String KEY_STEAM_ID = "steamids";
 
             //Check if there is a resolve steamId saved
             steamId = params[1];
@@ -160,15 +166,28 @@ public class GetUserInfo extends AsyncTask<String, Void, Integer> {
             }
 
             //Save the resolved steamId
-            PreferenceManager.getDefaultSharedPreferences(mContext).edit()
-                    .putString(mContext
-                            .getString(R.string.pref_resolved_steam_id), steamId).apply();
+            mEditor.putString(mContext
+                    .getString(R.string.pref_resolved_steam_id), steamId).apply();
 
-            //Build user info uri
-            uri = Uri.parse(USER_INFO_BASE_URL).buildUpon()
+            retrofit2.Response<BackpackTfPayload> responseTemp = mBackpackTfInterface.getUserData(steamId).execute();
+
+            if (responseTemp.body() != null) {
+                saveUserData(responseTemp.body());
+            } else if (responseTemp.raw().code() >= 500) {
+                errorMessage = "Server error: " + responseTemp.raw().code();
+                return 1;
+            } else if (responseTemp.raw().code() >= 400) {
+                errorMessage = "Client error: " + responseTemp.raw().code();
+                return 1;
+            }
+
+            //Build user summaries uri
+            uri = Uri.parse(USER_SUMMARIES_BASE_URL).buildUpon()
+                    .appendQueryParameter(KEY_API, BuildConfig.STEAM_WEB_API_KEY)
                     .appendQueryParameter(KEY_STEAM_ID, steamId)
-                    .appendQueryParameter(KEY_COMPRESS, "1")
                     .build();
+
+            Log.v(LOG_TAG, "Built uri: " + uri.toString());
 
             //Initialize the URL
             url = new URL(uri.toString());
@@ -190,34 +209,6 @@ public class GetUserInfo extends AsyncTask<String, Void, Integer> {
 
             jsonString = response.body().string();
             //Parse the JSON
-            parseUserInfoJson(jsonString, steamId);
-
-            //Build user summaries uri
-            uri = Uri.parse(USER_SUMMARIES_BASE_URL).buildUpon()
-                    .appendQueryParameter(KEY_API, BuildConfig.STEAM_WEB_API_KEY)
-                    .appendQueryParameter(KEY_STEAM_ID, steamId)
-                    .build();
-
-            //Initialize the URL
-            url = new URL(uri.toString());
-
-            //Open connection
-            client = new OkHttpClient();
-            request = new Request.Builder().url(url).build();
-            response = client.newCall(request).execute();
-
-            statusCode = response.code();
-
-            if (statusCode >= 500) {
-                errorMessage = "Server error: " + statusCode;
-                return -1;
-            } else if (statusCode >= 400) {
-                errorMessage = "Client error: " + statusCode;
-                return -1;
-            }
-
-            jsonString = response.body().string();
-            //Parse the JSON
             return parseUserSummariesJson(jsonString);
 
         } catch (IOException e) {
@@ -225,7 +216,7 @@ public class GetUserInfo extends AsyncTask<String, Void, Integer> {
             errorMessage = mContext.getString(R.string.error_network);
             e.printStackTrace();
 
-            ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+            mTracker.send(new HitBuilders.ExceptionBuilder()
                     .setDescription("Network exception:GetUserInfo, Message: " + e.getMessage())
                     .setFatal(false)
                     .build());
@@ -236,7 +227,7 @@ public class GetUserInfo extends AsyncTask<String, Void, Integer> {
             errorMessage = mContext.getString(R.string.error_data_parse);
             e.printStackTrace();
 
-            ((BptfApplication) mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+            mTracker.send(new HitBuilders.ExceptionBuilder()
                     .setDescription("JSON exception:GetUserInfo, Message: " + e.getMessage())
                     .setFatal(true)
                     .build());
@@ -285,171 +276,90 @@ public class GetUserInfo extends AsyncTask<String, Void, Integer> {
         JSONArray players = response.getJSONArray(OWM_PLAYERS);
         JSONObject player = players.getJSONObject(0);
 
-        //Start editing the sharedpreferences
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        SharedPreferences.Editor editor = prefs.edit();
-
         //Save the name of the user
         if (player.has(OWM_NAME)) {
-            editor.putString(mContext.getString(R.string.pref_player_name),
+            mEditor.putString(mContext.getString(R.string.pref_player_name),
                     player.getString(OWM_NAME));
         }
 
         //Save the user's last online time
         if (player.has(OWM_LAST_ONLINE)) {
-            editor.putLong(mContext.getString(R.string.pref_player_last_online),
+            mEditor.putLong(mContext.getString(R.string.pref_player_last_online),
                     player.getLong(OWM_LAST_ONLINE));
         }
 
         //Only save the avatarUrl if it's different from the previous url
-        String avatarUrl = prefs.getString(mContext.getString(R.string.pref_player_avatar_url), "");
+        String avatarUrl = mPrefs.getString(mContext.getString(R.string.pref_player_avatar_url), "");
         if (player.has(OWM_AVATAR) && !avatarUrl.equals(player.getString(OWM_AVATAR))) {
             //We also need to notify that app that the user has a new avatar
-            editor.putBoolean(mContext.getString(R.string.pref_new_avatar), true);
-            editor.putString(mContext.getString(R.string.pref_player_avatar_url),
+            mEditor.putBoolean(mContext.getString(R.string.pref_new_avatar), true);
+            mEditor.putString(mContext.getString(R.string.pref_player_avatar_url),
                     player.getString(OWM_AVATAR));
         }
 
         //Save the state of the player
         if (player.has(OWM_PLAYER_STATE)) {
-            editor.putInt(mContext.getString(R.string.pref_player_state),
+            mEditor.putInt(mContext.getString(R.string.pref_player_state),
                     player.getInt(OWM_PLAYER_STATE));
         }
 
         //If the player is in-game, the state is 7
         if (player.has(OWM_IN_GAME)) {
-            editor.putInt(mContext.getString(R.string.pref_player_state), 7);
+            mEditor.putInt(mContext.getString(R.string.pref_player_state), 7);
         }
 
         //Save the time of the profile creation
         if (player.has(OWM_PROFILE_CREATED)) {
-            editor.putLong(mContext.getString(R.string.pref_player_profile_created),
+            mEditor.putLong(mContext.getString(R.string.pref_player_profile_created),
                     player.getLong(OWM_PROFILE_CREATED));
         }
 
         //Save the edits
-        editor.apply();
+        mEditor.apply();
 
         return 0;
     }
 
-    /**
-     * Get all the data needed from the JSON string and save them to the default shared preferences.
-     *
-     * @param jsonString the json string to be parsed
-     * @param steamId    the steam id of the user
-     * @throws JSONException
-     */
-    private void parseUserInfoJson(String jsonString, String steamId) throws JSONException {
+    private void saveUserData(BackpackTfPayload payload) {
+        if (payload.getResponse() == null) {
+            return;
+        }
 
-        //All the JSON keys needed to parse
-        final String OWM_RESPONSE = "response";
-        final String OWM_SUCCESS = "success";
-        final String OWM_PLAYERS = "players";
-        final String OWM_BACKPACK_VALUE = "backpack_value";
-        final String OWM_BACKPACK_VALUE_TF2 = "440";
-        final String OWM_PLAYER_NAME = "name";
-        final String OWM_PLAYER_REPUTATION = "backpack_tf_reputation";
-        final String OWM_PLAYER_GROUP = "backpack_tf_group";
-        final String OWM_PLAYER_BANNED = "backpack_tf_banned";
-        final String OWM_PLAYER_TRUST = "backpack_tf_trust";
-        final String OWM_PLAYER_TRUST_FOR = "for";
-        final String OWM_PLAYER_TRUST_AGAINST = "against";
-        final String OWM_PLAYER_SCAMMER = "steamrep_scammer";
-        final String OWM_PLAYER_BAN_ECONOMY = "ban_economy";
-        final String OWM_PLAYER_BAN_COMMUNITY = "ban_community";
-        final String OWM_PLAYER_BAN_VAC = "ban_vac";
-
-        //Ge the response
-        JSONObject jsonObject = new JSONObject(jsonString);
-        JSONObject response = jsonObject.getJSONObject(OWM_RESPONSE);
-
-        if (response.getInt(OWM_SUCCESS) == 0) {
+        if (payload.getResponse().getSuccess() == 0) {
             //The api query was unsuccessful, nothing to do.
             return;
         }
 
-        //Get the JSONObject that contains the needed data
-        JSONObject players = response.getJSONObject(OWM_PLAYERS);
-        JSONObject current_user = players.getJSONObject(steamId);
+        if (payload.getResponse().getPlayers() == null) {
+            return;
+        }
 
-        //Get the shared preferences
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        BackpackTfPlayer player = payload.getResponse().getPlayers().get(steamId);
+        if (player == null) {
+            return;
+        }
 
-        //Check if the user JSON query was successful
-        if (current_user.getInt(OWM_SUCCESS) == 1) {
+        if (player.getSuccess() == 1) {
+            // TODO: 2016. 03. 14. save booleans?
+            Utility.putDouble(mEditor, mContext.getString(R.string.pref_player_backpack_value_tf2),
+                    player.getBackpackValue().get440())
+                    .putString(mContext.getString(R.string.pref_player_name), player.getName())
+                    .putInt(mContext.getString(R.string.pref_player_reputation), player.getBackpackTfReputation())
+                    .putInt(mContext.getString(R.string.pref_player_group), player.getBackpackTfGroup() ? 1 : 0)
+                    .putInt(mContext.getString(R.string.pref_player_banned), player.getBackpackTfBanned() ? 1 : 0)
+                    .putInt(mContext.getString(R.string.pref_player_scammer), player.getSteamrepScammer() ? 1 : 0)
+                    .putInt(mContext.getString(R.string.pref_player_community_banned), player.getBanCommunity() ? 1 : 0)
+                    .putInt(mContext.getString(R.string.pref_player_economy_banned), player.getBanEconomy() ? 1 : 0)
+                    .putInt(mContext.getString(R.string.pref_player_vac_banned), player.getBanVac() ? 1 : 0);
 
-            //Start the edit
-            SharedPreferences.Editor editor = prefs.edit();
-
-            //Save the user's name
-            if (current_user.has(OWM_PLAYER_NAME)) {
-                editor.putString(mContext.getString(R.string.pref_player_name), current_user.getString(OWM_PLAYER_NAME));
+            if (player.getBackpackTfTrust() != null) {
+                mEditor.putInt(mContext.getString(R.string.pref_player_trust_positive),
+                        player.getBackpackTfTrust().getFor())
+                        .putInt(mContext.getString(R.string.pref_player_trust_negative),
+                                player.getBackpackTfTrust().getAgainst());
             }
 
-            //Save the user's reputation
-            if (current_user.has(OWM_PLAYER_REPUTATION)) {
-                editor.putInt(mContext.getString(R.string.pref_player_reputation), current_user.getInt(OWM_PLAYER_REPUTATION));
-            }
-
-            //Save the value of the user's backpack if not private
-            if (current_user.has(OWM_BACKPACK_VALUE) &&
-                    current_user.getJSONObject(OWM_BACKPACK_VALUE).has(OWM_BACKPACK_VALUE_TF2)) {
-                Utility.putDouble(editor, mContext.getString(R.string.pref_player_backpack_value_tf2),
-                        current_user.getJSONObject(OWM_BACKPACK_VALUE).getDouble(OWM_BACKPACK_VALUE_TF2));
-            }
-
-            //Save whether the players is in the bp.tf group
-            if (current_user.has(OWM_PLAYER_GROUP)) {
-                editor.putInt(mContext.getString(R.string.pref_player_group), 1);
-            } else {
-                editor.putInt(mContext.getString(R.string.pref_player_group), 0);
-            }
-
-            //Save if the player is banned
-            if (current_user.has(OWM_PLAYER_BANNED)) {
-                editor.putInt(mContext.getString(R.string.pref_player_banned), 1);
-            } else {
-                editor.putInt(mContext.getString(R.string.pref_player_banned), 0);
-            }
-
-            //Save if the player is a scammer
-            if (current_user.has(OWM_PLAYER_SCAMMER)) {
-                editor.putInt(mContext.getString(R.string.pref_player_scammer), 1);
-            } else {
-                editor.putInt(mContext.getString(R.string.pref_player_scammer), 0);
-            }
-
-            //Save if the player is community banned
-            if (current_user.has(OWM_PLAYER_BAN_COMMUNITY)) {
-                editor.putInt(mContext.getString(R.string.pref_player_community_banned), 1);
-            } else {
-                editor.putInt(mContext.getString(R.string.pref_player_community_banned), 0);
-            }
-
-            //Save if the player is economy banned
-            if (current_user.has(OWM_PLAYER_BAN_ECONOMY)) {
-                editor.putInt(mContext.getString(R.string.pref_player_economy_banned), 1);
-            } else {
-                editor.putInt(mContext.getString(R.string.pref_player_economy_banned), 0);
-            }
-
-            //Save if the player is VAC banned
-            if (current_user.has(OWM_PLAYER_BAN_VAC)) {
-                editor.putInt(mContext.getString(R.string.pref_player_vac_banned), 1);
-            } else {
-                editor.putInt(mContext.getString(R.string.pref_player_vac_banned), 0);
-            }
-
-            //Save the player's trust score
-            if (current_user.has(OWM_PLAYER_TRUST)) {
-                JSONObject trustScore = current_user.getJSONObject(OWM_PLAYER_TRUST);
-                editor.putInt(mContext.getString(R.string.pref_player_trust_positive), trustScore.getInt(OWM_PLAYER_TRUST_FOR));
-                editor.putInt(mContext.getString(R.string.pref_player_trust_negative), trustScore.getInt(OWM_PLAYER_TRUST_AGAINST));
-            }
-
-            //Save all edits
-            editor.apply();
+            mEditor.apply();
         }
     }
 

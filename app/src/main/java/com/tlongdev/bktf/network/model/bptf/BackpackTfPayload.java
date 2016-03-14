@@ -14,49 +14,22 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.network.model;
+package com.tlongdev.bktf.network.model.bptf;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Long
- * @since 2016. 03. 10.
+ * @since 2016. 03. 14.
  */
-public class TlongdevPricesPayload {
+public class BackpackTfPayload {
 
-    @SerializedName("success")
+    @SerializedName("response")
     @Expose
-    private Integer success;
+    private BackpackTfResponse response;
 
-    @SerializedName("count")
-    @Expose
-    private Integer count;
-
-    @SerializedName("prices")
-    @Expose
-    private List<TlongdevPrice> prices = new ArrayList<TlongdevPrice>();
-
-    @SerializedName("message")
-    @Expose
-    private String message;
-
-    public Integer getSuccess() {
-        return success;
-    }
-
-    public Integer getCount() {
-        return count;
-    }
-
-    public List<TlongdevPrice> getPrices() {
-        return prices;
-    }
-
-    public String getMessage() {
-        return message;
+    public BackpackTfResponse getResponse() {
+        return response;
     }
 }

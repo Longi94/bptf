@@ -32,8 +32,8 @@ import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.network.TlongdevInterface;
 import com.tlongdev.bktf.network.converter.TlongdevModelConverter;
-import com.tlongdev.bktf.network.model.TlongdevPrice;
-import com.tlongdev.bktf.network.model.TlongdevPricesPayload;
+import com.tlongdev.bktf.network.model.tlongdev.TlongdevPrice;
+import com.tlongdev.bktf.network.model.tlongdev.TlongdevPricesPayload;
 import com.tlongdev.bktf.util.Utility;
 
 import java.io.IOException;

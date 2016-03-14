@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.network.model;
+package com.tlongdev.bktf.network.model.tlongdev;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -23,45 +23,21 @@ import com.google.gson.annotations.SerializedName;
  * @author Long
  * @since 2016. 03. 10.
  */
-public class TlongdevItem {
+public class TlongdevParticleName {
 
-    @SerializedName("defindex")
+    @SerializedName("id")
     @Expose
-    private Integer defindex;
+    private int id;
 
     @SerializedName("name")
     @Expose
     private String name;
 
-    @SerializedName("description")
-    @Expose
-    private String description;
-
-    @SerializedName("type_name")
-    @Expose
-    private String typeName;
-
-    @SerializedName("proper_name")
-    @Expose
-    private Integer properName;
-
-    public Integer getDefindex() {
-        return defindex;
+    public int getId() {
+        return id;
     }
 
     public String getName() {
         return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public Integer getProperName() {
-        return properName;
     }
 }

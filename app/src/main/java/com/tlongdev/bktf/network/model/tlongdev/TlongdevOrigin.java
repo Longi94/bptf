@@ -14,18 +14,30 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.network.converter;
+package com.tlongdev.bktf.network.model.tlongdev;
 
-import com.tlongdev.bktf.model.Price;
-import com.tlongdev.bktf.network.model.tlongdev.TlongdevPrice;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Long
  * @since 2016. 03. 10.
  */
-public class TlongdevModelConverter {
-    public static Price convertToPrice(TlongdevPrice price) {
-        return new Price(price.getValue(), price.getValueHigh() == null ? 0 : price.getValueHigh(),
-                price.getValueRaw(), price.getLastUpdate(), price.getDifference(), price.getCurrency());
+public class TlongdevOrigin {
+
+    @SerializedName("id")
+    @Expose
+    private int id;
+
+    @SerializedName("name")
+    @Expose
+    private String name;
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 }

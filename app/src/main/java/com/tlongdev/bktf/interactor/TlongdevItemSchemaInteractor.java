@@ -30,11 +30,11 @@ import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
 import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
 import com.tlongdev.bktf.network.TlongdevInterface;
-import com.tlongdev.bktf.network.model.TlongdevDecoratedWeapon;
-import com.tlongdev.bktf.network.model.TlongdevItem;
-import com.tlongdev.bktf.network.model.TlongdevItemSchemaPayload;
-import com.tlongdev.bktf.network.model.TlongdevOrigin;
-import com.tlongdev.bktf.network.model.TlongdevParticleName;
+import com.tlongdev.bktf.network.model.tlongdev.TlongdevDecoratedWeapon;
+import com.tlongdev.bktf.network.model.tlongdev.TlongdevItem;
+import com.tlongdev.bktf.network.model.tlongdev.TlongdevItemSchemaPayload;
+import com.tlongdev.bktf.network.model.tlongdev.TlongdevOrigin;
+import com.tlongdev.bktf.network.model.tlongdev.TlongdevParticleName;
 
 import java.io.IOException;
 import java.util.List;

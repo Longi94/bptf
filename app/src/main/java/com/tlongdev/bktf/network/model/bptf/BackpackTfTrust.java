@@ -14,30 +14,30 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.network.model;
+package com.tlongdev.bktf.network.model.bptf;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Long
- * @since 2016. 03. 10.
+ * @since 2016. 03. 14.
  */
-public class TlongdevDecoratedWeapon {
+public class BackpackTfTrust {
 
-    @SerializedName("defindex")
+    @SerializedName("for")
     @Expose
-    private int defindex;
+    public int _for;
 
-    @SerializedName("grade")
+    @SerializedName("against")
     @Expose
-    private int grade;
+    public int against;
 
-    public int getDefindex() {
-        return defindex;
+    public int getFor() {
+        return _for;
     }
 
-    public int getGrade() {
-        return grade;
+    public int getAgainst() {
+        return against;
     }
 }

@@ -1,12 +1,12 @@
 /**
  * Copyright 2015 Long Tran
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,11 +47,11 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.interactor.BackpackTfUserDataInteractor;
+import com.tlongdev.bktf.network.GetUserBackpack;
 import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.activity.UserBackpackActivity;
-import com.tlongdev.bktf.network.GetUserBackpack;
-import com.tlongdev.bktf.network.GetUserInfo;
 import com.tlongdev.bktf.util.Profile;
 import com.tlongdev.bktf.util.Utility;
 
@@ -63,7 +63,7 @@ import butterknife.OnClick;
  * Fragment for displaying the user profile.
  */
 public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
-        View.OnClickListener, GetUserInfo.OnUserInfoListener, MainActivity.OnDrawerOpenedListener,
+        View.OnClickListener, BackpackTfUserDataInteractor.OnUserInfoListener, MainActivity.OnDrawerOpenedListener,
         GetUserBackpack.OnUserBackpackListener {
 
     /**
@@ -186,7 +186,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 .getLong(getString(R.string.pref_last_user_data_update), 0) >= 3600000L) {
 
             //Start the task and listne for the end
-            GetUserInfo task = new GetUserInfo(mContext, false);
+            BackpackTfUserDataInteractor task = new BackpackTfUserDataInteractor(mContext,(BptfApplication) getActivity().getApplication(), false);
             task.registerFetchUserInfoListener(this);
             task.execute(Profile.getSteamId(mContext), Profile.getResolvedSteamId(mContext));
 
@@ -215,7 +215,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         layoutRefreshing = true;
         if (Utility.isNetworkAvailable(mContext)) {
             //Start fetching the data and listen for the end
-            GetUserInfo fetchTask = new GetUserInfo(mContext, true);
+            BackpackTfUserDataInteractor fetchTask = new BackpackTfUserDataInteractor(mContext, (BptfApplication) getActivity().getApplication(), true);
             fetchTask.registerFetchUserInfoListener(this);
             fetchTask.execute(Profile.getSteamId(mContext), Profile.getResolvedSteamId(mContext));
 

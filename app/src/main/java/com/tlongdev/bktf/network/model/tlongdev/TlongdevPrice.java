@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.network.model;
+package com.tlongdev.bktf.network.model.tlongdev;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

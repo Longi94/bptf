@@ -16,8 +16,8 @@
 
 package com.tlongdev.bktf.network;
 
-import com.tlongdev.bktf.network.model.TlongdevItemSchemaPayload;
-import com.tlongdev.bktf.network.model.TlongdevPricesPayload;
+import com.tlongdev.bktf.network.model.tlongdev.TlongdevItemSchemaPayload;
+import com.tlongdev.bktf.network.model.tlongdev.TlongdevPricesPayload;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

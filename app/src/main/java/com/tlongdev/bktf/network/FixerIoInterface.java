@@ -16,7 +16,7 @@
 
 package com.tlongdev.bktf.network;
 
-import com.tlongdev.bktf.network.model.CurrencyRates;
+import com.tlongdev.bktf.network.model.fixerio.CurrencyRates;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

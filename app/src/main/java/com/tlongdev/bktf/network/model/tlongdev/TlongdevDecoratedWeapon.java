@@ -14,40 +14,30 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.network.model;
+package com.tlongdev.bktf.network.model.tlongdev;
 
-import java.util.HashMap;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Long
- * @since 2016. 02. 25.
+ * @since 2016. 03. 10.
  */
-public class CurrencyRates {
-    private String base;
-    private String date;
-    private HashMap<String, Double> rates;
+public class TlongdevDecoratedWeapon {
 
-    public String getBase() {
-        return base;
+    @SerializedName("defindex")
+    @Expose
+    private int defindex;
+
+    @SerializedName("grade")
+    @Expose
+    private int grade;
+
+    public int getDefindex() {
+        return defindex;
     }
 
-    public void setBase(String base) {
-        this.base = base;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public HashMap<String, Double> getRates() {
-        return rates;
-    }
-
-    public void setRates(HashMap<String, Double> rates) {
-        this.rates = rates;
+    public int getGrade() {
+        return grade;
     }
 }

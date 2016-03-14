@@ -14,30 +14,23 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.network.model;
+package com.tlongdev.bktf.network;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.tlongdev.bktf.network.model.bptf.BackpackTfPayload;
+
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 /**
  * @author Long
- * @since 2016. 03. 10.
+ * @since 2016. 03. 14.
  */
-public class TlongdevOrigin {
+public interface BackpackTfInterface {
 
-    @SerializedName("id")
-    @Expose
-    private int id;
+    String BASE_URL = "http://backpack.tf/api/";
 
-    @SerializedName("name")
-    @Expose
-    private String name;
+    @GET("IGetUsers/v3")
+    Call<BackpackTfPayload> getUserData(@Query("steamids") String steamId);
 
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
 }
