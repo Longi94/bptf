@@ -155,7 +155,7 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
 
     public void loadCurrencyPrices() {
         LoadCurrencyPricesInteractor interactor = new LoadCurrencyPricesInteractor(
-                mApplication, this
+                mApplication, mView.getContext(), this
         );
         interactor.execute();
     }

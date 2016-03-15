@@ -29,10 +29,8 @@ import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
-import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.model.Quality;
 import com.tlongdev.bktf.network.TlongdevInterface;
-import com.tlongdev.bktf.network.converter.TlongdevModelConverter;
 import com.tlongdev.bktf.network.model.tlongdev.TlongdevPrice;
 import com.tlongdev.bktf.network.model.tlongdev.TlongdevPricesPayload;
 import com.tlongdev.bktf.util.Utility;
@@ -164,35 +162,15 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
         Vector<ContentValues> cVVector = new Vector<>();
 
         for (TlongdevPrice price : prices) {
-
             cVVector.add(buildContentValues(price));
 
             if (price.getQuality() == 6 && price.getTradable() == 1 && price.getCraftable() == 1) {
                 if (price.getDefindex() == 143) { //buds
-                    //Store the price in a string so it can be displayed in the
-                    //header in the latest changes page
-                    Price budPrice = TlongdevModelConverter.convertToPrice(price);
-
-                    String priceString = budPrice.getFormattedPrice(mContext);
-                    mEditor.putString(mContext.getString(R.string.pref_buds_price), priceString);
-
-                    //Save the difference
-                    Utility.putDouble(mEditor, mContext.getString(R.string.pref_buds_diff), price.getDifference());
-                    //Save the raw price
                     Utility.putDouble(mEditor, mContext.getString(R.string.pref_buds_raw), price.getValueRaw());
-
                     mEditor.apply();
                 } else if (price.getDefindex() == 5002) { //metal
-                    //Store the price in a string so it can be displayed in the
-                    //header in the latest changes page
+
                     double highPrice = price.getValueHigh() == null ? 0 : price.getValueHigh();
-                    Price refPrice = TlongdevModelConverter.convertToPrice(price);
-
-                    String priceString = refPrice.getFormattedPrice(mContext);
-                    mEditor.putString(mContext.getString(R.string.pref_metal_price), priceString);
-
-                    //Save the difference
-                    Utility.putDouble(mEditor, mContext.getString(R.string.pref_metal_diff), price.getDifference());
 
                     if (highPrice > price.getValue()) {
                         //If the metal has a high price, save the average as raw.
@@ -201,22 +179,9 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
                         //save as raw price
                         Utility.putDouble(mEditor, mContext.getString(R.string.pref_metal_raw_usd), price.getValue());
                     }
-
                     mEditor.apply();
                 } else if (price.getDefindex() == 5021) { //key
-
-                    //Store the price in a string so it can be displayed in the
-                    //header in the latest changes page
-                    Price keyPrice = TlongdevModelConverter.convertToPrice(price);
-
-                    String priceString = keyPrice.getFormattedPrice(mContext);
-                    mEditor.putString(mContext.getString(R.string.pref_key_price), priceString);
-
-                    //Save the difference
-                    Utility.putDouble(mEditor, mContext.getString(R.string.pref_key_diff), price.getDifference());
-                    //Save the raw price
                     Utility.putDouble(mEditor, mContext.getString(R.string.pref_key_raw), price.getValueRaw());
-
                     mEditor.apply();
                 }
             }

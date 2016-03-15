@@ -8,18 +8,12 @@
     <!--Preference keys-->
 
     <string name="pref_auto_sync" translatable="false">pref_auto_sync_v2</string>
-    <string name="pref_buds_diff" translatable="false">pref_buds_diff_v2</string>
-    <string name="pref_buds_price" translatable="false">pref_buds_price</string>
     <string name="pref_buds_raw" translatable="false">pref_buds_raw_v2</string>
-    <string name="pref_key_diff" translatable="false">pref_key_diff_v2</string>
-    <string name="pref_key_price" translatable="false">pref_key_price</string>
     <string name="pref_key_raw" translatable="false">pref_key_raw_v2</string>
+    <string name="pref_metal_raw_usd" translatable="false">pref_metal_raw_v2</string>
     <string name="pref_last_price_list_update" translatable="false">pref_last_price_list_update</string>
     <string name="pref_last_user_data_update" translatable="false">pref_last_user_data_update</string>
     <string name="pref_main_preference_screen" translatable="false">main_preference_screen</string>
-    <string name="pref_metal_diff" translatable="false">pref_metal_diff_v2</string>
-    <string name="pref_metal_price" translatable="false">pref_metal_price</string>
-    <string name="pref_metal_raw_usd" translatable="false">pref_metal_raw_v2</string>
     <string name="pref_new_avatar" translatable="false">pref_new_avatar</string>
     <string name="pref_player_avatar_url" translatable="false">pref_player_avatar_url</string>
     <string name="pref_player_backpack_value_tf2" translatable="false">pref_player_backpack_value_tf2_v2</string>

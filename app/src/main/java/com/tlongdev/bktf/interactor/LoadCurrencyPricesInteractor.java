@@ -17,12 +17,14 @@
 package com.tlongdev.bktf.interactor;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.util.Utility;
 
 import javax.inject.Inject;
 
@@ -39,10 +41,12 @@ public class LoadCurrencyPricesInteractor extends AsyncTask<Void, Void, Void> {
     private Price mBudPrice;
 
     private Callback mCallback;
+    private Context mContext;
 
-    public LoadCurrencyPricesInteractor(BptfApplication application, Callback callback) {
+    public LoadCurrencyPricesInteractor(BptfApplication application, Context context, Callback callback) {
         application.getInteractorComponent().inject(this);
         mCallback = callback;
+        mContext = context;
     }
 
     @SuppressWarnings("WrongConstant")
@@ -57,6 +61,7 @@ public class LoadCurrencyPricesInteractor extends AsyncTask<Void, Void, Void> {
                         PriceEntry.COLUMN_PRICE_HIGH,
                         PriceEntry.COLUMN_DIFFERENCE,
                         PriceEntry.COLUMN_CURRENCY,
+                        Utility.getRawPriceQueryString(mContext)
                 },
                 PriceEntry.COLUMN_DEFINDEX + " IN (143, 5002, 5021) AND " +
                         PriceEntry.COLUMN_ITEM_QUALITY + " = 6 AND " +
@@ -75,6 +80,7 @@ public class LoadCurrencyPricesInteractor extends AsyncTask<Void, Void, Void> {
                         mBudPrice.setHighValue(cursor.getDouble(2));
                         mBudPrice.setDifference(cursor.getDouble(3));
                         mBudPrice.setCurrency(cursor.getString(4));
+                        mBudPrice.setRawValue(cursor.getDouble(5));
                         break;
                     case 5002:
                         mMetalPrice = new Price();
@@ -82,6 +88,7 @@ public class LoadCurrencyPricesInteractor extends AsyncTask<Void, Void, Void> {
                         mMetalPrice.setHighValue(cursor.getDouble(2));
                         mMetalPrice.setDifference(cursor.getDouble(3));
                         mMetalPrice.setCurrency(cursor.getString(4));
+                        mMetalPrice.setRawValue(cursor.getDouble(5));
                         break;
                     case 5021:
                         mKeyPrice = new Price();
@@ -89,6 +96,7 @@ public class LoadCurrencyPricesInteractor extends AsyncTask<Void, Void, Void> {
                         mKeyPrice.setHighValue(cursor.getDouble(2));
                         mKeyPrice.setDifference(cursor.getDouble(3));
                         mKeyPrice.setCurrency(cursor.getString(4));
+                        mKeyPrice.setRawValue(cursor.getDouble(5));
                         break;
                 }
             }
