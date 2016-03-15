@@ -30,11 +30,11 @@ public class PlayerItem {
 
     @SerializedName("id")
     @Expose
-    private int id;
+    private long id;
 
     @SerializedName("original_id")
     @Expose
-    private int originalId;
+    private long originalId;
 
     @SerializedName("defindex")
     @Expose
@@ -62,7 +62,7 @@ public class PlayerItem {
 
     @SerializedName("inventory")
     @Expose
-    private int inventory;
+    private long inventory;
 
     @SerializedName("quality")
     @Expose
@@ -90,11 +90,11 @@ public class PlayerItem {
     @Expose
     private List<PlayerItemEquipped> equipped = new ArrayList<>();
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public int getOriginalId() {
+    public long getOriginalId() {
         return originalId;
     }
 
@@ -122,7 +122,7 @@ public class PlayerItem {
         return flagCannotCraft;
     }
 
-    public int getInventory() {
+    public long getInventory() {
         return inventory;
     }
 

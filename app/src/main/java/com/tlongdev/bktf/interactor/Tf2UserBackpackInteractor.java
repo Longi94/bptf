@@ -387,7 +387,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
                                 attribute.getAccountInfo().getPersonaName());
                         break;
                     case 229://Craft number
-                        values.put(UserBackpackEntry.COLUMN_CRAFT_NUMBER, attribute.getValue());
+                        values.put(UserBackpackEntry.COLUMN_CRAFT_NUMBER, Integer.parseInt(attribute.getValue()));
                         break;
                     case 725://Decorated weapon wear
                         /*
@@ -397,7 +397,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
                         1061997773 - Well Worn
                         1065353216 - Battle Scarred
                         */
-                        values.put(UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR, attribute.getValue());
+                        values.put(UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR, Long.parseLong(attribute.getValue()));
                         break;
                     case 2013://TODO Killstreaker
                         break;

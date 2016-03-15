@@ -47,13 +47,14 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.interactor.GetUserDataInteractor;
-import com.tlongdev.bktf.interactor.Tf2UserBackpackInteractor;
+import com.tlongdev.bktf.presenter.fragment.UserPresenter;
 import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.activity.UserBackpackActivity;
-import com.tlongdev.bktf.util.Profile;
+import com.tlongdev.bktf.ui.view.fragment.UserView;
 import com.tlongdev.bktf.util.Utility;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -62,24 +63,19 @@ import butterknife.OnClick;
 /**
  * Fragment for displaying the user profile.
  */
-public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
-        View.OnClickListener, GetUserDataInteractor.Callback, MainActivity.OnDrawerOpenedListener,
-        Tf2UserBackpackInteractor.Callback {
+public class UserFragment extends Fragment implements UserView, View.OnClickListener, MainActivity.OnDrawerOpenedListener {
 
     /**
      * Log tag for logging.
      */
-    @SuppressWarnings("unused")
     private static final String LOG_TAG = UserFragment.class.getSimpleName();
 
     /**
      * The {@link Tracker} used to record screen views.
      */
-    private Tracker mTracker;
+    @Inject Tracker mTracker;
+    @Inject SharedPreferences mPrefs;
 
-    private Context mContext;
-
-    //Reference too all the views that need to be updated
     @Bind(R.id.text_view_player_reputation) TextView playerReputation;
     @Bind(R.id.trust_positive) TextView trustPositive;
     @Bind(R.id.trust_negative) TextView trustNegative;
@@ -95,25 +91,17 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Bind(R.id.text_view_user_since) TextView userSinceText;
     @Bind(R.id.text_view_user_last_online) TextView lastOnlineText;
     @Bind(R.id.avatar) ImageView avatar;
-
-    //Swipe refresh layout for refreshing the user data manually
     @Bind(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
+    @Bind(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
+    @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
+    @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbarLayout;
 
     //Stores whether the backpack is private or not
     private boolean privateBackpack = false;
 
-    /**
-     * Only needed for manually expanding the toolbar
-     */
-    @Bind(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
-    @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
+    private UserPresenter mPresenter;
 
-    /**
-     * the collapsing toolbar layout
-     */
-    @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbarLayout;
-
-    private boolean layoutRefreshing = false;
+    private Context mContext;
 
     /**
      * Constructor
@@ -144,10 +132,12 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         // Obtain the shared Tracker instance.
         BptfApplication application = (BptfApplication) (getActivity()).getApplication();
-        mTracker = application.getDefaultTracker();
+        application.getFragmentComponent().inject(this);
+
+        mPresenter = new UserPresenter(application);
+        mPresenter.attachView(this);
 
         View rootView = inflater.inflate(R.layout.fragment_user, container, false);
-
         ButterKnife.bind(this, rootView);
 
         //Set the toolbar to the main activity's action bar
@@ -155,15 +145,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         //Set the color of the refreshing animation
         mSwipeRefreshLayout.setColorSchemeColors(Utility.getColor(mContext, R.color.accent));
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mSwipeRefreshLayout.setRefreshing(layoutRefreshing);
-            }
-        });
-
+        mSwipeRefreshLayout.setOnRefreshListener(mPresenter);
 
         //Update all the views to show te user data
         updateUserPage();
@@ -177,57 +159,15 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onResume() {
         super.onResume();
+        mPresenter.getUserDataIfNeeded();
         mTracker.setScreenName("User Profile");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-
-        //Update user info if last update was more than 30 minutes ago
-        if (Utility.isNetworkAvailable(mContext) && System.currentTimeMillis()
-                - PreferenceManager.getDefaultSharedPreferences(mContext)
-                .getLong(getString(R.string.pref_last_user_data_update), 0) >= 3600000L) {
-
-            //Start the task and listne for the end
-            GetUserDataInteractor task = new GetUserDataInteractor(mContext,(BptfApplication) getActivity().getApplication(), false, this);
-            task.execute(Profile.getSteamId(mContext), Profile.getResolvedSteamId(mContext));
-
-            //Workaround for the circle not appearing
-            mSwipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    mSwipeRefreshLayout.setRefreshing(true);
-                }
-            });
-            layoutRefreshing = true;
-
-            mTracker.send(new HitBuilders.EventBuilder()
-                    .setCategory("Request")
-                    .setAction("UserData")
-                    .build());
-        }
-
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void onRefresh() {
-        layoutRefreshing = true;
-        if (Utility.isNetworkAvailable(mContext)) {
-            //Start fetching the data and listen for the end
-            GetUserDataInteractor fetchTask = new GetUserDataInteractor(mContext, (BptfApplication) getActivity().getApplication(), true, this);
-            fetchTask.execute(Profile.getSteamId(mContext), Profile.getResolvedSteamId(mContext));
-
-            mTracker.send(new HitBuilders.EventBuilder()
-                    .setCategory("Request")
-                    .setAction("UserData")
-                    .build());
-        } else {
-            //There is no internet connection, notify the user
-            Toast.makeText(mContext, "bptf: " + getString(R.string.error_no_network),
-                    Toast.LENGTH_SHORT).show();
-            mSwipeRefreshLayout.setRefreshing(false);
-            layoutRefreshing = false;
-        }
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.detachView();
     }
 
     @Override
@@ -254,8 +194,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         //Handle all the buttons here
 
         //Get the steam id, do nothing if there is no steam id
-        String steamId = PreferenceManager.getDefaultSharedPreferences(mContext).getString(
-                getString(R.string.pref_resolved_steam_id), "");
+        String steamId = mPrefs.getString(getString(R.string.pref_resolved_steam_id), "");
         if (steamId.equals("")) {
             Toast.makeText(mContext, "bptf: " + getString(R.string.error_no_steam_id),
                     Toast.LENGTH_SHORT).show();
@@ -313,12 +252,10 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     /**
      * Update all info on the user page.
      */
+    @Override
     public void updateUserPage() {
-        //Get the default shared preferences
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-
         //Download avatar if needed.
-        if (prefs.contains(getString(R.string.pref_new_avatar)) &&
+        if (mPrefs.contains(getString(R.string.pref_new_avatar)) &&
                 Utility.isNetworkAvailable(mContext)) {
             Glide.with(this)
                     .load(PreferenceManager.getDefaultSharedPreferences(mContext).
@@ -329,19 +266,19 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         //Set the player name
-        String name = prefs.getString(getString(R.string.pref_player_name), "");
+        String name = mPrefs.getString(getString(R.string.pref_player_name), "");
         mCollapsingToolbarLayout.setTitle(name);
 
-        if (prefs.getInt(getString(R.string.pref_player_banned), 0) == 1) {
+        if (mPrefs.getInt(getString(R.string.pref_player_banned), 0) == 1) {
             //Set player name to red and cross name out if banned
             // TODO: 2015. 10. 22.
         }
 
         //Set the player reputation.
-        playerReputation.setText(String.valueOf(prefs.getInt(getString(R.string.pref_player_reputation), 0)));
+        playerReputation.setText(String.valueOf(mPrefs.getInt(getString(R.string.pref_player_reputation), 0)));
 
         //Set the 'user since' text
-        long profileCreated = prefs.getLong(getString(R.string.pref_player_profile_created), -1L);
+        long profileCreated = mPrefs.getLong(getString(R.string.pref_player_profile_created), -1L);
         if (profileCreated == -1) {
             userSinceText.setText(getString(R.string.filler_unknown));
         } else {
@@ -349,9 +286,9 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         //Switch for the player's state
-        switch (prefs.getInt(getString(R.string.pref_player_state), 0)) {
+        switch (mPrefs.getInt(getString(R.string.pref_player_state), 0)) {
             case 0:
-                long lastOnline = prefs.getLong(getString(R.string.pref_player_last_online), -1L);
+                long lastOnline = mPrefs.getLong(getString(R.string.pref_player_last_online), -1L);
                 if (lastOnline == -1) {
                     //Weird
                     lastOnlineText.setText(String.format("%s %s", getString(R.string.user_page_last_online), getString(R.string.filler_unknown)));
@@ -400,7 +337,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         if (statusBad != null) statusBad.setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
 
         //Steamrep information
-        switch (prefs.getInt(getString(R.string.pref_player_scammer), -1)) {
+        switch (mPrefs.getInt(getString(R.string.pref_player_scammer), -1)) {
             case -1:
                 steamRepStatus.setImageDrawable(statusUnknown);
                 break;
@@ -413,7 +350,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         //Trade status
-        switch (prefs.getInt(getString(R.string.pref_player_economy_banned), -1)) {
+        switch (mPrefs.getInt(getString(R.string.pref_player_economy_banned), -1)) {
             case -1:
                 tradeStatus.setImageDrawable(statusUnknown);
                 break;
@@ -426,7 +363,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         //VAC status
-        switch (prefs.getInt(getString(R.string.pref_player_vac_banned), -1)) {
+        switch (mPrefs.getInt(getString(R.string.pref_player_vac_banned), -1)) {
             case -1:
                 vacStatus.setImageDrawable(statusUnknown);
                 break;
@@ -439,7 +376,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         //Community status
-        switch (prefs.getInt(getString(R.string.pref_player_community_banned), -1)) {
+        switch (mPrefs.getInt(getString(R.string.pref_player_community_banned), -1)) {
             case -1:
                 communityStatus.setImageDrawable(statusUnknown);
                 break;
@@ -452,8 +389,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         //Backpack value
-        double bpValue = Utility.getDouble(prefs,
-                getString(R.string.pref_player_backpack_value_tf2), -1);
+        double bpValue = Utility.getDouble(mPrefs, getString(R.string.pref_player_backpack_value_tf2), -1);
         if (bpValue == -1) {
             //Value is unknown (probably private)
             backpackValueRefined.setText("?");
@@ -463,31 +399,31 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             backpackValueRefined.setText(String.valueOf(Math.round(bpValue)));
 
             //Convert the value into USD and format it like above
-            double bpValueUsd = bpValue * Utility.getDouble(prefs, getString(R.string.pref_metal_raw_usd), 1);
+            double bpValueUsd = bpValue * Utility.getDouble(mPrefs, getString(R.string.pref_metal_raw_usd), 1);
             backpackValueUsd.setText(String.valueOf(Math.round(bpValueUsd)));
         }
 
         //Set the trust score and color the background according to it.
-        trustPositive.setText(String.format("+%d", prefs.getInt(getString(R.string.pref_player_trust_positive), 0)));
-        trustNegative.setText(String.format("-%d", prefs.getInt(getString(R.string.pref_player_trust_negative), 0)));
+        trustPositive.setText(String.format("+%d", mPrefs.getInt(getString(R.string.pref_player_trust_positive), 0)));
+        trustNegative.setText(String.format("-%d", mPrefs.getInt(getString(R.string.pref_player_trust_negative), 0)));
 
         //Raw keys
-        int rawKeys = prefs.getInt(getString(R.string.pref_user_raw_key), -1);
+        int rawKeys = mPrefs.getInt(getString(R.string.pref_user_raw_key), -1);
         if (rawKeys >= 0)
             backpackRawKeys.setText(String.valueOf(rawKeys));
         else
             backpackRawKeys.setText("?");
 
         //Raw metal
-        double rawMetal = Utility.getDouble(prefs, getString(R.string.pref_user_raw_metal), -1);
+        double rawMetal = Utility.getDouble(mPrefs, getString(R.string.pref_user_raw_metal), -1);
         if (rawMetal >= 0)
             backpackRawMetal.setText(String.valueOf(Utility.formatDouble(rawMetal)));
         else
             backpackRawMetal.setText("?");
 
         //Number of slots and slots used
-        int itemNumber = prefs.getInt(getString(R.string.pref_user_items), -1);
-        int backpackSlotNumber = prefs.getInt(getString(R.string.pref_user_slots), -1);
+        int itemNumber = mPrefs.getInt(getString(R.string.pref_user_items), -1);
+        int backpackSlotNumber = mPrefs.getInt(getString(R.string.pref_user_slots), -1);
         if (itemNumber >= 0 && backpackSlotNumber >= 0)
             backpackSlots.setText(String.format("%s/%d", String.valueOf(itemNumber), backpackSlotNumber));
         else
@@ -495,100 +431,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     @Override
-    public void onUserInfoFinished(String steamId) {
-
-        //Save the update time
-        PreferenceManager.getDefaultSharedPreferences(mContext).edit()
-                .putLong(mContext.getString(R.string.pref_last_user_data_update),
-                        System.currentTimeMillis()).apply();
-
-        Tf2UserBackpackInteractor task = new Tf2UserBackpackInteractor(mContext, (BptfApplication) getActivity().getApplication(), this);
-        task.execute(steamId);
-
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Request")
-                .setAction("UserBackpack")
-                .build());
-    }
-
-    @Override
-    public void onUserInfoFailed(String errorMessage) {
-        //Stop the refreshing animation and update the UI
-        if (isAdded()) {
-            updateUserPage();
-            mSwipeRefreshLayout.setRefreshing(false);
-            layoutRefreshing = false;
-        }
-
-        Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void onDrawerOpened() {
         expandToolbar();
-    }
-
-    @Override
-    public void onUserBackpackFinished(int rawKeys, double rawMetal, int backpackSlots, int itemNumber) {
-
-        //Start editing the preferences
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        //Save all the data passed
-        editor.putInt(mContext.getString(R.string.pref_user_slots), backpackSlots);
-        editor.putInt(mContext.getString(R.string.pref_user_items), itemNumber);
-        editor.putInt(mContext.getString(R.string.pref_user_raw_key), rawKeys);
-        Utility.putDouble(editor, mContext.getString(R.string.pref_user_raw_metal), rawMetal);
-        editor.apply();
-
-        privateBackpack = false;
-        //Stop the refreshing animation and update the UI
-        if (isAdded()) {
-            updateUserPage();
-            mSwipeRefreshLayout.setRefreshing(false);
-            layoutRefreshing = false;
-        }
-
-        ((MainActivity) mContext).updateDrawer();
-    }
-
-    @Override
-    public void onPrivateBackpack() {
-
-        //Start editing the preferences
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        //Save all data that represent a private backpack
-        editor.putInt(mContext.getString(R.string.pref_user_slots), -1);
-        editor.putInt(mContext.getString(R.string.pref_user_items), -1);
-        editor.putInt(mContext.getString(R.string.pref_user_raw_key), -1);
-        Utility.putDouble(editor, mContext.getString(R.string.pref_user_raw_metal), -1);
-        Utility.putDouble(editor, mContext.getString(R.string.pref_player_backpack_value_tf2), -1);
-        editor.apply();
-
-        privateBackpack = true;
-        //Stop the refreshing animation and update the UI
-        if (isAdded()) {
-            updateUserPage();
-            mSwipeRefreshLayout.setRefreshing(false);
-            layoutRefreshing = false;
-        }
-
-        ((MainActivity) mContext).updateDrawer();
-    }
-
-    @Override
-    public void onUserBackpackFailed(String errorMessage) {
-        //Stop the refreshing animation and update the UI
-        if (isAdded()) {
-            updateUserPage();
-            mSwipeRefreshLayout.setRefreshing(false);
-            layoutRefreshing = false;
-        }
-
-        Toast.makeText(mContext, "failed", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -599,4 +443,33 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
     }
 
+    @Override
+    public BptfApplication getBptfApplication() {
+        return (BptfApplication) getActivity().getApplication();
+    }
+
+    @Override
+    public void showRefreshingAnimation() {
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(true);
+            }
+        });
+    }
+
+    @Override
+    public void hideRefreshingAnimation() {
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void backpack(boolean _private) {
+        privateBackpack = _private;
+    }
+
+    @Override
+    public void updateDrawer() {
+        ((MainActivity) mContext).updateDrawer();
+    }
 }

@@ -31,7 +31,7 @@ public class PlayerItemAttribute {
 
     @SerializedName("value")
     @Expose
-    private int value;
+    private String value;
 
     @SerializedName("float_value")
     @Expose
@@ -45,7 +45,7 @@ public class PlayerItemAttribute {
         return defindex;
     }
 
-    public int getValue() {
+    public String getValue() {
         return value;
     }
 

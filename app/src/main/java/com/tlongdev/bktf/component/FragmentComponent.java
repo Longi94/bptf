@@ -21,6 +21,7 @@ import com.tlongdev.bktf.ui.fragment.CalculatorFragment;
 import com.tlongdev.bktf.ui.fragment.FavoritesFragment;
 import com.tlongdev.bktf.ui.fragment.RecentsFragment;
 import com.tlongdev.bktf.ui.fragment.UnusualFragment;
+import com.tlongdev.bktf.ui.fragment.UserFragment;
 
 import javax.inject.Singleton;
 
@@ -40,4 +41,6 @@ public interface FragmentComponent {
     void inject(FavoritesFragment favoritesFragment);
 
     void inject(UnusualFragment unusualFragment);
+
+    void inject(UserFragment userFragment);
 }
