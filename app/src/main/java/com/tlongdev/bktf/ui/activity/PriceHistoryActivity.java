@@ -47,7 +47,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class PriceHistoryActivity extends AppCompatActivity implements BackpackTfPriceHistoryInteractor.OnPriceHistoryListener {
+public class PriceHistoryActivity extends AppCompatActivity implements BackpackTfPriceHistoryInteractor.Callback {
 
     /**
      * Log tag for logging.
@@ -102,8 +102,7 @@ public class PriceHistoryActivity extends AppCompatActivity implements BackpackT
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         if (Utility.isNetworkAvailable(this)) {
-            BackpackTfPriceHistoryInteractor task = new BackpackTfPriceHistoryInteractor((BptfApplication) getApplication(), mItem);
-            task.setListener(this);
+            BackpackTfPriceHistoryInteractor task = new BackpackTfPriceHistoryInteractor((BptfApplication) getApplication(), mItem, this);
             task.execute();
 
             mTracker.send(new HitBuilders.EventBuilder()

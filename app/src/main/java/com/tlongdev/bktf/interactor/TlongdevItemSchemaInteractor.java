@@ -56,12 +56,13 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
 
     private Context mContext;
 
-    private OnItemSchemaListener listener;
+    private Callback mCallback;
     private String errorMessage;
 
-    public TlongdevItemSchemaInteractor(Context context, BptfApplication application) {
-        this.mContext = context;
+    public TlongdevItemSchemaInteractor(Context context, BptfApplication application, Callback callback) {
         application.getInteractorComponent().inject(this);
+        mContext = context;
+        mCallback = callback;
     }
 
     @Override
@@ -206,16 +207,16 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
     @Override
     protected void onPostExecute(Integer integer) {
         super.onPostExecute(integer);
-        if (listener != null) {
+        if (mCallback != null) {
             switch (integer) {
                 case 0:
-                    listener.onItemSchemaFinished();
+                    mCallback.onItemSchemaFinished();
                     break;
                 case -1:
-                    listener.onItemSchemaFailed(errorMessage);
+                    mCallback.onItemSchemaFailed(errorMessage);
                     break;
                 default:
-                    listener.onItemSchemaFailed(errorMessage);
+                    mCallback.onItemSchemaFailed(errorMessage);
                     break;
             }
         }
@@ -224,24 +225,15 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
     @Override
     protected void onProgressUpdate(Void... values) {
         super.onProgressUpdate(values);
-        if (listener != null) {
-            listener.onItemSchemaUpdate(4);
+        if (mCallback != null) {
+            mCallback.onItemSchemaUpdate(4);
         }
-    }
-
-    /**
-     * Sets the listener, which will be notified of the results
-     *
-     * @param listener the listener
-     */
-    public void setListener(OnItemSchemaListener listener) {
-        this.listener = listener;
     }
 
     /**
      * Listener interface
      */
-    public interface OnItemSchemaListener {
+    public interface Callback {
 
         void onItemSchemaFinished();
 

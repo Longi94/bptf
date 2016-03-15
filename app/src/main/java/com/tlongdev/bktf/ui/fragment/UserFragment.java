@@ -63,8 +63,8 @@ import butterknife.OnClick;
  * Fragment for displaying the user profile.
  */
 public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
-        View.OnClickListener, GetUserDataInteractor.OnUserInfoListener, MainActivity.OnDrawerOpenedListener,
-        Tf2UserBackpackInteractor.OnUserBackpackListener {
+        View.OnClickListener, GetUserDataInteractor.Callback, MainActivity.OnDrawerOpenedListener,
+        Tf2UserBackpackInteractor.Callback {
 
     /**
      * Log tag for logging.
@@ -186,8 +186,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 .getLong(getString(R.string.pref_last_user_data_update), 0) >= 3600000L) {
 
             //Start the task and listne for the end
-            GetUserDataInteractor task = new GetUserDataInteractor(mContext,(BptfApplication) getActivity().getApplication(), false);
-            task.registerFetchUserInfoListener(this);
+            GetUserDataInteractor task = new GetUserDataInteractor(mContext,(BptfApplication) getActivity().getApplication(), false, this);
             task.execute(Profile.getSteamId(mContext), Profile.getResolvedSteamId(mContext));
 
             //Workaround for the circle not appearing
@@ -215,8 +214,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         layoutRefreshing = true;
         if (Utility.isNetworkAvailable(mContext)) {
             //Start fetching the data and listen for the end
-            GetUserDataInteractor fetchTask = new GetUserDataInteractor(mContext, (BptfApplication) getActivity().getApplication(), true);
-            fetchTask.registerFetchUserInfoListener(this);
+            GetUserDataInteractor fetchTask = new GetUserDataInteractor(mContext, (BptfApplication) getActivity().getApplication(), true, this);
             fetchTask.execute(Profile.getSteamId(mContext), Profile.getResolvedSteamId(mContext));
 
             mTracker.send(new HitBuilders.EventBuilder()
@@ -504,8 +502,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 .putLong(mContext.getString(R.string.pref_last_user_data_update),
                         System.currentTimeMillis()).apply();
 
-        Tf2UserBackpackInteractor task = new Tf2UserBackpackInteractor(mContext, (BptfApplication) getActivity().getApplication());
-        task.registerOnFetchUserBackpackListener(this);
+        Tf2UserBackpackInteractor task = new Tf2UserBackpackInteractor(mContext, (BptfApplication) getActivity().getApplication(), this);
         task.execute(steamId);
 
         mTracker.send(new HitBuilders.EventBuilder()

@@ -21,7 +21,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -51,10 +50,11 @@ import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.RecentsAdapter;
+import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.presenter.fragment.RecentsPresenter;
-import com.tlongdev.bktf.ui.view.fragment.RecentsView;
 import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
+import com.tlongdev.bktf.ui.view.fragment.RecentsView;
 import com.tlongdev.bktf.util.Utility;
 
 import javax.inject.Inject;
@@ -91,7 +91,6 @@ public class RecentsFragment extends Fragment implements RecentsView,
     public static final int COL_AUSTRALIUM = 11;
 
     @Inject Tracker mTracker;
-    @Inject SharedPreferences mPrefs;
 
     /**
      * Loading indicator
@@ -117,9 +116,9 @@ public class RecentsFragment extends Fragment implements RecentsView,
     /**
      * Views
      */
-    @Bind(R.id.text_view_metal_price) TextView metalPrice;
-    @Bind(R.id.text_view_key_price) TextView keyPrice;
-    @Bind(R.id.text_view_buds_price) TextView budsPrice;
+    @Bind(R.id.text_view_metal_price) TextView mMetalPrice;
+    @Bind(R.id.text_view_key_price) TextView mKeyPrice;
+    @Bind(R.id.text_view_buds_price) TextView mBudsPrice;
     @Bind(R.id.image_view_metal_price) View metalPriceImage;
     @Bind(R.id.image_view_key_price) View keyPriceImage;
     @Bind(R.id.image_view_buds_price) View budsPriceImage;
@@ -134,7 +133,7 @@ public class RecentsFragment extends Fragment implements RecentsView,
 
     private Context mContext;
 
-    private RecentsPresenter presenter;
+    private RecentsPresenter mPresenter;
 
     /**
      * Constructor
@@ -168,8 +167,8 @@ public class RecentsFragment extends Fragment implements RecentsView,
         BptfApplication application = (BptfApplication) getActivity().getApplication();
         application.getFragmentComponent().inject(this);
 
-        presenter = new RecentsPresenter(application);
-        presenter.attachView(this);
+        mPresenter = new RecentsPresenter(application);
+        mPresenter.attachView(this);
 
         View rootView = inflater.inflate(R.layout.fragment_recents, container, false);
         ButterKnife.bind(this, rootView);
@@ -198,16 +197,14 @@ public class RecentsFragment extends Fragment implements RecentsView,
         mSwipeRefreshLayout.setColorSchemeColors(Utility.getColor(mContext, R.color.accent));
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        //Populate the toolbar header
-        updateCurrencyHeader();
-
         return rootView;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter.loadPrices();
+        mPresenter.loadPrices();
+        mPresenter.loadCurrencyPrices();
     }
 
     @Override
@@ -216,13 +213,13 @@ public class RecentsFragment extends Fragment implements RecentsView,
         mTracker.setScreenName("Latest Changes");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
-        presenter.downloadPricesIfNeeded();
+        mPresenter.downloadPricesIfNeeded();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        presenter.detachView();
+        mPresenter.detachView();
     }
 
     @Override
@@ -244,7 +241,7 @@ public class RecentsFragment extends Fragment implements RecentsView,
 
     @Override
     public void onRefresh() {
-        presenter.downloadPrices();
+        mPresenter.downloadPrices();
     }
 
     @Override
@@ -307,22 +304,22 @@ public class RecentsFragment extends Fragment implements RecentsView,
     }
 
     @Override
-    public void updateCurrencyHeader() {
-        metalPrice.setText(mPrefs.getString(getString(R.string.pref_metal_price), ""));
-        keyPrice.setText(mPrefs.getString(getString(R.string.pref_key_price), ""));
-        budsPrice.setText(mPrefs.getString(getString(R.string.pref_buds_price), ""));
+    public void updateCurrencyHeader(Price metalPrice, Price keyPrice, Price budPrice) {
+        mMetalPrice.setText(metalPrice.getFormattedPrice(getActivity()));
+        mKeyPrice.setText(keyPrice.getFormattedPrice(getActivity()));
+        mBudsPrice.setText(budPrice.getFormattedPrice(getActivity()));
 
-        if (Utility.getDouble(mPrefs, getString(R.string.pref_metal_diff), 0.0) > 0.0) {
+        if (metalPrice.getDifference() > 0.0) {
             metalPriceImage.setBackgroundColor(0xff008504);
         } else {
             metalPriceImage.setBackgroundColor(0xff850000);
         }
-        if (Utility.getDouble(mPrefs, getString(R.string.pref_key_diff), 0.0) > 0.0) {
+        if (keyPrice.getDifference() > 0.0) {
             keyPriceImage.setBackgroundColor(0xff008504);
         } else {
             keyPriceImage.setBackgroundColor(0xff850000);
         }
-        if (Utility.getDouble(mPrefs, getString(R.string.pref_buds_diff), 0.0) > 0) {
+        if (budPrice.getDifference() > 0) {
             budsPriceImage.setBackgroundColor(0xff008504);
         } else {
             budsPriceImage.setBackgroundColor(0xff850000);

@@ -95,7 +95,7 @@ public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalcul
     }
 
     @Override
-    public void onFinish(List<Item> items, List<Integer> count, double totalValue) {
+    public void onLoadCalculatorItemsFinished(List<Item> items, List<Integer> count, double totalValue) {
         mTotalPrice.setValue(totalValue);
         if (mView != null) {
             mView.showItems(items, count, mTotalPrice);

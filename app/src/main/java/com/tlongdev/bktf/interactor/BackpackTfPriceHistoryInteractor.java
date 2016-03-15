@@ -50,13 +50,14 @@ public class BackpackTfPriceHistoryInteractor extends AsyncTask<Void, Void, Inte
 
     private Item item;
 
-    private OnPriceHistoryListener listener;
-
     private String errorMessage;
 
     private List<Price> result = new LinkedList<>();
 
-    public BackpackTfPriceHistoryInteractor(BptfApplication application, Item item) {
+    private Callback mCallback;
+
+    public BackpackTfPriceHistoryInteractor(BptfApplication application, Item item, Callback callback) {
+        mCallback = callback;
         application.getInteractorComponent().inject(this);
         this.item = item;
     }
@@ -121,29 +122,20 @@ public class BackpackTfPriceHistoryInteractor extends AsyncTask<Void, Void, Inte
 
     @Override
     protected void onPostExecute(Integer integer) {
-        if (listener != null) {
+        if (mCallback != null) {
             if (integer >= 0) {
                 //Notify the listener that the update finished
-                listener.onPriceHistoryFinished(result);
+                mCallback.onPriceHistoryFinished(result);
             } else {
-                listener.onPriceHistoryFailed(errorMessage);
+                mCallback.onPriceHistoryFailed(errorMessage);
             }
         }
     }
 
     /**
-     * Register a listener which will be notified when the fetching finishes.
-     *
-     * @param listener the listener to be notified
-     */
-    public void setListener(OnPriceHistoryListener listener) {
-        this.listener = listener;
-    }
-
-    /**
      * Listener interface
      */
-    public interface OnPriceHistoryListener {
+    public interface Callback {
 
         /**
          * Notify the listener, that the fetching has stopped.

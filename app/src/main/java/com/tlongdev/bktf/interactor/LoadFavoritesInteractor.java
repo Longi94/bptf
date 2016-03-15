@@ -54,6 +54,7 @@ public class LoadFavoritesInteractor extends AsyncTask<Void, Void, Void> {
         mCallback = callback;
     }
 
+    @SuppressWarnings("WrongConstant")
     @Override
     protected Void doInBackground(Void... params) {
 

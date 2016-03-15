@@ -30,6 +30,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.model.Quality;
 import com.tlongdev.bktf.network.TlongdevInterface;
 import com.tlongdev.bktf.network.converter.TlongdevModelConverter;
 import com.tlongdev.bktf.network.model.tlongdev.TlongdevPrice;
@@ -73,7 +74,7 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
     private String errorMessage;
 
     //The listener that will be notified when the fetching finishes
-    private OnPriceListListener listener;
+    private Callback mCallback;
 
     //the variable that contains the birth time of the youngest price
     private int latestUpdate = 0;
@@ -87,12 +88,14 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
      * @param updateDatabase whether the database only needs an update
      * @param manualSync     whether this task was user initiated
      */
-    public TlongdevPriceListInteractor(Context context, BptfApplication application, boolean updateDatabase, boolean manualSync) {
+    public TlongdevPriceListInteractor(Context context, BptfApplication application,
+                                       boolean updateDatabase, boolean manualSync,
+                                       Callback callback) {
+        application.getInteractorComponent().inject(this);
         this.mContext = context;
         this.updateDatabase = updateDatabase;
         this.manualSync = manualSync;
-
-        application.getInteractorComponent().inject(this);
+        this.mCallback = callback;
     }
 
     /**
@@ -233,7 +236,7 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
 
     private ContentValues buildContentValues(TlongdevPrice price) {
         //Fix the defindex for pricing
-        Item item = new Item(price.getDefindex(), null, 0, false, false, false, 0, null);
+        Item item = new Item(price.getDefindex(), null, Quality.NORMAL, false, false, false, 0, null);
 
         //The DV that will contain all the data
         ContentValues itemValues = new ContentValues();
@@ -260,29 +263,20 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
      */
     @Override
     protected void onPostExecute(Integer integer) {
-        if (listener != null) {
+        if (mCallback != null) {
             if (integer >= 0) {
                 //Notify the listener that the update finished
-                listener.onPriceListFinished(rowsInserted, latestUpdate);
+                mCallback.onPriceListFinished(rowsInserted, latestUpdate);
             } else {
-                listener.onPriceListFailed(errorMessage);
+                mCallback.onPriceListFailed(errorMessage);
             }
         }
     }
 
     /**
-     * Register a listener which will be notified when the fetching finishes.
-     *
-     * @param listener the listener to be notified
-     */
-    public void setOnPriceListFetchListener(OnPriceListListener listener) {
-        this.listener = listener;
-    }
-
-    /**
      * Listener interface
      */
-    public interface OnPriceListListener {
+    public interface Callback {
         /**
          * Notify the listener, that the fetching has stopped.
          */

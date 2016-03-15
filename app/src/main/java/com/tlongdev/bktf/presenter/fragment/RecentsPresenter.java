@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,8 +27,10 @@ import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.interactor.LoadAllPricesInteractor;
+import com.tlongdev.bktf.interactor.LoadCurrencyPricesInteractor;
 import com.tlongdev.bktf.interactor.TlongdevItemSchemaInteractor;
 import com.tlongdev.bktf.interactor.TlongdevPriceListInteractor;
+import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.presenter.Presenter;
 import com.tlongdev.bktf.ui.view.fragment.RecentsView;
 import com.tlongdev.bktf.util.Utility;
@@ -39,15 +41,17 @@ import javax.inject.Inject;
  * @author Long
  * @since 2016. 03. 10.
  */
-public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInteractor.Callback, TlongdevPriceListInteractor.OnPriceListListener, TlongdevItemSchemaInteractor.OnItemSchemaListener {
+public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesInteractor.Callback, TlongdevPriceListInteractor.Callback, TlongdevItemSchemaInteractor.Callback, LoadCurrencyPricesInteractor.Callback {
 
     @Inject SharedPreferences mPrefs;
     @Inject SharedPreferences.Editor mEditor;
     @Inject Tracker mTracker;
 
     private RecentsView mView;
+    private BptfApplication mApplication;
 
     public RecentsPresenter(BptfApplication application) {
+        mApplication = application;
         application.getPresenterComponent().inject(this);
     }
 
@@ -62,14 +66,14 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
     }
 
     @Override
-    public void onFinish(Cursor prices) {
+    public void onLoadPricesFinished(Cursor prices) {
         if (mView != null) {
             mView.showPrices(prices);
         }
     }
 
     @Override
-    public void onFail() {
+    public void onLoadPricesFailed() {
         if (mView != null) {
             mView.showError();
         }
@@ -77,9 +81,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
 
     public void loadPrices() {
         LoadAllPricesInteractor interactor = new LoadAllPricesInteractor(
-                mView.getContext(),
-                mView.getBptfApplication(),
-                this
+                mView.getContext(), mApplication, this
         );
         interactor.execute();
     }
@@ -88,8 +90,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
 
         //Manual update
         if (Utility.isNetworkAvailable(mView.getContext())) {
-            TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(mView.getContext(), mView.getBptfApplication(), true, true);
-            task.setOnPriceListFetchListener(this);
+            TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(mView.getContext(), mApplication, true, true, this);
             task.execute();
 
             mTracker.send(new HitBuilders.EventBuilder()
@@ -109,8 +110,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
         //Download whole database when the app is first opened.
         if (mPrefs.getBoolean(mView.getContext().getString(R.string.pref_initial_load_v2), true)) {
             if (Utility.isNetworkAvailable(mView.getContext())) {
-                TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(mView.getContext(), mView.getBptfApplication(), false, true);
-                task.setOnPriceListFetchListener(this);
+                TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(mView.getContext(), mApplication, false, true, this);
                 task.execute();
 
                 //Show the progress dialog
@@ -139,10 +139,9 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
             //Update database if the last update happened more than an hour ago
             if (System.currentTimeMillis() - mPrefs.getLong(mView.getContext().getString(R.string.pref_last_price_list_update), 0) >= 3600000L
                     && Utility.isNetworkAvailable(mView.getContext())) {
-                TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(mView.getContext(), mView.getBptfApplication(), true, false);
-                task.setOnPriceListFetchListener(this);
+                TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(mView.getContext(), mApplication, true, false, this);
                 task.execute();
-                
+
                 mView.showRefreshAnimation();
 
                 mTracker.send(new HitBuilders.EventBuilder()
@@ -152,6 +151,13 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
                         .build());
             }
         }
+    }
+
+    public void loadCurrencyPrices() {
+        LoadCurrencyPricesInteractor interactor = new LoadCurrencyPricesInteractor(
+                mApplication, this
+        );
+        interactor.execute();
     }
 
     @Override
@@ -166,8 +172,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
 
         if (mPrefs.getBoolean(mView.getContext().getString(R.string.pref_initial_load_v2), true)) {
 
-            TlongdevItemSchemaInteractor task = new TlongdevItemSchemaInteractor(mView.getContext(), mView.getBptfApplication());
-            task.setListener(this);
+            TlongdevItemSchemaInteractor task = new TlongdevItemSchemaInteractor(mView.getContext(), mApplication, this);
             task.execute();
 
             if (mView != null) {
@@ -186,8 +191,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
 
             if (System.currentTimeMillis() - mPrefs.getLong(mView.getContext().getString(R.string.pref_last_item_schema_update), 0) >= 172800000L //2days
                     && Utility.isNetworkAvailable(mView.getContext())) {
-                TlongdevItemSchemaInteractor task = new TlongdevItemSchemaInteractor(mView.getContext(), mView.getBptfApplication());
-                task.setListener(this);
+                TlongdevItemSchemaInteractor task = new TlongdevItemSchemaInteractor(mView.getContext(), mApplication, this);
                 task.execute();
 
                 mTracker.send(new HitBuilders.EventBuilder()
@@ -198,8 +202,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
             } else {
                 if (mView != null) {
                     mView.hideRefreshingAnimation();
-
-                    mView.updateCurrencyHeader();
+                    loadCurrencyPrices();
                 }
             }
         }
@@ -234,7 +237,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
         if (mView != null) {
             //Stop animation
             mView.hideRefreshingAnimation();
-            mView.updateCurrencyHeader();
+            loadCurrencyPrices();
         }
     }
 
@@ -250,5 +253,10 @@ public class RecentsPresenter implements Presenter<RecentsView>,LoadAllPricesInt
         if (mView != null) {
             mView.showItemSchemaError(errorMessage);
         }
+    }
+
+    @Override
+    public void onLoadCurrencyPricesFinished(Price metalPrice, Price keyPrice, Price budPrice) {
+        mView.updateCurrencyHeader(metalPrice, keyPrice, budPrice);
     }
 }

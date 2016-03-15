@@ -18,6 +18,7 @@ package com.tlongdev.bktf.ui.view.fragment;
 
 import android.database.Cursor;
 
+import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.ui.view.BaseView;
 
 /**
@@ -35,8 +36,6 @@ public interface RecentsView extends BaseView {
 
     void finishActivity();
 
-    void updateCurrencyHeader();
-
     void dismissLoadingDialog();
 
     void showLoadingDialog(String message);
@@ -46,4 +45,6 @@ public interface RecentsView extends BaseView {
     void showItemSchemaError(String errorMessage);
 
     void showPricesError(String errorMessage);
+
+    void updateCurrencyHeader(Price metalPrice, Price keyPrice, Price budPrice);
 }

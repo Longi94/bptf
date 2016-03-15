@@ -37,7 +37,7 @@ import com.tlongdev.bktf.util.Utility;
 /**
  * Created by Long on 2015. 12. 18..
  */
-public class GcmMessageHandler extends GcmListenerService implements TlongdevPriceListInteractor.OnPriceListListener {
+public class GcmMessageHandler extends GcmListenerService implements TlongdevPriceListInteractor.Callback {
 
     public static final String LOG_TAG = GcmMessageHandler.class.getSimpleName();
 
@@ -56,8 +56,7 @@ public class GcmMessageHandler extends GcmListenerService implements TlongdevPri
                 String autoSync = prefs.getString(getString(R.string.pref_auto_sync), "1");
 
                 if (autoSync.equals("2") || (autoSync.equals("1") && wifi.isConnected())) {
-                    TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(this, (BptfApplication) getApplication(), true, true);
-                    task.setOnPriceListFetchListener(this);
+                    TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(this, (BptfApplication) getApplication(), true, true, this);
                     task.execute();
                 }
             }

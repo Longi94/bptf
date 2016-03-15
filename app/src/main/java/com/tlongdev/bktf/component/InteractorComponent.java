@@ -20,6 +20,7 @@ import com.tlongdev.bktf.interactor.BackpackTfPriceHistoryInteractor;
 import com.tlongdev.bktf.interactor.GetUserDataInteractor;
 import com.tlongdev.bktf.interactor.LoadAllPricesInteractor;
 import com.tlongdev.bktf.interactor.LoadCalculatorItemsInteractor;
+import com.tlongdev.bktf.interactor.LoadCurrencyPricesInteractor;
 import com.tlongdev.bktf.interactor.LoadFavoritesInteractor;
 import com.tlongdev.bktf.interactor.LoadUnusualEffectsInteractor;
 import com.tlongdev.bktf.interactor.LoadUnusualHatCategoriesInteractor;
@@ -60,4 +61,6 @@ public interface InteractorComponent {
     void inject(BackpackTfPriceHistoryInteractor backpackTfPriceHistoryInteractor);
 
     void inject(Tf2UserBackpackInteractor tf2UserBackpackInteractor);
+
+    void inject(LoadCurrencyPricesInteractor loadCurrencyPricesInteractor);
 }

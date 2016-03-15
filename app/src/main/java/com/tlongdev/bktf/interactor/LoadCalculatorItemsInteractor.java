@@ -126,11 +126,11 @@ public class LoadCalculatorItemsInteractor extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         if (mCallback != null) {
-            mCallback.onFinish(mItems, mCount, mTotalValue);
+            mCallback.onLoadCalculatorItemsFinished(mItems, mCount, mTotalValue);
         }
     }
 
     public interface Callback {
-        void onFinish(List<Item> items, List<Integer> count, double totalValue);
+        void onLoadCalculatorItemsFinished(List<Item> items, List<Integer> count, double totalValue);
     }
 }

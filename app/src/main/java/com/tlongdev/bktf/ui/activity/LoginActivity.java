@@ -42,7 +42,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LoginActivity extends AppCompatActivity implements GetUserDataInteractor.OnUserInfoListener, Tf2UserBackpackInteractor.OnUserBackpackListener {
+public class LoginActivity extends AppCompatActivity implements GetUserDataInteractor.Callback, Tf2UserBackpackInteractor.Callback {
 
     /**
      * The {@link Tracker} used to record screen views.
@@ -109,8 +109,7 @@ public class LoginActivity extends AppCompatActivity implements GetUserDataInter
         } else {
             String steamId = steamIdInput.getText().toString();
 
-            GetUserDataInteractor task = new GetUserDataInteractor(LoginActivity.this, (BptfApplication) getApplication(),true);
-            task.registerFetchUserInfoListener(LoginActivity.this);
+            GetUserDataInteractor task = new GetUserDataInteractor(LoginActivity.this, (BptfApplication) getApplication(),true, LoginActivity.this);
             task.execute(steamId, null);
 
             loadingDialog = ProgressDialog.show(LoginActivity.this, null, "Please wait...", true, false);
@@ -129,8 +128,7 @@ public class LoginActivity extends AppCompatActivity implements GetUserDataInter
                 .putLong(getString(R.string.pref_last_user_data_update),
                         System.currentTimeMillis()).apply();
 
-        Tf2UserBackpackInteractor task = new Tf2UserBackpackInteractor(this, (BptfApplication) getApplication());
-        task.registerOnFetchUserBackpackListener(this);
+        Tf2UserBackpackInteractor task = new Tf2UserBackpackInteractor(this, (BptfApplication) getApplication(), this);
         task.execute(steamId);
 
         mTracker.send(new HitBuilders.EventBuilder()

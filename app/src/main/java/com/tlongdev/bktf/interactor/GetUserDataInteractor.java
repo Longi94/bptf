@@ -63,8 +63,8 @@ public class GetUserDataInteractor extends AsyncTask<String, Void, Integer> {
     //The error message that will be presented to the user, when an error occurs
     private String errorMessage;
 
-    //The listener that will be notified when the fetching finishes
-    private OnUserInfoListener listener = null;
+    //The mCallback that will be notified when the fetching finishes
+    private Callback mCallback;
 
     private String steamId;
 
@@ -74,10 +74,12 @@ public class GetUserDataInteractor extends AsyncTask<String, Void, Integer> {
      * @param context    the context the task will run in
      * @param manualSync whether the updated was initiated by the user
      */
-    public GetUserDataInteractor(Context context, BptfApplication application, boolean manualSync) {
+    public GetUserDataInteractor(Context context, BptfApplication application, boolean manualSync,
+                                 Callback callback) {
         application.getInteractorComponent().inject(this);
         this.mContext = context;
         this.manualSync = manualSync;
+        mCallback = callback;
     }
 
     /**
@@ -175,12 +177,12 @@ public class GetUserDataInteractor extends AsyncTask<String, Void, Integer> {
     @Override
     protected void onPostExecute(Integer integer) {
         //Finished fetching the backpack
-        if (listener != null) {
+        if (mCallback != null) {
             if (integer >= 0) {
-                //notify the listener, that the fetching has finished.
-                listener.onUserInfoFinished(steamId);
+                //notify the mCallback, that the fetching has finished.
+                mCallback.onUserInfoFinished(steamId);
             } else {
-                listener.onUserInfoFailed(errorMessage);
+                mCallback.onUserInfoFailed(errorMessage);
             }
         }
     }
@@ -256,18 +258,9 @@ public class GetUserDataInteractor extends AsyncTask<String, Void, Integer> {
     }
 
     /**
-     * Register a listener, that will be notified when the fetching finishes
-     *
-     * @param listener the listener to be registered
-     */
-    public void registerFetchUserInfoListener(OnUserInfoListener listener) {
-        this.listener = listener;
-    }
-
-    /**
      * Listener interface.
      */
-    public interface OnUserInfoListener {
+    public interface Callback {
 
         /**
          * Callback which will be called when both tasks finish.

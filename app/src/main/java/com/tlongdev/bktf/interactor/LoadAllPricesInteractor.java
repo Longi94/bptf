@@ -81,20 +81,20 @@ public class LoadAllPricesInteractor extends AsyncTask<Void, Void, Cursor> {
     @Override
     protected void onPostExecute(Cursor cursor) {
         if (mCallback != null) {
-            mCallback.onFinish(cursor);
+            mCallback.onLoadPricesFinished(cursor);
         }
     }
 
     @Override
     protected void onCancelled(Cursor cursor) {
         if (mCallback != null) {
-            mCallback.onFail();
+            mCallback.onLoadPricesFailed();
         }
     }
 
     public interface Callback {
-        void onFinish(Cursor prices);
+        void onLoadPricesFinished(Cursor prices);
 
-        void onFail();
+        void onLoadPricesFailed();
     }
 }

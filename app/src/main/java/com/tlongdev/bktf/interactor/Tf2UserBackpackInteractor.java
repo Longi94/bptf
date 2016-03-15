@@ -86,16 +86,18 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
     private String mSteamId;
 
     //The listener that will be notified when the fetching finishes
-    private OnUserBackpackListener listener = null;
+    private Callback mCallback;
 
     /**
      * Constructor
      *
      * @param context the context the task was launched in
      */
-    public Tf2UserBackpackInteractor(Context context, BptfApplication application) {
+    public Tf2UserBackpackInteractor(Context context, BptfApplication application,
+                                     Callback callback) {
         application.getInteractorComponent().inject(this);
         mContext = context;
+        mCallback = callback;
     }
 
     /**
@@ -141,16 +143,16 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
      */
     @Override
     protected void onPostExecute(Integer integer) {
-        if (listener != null) {
+        if (mCallback != null) {
             if (integer == 0) {
                 //Notify the listener that the backpack was private
-                listener.onPrivateBackpack();
+                mCallback.onPrivateBackpack();
             } else if (integer >= 1) {
                 //Notify the user that the fetching finished and pass on the data
-                listener.onUserBackpackFinished(rawKeys, Utility.getRawMetal(rawRef, rawRec, rawScraps),
+                mCallback.onUserBackpackFinished(rawKeys, Utility.getRawMetal(rawRef, rawRec, rawScraps),
                         backpackSlots, itemNumber);
             } else {
-                listener.onUserBackpackFailed(errorMessage);
+                mCallback.onUserBackpackFailed(errorMessage);
             }
         }
     }
@@ -416,21 +418,12 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
     }
 
     /**
-     * Register a listener that will be notified
-     *
-     * @param listener the listener to be notified
-     */
-    public void registerOnFetchUserBackpackListener(OnUserBackpackListener listener) {
-        this.listener = listener;
-    }
-
-    /**
      * Listener interface for listening for the end of the fetch.
      */
-    public interface OnUserBackpackListener {
+    public interface Callback {
 
         /**
-         * Notify the listener, that the fetchin has finished. The backpack is public.
+         * Notify the mCallback, that the fetchin has finished. The backpack is public.
          *
          * @param rawKeys       the number of raw keys in the backpack
          * @param rawMetal      the number of raw metal in the backpack
@@ -440,7 +433,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
         void onUserBackpackFinished(int rawKeys, double rawMetal, int backpackSlots, int itemNumber);
 
         /**
-         * Notify the listener that the backpack was private.
+         * Notify the mCallback that the backpack was private.
          */
         void onPrivateBackpack();
 
