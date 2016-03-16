@@ -444,11 +444,6 @@ public class UserFragment extends Fragment implements UserView, View.OnClickList
     }
 
     @Override
-    public BptfApplication getBptfApplication() {
-        return (BptfApplication) getActivity().getApplication();
-    }
-
-    @Override
     public void showRefreshingAnimation() {
         mSwipeRefreshLayout.post(new Runnable() {
             @Override

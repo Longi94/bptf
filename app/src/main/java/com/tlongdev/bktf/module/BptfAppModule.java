@@ -17,6 +17,7 @@
 package com.tlongdev.bktf.module;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -43,14 +44,20 @@ public class BptfAppModule {
 
     @Provides
     @Singleton
+    Context provideApplicationContext() {
+        return mApplication;
+    }
+
+    @Provides
+    @Singleton
     Application provideApplication() {
         return mApplication;
     }
 
     @Provides
     @Singleton
-    SharedPreferences provideSharedPreferences(Application application) {
-        return PreferenceManager.getDefaultSharedPreferences(application);
+    SharedPreferences provideSharedPreferences(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     @Provides

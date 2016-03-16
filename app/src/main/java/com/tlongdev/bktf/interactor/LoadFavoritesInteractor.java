@@ -42,15 +42,14 @@ import javax.inject.Named;
 public class LoadFavoritesInteractor extends AsyncTask<Void, Void, Void> {
 
     @Inject @Named("readable") SQLiteDatabase mDatabase;
+    @Inject Context mContext;
 
     private Callback mCallback;
-    private Context mContext;
 
     private List<Item> mItems = new LinkedList<>();
 
-    public LoadFavoritesInteractor(Context context, BptfApplication application, Callback callback) {
+    public LoadFavoritesInteractor(BptfApplication application, Callback callback) {
         application.getInteractorComponent().inject(this);
-        mContext = context;
         mCallback = callback;
     }
 

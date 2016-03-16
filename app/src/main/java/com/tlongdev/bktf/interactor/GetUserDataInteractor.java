@@ -53,9 +53,7 @@ public class GetUserDataInteractor extends AsyncTask<String, Void, Integer> {
     @Inject Tracker mTracker;
     @Inject SharedPreferences.Editor mEditor;
     @Inject SharedPreferences mPrefs;
-
-    //The context the task is running in
-    private Context mContext;
+    @Inject Context mContext;
 
     //Whether it was a user initiated update
     private boolean manualSync;
@@ -71,13 +69,10 @@ public class GetUserDataInteractor extends AsyncTask<String, Void, Integer> {
     /**
      * Constructor.
      *
-     * @param context    the context the task will run in
      * @param manualSync whether the updated was initiated by the user
      */
-    public GetUserDataInteractor(Context context, BptfApplication application, boolean manualSync,
-                                 Callback callback) {
+    public GetUserDataInteractor(BptfApplication application, boolean manualSync, Callback callback) {
         application.getInteractorComponent().inject(this);
-        this.mContext = context;
         this.manualSync = manualSync;
         mCallback = callback;
     }

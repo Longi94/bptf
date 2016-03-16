@@ -42,8 +42,7 @@ import javax.inject.Named;
 public class LoadCalculatorItemsInteractor extends AsyncTask<Void, Void, Void> {
 
     @Inject @Named("readable") SQLiteDatabase mDatabase;
-
-    private Context mContext;
+    @Inject Context mContext;
 
     private List<Item> mItems = new LinkedList<>();
     private List<Integer> mCount = new LinkedList<>();
@@ -51,12 +50,12 @@ public class LoadCalculatorItemsInteractor extends AsyncTask<Void, Void, Void> {
 
     private Callback mCallback;
 
-    public LoadCalculatorItemsInteractor(Context context, BptfApplication application, Callback callback) {
-        mContext = context;
-        mCallback = callback;
+    public LoadCalculatorItemsInteractor(BptfApplication application, Callback callback) {
         application.getInteractorComponent().inject(this);
+        mCallback = callback;
     }
 
+    @SuppressWarnings("WrongConstant")
     @Override
     protected Void doInBackground(Void... params) {
 

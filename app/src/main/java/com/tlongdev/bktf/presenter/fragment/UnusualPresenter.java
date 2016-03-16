@@ -56,14 +56,14 @@ public class UnusualPresenter implements Presenter<UnusualView>,LoadUnusualHatCa
 
     public void loadUnusualHats(String filter, @UnusualOrder int orderBy) {
         LoadUnusualHatCategoriesInteractor interactor = new LoadUnusualHatCategoriesInteractor(
-                mView.getContext(), mApplication, filter, orderBy, this
+                mApplication, filter, orderBy, this
         );
         interactor.execute();
     }
 
     public void loadUnusualEffects(String filter, @UnusualOrder int orderBy) {
         LoadUnusualEffectsInteractor interactor = new LoadUnusualEffectsInteractor(
-                mView.getContext(), mApplication, filter, orderBy, this
+                mApplication, filter, orderBy, this
         );
         interactor.execute();
     }

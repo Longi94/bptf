@@ -58,9 +58,7 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
     @Inject SharedPreferences.Editor mEditor;
     @Inject TlongdevInterface mTlongdevInterface;
     @Inject Tracker mTracker;
-
-    //The context the task runs in
-    private final Context mContext;
+    @Inject Context mContext;
 
     //Whether it's an update or full database download
     private boolean updateDatabase;
@@ -81,16 +79,14 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
 
     /**
      * Constructor
-     *  @param context        the context the task was launched in
      * @param application
      * @param updateDatabase whether the database only needs an update
      * @param manualSync     whether this task was user initiated
      */
-    public TlongdevPriceListInteractor(Context context, BptfApplication application,
+    public TlongdevPriceListInteractor(BptfApplication application,
                                        boolean updateDatabase, boolean manualSync,
                                        Callback callback) {
         application.getInteractorComponent().inject(this);
-        this.mContext = context;
         this.updateDatabase = updateDatabase;
         this.manualSync = manualSync;
         this.mCallback = callback;

@@ -221,11 +221,6 @@ public class CalculatorFragment extends Fragment implements CalculatorView, Main
     }
 
     @Override
-    public BptfApplication getBptfApplication() {
-        return (BptfApplication) getActivity().getApplication();
-    }
-
-    @Override
     public void showItems(List<Item> items, List<Integer> count, Price totalPrice) {
         updatePrices(totalPrice);
         mAdapter.setDataSet(items, count);

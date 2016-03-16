@@ -276,9 +276,4 @@ public class UnusualFragment extends Fragment implements UnusualView,
             mPresenter.loadUnusualHats(filter, mCurrentSort);
         }
     }
-
-    @Override
-    public BptfApplication getBptfApplication() {
-        return (BptfApplication) getActivity().getApplication();
-    }
 }

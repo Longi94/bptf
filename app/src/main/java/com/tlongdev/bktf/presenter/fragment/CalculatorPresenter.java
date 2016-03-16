@@ -66,6 +66,8 @@ public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalcul
 
     private CalculatorView mView;
 
+    private BptfApplication mApplication;
+
     /**
      * The sum of the price of items in the list
      */
@@ -73,6 +75,7 @@ public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalcul
 
     public CalculatorPresenter(BptfApplication application) {
         application.getPresenterComponent().inject(this);
+        mApplication = application;
         mTotalPrice.setCurrency(Currency.METAL);
         PRICE_LIST_COLUMNS[1] = Utility.getRawPriceQueryString(application) + " price_raw";
     }
@@ -89,8 +92,7 @@ public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalcul
 
     public void loadItems() {
         LoadCalculatorItemsInteractor itemsInteractor = new LoadCalculatorItemsInteractor(
-                mView.getContext(), mView.getBptfApplication(), this
-        );
+                mApplication, this);
         itemsInteractor.execute();
     }
 

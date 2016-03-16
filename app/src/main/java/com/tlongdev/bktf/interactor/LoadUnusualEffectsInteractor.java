@@ -44,20 +44,19 @@ import javax.inject.Named;
 public class LoadUnusualEffectsInteractor extends AsyncTask<Void, Void, Void> {
     @Inject @Named("readable") SQLiteDatabase mDatabase;
     @Inject SharedPreferences mPrefs;
+    @Inject Context mContext;
 
     @UnusualPresenter.UnusualOrder
     private int mOrderBy;
     private Callback mCallback;
-    private Context mContext;
     private String mFilter;
 
     private List<Item> mItems = new LinkedList<>();
 
-    public LoadUnusualEffectsInteractor(Context context, BptfApplication application, String filter,
+    public LoadUnusualEffectsInteractor(BptfApplication application, String filter,
                                         @UnusualPresenter.UnusualOrder int orderBy, Callback callback) {
-        mContext = context;
-        mFilter = filter;
         application.getInteractorComponent().inject(this);
+        mFilter = filter;
         mOrderBy = orderBy;
         mCallback = callback;
     }

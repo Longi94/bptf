@@ -56,7 +56,7 @@ public class GcmMessageHandler extends GcmListenerService implements TlongdevPri
                 String autoSync = prefs.getString(getString(R.string.pref_auto_sync), "1");
 
                 if (autoSync.equals("2") || (autoSync.equals("1") && wifi.isConnected())) {
-                    TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(this, (BptfApplication) getApplication(), true, true, this);
+                    TlongdevPriceListInteractor task = new TlongdevPriceListInteractor((BptfApplication) getApplication(), true, true, this);
                     task.execute();
                 }
             }

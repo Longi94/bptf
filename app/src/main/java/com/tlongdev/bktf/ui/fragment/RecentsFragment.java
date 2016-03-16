@@ -405,9 +405,4 @@ public class RecentsFragment extends Fragment implements RecentsView,
             Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
         }
     }
-
-    @Override
-    public BptfApplication getBptfApplication() {
-        return (BptfApplication) getActivity().getApplication();
-    }
 }

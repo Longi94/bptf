@@ -18,13 +18,10 @@ package com.tlongdev.bktf.ui.view;
 
 import android.content.Context;
 
-import com.tlongdev.bktf.BptfApplication;
-
 /**
  * @author Long
  * @since 2016. 02. 26.
  */
 public interface BaseView {
     Context getContext();
-    BptfApplication getBptfApplication();
 }

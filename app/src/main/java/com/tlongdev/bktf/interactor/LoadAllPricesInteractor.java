@@ -36,14 +36,13 @@ import javax.inject.Named;
 public class LoadAllPricesInteractor extends AsyncTask<Void, Void, Cursor> {
 
     @Inject @Named("readable") SQLiteDatabase mDatabase;
+    @Inject Context mContext;
 
-    private Context mContext;
     private Callback mCallback;
 
-    public LoadAllPricesInteractor(Context context, BptfApplication application, Callback callback) {
-        mContext = context;
-        mCallback = callback;
+    public LoadAllPricesInteractor(BptfApplication application, Callback callback) {
         application.getInteractorComponent().inject(this);
+        mCallback = callback;
     }
 
     @Override

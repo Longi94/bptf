@@ -35,18 +35,17 @@ import javax.inject.Inject;
 public class LoadCurrencyPricesInteractor extends AsyncTask<Void, Void, Void> {
 
     @Inject ContentResolver mContentResolver;
+    @Inject Context mContext;
 
     private Price mMetalPrice;
     private Price mKeyPrice;
     private Price mBudPrice;
 
     private Callback mCallback;
-    private Context mContext;
 
-    public LoadCurrencyPricesInteractor(BptfApplication application, Context context, Callback callback) {
+    public LoadCurrencyPricesInteractor(BptfApplication application, Callback callback) {
         application.getInteractorComponent().inject(this);
         mCallback = callback;
-        mContext = context;
     }
 
     @SuppressWarnings("WrongConstant")

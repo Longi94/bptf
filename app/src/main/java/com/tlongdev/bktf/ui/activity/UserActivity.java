@@ -610,7 +610,7 @@ public class UserActivity extends AppCompatActivity implements Tf2UserBackpackIn
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            Tf2UserBackpackInteractor task = new Tf2UserBackpackInteractor(UserActivity.this, (BptfApplication) getApplication(), UserActivity.this);
+            Tf2UserBackpackInteractor task = new Tf2UserBackpackInteractor((BptfApplication) getApplication(), UserActivity.this);
             task.execute(steamId);
 
             mTracker.send(new HitBuilders.EventBuilder()

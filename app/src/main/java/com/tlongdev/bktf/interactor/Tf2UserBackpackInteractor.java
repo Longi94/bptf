@@ -63,9 +63,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
 
     @Inject Tf2Interface mTf2Interface;
     @Inject Tracker mTracker;
-
-    //The context the task was launched in
-    private Context mContext;
+    @Inject Context mContext;
 
     //Indicates which table to insert data into
     private boolean isGuest;
@@ -88,15 +86,8 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
     //The listener that will be notified when the fetching finishes
     private Callback mCallback;
 
-    /**
-     * Constructor
-     *
-     * @param context the context the task was launched in
-     */
-    public Tf2UserBackpackInteractor(Context context, BptfApplication application,
-                                     Callback callback) {
+    public Tf2UserBackpackInteractor(BptfApplication application, Callback callback) {
         application.getInteractorComponent().inject(this);
-        mContext = context;
         mCallback = callback;
     }
 

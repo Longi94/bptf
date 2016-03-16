@@ -70,9 +70,7 @@ public class FavoritesPresenter implements Presenter<FavoritesView>,LoadFavorite
     }
 
     public void loadFavorites() {
-        LoadFavoritesInteractor interactor = new LoadFavoritesInteractor(
-                mView.getContext(), mApplication, this
-        );
+        LoadFavoritesInteractor interactor = new LoadFavoritesInteractor(mApplication, this);
         interactor.execute();
     }
 

@@ -191,11 +191,6 @@ public class FavoritesFragment extends Fragment implements FavoritesView,
     }
 
     @Override
-    public BptfApplication getBptfApplication() {
-        return (BptfApplication) getActivity().getApplication();
-    }
-
-    @Override
     public void showFavorites(List<Item> items) {
         mAdapter.setDataSet(items);
         mAdapter.notifyDataSetChanged();

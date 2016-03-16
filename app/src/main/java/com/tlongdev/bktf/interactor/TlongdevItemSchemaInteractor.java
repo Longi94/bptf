@@ -53,15 +53,13 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
 
     @Inject TlongdevInterface mTlongdevInterface;
     @Inject Tracker mTracker;
-
-    private Context mContext;
+    @Inject Context mContext;
 
     private Callback mCallback;
     private String errorMessage;
 
-    public TlongdevItemSchemaInteractor(Context context, BptfApplication application, Callback callback) {
+    public TlongdevItemSchemaInteractor(BptfApplication application, Callback callback) {
         application.getInteractorComponent().inject(this);
-        mContext = context;
         mCallback = callback;
     }
 

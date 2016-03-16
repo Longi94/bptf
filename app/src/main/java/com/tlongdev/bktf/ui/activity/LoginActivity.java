@@ -109,7 +109,7 @@ public class LoginActivity extends AppCompatActivity implements GetUserDataInter
         } else {
             String steamId = steamIdInput.getText().toString();
 
-            GetUserDataInteractor task = new GetUserDataInteractor(LoginActivity.this, (BptfApplication) getApplication(),true, LoginActivity.this);
+            GetUserDataInteractor task = new GetUserDataInteractor((BptfApplication) getApplication(),true, LoginActivity.this);
             task.execute(steamId, null);
 
             loadingDialog = ProgressDialog.show(LoginActivity.this, null, "Please wait...", true, false);
@@ -128,7 +128,7 @@ public class LoginActivity extends AppCompatActivity implements GetUserDataInter
                 .putLong(getString(R.string.pref_last_user_data_update),
                         System.currentTimeMillis()).apply();
 
-        Tf2UserBackpackInteractor task = new Tf2UserBackpackInteractor(this, (BptfApplication) getApplication(), this);
+        Tf2UserBackpackInteractor task = new Tf2UserBackpackInteractor((BptfApplication) getApplication(), this);
         task.execute(steamId);
 
         mTracker.send(new HitBuilders.EventBuilder()

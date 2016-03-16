@@ -45,20 +45,19 @@ public class LoadUnusualHatCategoriesInteractor extends AsyncTask<Void, Void, Vo
 
     @Inject @Named("readable") SQLiteDatabase mDatabase;
     @Inject SharedPreferences mPrefs;
+    @Inject Context mContext;
 
     @UnusualPresenter.UnusualOrder
     private int mOrderBy;
     private Callback mCallback;
-    private Context mContext;
     private String mFilter;
 
     private List<Item> mItems = new LinkedList<>();
 
-    public LoadUnusualHatCategoriesInteractor(Context context, BptfApplication application,
-                                              String filter, @UnusualPresenter.UnusualOrder int orderBy,
+    public LoadUnusualHatCategoriesInteractor(BptfApplication application, String filter,
+                                              @UnusualPresenter.UnusualOrder int orderBy,
                                               Callback callback) {
         application.getInteractorComponent().inject(this);
-        mContext = context;
         mFilter = filter;
         mOrderBy = orderBy;
         mCallback = callback;
