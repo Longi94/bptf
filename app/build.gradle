@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+def getKey(Properties properties, String name) {
+    return properties.containsKey(name) ? properties.getProperty(name) : "DUMMY_KEY"
+}
+
 android {
     compileSdkVersion 23
     buildToolsVersion '23.0.2'
@@ -17,8 +21,15 @@ android {
             }
         }
 
-        buildConfigField("String", "BACKPACK_TF_API_KEY", "\"${rootProject.property("BACKPACK_TF_API_KEY")}\"")
-        buildConfigField("String", "STEAM_WEB_API_KEY", "\"${rootProject.property("STEAM_WEB_API_KEY")}\"")
+        vectorDrawables.useSupportLibrary = true
+
+        Properties keys = new Properties()
+        if (project.rootProject.file('keys.properties').exists()) {
+            keys.load(project.rootProject.file('keys.properties').newDataInputStream())
+        }
+
+        buildConfigField("String", "BACKPACK_TF_API_KEY", "\"${getKey(keys, "BACKPACK_TF_API_KEY")}\"")
+        buildConfigField("String", "STEAM_WEB_API_KEY", "\"${getKey(keys, "STEAM_WEB_API_KEY")}\"")
     }
     buildTypes {
         release {
@@ -33,6 +44,9 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
+    }
+    lintOptions {
+        disable 'InvalidPackage'
     }
 }
 
