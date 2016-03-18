@@ -54,7 +54,6 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
     /**
      * Log tag for logging.
      */
-    @SuppressWarnings("unused")
     private static final String LOG_TAG = Tf2UserBackpackInteractor.class.getSimpleName();
 
     //A list containing all the possible positions. This is needed to fill in the empty item slots
@@ -166,7 +165,6 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
 
                 for (PlayerItem item : items) {
                     ContentValues values = buildContentValues(item);
-
                     if (values != null) {
                         cVVector.add(values);
                     }
@@ -275,7 +273,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
         values.put(UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE, playerItem.isFlagCannotTrade() ? 1 : 0);
 
         //Save the craftability
-        values.put(UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE, playerItem.isFlagCannotCraft() ? 1 : 0);
+        values.put(UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT, playerItem.isFlagCannotCraft() ? 1 : 0);
 
         if (inventoryToken >= 3221225472L /*11000000000000000000000000000000*/) {
             //The jsonItem doesn't have a designated place i the backpack yet. It's a new jsonItem.
@@ -303,6 +301,14 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
 
         //Get the other attributes from the attributes JSON object
         values = addAttributes(values, playerItem);
+
+        if (!values.containsKey(UserBackpackEntry.COLUMN_ITEM_INDEX)) {
+            values.put(UserBackpackEntry.COLUMN_ITEM_INDEX, 0);
+        }
+
+        if (!values.containsKey(UserBackpackEntry.COLUMN_AUSTRALIUM)) {
+            values.put(UserBackpackEntry.COLUMN_AUSTRALIUM, 0);
+        }
 
         //Save the equipped property of the jsonItem
         if (playerItem.getEquipped() != null)
