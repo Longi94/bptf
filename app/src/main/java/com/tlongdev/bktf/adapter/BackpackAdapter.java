@@ -190,9 +190,9 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                         holder.quality.setImageResource(R.drawable.uncraft);
                     }
 
-                        if (BackpackItem.isPaint(item.getPaint())) {
+                        if (BackpackItem.isPaint(backpackItem.getPaint())) {
                             Glide.with(mContext)
-                                    .load("file:///android_asset/paint/" + item.getPaint() + ".webp")
+                                    .load("file:///android_asset/paint/" + backpackItem.getPaint() + ".webp")
                                     .into(holder.paint);
                         }
 

@@ -240,6 +240,5 @@
     <string name="title_activity_licenses">Open source licenses</string>
     <string name="pref_title_github_repo">Source code</string>
     <string name="title_activity_search_filter">SearchFilterActivity</string>
-    <string name="title_activity_steam_id">SteamIdActivity</string>
 
 </resources>
