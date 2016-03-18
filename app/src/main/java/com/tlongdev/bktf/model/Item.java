@@ -18,10 +18,8 @@ package com.tlongdev.bktf.model;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.preference.PreferenceManager;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract;
@@ -565,25 +563,13 @@ public class Item implements Parcelable {
      * @param context the context
      * @return Uri object
      */
-    public Uri getIconUrl(Context context) {
-        String BASE_URL = context.getString(R.string.tlongdev_tf2_icons);
-        Uri.Builder builder = Uri.parse(BASE_URL).buildUpon()
-                .appendQueryParameter("defindex", String.valueOf(defindex))
-                .appendQueryParameter("filetype", "webp");
-
-        // TODO: 2015. 11. 09.
-        boolean large = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("dummy", false);
-        if (large) {
-            builder.appendQueryParameter("large", "1");
-        }
-
+    public String getIconUrl(Context context) {
         if (australium) {
-            builder.appendQueryParameter("australium", "1");
+            return "file:///android_asset/australium/" + defindex + ".webp";
         } else if (weaponWear > 0) {
-            builder.appendQueryParameter("wear", String.valueOf(weaponWear));
+            return "file:///android_asset/decorated/" + defindex + "/" + weaponWear + ".webp";
         }
-
-        return builder.build();
+        return "file:///android_asset/items/" + defindex + ".webp";
     }
 
     /**
