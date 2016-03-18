@@ -85,7 +85,7 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
         if (mView != null) {
             mView.updateUserPage();
             mView.hideRefreshingAnimation();
-            Toast.makeText(mView.getContext(), "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
+            mView.showToast("bptf: " + errorMessage, Toast.LENGTH_SHORT);
         }
     }
 
@@ -102,7 +102,7 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
                     .build());
         } else {
             //There is no internet connection, notify the user
-            Toast.makeText(mView.getContext(), "bptf: " + mView.getContext().getString(R.string.error_no_network), Toast.LENGTH_SHORT).show();
+            mView.showToast("bptf: " + mContext.getString(R.string.error_no_network), Toast.LENGTH_SHORT);
             mView.hideRefreshingAnimation();
         }
     }
@@ -148,7 +148,7 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
         if (mView != null) {
             mView.updateUserPage();
             mView.hideRefreshingAnimation();
-            Toast.makeText(mView.getContext(), "failed", Toast.LENGTH_SHORT).show();
+            mView.showToast("failed", Toast.LENGTH_SHORT);
         }
     }
 }

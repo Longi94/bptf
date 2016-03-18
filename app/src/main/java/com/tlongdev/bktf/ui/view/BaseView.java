@@ -16,12 +16,10 @@
 
 package com.tlongdev.bktf.ui.view;
 
-import android.content.Context;
-
 /**
  * @author Long
  * @since 2016. 02. 26.
  */
 public interface BaseView {
-    Context getContext();
+    void showToast(CharSequence message, int duration);
 }

@@ -16,9 +16,7 @@
 
 package com.tlongdev.bktf.presenter.fragment;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.widget.Toast;
@@ -87,7 +85,6 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
     }
 
     public void downloadPrices() {
-
         //Manual update
         if (Utility.isNetworkAvailable(mContext)) {
             TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(mApplication, true, true, this);
@@ -99,8 +96,7 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
                     .setLabel("Prices")
                     .build());
         } else {
-            Toast.makeText(mView.getContext(), "bptf: " + mContext.getString(R.string.error_no_network), Toast.LENGTH_SHORT).show();
-
+            mView.showToast("bptf: " + mContext.getString(R.string.error_no_network), Toast.LENGTH_SHORT);
             mView.hideRefreshingAnimation();
         }
     }
@@ -121,20 +117,9 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
                         .setLabel("Prices")
                         .build());
             } else {
-                //Quit the app if the download failed.
-                AlertDialog.Builder builder = new AlertDialog.Builder(mView.getContext());
-                builder.setMessage(mContext.getString(R.string.message_database_fail_network)).setCancelable(false).
-                        setPositiveButton(mContext.getString(R.string.action_close), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mView.finishActivity();
-                            }
-                        });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
+                mView.showErrorDialog();
             }
         } else {
-
             //Update database if the last update happened more than an hour ago
             if (System.currentTimeMillis() - mPrefs.getLong(mContext.getString(R.string.pref_last_price_list_update), 0) >= 3600000L
                     && Utility.isNetworkAvailable(mContext)) {

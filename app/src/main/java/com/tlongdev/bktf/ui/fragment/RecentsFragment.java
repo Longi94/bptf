@@ -263,11 +263,6 @@ public class RecentsFragment extends Fragment implements RecentsView,
     }
 
     @Override
-    public void finishActivity() {
-        getActivity().finish();
-    }
-
-    @Override
     public void updateCurrencyHeader(Price metalPrice, Price keyPrice, Price budPrice) {
         mMetalPrice.setText(metalPrice.getFormattedPrice(getActivity()));
         mKeyPrice.setText(keyPrice.getFormattedPrice(getActivity()));
@@ -325,48 +320,40 @@ public class RecentsFragment extends Fragment implements RecentsView,
     @Override
     public void showItemSchemaError(String errorMessage) {
         if (loadingDialog != null && loadingDialog.isShowing()) {
-
-            AlertDialog.Builder builder;
-            AlertDialog alertDialog;
-            builder = new AlertDialog.Builder(mContext);
-            builder.setMessage(mContext.getString(R.string.message_database_fail_network))
-                    .setCancelable(false)
-                    .setPositiveButton(mContext.getString(R.string.action_close), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //Close app
-                            getActivity().finish();
-                        }
-                    });
-            alertDialog = builder.create();
             loadingDialog.dismiss();
-            alertDialog.show();
+            showErrorDialog();
         } else {
-            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
+            showToast("bptf: " + errorMessage, Toast.LENGTH_SHORT);
         }
     }
 
     @Override
     public void showPricesError(String errorMessage) {
         if (loadingDialog != null && loadingDialog.isShowing()) {
-
-            AlertDialog.Builder builder;
-            AlertDialog alertDialog;
-            builder = new AlertDialog.Builder(mContext);
-            builder.setMessage(mContext.getString(R.string.message_database_fail_network))
-                    .setCancelable(false)
-                    .setPositiveButton(mContext.getString(R.string.action_close), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //Close app
-                            getActivity().finish();
-                        }
-                    });
-            alertDialog = builder.create();
             loadingDialog.dismiss();
-            alertDialog.show();
+            showErrorDialog();
         } else {
-            Toast.makeText(mContext, "bptf: " + errorMessage, Toast.LENGTH_SHORT).show();
+            showToast("bptf: " + errorMessage, Toast.LENGTH_SHORT);
         }
+    }
+
+    @Override
+    public void showToast(CharSequence message, int duration) {
+        Toast.makeText(getActivity(), message, duration).show();
+    }
+
+    @Override
+    public void showErrorDialog() {
+        //Quit the app if the download failed.
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(mContext.getString(R.string.message_database_fail_network)).setCancelable(false).
+                setPositiveButton(mContext.getString(R.string.action_close), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().finish();
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

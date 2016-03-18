@@ -467,4 +467,9 @@ public class UserFragment extends Fragment implements UserView, View.OnClickList
     public void updateDrawer() {
         ((MainActivity) mContext).updateDrawer();
     }
+
+    @Override
+    public void showToast(CharSequence message, int duration) {
+        Toast.makeText(getActivity(), message, duration).show();
+    }
 }

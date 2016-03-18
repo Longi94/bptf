@@ -34,8 +34,6 @@ public interface RecentsView extends BaseView {
 
     void hideRefreshingAnimation();
 
-    void finishActivity();
-
     void dismissLoadingDialog();
 
     void showLoadingDialog(String message);
@@ -47,4 +45,6 @@ public interface RecentsView extends BaseView {
     void showPricesError(String errorMessage);
 
     void updateCurrencyHeader(Price metalPrice, Price keyPrice, Price budPrice);
+
+    void showErrorDialog();
 }

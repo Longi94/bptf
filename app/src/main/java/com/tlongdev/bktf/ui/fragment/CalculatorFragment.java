@@ -35,6 +35,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -232,5 +233,10 @@ public class CalculatorFragment extends Fragment implements CalculatorView, Main
         int count = mAdapter.getItemCount();
         mAdapter.clearDataSet();
         mAdapter.notifyItemRangeRemoved(0, count);
+    }
+
+    @Override
+    public void showToast(CharSequence message, int duration) {
+        Toast.makeText(getActivity(), message, duration).show();
     }
 }
