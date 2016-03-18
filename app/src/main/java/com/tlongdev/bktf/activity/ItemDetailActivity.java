@@ -351,7 +351,7 @@ public class ItemDetailActivity extends Activity {
 
                 if (BackpackItem.isPaint(item.getPaint())) {
                     Glide.with(this)
-                            .load("file:///android_asset/paint/" + item.getPaint() + ".png")
+                            .load("file:///android_asset/paint/" + item.getPaint() + ".webp")
                             .into(paintView);
                 }
 
