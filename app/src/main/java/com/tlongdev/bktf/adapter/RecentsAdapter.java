@@ -34,10 +34,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
-import com.tlongdev.bktf.ui.fragment.RecentsFragment;
+import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
+import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
@@ -82,33 +83,27 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
         return new ViewHolder(v);
     }
 
+    @SuppressWarnings("WrongConstant")
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         if (mDataSet != null && mDataSet.moveToPosition(position)) {
 
-            holder.root.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // TODO: 2015. 10. 26. does nothing, this is for the fancy ripples for now
-                }
-            });
-
             //Get all the data from the cursor
             final Item item = new Item(
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_DEFI),
-                    mDataSet.getString(RecentsFragment.COL_PRICE_LIST_NAME),
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_QUAL),
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_TRAD) == 1,
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_CRAF) == 1,
-                    mDataSet.getInt(RecentsFragment.COL_AUSTRALIUM) == 1,
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_INDE),
+                    mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_DEFINDEX)),
+                    mDataSet.getString(mDataSet.getColumnIndex(ItemSchemaEntry.COLUMN_ITEM_NAME)),
+                    mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_QUALITY)),
+                    mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_TRADABLE)) == 1,
+                    mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_CRAFTABLE)) == 1,
+                    mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_AUSTRALIUM)) == 1,
+                    mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE_INDEX)),
                     new Price(
-                            mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PRIC),
-                            mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PMAX),
-                            mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PRAW),
+                            mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE)),
+                            mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE_HIGH)),
+                            mDataSet.getDouble(mDataSet.getColumnIndex("raw_price")),
                             0 /* TODO last update */,
-                            mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_DIFF),
-                            mDataSet.getString(RecentsFragment.COL_PRICE_LIST_CURR)
+                            mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_DIFFERENCE)),
+                            mDataSet.getString(mDataSet.getColumnIndex(PriceEntry.COLUMN_CURRENCY))
                     )
             );
 
@@ -233,20 +228,13 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
         View root;
         @Bind(R.id.more) View more;
         @Bind(R.id.icon_background) View background;
-
         @Bind(R.id.icon) ImageView icon;
         @Bind(R.id.effect) ImageView effect;
         @Bind(R.id.quality) ImageView quality;
-
         @Bind(R.id.name) TextView name;
         @Bind(R.id.price) TextView price;
         @Bind(R.id.difference) TextView difference;
 
-        /**
-         * Constructor.
-         *
-         * @param view the root view
-         */
         public ViewHolder(View view) {
             super(view);
             root = view;

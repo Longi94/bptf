@@ -57,7 +57,7 @@ public class LoadAllPricesInteractor extends AsyncTask<Void, Void, Cursor> {
                         DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_CURRENCY + "," +
                         DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_PRICE + "," +
                         DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_PRICE_HIGH + "," +
-                        Utility.getRawPriceQueryString(mContext) + "," +
+                        Utility.getRawPriceQueryString(mContext) + " raw_price," +
                         DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_DIFFERENCE + "," +
                         DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_AUSTRALIUM +
                         " FROM " + DatabaseContract.PriceEntry.TABLE_NAME +

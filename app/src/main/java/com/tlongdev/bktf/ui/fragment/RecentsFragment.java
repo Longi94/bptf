@@ -74,48 +74,13 @@ public class RecentsFragment extends Fragment implements RecentsView,
     @SuppressWarnings("unused")
     private static final String LOG_TAG = RecentsFragment.class.getSimpleName();
 
-    /**
-     * Indexes for the columns
-     */
-    public static final int COL_PRICE_LIST_DEFI = 0;
-    public static final int COL_PRICE_LIST_NAME = 1;
-    public static final int COL_PRICE_LIST_QUAL = 2;
-    public static final int COL_PRICE_LIST_TRAD = 3;
-    public static final int COL_PRICE_LIST_CRAF = 4;
-    public static final int COL_PRICE_LIST_INDE = 5;
-    public static final int COL_PRICE_LIST_CURR = 6;
-    public static final int COL_PRICE_LIST_PRIC = 7;
-    public static final int COL_PRICE_LIST_PMAX = 8;
-    public static final int COL_PRICE_LIST_PRAW = 9;
-    public static final int COL_PRICE_LIST_DIFF = 10;
-    public static final int COL_AUSTRALIUM = 11;
-
     @Inject Tracker mTracker;
 
-    /**
-     * Loading indicator
-     */
     @Bind(R.id.progress_bar) ProgressBar progressBar;
-
-    /**
-     * the swipe refresh layout
-     */
     @Bind(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
-
-    /**
-     * The recycler view
-     */
     @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
-
-    /**
-     * Only needed for manually expanding the toolbar
-     */
     @Bind(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
     @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
-
-    /**
-     * Views
-     */
     @Bind(R.id.text_view_metal_price) TextView mMetalPrice;
     @Bind(R.id.text_view_key_price) TextView mKeyPrice;
     @Bind(R.id.text_view_buds_price) TextView mBudsPrice;
@@ -128,7 +93,6 @@ public class RecentsFragment extends Fragment implements RecentsView,
      */
     private RecentsAdapter adapter;
 
-    //Dialog to indicate the download progress
     private ProgressDialog loadingDialog;
 
     private Context mContext;
