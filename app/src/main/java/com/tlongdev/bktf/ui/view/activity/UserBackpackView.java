@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.component;
+package com.tlongdev.bktf.ui.view.activity;
 
-import com.tlongdev.bktf.module.BptfAppModule;
-import com.tlongdev.bktf.ui.activity.UserBackpackActivity;
+import com.tlongdev.bktf.model.BackpackItem;
+import com.tlongdev.bktf.ui.view.BaseView;
 
-import javax.inject.Singleton;
-
-import dagger.Component;
+import java.util.List;
 
 /**
  * @author Long
- * @since 2016. 03. 10.
+ * @since 2016. 03. 18.
  */
-@Singleton
-@Component(modules = BptfAppModule.class)
-public interface ActivityComponent {
+public interface UserBackpackView extends BaseView {
 
-    void inject(UserBackpackActivity userBackpackActivity);
+    void showItems(List<BackpackItem> items, List<BackpackItem> newItems);
 }

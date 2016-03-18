@@ -27,6 +27,8 @@ import com.tlongdev.bktf.R;
  */
 public class BackpackItem extends Item {
 
+    private int id;
+
     private int uniqueId;
     private int originalId;
     private int level;
@@ -98,16 +100,6 @@ public class BackpackItem extends Item {
     }
 
     public BackpackItem() {
-        this(0, null, 0, false, false, false, 0, null, 0, 0, 0, 0, 0, 0, null, null, null, null, null, false);
-    }
-
-    public BackpackItem(int defindex, String name, int quality, boolean tradable, boolean craftable,
-                        boolean australium, int priceIndex, Price price, int uniqueId, int originalId,
-                        int level, int origin, int paint, int craftNumber, String customName,
-                        String customDescription, String creatorName, String gifterName, String containedItem, boolean equipped) {
-        this(defindex, name, quality, tradable, craftable, australium, priceIndex, 0, price, uniqueId,
-                originalId, level, origin, paint, craftNumber, customName, customDescription, creatorName,
-                gifterName, containedItem, equipped);
     }
 
     public BackpackItem(int defindex, String name, int quality, boolean tradable, boolean craftable,
@@ -337,5 +329,13 @@ public class BackpackItem extends Item {
             default:
                 return false;
         }
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

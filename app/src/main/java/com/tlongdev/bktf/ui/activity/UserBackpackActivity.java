@@ -16,103 +16,67 @@
 
 package com.tlongdev.bktf.ui.activity;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Pair;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.BackpackAdapter;
-import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
+import com.tlongdev.bktf.data.DatabaseContract;
+import com.tlongdev.bktf.model.BackpackItem;
+import com.tlongdev.bktf.presenter.activity.UserBackpackPresenter;
+import com.tlongdev.bktf.ui.view.activity.UserBackpackView;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Activity for viewing user backpacks.
  */
-public class UserBackpackActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class UserBackpackActivity extends AppCompatActivity implements UserBackpackView, BackpackAdapter.OnItemClickedListener {
 
     /**
      * Log tag for logging.
      */
-    @SuppressWarnings("unused")
     private static final String LOG_TAG = UserBackpackActivity.class.getSimpleName();
 
-    //Loader types
-    public static final int LOADER_NORMAL = 0;
-    public static final int LOADER_NEW = 1;
-
-    //Indexes for the columns above
-    public static final int COL_BACKPACK_ID = 0;
-    public static final int COL_BACKPACK_DEFI = 1;
-    public static final int COL_BACKPACK_QUAL = 2;
-    // TODO unused public static final int COL_BACKPACK_CRFN = 3;
-    public static final int COL_BACKPACK_TRAD = 4;
-    public static final int COL_BACKPACK_CRAF = 5;
-    public static final int COL_BACKPACK_INDE = 6;
-    public static final int COL_BACKPACK_PAIN = 7;
-    public static final int COL_BACKPACK_AUS = 8;
-    public static final int COL_BACKPACK_WEAR = 9;
-
-    //Keys for extre data in the intent
+    //Keys for extra data in the intent
     public static final String EXTRA_NAME = "name";
     public static final String EXTRA_GUEST = "guest";
-
-    //Query columns for local user
-    private static final String[] QUERY_COLUMNS = {
-            UserBackpackEntry.TABLE_NAME + "." +
-                    UserBackpackEntry._ID,
-            UserBackpackEntry.COLUMN_DEFINDEX,
-            UserBackpackEntry.COLUMN_QUALITY,
-            UserBackpackEntry.COLUMN_CRAFT_NUMBER,
-            UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE,
-            UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT,
-            UserBackpackEntry.COLUMN_ITEM_INDEX,
-            UserBackpackEntry.COLUMN_PAINT,
-            UserBackpackEntry.COLUMN_AUSTRALIUM,
-            UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR
-    };
-
-    //Query columns for s guest user
-    private static final String[] QUERY_COLUMNS_GUEST = {
-            UserBackpackEntry.TABLE_NAME_GUEST + "." +
-                    UserBackpackEntry._ID,
-            UserBackpackEntry.COLUMN_DEFINDEX,
-            UserBackpackEntry.COLUMN_QUALITY,
-            UserBackpackEntry.COLUMN_CRAFT_NUMBER,
-            UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE,
-            UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT,
-            UserBackpackEntry.COLUMN_ITEM_INDEX,
-            UserBackpackEntry.COLUMN_PAINT,
-            UserBackpackEntry.COLUMN_AUSTRALIUM,
-            UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR
-    };
 
     /**
      * The {@link Tracker} used to record screen views.
      */
-    private Tracker mTracker;
+    @Inject Tracker mTracker;
+
+    @Bind(R.id.list_view_backpack) RecyclerView mRecyclerView;
 
     //Adapters used for the listview
-    private BackpackAdapter adapter;
+    private BackpackAdapter mAdapter;
 
     //Boolean to decide which database table to load from
     private boolean isGuest;
 
-    //Cursors for the adapter (one for items in the backpack, one for new and unplaced items).
-    private Cursor normalCursor;
-    private Cursor newCursor;
+    private UserBackpackPresenter mPresenter;
 
     /**
      * {@inheritDoc}
@@ -120,11 +84,16 @@ public class UserBackpackActivity extends AppCompatActivity implements LoaderMan
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_backpack);
 
         // Obtain the shared Tracker instance.
         BptfApplication application = (BptfApplication) getApplication();
-        mTracker = application.getDefaultTracker();
+        application.getActivityComponent().inject(this);
+
+        mPresenter = new UserBackpackPresenter(application);
+        mPresenter.attachView(this);
+
+        setContentView(R.layout.activity_user_backpack);
+        ButterKnife.bind(this);
 
         //Set the color of the status bar
         if (Build.VERSION.SDK_INT >= 21) {
@@ -147,13 +116,11 @@ public class UserBackpackActivity extends AppCompatActivity implements LoaderMan
         //Decide which table to load data from according to the extra data from the intent
         isGuest = getIntent().getBooleanExtra(EXTRA_GUEST, false);
 
-        //The listview that displays all the items from the backpack
-        RecyclerView listView = (RecyclerView) findViewById(R.id.list_view_backpack);
-
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
-        listView.setHasFixedSize(true);
-        adapter = new BackpackAdapter(this, isGuest);
+        mRecyclerView.setHasFixedSize(true);
+        mAdapter = new BackpackAdapter(this, isGuest);
+        mAdapter.setListener(this);
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
@@ -163,7 +130,7 @@ public class UserBackpackActivity extends AppCompatActivity implements LoaderMan
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                if (adapter.getItemViewType(position) == BackpackAdapter.VIEW_TYPE_HEADER) {
+                if (mAdapter.getItemViewType(position) == BackpackAdapter.VIEW_TYPE_HEADER) {
                     return columnCount;
                 } else {
                     return 1;
@@ -171,21 +138,22 @@ public class UserBackpackActivity extends AppCompatActivity implements LoaderMan
             }
         });
 
-        listView.setLayoutManager(layoutManager);
-
-        //Initialise adn set the adapter
-        listView.setAdapter(adapter);
-
-        //Start loading data from the database
-        getSupportLoaderManager().initLoader(LOADER_NORMAL, null, this);
-        getSupportLoaderManager().initLoader(LOADER_NEW, null, this);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        mPresenter.loadBackpackItems(isGuest);
         mTracker.setScreenName(String.valueOf(getTitle()));
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.detachView();
     }
 
     /**
@@ -203,93 +171,72 @@ public class UserBackpackActivity extends AppCompatActivity implements LoaderMan
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        //All the variables need for querying
-        //Sort items by their position
-        String sortOrder = UserBackpackEntry.COLUMN_POSITION + " ASC";
-        Uri uri;
-        String[] columns;
-        String selection;
+    public void showItems(List<BackpackItem> items, List<BackpackItem> newItems) {
+        mAdapter.setDataSet(items, newItems);
+        mAdapter.notifyDataSetChanged();
+    }
 
-        if (isGuest) {
-            //This user was searched for. Load from the second table
-            uri = UserBackpackEntry.CONTENT_URI_GUEST;
-            columns = QUERY_COLUMNS_GUEST;
-        } else {
-            //This is the current user. Load from the main table
-            uri = UserBackpackEntry.CONTENT_URI;
-            columns = QUERY_COLUMNS;
-        }
+    @Override
+    public void showToast(CharSequence message, int duration) {
+        Toast.makeText(this, message, duration).show();
+    }
 
-        switch (id) {
-            case LOADER_NORMAL:
-                //Load the items, that have a plce in the backpack.
-                if (isGuest) {
-                    selection = UserBackpackEntry.TABLE_NAME_GUEST + "." +
-                            UserBackpackEntry.COLUMN_POSITION + " >= 1";
-                } else {
-                    selection = UserBackpackEntry.TABLE_NAME + "." +
-                            UserBackpackEntry.COLUMN_POSITION + " >= 1";
-                }
-                break;
-            case LOADER_NEW:
-                //Load the new items, position is -1
-                if (isGuest) {
-                    selection = UserBackpackEntry.TABLE_NAME_GUEST + "." +
-                            UserBackpackEntry.COLUMN_POSITION + " = -1";
-                } else {
-                    selection = UserBackpackEntry.TABLE_NAME + "." +
-                            UserBackpackEntry.COLUMN_POSITION + " = -1";
-                }
-                break;
-            default:
-                return null;
-        }
+    @Override
+    public void OnItemClicked(BackpackAdapter.ViewHolder holder, BackpackItem backpackItem) {
+        //Open the ItemDetailActivity and send some extra data to it
+        Intent i = new Intent(this, ItemDetailActivity.class);
+        i.putExtra(ItemDetailActivity.EXTRA_ITEM_ID, backpackItem.getId());
+        i.putExtra(ItemDetailActivity.EXTRA_GUEST, isGuest);
 
-        //Load
-        return new CursorLoader(
-                this,
-                uri,
-                columns,
-                selection,
-                null,
-                sortOrder
+        Cursor itemCursor = getContentResolver().query(
+                DatabaseContract.ItemSchemaEntry.CONTENT_URI,
+                new String[]{DatabaseContract.ItemSchemaEntry.COLUMN_ITEM_NAME, DatabaseContract.ItemSchemaEntry.COLUMN_TYPE_NAME, DatabaseContract.ItemSchemaEntry.COLUMN_PROPER_NAME},
+                DatabaseContract.ItemSchemaEntry.TABLE_NAME + "." + DatabaseContract.ItemSchemaEntry.COLUMN_DEFINDEX + " = ?",
+                new String[]{String.valueOf(backpackItem.getDefindex())},
+                null
         );
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        //Pass the newly created cursor to the adapter to show the items.
-        switch (loader.getId()) {
-            case LOADER_NORMAL:
-                normalCursor = data;
-                if (newCursor != null) {
-                    adapter.swapCursor(normalCursor, newCursor);
-                }
-                break;
-            case LOADER_NEW:
-                newCursor = data;
-                if (normalCursor != null) {
-                    adapter.swapCursor(normalCursor, newCursor);
-                }
-                break;
+        if (itemCursor != null) {
+            if (itemCursor.moveToFirst()) {
+                i.putExtra(ItemDetailActivity.EXTRA_ITEM_NAME,
+                        itemCursor.getString(0));
+                i.putExtra(ItemDetailActivity.EXTRA_ITEM_TYPE,
+                        itemCursor.getString(1));
+                i.putExtra(ItemDetailActivity.EXTRA_PROPER_NAME,
+                        itemCursor.getInt(2));
+            }
+            itemCursor.close();
         }
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        //This is never reached, but it's here just in case
-        //Remove all data from the adapter
-        adapter.swapCursor(null, null);
+        if (Build.VERSION.SDK_INT >= 23) {
+            //Fancy shared elements transition if above 20
+            ActivityOptions options;
+            if (holder.quality.getVisibility() == View.VISIBLE) {
+                options = ActivityOptions
+                        .makeSceneTransitionAnimation(this,
+                                Pair.create((View) holder.icon, "icon_transition"),
+                                Pair.create((View) holder.effect, "effect_transition"),
+                                Pair.create((View) holder.paint, "paint_transition"),
+                                Pair.create((View) holder.quality, "quality_transition"),
+                                Pair.create((View) holder.root, "background_transition"));
+            } else {
+                options = ActivityOptions
+                        .makeSceneTransitionAnimation(this,
+                                Pair.create((View) holder.icon, "icon_transition"),
+                                Pair.create((View) holder.effect, "effect_transition"),
+                                Pair.create((View) holder.paint, "paint_transition"),
+                                Pair.create((View) holder.root, "background_transition"));
+            }
+            startActivity(i, options.toBundle());
+        } else if (Build.VERSION.SDK_INT >= 21) {
+            //Fancy shared elements transition if above 20
+            @SuppressWarnings("unchecked")
+            ActivityOptions options = ActivityOptions
+                    .makeSceneTransitionAnimation(this, holder.root, "background_transition");
+            startActivity(i, options.toBundle());
+        } else {
+            startActivity(i);
+        }
     }
 }
