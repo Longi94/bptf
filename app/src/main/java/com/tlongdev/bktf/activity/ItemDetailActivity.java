@@ -331,8 +331,7 @@ public class ItemDetailActivity extends Activity {
 
                 if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
                     Glide.with(this)
-                            .load(item.getEffectUrl(this))
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .load(item.getEffectUrl())
                             .dontAnimate()
                             .into(effectView);
                 }

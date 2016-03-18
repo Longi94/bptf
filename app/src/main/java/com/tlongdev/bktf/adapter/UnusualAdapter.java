@@ -156,8 +156,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                             mDataSet.getInt(UnusualFragment.COLUMN_INDEX), null);
 
                     Glide.with(mContext)
-                            .load(effect.getEffectUrl(mContext))
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .load(effect.getEffectUrl())
                             .into(holder.icon);
 
                     holder.root.setOnClickListener(new View.OnClickListener() {
@@ -202,8 +201,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(holder.icon);
                     Glide.with(mContext)
-                            .load(hat.getEffectUrl(mContext))
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .load(hat.getEffectUrl())
                             .into(holder.effect);
 
                     holder.more.setOnClickListener(new View.OnClickListener() {

@@ -589,22 +589,10 @@ public class Item implements Parcelable {
     /**
      * Returns the url link for the effect if the item.
      *
-     * @param context the context
      * @return Uri object
      */
-    public Uri getEffectUrl(Context context) {
-        String BASE_URL = context.getString(R.string.tlongdev_tf2_icons);
-        Uri.Builder builder = Uri.parse(BASE_URL).buildUpon()
-                .appendQueryParameter("effect", String.valueOf(priceIndex))
-                .appendQueryParameter("filetype", "webp");
-
-        // TODO: 2015. 11. 09.
-        boolean large = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("dummy", false);
-        if (large) {
-            builder.appendQueryParameter("large", "1");
-        }
-
-        return builder.build();
+    public String getEffectUrl() {
+        return "file:///android_asset/effect/" + priceIndex + ".webp";
     }
 
     public String getBackpackTfUrl() {

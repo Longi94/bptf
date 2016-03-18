@@ -49,7 +49,7 @@ public class EffectAdapter extends SimpleCursorAdapter {
             effect.setPriceIndex(cursor.getInt(ItemChooserActivity.COLUMN_INDEX));
 
             Glide.with(mContext)
-                    .load(effect.getEffectUrl(mContext))
+                    .load(effect.getEffectUrl())
                     .into((ImageView) view.findViewById(R.id.effect));
         }
     }

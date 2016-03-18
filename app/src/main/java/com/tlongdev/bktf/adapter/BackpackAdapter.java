@@ -202,8 +202,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
 
                         if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
                             Glide.with(mContext)
-                                    .load(item.getEffectUrl(mContext))
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .load(item.getEffectUrl())
                                     .into(holder.effect);
                         }
 
