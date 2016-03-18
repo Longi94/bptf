@@ -172,12 +172,11 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(holder.icon);
 
-                    if (backpackItem.getPriceIndex() != 0 && backpackItem.canHaveEffects()) {
-                        Glide.with(mContext)
-                                .load(backpackItem.getEffectUrl(mContext))
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .into(holder.effect);
-                    }
+                        if (backpackItem.getPriceIndex() != 0 && backpackItem.canHaveEffects()) {
+                            Glide.with(mContext)
+                                    .load(backpackItem.getEffectUrl())
+                                    .into(holder.effect);
+                        }
 
                     if (!backpackItem.isTradable()) {
                         holder.quality.setVisibility(View.VISIBLE);
@@ -191,11 +190,11 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                         holder.quality.setImageResource(R.drawable.uncraft);
                     }
 
-                    if (BackpackItem.isPaint(backpackItem.getPaint())) {
-                        Glide.with(mContext)
-                                .load("file:///android_asset/paint/" + backpackItem.getPaint() + ".png")
-                                .into(holder.paint);
-                    }
+                        if (BackpackItem.isPaint(item.getPaint())) {
+                            Glide.with(mContext)
+                                    .load("file:///android_asset/paint/" + item.getPaint() + ".webp")
+                                    .into(holder.paint);
+                        }
 
                     //The on click listener for an item
                     holder.root.setOnClickListener(new View.OnClickListener() {

@@ -121,8 +121,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                 case TYPE_EFFECTS:
 
                     Glide.with(mContext)
-                            .load(item.getEffectUrl(mContext))
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .load(item.getEffectUrl())
                             .into(holder.icon);
 
                     holder.root.setOnClickListener(new View.OnClickListener() {
@@ -166,8 +165,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(holder.icon);
                     Glide.with(mContext)
-                            .load(hat.getEffectUrl(mContext))
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .load(hat.getEffectUrl())
                             .into(holder.effect);
 
                     holder.more.setOnClickListener(new View.OnClickListener() {

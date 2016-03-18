@@ -331,8 +331,7 @@ public class ItemDetailActivity extends Activity {
 
                 if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
                     Glide.with(this)
-                            .load(item.getEffectUrl(this))
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .load(item.getEffectUrl())
                             .dontAnimate()
                             .into(effectView);
                 }
@@ -351,7 +350,7 @@ public class ItemDetailActivity extends Activity {
 
                 if (BackpackItem.isPaint(item.getPaint())) {
                     Glide.with(this)
-                            .load("file:///android_asset/paint/" + item.getPaint() + ".png")
+                            .load("file:///android_asset/paint/" + item.getPaint() + ".webp")
                             .into(paintView);
                 }
 

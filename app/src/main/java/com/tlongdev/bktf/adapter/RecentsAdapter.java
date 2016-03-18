@@ -181,8 +181,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
 
             if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
                 Glide.with(mContext)
-                        .load(item.getEffectUrl(mContext))
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .load(item.getEffectUrl())
                         .into(holder.effect);
             } else {
                 Glide.clear(holder.effect);

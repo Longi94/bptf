@@ -142,8 +142,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
 
             if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
                 Glide.with(mContext)
-                        .load(item.getEffectUrl(mContext))
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .load(item.getEffectUrl())
                         .into(holder.effect);
             } else {
                 Glide.clear(holder.effect);
