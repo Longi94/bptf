@@ -8,7 +8,6 @@
     <string name="steam_resolve_vanity_url"  translatable="false">http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/</string>
     <string name="tlongdev_item_schema" translatable="false">http://tlongdev.com/api/v1/item_schema</string>
     <string name="tlongdev_prices" translatable="false">http://tlongdev.com/api/v1/prices</string>
-    <string name="tlongdev_tf2_icons" translatable="false">http://tlongdev.com/api/v1/tf2_icon</string>
 
     <!--URLs-->
     <string name="link_bazaar_tf" translatable="false">http://bazaar.tf/profiles/</string>
