@@ -16,11 +16,14 @@
 
 package com.tlongdev.bktf.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * @author Long
  * @since 2016. 03. 19.
  */
-public class User {
+public class User implements Parcelable {
 
     private String name;
 
@@ -65,6 +68,76 @@ public class User {
     private int backpackSlots;
 
     private int itemCount;
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    public User() {}
+
+    public User(Parcel source) {
+        name = source.readString();
+        steamId = source.readString();
+        resolvedSteamId = source.readString();
+        avatarUrl = source.readString();
+        reputation = source.readInt();
+        profileCreated = source.readLong();
+        state = source.readInt();
+        lastOnline = source.readLong();
+        inGroup = source.readByte() == 1;
+        banned = source.readByte() == 1;
+        scammer = source.readByte() == 1;
+        economyBanned = source.readByte() == 1;
+        vacBanned = source.readByte() == 1;
+        communityBanned = source.readByte() == 1;
+        backpackValue = source.readDouble();
+        lastUpdated = source.readLong();
+        trustPositive = source.readInt();
+        trustNegatvie = source.readInt();
+        rawKeys = source.readInt();
+        rawMetal = source.readDouble();
+        backpackSlots = source.readInt();
+        itemCount = source.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(steamId);
+        dest.writeString(resolvedSteamId);
+        dest.writeString(avatarUrl);
+        dest.writeInt(reputation);
+        dest.writeLong(profileCreated);
+        dest.writeInt(state);
+        dest.writeLong(lastOnline);
+        dest.writeByte((byte) (inGroup ? 1 : 0));
+        dest.writeByte((byte) (banned ? 1 : 0));
+        dest.writeByte((byte) (scammer ? 1 : 0));
+        dest.writeByte((byte) (economyBanned ? 1 : 0));
+        dest.writeByte((byte) (vacBanned ? 1 : 0));
+        dest.writeByte((byte) (communityBanned ? 1 : 0));
+        dest.writeDouble(backpackValue);
+        dest.writeLong(lastUpdated);
+        dest.writeInt(trustPositive);
+        dest.writeInt(trustNegatvie);
+        dest.writeInt(rawKeys);
+        dest.writeDouble(rawMetal);
+        dest.writeInt(backpackSlots);
+        dest.writeInt(itemCount);
+    }
 
     public String getName() {
         return name;

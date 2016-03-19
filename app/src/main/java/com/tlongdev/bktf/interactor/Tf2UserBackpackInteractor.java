@@ -47,9 +47,9 @@ import javax.inject.Inject;
 import retrofit2.Response;
 
 /**
- * Task for fetchin the user's backpack in the background
+ * Task for fetching the user's backpack in the background
  */
-public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> {
+public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
 
     /**
      * Log tag for logging.
@@ -66,7 +66,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
     @Inject ProfileManager mProfileManager;
 
     //Indicates which table to insert data into
-    private boolean isGuest;
+    private boolean mIsGuest;
 
     //Error message to be displayed to the user
     private String errorMessage;
@@ -77,33 +77,26 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
     private int rawRec = 0;
     private int rawScraps = 0;
 
-    //The number of slots and items in the backpack
-    private int backpackSlots = 0;
-    private int itemNumber = 0;
-
-    private String mSteamId;
-
     //The listener that will be notified when the fetching finishes
     private Callback mCallback;
+    private User mUser;
 
-    public Tf2UserBackpackInteractor(BptfApplication application, Callback callback) {
+    public Tf2UserBackpackInteractor(BptfApplication application, User user, boolean isGuest,
+                                     Callback callback) {
         application.getInteractorComponent().inject(this);
         mCallback = callback;
+        mUser = user;
+        mIsGuest = isGuest;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected Integer doInBackground(String... params) {
-        mSteamId = params[0];
-        //if the given steam id is not the same as the saved resolved steam_id, then this is a guest
-        //backpack
-        isGuest = !mSteamId.equals(mProfileManager.getResolvedSteamId());
-
+    protected Integer doInBackground(Void... params) {
         try {
             Response<PlayerItemsPayload> response = mTf2Interface.getUserBackpack(
-                    BuildConfig.STEAM_WEB_API_KEY, mSteamId).execute();
+                    BuildConfig.STEAM_WEB_API_KEY, mUser.getResolvedSteamId()).execute();
 
             if (response.body() != null) {
                 return saveItems(response.body());
@@ -139,7 +132,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
                 mCallback.onPrivateBackpack();
             } else if (integer >= 1) {
                 //Notify the user that the fetching finished and pass on the data
-                mCallback.onUserBackpackFinished();
+                mCallback.onUserBackpackFinished(mUser);
             } else {
                 mCallback.onUserBackpackFailed(errorMessage);
             }
@@ -153,8 +146,8 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
 
                 List<PlayerItem> items = payload.getResult().getItems();
 
-                backpackSlots = payload.getResult().getNumBackpackSlots();
-                itemNumber = items.size();
+                int backpackSlots = payload.getResult().getNumBackpackSlots();
+                int itemNumber = items.size();
 
                 //Create a list containing all the possible position
                 slotNumbers = new LinkedList<>();
@@ -180,7 +173,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
 
                     //Content uri based on which talbe to insert into
                     Uri contentUri;
-                    if (!isGuest) {
+                    if (!mIsGuest) {
                         contentUri = UserBackpackEntry.CONTENT_URI;
                     } else {
                         contentUri = UserBackpackEntry.CONTENT_URI_GUEST;
@@ -197,23 +190,22 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
 
                     Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
 
-                    User user = mProfileManager.getUser();
-                    user.setRawMetal(Utility.getRawMetal(rawRef, rawRec, rawScraps));
-                    user.setRawKeys(rawKeys);
-                    user.setBackpackSlots(backpackSlots);
-                    user.setItemCount(itemNumber);
+                    mUser.setRawMetal(Utility.getRawMetal(rawRef, rawRec, rawScraps));
+                    mUser.setRawKeys(rawKeys);
+                    mUser.setBackpackSlots(backpackSlots);
+                    mUser.setItemCount(itemNumber);
 
-                    mProfileManager.saveUser(user);
+                    mProfileManager.saveUser(mUser);
                 }
                 return 1;
             case 8: //Invalid ID, shouldn't reach
                 throw new IllegalStateException(
-                        "Steam ID provided for backpack fetching was invalid: " + mSteamId);
+                        "Steam ID provided for backpack fetching was invalid: " + mUser.getResolvedSteamId());
             case 15: //Backpack is private
                 return 2;
             case 18: //ID doesn't exist, shouldn't reach
                 throw new IllegalStateException(
-                        "Steam ID provided for backpack fetching doesn't exist: " + mSteamId);
+                        "Steam ID provided for backpack fetching doesn't exist: " + mUser.getResolvedSteamId());
             default: //Shouldn't reach
                 throw new IllegalStateException("Unknown status returned by GetPlayerItems api: " +
                         payload.getResult().getStatus());
@@ -430,7 +422,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
         /**
          * Notify the mCallback, that the fetching has finished. The backpack is public.
          */
-        void onUserBackpackFinished();
+        void onUserBackpackFinished(User user);
 
         /**
          * Notify the mCallback that the backpack was private.

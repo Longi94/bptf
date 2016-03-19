@@ -126,8 +126,10 @@ public class LoginActivity extends AppCompatActivity implements GetUserDataInter
 
     @Override
     public void onUserInfoFinished(User user) {
-        Tf2UserBackpackInteractor task = new Tf2UserBackpackInteractor((BptfApplication) getApplication(), this);
-        task.execute(user.getResolvedSteamId());
+        Tf2UserBackpackInteractor task = new Tf2UserBackpackInteractor(
+                (BptfApplication) getApplication(), user, false, this
+        );
+        task.execute();
 
         mTracker.send(new HitBuilders.EventBuilder()
                 .setCategory("Request")
@@ -147,7 +149,7 @@ public class LoginActivity extends AppCompatActivity implements GetUserDataInter
     }
 
     @Override
-    public void onUserBackpackFinished() {
+    public void onUserBackpackFinished(User user) {
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }

@@ -14,9 +14,8 @@
         android:layout_height="64dp"
         android:layout_gravity="center" />
 
-    <fragment
-        android:name="com.tlongdev.bktf.ui.fragment.UserFragment"
-        android:id="@+id/user_fragment"
+    <FrameLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

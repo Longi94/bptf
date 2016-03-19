@@ -124,7 +124,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                             public void onClick(View v) {
                                 Intent intent = new Intent(mContext, UserActivity.class);
                                 intent.putExtra(UserActivity.STEAM_ID_KEY, userInfo[1]);
-                                intent.putExtra(UserActivity.JSON_USER_SUMMARIES_KEY, userInfo[2]);
                                 mContext.startActivity(intent);
                             }
                         });

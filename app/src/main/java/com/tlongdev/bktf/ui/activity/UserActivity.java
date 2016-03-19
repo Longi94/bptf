@@ -19,17 +19,24 @@ package com.tlongdev.bktf.ui.activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.model.User;
+import com.tlongdev.bktf.presenter.activity.UserPresenter;
 import com.tlongdev.bktf.ui.fragment.UserFragment;
+import com.tlongdev.bktf.ui.view.activity.UserView;
 import com.tlongdev.bktf.util.Utility;
 
 import javax.inject.Inject;
@@ -40,7 +47,7 @@ import butterknife.ButterKnife;
 /**
  * Profile page activity.
  */
-public class UserActivity extends AppCompatActivity {
+public class UserActivity extends AppCompatActivity implements UserView{
 
     /**
      * Log tag for logging.
@@ -50,7 +57,6 @@ public class UserActivity extends AppCompatActivity {
 
     //Keys for extra data in the intent.
     public static final String STEAM_ID_KEY = "steamid";
-    public static final String JSON_USER_SUMMARIES_KEY = "json_user_summaries";
 
     /**
      * The {@link Tracker} used to record screen views.
@@ -60,10 +66,9 @@ public class UserActivity extends AppCompatActivity {
     //Progress bar that indicates downloading user data.
     @Bind(R.id.progress_bar) ProgressBar progressBar;
 
-    //Steam id of the player, whose profile page is currently shown.
     private String steamId;
 
-    private UserFragment mUserFragment;
+    private UserPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,11 +76,12 @@ public class UserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user);
         ButterKnife.bind(this);
 
-        mUserFragment = (UserFragment) getSupportFragmentManager().findFragmentById(R.id.user_fragment);
-
         // Obtain the shared Tracker instance.
         BptfApplication application = (BptfApplication) getApplication();
         application.getActivityComponent().inject(this);
+
+        mPresenter = new UserPresenter(application);
+        mPresenter.attachView(this);
 
         //Set the color of the status bar
         if (Build.VERSION.SDK_INT >= 21) {
@@ -108,5 +114,43 @@ public class UserActivity extends AppCompatActivity {
         super.onResume();
         mTracker.setScreenName(String.valueOf(getTitle()));
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+
+        mPresenter.loadData(steamId);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.detachView();
+    }
+
+    @Override
+    public void showToast(CharSequence message, int duration) {
+        Toast.makeText(this, message, duration).show();
+    }
+
+    @Override
+    public void showData(User user) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.simple_fade_in, R.anim.simple_fade_out);
+        transaction.replace(R.id.container, UserFragment.newInstance(user));
+        transaction.commit();
+
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void privateBackpack(User user) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.simple_fade_in, R.anim.simple_fade_out);
+
+        UserFragment fragment = UserFragment.newInstance(user);
+        fragment.backpack(true);
+        transaction.replace(R.id.container, fragment);
+        transaction.commit();
+
+        progressBar.setVisibility(View.GONE);
     }
 }

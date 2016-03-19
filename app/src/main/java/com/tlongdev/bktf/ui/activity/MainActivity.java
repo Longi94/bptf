@@ -335,7 +335,7 @@ public class MainActivity extends AppCompatActivity {
             case 2:
                 newFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_USER);
                 if (newFragment == null) {
-                    newFragment = new UserFragment();
+                    newFragment = UserFragment.newInstance();
                 }
                 drawerListener = (UserFragment) newFragment;
                 transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_USER);

@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -71,12 +71,15 @@ public class UserFragment extends Fragment implements UserView, View.OnClickList
      */
     private static final String LOG_TAG = UserFragment.class.getSimpleName();
 
+    public static final String USER_PARAM = "user_param";
+
     /**
      * The {@link Tracker} used to record screen views.
      */
     @Inject Tracker mTracker;
     @Inject SharedPreferences mPrefs;
     @Inject ProfileManager mProfileManager;
+    @Inject Context mContext;
 
     @Bind(R.id.text_view_player_reputation) TextView playerReputation;
     @Bind(R.id.trust_positive) TextView trustPositive;
@@ -103,13 +106,26 @@ public class UserFragment extends Fragment implements UserView, View.OnClickList
 
     private UserPresenter mPresenter;
 
-    private Context mContext;
+    private User mUser;
+    private boolean searchedUser;
 
     /**
      * Constructor
      */
     public UserFragment() {
         //Required empty constructor.
+    }
+
+    public static UserFragment newInstance() {
+        return new UserFragment();
+    }
+
+    public static UserFragment newInstance(User user) {
+        UserFragment fragment = new UserFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(USER_PARAM, user);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -119,18 +135,16 @@ public class UserFragment extends Fragment implements UserView, View.OnClickList
         setRetainInstance(true);
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mContext = context;
-    }
-
     /**
      * {@inheritDoc}
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (getArguments() != null) {
+            mUser = getArguments().getParcelable(USER_PARAM);
+            searchedUser = true;
+        }
 
         // Obtain the shared Tracker instance.
         BptfApplication application = (BptfApplication) (getActivity()).getApplication();
@@ -138,19 +152,26 @@ public class UserFragment extends Fragment implements UserView, View.OnClickList
 
         mPresenter = new UserPresenter(application);
         mPresenter.attachView(this);
+        mPresenter.setSearchedUser(searchedUser);
 
         View rootView = inflater.inflate(R.layout.fragment_user, container, false);
         ButterKnife.bind(this, rootView);
 
         //Set the toolbar to the main activity's action bar
-        ((AppCompatActivity) mContext).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
+        ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
         //Set the color of the refreshing animation
-        mSwipeRefreshLayout.setColorSchemeColors(Utility.getColor(mContext, R.color.accent));
-        mSwipeRefreshLayout.setOnRefreshListener(mPresenter);
+        if (!searchedUser) {
+            mSwipeRefreshLayout.setColorSchemeColors(Utility.getColor(mContext, R.color.accent));
+            mSwipeRefreshLayout.setOnRefreshListener(mPresenter);
+
+            mUser = mProfileManager.getUser();
+        } else {
+            mSwipeRefreshLayout.setEnabled(false);
+        }
 
         //Update all the views to show te user data
-        updateUserPage(mProfileManager.getUser());
+        updateUserPage(mUser);
 
         return rootView;
     }
@@ -184,7 +205,7 @@ public class UserFragment extends Fragment implements UserView, View.OnClickList
         switch (itemId) {
             case R.id.action_search:
                 //Start the search activity
-                startActivity(new Intent(mContext, SearchActivity.class));
+                startActivity(new Intent(getActivity(), SearchActivity.class));
                 break;
         }
         return true;
@@ -198,8 +219,7 @@ public class UserFragment extends Fragment implements UserView, View.OnClickList
         //Get the steam id, do nothing if there is no steam id
         String steamId = mProfileManager.getResolvedSteamId();
         if (steamId.equals("")) {
-            Toast.makeText(mContext, "bptf: " + getString(R.string.error_no_steam_id),
-                    Toast.LENGTH_SHORT).show();
+            showToast( "bptf: " + getString(R.string.error_no_steam_id), Toast.LENGTH_SHORT);
             return;
         }
 
@@ -238,14 +258,13 @@ public class UserFragment extends Fragment implements UserView, View.OnClickList
         } else {
             if (privateBackpack) {
                 //The backpack is private, do nothing
-                Toast.makeText(mContext, getString(R.string.message_private_backpack_own),
-                        Toast.LENGTH_SHORT).show();
+                showToast(getString(R.string.message_private_backpack_own), Toast.LENGTH_SHORT);
             } else {
                 //Else the user clicked on the backpack button. Start the backpack activity. Pass
                 //the steamId and whether it's the user's backpack or not
-                Intent i = new Intent(mContext, UserBackpackActivity.class);
+                Intent i = new Intent(getActivity(), UserBackpackActivity.class);
                 i.putExtra(UserBackpackActivity.EXTRA_NAME, mCollapsingToolbarLayout.getTitle());
-                i.putExtra(UserBackpackActivity.EXTRA_GUEST, false);
+                i.putExtra(UserBackpackActivity.EXTRA_GUEST, searchedUser);
                 startActivity(i);
             }
         }
@@ -254,25 +273,25 @@ public class UserFragment extends Fragment implements UserView, View.OnClickList
     @Override
     public void updateUserPage(User user) {
         //Download avatar if needed.
-            Glide.with(this)
-                    .load(user.getAvatarUrl())
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(avatar);
+        Glide.with(this)
+                .load(mUser.getAvatarUrl())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(avatar);
 
         //Set the player name
-        String name = user.getName();
+        String name = mUser.getName();
         mCollapsingToolbarLayout.setTitle(name);
 
-        if (user.isBanned()) {
+        if (mUser.isBanned()) {
             //Set player name to red and cross name out if banned
             // TODO: 2015. 10. 22.
         }
 
         //Set the player reputation.
-        playerReputation.setText(String.valueOf(user.getReputation()));
+        playerReputation.setText(String.valueOf(mUser.getReputation()));
 
         //Set the 'user since' text
-        long profileCreated = user.getProfileCreated();
+        long profileCreated = mUser.getProfileCreated();
         if (profileCreated == -1) {
             userSinceText.setText(getString(R.string.filler_unknown));
         } else {
@@ -280,9 +299,9 @@ public class UserFragment extends Fragment implements UserView, View.OnClickList
         }
 
         //Switch for the player's state
-        switch (user.getState()) {
+        switch (mUser.getState()) {
             case 0:
-                long lastOnline = user.getLastOnline();
+                long lastOnline = mUser.getLastOnline();
                 if (lastOnline == -1) {
                     //Weird
                     lastOnlineText.setText(String.format("%s %s", getString(R.string.user_page_last_online), getString(R.string.filler_unknown)));
@@ -324,42 +343,41 @@ public class UserFragment extends Fragment implements UserView, View.OnClickList
         }
 
         //Load drawables for player statuses
-        Drawable statusUnknown = getResources().getDrawable(R.drawable.ic_help_white);
         Drawable statusOk = getResources().getDrawable(R.drawable.ic_done_white);
         Drawable statusBad = getResources().getDrawable(R.drawable.ic_close_white);
         if (statusOk != null) statusOk.setColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY);
         if (statusBad != null) statusBad.setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
 
         //Steamrep information
-        if (user.isScammer()) {
+        if (mUser.isScammer()) {
             steamRepStatus.setImageDrawable(statusBad);
         } else {
             steamRepStatus.setImageDrawable(statusOk);
         }
 
         //Trade status
-        if (user.isEconomyBanned()) {
+        if (mUser.isEconomyBanned()) {
             tradeStatus.setImageDrawable(statusBad);
         } else {
             tradeStatus.setImageDrawable(statusOk);
         }
 
         //VAC status
-        if (user.isVacBanned()) {
+        if (mUser.isVacBanned()) {
             vacStatus.setImageDrawable(statusBad);
         } else {
             vacStatus.setImageDrawable(statusOk);
         }
 
         //Community status
-        if (user.isCommunityBanned()) {
+        if (mUser.isCommunityBanned()) {
             communityStatus.setImageDrawable(statusBad);
         } else {
             communityStatus.setImageDrawable(statusOk);
         }
 
         //Backpack value
-        double bpValue = user.getBackpackValue();
+        double bpValue = mUser.getBackpackValue();
         if (bpValue == -1) {
             //Value is unknown (probably private)
             backpackValueRefined.setText("?");
@@ -374,26 +392,26 @@ public class UserFragment extends Fragment implements UserView, View.OnClickList
         }
 
         //Set the trust score and color the background according to it.
-        trustPositive.setText(String.format("+%d", user.getTrustPositive()));
-        trustNegative.setText(String.format("-%d", user.getTrustNegatvie()));
+        trustPositive.setText(String.format("+%d", mUser.getTrustPositive()));
+        trustNegative.setText(String.format("-%d", mUser.getTrustNegatvie()));
 
         //Raw keys
-        int rawKeys = user.getRawKeys();
+        int rawKeys = mUser.getRawKeys();
         if (rawKeys >= 0)
             backpackRawKeys.setText(String.valueOf(rawKeys));
         else
             backpackRawKeys.setText("?");
 
         //Raw metal
-        double rawMetal = user.getRawMetal();
+        double rawMetal = mUser.getRawMetal();
         if (rawMetal >= 0)
             backpackRawMetal.setText(String.valueOf(Utility.formatDouble(rawMetal)));
         else
             backpackRawMetal.setText("?");
 
         //Number of slots and slots used
-        int itemNumber = user.getItemCount();
-        int backpackSlotNumber = user.getBackpackSlots();
+        int itemNumber = mUser.getItemCount();
+        int backpackSlotNumber = mUser.getBackpackSlots();
         if (itemNumber >= 0 && backpackSlotNumber >= 0)
             backpackSlots.setText(String.format("%s/%d", String.valueOf(itemNumber), backpackSlotNumber));
         else
@@ -435,7 +453,7 @@ public class UserFragment extends Fragment implements UserView, View.OnClickList
 
     @Override
     public void updateDrawer() {
-        ((MainActivity) mContext).updateDrawer();
+        ((MainActivity) getActivity()).updateDrawer();
     }
 
     @Override

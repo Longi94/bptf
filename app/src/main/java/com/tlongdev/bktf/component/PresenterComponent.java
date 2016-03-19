@@ -47,4 +47,6 @@ public interface PresenterComponent {
     void inject(UserPresenter userPresenter);
 
     void inject(UserBackpackPresenter userBackpackPresenter);
+
+    void inject(com.tlongdev.bktf.presenter.activity.UserPresenter userPresenter);
 }

@@ -49,6 +49,7 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
 
     private UserView mView;
     private BptfApplication mApplication;
+    private boolean mSearchedUser;
 
     public UserPresenter(BptfApplication application) {
         mApplication = application;
@@ -68,7 +69,7 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
     public void getUserDataIfNeeded() {
         User user = mProfileManager.getUser();
         //Update user info if last update was more than 30 minutes ago
-        if (Utility.isNetworkAvailable(mContext) && System.currentTimeMillis()
+        if (!mSearchedUser && Utility.isNetworkAvailable(mContext) && System.currentTimeMillis()
                 - user.getLastUpdated() >= 3600000L) {
 
             //Start the task and listne for the end
@@ -87,8 +88,10 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
 
     @Override
     public void onUserInfoFinished(User user) {
-        Tf2UserBackpackInteractor interactor = new Tf2UserBackpackInteractor(mApplication, this);
-        interactor.execute(user.getResolvedSteamId());
+        Tf2UserBackpackInteractor interactor = new Tf2UserBackpackInteractor(
+                mApplication, user, false, this
+        );
+        interactor.execute();
 
         mTracker.send(new HitBuilders.EventBuilder()
                 .setCategory("Request")
@@ -124,7 +127,7 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
     }
 
     @Override
-    public void onUserBackpackFinished() {
+    public void onUserBackpackFinished(User user) {
         if (mView != null) {
             mView.backpack(false);
             mView.updateUserPage(mProfileManager.getUser());
@@ -159,5 +162,9 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
             mView.hideRefreshingAnimation();
             mView.showToast("failed", Toast.LENGTH_SHORT);
         }
+    }
+
+    public void setSearchedUser(boolean searchedUser) {
+        mSearchedUser = searchedUser;
     }
 }

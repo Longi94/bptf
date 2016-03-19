@@ -17,7 +17,6 @@
 package com.tlongdev.bktf.interactor;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
 import com.google.android.gms.analytics.HitBuilders;
@@ -34,7 +33,6 @@ import com.tlongdev.bktf.network.model.steam.UserSummariesPayload;
 import com.tlongdev.bktf.network.model.steam.UserSummariesPlayer;
 import com.tlongdev.bktf.network.model.steam.UserSummariesResponse;
 import com.tlongdev.bktf.network.model.steam.VanityUrl;
-import com.tlongdev.bktf.util.ProfileManager;
 import com.tlongdev.bktf.util.Utility;
 
 import java.io.IOException;
@@ -44,19 +42,15 @@ import javax.inject.Inject;
 import retrofit2.Response;
 
 /**
- * Task for fetching data about the user in the background.
+ * @author Long
+ * @since 2016. 03. 19.
  */
-public class GetUserDataInteractor extends AsyncTask<Void, Void, Integer> {
+public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer> {
 
     @Inject BackpackTfInterface mBackpackTfInterface;
     @Inject SteamUserInterface mSteamUserInterface;
     @Inject Tracker mTracker;
-    @Inject SharedPreferences mPrefs;
     @Inject Context mContext;
-    @Inject ProfileManager mProfileManager;
-
-    //Whether it was a user initiated update
-    private boolean manualSync;
 
     //The error message that will be presented to the user, when an error occurs
     private String errorMessage;
@@ -70,15 +64,12 @@ public class GetUserDataInteractor extends AsyncTask<Void, Void, Integer> {
 
     /**
      * Constructor.
-     *
-     * @param manualSync whether the updated was initiated by the user
      */
-    public GetUserDataInteractor(BptfApplication application, User user,
-                                 boolean manualSync, Callback callback) {
+    public GetSearchedUserDataInteractor(BptfApplication application, String steamId,
+                                 Callback callback) {
         application.getInteractorComponent().inject(this);
-        this.manualSync = manualSync;
         mCallback = callback;
-        mUser = user;
+        mSteamId = steamId;
     }
 
     /**
@@ -86,24 +77,8 @@ public class GetUserDataInteractor extends AsyncTask<Void, Void, Integer> {
      */
     @Override
     protected Integer doInBackground(Void... params) {
-        if (System.currentTimeMillis() - mUser.getLastUpdated() < 3600000L && !manualSync) {
-            //This task ran less than an hour ago and wasn't a manual sync, nothing to do.
-            return -1;
-        }
 
         try {
-            //Check if there is a resolve steamId saved
-            mSteamId = mUser.getResolvedSteamId();
-            if (mSteamId == null || mSteamId.equals("")) {
-                //There is no resolved steam id saved
-                mSteamId = mUser.getSteamId();
-                if (mSteamId == null) {
-                    //There is no steam id saved
-                    errorMessage = mContext.getString(R.string.error_no_steam_id);
-                    return -1;
-                }
-            }
-
             //Check if the given steamid is a resolved 64bit steamId
             if (!Utility.isSteamId(mSteamId)) {
                 //First we try to resolve the steamId if the provided one isn't a 64bit steamId
@@ -118,12 +93,14 @@ public class GetUserDataInteractor extends AsyncTask<Void, Void, Integer> {
                     mSteamId = vanityUrl.getResponse().getSteamid();
                 } else if (response.raw().code() >= 500) {
                     errorMessage = "Server error: " + response.raw().code();
-                    return -1;
+                    return 1;
                 } else if (response.raw().code() >= 400) {
                     errorMessage = "Client error: " + response.raw().code();
-                    return -1;
+                    return 1;
                 }
             }
+
+            mUser = new User();
 
             //Save the resolved steamId
             mUser.setResolvedSteamId(mSteamId);
@@ -134,10 +111,10 @@ public class GetUserDataInteractor extends AsyncTask<Void, Void, Integer> {
                 saveUserData(bptfResponse.body());
             } else if (bptfResponse.raw().code() >= 500) {
                 errorMessage = "Server error: " + bptfResponse.raw().code();
-                return 1;
+                return -1;
             } else if (bptfResponse.raw().code() >= 400) {
                 errorMessage = "Client error: " + bptfResponse.raw().code();
-                return 1;
+                return -1;
             }
 
             Response<UserSummariesPayload> steamResponse =
@@ -152,9 +129,6 @@ public class GetUserDataInteractor extends AsyncTask<Void, Void, Integer> {
                 errorMessage = "Client error: " + steamResponse.raw().code();
                 return -1;
             }
-
-            mUser.setLastUpdated(System.currentTimeMillis());
-            mProfileManager.saveUser(mUser);
 
             return 0;
         } catch (IOException e) {
