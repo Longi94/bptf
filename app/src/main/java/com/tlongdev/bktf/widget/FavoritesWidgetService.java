@@ -147,28 +147,29 @@ public class FavoritesWidgetService extends RemoteViewsService {
             return mDataSet == null ? 0 : mDataSet.getCount();
         }
 
+        @SuppressWarnings("WrongConstant")
         @Override
         public RemoteViews getViewAt(int position) {
             RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.list_favorites_widgets);
 
             if (mDataSet != null && mDataSet.moveToPosition(position)) {
-                Item item = new Item(mDataSet.getInt(COLUMN_DEFINDEX),
-                        mDataSet.getString(COLUMN_NAME),
-                        mDataSet.getInt(COLUMN_QUALITY),
-                        mDataSet.getInt(COLUMN_TRADABLE) == 1,
-                        mDataSet.getInt(COLUMN_CRAFTABLE) == 1,
-                        mDataSet.getInt(COLUMN_AUSTRALIUM) == 1,
-                        mDataSet.getInt(COLUMN_PRICE_INDEX),
-                        null
-                );
+                Item item = new Item();
+                item.setDefindex(mDataSet.getInt(COLUMN_DEFINDEX));
+                item.setName(mDataSet.getString(COLUMN_NAME));
+                item.setQuality(mDataSet.getInt(COLUMN_QUALITY));
+                item.setTradable(mDataSet.getInt(COLUMN_TRADABLE) == 1);
+                item.setCraftable(mDataSet.getInt(COLUMN_CRAFTABLE) == 1);
+                item.setAustralium(mDataSet.getInt(COLUMN_AUSTRALIUM) == 1);
+                item.setPriceIndex(mDataSet.getInt(COLUMN_PRICE_INDEX));
 
                 if (mDataSet.getString(COLUMN_CURRENCY) != null) {
-                    item.setPrice(new Price(mDataSet.getDouble(COLUMN_PRICE),
-                            mDataSet.getDouble(COLUMN_PRICE_MAX),
-                            mDataSet.getDouble(COLUMN_PRICE_RAW),
-                            0,
-                            mDataSet.getDouble(COLUMN_DIFFERENCE),
-                            mDataSet.getString(COLUMN_CURRENCY)));
+                    Price price = new Price();
+                    price.setValue(mDataSet.getDouble(COLUMN_PRICE));
+                    price.setHighValue(mDataSet.getDouble(COLUMN_PRICE_MAX));
+                    price.setRawValue(mDataSet.getDouble(COLUMN_PRICE_RAW));
+                    price.setDifference(mDataSet.getDouble(COLUMN_DIFFERENCE));
+                    price.setCurrency(mDataSet.getString(COLUMN_CURRENCY));
+                    item.setPrice(price);
                 }
 
                 final long token = Binder.clearCallingIdentity();

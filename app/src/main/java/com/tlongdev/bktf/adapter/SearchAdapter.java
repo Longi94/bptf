@@ -35,11 +35,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.model.Item;
+import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.activity.UserActivity;
-import com.tlongdev.bktf.model.Item;
-import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
@@ -106,6 +106,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         return new ViewHolder(v);
     }
 
+    @SuppressWarnings("WrongConstant")
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         if (mDataSet != null && mDataSet.moveToPosition(position)) {
@@ -162,25 +163,22 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                             // TODO: 2015. 10. 26. Does nothing, fancy ripples for now
                         }
                     });
+                    
+                    Price price = new Price();
+                    price.setValue(mDataSet.getDouble(SearchActivity.COLUMN_PRICE));
+                    price.setHighValue(mDataSet.getDouble(SearchActivity.COLUMN_PRICE_HIGH));
+                    price.setCurrency(mDataSet.getString(SearchActivity.COLUMN_CURRENCY));
 
                     //Get all the data from the cursor
-                    final Item item = new Item(
-                            mDataSet.getInt(SearchActivity.COLUMN_DEFINDEX),
-                            mDataSet.getString(SearchActivity.COLUMN_NAME),
-                            mDataSet.getInt(SearchActivity.COLUMN_QUALITY),
-                            mDataSet.getInt(SearchActivity.COLUMN_TRADABLE) == 1,
-                            mDataSet.getInt(SearchActivity.COLUMN_CRAFTABLE) == 1,
-                            mDataSet.getInt(SearchActivity.COLUMN_AUSTRALIUM) == 1,
-                            mDataSet.getInt(SearchActivity.COLUMN_PRICE_INDEX),
-                            new Price(
-                                    mDataSet.getDouble(SearchActivity.COLUMN_PRICE),
-                                    mDataSet.getDouble(SearchActivity.COLUMN_PRICE_HIGH),
-                                    0,
-                                    0,
-                                    0,
-                                    mDataSet.getString(SearchActivity.COLUMN_CURRENCY)
-                            )
-                    );
+                    final Item item = new Item();
+                    item.setDefindex(mDataSet.getInt(SearchActivity.COLUMN_DEFINDEX));
+                    item.setName(mDataSet.getString(SearchActivity.COLUMN_NAME));
+                    item.setQuality(mDataSet.getInt(SearchActivity.COLUMN_QUALITY));
+                    item.setTradable(mDataSet.getInt(SearchActivity.COLUMN_TRADABLE) == 1);
+                    item.setCraftable(mDataSet.getInt(SearchActivity.COLUMN_CRAFTABLE) == 1);
+                    item.setAustralium(mDataSet.getInt(SearchActivity.COLUMN_AUSTRALIUM) == 1);
+                    item.setPriceIndex(mDataSet.getInt(SearchActivity.COLUMN_PRICE_INDEX));
+                    item.setPrice(price);
 
                     holder.more.setOnClickListener(new View.OnClickListener() {
 

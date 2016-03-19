@@ -29,7 +29,6 @@ import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
-import com.tlongdev.bktf.model.Quality;
 import com.tlongdev.bktf.network.TlongdevInterface;
 import com.tlongdev.bktf.network.model.tlongdev.TlongdevPrice;
 import com.tlongdev.bktf.network.model.tlongdev.TlongdevPricesPayload;
@@ -197,7 +196,8 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
 
     private ContentValues buildContentValues(TlongdevPrice price) {
         //Fix the defindex for pricing
-        Item item = new Item(price.getDefindex(), null, Quality.NORMAL, false, false, false, 0, null);
+        Item item = new Item();
+        item.setDefindex(price.getDefindex());
 
         //The DV that will contain all the data
         ContentValues itemValues = new ContentValues();

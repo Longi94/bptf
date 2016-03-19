@@ -87,25 +87,24 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         if (mDataSet != null && mDataSet.moveToPosition(position)) {
+            
+            Price price = new Price();
+            price.setValue(mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE)));
+            price.setHighValue(mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE_HIGH)));
+            price.setRawValue(mDataSet.getDouble(mDataSet.getColumnIndex("price_raw")));
+            price.setDifference(mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_DIFFERENCE)));
+            price.setCurrency(mDataSet.getString(mDataSet.getColumnIndex(PriceEntry.COLUMN_CURRENCY)));
 
             //Get all the data from the cursor
-            final Item item = new Item(
-                    mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_DEFINDEX)),
-                    mDataSet.getString(mDataSet.getColumnIndex(ItemSchemaEntry.COLUMN_ITEM_NAME)),
-                    mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_QUALITY)),
-                    mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_TRADABLE)) == 1,
-                    mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_CRAFTABLE)) == 1,
-                    mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_AUSTRALIUM)) == 1,
-                    mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE_INDEX)),
-                    new Price(
-                            mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE)),
-                            mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE_HIGH)),
-                            mDataSet.getDouble(mDataSet.getColumnIndex("raw_price")),
-                            0 /* TODO last update */,
-                            mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_DIFFERENCE)),
-                            mDataSet.getString(mDataSet.getColumnIndex(PriceEntry.COLUMN_CURRENCY))
-                    )
-            );
+            final Item item = new Item();
+            item.setDefindex(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_DEFINDEX)));
+            item.setName(mDataSet.getString(mDataSet.getColumnIndex(ItemSchemaEntry.COLUMN_ITEM_NAME)));
+            item.setQuality(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_QUALITY)));
+            item.setTradable(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_TRADABLE)) == 1);
+            item.setCraftable(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_CRAFTABLE)) == 1);
+            item.setAustralium(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_AUSTRALIUM)) == 1);
+            item.setPriceIndex(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE_INDEX)));
+            item.setPrice(price);
 
             holder.more.setOnClickListener(new View.OnClickListener() {
 

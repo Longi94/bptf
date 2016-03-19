@@ -124,7 +124,9 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                             inputMetal.setText(null);
                             inputUsd.setText(null);
                         } else {
-                            Price price = new Price(Double.parseDouble(s.toString()), Currency.BUD);
+                            Price price = new Price();
+                            price.setValue(Double.parseDouble(s.toString()));
+                            price.setCurrency(Currency.BUD);
                             inputKeys.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false))));
                             inputMetal.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false))));
                             inputUsd.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.USD, false))));
@@ -158,7 +160,9 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                             inputMetal.setText(null);
                             inputUsd.setText(null);
                         } else {
-                            Price price = new Price(Double.parseDouble(s.toString()), Currency.KEY);
+                            Price price = new Price();
+                            price.setValue(Double.parseDouble(s.toString()));
+                            price.setCurrency(Currency.KEY);
                             inputEarbuds.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.BUD, false))));
                             inputMetal.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false))));
                             inputUsd.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.USD, false))));
@@ -192,7 +196,9 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                             inputEarbuds.setText(null);
                             inputUsd.setText(null);
                         } else {
-                            Price price = new Price(Double.parseDouble(s.toString()), Currency.METAL);
+                            Price price = new Price();
+                            price.setValue(Double.parseDouble(s.toString()));
+                            price.setCurrency(Currency.METAL);
                             inputKeys.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false))));
                             inputEarbuds.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.BUD, false))));
                             inputUsd.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.USD, false))));
@@ -226,7 +232,9 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
                             inputMetal.setText(null);
                             inputEarbuds.setText(null);
                         } else {
-                            Price price = new Price(Double.parseDouble(s.toString()), Currency.USD);
+                            Price price = new Price();
+                            price.setValue(Double.parseDouble(s.toString()));
+                            price.setCurrency(Currency.USD);
                             inputKeys.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false))));
                             inputMetal.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false))));
                             inputEarbuds.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.BUD, false))));
@@ -248,7 +256,9 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
         });
 
         //Set the initial values
-        Price price = new Price(1, Currency.BUD);
+        Price price = new Price();
+        price.setValue(1.0);
+        price.setCurrency(Currency.BUD);
         inputEarbuds.setText("1");
         inputEarbuds.setSelection(inputEarbuds.length());
         try {

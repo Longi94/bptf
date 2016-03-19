@@ -24,8 +24,16 @@ import com.tlongdev.bktf.network.model.tlongdev.TlongdevPrice;
  * @since 2016. 03. 10.
  */
 public class TlongdevModelConverter {
-    public static Price convertToPrice(TlongdevPrice price) {
-        return new Price(price.getValue(), price.getValueHigh() == null ? 0 : price.getValueHigh(),
-                price.getValueRaw(), price.getLastUpdate(), price.getDifference(), price.getCurrency());
+
+    @SuppressWarnings("WrongConstant")
+    public static Price convertToPrice(TlongdevPrice tlongdevPrice) {
+        Price price = new Price();
+        price.setValue(tlongdevPrice.getValue());
+        price.setHighValue(tlongdevPrice.getValueHigh() == null ? 0 : tlongdevPrice.getValueHigh());
+        price.setRawValue(tlongdevPrice.getValueRaw());
+        price.setLastUpdate(tlongdevPrice.getLastUpdate());
+        price.setDifference(tlongdevPrice.getDifference());
+        price.setCurrency(tlongdevPrice.getCurrency());
+        return price;
     }
 }

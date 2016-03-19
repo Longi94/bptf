@@ -352,9 +352,15 @@ public class Utility {
      * @return the query string
      */
     public static String getRawPriceQueryString(Context context) {
-        Price key = new Price(1, Currency.KEY);
-        Price usd = new Price(1, Currency.USD);
-        Price bud = new Price(1, Currency.BUD);
+        Price key = new Price();
+        key.setValue(1);
+        key.setCurrency(Currency.KEY);
+        Price usd = new Price();
+        usd.setValue(1);
+        usd.setCurrency(Currency.USD);
+        Price bud = new Price();
+        bud.setValue(1);
+        bud.setCurrency(Currency.BUD);
 
         double keyMultiplier = key.getConvertedPrice(context, Currency.METAL, false);
         double usdMultiplier = usd.getConvertedPrice(context, Currency.METAL, false);

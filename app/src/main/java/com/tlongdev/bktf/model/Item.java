@@ -100,25 +100,7 @@ public class Item implements Parcelable {
         dest.writeParcelable(price, flags);
     }
 
-    public Item() {
-        this(0, null, 0, false, false, false, 0, null);
-    }
-
-    public Item(int defindex, String name, @Quality.Enum int quality, boolean tradable, boolean craftable, boolean australium, int priceIndex, Price price) {
-        this(defindex, name, quality, tradable, craftable, australium, priceIndex, 0, price);
-    }
-
-    public Item(int defindex, String name, @Quality.Enum int quality, boolean tradable, boolean craftable, boolean australium, int priceIndex, int weaponWear, Price price) {
-        this.defindex = defindex;
-        this.name = name;
-        this.quality = quality;
-        this.tradable = tradable;
-        this.craftable = craftable;
-        this.australium = australium;
-        this.priceIndex = priceIndex;
-        this.weaponWear = weaponWear;
-        this.price = price;
-    }
+    public Item() {}
 
     public int getDefindex() {
         return defindex;

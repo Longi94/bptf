@@ -56,6 +56,8 @@ public class BackpackItem extends Item {
         }
     };
 
+    public BackpackItem() {}
+
     public BackpackItem(Parcel source) {
         super(source);
         uniqueId = source.readInt();
@@ -97,29 +99,6 @@ public class BackpackItem extends Item {
         dest.writeString(containedItem);
 
         dest.writeByte((byte) (equipped ? 1 : 0));
-    }
-
-    public BackpackItem() {
-    }
-
-    public BackpackItem(int defindex, String name, int quality, boolean tradable, boolean craftable,
-                        boolean australium, int priceIndex, int weaponWear, Price price, int uniqueId,
-                        int originalId, int level, int origin, int paint, int craftNumber, String customName,
-                        String customDescription, String creatorName, String gifterName, String containedItem,
-                        boolean equipped) {
-        super(defindex, name, quality, tradable, craftable, australium, priceIndex, weaponWear, price);
-        this.uniqueId = uniqueId;
-        this.originalId = originalId;
-        this.level = level;
-        this.origin = origin;
-        this.paint = paint;
-        this.craftNumber = craftNumber;
-        this.customName = customName;
-        this.customDescription = customDescription;
-        this.creatorName = creatorName;
-        this.gifterName = gifterName;
-        this.containedItem = containedItem;
-        this.equipped = equipped;
     }
 
     public int getUniqueId() {

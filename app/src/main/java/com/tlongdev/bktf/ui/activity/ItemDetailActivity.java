@@ -210,6 +210,7 @@ public class ItemDetailActivity extends Activity {
     /**
      * Query all the necessary data out of the database and show them to de user.
      */
+    @SuppressWarnings("WrongConstant")
     private void queryItemDetails() {
         //Variables needed for querying
         Uri uri;
@@ -242,29 +243,21 @@ public class ItemDetailActivity extends Activity {
         if (itemCursor != null) {
             if (itemCursor.moveToFirst()) {
                 //Store all the data
-                BackpackItem item = new BackpackItem(
-                        itemCursor.getInt(COLUMN_DEFINDEX),
-                        mIntent.getStringExtra(EXTRA_ITEM_NAME),
-                        itemCursor.getInt(COLUMN_QUALITY),
-                        Math.abs(itemCursor.getInt(COLUMN_TRADABLE) - 1) == 1,
-                        Math.abs(itemCursor.getInt(COLUMN_CRAFTABLE) - 1) == 1,
-                        itemCursor.getInt(COLUMN_AUSTRALIUM) == 1,
-                        itemCursor.getInt(COLUMN_PRICE_INDEX),
-                        itemCursor.getInt(COLUMN_WEAPON_WEAR),
-                        null,
-                        0,
-                        0,
-                        itemCursor.getInt(COLUMN_LEVEL),
-                        itemCursor.getInt(COLUMN_ORIGIN),
-                        itemCursor.getInt(COLUMN_PAINT),
-                        0,
-                        itemCursor.getString(COLUMN_CUSTOM_NAME),
-                        itemCursor.getString(COLUMN_CUSTOM_DESCRIPTION),
-                        itemCursor.getString(COLUMN_CRAFTER),
-                        itemCursor.getString(COLUMN_GIFTER),
-                        null,
-                        false
-                );
+                BackpackItem item = new BackpackItem();
+                item.setDefindex(itemCursor.getInt(COLUMN_DEFINDEX));
+                item.setName(mIntent.getStringExtra(EXTRA_ITEM_NAME));
+                item.setQuality(itemCursor.getInt(COLUMN_QUALITY));
+                item.setTradable(itemCursor.getInt(COLUMN_TRADABLE) == 0);
+                item.setCraftable(itemCursor.getInt(COLUMN_CRAFTABLE) == 0);
+                item.setAustralium(itemCursor.getInt(COLUMN_AUSTRALIUM) == 1);
+                item.setPriceIndex(itemCursor.getInt(COLUMN_WEAPON_WEAR));
+                item.setLevel(itemCursor.getInt(COLUMN_LEVEL));
+                item.setOrigin(itemCursor.getInt(COLUMN_ORIGIN));
+                item.setPaint(itemCursor.getInt(COLUMN_PAINT));
+                item.setCustomName(itemCursor.getString(COLUMN_CUSTOM_NAME));
+                item.setCustomDescription(itemCursor.getString(COLUMN_CUSTOM_DESCRIPTION));
+                item.setCreatorName(itemCursor.getString(COLUMN_CRAFTER));
+                item.setGifterName(itemCursor.getString(COLUMN_GIFTER));
 
                 //Set the name of the item
                 name.setText(item.getFormattedName(this, mIntent.getIntExtra(EXTRA_PROPER_NAME, 0) == 1));
@@ -379,12 +372,11 @@ public class ItemDetailActivity extends Activity {
 
                 if (priceCursor != null) {
                     if (priceCursor.moveToFirst()) {
-                        Price price = new Price(
-                                priceCursor.getDouble(COLUMN_PRICE),
-                                priceCursor.getDouble(COLUMN_PRICE_HIGH),
-                                0, 0, 0,
-                                priceCursor.getString(COLUMN_CURRENCY)
-                        );
+                        Price price = new Price();
+                        price.setValue(priceCursor.getDouble(COLUMN_PRICE));
+                        price.setHighValue(priceCursor.getDouble(COLUMN_PRICE_HIGH));
+                        price.setCurrency(priceCursor.getString(COLUMN_CURRENCY));
+
                         //Show the priceView
                         priceView.setVisibility(View.VISIBLE);
                         priceView.setText(String.format("%s: %s",

@@ -30,7 +30,6 @@ import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
 import com.tlongdev.bktf.model.Item;
-import com.tlongdev.bktf.model.Quality;
 import com.tlongdev.bktf.network.Tf2Interface;
 import com.tlongdev.bktf.network.model.tf2.PlayerItem;
 import com.tlongdev.bktf.network.model.tf2.PlayerItemAttribute;
@@ -251,7 +250,8 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
         }
 
         //Fix the defindex for pricing purposes
-        Item item = new Item(defindex, null, Quality.NORMAL, false, false, false, 0, null);
+        Item item = new Item();
+        item.setDefindex(defindex);
         defindex = item.getFixedDefindex();
 
         //Save the unique ID
