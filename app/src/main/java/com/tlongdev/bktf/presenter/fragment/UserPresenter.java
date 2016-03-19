@@ -1,3 +1,19 @@
+/**
+ * Copyright 2016 Long Tran
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.tlongdev.bktf.presenter.fragment;
 
 import android.content.Context;
@@ -11,9 +27,10 @@ import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.interactor.GetUserDataInteractor;
 import com.tlongdev.bktf.interactor.Tf2UserBackpackInteractor;
+import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.presenter.Presenter;
 import com.tlongdev.bktf.ui.view.fragment.UserView;
-import com.tlongdev.bktf.util.Profile;
+import com.tlongdev.bktf.util.ProfileManager;
 import com.tlongdev.bktf.util.Utility;
 
 import javax.inject.Inject;
@@ -28,6 +45,7 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
     @Inject SharedPreferences.Editor mEditor;
     @Inject Tracker mTracker;
     @Inject Context mContext;
+    @Inject ProfileManager mProfileManager;
 
     private UserView mView;
     private BptfApplication mApplication;
@@ -48,13 +66,15 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
     }
 
     public void getUserDataIfNeeded() {
+        User user = mProfileManager.getUser();
         //Update user info if last update was more than 30 minutes ago
         if (Utility.isNetworkAvailable(mContext) && System.currentTimeMillis()
-                - mPrefs.getLong(mContext.getString(R.string.pref_last_user_data_update), 0) >= 3600000L) {
+                - user.getLastUpdated() >= 3600000L) {
 
             //Start the task and listne for the end
-            GetUserDataInteractor task = new GetUserDataInteractor(mApplication, false, this);
-            task.execute(Profile.getSteamId(mContext), Profile.getResolvedSteamId(mContext));
+            GetUserDataInteractor task = new GetUserDataInteractor(mApplication,
+                    mProfileManager.getUser(), false, this);
+            task.execute();
 
             mView.showRefreshingAnimation();
 
@@ -66,13 +86,9 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
     }
 
     @Override
-    public void onUserInfoFinished(String steamId) {
-        //Save the update time
-        mEditor.putLong(mContext.getString(R.string.pref_last_user_data_update),
-                System.currentTimeMillis()).apply();
-
+    public void onUserInfoFinished(User user) {
         Tf2UserBackpackInteractor interactor = new Tf2UserBackpackInteractor(mApplication, this);
-        interactor.execute(steamId);
+        interactor.execute(user.getResolvedSteamId());
 
         mTracker.send(new HitBuilders.EventBuilder()
                 .setCategory("Request")
@@ -83,7 +99,6 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
     @Override
     public void onUserInfoFailed(String errorMessage) {
         if (mView != null) {
-            mView.updateUserPage();
             mView.hideRefreshingAnimation();
             mView.showToast("bptf: " + errorMessage, Toast.LENGTH_SHORT);
         }
@@ -93,8 +108,9 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
     public void onRefresh() {
         if (Utility.isNetworkAvailable(mContext)) {
             //Start fetching the data and listen for the end
-            GetUserDataInteractor fetchTask = new GetUserDataInteractor(mApplication, true, this);
-            fetchTask.execute(Profile.getSteamId(mContext), Profile.getResolvedSteamId(mContext));
+            GetUserDataInteractor fetchTask = new GetUserDataInteractor(mApplication,
+                    mProfileManager.getUser(), true, this);
+            fetchTask.execute();
 
             mTracker.send(new HitBuilders.EventBuilder()
                     .setCategory("Request")
@@ -108,17 +124,10 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
     }
 
     @Override
-    public void onUserBackpackFinished(int rawKeys, double rawMetal, int backpackSlots, int itemNumber) {
-        //Save all the data passed
-        mEditor.putInt(mContext.getString(R.string.pref_user_slots), backpackSlots);
-        mEditor.putInt(mContext.getString(R.string.pref_user_items), itemNumber);
-        mEditor.putInt(mContext.getString(R.string.pref_user_raw_key), rawKeys);
-        Utility.putDouble(mEditor, mContext.getString(R.string.pref_user_raw_metal), rawMetal);
-        mEditor.apply();
-
+    public void onUserBackpackFinished() {
         if (mView != null) {
             mView.backpack(false);
-            mView.updateUserPage();
+            mView.updateUserPage(mProfileManager.getUser());
             mView.hideRefreshingAnimation();
             mView.updateDrawer();
         }
@@ -127,16 +136,16 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
     @Override
     public void onPrivateBackpack() {
         //Save all data that represent a private backpack
-        mEditor.putInt(mContext.getString(R.string.pref_user_slots), -1);
-        mEditor.putInt(mContext.getString(R.string.pref_user_items), -1);
-        mEditor.putInt(mContext.getString(R.string.pref_user_raw_key), -1);
-        Utility.putDouble(mEditor, mContext.getString(R.string.pref_user_raw_metal), -1);
-        Utility.putDouble(mEditor, mContext.getString(R.string.pref_player_backpack_value_tf2), -1);
-        mEditor.apply();
+        User user = mProfileManager.getUser();
+        user.setBackpackSlots(-1);
+        user.setItemCount(-1);
+        user.setRawKeys(-1);
+        user.setRawMetal(-1);
+        mProfileManager.saveUser(user);
 
         if (mView != null) {
             mView.backpack(true);
-            mView.updateUserPage();
+            mView.updateUserPage(user);
             mView.hideRefreshingAnimation();
             mView.updateDrawer();
         }
@@ -146,7 +155,7 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
     public void onUserBackpackFailed(String errorMessage) {
         //Stop the refreshing animation and update the UI
         if (mView != null) {
-            mView.updateUserPage();
+            mView.updateUserPage(mProfileManager.getUser());
             mView.hideRefreshingAnimation();
             mView.showToast("failed", Toast.LENGTH_SHORT);
         }

@@ -42,15 +42,16 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.gcm.GcmRegisterPriceUpdatesService;
+import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.ui.fragment.CalculatorFragment;
 import com.tlongdev.bktf.ui.fragment.ConverterFragment;
 import com.tlongdev.bktf.ui.fragment.FavoritesFragment;
 import com.tlongdev.bktf.ui.fragment.RecentsFragment;
 import com.tlongdev.bktf.ui.fragment.UnusualFragment;
 import com.tlongdev.bktf.ui.fragment.UserFragment;
-import com.tlongdev.bktf.gcm.GcmRegisterPriceUpdatesService;
 import com.tlongdev.bktf.util.CircleTransform;
-import com.tlongdev.bktf.util.Profile;
+import com.tlongdev.bktf.util.ProfileManager;
 import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
@@ -217,7 +218,8 @@ public class MainActivity extends AppCompatActivity {
         //If needed (mostly when the steamId was changed) reload a new instance of the UserFragment
         if (userStateChanged) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if (Profile.isSignedIn(this)) {
+            ProfileManager manager = new ProfileManager((BptfApplication) getApplication());
+            if (manager.isSignedIn()) {
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, new UserFragment())
                         .commit();
@@ -376,13 +378,15 @@ public class MainActivity extends AppCompatActivity {
     public void updateDrawer() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if (Profile.isSignedIn(this)) {
+        ProfileManager manager = new ProfileManager((BptfApplication) getApplication());
+        if (manager.isSignedIn()) {
+            User user = manager.getUser();
+
             //Set the name
-            name.setText(prefs.getString(getString(R.string.pref_player_name), null));
+            name.setText(user.getName());
 
             //Set the backpack value
-            double bpValue = Utility.getDouble(prefs,
-                    getString(R.string.pref_player_backpack_value_tf2), -1);
+            double bpValue = user.getBackpackValue();
             if (bpValue >= 0) {
                 backpack.setText(String.format("Backpack: %s", getString(R.string.currency_metal, String.valueOf(Math.round(bpValue)))));
             } else {
@@ -390,16 +394,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
             //Download the avatar (if needed) and set it
-            if (prefs.contains(getString(R.string.pref_new_avatar)) &&
-                    Utility.isNetworkAvailable(this)) {
-                Glide.with(this)
-                        .load(PreferenceManager.getDefaultSharedPreferences(this).
-                                getString(getString(R.string.pref_player_avatar_url), ""))
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .transform(new CircleTransform(this))
-                        .into(avatar);
-
-            }
+            Glide.with(this)
+                    .load(user.getAvatarUrl())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .transform(new CircleTransform(this))
+                    .into(avatar);
             userMenuItem.setEnabled(true);
         } else {
             Glide.with(this)

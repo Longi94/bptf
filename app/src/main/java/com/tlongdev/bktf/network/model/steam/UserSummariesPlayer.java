@@ -43,7 +43,7 @@ public class UserSummariesPlayer {
 
     @SerializedName("lastlogoff")
     @Expose
-    private int lastLogoff;
+    private long lastLogoff;
 
     @SerializedName("profileurl")
     @Expose
@@ -101,7 +101,7 @@ public class UserSummariesPlayer {
         return personaName;
     }
 
-    public int getLastLogoff() {
+    public long getLastLogoff() {
         return lastLogoff;
     }
 

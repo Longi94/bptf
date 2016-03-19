@@ -36,7 +36,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.gcm.GcmRegisterPriceUpdatesService;
-import com.tlongdev.bktf.util.Profile;
+import com.tlongdev.bktf.util.ProfileManager;
 import com.tlongdev.bktf.util.Utility;
 
 /**
@@ -212,8 +212,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         findPreference(getString(R.string.pref_key_login)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                if (Profile.isSignedIn(SettingsActivity.this)) {
-                    Profile.logOut(SettingsActivity.this);
+                ProfileManager manager = new ProfileManager((BptfApplication) getApplication());
+                if (manager.isSignedIn()) {
+                    manager.logOut();
                     updateLoginPreference();
                     Intent i = new Intent();
                     i.putExtra("login_changed", true);
@@ -247,10 +248,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
     }
 
     private void updateLoginPreference() {
+        ProfileManager manager = new ProfileManager((BptfApplication) getApplication());
         Preference login = findPreference(getString(R.string.pref_key_login));
-        if (Profile.isSignedIn(this)) {
+        if (manager.isSignedIn()) {
             login.setTitle("Log out");
-            login.setSummary(Profile.getSteamId(this));
+            login.setSummary(manager.getSteamId());
         } else {
             login.setTitle("Log in");
             login.setSummary(null);

@@ -39,12 +39,6 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    Gson provideGson() {
-        return new Gson();
-    }
-
-    @Provides
-    @Singleton
     @Named("tlongdev")
     Retrofit provideTlongdevRetrofit(Gson gson) {
         return new Retrofit.Builder()

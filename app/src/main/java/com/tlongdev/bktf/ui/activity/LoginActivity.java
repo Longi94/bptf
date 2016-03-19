@@ -18,10 +18,8 @@ package com.tlongdev.bktf.ui.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -35,7 +33,8 @@ import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.interactor.GetUserDataInteractor;
 import com.tlongdev.bktf.interactor.Tf2UserBackpackInteractor;
-import com.tlongdev.bktf.util.Profile;
+import com.tlongdev.bktf.model.User;
+import com.tlongdev.bktf.util.ProfileManager;
 import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
@@ -109,8 +108,12 @@ public class LoginActivity extends AppCompatActivity implements GetUserDataInter
         } else {
             String steamId = steamIdInput.getText().toString();
 
-            GetUserDataInteractor task = new GetUserDataInteractor((BptfApplication) getApplication(),true, LoginActivity.this);
-            task.execute(steamId, null);
+            User user = new User();
+            user.setSteamId(steamId);
+
+            GetUserDataInteractor task = new GetUserDataInteractor((BptfApplication) getApplication(),
+                    user, true, LoginActivity.this);
+            task.execute();
 
             loadingDialog = ProgressDialog.show(LoginActivity.this, null, "Please wait...", true, false);
 
@@ -122,14 +125,9 @@ public class LoginActivity extends AppCompatActivity implements GetUserDataInter
     }
 
     @Override
-    public void onUserInfoFinished(String steamId) {
-
-        PreferenceManager.getDefaultSharedPreferences(this).edit()
-                .putLong(getString(R.string.pref_last_user_data_update),
-                        System.currentTimeMillis()).apply();
-
+    public void onUserInfoFinished(User user) {
         Tf2UserBackpackInteractor task = new Tf2UserBackpackInteractor((BptfApplication) getApplication(), this);
-        task.execute(steamId);
+        task.execute(user.getResolvedSteamId());
 
         mTracker.send(new HitBuilders.EventBuilder()
                 .setCategory("Request")
@@ -143,54 +141,24 @@ public class LoginActivity extends AppCompatActivity implements GetUserDataInter
             loadingDialog.dismiss();
         }
 
-        Profile.logOut(this);
+        new ProfileManager((BptfApplication) getApplication()).logOut();
 
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onUserBackpackFinished(int rawKeys, double rawMetal, int backpackSlots, int itemNumber) {
-
-        //Start editing the preferences
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        //Save all the data passed
-        editor.putInt(getString(R.string.pref_user_slots), backpackSlots);
-        editor.putInt(getString(R.string.pref_user_items), itemNumber);
-        editor.putInt(getString(R.string.pref_user_raw_key), rawKeys);
-        Utility.putDouble(editor, getString(R.string.pref_user_raw_metal), rawMetal);
-
-        editor.putString(getString(R.string.pref_steam_id), steamIdInput.getText().toString());
-        editor.apply();
-
+    public void onUserBackpackFinished() {
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-
         finish();
     }
 
     @Override
     public void onPrivateBackpack() {
-        //Start editing the preferences
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        //Save all data that represent a private backpack
-        editor.putInt(getString(R.string.pref_user_slots), -1);
-        editor.putInt(getString(R.string.pref_user_items), -1);
-        editor.putInt(getString(R.string.pref_user_raw_key), -1);
-        Utility.putDouble(editor, getString(R.string.pref_user_raw_metal), -1);
-        Utility.putDouble(editor, getString(R.string.pref_player_backpack_value_tf2), -1);
-
-        editor.putString(getString(R.string.pref_steam_id), steamIdInput.getText().toString());
-        editor.apply();
-
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-
         finish();
     }
 
@@ -200,7 +168,7 @@ public class LoginActivity extends AppCompatActivity implements GetUserDataInter
             loadingDialog.dismiss();
         }
 
-        Profile.logOut(this);
+        new ProfileManager((BptfApplication) getApplication()).logOut();
 
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
     }

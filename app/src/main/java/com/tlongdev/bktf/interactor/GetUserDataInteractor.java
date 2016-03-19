@@ -25,6 +25,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.network.BackpackTfInterface;
 import com.tlongdev.bktf.network.SteamUserInterface;
 import com.tlongdev.bktf.network.model.bptf.BackpackTfPayload;
@@ -33,6 +34,7 @@ import com.tlongdev.bktf.network.model.steam.UserSummariesPayload;
 import com.tlongdev.bktf.network.model.steam.UserSummariesPlayer;
 import com.tlongdev.bktf.network.model.steam.UserSummariesResponse;
 import com.tlongdev.bktf.network.model.steam.VanityUrl;
+import com.tlongdev.bktf.util.ProfileManager;
 import com.tlongdev.bktf.util.Utility;
 
 import java.io.IOException;
@@ -51,9 +53,9 @@ public class GetUserDataInteractor extends AsyncTask<String, Void, Integer> {
     @Inject BackpackTfInterface mBackpackTfInterface;
     @Inject SteamUserInterface mSteamUserInterface;
     @Inject Tracker mTracker;
-    @Inject SharedPreferences.Editor mEditor;
     @Inject SharedPreferences mPrefs;
     @Inject Context mContext;
+    @Inject ProfileManager mProfileManager;
 
     //Whether it was a user initiated update
     private boolean manualSync;
@@ -64,17 +66,21 @@ public class GetUserDataInteractor extends AsyncTask<String, Void, Integer> {
     //The mCallback that will be notified when the fetching finishes
     private Callback mCallback;
 
-    private String steamId;
+    private String mSteamId;
+
+    private User mUser;
 
     /**
      * Constructor.
      *
      * @param manualSync whether the updated was initiated by the user
      */
-    public GetUserDataInteractor(BptfApplication application, boolean manualSync, Callback callback) {
+    public GetUserDataInteractor(BptfApplication application, User user,
+                                 boolean manualSync, Callback callback) {
         application.getInteractorComponent().inject(this);
         this.manualSync = manualSync;
         mCallback = callback;
+        mUser = user;
     }
 
     /**
@@ -82,19 +88,18 @@ public class GetUserDataInteractor extends AsyncTask<String, Void, Integer> {
      */
     @Override
     protected Integer doInBackground(String... params) {
-        if (System.currentTimeMillis() - mPrefs.getLong(mContext.getString(R.string.pref_last_user_data_update), 0)
-                < 3600000L && !manualSync) {
+        if (System.currentTimeMillis() - mUser.getLastUpdated() < 3600000L && !manualSync) {
             //This task ran less than an hour ago and wasn't a manual sync, nothing to do.
             return -1;
         }
 
         try {
             //Check if there is a resolve steamId saved
-            steamId = params[1];
-            if (steamId == null || steamId.equals("")) {
+            mSteamId = mUser.getResolvedSteamId();
+            if (mSteamId == null || mSteamId.equals("")) {
                 //There is no resolved steam id saved
-                steamId = params[0];
-                if (steamId == null) {
+                mSteamId = mUser.getSteamId();
+                if (mSteamId == null) {
                     //There is no steam id saved
                     errorMessage = mContext.getString(R.string.error_no_steam_id);
                     return -1;
@@ -102,9 +107,9 @@ public class GetUserDataInteractor extends AsyncTask<String, Void, Integer> {
             }
 
             //Check if the given steamid is a resolved 64bit steamId
-            if (!Utility.isSteamId(steamId)) {
+            if (!Utility.isSteamId(mSteamId)) {
                 //First we try to resolve the steamId if the provided one isn't a 64bit steamId
-                Response<VanityUrl> response = mSteamUserInterface.resolveVanityUrl(BuildConfig.STEAM_WEB_API_KEY, steamId).execute();
+                Response<VanityUrl> response = mSteamUserInterface.resolveVanityUrl(BuildConfig.STEAM_WEB_API_KEY, mSteamId).execute();
                 if (response.body() != null) {
                     VanityUrl vanityUrl = response.body();
 
@@ -112,7 +117,7 @@ public class GetUserDataInteractor extends AsyncTask<String, Void, Integer> {
                         errorMessage = vanityUrl.getResponse().getMessage();
                         return -1;
                     }
-                    steamId = vanityUrl.getResponse().getSteamid();
+                    mSteamId = vanityUrl.getResponse().getSteamid();
                 } else if (response.raw().code() >= 500) {
                     errorMessage = "Server error: " + response.raw().code();
                     return 1;
@@ -123,10 +128,9 @@ public class GetUserDataInteractor extends AsyncTask<String, Void, Integer> {
             }
 
             //Save the resolved steamId
-            mEditor.putString(mContext
-                    .getString(R.string.pref_resolved_steam_id), steamId).apply();
+            mUser.setResolvedSteamId(mSteamId);
 
-            Response<BackpackTfPayload> bptfResponse = mBackpackTfInterface.getUserData(steamId).execute();
+            Response<BackpackTfPayload> bptfResponse = mBackpackTfInterface.getUserData(mSteamId).execute();
 
             if (bptfResponse.body() != null) {
                 saveUserData(bptfResponse.body());
@@ -139,7 +143,7 @@ public class GetUserDataInteractor extends AsyncTask<String, Void, Integer> {
             }
 
             Response<UserSummariesPayload> steamResponse =
-                    mSteamUserInterface.getUserSummaries(BuildConfig.STEAM_WEB_API_KEY, steamId).execute();
+                    mSteamUserInterface.getUserSummaries(BuildConfig.STEAM_WEB_API_KEY, mSteamId).execute();
 
             if (steamResponse.body() != null) {
                 saveSteamData(steamResponse.body());
@@ -150,6 +154,9 @@ public class GetUserDataInteractor extends AsyncTask<String, Void, Integer> {
                 errorMessage = "Client error: " + steamResponse.raw().code();
                 return -1;
             }
+
+            mUser.setLastUpdated(System.currentTimeMillis());
+            mProfileManager.saveUser(mUser);
 
             return 0;
         } catch (IOException e) {
@@ -175,7 +182,7 @@ public class GetUserDataInteractor extends AsyncTask<String, Void, Integer> {
         if (mCallback != null) {
             if (integer >= 0) {
                 //notify the mCallback, that the fetching has finished.
-                mCallback.onUserInfoFinished(steamId);
+                mCallback.onUserInfoFinished(mUser);
             } else {
                 mCallback.onUserInfoFailed(errorMessage);
             }
@@ -188,22 +195,15 @@ public class GetUserDataInteractor extends AsyncTask<String, Void, Integer> {
             if (response.getPlayers() != null && response.getPlayers().size() > 0) {
                 UserSummariesPlayer player = response.getPlayers().get(0);
                 if (player != null) {
-                    mEditor.putString(mContext.getString(R.string.pref_player_name), player.getPersonaName())
-                            .putLong(mContext.getString(R.string.pref_player_last_online), player.getLastLogoff())
-                            .putInt(mContext.getString(R.string.pref_player_state), player.getPersonaState())
-                            .putLong(mContext.getString(R.string.pref_player_profile_created), player.getTimeCreated());
+                    mUser.setName(player.getPersonaName());
+                    mUser.setLastOnline(player.getLastLogoff());
+                    mUser.setState(player.getPersonaState());
+                    mUser.setProfileCreated(player.getTimeCreated());
+                    mUser.setAvatarUrl(player.getAvatarFull());
 
                     if (player.getGameId() != 0) {
-                        mEditor.putInt(mContext.getString(R.string.pref_player_state), 7);
+                        mUser.setState(7);
                     }
-
-                    String avatarUrl = mPrefs.getString(mContext.getString(R.string.pref_player_avatar_url), "");
-
-                    if (!avatarUrl.equals(player.getAvatarFull())) {
-                        mEditor.putBoolean(mContext.getString(R.string.pref_new_avatar), true);
-                        mEditor.putString(mContext.getString(R.string.pref_player_avatar_url), player.getAvatarFull());
-                    }
-                    mEditor.apply();
                 }
             }
         }
@@ -223,32 +223,26 @@ public class GetUserDataInteractor extends AsyncTask<String, Void, Integer> {
             return;
         }
 
-        BackpackTfPlayer player = payload.getResponse().getPlayers().get(steamId);
+        BackpackTfPlayer player = payload.getResponse().getPlayers().get(mSteamId);
         if (player == null) {
             return;
         }
 
         if (player.getSuccess() == 1) {
-            // TODO: 2016. 03. 14. save booleans?
-            Utility.putDouble(mEditor, mContext.getString(R.string.pref_player_backpack_value_tf2),
-                    player.getBackpackValue().get440())
-                    .putString(mContext.getString(R.string.pref_player_name), player.getName())
-                    .putInt(mContext.getString(R.string.pref_player_reputation), player.getBackpackTfReputation())
-                    .putInt(mContext.getString(R.string.pref_player_group), player.getBackpackTfGroup() ? 1 : 0)
-                    .putInt(mContext.getString(R.string.pref_player_banned), player.getBackpackTfBanned() ? 1 : 0)
-                    .putInt(mContext.getString(R.string.pref_player_scammer), player.getSteamrepScammer() ? 1 : 0)
-                    .putInt(mContext.getString(R.string.pref_player_community_banned), player.getBanCommunity() ? 1 : 0)
-                    .putInt(mContext.getString(R.string.pref_player_economy_banned), player.getBanEconomy() ? 1 : 0)
-                    .putInt(mContext.getString(R.string.pref_player_vac_banned), player.getBanVac() ? 1 : 0);
+            mUser.setBackpackValue(player.getBackpackValue().get440());
+            mUser.setName(player.getName());
+            mUser.setReputation(player.getBackpackTfReputation());
+            mUser.setInGroup(player.getBackpackTfGroup());
+            mUser.setBanned(player.getBackpackTfBanned());
+            mUser.setScammer(player.getSteamrepScammer());
+            mUser.setEconomyBanned(player.getBanCommunity());
+            mUser.setCommunityBanned(player.getBanCommunity());
+            mUser.setVacBanned(player.getBanVac());
 
             if (player.getBackpackTfTrust() != null) {
-                mEditor.putInt(mContext.getString(R.string.pref_player_trust_positive),
-                        player.getBackpackTfTrust().getFor())
-                        .putInt(mContext.getString(R.string.pref_player_trust_negative),
-                                player.getBackpackTfTrust().getAgainst());
+                mUser.setTrustNegatvie(player.getBackpackTfTrust().getAgainst());
+                mUser.setTrustPositive(player.getBackpackTfTrust().getFor());
             }
-
-            mEditor.apply();
         }
     }
 
@@ -260,9 +254,9 @@ public class GetUserDataInteractor extends AsyncTask<String, Void, Integer> {
         /**
          * Callback which will be called when both tasks finish.
          *
-         * @param steamId the steamid of the zser
+         * @param user the user
          */
-        void onUserInfoFinished(String steamId);
+        void onUserInfoFinished(User user);
 
         void onUserInfoFailed(String errorMessage);
     }

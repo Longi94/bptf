@@ -20,7 +20,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.gms.analytics.HitBuilders;
@@ -30,10 +29,12 @@ import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
 import com.tlongdev.bktf.model.Item;
+import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.network.Tf2Interface;
 import com.tlongdev.bktf.network.model.tf2.PlayerItem;
 import com.tlongdev.bktf.network.model.tf2.PlayerItemAttribute;
 import com.tlongdev.bktf.network.model.tf2.PlayerItemsPayload;
+import com.tlongdev.bktf.util.ProfileManager;
 import com.tlongdev.bktf.util.Utility;
 
 import java.io.IOException;
@@ -62,6 +63,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
     @Inject Tf2Interface mTf2Interface;
     @Inject Tracker mTracker;
     @Inject Context mContext;
+    @Inject ProfileManager mProfileManager;
 
     //Indicates which table to insert data into
     private boolean isGuest;
@@ -97,8 +99,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
         mSteamId = params[0];
         //if the given steam id is not the same as the saved resolved steam_id, then this is a guest
         //backpack
-        isGuest = !mSteamId.equals(PreferenceManager.getDefaultSharedPreferences(mContext)
-                .getString(mContext.getString(R.string.pref_resolved_steam_id), ""));
+        isGuest = !mSteamId.equals(mProfileManager.getResolvedSteamId());
 
         try {
             Response<PlayerItemsPayload> response = mTf2Interface.getUserBackpack(
@@ -138,8 +139,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
                 mCallback.onPrivateBackpack();
             } else if (integer >= 1) {
                 //Notify the user that the fetching finished and pass on the data
-                mCallback.onUserBackpackFinished(rawKeys, Utility.getRawMetal(rawRef, rawRec, rawScraps),
-                        backpackSlots, itemNumber);
+                mCallback.onUserBackpackFinished();
             } else {
                 mCallback.onUserBackpackFailed(errorMessage);
             }
@@ -186,7 +186,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
                         contentUri = UserBackpackEntry.CONTENT_URI_GUEST;
                     }
 
-                    //Clear the databse first
+                    //Clear the database first
                     int rowsDeleted = mContext.getContentResolver().delete(contentUri, null, null);
 
                     Log.v(LOG_TAG, "deleted " + rowsDeleted + " rows");
@@ -196,6 +196,14 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
                             .bulkInsert(contentUri, cvArray);
 
                     Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
+
+                    User user = mProfileManager.getUser();
+                    user.setRawMetal(Utility.getRawMetal(rawRef, rawRec, rawScraps));
+                    user.setRawKeys(rawKeys);
+                    user.setBackpackSlots(backpackSlots);
+                    user.setItemCount(itemNumber);
+
+                    mProfileManager.saveUser(user);
                 }
                 return 1;
             case 8: //Invalid ID, shouldn't reach
@@ -420,14 +428,9 @@ public class Tf2UserBackpackInteractor extends AsyncTask<String, Void, Integer> 
     public interface Callback {
 
         /**
-         * Notify the mCallback, that the fetchin has finished. The backpack is public.
-         *
-         * @param rawKeys       the number of raw keys in the backpack
-         * @param rawMetal      the number of raw metal in the backpack
-         * @param backpackSlots the number of backpack slots
-         * @param itemNumber    the number of items in the backpack
+         * Notify the mCallback, that the fetching has finished. The backpack is public.
          */
-        void onUserBackpackFinished(int rawKeys, double rawMetal, int backpackSlots, int itemNumber);
+        void onUserBackpackFinished();
 
         /**
          * Notify the mCallback that the backpack was private.

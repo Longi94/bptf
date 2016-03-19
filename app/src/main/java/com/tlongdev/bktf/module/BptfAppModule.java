@@ -22,7 +22,9 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.google.android.gms.analytics.Tracker;
+import com.google.gson.Gson;
 import com.tlongdev.bktf.BptfApplication;
+import com.tlongdev.bktf.util.ProfileManager;
 
 import javax.inject.Singleton;
 
@@ -70,5 +72,17 @@ public class BptfAppModule {
     @Singleton
     SharedPreferences.Editor provideEditor(SharedPreferences prefs) {
         return prefs.edit();
+    }
+
+    @Provides
+    @Singleton
+    Gson provideGson() {
+        return new Gson();
+    }
+
+    @Provides
+    @Singleton
+    ProfileManager provideProfileManager(Application application) {
+        return new ProfileManager((BptfApplication) application);
     }
 }

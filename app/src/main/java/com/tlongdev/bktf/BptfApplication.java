@@ -25,9 +25,11 @@ import com.tlongdev.bktf.component.DaggerActivityComponent;
 import com.tlongdev.bktf.component.DaggerFragmentComponent;
 import com.tlongdev.bktf.component.DaggerInteractorComponent;
 import com.tlongdev.bktf.component.DaggerPresenterComponent;
+import com.tlongdev.bktf.component.DaggerProfileManagerComponent;
 import com.tlongdev.bktf.component.FragmentComponent;
 import com.tlongdev.bktf.component.InteractorComponent;
 import com.tlongdev.bktf.component.PresenterComponent;
+import com.tlongdev.bktf.component.ProfileManagerComponent;
 import com.tlongdev.bktf.module.BptfAppModule;
 import com.tlongdev.bktf.module.NetworkModule;
 import com.tlongdev.bktf.module.StorageModule;
@@ -45,6 +47,8 @@ public class BptfApplication extends Application {
     private InteractorComponent mInteractorComponent;
 
     private PresenterComponent mPresenterComponent;
+
+    private ProfileManagerComponent mProfileManagerComponent;
 
     @Override
     public void onCreate() {
@@ -66,6 +70,11 @@ public class BptfApplication extends Application {
 
         mPresenterComponent = DaggerPresenterComponent.builder()
                 .bptfAppModule(new BptfAppModule(this))
+                .build();
+
+        mProfileManagerComponent = DaggerProfileManagerComponent.builder()
+                .bptfAppModule(new BptfAppModule(this))
+                .storageModule(new StorageModule())
                 .build();
     }
 
@@ -96,5 +105,9 @@ public class BptfApplication extends Application {
 
     public PresenterComponent getPresenterComponent() {
         return mPresenterComponent;
+    }
+
+    public ProfileManagerComponent getProfileManagerComponent() {
+        return mProfileManagerComponent;
     }
 }

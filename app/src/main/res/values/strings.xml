@@ -12,30 +12,7 @@
     <string name="pref_key_raw" translatable="false">pref_key_raw_v2</string>
     <string name="pref_metal_raw_usd" translatable="false">pref_metal_raw_v2</string>
     <string name="pref_last_price_list_update" translatable="false">pref_last_price_list_update</string>
-    <string name="pref_last_user_data_update" translatable="false">pref_last_user_data_update</string>
     <string name="pref_main_preference_screen" translatable="false">main_preference_screen</string>
-    <string name="pref_new_avatar" translatable="false">pref_new_avatar</string>
-    <string name="pref_player_avatar_url" translatable="false">pref_player_avatar_url</string>
-    <string name="pref_player_backpack_value_tf2" translatable="false">pref_player_backpack_value_tf2_v2</string>
-    <string name="pref_player_banned" translatable="false">pref_player_banned</string>
-    <string name="pref_player_community_banned" translatable="false">pref_player_community_banned</string>
-    <string name="pref_player_economy_banned" translatable="false">pref_player_economy_banned</string>
-    <string name="pref_player_group" translatable="false">pref_player_group</string>
-    <string name="pref_player_last_online" translatable="false">pref_player_last_online</string>
-    <string name="pref_player_name" translatable="false">pref_player_name</string>
-    <string name="pref_player_profile_created" translatable="false">pref_player_profile_created</string>
-    <string name="pref_player_reputation" translatable="false">pref_player_reputation</string>
-    <string name="pref_player_scammer" translatable="false">pref_player_scammer</string>
-    <string name="pref_player_state" translatable="false">pref_player_state</string>
-    <string name="pref_player_trust_negative" translatable="false">pref_player_trust_negative</string>
-    <string name="pref_player_trust_positive" translatable="false">pref_player_trust_positive</string>
-    <string name="pref_player_vac_banned" translatable="false">pref_player_vac_banned</string>
-    <string name="pref_resolved_steam_id" translatable="false">pref_resolved_steam_id</string>
-    <string name="pref_steam_id" translatable="false">pref_steam_id</string>
-    <string name="pref_user_items" translatable="false">pref_user_items</string>
-    <string name="pref_user_raw_key" translatable="false">pref_user_raw_key</string>
-    <string name="pref_user_raw_metal" translatable="false">pref_user_raw_metal</string>
-    <string name="pref_user_slots" translatable="false">pref_user_slots</string>
 
     <!--Action Bar icons-->
 
@@ -240,5 +217,6 @@
     <string name="title_activity_licenses">Open source licenses</string>
     <string name="pref_title_github_repo">Source code</string>
     <string name="title_activity_search_filter">SearchFilterActivity</string>
+    <string name="pref_user_data">pref_user_data</string>
 
 </resources>

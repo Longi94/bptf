@@ -63,29 +63,6 @@ public class UserActivity extends AppCompatActivity {
     //Steam id of the player, whose profile page is currently shown.
     private String steamId;
 
-    //Stores whether the backpack is private or not
-    private boolean privateBackpack = false;
-
-    //All these values store info about the user, and the info that is shown to the user.
-    //Also initial values.
-    private boolean isBanned = false;
-    private boolean isCommunityBanned = false;
-    private boolean isScammer = false;
-    private boolean isTradeBanned = false;
-    private boolean isVacBanned = false;
-    private double backpackValue = -1;
-    private double rawMetal = 0;
-    private int backpackSlotNumber = 0;
-    private int itemNumber = 0;
-    private int playerReputationValue = 0;
-    private int playerState = 0;
-    private int ratingPositive = 0;
-    private int ratingNegative = 0;
-    private int rawKeys = 0;
-    private long lastOnline = -1;
-    private long profileCreated = -1;
-    private String playerNameString = "";
-
     private UserFragment mUserFragment;
 
     @Override
