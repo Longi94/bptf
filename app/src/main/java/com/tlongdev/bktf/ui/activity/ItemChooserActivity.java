@@ -18,11 +18,9 @@ package com.tlongdev.bktf.ui.activity;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,9 +32,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.spinner.EffectAdapter;
 import com.tlongdev.bktf.adapter.spinner.QualityAdapter;
@@ -45,7 +43,6 @@ import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
 import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Quality;
-import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -63,6 +60,7 @@ public class ItemChooserActivity extends BptfActivity {
     private static final String LOG_TAG = ItemChooserActivity.class.getSimpleName();
 
     private static final int SELECT_ITEM = 100;
+
     public static final String EXTRA_ITEM = "item";
     public static final String EXTRA_IS_FROM_CALCULATOR = "calculator";
 
@@ -88,27 +86,26 @@ public class ItemChooserActivity extends BptfActivity {
     @Bind(R.id.australium) CheckBox australium;
     @Bind(R.id.fab) FloatingActionButton fab;
 
+    @InjectExtra(EXTRA_IS_FROM_CALCULATOR) boolean isFromCalculator = false;
+
     private Cursor effectCursor;
 
-    private Item item;
+    private Item mItem;
 
     private QualityAdapter qualityAdapter;
     private EffectAdapter effectAdapter;
     private WeaponWearAdapter wearAdapter;
-
-    private boolean isFromCalculator = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_chooser);
         ButterKnife.bind(this);
+        Dart.inject(this);
 
         setTitle(null);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-
-        isFromCalculator = getIntent().getBooleanExtra(EXTRA_IS_FROM_CALCULATOR, false);
 
         //Show the home button as back button
         ActionBar actionBar = getSupportActionBar();
@@ -159,7 +156,7 @@ public class ItemChooserActivity extends BptfActivity {
         wearAdapter = new WeaponWearAdapter(this);
         wearSpinner.setAdapter(wearAdapter);
 
-        item = new Item();
+        mItem = new Item();
 
         fab.hide();
     }
@@ -193,8 +190,8 @@ public class ItemChooserActivity extends BptfActivity {
         switch (requestCode) {
             case SELECT_ITEM:
                 if (resultCode == RESULT_OK) {
-                    item.setDefindex(data.getIntExtra(SelectItemActivity.EXTRA_DEFINDEX, -1));
-                    item.setName(data.getStringExtra(SelectItemActivity.EXTRA_NAME));
+                    mItem.setDefindex(data.getIntExtra(SelectItemActivity.EXTRA_DEFINDEX, -1));
+                    mItem.setName(data.getStringExtra(SelectItemActivity.EXTRA_NAME));
                     updateItemIcon();
                     fab.show();
                 }
@@ -205,16 +202,16 @@ public class ItemChooserActivity extends BptfActivity {
 
     @OnClick(R.id.fab)
     public void submit() {
-        item.setQuality(qualityAdapter.getQualityId(qualitySpinner.getSelectedItemPosition()));
-        if (item.getQuality() == Quality.UNUSUAL) {
-            item.setPriceIndex(effectAdapter.getEffectId(effectSpinner.getSelectedItemPosition()));
-        } else if (item.getQuality() == Quality.PAINTKITWEAPON) {
-            item.setWeaponWear(wearAdapter.getWearId(wearSpinner.getSelectedItemPosition()));
+        mItem.setQuality(qualityAdapter.getQualityId(qualitySpinner.getSelectedItemPosition()));
+        if (mItem.getQuality() == Quality.UNUSUAL) {
+            mItem.setPriceIndex(effectAdapter.getEffectId(effectSpinner.getSelectedItemPosition()));
+        } else if (mItem.getQuality() == Quality.PAINTKITWEAPON) {
+            mItem.setWeaponWear(wearAdapter.getWearId(wearSpinner.getSelectedItemPosition()));
         }
 
-        item.setTradable(tradable.isChecked());
-        item.setCraftable(craftable.isChecked());
-        item.setAustralium(australium.isChecked());
+        mItem.setTradable(tradable.isChecked());
+        mItem.setCraftable(craftable.isChecked());
+        mItem.setAustralium(australium.isChecked());
 
         if (isFromCalculator) {
             Cursor cursor = getContentResolver().query(
@@ -227,13 +224,13 @@ public class ItemChooserActivity extends BptfActivity {
                             CalculatorEntry.COLUMN_PRICE_INDEX + " = ? AND " +
                             CalculatorEntry.COLUMN_AUSTRALIUM + " = ? AND " +
                             CalculatorEntry.COLUMN_WEAPON_WEAR + " = ?",
-                    new String[]{String.valueOf(item.getDefindex()),
-                            String.valueOf(item.getQuality()),
-                            item.isTradable() ? "1" : "0",
-                            item.isCraftable() ? "1" : "0",
-                            String.valueOf(item.getPriceIndex()),
-                            item.isAustralium() ? "1" : "0",
-                            String.valueOf(item.getWeaponWear())
+                    new String[]{String.valueOf(mItem.getDefindex()),
+                            String.valueOf(mItem.getQuality()),
+                            mItem.isTradable() ? "1" : "0",
+                            mItem.isCraftable() ? "1" : "0",
+                            String.valueOf(mItem.getPriceIndex()),
+                            mItem.isAustralium() ? "1" : "0",
+                            String.valueOf(mItem.getWeaponWear())
                     },
                     null
             );
@@ -249,7 +246,7 @@ public class ItemChooserActivity extends BptfActivity {
         }
 
         Intent result = new Intent();
-        result.putExtra(EXTRA_ITEM, item);
+        result.putExtra(EXTRA_ITEM, mItem);
         setResult(RESULT_OK, result);
         finish();
     }
@@ -263,9 +260,9 @@ public class ItemChooserActivity extends BptfActivity {
         icon.setVisibility(View.VISIBLE);
         itemText.setVisibility(View.GONE);
         itemName.setVisibility(View.VISIBLE);
-        itemName.setText(item.getName());
+        itemName.setText(mItem.getName());
         Glide.with(this)
-                .load(item.getIconUrl(this))
+                .load(mItem.getIconUrl(this))
                 .into(icon);
     }
 }

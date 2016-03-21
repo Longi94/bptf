@@ -16,7 +16,6 @@
 
 package com.tlongdev.bktf.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,6 +29,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
@@ -54,11 +55,8 @@ public class PriceHistoryActivity extends BptfActivity implements BackpackTfPric
 
     public static final String EXTRA_ITEM = "item";
 
-    private Item mItem;
+    @InjectExtra(EXTRA_ITEM) Item mItem;
 
-    /**
-     * Views
-     */
     @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
     @Bind(R.id.progress_bar) ProgressBar progressBar;
     @Bind(R.id.fail_text) TextView failText;
@@ -68,6 +66,7 @@ public class PriceHistoryActivity extends BptfActivity implements BackpackTfPric
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_price_history);
         ButterKnife.bind(this);
+        Dart.inject(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -77,10 +76,6 @@ public class PriceHistoryActivity extends BptfActivity implements BackpackTfPric
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        Intent i = getIntent();
-
-        mItem = i.getParcelableExtra(EXTRA_ITEM);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 

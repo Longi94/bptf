@@ -115,8 +115,8 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                         @Override
                         public void onClick(View v) {
                             Intent i = new Intent(mContext, UnusualActivity.class);
-                            i.putExtra(UnusualActivity.DEFINDEX_KEY, item.getDefindex());
-                            i.putExtra(UnusualActivity.NAME_KEY, item.getName());
+                            i.putExtra(UnusualActivity.EXTRA_DEFINDEX, item.getDefindex());
+                            i.putExtra(UnusualActivity.EXTRA_NAME, item.getName());
                             mContext.startActivity(i);
                         }
                     });
@@ -138,8 +138,8 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                         @Override
                         public void onClick(View v) {
                             Intent i = new Intent(mContext, UnusualActivity.class);
-                            i.putExtra(UnusualActivity.PRICE_INDEX_KEY, item.getPriceIndex());
-                            i.putExtra(UnusualActivity.NAME_KEY, Utility.getUnusualEffectName(mContext, item.getPriceIndex()));
+                            i.putExtra(UnusualActivity.EXTRA_PRICE_INDEX, item.getPriceIndex());
+                            i.putExtra(UnusualActivity.EXTRA_NAME, Utility.getUnusualEffectName(mContext, item.getPriceIndex()));
                             mContext.startActivity(i);
                         }
                     });

@@ -16,7 +16,6 @@
 
 package com.tlongdev.bktf.ui.activity;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -31,6 +30,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
@@ -124,11 +125,11 @@ public class ItemDetailActivity extends BptfActivity {
             UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR
     };
 
-    //This decides which table to load data from.
-    private boolean isGuest;
-
-    //This is the id of the item in the database table
-    private int id;
+    @InjectExtra(EXTRA_GUEST) boolean isGuest;
+    @InjectExtra(EXTRA_ITEM_ID) int mId;
+    @InjectExtra(EXTRA_PROPER_NAME) int mProperName;
+    @InjectExtra(EXTRA_ITEM_NAME) String mItemName;
+    @InjectExtra(EXTRA_ITEM_TYPE) String mItemType;
 
     //References to all the text views in the view
     @Bind(R.id.text_view_name) TextView name;
@@ -147,9 +148,6 @@ public class ItemDetailActivity extends BptfActivity {
     @Bind(R.id.effect) ImageView effectView;
     @Bind(R.id.paint) ImageView paintView;
     @Bind(R.id.quality) ImageView quality;
-
-    //Store the intent that came
-    private Intent mIntent;
     @Bind(R.id.card_view)  CardView cardView;
 
     @Override
@@ -157,13 +155,7 @@ public class ItemDetailActivity extends BptfActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
         ButterKnife.bind(this);
-
-        //Store the intent
-        mIntent = getIntent();
-
-        //Get extra data
-        isGuest = mIntent.getBooleanExtra(EXTRA_GUEST, false);
-        id = mIntent.getIntExtra(EXTRA_ITEM_ID, 0);
+        Dart.inject(this);
 
         //Scale the icon, so the width of the image view is on third of the screen's width
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
@@ -224,7 +216,7 @@ public class ItemDetailActivity extends BptfActivity {
                 uri,
                 columns,
                 selection,
-                new String[]{String.valueOf(id)},
+                new String[]{String.valueOf(mId)},
                 null
         );
 
@@ -233,7 +225,7 @@ public class ItemDetailActivity extends BptfActivity {
                 //Store all the data
                 BackpackItem item = new BackpackItem();
                 item.setDefindex(itemCursor.getInt(COLUMN_DEFINDEX));
-                item.setName(mIntent.getStringExtra(EXTRA_ITEM_NAME));
+                item.setName(mItemName);
                 item.setQuality(itemCursor.getInt(COLUMN_QUALITY));
                 item.setTradable(itemCursor.getInt(COLUMN_TRADABLE) == 0);
                 item.setCraftable(itemCursor.getInt(COLUMN_CRAFTABLE) == 0);
@@ -248,15 +240,13 @@ public class ItemDetailActivity extends BptfActivity {
                 item.setGifterName(itemCursor.getString(COLUMN_GIFTER));
 
                 //Set the name of the item
-                name.setText(item.getFormattedName(this, mIntent.getIntExtra(EXTRA_PROPER_NAME, 0) == 1));
+                name.setText(item.getFormattedName(this, mProperName == 1));
 
                 //Set the level of the item, get the type from the intent
                 if (item.getDefindex() >= 15000 && item.getDefindex() <= 15059) {
-                    level.setText(item.getDecoratedWeaponDesc(this, mIntent.getStringExtra(EXTRA_ITEM_TYPE)));
+                    level.setText(item.getDecoratedWeaponDesc(this, mItemType));
                 } else {
-                    level.setText(getString(R.string.item_detail_level,
-                            item.getLevel(),
-                            mIntent.getStringExtra(EXTRA_ITEM_TYPE)));
+                    level.setText(getString(R.string.item_detail_level, item.getLevel(), mItemType));
                 }
 
                 //Set the origin of the item. Get the origin from the string array resource
@@ -377,7 +367,7 @@ public class ItemDetailActivity extends BptfActivity {
             itemCursor.close();
         } else {
             //Crash the app if there is no item with the id (should never happen)
-            throw new RuntimeException("Item with id " + id + " not found (selection: "
+            throw new RuntimeException("Item with id " + mId + " not found (selection: "
                     + selection + ")");
         }
     }

@@ -16,7 +16,6 @@
 
 package com.tlongdev.bktf.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
@@ -27,6 +26,8 @@ import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.widget.EditText;
 
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.UnusualAdapter;
@@ -49,22 +50,19 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
      */
     private static final String LOG_TAG = UnusualActivity.class.getSimpleName();
 
-    //Intent extra keys
-    public static final String DEFINDEX_KEY = "defindex";
-    public static final String NAME_KEY = "name";
-    public static final String PRICE_INDEX_KEY = "index";
+    public static final String EXTRA_DEFINDEX = "defindex";
+    public static final String EXTRA_NAME = "name";
+    public static final String EXTRA_PRICE_INDEX = "index";
+
+    @InjectExtra(EXTRA_DEFINDEX) int mDefindex = -1;
+    @InjectExtra(EXTRA_PRICE_INDEX) int mIndex = -1;
+    @InjectExtra(EXTRA_NAME) String mName;
 
     @Bind(R.id.search) EditText mSearchInput;
     @Bind(R.id.toolbar) Toolbar mToolbar;
     @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
 
-    //Adapter for the gridView
     private UnusualAdapter mAdapter;
-
-    //The defindex and index of the item to be viewed
-    private int defindex;
-    private int index;
-
     private UnusualPresenter mPresenter;
 
     @Override
@@ -72,6 +70,7 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unusual);
         ButterKnife.bind(this);
+        Dart.inject(this);
 
         mPresenter = new UnusualPresenter(mApplication);
         mPresenter.attachView(this);
@@ -84,13 +83,8 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        //Get necessary data from intent
-        Intent i = getIntent();
-        defindex = i.getIntExtra(DEFINDEX_KEY, -1);
-        index = i.getIntExtra(PRICE_INDEX_KEY, -1);
-
         //Set the action bar title to the current hat/effect name
-        setTitle(i.getStringExtra(NAME_KEY));
+        setTitle(mName);
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
@@ -104,9 +98,9 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, columnCount));
 
         mSearchInput.addTextChangedListener(this);
-        mSearchInput.setHint(defindex != -1 ? "Effect" : "Name");
+        mSearchInput.setHint(mDefindex != -1 ? "Effect" : "Name");
 
-        mPresenter.loadUnusuals(defindex, index, "");
+        mPresenter.loadUnusuals(mDefindex, mIndex, "");
     }
 
     @Override
@@ -126,7 +120,7 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
 
     @Override
     public void afterTextChanged(Editable s) {
-        mPresenter.loadUnusuals(defindex, index, s.toString());
+        mPresenter.loadUnusuals(mDefindex, mIndex, s.toString());
     }
 
     @Override
