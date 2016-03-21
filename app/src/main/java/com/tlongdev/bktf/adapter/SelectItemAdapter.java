@@ -27,7 +27,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.ui.activity.SelectItemActivity;
+import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.model.Item;
 
 import butterknife.Bind;
@@ -65,8 +65,8 @@ public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.Vi
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (mDataSet != null && mDataSet.moveToPosition(position)) {
             final Item item = new Item();
-            item.setDefindex(mDataSet.getInt(SelectItemActivity.COLUMN_DEFINDEX));
-            item.setName(mDataSet.getString(SelectItemActivity.COLUMN_NAME));
+            item.setDefindex(mDataSet.getInt(mDataSet.getColumnIndex(ItemSchemaEntry.COLUMN_DEFINDEX)));
+            item.setName(mDataSet.getString(mDataSet.getColumnIndex(ItemSchemaEntry.COLUMN_ITEM_NAME)));
 
             holder.name.setText(item.getName());
 

@@ -17,6 +17,7 @@
 package com.tlongdev.bktf.ui.activity;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -54,7 +55,11 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
     public static final String EXTRA_NAME = "name";
     public static final String EXTRA_PRICE_INDEX = "index";
 
+    @SuppressWarnings("NullableProblems")
+    @Nullable
     @InjectExtra(EXTRA_DEFINDEX) int mDefindex = -1;
+    @SuppressWarnings("NullableProblems")
+    @Nullable
     @InjectExtra(EXTRA_PRICE_INDEX) int mIndex = -1;
     @InjectExtra(EXTRA_NAME) String mName;
 
@@ -108,6 +113,12 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
         super.onResume();
         mTracker.setScreenName(String.valueOf(getTitle()));
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.detachView();
     }
 
     @Override

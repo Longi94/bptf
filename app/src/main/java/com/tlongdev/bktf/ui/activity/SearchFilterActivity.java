@@ -18,6 +18,7 @@ package com.tlongdev.bktf.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
@@ -53,10 +54,20 @@ public class SearchFilterActivity extends BptfActivity {
     public static final String EXTRA_CRAFTABLE = "craftable";
     public static final String EXTRA_AUSTRALIUM = "australium";
 
+    @SuppressWarnings("NullableProblems")
+    @Nullable
     @InjectExtra(EXTRA_ENABLED) boolean mEnabled = false;
+    @SuppressWarnings("NullableProblems")
+    @Nullable
     @InjectExtra(EXTRA_QUALITY) int mQuality = Quality.UNIQUE;
+    @SuppressWarnings("NullableProblems")
+    @Nullable
     @InjectExtra(EXTRA_TRADABLE) boolean mTradable = true;
+    @SuppressWarnings("NullableProblems")
+    @Nullable
     @InjectExtra(EXTRA_CRAFTABLE) boolean mCraftable = true;
+    @SuppressWarnings("NullableProblems")
+    @Nullable
     @InjectExtra(EXTRA_AUSTRALIUM) boolean mAustralium = true;
 
     @Bind(R.id.quality) Spinner qualitySpinner;

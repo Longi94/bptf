@@ -19,9 +19,6 @@ package com.tlongdev.bktf.ui.activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -31,30 +28,23 @@ import android.widget.EditText;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.SelectItemAdapter;
-import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
+import com.tlongdev.bktf.presenter.activity.SelectItemPresenter;
+import com.tlongdev.bktf.ui.view.activity.SelectItemView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class SelectItemActivity extends BptfActivity implements LoaderManager.LoaderCallbacks<Cursor>, TextWatcher, SelectItemAdapter.OnItemSelectedListener {
+public class SelectItemActivity extends BptfActivity implements SelectItemView, TextWatcher,
+        SelectItemAdapter.OnItemSelectedListener {
 
-    public static String[] COLUMNS = {
-            ItemSchemaEntry._ID,
-            ItemSchemaEntry.COLUMN_DEFINDEX,
-            ItemSchemaEntry.COLUMN_ITEM_NAME
-    };
-
-    public static final int COLUMN_DEFINDEX = 1;
-    public static final int COLUMN_NAME = 2;
-
-    private static final String QUERY_KEY = "query";
     public static final String EXTRA_DEFINDEX = "defindex";
     public static final String EXTRA_NAME = "name";
 
     @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
     @Bind(R.id.item_name) EditText inputName;
 
-    private SelectItemAdapter adapter;
+    private SelectItemPresenter mPresenter;
+    private SelectItemAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,17 +52,18 @@ public class SelectItemActivity extends BptfActivity implements LoaderManager.Lo
         setContentView(R.layout.activity_select_item);
         ButterKnife.bind(this);
 
+        mPresenter = new SelectItemPresenter(mApplication);
+        mPresenter.attachView(this);
+
         setFinishOnTouchOutside(false);
 
-        adapter = new SelectItemAdapter(this, null);
-        adapter.setListener(this);
+        mAdapter = new SelectItemAdapter(this, null);
+        mAdapter.setListener(this);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(mAdapter);
 
         inputName.addTextChangedListener(this);
-
-        getSupportLoaderManager().initLoader(0, null, this);
     }
 
     @Override
@@ -83,63 +74,22 @@ public class SelectItemActivity extends BptfActivity implements LoaderManager.Lo
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
-        String query;
-        String[] selectionArgs;
-
-        if (args != null) {
-            query = args.getString(QUERY_KEY);
-            if (query != null && query.length() > 0)
-                selectionArgs = new String[]{"%" + query + "%"};
-            else
-                selectionArgs = new String[]{"there is no such itme like thisasd"}; //stupid
-        } else {
-            selectionArgs = new String[]{"there is no such itme like thisasd"};
-        }
-
-        return new CursorLoader(this,
-                ItemSchemaEntry.CONTENT_URI,
-                COLUMNS,
-                ItemSchemaEntry.COLUMN_ITEM_NAME + " LIKE ?",
-                selectionArgs,
-                ItemSchemaEntry.COLUMN_ITEM_NAME + " ASC");
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        adapter.swapCursor(data, false);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.swapCursor(null, false);
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.detachView();
     }
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
     }
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-
     }
 
     @Override
     public void afterTextChanged(Editable s) {
-        restartLoader(s.toString());
-    }
-
-    /**
-     * Restarts the cursor loader with the given query string
-     *
-     * @param query the query string of the search view.
-     */
-    public void restartLoader(String query) {
-        Bundle args = new Bundle();
-        args.putString(QUERY_KEY, query);
-        getSupportLoaderManager().restartLoader(0, args, this);
+        mPresenter.loadItems(s.toString());
     }
 
     @Override
@@ -149,5 +99,10 @@ public class SelectItemActivity extends BptfActivity implements LoaderManager.Lo
         result.putExtra(EXTRA_NAME, name);
         setResult(RESULT_OK, result);
         finish();
+    }
+
+    @Override
+    public void showItems(Cursor items) {
+        mAdapter.swapCursor(items, true);
     }
 }

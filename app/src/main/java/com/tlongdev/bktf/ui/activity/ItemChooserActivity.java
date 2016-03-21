@@ -19,6 +19,7 @@ package com.tlongdev.bktf.ui.activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -86,6 +87,8 @@ public class ItemChooserActivity extends BptfActivity {
     @Bind(R.id.australium) CheckBox australium;
     @Bind(R.id.fab) FloatingActionButton fab;
 
+    @SuppressWarnings("NullableProblems")
+    @Nullable
     @InjectExtra(EXTRA_IS_FROM_CALCULATOR) boolean isFromCalculator = false;
 
     private Cursor effectCursor;
