@@ -20,7 +20,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -36,12 +35,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
@@ -53,18 +51,13 @@ import butterknife.OnTouch;
 /**
  * Converter fragment. Let's the user quickly convert between currencies.
  */
-public class ConverterFragment extends Fragment implements View.OnClickListener, View.OnFocusChangeListener {
+public class ConverterFragment extends BptfFragment implements View.OnClickListener, View.OnFocusChangeListener {
 
     /**
      * Log tag for logging.
      */
     @SuppressWarnings("unused")
     private static final String LOG_TAG = ConverterFragment.class.getSimpleName();
-
-    /**
-     * The {@link Tracker} used to record screen views.
-     */
-    private Tracker mTracker;
 
     /**
      * Inputs
@@ -96,11 +89,6 @@ public class ConverterFragment extends Fragment implements View.OnClickListener,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        // Obtain the shared Tracker instance.
-        BptfApplication application = (BptfApplication) (getActivity()).getApplication();
-        mTracker = application.getDefaultTracker();
-
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_converter, container, false);
 

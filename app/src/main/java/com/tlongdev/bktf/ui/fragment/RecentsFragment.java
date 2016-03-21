@@ -26,7 +26,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -46,8 +45,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.RecentsAdapter;
 import com.tlongdev.bktf.model.Price;
@@ -57,15 +54,13 @@ import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.view.fragment.RecentsView;
 import com.tlongdev.bktf.util.Utility;
 
-import javax.inject.Inject;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
  * recents fragment. Shows a list of all the prices orderd by the time of the price update.
  */
-public class RecentsFragment extends Fragment implements RecentsView,
+public class RecentsFragment extends BptfFragment implements RecentsView,
         SwipeRefreshLayout.OnRefreshListener, MainActivity.OnDrawerOpenedListener {
 
     /**
@@ -73,8 +68,6 @@ public class RecentsFragment extends Fragment implements RecentsView,
      */
     @SuppressWarnings("unused")
     private static final String LOG_TAG = RecentsFragment.class.getSimpleName();
-
-    @Inject Tracker mTracker;
 
     @Bind(R.id.progress_bar) ProgressBar progressBar;
     @Bind(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
@@ -127,11 +120,7 @@ public class RecentsFragment extends Fragment implements RecentsView,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Obtain the shared Tracker instance.
-        BptfApplication application = (BptfApplication) getActivity().getApplication();
-        application.getFragmentComponent().inject(this);
-
-        mPresenter = new RecentsPresenter(application);
+        mPresenter = new RecentsPresenter(mApplication);
         mPresenter.attachView(this);
 
         View rootView = inflater.inflate(R.layout.fragment_recents, container, false);
@@ -335,11 +324,6 @@ public class RecentsFragment extends Fragment implements RecentsView,
         } else {
             showToast("bptf: " + errorMessage, Toast.LENGTH_SHORT);
         }
-    }
-
-    @Override
-    public void showToast(CharSequence message, int duration) {
-        Toast.makeText(getActivity(), message, duration).show();
     }
 
     @Override

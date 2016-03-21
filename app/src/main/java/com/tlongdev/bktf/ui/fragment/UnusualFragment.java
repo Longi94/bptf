@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,11 +35,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.UnusualAdapter;
 import com.tlongdev.bktf.model.Item;
@@ -52,8 +48,6 @@ import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -61,15 +55,13 @@ import butterknife.ButterKnife;
  * The unusual fragment, that shows a list of unusual item categories. Either categorized by
  * hats or effects.
  */
-public class UnusualFragment extends Fragment implements UnusualView,
+public class UnusualFragment extends BptfFragment implements UnusualView,
         MainActivity.OnDrawerOpenedListener, TextWatcher {
 
     /**
      * Log tag for logging.
      */
     private static final String LOG_TAG = UnusualFragment.class.getSimpleName();
-
-    @Inject Tracker mTracker;
 
     @Bind(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
     @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
@@ -116,12 +108,7 @@ public class UnusualFragment extends Fragment implements UnusualView,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        // Obtain the shared Tracker instance.
-        BptfApplication application = (BptfApplication) (getActivity()).getApplication();
-        application.getFragmentComponent().inject(this);
-
-        mPresenter = new UnusualPresenter(application);
+        mPresenter = new UnusualPresenter(mApplication);
         mPresenter.attachView(this);
 
         View rootView = inflater.inflate(R.layout.fragment_unusual, container, false);
@@ -276,10 +263,5 @@ public class UnusualFragment extends Fragment implements UnusualView,
         } else {
             mPresenter.loadUnusualHats(filter, mCurrentSort);
         }
-    }
-
-    @Override
-    public void showToast(CharSequence message, int duration) {
-        Toast.makeText(getActivity(), message, duration).show();
     }
 }

@@ -26,7 +26,6 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -43,8 +42,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.presenter.fragment.UserPresenter;
@@ -64,7 +61,7 @@ import butterknife.OnClick;
 /**
  * Fragment for displaying the user profile.
  */
-public class UserFragment extends Fragment implements UserView, View.OnClickListener, MainActivity.OnDrawerOpenedListener {
+public class UserFragment extends BptfFragment implements UserView, View.OnClickListener, MainActivity.OnDrawerOpenedListener {
 
     /**
      * Log tag for logging.
@@ -73,10 +70,6 @@ public class UserFragment extends Fragment implements UserView, View.OnClickList
 
     public static final String USER_PARAM = "user_param";
 
-    /**
-     * The {@link Tracker} used to record screen views.
-     */
-    @Inject Tracker mTracker;
     @Inject SharedPreferences mPrefs;
     @Inject ProfileManager mProfileManager;
     @Inject Context mContext;
@@ -146,11 +139,7 @@ public class UserFragment extends Fragment implements UserView, View.OnClickList
             searchedUser = true;
         }
 
-        // Obtain the shared Tracker instance.
-        BptfApplication application = (BptfApplication) (getActivity()).getApplication();
-        application.getFragmentComponent().inject(this);
-
-        mPresenter = new UserPresenter(application);
+        mPresenter = new UserPresenter(mApplication);
         mPresenter.attachView(this);
         mPresenter.setSearchedUser(searchedUser);
 
@@ -454,10 +443,5 @@ public class UserFragment extends Fragment implements UserView, View.OnClickList
     @Override
     public void updateDrawer() {
         ((MainActivity) getActivity()).updateDrawer();
-    }
-
-    @Override
-    public void showToast(CharSequence message, int duration) {
-        Toast.makeText(getActivity(), message, duration).show();
     }
 }

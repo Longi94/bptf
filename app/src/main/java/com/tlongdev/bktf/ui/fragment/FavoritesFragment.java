@@ -34,11 +34,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.FavoritesAdapter;
 import com.tlongdev.bktf.model.Item;
@@ -51,8 +48,6 @@ import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -60,12 +55,10 @@ import butterknife.OnClick;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FavoritesFragment extends Fragment implements FavoritesView,
+public class FavoritesFragment extends BptfFragment implements FavoritesView,
         MainActivity.OnDrawerOpenedListener {
 
     private static final String LOG_TAG = FavoritesFragment.class.getSimpleName();
-
-    @Inject Tracker mTracker;
 
     @Bind(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
     @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
@@ -96,12 +89,7 @@ public class FavoritesFragment extends Fragment implements FavoritesView,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        // Obtain the shared Tracker instance.
-        BptfApplication application = (BptfApplication) (getActivity()).getApplication();
-        application.getFragmentComponent().inject(this);
-
-        mPresenter = new FavoritesPresenter(application);
+        mPresenter = new FavoritesPresenter(mApplication);
         mPresenter.attachView(this);
 
         // Inflate the layout for this fragment
@@ -203,10 +191,5 @@ public class FavoritesFragment extends Fragment implements FavoritesView,
     public void expandToolbar() {
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
         behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
-    }
-
-    @Override
-    public void showToast(CharSequence message, int duration) {
-        Toast.makeText(getActivity(), message, duration).show();
     }
 }

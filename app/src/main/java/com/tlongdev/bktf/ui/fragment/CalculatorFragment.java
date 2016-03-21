@@ -22,7 +22,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,11 +34,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.CalculatorAdapter;
 import com.tlongdev.bktf.model.Currency;
@@ -53,8 +49,6 @@ import com.tlongdev.bktf.ui.view.fragment.CalculatorView;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -63,11 +57,9 @@ import butterknife.OnClick;
  * Calculator fragment. Let's the user create a list of items and it will calculate the total value
  * of the items
  */
-public class CalculatorFragment extends Fragment implements CalculatorView, MainActivity.OnDrawerOpenedListener{
+public class CalculatorFragment extends BptfFragment implements CalculatorView, MainActivity.OnDrawerOpenedListener{
 
     private static final String LOG_TAG = CalculatorFragment.class.getSimpleName();
-
-    @Inject Tracker mTracker;
 
     @Bind(R.id.text_view_price_metal) TextView priceMetal;
     @Bind(R.id.text_view_price_keys) TextView priceKeys;
@@ -94,11 +86,7 @@ public class CalculatorFragment extends Fragment implements CalculatorView, Main
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Obtain the shared Tracker instance.
-        BptfApplication application = (BptfApplication) (getActivity()).getApplication();
-        application.getFragmentComponent().inject(this);
-
-        mPresenter = new CalculatorPresenter(application);
+        mPresenter = new CalculatorPresenter(mApplication);
         mPresenter.attachView(this);
 
         View rootView = inflater.inflate(R.layout.fragment_calculator, container, false);
@@ -233,10 +221,5 @@ public class CalculatorFragment extends Fragment implements CalculatorView, Main
         int count = mAdapter.getItemCount();
         mAdapter.clearDataSet();
         mAdapter.notifyItemRangeRemoved(0, count);
-    }
-
-    @Override
-    public void showToast(CharSequence message, int duration) {
-        Toast.makeText(getActivity(), message, duration).show();
     }
 }

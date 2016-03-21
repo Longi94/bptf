@@ -17,11 +17,7 @@
 package com.tlongdev.bktf.component;
 
 import com.tlongdev.bktf.module.BptfAppModule;
-import com.tlongdev.bktf.ui.fragment.CalculatorFragment;
-import com.tlongdev.bktf.ui.fragment.FavoritesFragment;
-import com.tlongdev.bktf.ui.fragment.RecentsFragment;
-import com.tlongdev.bktf.ui.fragment.UnusualFragment;
-import com.tlongdev.bktf.ui.fragment.UserFragment;
+import com.tlongdev.bktf.ui.fragment.BptfFragment;
 
 import javax.inject.Singleton;
 
@@ -34,13 +30,6 @@ import dagger.Component;
 @Singleton
 @Component(modules = BptfAppModule.class)
 public interface FragmentComponent {
-    void inject(RecentsFragment recentsFragment);
 
-    void inject(CalculatorFragment calculatorFragment);
-
-    void inject(FavoritesFragment favoritesFragment);
-
-    void inject(UnusualFragment unusualFragment);
-
-    void inject(UserFragment userFragment);
+    void inject(BptfFragment bptfFragment);
 }
