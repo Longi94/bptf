@@ -26,6 +26,7 @@ import com.tlongdev.bktf.interactor.LoadCurrencyPricesInteractor;
 import com.tlongdev.bktf.interactor.LoadFavoritesInteractor;
 import com.tlongdev.bktf.interactor.LoadUnusualEffectsInteractor;
 import com.tlongdev.bktf.interactor.LoadUnusualHatCategoriesInteractor;
+import com.tlongdev.bktf.interactor.LoadUnusualsInteractor;
 import com.tlongdev.bktf.interactor.TlongdevItemSchemaInteractor;
 import com.tlongdev.bktf.interactor.TlongdevPriceListInteractor;
 import com.tlongdev.bktf.module.BptfAppModule;
@@ -69,4 +70,6 @@ public interface InteractorComponent {
     void inject(LoadBackpackItemsInteractor loadBackpackItemsInteractor);
 
     void inject(GetSearchedUserDataInteractor getSearchedUserDataInteractor);
+
+    void inject(LoadUnusualsInteractor loadUnusualsInteractor);
 }

@@ -18,8 +18,12 @@ package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.support.annotation.IntDef;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -28,10 +32,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Item;
+import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.ui.activity.UnusualActivity;
 import com.tlongdev.bktf.util.Utility;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
 import butterknife.Bind;
@@ -48,9 +56,10 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
     @SuppressWarnings("unused")
     private static final String LOG_TAG = UnusualAdapter.class.getSimpleName();
 
-    /**
-     * Type IDs
-     */
+    @IntDef({TYPE_HATS, TYPE_EFFECTS, TYPE_SPECIFIC_HAT})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface UnusualAdapterType{}
+
     public static final int TYPE_HATS = 0;
     public static final int TYPE_EFFECTS = 1;
     public static final int TYPE_SPECIFIC_HAT = 2;
@@ -68,7 +77,8 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
     /**
      * This variable will determine how the items will look like in the list
      */
-    private int type = 0;
+    @UnusualAdapterType
+    private int mType;
 
     /**
      * Main constructor.
@@ -92,7 +102,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
 
             final Item item = mDataSet.get(position);
 
-            switch (type) {
+            switch (mType) {
                 //We are showing the hats, no effects
                 case TYPE_HATS:
 
@@ -143,29 +153,16 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                     break;
                 //We are showing both that icon and the effect for a specific hat or effect
                 case TYPE_SPECIFIC_HAT:
-                    /*final Item hat = new Item(
-                            mDataSet.getInt(UnusualActivity.COLUMN_DEFINDEX),
-                            null,
-                            Quality.UNUSUAL, true, true, false,
-                            mDataSet.getInt(UnusualActivity.COLUMN_PRICE_INDEX),
-                            new Price(
-                                    mDataSet.getDouble(UnusualActivity.COLUMN_PRICE),
-                                    mDataSet.getDouble(UnusualActivity.COLUMN_PRICE_MAX),
-                                    0, 0, 0,
-                                    mDataSet.getString(UnusualActivity.COLUMN_CURRENCY)
-                            )
-                    );
+                    holder.price.setText(item.getPrice().getFormattedPrice(mContext, Currency.KEY));
 
-                    holder.price.setText(hat.getPrice().getFormattedPrice(mContext, Currency.KEY));
-
-                    holder.name.setText(mDataSet.getString(UnusualActivity.COLUMN_NAME));
+                    holder.name.setText(item.getName());
 
                     Glide.with(mContext)
-                            .load(hat.getIconUrl(mContext))
+                            .load(item.getIconUrl(mContext))
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(holder.icon);
                     Glide.with(mContext)
-                            .load(hat.getEffectUrl())
+                            .load(item.getEffectUrl())
                             .into(holder.effect);
 
                     holder.more.setOnClickListener(new View.OnClickListener() {
@@ -176,7 +173,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                             menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
 
                             menu.getMenu().getItem(0).setTitle(
-                                    Utility.isFavorite(mContext, hat) ? "Remove from favorites" : "Add to favorites");
+                                    Utility.isFavorite(mContext, item) ? "Remove from favorites" : "Add to favorites");
 
                             menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                 @Override
@@ -186,20 +183,20 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
 
                                             Intent i = new Intent(mContext, PriceHistoryActivity.class);
 
-                                            i.putExtra(PriceHistoryActivity.EXTRA_ITEM, hat);
+                                            i.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
 
                                             mContext.startActivity(i);
                                             break;
                                         case R.id.favorite:
-                                            if (Utility.isFavorite(mContext, hat)) {
-                                                Utility.removeFromFavorites(mContext, hat);
+                                            if (Utility.isFavorite(mContext, item)) {
+                                                Utility.removeFromFavorites(mContext, item);
                                             } else {
-                                                Utility.addToFavorites(mContext, hat);
+                                                Utility.addToFavorites(mContext, item);
                                             }
                                             break;
                                         case R.id.backpack_tf:
                                             mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
-                                                    hat.getBackpackTfUrl())));
+                                                    item.getBackpackTfUrl())));
                                             break;
                                     }
                                     return true;
@@ -209,7 +206,6 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                             menu.show();
                         }
                     });
-*/
                     break;
             }
         }
@@ -225,8 +221,8 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
      *
      * @param type the type of the adapter
      */
-    public void setType(int type) {
-        this.type = type;
+    public void setType(@UnusualAdapterType int type) {
+        this.mType = type;
     }
 
     public void setDataSet(List<Item> dataSet) {

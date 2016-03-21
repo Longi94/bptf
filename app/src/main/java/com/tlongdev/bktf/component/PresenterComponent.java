@@ -49,4 +49,6 @@ public interface PresenterComponent {
     void inject(UserBackpackPresenter userBackpackPresenter);
 
     void inject(com.tlongdev.bktf.presenter.activity.UserPresenter userPresenter);
+
+    void inject(com.tlongdev.bktf.presenter.activity.UnusualPresenter unusualPresenter);
 }
