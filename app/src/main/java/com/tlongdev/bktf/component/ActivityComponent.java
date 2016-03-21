@@ -17,6 +17,7 @@
 package com.tlongdev.bktf.component;
 
 import com.tlongdev.bktf.module.BptfAppModule;
+import com.tlongdev.bktf.ui.activity.SteamIdActivity;
 import com.tlongdev.bktf.ui.activity.UnusualActivity;
 import com.tlongdev.bktf.ui.activity.UserActivity;
 import com.tlongdev.bktf.ui.activity.UserBackpackActivity;
@@ -38,4 +39,6 @@ public interface ActivityComponent {
     void inject(UserActivity userActivity);
 
     void inject(UnusualActivity unusualActivity);
+
+    void inject(SteamIdActivity steamIdActivity);
 }

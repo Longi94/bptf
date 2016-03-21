@@ -30,6 +30,8 @@ import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.util.Utility;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -38,9 +40,10 @@ public class SteamIdActivity extends AppCompatActivity {
     /**
      * The {@link Tracker} used to record screen views.
      */
-    private Tracker mTracker;
+    @Inject Tracker mTracker;
 
     @Bind(R.id.web_view) WebView webView;
+    @Bind(R.id.toolbar) Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,15 +54,14 @@ public class SteamIdActivity extends AppCompatActivity {
 
         // Obtain the shared Tracker instance.
         BptfApplication application = (BptfApplication) getApplication();
-        mTracker = application.getDefaultTracker();
+        application.getActivityComponent().inject(this);
 
         //Set the color of the status bar
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         webView.setWebChromeClient(new WebChromeClient() {
