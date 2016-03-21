@@ -16,9 +16,7 @@
 
 package com.tlongdev.bktf.ui.activity;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Window;
 import android.webkit.WebChromeClient;
@@ -26,16 +24,14 @@ import android.webkit.WebView;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.util.Utility;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class SteamIdActivity extends AppCompatActivity {
+public class SteamIdActivity extends BptfActivity {
 
     /**
      * The {@link Tracker} used to record screen views.
@@ -51,15 +47,6 @@ public class SteamIdActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_steam_id);
         ButterKnife.bind(this);
-
-        // Obtain the shared Tracker instance.
-        BptfApplication application = (BptfApplication) getApplication();
-        application.getActivityComponent().inject(this);
-
-        //Set the color of the status bar
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
-        }
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

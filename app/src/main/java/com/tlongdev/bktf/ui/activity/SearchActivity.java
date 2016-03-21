@@ -23,14 +23,12 @@ import android.database.MatrixCursor;
 import android.database.MergeCursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -42,8 +40,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.SearchAdapter;
@@ -65,7 +61,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class SearchActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class SearchActivity extends BptfActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     /**
      * Log tag for logging.
@@ -101,11 +97,6 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             PriceEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
             PriceEntry.COLUMN_AUSTRALIUM + " = ?";
 
-    /**
-     * The {@link Tracker} used to record screen views.
-     */
-    private Tracker mTracker;
-
     //The search query string
     private String searchQuery;
 
@@ -129,15 +120,6 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
-
-        // Obtain the shared Tracker instance.
-        BptfApplication application = (BptfApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-
-        //Set the color of the status bar
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
-        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

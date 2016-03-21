@@ -18,12 +18,10 @@ package com.tlongdev.bktf.ui.activity;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -31,17 +29,14 @@ import android.text.TextWatcher;
 import android.widget.EditText;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.SelectItemAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
-import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class SelectItemActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, TextWatcher, SelectItemAdapter.OnItemSelectedListener {
+public class SelectItemActivity extends BptfActivity implements LoaderManager.LoaderCallbacks<Cursor>, TextWatcher, SelectItemAdapter.OnItemSelectedListener {
 
     public static String[] COLUMNS = {
             ItemSchemaEntry._ID,
@@ -56,11 +51,6 @@ public class SelectItemActivity extends AppCompatActivity implements LoaderManag
     public static final String EXTRA_DEFINDEX = "defindex";
     public static final String EXTRA_NAME = "name";
 
-    /**
-     * The {@link Tracker} used to record screen views.
-     */
-    private Tracker mTracker;
-
     @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
     @Bind(R.id.item_name) EditText inputName;
 
@@ -71,15 +61,6 @@ public class SelectItemActivity extends AppCompatActivity implements LoaderManag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_item);
         ButterKnife.bind(this);
-
-        // Obtain the shared Tracker instance.
-        BptfApplication application = (BptfApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-
-        //Set the color of the status bar
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
-        }
 
         setFinishOnTouchOutside(false);
 

@@ -17,10 +17,8 @@
 package com.tlongdev.bktf.ui.activity;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -31,18 +29,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.UnusualAdapter;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.presenter.activity.UnusualPresenter;
 import com.tlongdev.bktf.ui.view.activity.UnusualView;
-import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -50,7 +43,7 @@ import butterknife.ButterKnife;
 /**
  * Activity for showing unusual prices for specific effects or hats.
  */
-public class UnusualActivity extends AppCompatActivity implements UnusualView, TextWatcher {
+public class UnusualActivity extends BptfActivity implements UnusualView, TextWatcher {
 
     /**
      * Log tag for logging.
@@ -61,8 +54,6 @@ public class UnusualActivity extends AppCompatActivity implements UnusualView, T
     public static final String DEFINDEX_KEY = "defindex";
     public static final String NAME_KEY = "name";
     public static final String PRICE_INDEX_KEY = "index";
-
-    @Inject Tracker mTracker;
 
     @Bind(R.id.search) EditText mSearchInput;
     @Bind(R.id.toolbar) Toolbar mToolbar;
@@ -83,17 +74,8 @@ public class UnusualActivity extends AppCompatActivity implements UnusualView, T
         setContentView(R.layout.activity_unusual);
         ButterKnife.bind(this);
 
-        // Obtain the shared Tracker instance.
-        BptfApplication application = (BptfApplication) getApplication();
-        application.getActivityComponent().inject(this);
-
-        mPresenter = new UnusualPresenter(application);
+        mPresenter = new UnusualPresenter(mApplication);
         mPresenter.attachView(this);
-
-        //Set the color of the status bar
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
-        }
 
         setSupportActionBar(mToolbar);
 

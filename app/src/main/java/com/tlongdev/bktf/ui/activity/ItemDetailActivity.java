@@ -16,7 +16,6 @@
 
 package com.tlongdev.bktf.ui.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -33,8 +32,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
@@ -49,7 +46,7 @@ import butterknife.ButterKnife;
 /**
  * The (dialog) activity for showing info about an item in a backpack.
  */
-public class ItemDetailActivity extends Activity {
+public class ItemDetailActivity extends BptfActivity {
 
     /**
      * Log tag for logging.
@@ -127,11 +124,6 @@ public class ItemDetailActivity extends Activity {
             UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR
     };
 
-    /**
-     * The {@link Tracker} used to record screen views.
-     */
-    private Tracker mTracker;
-
     //This decides which table to load data from.
     private boolean isGuest;
 
@@ -165,10 +157,6 @@ public class ItemDetailActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
         ButterKnife.bind(this);
-
-        // Obtain the shared Tracker instance.
-        BptfApplication application = (BptfApplication) getApplication();
-        mTracker = application.getDefaultTracker();
 
         //Store the intent
         mIntent = getIntent();

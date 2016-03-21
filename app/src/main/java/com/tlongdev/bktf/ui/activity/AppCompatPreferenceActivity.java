@@ -29,25 +29,29 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.analytics.Tracker;
+import com.tlongdev.bktf.BptfApplication;
+
+import javax.inject.Inject;
+
 /**
  * A {@link android.preference.PreferenceActivity} which implements and proxies the necessary calls
  * to be used with AppCompat.
  */
 public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
 
-    /**
-     * Log tag for logging.
-     */
-    @SuppressWarnings("unused")
-    private static final String LOG_TAG = AppCompatPreferenceActivity.class.getSimpleName();
+    @Inject Tracker mTracker;
 
     private AppCompatDelegate mDelegate;
+    private BptfApplication mApplication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getDelegate().installViewFactory();
         getDelegate().onCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
+        mApplication = (BptfApplication) getApplication();
+        mApplication.getActivityComponent().inject(this);
     }
 
     @Override

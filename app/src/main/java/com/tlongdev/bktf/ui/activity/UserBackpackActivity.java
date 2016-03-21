@@ -22,7 +22,6 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -33,8 +32,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.BackpackAdapter;
 import com.tlongdev.bktf.data.DatabaseContract;
@@ -44,15 +41,13 @@ import com.tlongdev.bktf.ui.view.activity.UserBackpackView;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
  * Activity for viewing user backpacks.
  */
-public class UserBackpackActivity extends AppCompatActivity implements UserBackpackView, BackpackAdapter.OnItemClickedListener {
+public class UserBackpackActivity extends BptfActivity implements UserBackpackView, BackpackAdapter.OnItemClickedListener {
 
     /**
      * Log tag for logging.
@@ -62,11 +57,6 @@ public class UserBackpackActivity extends AppCompatActivity implements UserBackp
     //Keys for extra data in the intent
     public static final String EXTRA_NAME = "name";
     public static final String EXTRA_GUEST = "guest";
-
-    /**
-     * The {@link Tracker} used to record screen views.
-     */
-    @Inject Tracker mTracker;
 
     @Bind(R.id.list_view_backpack) RecyclerView mRecyclerView;
 
@@ -84,21 +74,11 @@ public class UserBackpackActivity extends AppCompatActivity implements UserBackp
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Obtain the shared Tracker instance.
-        BptfApplication application = (BptfApplication) getApplication();
-        application.getActivityComponent().inject(this);
-
-        mPresenter = new UserBackpackPresenter(application);
-        mPresenter.attachView(this);
-
         setContentView(R.layout.activity_user_backpack);
         ButterKnife.bind(this);
 
-        //Set the color of the status bar
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.primary_dark));
-        }
+        mPresenter = new UserBackpackPresenter(mApplication);
+        mPresenter.attachView(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

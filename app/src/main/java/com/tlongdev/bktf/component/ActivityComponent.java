@@ -17,6 +17,8 @@
 package com.tlongdev.bktf.component;
 
 import com.tlongdev.bktf.module.BptfAppModule;
+import com.tlongdev.bktf.ui.activity.AppCompatPreferenceActivity;
+import com.tlongdev.bktf.ui.activity.BptfActivity;
 import com.tlongdev.bktf.ui.activity.SteamIdActivity;
 import com.tlongdev.bktf.ui.activity.UnusualActivity;
 import com.tlongdev.bktf.ui.activity.UserActivity;
@@ -33,6 +35,10 @@ import dagger.Component;
 @Singleton
 @Component(modules = BptfAppModule.class)
 public interface ActivityComponent {
+
+    void inject(BptfActivity bptfActivity);
+
+    void inject(AppCompatPreferenceActivity appCompatPreferenceActivity);
 
     void inject(UserBackpackActivity userBackpackActivity);
 

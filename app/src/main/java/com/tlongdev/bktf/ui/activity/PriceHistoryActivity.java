@@ -17,10 +17,8 @@
 package com.tlongdev.bktf.ui.activity;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -33,13 +31,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.HistoryAdapter;
+import com.tlongdev.bktf.interactor.BackpackTfPriceHistoryInteractor;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
-import com.tlongdev.bktf.interactor.BackpackTfPriceHistoryInteractor;
 import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
@@ -47,7 +44,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class PriceHistoryActivity extends AppCompatActivity implements BackpackTfPriceHistoryInteractor.Callback {
+public class PriceHistoryActivity extends BptfActivity implements BackpackTfPriceHistoryInteractor.Callback {
 
     /**
      * Log tag for logging.
@@ -56,11 +53,6 @@ public class PriceHistoryActivity extends AppCompatActivity implements BackpackT
     private static final String LOG_TAG = BackpackTfPriceHistoryInteractor.class.getSimpleName();
 
     public static final String EXTRA_ITEM = "item";
-
-    /**
-     * The {@link Tracker} used to record screen views.
-     */
-    private Tracker mTracker;
 
     private Item mItem;
 
@@ -77,10 +69,6 @@ public class PriceHistoryActivity extends AppCompatActivity implements BackpackT
         setContentView(R.layout.activity_price_history);
         ButterKnife.bind(this);
 
-        // Obtain the shared Tracker instance.
-        BptfApplication application = (BptfApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -88,11 +76,6 @@ public class PriceHistoryActivity extends AppCompatActivity implements BackpackT
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        //Set the color of the status bar
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
         }
 
         Intent i = getIntent();

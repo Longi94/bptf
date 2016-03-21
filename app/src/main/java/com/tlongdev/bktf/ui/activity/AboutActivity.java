@@ -20,7 +20,6 @@ package com.tlongdev.bktf.ui.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -34,11 +33,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.util.Utility;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -90,11 +86,6 @@ public class AboutActivity extends AppCompatPreferenceActivity implements Shared
     };
 
     /**
-     * The {@link Tracker} used to record screen views.
-     */
-    private Tracker mTracker;
-
-    /**
      * Binds a preference's summary to its value. More specifically, when the
      * preference's value is changed, its summary (line of text below the
      * preference title) is updated to reflect the value. The summary is also
@@ -118,16 +109,6 @@ public class AboutActivity extends AppCompatPreferenceActivity implements Shared
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Obtain the shared Tracker instance.
-        BptfApplication application = (BptfApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-
-        //Set the color of the status bar
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
-        }
-
         //Re-add actionbar that was removed in recent build tools.
         LinearLayout root = (LinearLayout) findViewById(android.R.id.list)
                 .getParent().getParent().getParent();

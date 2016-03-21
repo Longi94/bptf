@@ -17,12 +17,10 @@
 package com.tlongdev.bktf.ui.activity;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -30,16 +28,11 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.presenter.activity.UserPresenter;
 import com.tlongdev.bktf.ui.fragment.UserFragment;
 import com.tlongdev.bktf.ui.view.activity.UserView;
-import com.tlongdev.bktf.util.Utility;
-
-import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -47,7 +40,7 @@ import butterknife.ButterKnife;
 /**
  * Profile page activity.
  */
-public class UserActivity extends AppCompatActivity implements UserView{
+public class UserActivity extends BptfActivity implements UserView{
 
     /**
      * Log tag for logging.
@@ -57,11 +50,6 @@ public class UserActivity extends AppCompatActivity implements UserView{
 
     //Keys for extra data in the intent.
     public static final String STEAM_ID_KEY = "steamid";
-
-    /**
-     * The {@link Tracker} used to record screen views.
-     */
-    @Inject Tracker mTracker;
 
     //Progress bar that indicates downloading user data.
     @Bind(R.id.progress_bar) ProgressBar progressBar;
@@ -76,17 +64,8 @@ public class UserActivity extends AppCompatActivity implements UserView{
         setContentView(R.layout.activity_user);
         ButterKnife.bind(this);
 
-        // Obtain the shared Tracker instance.
-        BptfApplication application = (BptfApplication) getApplication();
-        application.getActivityComponent().inject(this);
-
-        mPresenter = new UserPresenter(application);
+        mPresenter = new UserPresenter(mApplication);
         mPresenter.attachView(this);
-
-        //Set the color of the status bar
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
-        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

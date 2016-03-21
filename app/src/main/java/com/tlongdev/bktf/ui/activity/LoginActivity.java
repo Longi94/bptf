@@ -18,35 +18,26 @@ package com.tlongdev.bktf.ui.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.interactor.GetUserDataInteractor;
 import com.tlongdev.bktf.interactor.Tf2UserBackpackInteractor;
 import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.util.ProfileManager;
-import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LoginActivity extends AppCompatActivity implements GetUserDataInteractor.Callback, Tf2UserBackpackInteractor.Callback {
-
-    /**
-     * The {@link Tracker} used to record screen views.
-     */
-    private Tracker mTracker;
+public class LoginActivity extends BptfActivity implements GetUserDataInteractor.Callback, Tf2UserBackpackInteractor.Callback {
 
     @Bind(R.id.steam_id) EditText steamIdInput;
 
@@ -58,10 +49,6 @@ public class LoginActivity extends AppCompatActivity implements GetUserDataInter
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        // Obtain the shared Tracker instance.
-        BptfApplication application = (BptfApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -69,11 +56,6 @@ public class LoginActivity extends AppCompatActivity implements GetUserDataInter
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        //Set the color of the status bar
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
         }
     }
 

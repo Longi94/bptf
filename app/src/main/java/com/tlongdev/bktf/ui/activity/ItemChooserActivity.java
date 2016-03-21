@@ -54,7 +54,7 @@ import butterknife.OnClick;
 /**
  * Dialog style activity for selecting items to be added to the calculator list.
  */
-public class ItemChooserActivity extends AppCompatActivity {
+public class ItemChooserActivity extends BptfActivity {
 
     /**
      * Log tag for logging.
@@ -74,11 +74,6 @@ public class ItemChooserActivity extends AppCompatActivity {
 
     public static final int COLUMN_INDEX = 1;
     public static final int COLUMN_NAME = 2;
-
-    /**
-     * The {@link Tracker} used to record screen views.
-     */
-    private Tracker mTracker;
 
     @Bind(R.id.quality) Spinner qualitySpinner;
     @Bind(R.id.effect) Spinner effectSpinner;
@@ -109,14 +104,6 @@ public class ItemChooserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_item_chooser);
         ButterKnife.bind(this);
 
-        // Obtain the shared Tracker instance.
-        BptfApplication application = (BptfApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-
-        //Set the color of the status bar
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
-        }
         setTitle(null);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));

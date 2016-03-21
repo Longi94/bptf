@@ -18,7 +18,6 @@ package com.tlongdev.bktf.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
@@ -28,8 +27,6 @@ import android.widget.Spinner;
 import android.widget.Switch;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.spinner.QualityAdapter;
 import com.tlongdev.bktf.model.Quality;
@@ -40,7 +37,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SearchFilterActivity extends AppCompatActivity {
+public class SearchFilterActivity extends BptfActivity {
 
     /**
      * Log tag for logging.
@@ -53,11 +50,6 @@ public class SearchFilterActivity extends AppCompatActivity {
     public static final String EXTRA_TRADABLE = "tradable";
     public static final String EXTRA_CRAFTABLE = "craftable";
     public static final String EXTRA_AUSTRALIUM = "australium";
-
-    /**
-     * The {@link Tracker} used to record screen views.
-     */
-    private Tracker mTracker;
 
     @Bind(R.id.quality) Spinner qualitySpinner;
     @Bind(R.id.tradable) CheckBox tradable;
@@ -72,10 +64,6 @@ public class SearchFilterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_filter);
         ButterKnife.bind(this);
-
-        // Obtain the shared Tracker instance.
-        BptfApplication application = (BptfApplication) getApplication();
-        mTracker = application.getDefaultTracker();
 
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.width = LinearLayout.LayoutParams.MATCH_PARENT;
