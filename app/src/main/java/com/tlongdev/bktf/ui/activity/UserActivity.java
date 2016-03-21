@@ -25,7 +25,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
@@ -101,11 +100,6 @@ public class UserActivity extends BptfActivity implements UserView{
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.detachView();
-    }
-
-    @Override
-    public void showToast(CharSequence message, int duration) {
-        Toast.makeText(this, message, duration).show();
     }
 
     @Override

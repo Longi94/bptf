@@ -23,20 +23,12 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.R;
-
-import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class SteamIdActivity extends BptfActivity {
-
-    /**
-     * The {@link Tracker} used to record screen views.
-     */
-    @Inject Tracker mTracker;
 
     @Bind(R.id.web_view) WebView webView;
     @Bind(R.id.toolbar) Toolbar mToolbar;

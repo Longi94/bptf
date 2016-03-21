@@ -26,7 +26,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
@@ -128,11 +127,6 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
     @Override
     public void afterTextChanged(Editable s) {
         mPresenter.loadUnusuals(defindex, index, s.toString());
-    }
-
-    @Override
-    public void showToast(CharSequence message, int duration) {
-        Toast.makeText(this, message, duration).show();
     }
 
     @Override

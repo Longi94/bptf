@@ -29,7 +29,6 @@ import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
@@ -155,11 +154,6 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
     public void showItems(List<BackpackItem> items, List<BackpackItem> newItems) {
         mAdapter.setDataSet(items, newItems);
         mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void showToast(CharSequence message, int duration) {
-        Toast.makeText(this, message, duration).show();
     }
 
     @Override
