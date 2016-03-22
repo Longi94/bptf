@@ -42,12 +42,6 @@ import butterknife.OnClick;
 
 public class SearchFilterActivity extends BptfActivity {
 
-    /**
-     * Log tag for logging.
-     */
-    @SuppressWarnings("unused")
-    private static final String LOG_TAG = SearchActivity.class.getSimpleName();
-
     public static final String EXTRA_ENABLED = "enabled";
     public static final String EXTRA_QUALITY = "quality";
     public static final String EXTRA_TRADABLE = "tradable";

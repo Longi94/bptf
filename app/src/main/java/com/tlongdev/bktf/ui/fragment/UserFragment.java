@@ -63,11 +63,6 @@ import butterknife.OnClick;
  */
 public class UserFragment extends BptfFragment implements UserView, View.OnClickListener, MainActivity.OnDrawerOpenedListener {
 
-    /**
-     * Log tag for logging.
-     */
-    private static final String LOG_TAG = UserFragment.class.getSimpleName();
-
     public static final String USER_PARAM = "user_param";
 
     @Inject SharedPreferences mPrefs;
@@ -138,6 +133,8 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
             mUser = getArguments().getParcelable(USER_PARAM);
             searchedUser = true;
         }
+
+        mApplication.getFragmentComponent().inject(this);
 
         mPresenter = new UserPresenter(mApplication);
         mPresenter.attachView(this);

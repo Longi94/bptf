@@ -14,25 +14,22 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.component;
+package com.tlongdev.bktf.ui.view.activity;
 
-import com.tlongdev.bktf.module.BptfAppModule;
-import com.tlongdev.bktf.ui.fragment.BptfFragment;
-import com.tlongdev.bktf.ui.fragment.UserFragment;
+import android.database.Cursor;
 
-import javax.inject.Singleton;
-
-import dagger.Component;
+import com.tlongdev.bktf.model.User;
+import com.tlongdev.bktf.ui.view.BaseView;
 
 /**
  * @author Long
- * @since 2016. 03. 10.
+ * @since 2016. 03. 22.
  */
-@Singleton
-@Component(modules = BptfAppModule.class)
-public interface FragmentComponent {
+public interface SearchView extends BaseView {
 
-    void inject(BptfFragment bptfFragment);
+    void showItems(Cursor items);
 
-    void inject(UserFragment userFragment);
+    void userFound(User user);
+
+    void userNotFound();
 }

@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -35,10 +34,12 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
+import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
-import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.activity.UserActivity;
 import com.tlongdev.bktf.util.Utility;
 
@@ -50,59 +51,22 @@ import butterknife.ButterKnife;
  */
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
-    /**
-     * Log tag for logging.
-     */
-    @SuppressWarnings("unused")
-    private static final String LOG_TAG = SearchAdapter.class.getSimpleName();
-
-    /**
-     * View type IDs
-     */
     private static final int VIEW_TYPE_PRICE = 0;
     private static final int VIEW_TYPE_USER = 1;
     private static final int VIEW_TYPE_LOADING = 2;
 
-    /**
-     * The data set
-     */
     private Cursor mDataSet;
-
-    /**
-     * The context
-     */
     private Context mContext;
+    private boolean mLoading;
+    private User mUser;
 
-    /**
-     * Whether we found a user for the string query or not
-     */
-    private boolean userFound = false;
-
-    /**
-     * Whether we are searching for the user or not
-     */
-    private boolean loading;
-
-    /**
-     * Some info on the user we found
-     */
-    private String[] userInfo;
-
-    /**
-     * Constructor.
-     *
-     * @param context the context
-     * @param dataSet the data set
-     */
-    public SearchAdapter(Context context, Cursor dataSet) {
+    public SearchAdapter(Context context) {
         this.mContext = context;
-        this.mDataSet = dataSet;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_search, parent, false);
-
         return new ViewHolder(v);
     }
 
@@ -114,7 +78,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 //We found a user, show some info
                 case VIEW_TYPE_USER:
                     holder.more.setVisibility(View.GONE);
-                    if (userFound) {
+                    if (mUser != null) {
                         holder.loading.setVisibility(View.GONE);
                         holder.priceLayout.setVisibility(View.VISIBLE);
 
@@ -123,23 +87,16 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                             @Override
                             public void onClick(View v) {
                                 Intent intent = new Intent(mContext, UserActivity.class);
-                                intent.putExtra(UserActivity.STEAM_ID_KEY, userInfo[1]);
+                                intent.putExtra(UserActivity.STEAM_ID_KEY, mUser.getResolvedSteamId());
                                 mContext.startActivity(intent);
                             }
                         });
 
-                        //The name
-                        holder.name.setText(mDataSet.getString(SearchActivity.COLUMN_NAME));
-                        //The avatar of the user
-                        String path = PreferenceManager.getDefaultSharedPreferences(mContext).
-                                getString(mContext.getString(R.string.pref_search_avatar_url), "");
-
-                        if (!path.equals("")) {
-                            Glide.with(mContext)
-                                    .load(path)
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                    .into(holder.icon);
-                        }
+                        holder.name.setText(mUser.getName());
+                        Glide.with(mContext)
+                                .load(mUser.getAvatarUrl())
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(holder.icon);
                     }
                     break;
                 //Lading view, searching for the user
@@ -155,28 +112,21 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     holder.priceLayout.setVisibility(View.VISIBLE);
                     holder.more.setVisibility(View.VISIBLE);
                     holder.loading.setVisibility(View.GONE);
-
-                    holder.root.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // TODO: 2015. 10. 26. Does nothing, fancy ripples for now
-                        }
-                    });
                     
                     Price price = new Price();
-                    price.setValue(mDataSet.getDouble(SearchActivity.COLUMN_PRICE));
-                    price.setHighValue(mDataSet.getDouble(SearchActivity.COLUMN_PRICE_HIGH));
-                    price.setCurrency(mDataSet.getString(SearchActivity.COLUMN_CURRENCY));
+                    price.setValue(mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE)));
+                    price.setHighValue(mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE_HIGH)));
+                    price.setCurrency(mDataSet.getString(mDataSet.getColumnIndex(PriceEntry.COLUMN_CURRENCY)));
 
                     //Get all the data from the cursor
                     final Item item = new Item();
-                    item.setDefindex(mDataSet.getInt(SearchActivity.COLUMN_DEFINDEX));
-                    item.setName(mDataSet.getString(SearchActivity.COLUMN_NAME));
-                    item.setQuality(mDataSet.getInt(SearchActivity.COLUMN_QUALITY));
-                    item.setTradable(mDataSet.getInt(SearchActivity.COLUMN_TRADABLE) == 1);
-                    item.setCraftable(mDataSet.getInt(SearchActivity.COLUMN_CRAFTABLE) == 1);
-                    item.setAustralium(mDataSet.getInt(SearchActivity.COLUMN_AUSTRALIUM) == 1);
-                    item.setPriceIndex(mDataSet.getInt(SearchActivity.COLUMN_PRICE_INDEX));
+                    item.setDefindex(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_DEFINDEX)));
+                    item.setName(mDataSet.getString(mDataSet.getColumnIndex(ItemSchemaEntry.COLUMN_ITEM_NAME)));
+                    item.setQuality(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_QUALITY)));
+                    item.setTradable(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_TRADABLE)) == 1);
+                    item.setCraftable(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_CRAFTABLE)) == 1);
+                    item.setAustralium(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_AUSTRALIUM)) == 1);
+                    item.setPriceIndex(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE_INDEX)));
                     item.setPrice(price);
 
                     holder.more.setOnClickListener(new View.OnClickListener() {
@@ -273,15 +223,17 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return mDataSet == null ? 0 : mDataSet.getCount();
+        int count = mDataSet == null ? 0 : mDataSet.getCount();
+        count += mUser != null || mLoading ? 1 : 0;
+        return count;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (loading) {
+        if (mLoading) {
             return position == 0 ? VIEW_TYPE_LOADING : VIEW_TYPE_PRICE;
         }
-        return userFound && position == 0 ? VIEW_TYPE_USER : VIEW_TYPE_PRICE;
+        return mUser != null && position == 0 ? VIEW_TYPE_USER : VIEW_TYPE_PRICE;
     }
 
     /**
@@ -293,7 +245,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     public void swapCursor(Cursor data, boolean closePrevious) {
         if (closePrevious && mDataSet != null) mDataSet.close();
         mDataSet = data;
-        notifyDataSetChanged();
     }
 
     /**
@@ -302,50 +253,27 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
      * @param loading whether it is loading or not
      */
     public void setLoading(boolean loading) {
-        this.loading = loading;
-        if (loading) {
-            userFound = false;
-        }
+        this.mLoading = loading;
     }
 
-    /**
-     * Tells the list that we found a user and it should show it
-     *
-     * @param userFound whether we found a user or not
-     * @param userInfo  some info about the user
-     */
-    public void setUserFound(boolean userFound, String[] userInfo) {
-        this.userFound = userFound;
-        this.userInfo = userInfo;
-        if (userFound) {
-            loading = false;
-        }
+    public void setUser(User user) {
+        mUser = user;
     }
 
-    /**
-     * The view holder.
-     */
     class ViewHolder extends RecyclerView.ViewHolder {
 
         View root;
 
         @Bind(R.id.loading_layout) View loading;
         @Bind(R.id.price_layout) View priceLayout;
-
         @Bind(R.id.icon) ImageView icon;
         @Bind(R.id.icon_background) View background;
         @Bind(R.id.effect) ImageView effect;
         @Bind(R.id.more) ImageView more;
         @Bind(R.id.quality) ImageView quality;
-
         @Bind(R.id.name) TextView name;
         @Bind(R.id.price) TextView price;
 
-        /**
-         * Constructor.
-         *
-         * @param view the root view
-         */
         public ViewHolder(View view) {
             super(view);
             root = view;
