@@ -38,7 +38,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.analytics.HitBuilders;
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.gcm.GcmRegisterPriceUpdatesService;
 import com.tlongdev.bktf.model.User;
@@ -52,6 +51,8 @@ import com.tlongdev.bktf.util.CircleTransform;
 import com.tlongdev.bktf.util.ProfileManager;
 import com.tlongdev.bktf.util.Utility;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -60,12 +61,6 @@ import butterknife.ButterKnife;
  * fragments are shown.
  */
 public class MainActivity extends BptfActivity {
-
-    /**
-     * Log tag for logging.
-     */
-    @SuppressWarnings("unused")
-    private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     /**
      * Request codes for onActivityResult
@@ -85,16 +80,19 @@ public class MainActivity extends BptfActivity {
      */
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
 
-    /**
-     * Helper component that ties the action bar to the navigation drawer.
-     */
-    private ActionBarDrawerToggle mDrawerToggle;
+    @Inject SharedPreferences mPrefs;
+    @Inject ProfileManager mProfileManager;
 
     /**
      * The drawer layout and the navigation drawer
      */
     @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @Bind(R.id.navigation_view) NavigationView mNavigationView;
+
+    /**
+     * Helper component that ties the action bar to the navigation drawer.
+     */
+    private ActionBarDrawerToggle mDrawerToggle;
 
     /**
      * The index of the current fragment.
@@ -108,7 +106,7 @@ public class MainActivity extends BptfActivity {
 
     /**
      * Listener to be notified when the drawer opens. Mainly for fragments with toolbars so we can
-     * exapnd the fragment's toolbar when the drawer opens.
+     * expand the fragment's toolbar when the drawer opens.
      */
     private OnDrawerOpenedListener drawerListener;
 
@@ -166,6 +164,8 @@ public class MainActivity extends BptfActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        mApplication.getActivityComponent().inject(this);
+
         //Set the default values for all preferences when the app is first loaded
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
 
@@ -207,8 +207,7 @@ public class MainActivity extends BptfActivity {
         //If needed (mostly when the steamId was changed) reload a new instance of the UserFragment
         if (userStateChanged) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            ProfileManager manager = new ProfileManager((BptfApplication) getApplication());
-            if (manager.isSignedIn()) {
+            if (mProfileManager.isSignedIn()) {
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, new UserFragment())
                         .commit();
@@ -223,10 +222,9 @@ public class MainActivity extends BptfActivity {
         }
         updateDrawer();
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean autoSync = !prefs.getString(getString(R.string.pref_auto_sync), "1").equals("0");
+        boolean autoSync = !mPrefs.getString(getString(R.string.pref_auto_sync), "1").equals("0");
 
-        if (prefs.getBoolean(getString(R.string.pref_registered_topic_price_updates), false) != autoSync) {
+        if (mPrefs.getBoolean(getString(R.string.pref_registered_topic_price_updates), false) != autoSync) {
             Intent intent = new Intent(this, GcmRegisterPriceUpdatesService.class);
             intent.putExtra(GcmRegisterPriceUpdatesService.EXTRA_SUBSCRIBE, autoSync);
             startService(intent);
@@ -365,11 +363,8 @@ public class MainActivity extends BptfActivity {
      * Updates the information in the navigation drawer header.
      */
     public void updateDrawer() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-        ProfileManager manager = new ProfileManager((BptfApplication) getApplication());
-        if (manager.isSignedIn()) {
-            User user = manager.getUser();
+        if (mProfileManager.isSignedIn()) {
+            User user = mProfileManager.getUser();
 
             //Set the name
             name.setText(user.getName());
@@ -377,7 +372,8 @@ public class MainActivity extends BptfActivity {
             //Set the backpack value
             double bpValue = user.getBackpackValue();
             if (bpValue >= 0) {
-                backpack.setText(String.format("Backpack: %s", getString(R.string.currency_metal, String.valueOf(Math.round(bpValue)))));
+                backpack.setText(String.format("Backpack: %s", getString(R.string.currency_metal,
+                        String.valueOf(Math.round(bpValue)))));
             } else {
                 backpack.setText("Private backpack");
             }
