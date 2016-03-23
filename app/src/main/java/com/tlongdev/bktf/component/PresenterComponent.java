@@ -18,6 +18,7 @@ package com.tlongdev.bktf.component;
 
 import com.tlongdev.bktf.module.BptfAppModule;
 import com.tlongdev.bktf.module.StorageModule;
+import com.tlongdev.bktf.presenter.activity.LoginPresenter;
 import com.tlongdev.bktf.presenter.activity.SelectItemPresenter;
 import com.tlongdev.bktf.presenter.activity.UserBackpackPresenter;
 import com.tlongdev.bktf.presenter.fragment.CalculatorPresenter;
@@ -54,4 +55,6 @@ public interface PresenterComponent {
     void inject(com.tlongdev.bktf.presenter.activity.UnusualPresenter unusualPresenter);
 
     void inject(SelectItemPresenter selectItemPresenter);
+
+    void inject(LoginPresenter loginPresenter);
 }

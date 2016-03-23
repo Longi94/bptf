@@ -23,25 +23,23 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.interactor.GetUserDataInteractor;
-import com.tlongdev.bktf.interactor.Tf2UserBackpackInteractor;
-import com.tlongdev.bktf.model.User;
-import com.tlongdev.bktf.util.ProfileManager;
+import com.tlongdev.bktf.presenter.activity.LoginPresenter;
+import com.tlongdev.bktf.ui.view.activity.LoginView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LoginActivity extends BptfActivity implements GetUserDataInteractor.Callback, Tf2UserBackpackInteractor.Callback {
+public class LoginActivity extends BptfActivity implements LoginView {
 
     @Bind(R.id.steam_id) EditText steamIdInput;
+    @Bind(R.id.toolbar) Toolbar mToolbar;
 
     private ProgressDialog loadingDialog;
+    private LoginPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +47,22 @@ public class LoginActivity extends BptfActivity implements GetUserDataInteractor
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mPresenter = new LoginPresenter(mApplication);
+        mPresenter.attachView(this);
+
+        setSupportActionBar(mToolbar);
 
         //Show the home button as back button
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.detachView();
     }
 
     @Override
@@ -88,72 +94,15 @@ public class LoginActivity extends BptfActivity implements GetUserDataInteractor
         if (steamIdInput.getText().toString().isEmpty()) {
             steamIdInput.setError("You didn't enter anything!");
         } else {
-            String steamId = steamIdInput.getText().toString();
-
-            User user = new User();
-            user.setSteamId(steamId);
-
-            GetUserDataInteractor task = new GetUserDataInteractor((BptfApplication) getApplication(),
-                    user, true, LoginActivity.this);
-            task.execute();
-
+            mPresenter.login(steamIdInput.getText().toString());
             loadingDialog = ProgressDialog.show(LoginActivity.this, null, "Please wait...", true, false);
-
-            mTracker.send(new HitBuilders.EventBuilder()
-                    .setCategory("Request")
-                    .setAction("UserData")
-                    .build());
         }
     }
 
     @Override
-    public void onUserInfoFinished(User user) {
-        Tf2UserBackpackInteractor task = new Tf2UserBackpackInteractor(
-                (BptfApplication) getApplication(), user, false, this
-        );
-        task.execute();
-
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Request")
-                .setAction("UserBackpack")
-                .build());
-    }
-
-    @Override
-    public void onUserInfoFailed(String errorMessage) {
+    public void dismissDialog() {
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-
-        new ProfileManager((BptfApplication) getApplication()).logOut();
-
-        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onUserBackpackFinished(User user) {
-        if (loadingDialog != null) {
-            loadingDialog.dismiss();
-        }
-        finish();
-    }
-
-    @Override
-    public void onPrivateBackpack() {
-        if (loadingDialog != null) {
-            loadingDialog.dismiss();
-        }
-        finish();
-    }
-
-    @Override
-    public void onUserBackpackFailed(String errorMessage) {
-        if (loadingDialog != null) {
-            loadingDialog.dismiss();
-        }
-
-        new ProfileManager((BptfApplication) getApplication()).logOut();
-
-        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
     }
 }
