@@ -32,12 +32,13 @@ import android.widget.TextView;
 import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
 import com.google.android.gms.analytics.HitBuilders;
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.HistoryAdapter;
 import com.tlongdev.bktf.interactor.BackpackTfPriceHistoryInteractor;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.presenter.activity.PriceHistoryPresenter;
+import com.tlongdev.bktf.ui.view.activity.PriceHistoryView;
 import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
@@ -45,12 +46,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class PriceHistoryActivity extends BptfActivity implements BackpackTfPriceHistoryInteractor.Callback {
+public class PriceHistoryActivity extends BptfActivity implements PriceHistoryView {
 
-    /**
-     * Log tag for logging.
-     */
-    @SuppressWarnings("unused")
     private static final String LOG_TAG = BackpackTfPriceHistoryInteractor.class.getSimpleName();
 
     public static final String EXTRA_ITEM = "item";
@@ -60,6 +57,9 @@ public class PriceHistoryActivity extends BptfActivity implements BackpackTfPric
     @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
     @Bind(R.id.progress_bar) ProgressBar progressBar;
     @Bind(R.id.fail_text) TextView failText;
+    @Bind(R.id.toolbar) Toolbar mToolbar;
+
+    private PriceHistoryPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +68,10 @@ public class PriceHistoryActivity extends BptfActivity implements BackpackTfPric
         ButterKnife.bind(this);
         Dart.inject(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mPresenter = new PriceHistoryPresenter(mApplication);
+        mPresenter.attachView(this);
+
+        setSupportActionBar(mToolbar);
 
         //Show the home button as back button
         ActionBar actionBar = getSupportActionBar();
@@ -80,9 +82,7 @@ public class PriceHistoryActivity extends BptfActivity implements BackpackTfPric
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         if (Utility.isNetworkAvailable(this)) {
-            BackpackTfPriceHistoryInteractor task = new BackpackTfPriceHistoryInteractor((BptfApplication) getApplication(), mItem, this);
-            task.execute();
-
+            mPresenter.loadPriceHistory(mItem);
             mTracker.send(new HitBuilders.EventBuilder()
                     .setCategory("Request")
                     .setAction("PriceHistory")
@@ -101,6 +101,12 @@ public class PriceHistoryActivity extends BptfActivity implements BackpackTfPric
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.detachView();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
@@ -109,30 +115,20 @@ public class PriceHistoryActivity extends BptfActivity implements BackpackTfPric
     }
 
     @Override
-    public void onPriceHistoryFinished(List<Price> prices) {
-        HistoryAdapter adapter = new HistoryAdapter(this, prices, mItem);
-        mRecyclerView.setAdapter(adapter);
-
-        //Animate in the recycler view, so it's not that abrupt
-        Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.simple_fade_in);
-        Animation fadeOut = AnimationUtils.loadAnimation(this, R.anim.simple_fade_in);
-
-        fadeIn.setDuration(500);
-        fadeOut.setDuration(500);
-
-        mRecyclerView.startAnimation(fadeIn);
-        mRecyclerView.setVisibility(View.VISIBLE);
-
-        progressBar.startAnimation(fadeOut);
-        progressBar.setVisibility(View.GONE);
+    public void showHistory(List<Price> prices) {
+        mRecyclerView.setAdapter(new HistoryAdapter(this, prices, mItem));
+        animateViews();
     }
 
     @Override
-    public void onPriceHistoryFailed(String errorMessage) {
+    public void showError(String errorMessage) {
         if (errorMessage != null) {
             Log.d(LOG_TAG, errorMessage);
         }
+        animateViews();
+    }
 
+    private void animateViews() {
         //Animate in the recycler view, so it's not that abrupt
         Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.simple_fade_in);
         Animation fadeOut = AnimationUtils.loadAnimation(this, R.anim.simple_fade_in);
