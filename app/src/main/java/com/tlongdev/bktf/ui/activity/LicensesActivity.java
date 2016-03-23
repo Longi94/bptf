@@ -26,26 +26,20 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.LicensesAdapter;
 import com.tlongdev.bktf.model.License;
-import com.tlongdev.bktf.util.ParseLicenseXml;
+import com.tlongdev.bktf.presenter.activity.LicensesPresenter;
+import com.tlongdev.bktf.ui.view.activity.LicensesView;
 
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class LicensesActivity extends BptfActivity {
+public class LicensesActivity extends BptfActivity implements LicensesView {
 
-    /**
-     * Log tag for logging.
-     */
-    @SuppressWarnings("unused")
-    private static final String LOG_TAG = LicensesActivity.class.getSimpleName();
+    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
+    @Bind(R.id.toolbar) Toolbar mToolbar;
 
-    @Bind(R.id.recycler_view) RecyclerView recyclerView;
+    private LicensesPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +47,10 @@ public class LicensesActivity extends BptfActivity {
         setContentView(R.layout.activity_licenses);
         ButterKnife.bind(this);
 
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        mPresenter = new LicensesPresenter(mApplication);
+        mPresenter.attachView(this);
+
+        setSupportActionBar(mToolbar);
 
         //Show the home button as back button
         ActionBar actionBar = getSupportActionBar();
@@ -61,19 +58,9 @@ public class LicensesActivity extends BptfActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<License> licenses = new ArrayList<>();
-
-        try {
-            licenses = ParseLicenseXml.Parse(getResources()
-                    .getXml(R.xml.licenses));
-        } catch (XmlPullParserException | IOException e) {
-            e.printStackTrace();
-        }
-
-        LicensesAdapter adapter = new LicensesAdapter(licenses, this);
-        recyclerView.setAdapter(adapter);
+        mPresenter.loadLicenses();
     }
 
     @Override
@@ -81,5 +68,16 @@ public class LicensesActivity extends BptfActivity {
         super.onResume();
         mTracker.setScreenName(String.valueOf(getTitle()));
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.detachView();
+    }
+
+    @Override
+    public void showLicenses(List<License> licenses) {
+        mRecyclerView.setAdapter(new LicensesAdapter(licenses, this));
     }
 }
