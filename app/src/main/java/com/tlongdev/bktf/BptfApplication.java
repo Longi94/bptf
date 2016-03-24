@@ -21,7 +21,9 @@ import android.app.Application;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.component.ActivityComponent;
+import com.tlongdev.bktf.component.AdapterComponent;
 import com.tlongdev.bktf.component.DaggerActivityComponent;
+import com.tlongdev.bktf.component.DaggerAdapterComponent;
 import com.tlongdev.bktf.component.DaggerFragmentComponent;
 import com.tlongdev.bktf.component.DaggerInteractorComponent;
 import com.tlongdev.bktf.component.DaggerPresenterComponent;
@@ -50,6 +52,8 @@ public class BptfApplication extends Application {
 
     private ProfileManagerComponent mProfileManagerComponent;
 
+    private AdapterComponent mAdapterComponent;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -75,6 +79,10 @@ public class BptfApplication extends Application {
         mProfileManagerComponent = DaggerProfileManagerComponent.builder()
                 .bptfAppModule(new BptfAppModule(this))
                 .storageModule(new StorageModule())
+                .build();
+
+        mAdapterComponent = DaggerAdapterComponent.builder()
+                .bptfAppModule(new BptfAppModule(this))
                 .build();
     }
 
@@ -109,5 +117,9 @@ public class BptfApplication extends Application {
 
     public ProfileManagerComponent getProfileManagerComponent() {
         return mProfileManagerComponent;
+    }
+
+    public AdapterComponent getAdapterComponent() {
+        return mAdapterComponent;
     }
 }

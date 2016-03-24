@@ -27,12 +27,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -42,54 +44,21 @@ import butterknife.ButterKnife;
  */
 public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHolder> {
 
-    /**
-     * Log tag for logging.
-     */
-    @SuppressWarnings("unused")
-    private static final String LOG_TAG = BackpackAdapter.class.getSimpleName();
-
-    /**
-     * View types
-     */
     public static final int VIEW_TYPE_ITEM = 0;
     public static final int VIEW_TYPE_HEADER = 1;
 
-    /**
-     * Cursor containing the non new items.
-     */
+    @Inject Context mContext;
+
     private List<BackpackItem> mDataSet;
 
-    /**
-     * Cursor containing the new items (items with no slot in the backpack)
-     */
     private List<BackpackItem> mDataSetNew;
 
-    /**
-     * The context.
-     */
-    private Context mContext;
-
-    /**
-     * Determines which table to read from.
-     */
-    private boolean isGuest = false;
-
-    /**
-     * The number of new items.
-     */
     private int newItemSlots = 0;
 
     private OnItemClickedListener mListener;
 
-    /**
-     * Constructor
-     *
-     * @param context the context
-     * @param isGuest determines which table to read from
-     */
-    public BackpackAdapter(Context context, boolean isGuest) {
-        this.mContext = context;
-        this.isGuest = isGuest;
+    public BackpackAdapter(BptfApplication application) {
+        application.getAdapterComponent().inject(this);
     }
 
     @Override
@@ -112,6 +81,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
 
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         switch (getItemViewType(position)) {
@@ -140,10 +110,12 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                     //Check if there are new items or not
                     if (position < newItemSlots) {
                         //Item is a new item
-                        backpackItem = position > mDataSetNew.size() ? new BackpackItem() : mDataSetNew.get(position - 1);
+                        backpackItem = position > mDataSetNew.size() ? new BackpackItem() :
+                                mDataSetNew.get(position - 1);
                     } else {
                         //Item is not a new item
-                        backpackItem = mDataSet.get((position - newItemSlots) - ((position - newItemSlots) / 51) - 1);
+                        backpackItem = mDataSet.get((position - newItemSlots) -
+                                ((position - newItemSlots) / 51) - 1);
                     }
                 } else {
                     //There is no new item in the backpack
@@ -169,7 +141,6 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
 
                     Glide.with(mContext)
                             .load(backpackItem.getIconUrl(mContext))
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(holder.icon);
 
                         if (backpackItem.getPriceIndex() != 0 && backpackItem.canHaveEffects()) {

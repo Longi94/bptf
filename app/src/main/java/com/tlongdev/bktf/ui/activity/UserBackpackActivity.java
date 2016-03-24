@@ -33,7 +33,7 @@ import android.view.View;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.BackpackAdapter;
-import com.tlongdev.bktf.data.DatabaseContract;
+import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.presenter.activity.UserBackpackPresenter;
 import com.tlongdev.bktf.ui.view.activity.UserBackpackView;
@@ -47,11 +47,6 @@ import butterknife.ButterKnife;
  * Activity for viewing user backpacks.
  */
 public class UserBackpackActivity extends BptfActivity implements UserBackpackView, BackpackAdapter.OnItemClickedListener {
-
-    /**
-     * Log tag for logging.
-     */
-    private static final String LOG_TAG = UserBackpackActivity.class.getSimpleName();
 
     //Keys for extra data in the intent
     public static final String EXTRA_NAME = "name";
@@ -98,7 +93,7 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
-        mAdapter = new BackpackAdapter(this, isGuest);
+        mAdapter = new BackpackAdapter(mApplication);
         mAdapter.setListener(this);
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
@@ -164,9 +159,13 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
         i.putExtra(ItemDetailActivity.EXTRA_GUEST, isGuest);
 
         Cursor itemCursor = getContentResolver().query(
-                DatabaseContract.ItemSchemaEntry.CONTENT_URI,
-                new String[]{DatabaseContract.ItemSchemaEntry.COLUMN_ITEM_NAME, DatabaseContract.ItemSchemaEntry.COLUMN_TYPE_NAME, DatabaseContract.ItemSchemaEntry.COLUMN_PROPER_NAME},
-                DatabaseContract.ItemSchemaEntry.TABLE_NAME + "." + DatabaseContract.ItemSchemaEntry.COLUMN_DEFINDEX + " = ?",
+                ItemSchemaEntry.CONTENT_URI,
+                new String[]{
+                        ItemSchemaEntry.COLUMN_ITEM_NAME,
+                        ItemSchemaEntry.COLUMN_TYPE_NAME,
+                        ItemSchemaEntry.COLUMN_PROPER_NAME
+                },
+                ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX + " = ?",
                 new String[]{String.valueOf(backpackItem.getDefindex())},
                 null
         );
