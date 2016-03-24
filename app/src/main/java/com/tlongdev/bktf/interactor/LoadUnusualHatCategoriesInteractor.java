@@ -69,7 +69,7 @@ public class LoadUnusualHatCategoriesInteractor extends AsyncTask<Void, Void, Vo
         String sql = "SELECT " +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + "," +
                 ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
-                Utility.getRawPriceQueryString(mContext) + " avg_price " +
+                " AVG(" + Utility.getRawPriceQueryString(mContext) + ") avg_price " +
                 " FROM " + PriceEntry.TABLE_NAME +
                 " LEFT JOIN " + ItemSchemaEntry.TABLE_NAME +
                 " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
@@ -85,7 +85,7 @@ public class LoadUnusualHatCategoriesInteractor extends AsyncTask<Void, Void, Vo
                 sql += " ORDER BY " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + " ASC";
                 break;
             case UnusualPresenter.ORDER_BY_PRICE:
-                sql += " ORDER BY AVG(" + Utility.getRawPriceQueryString(mContext) + ") DESC";
+                sql += " ORDER BY avg_price DESC";
                 break;
         }
 

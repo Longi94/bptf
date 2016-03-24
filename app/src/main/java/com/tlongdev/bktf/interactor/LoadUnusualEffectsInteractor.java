@@ -66,7 +66,7 @@ public class LoadUnusualEffectsInteractor extends AsyncTask<Void, Void, Void> {
 
         String sql = "SELECT " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + "," +
                 UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_NAME + "," +
-                Utility.getRawPriceQueryString(mContext) + " avg_price " +
+                " AVG(" + Utility.getRawPriceQueryString(mContext) + ") avg_price " +
                 " FROM " + PriceEntry.TABLE_NAME +
                 " LEFT JOIN " + UnusualSchemaEntry.TABLE_NAME +
                 " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + " = " + UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_ID +
@@ -82,7 +82,7 @@ public class LoadUnusualEffectsInteractor extends AsyncTask<Void, Void, Void> {
                 sql += " ORDER BY " + UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_NAME + " ASC";
                 break;
             case UnusualPresenter.ORDER_BY_PRICE:
-                sql += " ORDER BY AVG(" + Utility.getRawPriceQueryString(mContext) + ") DESC";
+                sql += " ORDER BY avg_price DESC";
                 break;
         }
 
