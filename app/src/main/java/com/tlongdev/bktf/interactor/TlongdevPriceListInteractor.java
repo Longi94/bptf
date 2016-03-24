@@ -76,12 +76,6 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
 
     private int rowsInserted = 0;
 
-    /**
-     * Constructor
-     * @param application
-     * @param updateDatabase whether the database only needs an update
-     * @param manualSync     whether this task was user initiated
-     */
     public TlongdevPriceListInteractor(BptfApplication application,
                                        boolean updateDatabase, boolean manualSync,
                                        Callback callback) {

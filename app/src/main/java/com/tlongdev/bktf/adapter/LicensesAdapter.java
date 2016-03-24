@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
 
 public class LicensesAdapter extends RecyclerView.Adapter<LicensesAdapter.ViewHolder>{
 
-    private List<License> licenses;
+    private final List<License> licenses;
 
     private OnClickListener mListener;
 

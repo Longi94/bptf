@@ -32,7 +32,7 @@ public class UserBackpackPresenter implements Presenter<UserBackpackView>,LoadBa
 
     private UserBackpackView mView;
 
-    private BptfApplication mApplication;
+    private final BptfApplication mApplication;
 
     public UserBackpackPresenter(BptfApplication application) {
         application.getPresenterComponent().inject(this);

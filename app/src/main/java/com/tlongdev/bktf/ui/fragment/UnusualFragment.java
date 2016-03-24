@@ -241,7 +241,7 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
     /**
      * Fully expand the toolbar with animation.
      */
-    public void expandToolbar() {
+    private void expandToolbar() {
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
         behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
     }

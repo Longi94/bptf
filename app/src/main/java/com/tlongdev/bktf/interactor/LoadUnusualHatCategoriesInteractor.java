@@ -48,11 +48,11 @@ public class LoadUnusualHatCategoriesInteractor extends AsyncTask<Void, Void, Vo
     @Inject Context mContext;
 
     @UnusualPresenter.UnusualOrder
-    private int mOrderBy;
-    private Callback mCallback;
-    private String mFilter;
+    private final int mOrderBy;
+    private final Callback mCallback;
+    private final String mFilter;
 
-    private List<Item> mItems = new LinkedList<>();
+    private final List<Item> mItems = new LinkedList<>();
 
     public LoadUnusualHatCategoriesInteractor(BptfApplication application, String filter,
                                               @UnusualPresenter.UnusualOrder int orderBy,
@@ -119,7 +119,5 @@ public class LoadUnusualHatCategoriesInteractor extends AsyncTask<Void, Void, Vo
 
     public interface Callback {
         void onUnusualHatsLoadFinished(List<Item> items);
-
-        void onUnusualHatsLoadFailed();
     }
 }

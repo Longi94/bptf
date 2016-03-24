@@ -203,10 +203,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
      * Replaces the cursor of the adapter
      *
      * @param data          the cursor that will replace the current one
-     * @param closePrevious whether to close the previous cursor
      */
-    public void swapCursor(Cursor data, boolean closePrevious) {
-        if (closePrevious && mDataSet != null) mDataSet.close();
+    public void swapCursor(Cursor data) {
+        if (mDataSet != null) mDataSet.close();
         mDataSet = data;
     }
 
@@ -229,8 +228,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        View root;
-
+        final View root;
         @Bind(R.id.loading_layout) View loading;
         @Bind(R.id.price_layout) View priceLayout;
         @Bind(R.id.icon) ImageView icon;

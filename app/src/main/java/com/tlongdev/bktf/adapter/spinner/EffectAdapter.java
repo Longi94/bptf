@@ -31,8 +31,8 @@ import java.util.List;
 
 public class EffectAdapter extends ArrayAdapter<Item> {
 
-    private Context mContext;
-    private List<Item> mDataSet;
+    private final Context mContext;
+    private final List<Item> mDataSet;
 
     public EffectAdapter(Context context, List<Item> items) {
         super(context, R.layout.effect_spinner_item);

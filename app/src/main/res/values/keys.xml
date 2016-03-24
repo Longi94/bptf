@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!--API URLs-->
-    <string name="backpack_tf_get_users" translatable="false">http://backpack.tf/api/IGetUsers/v3/</string>
-    <string name="steam_get_player_summaries_url" translatable="false">http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/</string>
-    <string name="steam_resolve_vanity_url"  translatable="false">http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/</string>
-
     <!--URLs-->
     <string name="link_bazaar_tf" translatable="false">http://bazaar.tf/profiles/</string>
     <string name="link_steamrep" translatable="false">http://steamrep.com/profiles/</string>

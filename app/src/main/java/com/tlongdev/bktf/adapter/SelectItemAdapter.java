@@ -44,9 +44,8 @@ public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.Vi
 
     private OnItemSelectedListener listener;
 
-    public SelectItemAdapter(BptfApplication application, Cursor dataSet) {
+    public SelectItemAdapter(BptfApplication application) {
         application.getAdapterComponent().inject(this);
-        this.mDataSet = dataSet;
     }
 
     @Override
@@ -87,10 +86,9 @@ public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.Vi
      * Replaces the cursor of the adapter
      *
      * @param data          the cursor that will replace the current one
-     * @param closePrevious whether to close the previous cursor
      */
-    public void swapCursor(Cursor data, boolean closePrevious) {
-        if (closePrevious && mDataSet != null) mDataSet.close();
+    public void swapCursor(Cursor data) {
+        if (mDataSet != null) mDataSet.close();
         mDataSet = data;
         notifyDataSetChanged();
     }
@@ -103,7 +101,7 @@ public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.Vi
 
         @Bind(R.id.icon) ImageView icon;
         @Bind(R.id.name) TextView name;
-        View root;
+        final View root;
 
         public ViewHolder(View view) {
             super(view);

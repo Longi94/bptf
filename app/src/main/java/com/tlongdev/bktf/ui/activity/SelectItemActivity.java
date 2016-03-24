@@ -57,7 +57,7 @@ public class SelectItemActivity extends BptfActivity implements SelectItemView, 
 
         setFinishOnTouchOutside(false);
 
-        mAdapter = new SelectItemAdapter(mApplication, null);
+        mAdapter = new SelectItemAdapter(mApplication);
         mAdapter.setListener(this);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -103,6 +103,6 @@ public class SelectItemActivity extends BptfActivity implements SelectItemView, 
 
     @Override
     public void showItems(Cursor items) {
-        mAdapter.swapCursor(items, true);
+        mAdapter.swapCursor(items);
     }
 }

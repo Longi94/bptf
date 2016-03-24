@@ -29,7 +29,7 @@ import com.tlongdev.bktf.ui.view.activity.ItemDetailView;
 public class ItemDetailPresenter implements Presenter<ItemDetailView>,LoadItemDetailsInteractor.Callback {
 
     private ItemDetailView mView;
-    private BptfApplication mApplication;
+    private final BptfApplication mApplication;
 
     public ItemDetailPresenter(BptfApplication application) {
         mApplication = application;

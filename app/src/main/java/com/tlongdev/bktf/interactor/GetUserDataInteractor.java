@@ -56,17 +56,17 @@ public class GetUserDataInteractor extends AsyncTask<Void, Void, Integer> {
     @Inject ProfileManager mProfileManager;
 
     //Whether it was a user initiated update
-    private boolean manualSync;
+    private final boolean manualSync;
 
     //The error message that will be presented to the user, when an error occurs
     private String errorMessage;
 
     //The mCallback that will be notified when the fetching finishes
-    private Callback mCallback;
+    private final Callback mCallback;
 
     private String mSteamId;
 
-    private User mUser;
+    private final User mUser;
 
     /**
      * Constructor.

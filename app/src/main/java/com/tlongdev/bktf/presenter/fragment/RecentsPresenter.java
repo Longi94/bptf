@@ -48,7 +48,7 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
     @Inject Context mContext;
 
     private RecentsView mView;
-    private BptfApplication mApplication;
+    private final BptfApplication mApplication;
 
     public RecentsPresenter(BptfApplication application) {
         mApplication = application;

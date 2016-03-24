@@ -53,7 +53,7 @@ public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalcul
     /**
      * the selection
      */
-    public static final String mSelection =
+    private static final String mSelection =
             PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = ? AND " +
                     PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
                     PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
@@ -66,12 +66,12 @@ public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalcul
 
     private CalculatorView mView;
 
-    private BptfApplication mApplication;
+    private final BptfApplication mApplication;
 
     /**
      * The sum of the price of items in the list
      */
-    private Price mTotalPrice = new Price();
+    private final Price mTotalPrice = new Price();
 
     public CalculatorPresenter(BptfApplication application) {
         application.getPresenterComponent().inject(this);

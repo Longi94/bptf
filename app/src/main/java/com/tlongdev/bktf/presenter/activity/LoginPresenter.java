@@ -42,7 +42,7 @@ public class LoginPresenter implements Presenter<LoginView>, GetUserDataInteract
 
     private LoginView mView;
 
-    private BptfApplication mApplication;
+    private final BptfApplication mApplication;
 
     public LoginPresenter(BptfApplication application) {
         mApplication = application;

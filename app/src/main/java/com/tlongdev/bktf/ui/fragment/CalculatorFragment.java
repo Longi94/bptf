@@ -93,7 +93,7 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView, 
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
-        mAdapter = new CalculatorAdapter(mApplication, null);
+        mAdapter = new CalculatorAdapter(mApplication);
         mAdapter.setListener(mPresenter);
 
         DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
@@ -202,7 +202,7 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView, 
     /**
      * Fully expand the toolbar with animation.
      */
-    public void expandToolbar() {
+    private void expandToolbar() {
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
         behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
     }

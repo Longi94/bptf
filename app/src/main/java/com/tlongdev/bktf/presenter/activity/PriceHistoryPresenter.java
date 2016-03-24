@@ -33,7 +33,7 @@ public class PriceHistoryPresenter implements Presenter<PriceHistoryView>,Backpa
 
     private PriceHistoryView mView;
 
-    private BptfApplication mApplication;
+    private final BptfApplication mApplication;
 
     public PriceHistoryPresenter(BptfApplication application) {
         mApplication = application;

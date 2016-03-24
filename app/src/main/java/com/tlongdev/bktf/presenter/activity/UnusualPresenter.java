@@ -31,7 +31,7 @@ import java.util.List;
 public class UnusualPresenter implements Presenter<UnusualView>,LoadUnusualsInteractor.Callback {
 
     private UnusualView mView;
-    private BptfApplication mApplication;
+    private final BptfApplication mApplication;
 
     public UnusualPresenter(BptfApplication application) {
         application.getPresenterComponent().inject(this);
@@ -60,10 +60,5 @@ public class UnusualPresenter implements Presenter<UnusualView>,LoadUnusualsInte
         if (mView != null) {
             mView.showUnusuals(items);
         }
-    }
-
-    @Override
-    public void onUnusualsLoadFailed() {
-
     }
 }

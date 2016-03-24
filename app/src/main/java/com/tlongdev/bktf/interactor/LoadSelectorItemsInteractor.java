@@ -33,8 +33,8 @@ public class LoadSelectorItemsInteractor extends AsyncTask<Void, Void, Cursor> {
 
     @Inject ContentResolver mContentResolver;
 
-    private String mQuery;
-    private Callback mCallback;
+    private final String mQuery;
+    private final Callback mCallback;
 
     public LoadSelectorItemsInteractor(BptfApplication application, String query, Callback callback) {
         application.getInteractorComponent().inject(this);

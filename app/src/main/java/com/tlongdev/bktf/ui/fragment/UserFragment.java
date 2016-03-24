@@ -65,7 +65,7 @@ import butterknife.OnClick;
  */
 public class UserFragment extends BptfFragment implements UserView, View.OnClickListener, MainActivity.OnDrawerOpenedListener {
 
-    public static final String USER_PARAM = "user_param";
+    private static final String USER_PARAM = "user_param";
 
     @Inject SharedPreferences mPrefs;
     @Inject ProfileManager mProfileManager;
@@ -414,7 +414,7 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
     /**
      * Fully expand the toolbar with animation.
      */
-    public void expandToolbar() {
+    private void expandToolbar() {
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
         behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
     }

@@ -31,7 +31,6 @@ import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Item;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -39,9 +38,6 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Long on 2015. 12. 08..
- */
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.ViewHolder> {
 
     @Inject Context mContext;
@@ -51,9 +47,8 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
 
     private OnMoreListener mListener;
 
-    public FavoritesAdapter(BptfApplication application, ArrayList<Item> dataSet) {
+    public FavoritesAdapter(BptfApplication application) {
         application.getAdapterComponent().inject(this);
-        this.mDataSet = dataSet;
     }
 
     @Override
@@ -150,7 +145,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        View root;
+        final View root;
         @Bind(R.id.more) View more;
         @Bind(R.id.icon_background) View background;
 

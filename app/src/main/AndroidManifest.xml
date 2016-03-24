@@ -12,6 +12,7 @@
     <uses-permission android:name="com.tlongdev.bktf.permission.C2D_MESSAGE"/>
 
     <application
+        android:supportsRtl="true"
         android:name=".BptfApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

@@ -48,7 +48,7 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
     @Inject ProfileManager mProfileManager;
 
     private UserView mView;
-    private BptfApplication mApplication;
+    private final BptfApplication mApplication;
     private boolean mSearchedUser;
 
     public UserPresenter(BptfApplication application) {

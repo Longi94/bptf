@@ -48,7 +48,7 @@ public class SearchUserInteractor extends AsyncTask<Void, Void, Integer> {
     @Inject Context mContext;
 
     private String mQuery;
-    private Callback mCallback;
+    private final Callback mCallback;
 
     private User mUser;
 

@@ -45,7 +45,7 @@ public class FavoritesPresenter implements Presenter<FavoritesView>,LoadFavorite
 
     private FavoritesView mView;
 
-    private BptfApplication mApplication;
+    private final BptfApplication mApplication;
 
     public FavoritesPresenter(BptfApplication application) {
         application.getPresenterComponent().inject(this);

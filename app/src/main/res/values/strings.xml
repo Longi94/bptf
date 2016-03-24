@@ -169,7 +169,6 @@
     <string name="error_no_steam_id" translatable="true">no steamID provided</string>
     <string name="error_network" translatable="true">network error</string>
     <string name="error_no_network" translatable="true">no connection</string>
-    <string name="error_data_parse" translatable="true">error while parsing data</string>
 
     <!--Quality names-->
 
@@ -197,7 +196,6 @@
     <string name="title_converter">Converter</string>
     <string name="message_item_schema_create">Creating item schema database…</string>
     <string name="pref_last_item_schema_update">pref_last_item_schema_update</string>
-    <string name="pref_search_avatar_url">pref_search_avatar_url</string>
     <string name="title_user">User Profile</string>
     <string name="title_activity_login">Login</string>
     <string name="login_steam_id"><u>What is my steam ID?</u></string>
@@ -218,8 +216,5 @@
     <string name="pref_title_github_repo">Source code</string>
     <string name="title_activity_search_filter">SearchFilterActivity</string>
     <string name="pref_user_data">pref_user_data</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

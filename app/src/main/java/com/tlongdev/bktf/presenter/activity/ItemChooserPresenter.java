@@ -41,7 +41,7 @@ public class ItemChooserPresenter implements Presenter<ItemChooserView>,LoadUnus
     @Inject ContentResolver mContentResolver;
 
     private ItemChooserView mView;
-    private BptfApplication mApplication;
+    private final BptfApplication mApplication;
 
     public ItemChooserPresenter(BptfApplication application) {
         application.getPresenterComponent().inject(this);
@@ -70,11 +70,6 @@ public class ItemChooserPresenter implements Presenter<ItemChooserView>,LoadUnus
         if (mView != null) {
             mView.showEffects(items);
         }
-    }
-
-    @Override
-    public void onUnusualEffectsLoadFailed() {
-
     }
 
     public boolean checkCalculator(Item item) {

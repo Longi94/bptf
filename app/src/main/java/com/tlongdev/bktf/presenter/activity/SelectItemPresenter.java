@@ -30,7 +30,7 @@ import com.tlongdev.bktf.ui.view.activity.SelectItemView;
 public class SelectItemPresenter implements Presenter<SelectItemView>,LoadSelectorItemsInteractor.Callback {
 
     private SelectItemView mView;
-    private BptfApplication mApplication;
+    private final BptfApplication mApplication;
 
     public SelectItemPresenter(BptfApplication application) {
         mApplication = application;

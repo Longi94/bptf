@@ -133,7 +133,7 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) mContext).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
-        adapter = new RecentsAdapter(mApplication, null);
+        adapter = new RecentsAdapter(mApplication);
         adapter.setListener(this);
 
         DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
@@ -210,14 +210,14 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
     /**
      * Fully expand the toolbar with animation.
      */
-    public void expandToolbar() {
+    private void expandToolbar() {
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
         behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
     }
 
     @Override
     public void showPrices(Cursor prices) {
-        adapter.swapCursor(prices, true);
+        adapter.swapCursor(prices);
 
         //Animate in the recycler view, so it's not that abrupt
         Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.simple_fade_in);
@@ -237,7 +237,7 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
 
     @Override
     public void showError() {
-        adapter.swapCursor(null, true);
+        adapter.swapCursor(null);
     }
 
     @Override

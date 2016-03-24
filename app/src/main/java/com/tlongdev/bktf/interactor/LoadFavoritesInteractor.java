@@ -45,9 +45,9 @@ public class LoadFavoritesInteractor extends AsyncTask<Void, Void, Void> {
     @Inject @Named("readable") SQLiteDatabase mDatabase;
     @Inject Context mContext;
 
-    private Callback mCallback;
+    private final Callback mCallback;
 
-    private List<Item> mItems = new LinkedList<>();
+    private final List<Item> mItems = new LinkedList<>();
 
     public LoadFavoritesInteractor(BptfApplication application, Callback callback) {
         application.getInteractorComponent().inject(this);

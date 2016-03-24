@@ -47,11 +47,11 @@ public class LoadUnusualEffectsInteractor extends AsyncTask<Void, Void, Void> {
     @Inject Context mContext;
 
     @UnusualPresenter.UnusualOrder
-    private int mOrderBy;
-    private Callback mCallback;
-    private String mFilter;
+    private final int mOrderBy;
+    private final Callback mCallback;
+    private final String mFilter;
 
-    private List<Item> mItems = new LinkedList<>();
+    private final List<Item> mItems = new LinkedList<>();
 
     public LoadUnusualEffectsInteractor(BptfApplication application, String filter,
                                         @UnusualPresenter.UnusualOrder int orderBy, Callback callback) {
@@ -116,7 +116,5 @@ public class LoadUnusualEffectsInteractor extends AsyncTask<Void, Void, Void> {
 
     public interface Callback {
         void onUnusualEffectsLoadFinished(List<Item> items);
-
-        void onUnusualEffectsLoadFailed();
     }
 }

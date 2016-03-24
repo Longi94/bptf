@@ -66,7 +66,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
     @Inject ProfileManager mProfileManager;
 
     //Indicates which table to insert data into
-    private boolean mIsGuest;
+    private final boolean mIsGuest;
 
     //Error message to be displayed to the user
     private String errorMessage;
@@ -78,8 +78,8 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
     private int rawScraps = 0;
 
     //The listener that will be notified when the fetching finishes
-    private Callback mCallback;
-    private User mUser;
+    private final Callback mCallback;
+    private final User mUser;
 
     public Tf2UserBackpackInteractor(BptfApplication application, User user, boolean isGuest,
                                      Callback callback) {

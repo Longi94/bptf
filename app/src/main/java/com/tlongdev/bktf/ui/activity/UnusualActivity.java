@@ -48,9 +48,9 @@ import butterknife.ButterKnife;
  */
 public class UnusualActivity extends BptfActivity implements UnusualView, TextWatcher, UnusualAdapter.OnItemClickListener {
 
-    public static final String EXTRA_DEFINDEX = "defindex";
-    public static final String EXTRA_NAME = "name";
-    public static final String EXTRA_PRICE_INDEX = "index";
+    private static final String EXTRA_DEFINDEX = "defindex";
+    private static final String EXTRA_NAME = "name";
+    private static final String EXTRA_PRICE_INDEX = "index";
 
     @SuppressWarnings("NullableProblems")
     @Nullable

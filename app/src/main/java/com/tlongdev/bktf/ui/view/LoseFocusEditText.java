@@ -24,9 +24,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-/**
- * Created by Long on 2016. 01. 03..
- */
 public class LoseFocusEditText extends EditText {
     public LoseFocusEditText(Context context) {
         super(context);

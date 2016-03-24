@@ -14,7 +14,7 @@ import com.tlongdev.bktf.ui.view.activity.UserView;
 public class UserPresenter implements Presenter<UserView>,GetSearchedUserDataInteractor.Callback, Tf2UserBackpackInteractor.Callback {
 
     private UserView mView;
-    private BptfApplication mApplication;
+    private final BptfApplication mApplication;
     private User mUser;
 
     public UserPresenter(BptfApplication application) {

@@ -36,9 +36,9 @@ public class LoadItemDetailsInteractor extends AsyncTask<Void, Void, BackpackIte
 
     @Inject ContentResolver mContentResolver;
 
-    private int mId;
-    private boolean mGuest;
-    private Callback mCallback;
+    private final int mId;
+    private final boolean mGuest;
+    private final Callback mCallback;
 
     public LoadItemDetailsInteractor(BptfApplication application, int id, boolean guest,
                                      Callback callback) {

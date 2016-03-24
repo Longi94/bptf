@@ -56,7 +56,7 @@ public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer
     private String errorMessage;
 
     //The mCallback that will be notified when the fetching finishes
-    private Callback mCallback;
+    private final Callback mCallback;
 
     private String mSteamId;
 

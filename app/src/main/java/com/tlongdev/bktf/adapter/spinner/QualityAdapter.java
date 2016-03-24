@@ -29,7 +29,7 @@ import com.tlongdev.bktf.model.Quality;
 
 public class QualityAdapter extends ArrayAdapter<String> {
 
-    public static final String[] QUALITIES = {
+    private static final String[] QUALITIES = {
             "Collector's", "Decorated Weapon", "Genuine", "Haunted", "Normal", "Self-Made",
             "Strange", "Unique", "Unusual", "Vintage"
     };
@@ -38,9 +38,9 @@ public class QualityAdapter extends ArrayAdapter<String> {
             Quality.SELF_MADE, Quality.STRANGE, Quality.UNIQUE, Quality.UNUSUAL, Quality.VINTAGE
     };
 
-    private Item quality;
+    private final Item quality;
 
-    private Context mContext;
+    private final Context mContext;
 
     public QualityAdapter(Context context) {
         super(context, R.layout.quality_spinner_item, QUALITIES);

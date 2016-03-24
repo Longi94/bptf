@@ -151,7 +151,7 @@ public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui
 
     @Override
     public void showItems(Cursor items) {
-        mAdapter.swapCursor(items, true);
+        mAdapter.swapCursor(items);
         mAdapter.notifyDataSetChanged();
     }
 

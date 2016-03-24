@@ -34,14 +34,11 @@ import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.interactor.TlongdevPriceListInteractor;
 import com.tlongdev.bktf.util.Utility;
 
-/**
- * Created by Long on 2015. 12. 18..
- */
 public class GcmMessageHandler extends GcmListenerService implements TlongdevPriceListInteractor.Callback {
 
-    public static final String LOG_TAG = GcmMessageHandler.class.getSimpleName();
+    private static final String LOG_TAG = GcmMessageHandler.class.getSimpleName();
 
-    public static final int NOTIFICATION_ID = 100;
+    private static final int NOTIFICATION_ID = 100;
 
     public void onMessageReceived(String from, Bundle data) {
         Log.d(LOG_TAG, "Message received");

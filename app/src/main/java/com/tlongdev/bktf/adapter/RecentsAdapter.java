@@ -51,9 +51,8 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
     private Cursor mDataSet;
     private OnMoreListener mListener;
 
-    public RecentsAdapter(BptfApplication application, Cursor dataSet) {
+    public RecentsAdapter(BptfApplication application) {
         application.getAdapterComponent().inject(this);
-        this.mDataSet = dataSet;
     }
 
     @Override
@@ -149,10 +148,9 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
      * Replaces the cursor of the adapter
      *
      * @param data          the cursor that will replace the current one
-     * @param closePrevious whether to close the previous cursor
      */
-    public void swapCursor(Cursor data, boolean closePrevious) {
-        if (closePrevious && mDataSet != null) mDataSet.close();
+    public void swapCursor(Cursor data) {
+        if (mDataSet != null) mDataSet.close();
         mDataSet = data;
         notifyDataSetChanged();
     }
@@ -166,7 +164,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        View root;
+        final View root;
         @Bind(R.id.more) View more;
         @Bind(R.id.icon_background) View background;
         @Bind(R.id.icon) ImageView icon;

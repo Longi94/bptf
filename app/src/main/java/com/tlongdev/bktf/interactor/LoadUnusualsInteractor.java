@@ -45,12 +45,12 @@ public class LoadUnusualsInteractor extends AsyncTask<Void, Void, Void> {
     @Inject @Named("readable") SQLiteDatabase mDatabase;
     @Inject Context mContext;
 
-    private Callback mCallback;
-    private String mFilter;
-    private int mDefindex;
-    private int mIndex;
+    private final Callback mCallback;
+    private final String mFilter;
+    private final int mDefindex;
+    private final int mIndex;
 
-    private List<Item> mItems = new LinkedList<>();
+    private final List<Item> mItems = new LinkedList<>();
 
     public LoadUnusualsInteractor(BptfApplication application, int defindex, int index, String filter,
                                   Callback callback) {
@@ -136,7 +136,5 @@ public class LoadUnusualsInteractor extends AsyncTask<Void, Void, Void> {
 
     public interface Callback {
         void onUnusualsLoadFinished(List<Item> items);
-
-        void onUnusualsLoadFailed();
     }
 }

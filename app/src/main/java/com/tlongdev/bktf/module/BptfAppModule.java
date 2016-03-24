@@ -38,7 +38,7 @@ import dagger.Provides;
 @Module
 public class BptfAppModule {
 
-    Application mApplication;
+    private final Application mApplication;
 
     public BptfAppModule(Application application) {
         mApplication = application;

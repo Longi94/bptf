@@ -36,7 +36,7 @@ import java.io.IOException;
  */
 public class GcmRegisterPriceUpdatesService extends IntentService {
 
-    public static final String TAG = "GcmPriceUpdatesService";
+    private static final String TAG = "GcmPriceUpdatesService";
 
     public static final String EXTRA_SUBSCRIBE = "sub_or_unsub";
 

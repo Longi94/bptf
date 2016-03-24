@@ -41,7 +41,7 @@ public class LoadCurrencyPricesInteractor extends AsyncTask<Void, Void, Void> {
     private Price mKeyPrice;
     private Price mBudPrice;
 
-    private Callback mCallback;
+    private final Callback mCallback;
 
     public LoadCurrencyPricesInteractor(BptfApplication application, Callback callback) {
         application.getInteractorComponent().inject(this);

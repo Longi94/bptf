@@ -18,7 +18,7 @@ android {
 
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
-                output.outputFile = new File(output.outputFile.parent, "bptf-" + versionName + ".apk")
+                output.outputFile = new File((String)output.outputFile.parent, "bptf-" + versionName + ".apk")
             }
         }
 

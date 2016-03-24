@@ -38,7 +38,7 @@ public class LoadAllPricesInteractor extends AsyncTask<Void, Void, Cursor> {
     @Inject @Named("readable") SQLiteDatabase mDatabase;
     @Inject Context mContext;
 
-    private Callback mCallback;
+    private final Callback mCallback;
 
     public LoadAllPricesInteractor(BptfApplication application, Callback callback) {
         application.getInteractorComponent().inject(this);

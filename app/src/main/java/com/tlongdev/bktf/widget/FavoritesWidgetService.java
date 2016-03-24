@@ -36,9 +36,6 @@ import com.tlongdev.bktf.util.Utility;
 
 import java.util.concurrent.ExecutionException;
 
-/**
- * Created by Long on 2015. 12. 21..
- */
 public class FavoritesWidgetService extends RemoteViewsService {
 
     @Override
@@ -69,9 +66,9 @@ public class FavoritesWidgetService extends RemoteViewsService {
 
         private Cursor mDataSet;
 
-        private Context mContext;
+        private final Context mContext;
 
-        private int widgetId;
+        private final int widgetId;
 
         private String sql;
 

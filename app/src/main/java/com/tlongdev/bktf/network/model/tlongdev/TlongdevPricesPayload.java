@@ -38,7 +38,7 @@ public class TlongdevPricesPayload {
 
     @SerializedName("prices")
     @Expose
-    private List<TlongdevPrice> prices = new ArrayList<TlongdevPrice>();
+    private List<TlongdevPrice> prices = new ArrayList<>();
 
     @SerializedName("message")
     @Expose

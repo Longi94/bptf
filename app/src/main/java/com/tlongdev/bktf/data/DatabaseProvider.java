@@ -37,16 +37,16 @@ public class DatabaseProvider extends ContentProvider {
     /**
      * URI matcher result codes
      */
-    public static final int RAW_QUERY = 99;
-    public static final int PRICE_LIST = 100;
-    public static final int ITEM_SCHEMA = 101;
-    public static final int ORIGIN_NAMES = 102;
-    public static final int UNUSUAL_SCHEMA = 103;
-    public static final int BACKPACK = 104;
-    public static final int BACKPACK_GUEST = 105;
-    public static final int FAVORITES = 106;
-    public static final int CALCULATOR = 107;
-    public static final int DECORATED_WEAPON = 108;
+    private static final int RAW_QUERY = 99;
+    private static final int PRICE_LIST = 100;
+    private static final int ITEM_SCHEMA = 101;
+    private static final int ORIGIN_NAMES = 102;
+    private static final int UNUSUAL_SCHEMA = 103;
+    private static final int BACKPACK = 104;
+    private static final int BACKPACK_GUEST = 105;
+    private static final int FAVORITES = 106;
+    private static final int CALCULATOR = 107;
+    private static final int DECORATED_WEAPON = 108;
 
     /**
      * The URI Matcher used by this content provider

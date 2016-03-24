@@ -22,9 +22,6 @@ import android.os.Parcelable;
 
 import com.tlongdev.bktf.R;
 
-/**
- * Created by Long on 2015. 10. 31..
- */
 public class BackpackItem extends Item {
 
     private int id;
@@ -58,7 +55,7 @@ public class BackpackItem extends Item {
 
     public BackpackItem() {}
 
-    public BackpackItem(Parcel source) {
+    private BackpackItem(Parcel source) {
         super(source);
         uniqueId = source.readInt();
         originalId = source.readInt();

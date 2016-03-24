@@ -35,7 +35,7 @@ import java.util.List;
  */
 public class UnusualPresenter implements Presenter<UnusualView>,LoadUnusualHatCategoriesInteractor.Callback, LoadUnusualEffectsInteractor.Callback {
 
-    private BptfApplication mApplication;
+    private final BptfApplication mApplication;
 
     private UnusualView mView;
 
@@ -76,20 +76,10 @@ public class UnusualPresenter implements Presenter<UnusualView>,LoadUnusualHatCa
     }
 
     @Override
-    public void onUnusualHatsLoadFailed() {
-
-    }
-
-    @Override
     public void onUnusualEffectsLoadFinished(List<Item> items) {
         if (mView != null) {
             mView.showUnusualEffects(items);
         }
-    }
-
-    @Override
-    public void onUnusualEffectsLoadFailed() {
-
     }
 
     @IntDef({ORDER_BY_NAME, ORDER_BY_PRICE})

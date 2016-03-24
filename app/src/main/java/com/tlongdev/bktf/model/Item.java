@@ -72,7 +72,7 @@ public class Item implements Parcelable {
         }
     };
 
-    public Item(Parcel source) {
+    protected Item(Parcel source) {
         defindex = source.readInt();
         name = source.readString();
         //noinspection WrongConstant
@@ -319,7 +319,7 @@ public class Item implements Parcelable {
      */
     public boolean canHaveEffects() {
         //Unusuals, self-made and community items
-        if (quality == 5 || quality == 7 || quality == 9) {
+        if (quality == Quality.UNUSUAL || quality == Quality.COMMUNITY || quality == Quality.SELF_MADE) {
             return defindex != 267 && defindex != 266;
         } else if (defindex == 1899 || defindex == 125) { //Cheater's Lament and Traveler's Hat
             return true;

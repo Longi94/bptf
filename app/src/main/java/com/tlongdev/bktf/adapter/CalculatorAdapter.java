@@ -30,7 +30,6 @@ import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Item;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -53,9 +52,8 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
      */
     private OnItemEditListener listener;
 
-    public CalculatorAdapter(BptfApplication application, ArrayList<Item> dataSet) {
+    public CalculatorAdapter(BptfApplication application) {
         application.getAdapterComponent().inject(this);
-        mDataSet = dataSet;
     }
 
     @Override

@@ -20,7 +20,7 @@ import javax.inject.Inject;
  */
 public class LoadBackpackItemsInteractor extends AsyncTask<Void, Void, Void> {
 
-    private static String[] PROJECTION = new String[]{
+    private static final String[] PROJECTION = new String[]{
             UserBackpackEntry._ID,
             UserBackpackEntry.COLUMN_DEFINDEX,
             UserBackpackEntry.COLUMN_QUALITY,
@@ -35,8 +35,8 @@ public class LoadBackpackItemsInteractor extends AsyncTask<Void, Void, Void> {
 
     @Inject ContentResolver mContentResolver;
 
-    private Callback mCallback;
-    private boolean mGuest;
+    private final Callback mCallback;
+    private final boolean mGuest;
 
     private List<BackpackItem> mItems;
     private List<BackpackItem> mNewItems;

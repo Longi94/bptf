@@ -35,13 +35,13 @@ public class LoadSearchItemsInteractor extends AsyncTask<Void, Void, Cursor> {
 
     @Inject ContentResolver mContentResolver;
 
-    private String mQuery;
-    private boolean mFilter;
-    private int mFilterQuality;
-    private boolean mFilterTradable;
-    private boolean mFilterCraftable;
-    private boolean mFilterAustralium;
-    private Callback mCallback;
+    private final String mQuery;
+    private final boolean mFilter;
+    private final int mFilterQuality;
+    private final boolean mFilterTradable;
+    private final boolean mFilterCraftable;
+    private final boolean mFilterAustralium;
+    private final Callback mCallback;
 
     public LoadSearchItemsInteractor(BptfApplication application, String query, boolean filter,
                                      int filterQuality, boolean filterTradable, boolean filterCraftable,

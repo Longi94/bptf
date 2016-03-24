@@ -62,13 +62,13 @@ import butterknife.ButterKnife;
  */
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
-    public static final int VIEW_TYPE_HEADER = 0;
-    public static final int VIEW_TYPE_NORMAL = 1;
+    private static final int VIEW_TYPE_HEADER = 0;
+    private static final int VIEW_TYPE_NORMAL = 1;
 
     @Inject Context mContext;
 
-    private List<Price> mDataSet;
-    private Item mItem;
+    private final List<Price> mDataSet;
+    private final Item mItem;
 
     private LineData mData;
 
@@ -161,7 +161,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         return mDataSet.size() + 1;
     }
 
-    private static Comparator<Price> priceAgeComparator = new Comparator<Price>() {
+    private final static Comparator<Price> priceAgeComparator = new Comparator<Price>() {
         @Override
         public int compare(Price lhs, Price rhs) {
             if (lhs.getLastUpdate() > rhs.getLastUpdate()) {

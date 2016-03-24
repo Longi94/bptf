@@ -100,7 +100,7 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
-        mAdapter = new FavoritesAdapter(mApplication, null);
+        mAdapter = new FavoritesAdapter(mApplication);
         mAdapter.setListener(this);
 
         DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
@@ -190,7 +190,7 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
     /**
      * Fully expand the toolbar with animation.
      */
-    public void expandToolbar() {
+    private void expandToolbar() {
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
         behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
     }

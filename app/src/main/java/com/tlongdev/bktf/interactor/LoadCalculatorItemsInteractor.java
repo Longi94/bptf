@@ -44,11 +44,11 @@ public class LoadCalculatorItemsInteractor extends AsyncTask<Void, Void, Void> {
     @Inject @Named("readable") SQLiteDatabase mDatabase;
     @Inject Context mContext;
 
-    private List<Item> mItems = new LinkedList<>();
-    private List<Integer> mCount = new LinkedList<>();
+    private final List<Item> mItems = new LinkedList<>();
+    private final List<Integer> mCount = new LinkedList<>();
     private double mTotalValue;
 
-    private Callback mCallback;
+    private final Callback mCallback;
 
     public LoadCalculatorItemsInteractor(BptfApplication application, Callback callback) {
         application.getInteractorComponent().inject(this);

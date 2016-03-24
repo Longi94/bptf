@@ -27,11 +27,11 @@ public class PlayerItemEquipped {
 
     @SerializedName("class")
     @Expose
-    public int _class;
+    private int _class;
 
     @SerializedName("slot")
     @Expose
-    public int slot;
+    private int slot;
 
     public int get_class() {
         return _class;

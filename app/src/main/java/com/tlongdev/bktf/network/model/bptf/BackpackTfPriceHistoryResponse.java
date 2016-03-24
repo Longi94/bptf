@@ -34,7 +34,7 @@ public class BackpackTfPriceHistoryResponse {
 
     @SerializedName("history")
     @Expose
-    private List<BackpackTfPriceHistory> history = new ArrayList<>();
+    private final List<BackpackTfPriceHistory> history = new ArrayList<>();
 
     @SerializedName("message")
     @Expose

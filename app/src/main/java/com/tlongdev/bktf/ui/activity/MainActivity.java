@@ -65,15 +65,15 @@ public class MainActivity extends BptfActivity {
     /**
      * Request codes for onActivityResult
      */
-    public static final int REQUEST_SETTINGS = 100;
+    private static final int REQUEST_SETTINGS = 100;
     public static final int REQUEST_NEW_ITEM = 101;
 
-    public static final String FRAGMENT_TAG_RECENTS = "recents";
-    public static final String FRAGMENT_TAG_UNUSUALS = "unusuals";
-    public static final String FRAGMENT_TAG_USER = "user";
-    public static final String FRAGMENT_TAG_FAVORITES = "favorites";
-    public static final String FRAGMENT_TAG_CONVERTER = "converter";
-    public static final String FRAGMENT_TAG_CALCULATOR = "calculator";
+    private static final String FRAGMENT_TAG_RECENTS = "recents";
+    private static final String FRAGMENT_TAG_UNUSUALS = "unusuals";
+    private static final String FRAGMENT_TAG_USER = "user";
+    private static final String FRAGMENT_TAG_FAVORITES = "favorites";
+    private static final String FRAGMENT_TAG_CONVERTER = "converter";
+    private static final String FRAGMENT_TAG_CALCULATOR = "calculator";
 
     /**
      * Remember the position of the selected item.
@@ -122,7 +122,7 @@ public class MainActivity extends BptfActivity {
     /**
      * Listener for the navigation drawer.
      */
-    NavigationView.OnNavigationItemSelectedListener navigationListener = new NavigationView.OnNavigationItemSelectedListener() {
+    private final NavigationView.OnNavigationItemSelectedListener navigationListener = new NavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(MenuItem menuItem) {
             //Close the drawers and handle item clicks
@@ -284,7 +284,7 @@ public class MainActivity extends BptfActivity {
      *
      * @param position the position of the clicked item in the navigation view
      */
-    public void switchFragment(int position) {
+    private void switchFragment(int position) {
 
         if (mCurrentSelectedPosition == position) {
             return;

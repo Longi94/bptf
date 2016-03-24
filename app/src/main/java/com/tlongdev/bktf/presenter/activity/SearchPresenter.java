@@ -33,7 +33,7 @@ public class SearchPresenter implements Presenter<SearchView>,SearchUserInteract
         LoadSearchItemsInteractor.Callback {
 
     private SearchView mView;
-    private BptfApplication mApplication;
+    private final BptfApplication mApplication;
 
     private String mQuery;
     private SearchUserInteractor mUserInteractor;

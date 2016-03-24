@@ -89,7 +89,7 @@ public class RoundedImageView extends ImageView {
      * @param radius the radius of the rounded corners
      * @return the rounded bitmap
      */
-    public static Bitmap getCroppedBitmap(Bitmap bmp, int radius) {
+    private static Bitmap getCroppedBitmap(Bitmap bmp, int radius) {
         Bitmap sbmp;
 
         if (bmp.getWidth() != radius || bmp.getHeight() != radius) {

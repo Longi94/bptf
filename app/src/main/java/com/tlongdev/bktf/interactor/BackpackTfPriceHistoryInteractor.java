@@ -48,18 +48,18 @@ public class BackpackTfPriceHistoryInteractor extends AsyncTask<Void, Void, Inte
     @Inject BackpackTfInterface mBackpackTfInterface;
     @Inject Tracker mTracker;
 
-    private Item item;
+    private final Item mItem;
 
     private String errorMessage;
 
-    private List<Price> result = new LinkedList<>();
+    private final List<Price> mResult = new LinkedList<>();
 
-    private Callback mCallback;
+    private final Callback mCallback;
 
     public BackpackTfPriceHistoryInteractor(BptfApplication application, Item item, Callback callback) {
-        mCallback = callback;
         application.getInteractorComponent().inject(this);
-        this.item = item;
+        mCallback = callback;
+        mItem = item;
     }
 
     @Override
@@ -68,11 +68,11 @@ public class BackpackTfPriceHistoryInteractor extends AsyncTask<Void, Void, Inte
         try {
             Response<BackpackTfPriceHistoryPayload> response =
                     mBackpackTfInterface.getPriceHistory(BuildConfig.BACKPACK_TF_API_KEY,
-                            String.valueOf(item.isAustralium() ? "Australium " + item.getName() : item.getDefindex()),
-                            item.getQuality(),
-                            item.isTradable() ? 1 : 0,
-                            item.isCraftable() ? 1 : 0,
-                            item.getPriceIndex())
+                            String.valueOf(mItem.isAustralium() ? "Australium " + mItem.getName() : mItem.getDefindex()),
+                            mItem.getQuality(),
+                            mItem.isTradable() ? 1 : 0,
+                            mItem.isCraftable() ? 1 : 0,
+                            mItem.getPriceIndex())
                             .execute();
 
             if (response.body() != null) {
@@ -85,7 +85,7 @@ public class BackpackTfPriceHistoryInteractor extends AsyncTask<Void, Void, Inte
                 }
 
                 for (BackpackTfPriceHistory history : payload.getResponse().getHistory()) {
-                    result.add(mapToPrice(history));
+                    mResult.add(mapToPrice(history));
                 }
 
                 return 0;
@@ -125,7 +125,7 @@ public class BackpackTfPriceHistoryInteractor extends AsyncTask<Void, Void, Inte
         if (mCallback != null) {
             if (integer >= 0) {
                 //Notify the listener that the update finished
-                mCallback.onPriceHistoryFinished(result);
+                mCallback.onPriceHistoryFinished(mResult);
             } else {
                 mCallback.onPriceHistoryFailed(errorMessage);
             }

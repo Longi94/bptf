@@ -17,13 +17,9 @@
 package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.annotation.IntDef;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -34,7 +30,6 @@ import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Item;
-import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.util.Utility;
 
 import java.lang.annotation.Retention;
@@ -51,12 +46,6 @@ import butterknife.ButterKnife;
  */
 public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHolder> {
 
-    /**
-     * Log tag for logging.
-     */
-    @SuppressWarnings("unused")
-    private static final String LOG_TAG = UnusualAdapter.class.getSimpleName();
-
     @IntDef({TYPE_HATS, TYPE_EFFECTS, TYPE_SPECIFIC_HAT})
     @Retention(RetentionPolicy.SOURCE)
     public @interface UnusualAdapterType{}
@@ -65,6 +54,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
 
     public static final int TYPE_EFFECTS = 1;
     public static final int TYPE_SPECIFIC_HAT = 2;
+
     @Inject Context mContext;
 
     private List<Item> mDataSet;
@@ -189,7 +179,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
      */
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        View root;
+        final View root;
 
         @Bind(R.id.icon) ImageView icon;
         @Bind(R.id.effect) ImageView effect;
