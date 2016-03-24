@@ -17,6 +17,7 @@
 package com.tlongdev.bktf.ui.activity;
 
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.support.annotation.LayoutRes;
@@ -31,6 +32,8 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
+import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.util.Utility;
 
 import javax.inject.Inject;
 
@@ -52,6 +55,11 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         mApplication = (BptfApplication) getApplication();
         mApplication.getActivityComponent().inject(this);
+
+        //Set the color of the status bar
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
+        }
     }
 
     @Override
