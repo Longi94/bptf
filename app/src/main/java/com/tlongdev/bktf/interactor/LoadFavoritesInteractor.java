@@ -86,7 +86,7 @@ public class LoadFavoritesInteractor extends AsyncTask<Void, Void, Void> {
         Cursor cursor = mDatabase.rawQuery(sql, null);
 
         if (cursor != null) {
-            while (cursor.moveToFirst()) {
+            while (cursor.moveToNext()) {
                 Item item = new Item();
                 item.setDefindex(cursor.getInt(cursor.getColumnIndex(DatabaseContract.CalculatorEntry.COLUMN_DEFINDEX)));
                 item.setName(cursor.getString(cursor.getColumnIndex(ItemSchemaEntry.COLUMN_ITEM_NAME)));
