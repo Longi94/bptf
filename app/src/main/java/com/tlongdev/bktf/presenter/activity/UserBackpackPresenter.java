@@ -16,6 +16,8 @@
 
 package com.tlongdev.bktf.presenter.activity;
 
+import android.os.AsyncTask;
+
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.interactor.LoadBackpackItemsInteractor;
 import com.tlongdev.bktf.model.BackpackItem;
@@ -53,7 +55,7 @@ public class UserBackpackPresenter implements Presenter<UserBackpackView>,LoadBa
         LoadBackpackItemsInteractor interactor = new LoadBackpackItemsInteractor(
                 mApplication, guest, this
         );
-        interactor.execute();
+        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

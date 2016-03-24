@@ -16,6 +16,8 @@
 
 package com.tlongdev.bktf.presenter.activity;
 
+import android.os.AsyncTask;
+
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.interactor.LoadUnusualsInteractor;
 import com.tlongdev.bktf.model.Item;
@@ -52,7 +54,7 @@ public class UnusualPresenter implements Presenter<UnusualView>,LoadUnusualsInte
         LoadUnusualsInteractor interactor = new LoadUnusualsInteractor(
                 mApplication, defindex, index, filter, this
         );
-        interactor.execute();
+        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

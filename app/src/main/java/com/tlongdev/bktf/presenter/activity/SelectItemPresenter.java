@@ -17,6 +17,7 @@
 package com.tlongdev.bktf.presenter.activity;
 
 import android.database.Cursor;
+import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.interactor.LoadSelectorItemsInteractor;
@@ -51,7 +52,7 @@ public class SelectItemPresenter implements Presenter<SelectItemView>,LoadSelect
         LoadSelectorItemsInteractor interactor = new LoadSelectorItemsInteractor(
                 mApplication, query, this
         );
-        interactor.execute();
+        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

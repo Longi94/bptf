@@ -19,6 +19,7 @@ package com.tlongdev.bktf.presenter.fragment;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.adapter.CalculatorAdapter;
@@ -93,7 +94,7 @@ public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalcul
     public void loadItems() {
         LoadCalculatorItemsInteractor itemsInteractor = new LoadCalculatorItemsInteractor(
                 mApplication, this);
-        itemsInteractor.execute();
+        itemsInteractor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

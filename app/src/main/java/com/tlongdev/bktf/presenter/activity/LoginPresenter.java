@@ -16,6 +16,7 @@
 
 package com.tlongdev.bktf.presenter.activity;
 
+import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
@@ -64,7 +65,7 @@ public class LoginPresenter implements Presenter<LoginView>, GetUserDataInteract
         user.setSteamId(id);
 
         GetUserDataInteractor interactor = new GetUserDataInteractor(mApplication, user, true, this);
-        interactor.execute();
+        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         mTracker.send(new HitBuilders.EventBuilder()
                 .setCategory("Request")
@@ -77,7 +78,7 @@ public class LoginPresenter implements Presenter<LoginView>, GetUserDataInteract
         Tf2UserBackpackInteractor interactor = new Tf2UserBackpackInteractor(
                 mApplication, user, false, this
         );
-        interactor.execute();
+        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         mTracker.send(new HitBuilders.EventBuilder()
                 .setCategory("Request")

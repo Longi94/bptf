@@ -19,6 +19,7 @@ package com.tlongdev.bktf.presenter.fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
@@ -84,7 +85,7 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
         if (mPrefs.getBoolean(mContext.getString(R.string.pref_initial_load_v2), true)) {
             if (Utility.isNetworkAvailable(mContext)) {
                 TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(mApplication, false, true, this);
-                task.execute();
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                 //Show the progress dialog
                 mView.showLoadingDialog("Downloading prices...");
@@ -99,12 +100,13 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
             }
         } else {
             LoadAllPricesInteractor interactor = new LoadAllPricesInteractor(mApplication, this);
-            interactor.execute();
+            interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            loadCurrencyPrices();
             //Update database if the last update happened more than an hour ago
             if (System.currentTimeMillis() - mPrefs.getLong(mContext.getString(R.string.pref_last_price_list_update), 0) >= 3600000L
                     && Utility.isNetworkAvailable(mContext)) {
-                TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(mApplication, true, false, this);
-                task.execute();
+                TlongdevPriceListInteractor interactor1 = new TlongdevPriceListInteractor(mApplication, true, false, this);
+                interactor1.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                 mView.showRefreshAnimation();
 
@@ -120,8 +122,8 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
     public void downloadPrices() {
         //Manual update
         if (Utility.isNetworkAvailable(mContext)) {
-            TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(mApplication, true, true, this);
-            task.execute();
+            TlongdevPriceListInteractor interactor = new TlongdevPriceListInteractor(mApplication, true, true, this);
+            interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
             mTracker.send(new HitBuilders.EventBuilder()
                     .setCategory("Request")
@@ -138,7 +140,7 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
         LoadCurrencyPricesInteractor interactor = new LoadCurrencyPricesInteractor(
                 mApplication, this
         );
-        interactor.execute();
+        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -154,7 +156,7 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
         if (mPrefs.getBoolean(mContext.getString(R.string.pref_initial_load_v2), true)) {
 
             TlongdevItemSchemaInteractor task = new TlongdevItemSchemaInteractor(mApplication, this);
-            task.execute();
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
             if (mView != null) {
                 mView.showLoadingDialog("Downloading item schema...");
@@ -173,7 +175,7 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
             if (System.currentTimeMillis() - mPrefs.getLong(mContext.getString(R.string.pref_last_item_schema_update), 0) >= 172800000L //2days
                     && Utility.isNetworkAvailable(mContext)) {
                 TlongdevItemSchemaInteractor task = new TlongdevItemSchemaInteractor(mApplication, this);
-                task.execute();
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                 mTracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Request")

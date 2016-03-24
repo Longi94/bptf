@@ -1,5 +1,7 @@
 package com.tlongdev.bktf.presenter.activity;
 
+import android.os.AsyncTask;
+
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.interactor.GetSearchedUserDataInteractor;
 import com.tlongdev.bktf.interactor.Tf2UserBackpackInteractor;
@@ -36,7 +38,7 @@ public class UserPresenter implements Presenter<UserView>,GetSearchedUserDataInt
         GetSearchedUserDataInteractor interactor = new GetSearchedUserDataInteractor(
                 mApplication, steamId, this
         );
-        interactor.execute();
+        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -45,7 +47,7 @@ public class UserPresenter implements Presenter<UserView>,GetSearchedUserDataInt
         Tf2UserBackpackInteractor interactor = new Tf2UserBackpackInteractor(
                 mApplication, user, true, this
         );
-        interactor.execute();
+        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

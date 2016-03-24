@@ -18,6 +18,7 @@ package com.tlongdev.bktf.presenter.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.widget.Toast;
 
@@ -72,10 +73,10 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
         if (!mSearchedUser && Utility.isNetworkAvailable(mContext) && System.currentTimeMillis()
                 - user.getLastUpdated() >= 3600000L) {
 
-            //Start the task and listne for the end
+            //Start the task and listen for the end
             GetUserDataInteractor task = new GetUserDataInteractor(mApplication,
                     mProfileManager.getUser(), false, this);
-            task.execute();
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
             mView.showRefreshingAnimation();
 
@@ -91,7 +92,7 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
         Tf2UserBackpackInteractor interactor = new Tf2UserBackpackInteractor(
                 mApplication, user, false, this
         );
-        interactor.execute();
+        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         mTracker.send(new HitBuilders.EventBuilder()
                 .setCategory("Request")
@@ -111,9 +112,9 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
     public void onRefresh() {
         if (Utility.isNetworkAvailable(mContext)) {
             //Start fetching the data and listen for the end
-            GetUserDataInteractor fetchTask = new GetUserDataInteractor(mApplication,
+            GetUserDataInteractor interactor = new GetUserDataInteractor(mApplication,
                     mProfileManager.getUser(), true, this);
-            fetchTask.execute();
+            interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
             mTracker.send(new HitBuilders.EventBuilder()
                     .setCategory("Request")

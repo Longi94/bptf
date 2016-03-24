@@ -16,6 +16,7 @@
 
 package com.tlongdev.bktf.presenter.fragment;
 
+import android.os.AsyncTask;
 import android.support.annotation.IntDef;
 
 import com.tlongdev.bktf.BptfApplication;
@@ -58,14 +59,14 @@ public class UnusualPresenter implements Presenter<UnusualView>,LoadUnusualHatCa
         LoadUnusualHatCategoriesInteractor interactor = new LoadUnusualHatCategoriesInteractor(
                 mApplication, filter, orderBy, this
         );
-        interactor.execute();
+        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void loadUnusualEffects(String filter, @UnusualOrder int orderBy) {
         LoadUnusualEffectsInteractor interactor = new LoadUnusualEffectsInteractor(
                 mApplication, filter, orderBy, this
         );
-        interactor.execute();
+        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

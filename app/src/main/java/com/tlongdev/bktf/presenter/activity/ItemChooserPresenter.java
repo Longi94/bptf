@@ -18,6 +18,7 @@ package com.tlongdev.bktf.presenter.activity;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.tlongdev.bktf.BptfApplication;
@@ -62,7 +63,7 @@ public class ItemChooserPresenter implements Presenter<ItemChooserView>,LoadUnus
         LoadUnusualEffectsInteractor interactor = new LoadUnusualEffectsInteractor(
                 mApplication, "", UnusualPresenter.ORDER_BY_NAME, this
         );
-        interactor.execute();
+        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

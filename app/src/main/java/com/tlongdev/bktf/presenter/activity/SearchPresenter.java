@@ -17,6 +17,7 @@
 package com.tlongdev.bktf.presenter.activity;
 
 import android.database.Cursor;
+import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.interactor.LoadSearchItemsInteractor;
@@ -72,7 +73,7 @@ public class SearchPresenter implements Presenter<SearchView>,SearchUserInteract
             mView.showItems(items);
         }
         mUserInteractor = new SearchUserInteractor(mApplication, mQuery, this);
-        mUserInteractor.execute();
+        mUserInteractor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void search(String query, boolean filter, int filterQuality, boolean filterTradable,
@@ -87,6 +88,6 @@ public class SearchPresenter implements Presenter<SearchView>,SearchUserInteract
                 mApplication, mQuery, filter, filterQuality, filterTradable, filterCraftable,
                 filterAustralium, this
         );
-        interactor.execute();
+        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 }

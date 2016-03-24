@@ -21,6 +21,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -53,8 +54,8 @@ public class GcmMessageHandler extends GcmListenerService implements TlongdevPri
                 String autoSync = prefs.getString(getString(R.string.pref_auto_sync), "1");
 
                 if (autoSync.equals("2") || (autoSync.equals("1") && wifi.isConnected())) {
-                    TlongdevPriceListInteractor task = new TlongdevPriceListInteractor((BptfApplication) getApplication(), true, true, this);
-                    task.execute();
+                    TlongdevPriceListInteractor interactor = new TlongdevPriceListInteractor((BptfApplication) getApplication(), true, true, this);
+                    interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }
         } else {

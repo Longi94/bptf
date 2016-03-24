@@ -16,6 +16,8 @@
 
 package com.tlongdev.bktf.presenter.activity;
 
+import android.os.AsyncTask;
+
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.interactor.BackpackTfPriceHistoryInteractor;
 import com.tlongdev.bktf.model.Item;
@@ -53,7 +55,7 @@ public class PriceHistoryPresenter implements Presenter<PriceHistoryView>,Backpa
         BackpackTfPriceHistoryInteractor interactor = new BackpackTfPriceHistoryInteractor(
                 mApplication, item, this
         );
-        interactor.execute();
+        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

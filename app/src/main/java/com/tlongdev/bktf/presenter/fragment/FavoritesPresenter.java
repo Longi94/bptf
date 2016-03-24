@@ -18,6 +18,7 @@ package com.tlongdev.bktf.presenter.fragment;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.tlongdev.bktf.BptfApplication;
@@ -71,7 +72,7 @@ public class FavoritesPresenter implements Presenter<FavoritesView>,LoadFavorite
 
     public void loadFavorites() {
         LoadFavoritesInteractor interactor = new LoadFavoritesInteractor(mApplication, this);
-        interactor.execute();
+        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void addCurrencies() {

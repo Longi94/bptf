@@ -16,6 +16,8 @@
 
 package com.tlongdev.bktf.presenter.activity;
 
+import android.os.AsyncTask;
+
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.interactor.LoadItemDetailsInteractor;
 import com.tlongdev.bktf.model.BackpackItem;
@@ -49,7 +51,7 @@ public class ItemDetailPresenter implements Presenter<ItemDetailView>,LoadItemDe
         LoadItemDetailsInteractor interactor = new LoadItemDetailsInteractor(
                 mApplication, id, guest, this
         );
-        interactor.execute();
+        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
