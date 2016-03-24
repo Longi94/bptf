@@ -94,7 +94,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                         @Override
                         public void onClick(View v) {
                             if (mListener != null) {
-                                mListener.onItemClicked(item.getPriceIndex(),
+                                mListener.onItemClicked(item.getDefindex(),
                                         item.getName(),
                                         false);
                             }

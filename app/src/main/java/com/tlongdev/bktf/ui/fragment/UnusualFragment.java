@@ -18,14 +18,12 @@ package com.tlongdev.bktf.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -45,8 +43,8 @@ import com.tlongdev.bktf.adapter.UnusualAdapter;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.presenter.fragment.UnusualPresenter;
 import com.tlongdev.bktf.ui.activity.MainActivity;
-import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
+import com.tlongdev.bktf.ui.activity.UnusualActivity;
 import com.tlongdev.bktf.ui.view.fragment.UnusualView;
 import com.tlongdev.bktf.util.Utility;
 
@@ -271,41 +269,18 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
     }
 
     @Override
-    public void onMoreClicked(View view,final Item item) {
-
-        PopupMenu menu = new PopupMenu(getContext(), view);
-        menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
-        menu.getMenu().getItem(0).setTitle(
-                Utility.isFavorite(mContext, item) ? "Remove from favorites" : "Add to favorites");
-        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.history:
-                        Intent i = new Intent(getActivity(), PriceHistoryActivity.class);
-                        i.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
-                        startActivity(i);
-                        break;
-                    case R.id.favorite:
-                        if (Utility.isFavorite(mContext, item)) {
-                            Utility.removeFromFavorites(mContext, item);
-                        } else {
-                            Utility.addToFavorites(mContext, item);
-                        }
-                        break;
-                    case R.id.backpack_tf:
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
-                                item.getBackpackTfUrl())));
-                        break;
-                }
-                return true;
-            }
-        });
-        menu.show();
+    public void onMoreClicked(View view, Item item) {
     }
 
     @Override
     public void onItemClicked(int index, String name, boolean effect) {
-
+        Intent i = new Intent(getActivity(), UnusualActivity.class);
+        if (effect) {
+            i.putExtra(UnusualActivity.EXTRA_PRICE_INDEX, index);
+        } else {
+            i.putExtra(UnusualActivity.EXTRA_DEFINDEX, index);
+        }
+        i.putExtra(UnusualActivity.EXTRA_NAME, name);
+        startActivity(i);
     }
 }
