@@ -72,6 +72,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
             price.setHighValue(mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE_HIGH)));
             price.setDifference(mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_DIFFERENCE)));
             price.setCurrency(mDataSet.getString(mDataSet.getColumnIndex(PriceEntry.COLUMN_CURRENCY)));
+            price.setRawValue(mDataSet.getDouble(mDataSet.getColumnIndex("raw_price")));
 
             //Get all the data from the cursor
             final Item item = new Item();

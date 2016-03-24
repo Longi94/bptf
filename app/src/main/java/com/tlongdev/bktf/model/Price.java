@@ -325,7 +325,7 @@ public class Price implements Parcelable {
             return String.format("+ %s", differencePrice.getFormattedPrice(context, currency));
         } else {
             Price differencePrice = new Price();
-            differencePrice.setValue(difference);
+            differencePrice.setValue(-difference);
             differencePrice.setCurrency(Currency.METAL);
             return String.format("- %s", differencePrice.getFormattedPrice(context, currency));
         }
