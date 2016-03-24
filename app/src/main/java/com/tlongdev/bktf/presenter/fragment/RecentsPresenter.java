@@ -80,28 +80,6 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
     }
 
     public void loadPrices() {
-        LoadAllPricesInteractor interactor = new LoadAllPricesInteractor(mApplication, this);
-        interactor.execute();
-    }
-
-    public void downloadPrices() {
-        //Manual update
-        if (Utility.isNetworkAvailable(mContext)) {
-            TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(mApplication, true, true, this);
-            task.execute();
-
-            mTracker.send(new HitBuilders.EventBuilder()
-                    .setCategory("Request")
-                    .setAction("Refresh")
-                    .setLabel("Prices")
-                    .build());
-        } else {
-            mView.showToast("bptf: " + mContext.getString(R.string.error_no_network), Toast.LENGTH_SHORT);
-            mView.hideRefreshingAnimation();
-        }
-    }
-
-    public void downloadPricesIfNeeded() {
         //Download whole database when the app is first opened.
         if (mPrefs.getBoolean(mContext.getString(R.string.pref_initial_load_v2), true)) {
             if (Utility.isNetworkAvailable(mContext)) {
@@ -120,6 +98,8 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
                 mView.showErrorDialog();
             }
         } else {
+            LoadAllPricesInteractor interactor = new LoadAllPricesInteractor(mApplication, this);
+            interactor.execute();
             //Update database if the last update happened more than an hour ago
             if (System.currentTimeMillis() - mPrefs.getLong(mContext.getString(R.string.pref_last_price_list_update), 0) >= 3600000L
                     && Utility.isNetworkAvailable(mContext)) {
@@ -134,6 +114,23 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
                         .setLabel("Prices")
                         .build());
             }
+        }
+    }
+
+    public void downloadPrices() {
+        //Manual update
+        if (Utility.isNetworkAvailable(mContext)) {
+            TlongdevPriceListInteractor task = new TlongdevPriceListInteractor(mApplication, true, true, this);
+            task.execute();
+
+            mTracker.send(new HitBuilders.EventBuilder()
+                    .setCategory("Request")
+                    .setAction("Refresh")
+                    .setLabel("Prices")
+                    .build());
+        } else {
+            mView.showToast("bptf: " + mContext.getString(R.string.error_no_network), Toast.LENGTH_SHORT);
+            mView.hideRefreshingAnimation();
         }
     }
 

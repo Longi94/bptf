@@ -67,12 +67,6 @@ import butterknife.ButterKnife;
 public class RecentsFragment extends BptfFragment implements RecentsView,
         SwipeRefreshLayout.OnRefreshListener, MainActivity.OnDrawerOpenedListener, RecentsAdapter.OnMoreListener {
 
-    /**
-     * Log tag for logging.
-     */
-    @SuppressWarnings("unused")
-    private static final String LOG_TAG = RecentsFragment.class.getSimpleName();
-
     @Bind(R.id.progress_bar) ProgressBar progressBar;
     @Bind(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
     @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
@@ -162,7 +156,6 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mPresenter.loadPrices();
-        mPresenter.loadCurrencyPrices();
     }
 
     @Override
@@ -170,8 +163,6 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
         super.onResume();
         mTracker.setScreenName("Latest Changes");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-
-        mPresenter.downloadPricesIfNeeded();
     }
 
     @Override

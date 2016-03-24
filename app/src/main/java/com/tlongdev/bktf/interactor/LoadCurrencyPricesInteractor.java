@@ -69,12 +69,14 @@ public class LoadCurrencyPricesInteractor extends AsyncTask<Void, Void, Void> {
                 null,
                 null
         );
+        mBudPrice = new Price();
+        mMetalPrice = new Price();
+        mKeyPrice = new Price();
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 switch (cursor.getInt(0)) {
                     case 143:
-                        mBudPrice = new Price();
                         mBudPrice.setValue(cursor.getDouble(1));
                         mBudPrice.setHighValue(cursor.getDouble(2));
                         mBudPrice.setDifference(cursor.getDouble(3));
@@ -82,7 +84,6 @@ public class LoadCurrencyPricesInteractor extends AsyncTask<Void, Void, Void> {
                         mBudPrice.setRawValue(cursor.getDouble(5));
                         break;
                     case 5002:
-                        mMetalPrice = new Price();
                         mMetalPrice.setValue(cursor.getDouble(1));
                         mMetalPrice.setHighValue(cursor.getDouble(2));
                         mMetalPrice.setDifference(cursor.getDouble(3));
@@ -90,7 +91,6 @@ public class LoadCurrencyPricesInteractor extends AsyncTask<Void, Void, Void> {
                         mMetalPrice.setRawValue(cursor.getDouble(5));
                         break;
                     case 5021:
-                        mKeyPrice = new Price();
                         mKeyPrice.setValue(cursor.getDouble(1));
                         mKeyPrice.setHighValue(cursor.getDouble(2));
                         mKeyPrice.setDifference(cursor.getDouble(3));
