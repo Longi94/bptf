@@ -545,10 +545,9 @@ public class Item implements Parcelable {
     /**
      * Returns the url link for the icon if the item.
      *
-     * @param context the context
      * @return Uri object
      */
-    public String getIconUrl(Context context) {
+    public String getIconUrl() {
         if (australium) {
             return "file:///android_asset/australium/" + defindex + ".webp";
         } else if (weaponWear > 0) {

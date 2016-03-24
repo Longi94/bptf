@@ -140,7 +140,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                     holder.root.setCardBackgroundColor(backpackItem.getColor(mContext, true));
 
                     Glide.with(mContext)
-                            .load(backpackItem.getIconUrl(mContext))
+                            .load(backpackItem.getIconUrl())
                             .into(holder.icon);
 
                         if (backpackItem.getPriceIndex() != 0 && backpackItem.canHaveEffects()) {

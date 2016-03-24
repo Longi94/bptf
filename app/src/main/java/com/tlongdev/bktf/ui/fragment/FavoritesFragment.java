@@ -18,6 +18,7 @@ package com.tlongdev.bktf.ui.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -34,6 +35,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
@@ -42,6 +44,7 @@ import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.presenter.fragment.FavoritesPresenter;
 import com.tlongdev.bktf.ui.activity.ItemChooserActivity;
 import com.tlongdev.bktf.ui.activity.MainActivity;
+import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.view.fragment.FavoritesView;
 import com.tlongdev.bktf.util.Utility;
@@ -56,9 +59,7 @@ import butterknife.OnClick;
  * A simple {@link Fragment} subclass.
  */
 public class FavoritesFragment extends BptfFragment implements FavoritesView,
-        MainActivity.OnDrawerOpenedListener {
-
-    private static final String LOG_TAG = FavoritesFragment.class.getSimpleName();
+        MainActivity.OnDrawerOpenedListener, FavoritesAdapter.OnMoreListener {
 
     @Bind(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
     @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
@@ -99,7 +100,8 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
-        mAdapter = new FavoritesAdapter(getActivity(), null);
+        mAdapter = new FavoritesAdapter(mApplication, null);
+        mAdapter.setListener(this);
 
         DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
@@ -191,5 +193,35 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
     public void expandToolbar() {
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
         behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
+    }
+
+    @Override
+    public void onMoreClicked(View view, final Item item) {
+        PopupMenu menu = new PopupMenu(getActivity(), view);
+        menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
+        menu.getMenu().getItem(0).setTitle("Remove from favorites");
+        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.history:
+                        Intent i = new Intent(getActivity(), PriceHistoryActivity.class);
+                        i.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
+                        startActivity(i);
+                        break;
+                    case R.id.favorite:
+                        Utility.removeFromFavorites(getActivity(), item);
+                        mAdapter.removeItem(item);
+                        break;
+                    case R.id.backpack_tf:
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
+                                item.getBackpackTfUrl())));
+                        break;
+                }
+                return true;
+            }
+        });
+
+        menu.show();
     }
 }

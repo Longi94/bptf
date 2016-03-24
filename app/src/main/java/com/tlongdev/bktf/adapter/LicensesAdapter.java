@@ -16,10 +16,7 @@
 
 package com.tlongdev.bktf.adapter;
 
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Paint;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,17 +31,14 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Long on 2016. 01. 10..
- */
 public class LicensesAdapter extends RecyclerView.Adapter<LicensesAdapter.ViewHolder>{
 
     private List<License> licenses;
-    private Context mContext;
 
-    public LicensesAdapter(List<License> licenses, Context context) {
+    private OnClickListener mListener;
+
+    public LicensesAdapter(List<License> licenses) {
         this.licenses = licenses;
-        this.mContext = context;
     }
 
     @Override
@@ -65,12 +59,8 @@ public class LicensesAdapter extends RecyclerView.Adapter<LicensesAdapter.ViewHo
         holder.link.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri webPage = Uri.parse(license.getUrl());
-
-                //Open link in the device default web browser
-                Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
-                if (intent.resolveActivity(mContext.getPackageManager()) != null) {
-                    mContext.startActivity(intent);
+                if (mListener != null) {
+                    mListener.onLicenseClicked(license.getUrl());
                 }
             }
         });
@@ -79,6 +69,10 @@ public class LicensesAdapter extends RecyclerView.Adapter<LicensesAdapter.ViewHo
     @Override
     public int getItemCount() {
         return licenses == null ? 0 : licenses.size();
+    }
+
+    public void setListener(OnClickListener listener) {
+        mListener = listener;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -92,5 +86,9 @@ public class LicensesAdapter extends RecyclerView.Adapter<LicensesAdapter.ViewHo
             ButterKnife.bind(this, view);
             link.setPaintFlags(link.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         }
+    }
+
+    public interface OnClickListener {
+        void onLicenseClicked(String wrbPage);
     }
 }

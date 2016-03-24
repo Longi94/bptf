@@ -116,7 +116,7 @@ public class PriceHistoryActivity extends BptfActivity implements PriceHistoryVi
 
     @Override
     public void showHistory(List<Price> prices) {
-        mRecyclerView.setAdapter(new HistoryAdapter(this, prices, mItem));
+        mRecyclerView.setAdapter(new HistoryAdapter(mApplication, prices, mItem));
         animateViews();
     }
 

@@ -18,6 +18,7 @@ package com.tlongdev.bktf.ui.activity;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
@@ -28,19 +29,22 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.PopupMenu;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.SearchAdapter;
+import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Quality;
 import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.presenter.activity.SearchPresenter;
+import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui.view.activity.SearchView {
+public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui.view.activity.SearchView, SearchAdapter.OnSearchClickListener {
 
     @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
     @Bind(R.id.toolbar) Toolbar mToolbar;
@@ -85,7 +89,8 @@ public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui
         }
 
         //Initialize the list
-        mAdapter = new SearchAdapter(this);
+        mAdapter = new SearchAdapter(mApplication);
+        mAdapter.setListener(this);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, columnCount));
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -191,5 +196,49 @@ public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui
         intent.putExtra(SearchFilterActivity.EXTRA_QUALITY, filterQuality);
         intent.putExtra(SearchFilterActivity.EXTRA_AUSTRALIUM, filterAustralium);
         startActivityForResult(intent, 0);
+    }
+
+    @Override
+    public void onMoreClicked(View view, final Item item) {
+        PopupMenu menu = new PopupMenu(this, view);
+        menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
+        menu.getMenu().getItem(0).setTitle(
+                Utility.isFavorite(this, item) ? "Remove from favorites" : "Add to favorites");
+        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.history:
+
+                        Intent i = new Intent(SearchActivity.this, PriceHistoryActivity.class);
+
+                        i.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
+
+                        startActivity(i);
+                        break;
+                    case R.id.favorite:
+                        if (Utility.isFavorite(SearchActivity.this, item)) {
+                            Utility.removeFromFavorites(SearchActivity.this, item);
+                        } else {
+                            Utility.addToFavorites(SearchActivity.this, item);
+                        }
+                        break;
+                    case R.id.backpack_tf:
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
+                                item.getBackpackTfUrl())));
+                        break;
+                }
+                return true;
+            }
+        });
+
+        menu.show();
+    }
+
+    @Override
+    public void onUserClicked(User user) {
+        Intent intent = new Intent(this, UserActivity.class);
+        intent.putExtra(UserActivity.STEAM_ID_KEY, user.getResolvedSteamId());
+        startActivity(intent);
     }
 }

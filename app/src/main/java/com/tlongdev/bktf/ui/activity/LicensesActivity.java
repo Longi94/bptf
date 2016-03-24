@@ -16,6 +16,8 @@
 
 package com.tlongdev.bktf.ui.activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,7 +36,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class LicensesActivity extends BptfActivity implements LicensesView {
+public class LicensesActivity extends BptfActivity implements LicensesView, LicensesAdapter.OnClickListener {
 
     @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
     @Bind(R.id.toolbar) Toolbar mToolbar;
@@ -78,6 +80,19 @@ public class LicensesActivity extends BptfActivity implements LicensesView {
 
     @Override
     public void showLicenses(List<License> licenses) {
-        mRecyclerView.setAdapter(new LicensesAdapter(licenses, this));
+        LicensesAdapter adapter = new LicensesAdapter(licenses);
+        adapter.setListener(this);
+        mRecyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onLicenseClicked(String url) {
+        Uri webPage = Uri.parse(url);
+
+        //Open link in the device default web browser
+        Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 }

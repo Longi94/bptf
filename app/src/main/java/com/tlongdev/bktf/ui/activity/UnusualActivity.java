@@ -16,6 +16,7 @@
 
 package com.tlongdev.bktf.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -25,6 +26,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.widget.EditText;
 
 import com.f2prateek.dart.Dart;
@@ -35,6 +37,7 @@ import com.tlongdev.bktf.adapter.UnusualAdapter;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.presenter.activity.UnusualPresenter;
 import com.tlongdev.bktf.ui.view.activity.UnusualView;
+import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
 
@@ -44,7 +47,7 @@ import butterknife.ButterKnife;
 /**
  * Activity for showing unusual prices for specific effects or hats.
  */
-public class UnusualActivity extends BptfActivity implements UnusualView, TextWatcher {
+public class UnusualActivity extends BptfActivity implements UnusualView, TextWatcher, UnusualAdapter.OnItemClickListener {
 
     /**
      * Log tag for logging.
@@ -96,8 +99,9 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
         int columnCount = Math.max(3, (int) Math.floor(dpWidth / 120.0));
 
         //Initialize adapter
-        mAdapter = new UnusualAdapter(this);
+        mAdapter = new UnusualAdapter(mApplication);
         mAdapter.setType(UnusualAdapter.TYPE_SPECIFIC_HAT);
+        mAdapter.setListener(this);
 
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, columnCount));
@@ -138,5 +142,22 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
     public void showUnusuals(List<Item> unusuals) {
         mAdapter.setDataSet(unusuals);
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onMoreClicked(View view, Item item) {
+
+    }
+
+    @Override
+    public void onItemClicked(int index, String name, boolean effect) {
+        Intent i = new Intent(this, UnusualActivity.class);
+        if (effect) {
+            i.putExtra(UnusualActivity.EXTRA_PRICE_INDEX, index);
+        } else {
+            i.putExtra(UnusualActivity.EXTRA_DEFINDEX, index);
+        }
+        i.putExtra(UnusualActivity.EXTRA_NAME, name);
+        startActivity(i);
     }
 }

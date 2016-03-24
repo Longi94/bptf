@@ -95,7 +95,7 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView, 
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
-        mAdapter = new CalculatorAdapter(getActivity(), null);
+        mAdapter = new CalculatorAdapter(null);
         mAdapter.setListener(mPresenter);
 
         DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();

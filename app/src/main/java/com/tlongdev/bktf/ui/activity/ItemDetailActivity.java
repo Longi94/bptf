@@ -186,7 +186,7 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
 
         //Set the icon and the background
         Glide.with(this)
-                .load(item.getIconUrl(this))
+                .load(item.getIconUrl())
                 .dontAnimate()
                 .into(icon);
 

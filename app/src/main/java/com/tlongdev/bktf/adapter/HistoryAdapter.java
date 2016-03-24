@@ -37,6 +37,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.github.mikephil.charting.utils.Utils;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
@@ -51,6 +52,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -59,35 +62,22 @@ import butterknife.ButterKnife;
  */
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
-    /**
-     * View types
-     */
     public static final int VIEW_TYPE_HEADER = 0;
     public static final int VIEW_TYPE_NORMAL = 1;
 
-    private Context mContext;
+    @Inject Context mContext;
 
-    /**
-     * The data set
-     */
     private List<Price> mDataSet;
     private Item mItem;
 
     private LineData mData;
 
-    /**
-     * Constructor
-     *
-     * @param context context
-     * @param prices  the data set
-     * @param item    the item
-     */
-    public HistoryAdapter(Context context, List<Price> prices, Item item) {
+    public HistoryAdapter(BptfApplication application, List<Price> prices, Item item) {
+        application.getAdapterComponent().inject(this);
         this.mDataSet = prices;
-        this.mContext = context;
         this.mItem = item;
 
-        Utils.init(context);
+        Utils.init(mContext);
 
         if (prices != null && prices.size() > 1) {
             buildDataSet();
@@ -129,7 +119,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                 holder.iconCard.setCardBackgroundColor(mItem.getColor(mContext, true));
 
                 Glide.with(mContext)
-                        .load(mItem.getIconUrl(mContext))
+                        .load(mItem.getIconUrl())
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(holder.icon);
                 Glide.with(mContext)

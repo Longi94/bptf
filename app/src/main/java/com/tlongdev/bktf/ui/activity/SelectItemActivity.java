@@ -57,7 +57,7 @@ public class SelectItemActivity extends BptfActivity implements SelectItemView, 
 
         setFinishOnTouchOutside(false);
 
-        mAdapter = new SelectItemAdapter(this, null);
+        mAdapter = new SelectItemAdapter(null);
         mAdapter.setListener(this);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));

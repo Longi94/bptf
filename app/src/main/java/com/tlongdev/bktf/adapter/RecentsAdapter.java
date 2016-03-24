@@ -17,29 +17,25 @@
 package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
-import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
-import com.tlongdev.bktf.util.Utility;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -49,30 +45,14 @@ import butterknife.ButterKnife;
  */
 public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHolder> {
 
-    /**
-     * Log tag for logging.
-     */
-    @SuppressWarnings("unused")
-    private static final String LOG_TAG = RecentsAdapter.class.getSimpleName();
+    @Inject Tracker mTracker;
+    @Inject Context mContext;
 
-    /**
-     * The context
-     */
-    private Context mContext;
-
-    /**
-     * The data set
-     */
     private Cursor mDataSet;
+    private OnMoreListener mListener;
 
-    /**
-     * Constructor.
-     *
-     * @param context the context
-     * @param dataSet the data set
-     */
-    public RecentsAdapter(Context context, Cursor dataSet) {
-        this.mContext = context;
+    public RecentsAdapter(BptfApplication application, Cursor dataSet) {
+        application.getAdapterComponent().inject(this);
         this.mDataSet = dataSet;
     }
 
@@ -106,45 +86,11 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
             item.setPrice(price);
 
             holder.more.setOnClickListener(new View.OnClickListener() {
-
                 @Override
                 public void onClick(View v) {
-                    PopupMenu menu = new PopupMenu(mContext, holder.more);
-
-                    menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
-
-                    menu.getMenu().getItem(0).setTitle(
-                            Utility.isFavorite(mContext, item) ? "Remove from favorites" : "Add to favorites");
-
-                    menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem menuItem) {
-                            switch (menuItem.getItemId()) {
-                                case R.id.history:
-
-                                    Intent i = new Intent(mContext, PriceHistoryActivity.class);
-
-                                    i.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
-
-                                    mContext.startActivity(i);
-                                    break;
-                                case R.id.favorite:
-                                    if (Utility.isFavorite(mContext, item)) {
-                                        Utility.removeFromFavorites(mContext, item);
-                                    } else {
-                                        Utility.addToFavorites(mContext, item);
-                                    }
-                                    break;
-                                case R.id.backpack_tf:
-                                    mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
-                                            item.getBackpackTfUrl())));
-                                    break;
-                            }
-                            return true;
-                        }
-                    });
-
-                    menu.show();
+                    if (mListener != null) {
+                        mListener.onMoreClicked(v, item);
+                    }
                 }
             });
 
@@ -172,15 +118,10 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
             }
 
             //Set the item icon
-            Glide.with(mContext)
-                    .load(item.getIconUrl(mContext))
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(holder.icon);
+            Glide.with(mContext).load(item.getIconUrl()).into(holder.icon);
 
             if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
-                Glide.with(mContext)
-                        .load(item.getEffectUrl())
-                        .into(holder.effect);
+                Glide.with(mContext).load(item.getEffectUrl()).into(holder.effect);
             } else {
                 Glide.clear(holder.effect);
                 holder.effect.setImageDrawable(null);
@@ -191,8 +132,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
                 holder.price.setText(item.getPrice().getFormattedPrice(mContext));
             } catch (Throwable t) {
                 t.printStackTrace();
-
-                ((BptfApplication)mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                mTracker.send(new HitBuilders.ExceptionBuilder()
                         .setDescription("Formatter exception:RecentsAdapter, Message: " + t.getMessage())
                         .setFatal(false)
                         .build());
@@ -217,6 +157,10 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
         notifyDataSetChanged();
     }
 
+    public void setListener(OnMoreListener listener) {
+        mListener = listener;
+    }
+
     /**
      * The view holder.
      */
@@ -237,5 +181,9 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
             root = view;
             ButterKnife.bind(this, view);
         }
+    }
+
+    public interface OnMoreListener {
+        void onMoreClicked(View view, Item item);
     }
 }

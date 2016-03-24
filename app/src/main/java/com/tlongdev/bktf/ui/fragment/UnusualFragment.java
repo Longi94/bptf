@@ -16,13 +16,16 @@
 
 package com.tlongdev.bktf.ui.fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -42,11 +45,14 @@ import com.tlongdev.bktf.adapter.UnusualAdapter;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.presenter.fragment.UnusualPresenter;
 import com.tlongdev.bktf.ui.activity.MainActivity;
+import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.view.fragment.UnusualView;
 import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -56,12 +62,9 @@ import butterknife.ButterKnife;
  * hats or effects.
  */
 public class UnusualFragment extends BptfFragment implements UnusualView,
-        MainActivity.OnDrawerOpenedListener, TextWatcher {
+        MainActivity.OnDrawerOpenedListener, TextWatcher, UnusualAdapter.OnItemClickListener {
 
-    /**
-     * Log tag for logging.
-     */
-    private static final String LOG_TAG = UnusualFragment.class.getSimpleName();
+    @Inject Context mContext;
 
     @Bind(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
     @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
@@ -108,12 +111,13 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mPresenter = new UnusualPresenter(mApplication);
-        mPresenter.attachView(this);
 
         View rootView = inflater.inflate(R.layout.fragment_unusual, container, false);
-
         ButterKnife.bind(this, rootView);
+        mApplication.getFragmentComponent().inject(this);
+
+        mPresenter = new UnusualPresenter(mApplication);
+        mPresenter.attachView(this);
 
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
@@ -124,7 +128,8 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
 
         //init the recycler view
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), columnCount));
-        mAdapter = new UnusualAdapter(getActivity());
+        mAdapter = new UnusualAdapter(mApplication);
+        mAdapter.setListener(this);
         mRecyclerView.setAdapter(mAdapter);
 
         mSearchInput.addTextChangedListener(this);
@@ -263,5 +268,44 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
         } else {
             mPresenter.loadUnusualHats(filter, mCurrentSort);
         }
+    }
+
+    @Override
+    public void onMoreClicked(View view,final Item item) {
+
+        PopupMenu menu = new PopupMenu(getContext(), view);
+        menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
+        menu.getMenu().getItem(0).setTitle(
+                Utility.isFavorite(mContext, item) ? "Remove from favorites" : "Add to favorites");
+        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.history:
+                        Intent i = new Intent(getActivity(), PriceHistoryActivity.class);
+                        i.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
+                        startActivity(i);
+                        break;
+                    case R.id.favorite:
+                        if (Utility.isFavorite(mContext, item)) {
+                            Utility.removeFromFavorites(mContext, item);
+                        } else {
+                            Utility.addToFavorites(mContext, item);
+                        }
+                        break;
+                    case R.id.backpack_tf:
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
+                                item.getBackpackTfUrl())));
+                        break;
+                }
+                return true;
+            }
+        });
+        menu.show();
+    }
+
+    @Override
+    public void onItemClicked(int index, String name, boolean effect) {
+
     }
 }

@@ -17,21 +17,18 @@
 package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
@@ -39,9 +36,8 @@ import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.model.User;
-import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
-import com.tlongdev.bktf.ui.activity.UserActivity;
-import com.tlongdev.bktf.util.Utility;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -55,18 +51,23 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     private static final int VIEW_TYPE_USER = 1;
     private static final int VIEW_TYPE_LOADING = 2;
 
+    @Inject Tracker mTracker;
+    @Inject Context mContext;
+
     private Cursor mDataSet;
-    private Context mContext;
     private boolean mLoading;
     private User mUser;
 
-    public SearchAdapter(Context context) {
-        this.mContext = context;
+    private OnSearchClickListener mListener;
+
+    public SearchAdapter(BptfApplication application) {
+        application.getAdapterComponent().inject(this);
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_search, parent, false);
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_search, parent, false);
         return new ViewHolder(v);
     }
 
@@ -86,9 +87,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                         holder.root.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intent = new Intent(mContext, UserActivity.class);
-                                intent.putExtra(UserActivity.STEAM_ID_KEY, mUser.getResolvedSteamId());
-                                mContext.startActivity(intent);
+                                if (mListener != null) {
+                                    mListener.onUserClicked(mUser);
+                                }
                             }
                         });
 
@@ -133,42 +134,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
                         @Override
                         public void onClick(View v) {
-                            PopupMenu menu = new PopupMenu(mContext, holder.more);
-
-                            menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
-
-                            menu.getMenu().getItem(0).setTitle(
-                                    Utility.isFavorite(mContext, item) ? "Remove from favorites" : "Add to favorites");
-
-                            menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem menuItem) {
-                                    switch (menuItem.getItemId()) {
-                                        case R.id.history:
-
-                                            Intent i = new Intent(mContext, PriceHistoryActivity.class);
-
-                                            i.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
-
-                                            mContext.startActivity(i);
-                                            break;
-                                        case R.id.favorite:
-                                            if (Utility.isFavorite(mContext, item)) {
-                                                Utility.removeFromFavorites(mContext, item);
-                                            } else {
-                                                Utility.addToFavorites(mContext, item);
-                                            }
-                                            break;
-                                        case R.id.backpack_tf:
-                                            mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
-                                                    item.getBackpackTfUrl())));
-                                            break;
-                                    }
-                                    return true;
-                                }
-                            });
-
-                            menu.show();
+                            if (mListener != null) {
+                                mListener.onMoreClicked(v, item);
+                            }
                         }
                     });
 
@@ -192,15 +160,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     }
 
                     //Set the item icon
-                    Glide.with(mContext)
-                            .load(item.getIconUrl(mContext))
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(holder.icon);
+                    Glide.with(mContext).load(item.getIconUrl()).into(holder.icon);
 
                     if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
-                        Glide.with(mContext)
-                                .load(item.getEffectUrl())
-                                .into(holder.effect);
+                        Glide.with(mContext).load(item.getEffectUrl()).into(holder.effect);
                     } else {
                         Glide.clear(holder.effect);
                         holder.effect.setImageDrawable(null);
@@ -211,7 +174,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     } catch (Throwable t) {
                         t.printStackTrace();
 
-                        ((BptfApplication)mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
+                        mTracker.send(new HitBuilders.ExceptionBuilder()
                                 .setDescription("Formatter exception:SearchAdapter, Message: " + t.getMessage())
                                 .setFatal(false)
                                 .build());
@@ -260,6 +223,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         mUser = user;
     }
 
+    public void setListener(OnSearchClickListener listener) {
+        mListener = listener;
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
 
         View root;
@@ -279,5 +246,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             root = view;
             ButterKnife.bind(this, view);
         }
+    }
+
+    public interface OnSearchClickListener {
+        void onMoreClicked(View view, Item item);
+        void onUserClicked(User user);
     }
 }

@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -40,6 +41,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,9 +49,11 @@ import android.widget.Toast;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.RecentsAdapter;
+import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.presenter.fragment.RecentsPresenter;
 import com.tlongdev.bktf.ui.activity.MainActivity;
+import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.view.fragment.RecentsView;
 import com.tlongdev.bktf.util.Utility;
@@ -61,7 +65,7 @@ import butterknife.ButterKnife;
  * recents fragment. Shows a list of all the prices orderd by the time of the price update.
  */
 public class RecentsFragment extends BptfFragment implements RecentsView,
-        SwipeRefreshLayout.OnRefreshListener, MainActivity.OnDrawerOpenedListener {
+        SwipeRefreshLayout.OnRefreshListener, MainActivity.OnDrawerOpenedListener, RecentsAdapter.OnMoreListener {
 
     /**
      * Log tag for logging.
@@ -129,7 +133,8 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) mContext).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
-        adapter = new RecentsAdapter(mContext, null);
+        adapter = new RecentsAdapter(mApplication, null);
+        adapter.setListener(this);
 
         DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
@@ -339,5 +344,41 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
                 });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    @Override
+    public void onMoreClicked(View view, final Item item) {
+        PopupMenu menu = new PopupMenu(getActivity(), view);
+
+        menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
+
+        menu.getMenu().getItem(0).setTitle(
+                Utility.isFavorite(mContext, item) ? "Remove from favorites" : "Add to favorites");
+
+        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.history:
+                        Intent i = new Intent(getActivity(), PriceHistoryActivity.class);
+                        i.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
+                        startActivity(i);
+                        break;
+                    case R.id.favorite:
+                        if (Utility.isFavorite(mContext, item)) {
+                            Utility.removeFromFavorites(mContext, item);
+                        } else {
+                            Utility.addToFavorites(mContext, item);
+                        }
+                        break;
+                    case R.id.backpack_tf:
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(item.getBackpackTfUrl())));
+                        break;
+                }
+                return true;
+            }
+        });
+
+        menu.show();
     }
 }

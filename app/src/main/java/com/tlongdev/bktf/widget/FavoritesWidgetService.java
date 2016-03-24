@@ -187,7 +187,7 @@ public class FavoritesWidgetService extends RemoteViewsService {
 
                 try {
                     Bitmap bitmap = Glide.with(mContext)
-                            .load(item.getIconUrl(mContext))
+                            .load(item.getIconUrl())
                             .asBitmap()
                             .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                             .get();

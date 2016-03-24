@@ -30,17 +30,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
-import com.tlongdev.bktf.ui.activity.UnusualActivity;
 import com.tlongdev.bktf.util.Utility;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -61,18 +62,14 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
     public @interface UnusualAdapterType{}
 
     public static final int TYPE_HATS = 0;
+
     public static final int TYPE_EFFECTS = 1;
     public static final int TYPE_SPECIFIC_HAT = 2;
+    @Inject Context mContext;
 
-    /**
-     * The data set
-     */
     private List<Item> mDataSet;
 
-    /**
-     * The context
-     */
-    private Context mContext;
+    private OnItemClickListener mListener;
 
     /**
      * This variable will determine how the items will look like in the list
@@ -80,13 +77,8 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
     @UnusualAdapterType
     private int mType;
 
-    /**
-     * Main constructor.
-     *
-     * @param context the context
-     */
-    public UnusualAdapter(Context context) {
-        this.mContext = context;
+    public UnusualAdapter(BptfApplication application) {
+        application.getAdapterComponent().inject(this);
     }
 
     @Override
@@ -106,18 +98,16 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                 //We are showing the hats, no effects
                 case TYPE_HATS:
 
-                    Glide.with(mContext)
-                            .load(item.getIconUrl(mContext))
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(holder.icon);
+                    Glide.with(mContext).load(item.getIconUrl()).into(holder.icon);
 
                     holder.root.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent i = new Intent(mContext, UnusualActivity.class);
-                            i.putExtra(UnusualActivity.EXTRA_DEFINDEX, item.getDefindex());
-                            i.putExtra(UnusualActivity.EXTRA_NAME, item.getName());
-                            mContext.startActivity(i);
+                            if (mListener != null) {
+                                mListener.onItemClicked(item.getPriceIndex(),
+                                        item.getName(),
+                                        false);
+                            }
                         }
                     });
                     holder.price.setText(mContext.getString(R.string.currency_key_plural,
@@ -130,17 +120,16 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                 //We are showing the effects, no hats
                 case TYPE_EFFECTS:
 
-                    Glide.with(mContext)
-                            .load(item.getEffectUrl())
-                            .into(holder.icon);
+                    Glide.with(mContext).load(item.getEffectUrl()).into(holder.icon);
 
                     holder.root.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent i = new Intent(mContext, UnusualActivity.class);
-                            i.putExtra(UnusualActivity.EXTRA_PRICE_INDEX, item.getPriceIndex());
-                            i.putExtra(UnusualActivity.EXTRA_NAME, Utility.getUnusualEffectName(mContext, item.getPriceIndex()));
-                            mContext.startActivity(i);
+                            if (mListener != null) {
+                                mListener.onItemClicked(item.getPriceIndex(),
+                                        Utility.getUnusualEffectName(mContext, item.getPriceIndex()),
+                                        true);
+                            }
                         }
                     });
 
@@ -157,53 +146,15 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
 
                     holder.name.setText(item.getName());
 
-                    Glide.with(mContext)
-                            .load(item.getIconUrl(mContext))
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(holder.icon);
-                    Glide.with(mContext)
-                            .load(item.getEffectUrl())
-                            .into(holder.effect);
+                    Glide.with(mContext).load(item.getIconUrl()).into(holder.icon);
+                    Glide.with(mContext).load(item.getEffectUrl()).into(holder.effect);
 
                     holder.more.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            PopupMenu menu = new PopupMenu(mContext, holder.more);
-
-                            menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
-
-                            menu.getMenu().getItem(0).setTitle(
-                                    Utility.isFavorite(mContext, item) ? "Remove from favorites" : "Add to favorites");
-
-                            menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem menuItem) {
-                                    switch (menuItem.getItemId()) {
-                                        case R.id.history:
-
-                                            Intent i = new Intent(mContext, PriceHistoryActivity.class);
-
-                                            i.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
-
-                                            mContext.startActivity(i);
-                                            break;
-                                        case R.id.favorite:
-                                            if (Utility.isFavorite(mContext, item)) {
-                                                Utility.removeFromFavorites(mContext, item);
-                                            } else {
-                                                Utility.addToFavorites(mContext, item);
-                                            }
-                                            break;
-                                        case R.id.backpack_tf:
-                                            mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
-                                                    item.getBackpackTfUrl())));
-                                            break;
-                                    }
-                                    return true;
-                                }
-                            });
-
-                            menu.show();
+                            if (mListener != null) {
+                                mListener.onMoreClicked(v, item);
+                            }
                         }
                     });
                     break;
@@ -229,6 +180,10 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
         mDataSet = dataSet;
     }
 
+    public void setListener(OnItemClickListener listener) {
+        mListener = listener;
+    }
+
     /**
      * The view holder.
      */
@@ -247,5 +202,10 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
             root = view;
             ButterKnife.bind(this, view);
         }
+    }
+
+    public interface OnItemClickListener {
+        void onMoreClicked(View view, Item item);
+        void onItemClicked(int index, String name, boolean effect);
     }
 }

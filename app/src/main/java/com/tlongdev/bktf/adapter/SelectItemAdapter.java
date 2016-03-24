@@ -26,38 +26,33 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.model.Item;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Long on 2015. 12. 12..
- */
 public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.ViewHolder> {
 
-    /**
-     * The data set
-     */
-    private Cursor mDataSet;
+    @Inject Context mContext;
 
-    /**
-     * The context
-     */
-    private Context mContext;
+    private Cursor mDataSet;
 
     private OnItemSelectedListener listener;
 
-    public SelectItemAdapter(Context context, Cursor dataSet) {
+    public SelectItemAdapter(BptfApplication application, Cursor dataSet) {
+        application.getAdapterComponent().inject(this);
         this.mDataSet = dataSet;
-        this.mContext = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.list_select_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_select_item, parent, false);
         return new ViewHolder(v);
     }
 
@@ -70,9 +65,7 @@ public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.Vi
 
             holder.name.setText(item.getName());
 
-            Glide.with(mContext)
-                    .load(item.getIconUrl(mContext))
-                    .into(holder.icon);
+            Glide.with(mContext).load(item.getIconUrl()).into(holder.icon);
 
             holder.root.setOnClickListener(new View.OnClickListener() {
                 @Override
