@@ -16,6 +16,7 @@
 
 package com.tlongdev.bktf.model;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Parcel;
@@ -26,6 +27,8 @@ import com.tlongdev.bktf.data.DatabaseContract;
 import com.tlongdev.bktf.data.DatabaseContract.DecoratedWeaponEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.util.Utility;
+
+import java.util.Locale;
 
 /**
  * Item class
@@ -182,6 +185,7 @@ public class Item implements Parcelable {
      * @param isProper whether the name needs the definite article (The)
      * @return the formatted name
      */
+    @SuppressLint("SwitchIntDef")
     public String getFormattedName(Context context, boolean isProper) {
         //Empty string that will be appended.
         String formattedName = "";
@@ -330,6 +334,7 @@ public class Item implements Parcelable {
      * @param isDark  whether to return the dark version of the color
      * @return the color of the item
      */
+    @SuppressLint("SwitchIntDef")
     public int getColor(Context context, boolean isDark) {
         switch (quality) {
             case Quality.GENUINE:
@@ -568,9 +573,9 @@ public class Item implements Parcelable {
     public String getBackpackTfUrl() {
         String url;
         if (!australium) {
-            url = String.format("http://backpack.tf/stats/%d/%d/%d/%d", quality, defindex, tradable ? 1 : 0, craftable ? 1 : 0);
+            url = String.format(Locale.US, "http://backpack.tf/stats/%d/%d/%d/%d", quality, defindex, tradable ? 1 : 0, craftable ? 1 : 0);
         } else {
-            url = String.format("http://backpack.tf/stats/%d/%s/%d/%d", quality, "Australium " + name, tradable ? 1 : 0, craftable ? 1 : 0);
+            url = String.format(Locale.US, "http://backpack.tf/stats/%d/%s/%d/%d", quality, "Australium " + name, tradable ? 1 : 0, craftable ? 1 : 0);
         }
 
         return priceIndex > 0 ? url + "/" + priceIndex : url;

@@ -37,7 +37,6 @@ import com.tlongdev.bktf.adapter.UnusualAdapter;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.presenter.activity.UnusualPresenter;
 import com.tlongdev.bktf.ui.view.activity.UnusualView;
-import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
 
@@ -48,11 +47,6 @@ import butterknife.ButterKnife;
  * Activity for showing unusual prices for specific effects or hats.
  */
 public class UnusualActivity extends BptfActivity implements UnusualView, TextWatcher, UnusualAdapter.OnItemClickListener {
-
-    /**
-     * Log tag for logging.
-     */
-    private static final String LOG_TAG = UnusualActivity.class.getSimpleName();
 
     public static final String EXTRA_DEFINDEX = "defindex";
     public static final String EXTRA_NAME = "name";

@@ -143,7 +143,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             case VIEW_TYPE_NORMAL:
                 Price price = mDataSet.get(position - 1);
                 holder.price.setText(price.getFormattedPrice(mContext));
-                holder.date.setText(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+                holder.date.setText(new SimpleDateFormat("dd-MM-yyyy", Locale.US)
                         .format(new Date(price.getLastUpdate())));
 
                 if (position == 1) {
@@ -185,7 +185,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         //Setup the X axis of the chart
         ArrayList<String> xValues = new ArrayList<>();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.US);
 
         for (long day = 0; day < days * 1.1; day++) {
             xValues.add(dateFormat.format(new Date(first + (day * 86400000L))));

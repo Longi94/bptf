@@ -59,8 +59,6 @@ import butterknife.OnClick;
  */
 public class CalculatorFragment extends BptfFragment implements CalculatorView, MainActivity.OnDrawerOpenedListener{
 
-    private static final String LOG_TAG = CalculatorFragment.class.getSimpleName();
-
     @Bind(R.id.text_view_price_metal) TextView priceMetal;
     @Bind(R.id.text_view_price_keys) TextView priceKeys;
     @Bind(R.id.text_view_price_buds) TextView priceBuds;
@@ -95,7 +93,7 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView, 
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
-        mAdapter = new CalculatorAdapter(null);
+        mAdapter = new CalculatorAdapter(mApplication, null);
         mAdapter.setListener(mPresenter);
 
         DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();

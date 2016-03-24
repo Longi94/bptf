@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="horizontal"
-    android:minHeight="48dp">
+    android:minHeight="48dp"
+    android:baselineAligned="false">
 
     <FrameLayout
         android:id="@+id/frame_layout"
