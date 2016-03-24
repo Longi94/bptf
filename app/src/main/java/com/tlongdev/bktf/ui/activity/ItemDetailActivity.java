@@ -16,9 +16,6 @@
 
 package com.tlongdev.bktf.ui.activity;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -29,16 +26,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
-import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
-import com.tlongdev.bktf.data.DatabaseHelper;
 import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.model.Quality;
+import com.tlongdev.bktf.presenter.activity.ItemDetailPresenter;
+import com.tlongdev.bktf.ui.view.activity.ItemDetailView;
 import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
@@ -47,13 +43,7 @@ import butterknife.ButterKnife;
 /**
  * The (dialog) activity for showing info about an item in a backpack.
  */
-public class ItemDetailActivity extends BptfActivity {
-
-    /**
-     * Log tag for logging.
-     */
-    @SuppressWarnings("unused")
-    private static final String LOG_TAG = ItemDetailActivity.class.getSimpleName();
+public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
 
     //Keys for the extra data in the intent
     public static final String EXTRA_ITEM_ID = "id";
@@ -61,69 +51,6 @@ public class ItemDetailActivity extends BptfActivity {
     public static final String EXTRA_ITEM_NAME = "name";
     public static final String EXTRA_ITEM_TYPE = "type";
     public static final String EXTRA_PROPER_NAME = "proper";
-
-    //Indexes for the columns below
-    public static final int COLUMN_DEFINDEX = 1;
-    public static final int COLUMN_QUALITY = 2;
-    // TODO public static final int COLUMN_CRAFT_NUMBER = 3;
-    public static final int COLUMN_TRADABLE = 4;
-    public static final int COLUMN_CRAFTABLE = 5;
-    public static final int COLUMN_PRICE_INDEX = 6;
-    public static final int COLUMN_PAINT = 7;
-    public static final int COLUMN_AUSTRALIUM = 8;
-    public static final int COLUMN_CRAFTER = 9;
-    public static final int COLUMN_GIFTER = 10;
-    public static final int COLUMN_CUSTOM_NAME = 11;
-    public static final int COLUMN_CUSTOM_DESCRIPTION = 12;
-    public static final int COLUMN_LEVEL = 13;
-    // TODO public static final int COLUMN_EQUIPPED = 14;
-    public static final int COLUMN_ORIGIN = 15;
-    public static final int COLUMN_WEAPON_WEAR = 16;
-
-    //Indexes for the columns above
-    public static final int COLUMN_PRICE = 0;
-    public static final int COLUMN_PRICE_HIGH = 1;
-    public static final int COLUMN_CURRENCY = 2;
-
-    //Query columns for querying info of the item
-    private static final String[] QUERY_COLUMNS = {
-            UserBackpackEntry.TABLE_NAME + "." + UserBackpackEntry._ID,
-            UserBackpackEntry.COLUMN_DEFINDEX,
-            UserBackpackEntry.COLUMN_QUALITY,
-            UserBackpackEntry.COLUMN_CRAFT_NUMBER,
-            UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE,
-            UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT,
-            UserBackpackEntry.COLUMN_ITEM_INDEX,
-            UserBackpackEntry.COLUMN_PAINT,
-            UserBackpackEntry.COLUMN_AUSTRALIUM,
-            UserBackpackEntry.COLUMN_CREATOR_NAME,
-            UserBackpackEntry.COLUMN_GIFTER_NAME,
-            UserBackpackEntry.COLUMN_CUSTOM_NAME,
-            UserBackpackEntry.COLUMN_CUSTOM_DESCRIPTION,
-            UserBackpackEntry.COLUMN_LEVEL,
-            UserBackpackEntry.COLUMN_EQUIPPED,
-            UserBackpackEntry.COLUMN_ORIGIN,
-            UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR
-    };
-    private static final String[] QUERY_COLUMNS_GUEST = {
-            UserBackpackEntry.TABLE_NAME_GUEST + "." + UserBackpackEntry._ID,
-            UserBackpackEntry.COLUMN_DEFINDEX,
-            UserBackpackEntry.COLUMN_QUALITY,
-            UserBackpackEntry.COLUMN_CRAFT_NUMBER,
-            UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE,
-            UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT,
-            UserBackpackEntry.COLUMN_ITEM_INDEX,
-            UserBackpackEntry.COLUMN_PAINT,
-            UserBackpackEntry.COLUMN_AUSTRALIUM,
-            UserBackpackEntry.COLUMN_CREATOR_NAME,
-            UserBackpackEntry.COLUMN_GIFTER_NAME,
-            UserBackpackEntry.COLUMN_CUSTOM_NAME,
-            UserBackpackEntry.COLUMN_CUSTOM_DESCRIPTION,
-            UserBackpackEntry.COLUMN_LEVEL,
-            UserBackpackEntry.COLUMN_EQUIPPED,
-            UserBackpackEntry.COLUMN_ORIGIN,
-            UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR
-    };
 
     @InjectExtra(EXTRA_GUEST) boolean isGuest;
     @InjectExtra(EXTRA_ITEM_ID) int mId;
@@ -148,7 +75,9 @@ public class ItemDetailActivity extends BptfActivity {
     @Bind(R.id.effect) ImageView effectView;
     @Bind(R.id.paint) ImageView paintView;
     @Bind(R.id.quality) ImageView quality;
-    @Bind(R.id.card_view)  CardView cardView;
+    @Bind(R.id.card_view) CardView cardView;
+
+    private ItemDetailPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +85,9 @@ public class ItemDetailActivity extends BptfActivity {
         setContentView(R.layout.activity_item_detail);
         ButterKnife.bind(this);
         Dart.inject(this);
+
+        mPresenter = new ItemDetailPresenter(mApplication);
+        mPresenter.attachView(this);
 
         //Scale the icon, so the width of the image view is on third of the screen's width
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
@@ -177,7 +109,7 @@ public class ItemDetailActivity extends BptfActivity {
         //Do nothing if the user taps on the card view itself
         cardView.setOnClickListener(null);
 
-        queryItemDetails();
+        mPresenter.loadItemDetails(mId, isGuest);
     }
 
     @Override
@@ -187,188 +119,113 @@ public class ItemDetailActivity extends BptfActivity {
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
-    /**
-     * Query all the necessary data out of the database and show them to de user.
-     */
-    @SuppressWarnings("WrongConstant")
-    private void queryItemDetails() {
-        //Variables needed for querying
-        Uri uri;
-        String[] columns;
-        String selection;
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.detachView();
+    }
 
-        if (isGuest) {
-            //The user is a guest user
-            uri = UserBackpackEntry.CONTENT_URI_GUEST;
-            columns = QUERY_COLUMNS_GUEST;
-            selection = UserBackpackEntry.TABLE_NAME_GUEST + "." +
-                    UserBackpackEntry._ID + " = ?";
+    @Override
+    public void showItemDetails(BackpackItem item) {
+        item.setName(mItemName);
+        //Set the name of the item
+        name.setText(item.getFormattedName(this, mProperName == 1));
+
+        //Set the level of the item, get the type from the intent
+        if (item.getDefindex() >= 15000 && item.getDefindex() <= 15059) {
+            level.setText(item.getDecoratedWeaponDesc(this, mItemType));
         } else {
-            //The user is the main user
-            uri = UserBackpackEntry.CONTENT_URI;
-            columns = QUERY_COLUMNS;
-            selection = UserBackpackEntry.TABLE_NAME + "." +
-                    UserBackpackEntry._ID + " = ?";
+            level.setText(getString(R.string.item_detail_level, item.getLevel(), mItemType));
         }
 
-        //Query
-        Cursor itemCursor = getContentResolver().query(
-                uri,
-                columns,
-                selection,
-                new String[]{String.valueOf(mId)},
-                null
-        );
+        //Set the origin of the item. Get the origin from the string array resource
+        origin.setText(String.format("%s: %s", getString(R.string.item_detail_origin), Utility.getOriginName(this, item.getOrigin())));
 
-        if (itemCursor != null) {
-            if (itemCursor.moveToFirst()) {
-                //Store all the data
-                BackpackItem item = new BackpackItem();
-                item.setDefindex(itemCursor.getInt(COLUMN_DEFINDEX));
-                item.setName(mItemName);
-                item.setQuality(itemCursor.getInt(COLUMN_QUALITY));
-                item.setTradable(itemCursor.getInt(COLUMN_TRADABLE) == 0);
-                item.setCraftable(itemCursor.getInt(COLUMN_CRAFTABLE) == 0);
-                item.setAustralium(itemCursor.getInt(COLUMN_AUSTRALIUM) == 1);
-                item.setPriceIndex(itemCursor.getInt(COLUMN_WEAPON_WEAR));
-                item.setLevel(itemCursor.getInt(COLUMN_LEVEL));
-                item.setOrigin(itemCursor.getInt(COLUMN_ORIGIN));
-                item.setPaint(itemCursor.getInt(COLUMN_PAINT));
-                item.setCustomName(itemCursor.getString(COLUMN_CUSTOM_NAME));
-                item.setCustomDescription(itemCursor.getString(COLUMN_CUSTOM_DESCRIPTION));
-                item.setCreatorName(itemCursor.getString(COLUMN_CRAFTER));
-                item.setGifterName(itemCursor.getString(COLUMN_GIFTER));
+        //Set the effect of the item (if any)
+        if (item.getPriceIndex() != 0 && (item.getQuality() == Quality.UNUSUAL
+                || item.getQuality() == Quality.COMMUNITY
+                || item.getQuality() == Quality.SELF_MADE)) {
+            effect.setText(String.format("%s: %s", getString(R.string.item_detail_effect),
+                    Utility.getUnusualEffectName(this, item.getPriceIndex())));
+            effect.setVisibility(View.VISIBLE);
+        }
 
-                //Set the name of the item
-                name.setText(item.getFormattedName(this, mProperName == 1));
+        //set the custom name of the item (if any)
+        if (item.getCustomName() != null) {
+            customName.setText(Html.fromHtml(String.format("%s: <i>%s</i>",
+                    getString(R.string.item_detail_custom_name), item.getCustomName())));
+            customName.setVisibility(View.VISIBLE);
+        }
 
-                //Set the level of the item, get the type from the intent
-                if (item.getDefindex() >= 15000 && item.getDefindex() <= 15059) {
-                    level.setText(item.getDecoratedWeaponDesc(this, mItemType));
-                } else {
-                    level.setText(getString(R.string.item_detail_level, item.getLevel(), mItemType));
-                }
+        //Set the custom description of the item (if any)
+        if (item.getCustomDescription() != null) {
+            customDesc.setText(Html.fromHtml(String.format("%s: <i>%s</i>",
+                    getString(R.string.item_detail_custom_description), item.getCustomDescription())));
+            customDesc.setVisibility(View.VISIBLE);
+        }
 
-                //Set the origin of the item. Get the origin from the string array resource
-                origin.setText(String.format("%s: %s", getString(R.string.item_detail_origin), Utility.getOriginName(this, item.getOrigin())));
+        //Set the crafter's name (if any)
+        if (item.getCreatorName() != null) {
+            crafterName.setText(Html.fromHtml(String.format("%s: <i>%s</i>",
+                    getString(R.string.item_detail_craft), item.getCreatorName())));
+            crafterName.setVisibility(View.VISIBLE);
+        }
 
-                //Set the effect of the item (if any)
-                if (item.getPriceIndex() != 0 && (item.getQuality() == 5 || item.getQuality() == 7 || item.getQuality() == 9)) {
-                    effect.setText(String.format("%s: %s", getString(R.string.item_detail_effect),
-                            Utility.getUnusualEffectName(this, item.getPriceIndex())));
-                    effect.setVisibility(View.VISIBLE);
-                }
+        //Set the gifter's name (if any)
+        if (item.getGifterName() != null) {
+            gifterName.setText(Html.fromHtml(String.format("%s: <i>%s</i>",
+                    getString(R.string.item_detail_gift), item.getGifterName())));
+            gifterName.setVisibility(View.VISIBLE);
+        }
 
-                //set the custom name of the item (if any)
-                if (item.getCustomName() != null) {
-                    customName.setText(Html.fromHtml(String.format("%s: <i>%s</i>",
-                            getString(R.string.item_detail_custom_name), item.getCustomName())));
-                    customName.setVisibility(View.VISIBLE);
-                }
+        //Set the paint text (if any)
+        if (item.getPaint() != 0) {
+            paint.setText(String.format("%s: %s", getString(R.string.item_detail_paint), item.getPaintName(this)));
+            paint.setVisibility(View.VISIBLE);
+        }
 
-                //Set the custom description of the item (if any)
-                if (item.getCustomDescription() != null) {
-                    customDesc.setText(Html.fromHtml(String.format("%s: <i>%s</i>",
-                            getString(R.string.item_detail_custom_description), item.getCustomDescription())));
-                    customDesc.setVisibility(View.VISIBLE);
-                }
+        //Set the icon and the background
+        Glide.with(this)
+                .load(item.getIconUrl(this))
+                .dontAnimate()
+                .into(icon);
 
-                //Set the crafter's name (if any)
-                if (item.getCreatorName() != null) {
-                    crafterName.setText(Html.fromHtml(String.format("%s: <i>%s</i>",
-                            getString(R.string.item_detail_craft), item.getCreatorName())));
-                    crafterName.setVisibility(View.VISIBLE);
-                }
+        if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
+            Glide.with(this)
+                    .load(item.getEffectUrl())
+                    .dontAnimate()
+                    .into(effectView);
+        }
 
-                //Set the gifter's name (if any)
-                if (item.getGifterName() != null) {
-                    gifterName.setText(Html.fromHtml(String.format("%s: <i>%s</i>",
-                            getString(R.string.item_detail_gift), item.getGifterName())));
-                    gifterName.setVisibility(View.VISIBLE);
-                }
-
-                //Set the paint text (if any)
-                if (item.getPaint() != 0) {
-                    paint.setText(String.format("%s: %s", getString(R.string.item_detail_paint), item.getPaintName(this)));
-                    paint.setVisibility(View.VISIBLE);
-                }
-
-                //Set the icon and the background
-                Glide.with(this)
-                        .load(item.getIconUrl(this))
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .dontAnimate()
-                        .into(icon);
-
-                if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
-                    Glide.with(this)
-                            .load(item.getEffectUrl())
-                            .dontAnimate()
-                            .into(effectView);
-                }
-
-                if (!item.isTradable()) {
-                    quality.setVisibility(View.VISIBLE);
-                    if (!item.isCraftable()) {
-                        quality.setImageResource(R.drawable.uncraft_untrad);
-                    } else {
-                        quality.setImageResource(R.drawable.untrad);
-                    }
-                } else if (!item.isCraftable()) {
-                    quality.setVisibility(View.VISIBLE);
-                    quality.setImageResource(R.drawable.uncraft);
-                }
-
-                if (BackpackItem.isPaint(item.getPaint())) {
-                    Glide.with(this)
-                            .load("file:///android_asset/paint/" + item.getPaint() + ".webp")
-                            .into(paintView);
-                }
-
-                cardView.setCardBackgroundColor(item.getColor(this, true));
-
-                //Start querying the priceView
-
-                String sql = "SELECT " +
-                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE + "," +
-                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_HIGH + "," +
-                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_CURRENCY +
-                        " FROM " + PriceEntry.TABLE_NAME +
-                        " WHERE " + PriceEntry.COLUMN_DEFINDEX + " = ? AND " +
-                        PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
-                        PriceEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
-                        PriceEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
-                        PriceEntry.COLUMN_PRICE_INDEX + " = ? AND " +
-                        PriceEntry.COLUMN_AUSTRALIUM + " = ?";
-
-                DatabaseHelper dbHelper = new DatabaseHelper(this);
-                SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-                Cursor priceCursor = db.rawQuery(sql, new String[]{String.valueOf(item.getDefindex()), String.valueOf(item.getQuality()),
-                        String.valueOf(item.isTradable() ? 1 : 0), String.valueOf(item.isCraftable() ? 1 : 0),
-                        String.valueOf(item.getPriceIndex()), String.valueOf(item.isAustralium() ? 1 : 0)});
-
-                if (priceCursor != null) {
-                    if (priceCursor.moveToFirst()) {
-                        Price price = new Price();
-                        price.setValue(priceCursor.getDouble(COLUMN_PRICE));
-                        price.setHighValue(priceCursor.getDouble(COLUMN_PRICE_HIGH));
-                        price.setCurrency(priceCursor.getString(COLUMN_CURRENCY));
-
-                        //Show the priceView
-                        priceView.setVisibility(View.VISIBLE);
-                        priceView.setText(String.format("%s: %s",
-                                getString(R.string.item_detail_suggested_price),
-                                price.getFormattedPrice(this)));
-                    }
-                    priceCursor.close();
-                }
+        if (!item.isTradable()) {
+            quality.setVisibility(View.VISIBLE);
+            if (!item.isCraftable()) {
+                quality.setImageResource(R.drawable.uncraft_untrad);
+            } else {
+                quality.setImageResource(R.drawable.untrad);
             }
-            itemCursor.close();
-        } else {
-            //Crash the app if there is no item with the id (should never happen)
-            throw new RuntimeException("Item with id " + mId + " not found (selection: "
-                    + selection + ")");
+        } else if (!item.isCraftable()) {
+            quality.setVisibility(View.VISIBLE);
+            quality.setImageResource(R.drawable.uncraft);
+        }
+
+        if (BackpackItem.isPaint(item.getPaint())) {
+            Glide.with(this)
+                    .load("file:///android_asset/paint/" + item.getPaint() + ".webp")
+                    .into(paintView);
+        }
+
+        cardView.setCardBackgroundColor(item.getColor(this, true));
+
+        Price price = item.getPrice();
+
+        if (price != null)
+        {
+            //Show the priceView
+            priceView.setVisibility(View.VISIBLE);
+            priceView.setText(String.format("%s: %s",
+                    getString(R.string.item_detail_suggested_price),
+                    price.getFormattedPrice(this)));
         }
     }
 }
