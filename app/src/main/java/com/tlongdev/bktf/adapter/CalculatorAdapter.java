@@ -94,7 +94,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                 public void onClick(View v) {
                     if (listener != null) {
                         //Notify listener that an item was deleted
-                        listener.onItemDeleted(item, mCountSet.get(currentCount));
+                        listener.onItemDeleted(item, currentCount);
                     }
                     notifyItemRemoved(mDataSet.indexOf(item));
                     mDataSet.remove(item);
@@ -121,7 +121,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                 holder.price.setText("Price unknown");
             }
 
-            holder.count.setText(String.valueOf(mCountSet.get(position)));
+            holder.count.setText(String.valueOf(currentCount));
 
             holder.count.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
@@ -142,9 +142,8 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                             holder.count.setText("1");
                         }
 
-                        int oldCount = mCountSet.get(currentCount);
-                        if (listener != null && oldCount != count) {
-                            listener.onItemEdited(item, oldCount, count);
+                        if (listener != null && currentCount != count) {
+                            listener.onItemEdited(item, currentCount, count);
                         }
 
                         mCountSet.set(currentCount, count);
