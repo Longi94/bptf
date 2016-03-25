@@ -16,7 +16,6 @@
 
 package com.tlongdev.bktf.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -26,6 +25,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.User;
@@ -53,7 +54,7 @@ public class UserActivity extends BptfActivity implements UserView{
     //Progress bar that indicates downloading user data.
     @Bind(R.id.progress_bar) ProgressBar progressBar;
 
-    private String steamId;
+    @InjectExtra(STEAM_ID_KEY) String steamId;
 
     private UserPresenter mPresenter;
 
@@ -62,6 +63,7 @@ public class UserActivity extends BptfActivity implements UserView{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
         ButterKnife.bind(this);
+        Dart.inject(this);
 
         mPresenter = new UserPresenter(mApplication);
         mPresenter.attachView(this);
@@ -75,16 +77,9 @@ public class UserActivity extends BptfActivity implements UserView{
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        Intent i = getIntent();
-
-        //Retrieve steamId from intent
-        steamId = i.getStringExtra(STEAM_ID_KEY);
         Log.d(LOG_TAG, "steamID: " + steamId);
 
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Request")
-                .setAction("UserDataGuest")
-                .build());
+        mPresenter.loadData(steamId);
     }
 
     @Override
@@ -92,8 +87,6 @@ public class UserActivity extends BptfActivity implements UserView{
         super.onResume();
         mTracker.setScreenName(String.valueOf(getTitle()));
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-
-        mPresenter.loadData(steamId);
     }
 
     @Override

@@ -69,6 +69,7 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
     @Bind(R.id.text_view_origin) TextView origin;
     @Bind(R.id.text_view_paint) TextView paint;
     @Bind(R.id.text_view_price) TextView priceView;
+    @Bind(R.id.relative_layout_image) FrameLayout layout;
 
     //References to the image view
     @Bind(R.id.icon) ImageView icon;
@@ -91,7 +92,6 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
 
         //Scale the icon, so the width of the image view is on third of the screen's width
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
-        FrameLayout layout = (FrameLayout) findViewById(R.id.relative_layout_image);
         layout.getLayoutParams().width = screenWidth / 3;
         layout.getLayoutParams().height = screenWidth / 3;
         layout.requestLayout();

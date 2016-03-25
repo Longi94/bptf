@@ -57,7 +57,9 @@ public class UserPresenter implements Presenter<UserView>,GetSearchedUserDataInt
     @Override
     public void onUserBackpackFinished(User user) {
         mUser = user;
-        mView.showData(user);
+        if (mView != null) {
+            mView.showData(user);
+        }
     }
 
     @Override
