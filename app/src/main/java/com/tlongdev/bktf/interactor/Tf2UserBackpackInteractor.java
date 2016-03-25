@@ -195,7 +195,9 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
                     mUser.setBackpackSlots(backpackSlots);
                     mUser.setItemCount(itemNumber);
 
-                    mProfileManager.saveUser(mUser);
+                    if (!mIsGuest) {
+                        mProfileManager.saveUser(mUser);
+                    }
                 }
                 return 1;
             case 8: //Invalid ID, shouldn't reach
