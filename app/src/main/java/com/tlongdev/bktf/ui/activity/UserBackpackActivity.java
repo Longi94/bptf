@@ -114,12 +114,13 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
 
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
+
+        mPresenter.loadBackpackItems(isGuest);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.loadBackpackItems(isGuest);
         mTracker.setScreenName(String.valueOf(getTitle()));
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }

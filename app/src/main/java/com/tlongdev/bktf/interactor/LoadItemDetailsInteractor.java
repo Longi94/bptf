@@ -84,17 +84,20 @@ public class LoadItemDetailsInteractor extends AsyncTask<Void, Void, BackpackIte
             if (cursor.moveToFirst()) {
                 item.setDefindex(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_DEFINDEX)));
                 item.setQuality(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_QUALITY)));
+                item.setCraftNumber(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_CRAFT_NUMBER)));
                 item.setTradable(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE)) == 0);
                 item.setCraftable(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT)) == 0);
-                item.setAustralium(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_AUSTRALIUM)) == 1);
-                item.setPriceIndex(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR)));
-                item.setLevel(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_LEVEL)));
-                item.setOrigin(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_ORIGIN)));
+                item.setPriceIndex(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_ITEM_INDEX)));
                 item.setPaint(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_PAINT)));
-                item.setCustomName(cursor.getString(cursor.getColumnIndex(UserBackpackEntry.COLUMN_CUSTOM_NAME)));
-                item.setCustomDescription(cursor.getString(cursor.getColumnIndex(UserBackpackEntry.COLUMN_CUSTOM_DESCRIPTION)));
+                item.setAustralium(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_AUSTRALIUM)) == 1);
                 item.setCreatorName(cursor.getString(cursor.getColumnIndex(UserBackpackEntry.COLUMN_CREATOR_NAME)));
                 item.setGifterName(cursor.getString(cursor.getColumnIndex(UserBackpackEntry.COLUMN_GIFTER_NAME)));
+                item.setCustomName(cursor.getString(cursor.getColumnIndex(UserBackpackEntry.COLUMN_CUSTOM_NAME)));
+                item.setCustomDescription(cursor.getString(cursor.getColumnIndex(UserBackpackEntry.COLUMN_CUSTOM_DESCRIPTION)));
+                item.setLevel(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_LEVEL)));
+                item.setEquipped(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_EQUIPPED)) == 1);
+                item.setOrigin(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_ORIGIN)));
+                item.setWeaponWear(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR)));
             }
             cursor.close();
         }
