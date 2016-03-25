@@ -74,46 +74,46 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     @SuppressWarnings("WrongConstant")
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        if (mDataSet != null && mDataSet.moveToPosition(position)) {
-            switch (getItemViewType(position)) {
-                //We found a user, show some info
-                case VIEW_TYPE_USER:
-                    holder.more.setVisibility(View.GONE);
-                    if (mUser != null) {
-                        holder.loading.setVisibility(View.GONE);
-                        holder.priceLayout.setVisibility(View.VISIBLE);
+        switch (getItemViewType(position)) {
+            //We found a user, show some info
+            case VIEW_TYPE_USER:
+                holder.more.setVisibility(View.GONE);
+                if (mUser != null) {
+                    holder.loading.setVisibility(View.GONE);
+                    holder.priceLayout.setVisibility(View.VISIBLE);
 
-                        //open the user activity when the user clicks on the view
-                        holder.root.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (mListener != null) {
-                                    mListener.onUserClicked(mUser);
-                                }
+                    //open the user activity when the user clicks on the view
+                    holder.root.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (mListener != null) {
+                                mListener.onUserClicked(mUser);
                             }
-                        });
+                        }
+                    });
 
-                        holder.name.setText(mUser.getName());
-                        Glide.with(mContext)
-                                .load(mUser.getAvatarUrl())
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .into(holder.icon);
-                    }
-                    break;
-                //Lading view, searching for the user
-                case VIEW_TYPE_LOADING:
-                    holder.loading.setVisibility(View.VISIBLE);
-                    holder.priceLayout.setVisibility(View.GONE);
+                    holder.name.setText(mUser.getName());
+                    Glide.with(mContext)
+                            .load(mUser.getAvatarUrl())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(holder.icon);
+                }
+                break;
+            //Lading view, searching for the user
+            case VIEW_TYPE_LOADING:
+                holder.loading.setVisibility(View.VISIBLE);
+                holder.priceLayout.setVisibility(View.GONE);
 
-                    holder.name.setText(null);
-                    holder.icon.setImageDrawable(null);
-                    break;
-                //Simple price view
-                case VIEW_TYPE_PRICE:
+                holder.name.setText(null);
+                holder.icon.setImageDrawable(null);
+                break;
+            //Simple price view
+            case VIEW_TYPE_PRICE:
+                if (mDataSet != null && mDataSet.moveToPosition(position)) {
                     holder.priceLayout.setVisibility(View.VISIBLE);
                     holder.more.setVisibility(View.VISIBLE);
                     holder.loading.setVisibility(View.GONE);
-                    
+
                     Price price = new Price();
                     price.setValue(mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE)));
                     price.setHighValue(mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE_HIGH)));
@@ -179,8 +179,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                                 .setFatal(false)
                                 .build());
                     }
-                    break;
-            }
+                }
+                break;
         }
     }
 
