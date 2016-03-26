@@ -161,7 +161,7 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
     @Override
     public void onResume() {
         super.onResume();
-        mTracker.setScreenName("Latest Changes");
+        mTracker.setScreenName(RecentsFragment.class.getName());
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 

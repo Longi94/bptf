@@ -129,7 +129,7 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
     @Override
     public void onResume() {
         super.onResume();
-        mTracker.setScreenName("Favorites");
+        mTracker.setScreenName(FavoritesFragment.class.getName());
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 

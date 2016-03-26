@@ -31,7 +31,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
 
@@ -119,13 +118,6 @@ public class AboutActivity extends AppCompatPreferenceActivity implements Shared
         setSupportActionBar((Toolbar) toolbar.findViewById(R.id.toolbar));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mTracker.setScreenName(String.valueOf(getTitle()));
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     /**

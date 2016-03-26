@@ -243,7 +243,7 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
-        mTracker.setScreenName("Converter");
+        mTracker.setScreenName(ConverterFragment.class.getName());
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 

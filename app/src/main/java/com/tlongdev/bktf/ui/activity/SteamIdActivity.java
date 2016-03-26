@@ -22,7 +22,6 @@ import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
-import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 
 import butterknife.Bind;
@@ -52,12 +51,5 @@ public class SteamIdActivity extends BptfActivity {
         });
         webView.getSettings().setBuiltInZoomControls(true);
         webView.loadUrl("http://tlongdev.com/steamid.html");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mTracker.setScreenName(String.valueOf(getTitle()));
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 }

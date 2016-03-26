@@ -31,7 +31,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 
-import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.SearchAdapter;
 import com.tlongdev.bktf.model.Item;
@@ -93,13 +92,6 @@ public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui
         mAdapter.setListener(this);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, columnCount));
         mRecyclerView.setAdapter(mAdapter);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mTracker.setScreenName(String.valueOf(getTitle()));
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override

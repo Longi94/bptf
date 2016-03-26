@@ -102,12 +102,18 @@ public class BptfApplication extends Application {
      * @return tracker
      */
     synchronized public Tracker getDefaultTracker() {
+        startTracking();
+        return mTracker;
+    }
+
+    public void startTracking() {
         if (mTracker == null) {
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
             // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
             mTracker = analytics.newTracker(R.xml.bptf_config);
+
+            analytics.enableAutoActivityReports(this);
         }
-        return mTracker;
     }
 
     public ActivityComponent getActivityComponent() {

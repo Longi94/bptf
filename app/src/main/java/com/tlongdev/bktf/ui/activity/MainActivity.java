@@ -37,7 +37,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.gcm.GcmRegisterPriceUpdatesService;
 import com.tlongdev.bktf.model.User;
@@ -165,6 +164,7 @@ public class MainActivity extends BptfActivity {
         ButterKnife.bind(this);
 
         mApplication.getActivityComponent().inject(this);
+        mApplication.startTracking();
 
         //Set the default values for all preferences when the app is first loaded
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
@@ -201,9 +201,6 @@ public class MainActivity extends BptfActivity {
 
     @Override
     protected void onResume() {
-        mTracker.setScreenName(String.valueOf(getTitle()));
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-
         //If needed (mostly when the steamId was changed) reload a new instance of the UserFragment
         if (userStateChanged) {
             FragmentManager fragmentManager = getSupportFragmentManager();

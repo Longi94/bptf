@@ -171,7 +171,7 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
     public void onResume() {
         super.onResume();
         mPresenter.getUserDataIfNeeded();
-        mTracker.setScreenName("User Profile");
+        mTracker.setScreenName(UserFragment.class.getName());
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 

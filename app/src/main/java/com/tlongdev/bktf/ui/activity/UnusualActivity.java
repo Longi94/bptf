@@ -34,7 +34,6 @@ import android.widget.EditText;
 
 import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
-import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.UnusualAdapter;
 import com.tlongdev.bktf.model.Item;
@@ -108,13 +107,6 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
         mSearchInput.setHint(mDefindex != -1 ? "Effect" : "Name");
 
         mPresenter.loadUnusuals(mDefindex, mIndex, "");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mTracker.setScreenName(String.valueOf(getTitle()));
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override

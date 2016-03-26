@@ -33,7 +33,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
-import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.spinner.EffectAdapter;
 import com.tlongdev.bktf.adapter.spinner.QualityAdapter;
@@ -140,13 +139,6 @@ public class ItemChooserActivity extends BptfActivity implements ItemChooserView
         fab.hide();
 
         mPresenter.loadEffects();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mTracker.setScreenName(String.valueOf(getTitle()));
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override

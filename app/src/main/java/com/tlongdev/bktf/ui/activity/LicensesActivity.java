@@ -24,7 +24,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
-import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.LicensesAdapter;
 import com.tlongdev.bktf.model.License;
@@ -63,13 +62,6 @@ public class LicensesActivity extends BptfActivity implements LicensesView, Lice
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mPresenter.loadLicenses();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mTracker.setScreenName(String.valueOf(getTitle()));
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override

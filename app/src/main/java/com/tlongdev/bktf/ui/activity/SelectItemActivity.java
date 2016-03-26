@@ -25,7 +25,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
-import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.SelectItemAdapter;
 import com.tlongdev.bktf.presenter.activity.SelectItemPresenter;
@@ -64,13 +63,6 @@ public class SelectItemActivity extends BptfActivity implements SelectItemView, 
         mRecyclerView.setAdapter(mAdapter);
 
         inputName.addTextChangedListener(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mTracker.setScreenName("SelectItemActivity");
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override

@@ -144,7 +144,7 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
     @Override
     public void onResume() {
         super.onResume();
-        mTracker.setScreenName("Unusual Prices");
+        mTracker.setScreenName(UnusualFragment.class.getName());
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 

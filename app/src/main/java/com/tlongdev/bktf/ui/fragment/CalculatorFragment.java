@@ -128,7 +128,7 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView, 
     @Override
     public void onResume() {
         super.onResume();
-        mTracker.setScreenName("Calculator");
+        mTracker.setScreenName(CalculatorFragment.class.getName());
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 

@@ -94,13 +94,6 @@ public class PriceHistoryActivity extends BptfActivity implements PriceHistoryVi
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        mTracker.setScreenName(String.valueOf(getTitle()));
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.detachView();

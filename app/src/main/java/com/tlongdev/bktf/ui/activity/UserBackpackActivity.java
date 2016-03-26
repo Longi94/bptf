@@ -30,7 +30,6 @@ import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.BackpackAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
@@ -116,13 +115,6 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
         mRecyclerView.setAdapter(mAdapter);
 
         mPresenter.loadBackpackItems(isGuest);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mTracker.setScreenName(String.valueOf(getTitle()));
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override

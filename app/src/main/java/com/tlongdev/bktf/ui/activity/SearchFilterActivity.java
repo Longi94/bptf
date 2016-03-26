@@ -29,7 +29,6 @@ import android.widget.Switch;
 
 import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
-import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.spinner.QualityAdapter;
 import com.tlongdev.bktf.model.Quality;
@@ -107,13 +106,6 @@ public class SearchFilterActivity extends BptfActivity {
         craftable.setChecked(mCraftable);
         australium.setChecked(mAustralium);
         qualitySpinner.setSelection(Arrays.asList(QualityAdapter.QUALITY_IDS).indexOf(mQuality));
-    }
-
-    @Override
-    protected void onResume() {
-        mTracker.setScreenName(String.valueOf(getTitle()));
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-        super.onResume();
     }
 
     @OnClick(R.id.apply)

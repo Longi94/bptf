@@ -27,7 +27,6 @@ import android.widget.ProgressBar;
 
 import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
-import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.presenter.activity.UserPresenter;
@@ -80,13 +79,6 @@ public class UserActivity extends BptfActivity implements UserView{
         Log.d(LOG_TAG, "steamID: " + steamId);
 
         mPresenter.loadData(steamId);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mTracker.setScreenName(String.valueOf(getTitle()));
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override

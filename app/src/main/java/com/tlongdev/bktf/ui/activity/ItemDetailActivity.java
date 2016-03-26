@@ -28,7 +28,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
-import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.model.Price;
@@ -110,13 +109,6 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
         cardView.setOnClickListener(null);
 
         mPresenter.loadItemDetails(mId, isGuest);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mTracker.setScreenName(String.valueOf(getTitle()));
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override
