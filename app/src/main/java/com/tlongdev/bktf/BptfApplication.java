@@ -19,6 +19,7 @@ package com.tlongdev.bktf;
 import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.component.ActivityComponent;
@@ -61,12 +62,7 @@ public class BptfApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
-
-        ProfileManager manager = new ProfileManager(this);
-        if (manager.isSignedIn()) {
-            Crashlytics.setUserIdentifier(manager.getResolvedSteamId());
-        }
+        Fabric.with(this, new Crashlytics(), new Answers());
 
         mActivityComponent = DaggerActivityComponent.builder()
                 .bptfAppModule(new BptfAppModule(this))
@@ -94,6 +90,11 @@ public class BptfApplication extends Application {
         mAdapterComponent = DaggerAdapterComponent.builder()
                 .bptfAppModule(new BptfAppModule(this))
                 .build();
+
+        ProfileManager manager = new ProfileManager(this);
+        if (manager.isSignedIn()) {
+            Crashlytics.setUserIdentifier(manager.getResolvedSteamId());
+        }
     }
 
     /**
