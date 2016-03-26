@@ -18,6 +18,7 @@ package com.tlongdev.bktf;
 
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.component.ActivityComponent;
@@ -35,6 +36,9 @@ import com.tlongdev.bktf.component.ProfileManagerComponent;
 import com.tlongdev.bktf.module.BptfAppModule;
 import com.tlongdev.bktf.module.NetworkModule;
 import com.tlongdev.bktf.module.StorageModule;
+import com.tlongdev.bktf.util.ProfileManager;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * This is a subclass of {@link Application} used to provide shared objects for this app.
@@ -57,6 +61,12 @@ public class BptfApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
+
+        ProfileManager manager = new ProfileManager(this);
+        if (manager.isSignedIn()) {
+            Crashlytics.setUserIdentifier(manager.getResolvedSteamId());
+        }
 
         mActivityComponent = DaggerActivityComponent.builder()
                 .bptfAppModule(new BptfAppModule(this))
