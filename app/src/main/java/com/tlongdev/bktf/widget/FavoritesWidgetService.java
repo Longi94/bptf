@@ -28,6 +28,7 @@ import android.widget.RemoteViewsService;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract;
 import com.tlongdev.bktf.model.Item;
@@ -201,7 +202,7 @@ public class FavoritesWidgetService extends RemoteViewsService {
                         rv.setImageViewBitmap(R.id.effect, null);
                     }
                 } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
+                    Crashlytics.logException(e);
                     rv.setImageViewBitmap(R.id.effect, null);
                 }
 

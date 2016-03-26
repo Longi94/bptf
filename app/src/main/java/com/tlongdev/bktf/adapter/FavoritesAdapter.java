@@ -25,8 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
+import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Item;
@@ -41,7 +40,6 @@ import butterknife.ButterKnife;
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.ViewHolder> {
 
     @Inject Context mContext;
-    @Inject Tracker mTracker;
 
     private List<Item> mDataSet;
 
@@ -111,12 +109,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
                     //Properly format the price
                     holder.price.setText(item.getPrice().getFormattedPrice(mContext));
                 } catch (Throwable t) {
-                    t.printStackTrace();
-
-                    mTracker.send(new HitBuilders.ExceptionBuilder()
-                            .setDescription("Formatter exception:RecentsAdapter, Message: " + t.getMessage())
-                            .setFatal(false)
-                            .build());
+                    Crashlytics.logException(t);
                 }
             } else {
                 holder.price.setText("Price Unknown");

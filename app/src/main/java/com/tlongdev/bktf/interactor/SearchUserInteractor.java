@@ -19,8 +19,7 @@ package com.tlongdev.bktf.interactor;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
+import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.model.User;
@@ -44,7 +43,6 @@ import retrofit2.Response;
 public class SearchUserInteractor extends AsyncTask<Void, Void, Integer> {
 
     @Inject SteamUserInterface mInterface;
-    @Inject Tracker mTracker;
     @Inject Context mContext;
 
     private String mQuery;
@@ -102,11 +100,7 @@ public class SearchUserInteractor extends AsyncTask<Void, Void, Integer> {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
-            mTracker.send(new HitBuilders.ExceptionBuilder()
-                    .setDescription("Network exception:SearchActivity, Message: " + e.getMessage())
-                    .setFatal(false)
-                    .build());
+            Crashlytics.logException(e);
         }
         return 0;
     }

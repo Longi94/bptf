@@ -22,8 +22,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
@@ -51,9 +49,6 @@ import retrofit2.Response;
  */
 public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
 
-    /**
-     * Log tag for logging.
-     */
     private static final String LOG_TAG = Tf2UserBackpackInteractor.class.getSimpleName();
 
     //A list containing all the possible positions. This is needed to fill in the empty item slots
@@ -61,7 +56,6 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
     private List<Integer> slotNumbers;
 
     @Inject Tf2Interface mTf2Interface;
-    @Inject Tracker mTracker;
     @Inject Context mContext;
     @Inject ProfileManager mProfileManager;
 
@@ -111,12 +105,6 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
 
         } catch (IOException e) {
             errorMessage = mContext.getString(R.string.error_network);
-            e.printStackTrace();
-            mTracker.send(new HitBuilders.ExceptionBuilder()
-                    .setDescription("Network exception:GetUserBackpack, Message: " + e.getMessage())
-                    .setFatal(false)
-                    .build());
-
             return -1;
         }
     }

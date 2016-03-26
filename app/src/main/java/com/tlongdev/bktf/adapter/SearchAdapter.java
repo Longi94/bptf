@@ -27,8 +27,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
+import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
@@ -51,7 +50,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     private static final int VIEW_TYPE_USER = 1;
     private static final int VIEW_TYPE_LOADING = 2;
 
-    @Inject Tracker mTracker;
     @Inject Context mContext;
 
     private Cursor mDataSet;
@@ -172,12 +170,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     try {
                         holder.price.setText(item.getPrice().getFormattedPrice(mContext));
                     } catch (Throwable t) {
-                        t.printStackTrace();
-
-                        mTracker.send(new HitBuilders.ExceptionBuilder()
-                                .setDescription("Formatter exception:SearchAdapter, Message: " + t.getMessage())
-                                .setFatal(false)
-                                .build());
+                        Crashlytics.logException(t);
                     }
                 }
                 break;

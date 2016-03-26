@@ -34,8 +34,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Price;
@@ -121,12 +121,7 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
                         }
                     }
                 } catch (Throwable t) {
-                    t.printStackTrace();
-
-                    ((BptfApplication)getActivity().getApplication()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
-                            .setDescription("Converter exception:ConverterFragment, Message: " + t.getMessage())
-                            .setFatal(false)
-                            .build());
+                    Crashlytics.logException(t);
                 }
             }
 
@@ -157,12 +152,7 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
                         }
                     }
                 } catch (Throwable t) {
-                    t.printStackTrace();
-
-                    ((BptfApplication)getActivity().getApplication()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
-                            .setDescription("Converter exception:ConverterFragment, Message: " + t.getMessage())
-                            .setFatal(false)
-                            .build());
+                    Crashlytics.logException(t);
                 }
             }
 
@@ -193,12 +183,7 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
                         }
                     }
                 } catch (Throwable t) {
-                    t.printStackTrace();
-
-                    ((BptfApplication)getActivity().getApplication()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
-                            .setDescription("Converter exception:ConverterFragment, Message: " + t.getMessage())
-                            .setFatal(false)
-                            .build());
+                    Crashlytics.logException(t);
                 }
             }
 
@@ -229,12 +214,7 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
                         }
                     }
                 } catch (Throwable t) {
-                    t.printStackTrace();
-
-                    ((BptfApplication)getActivity().getApplication()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
-                            .setDescription("Converter exception:ConverterFragment, Message: " + t.getMessage())
-                            .setFatal(false)
-                            .build());
+                    Crashlytics.logException(t);
                 }
             }
 
@@ -254,12 +234,7 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
             inputMetal.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false))));
             inputUsd.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.USD, false))));
         } catch (Throwable t) {
-            t.printStackTrace();
-
-            ((BptfApplication)getActivity().getApplication()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
-                    .setDescription("Converter exception:ConverterFragment, Message: " + t.getMessage())
-                    .setFatal(false)
-                    .build());
+            Crashlytics.logException(t);
         }
 
         return rootView;

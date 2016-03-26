@@ -23,8 +23,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
+import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
@@ -47,16 +46,11 @@ import retrofit2.Response;
  */
 public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Integer> {
 
-    /**
-     * Log tag for logging.
-     */
-    @SuppressWarnings("unused")
     private static final String LOG_TAG = TlongdevPriceListInteractor.class.getSimpleName();
 
     @Inject SharedPreferences mPrefs;
     @Inject SharedPreferences.Editor mEditor;
     @Inject TlongdevInterface mTlongdevInterface;
-    @Inject Tracker mTracker;
     @Inject Context mContext;
 
     //Whether it's an update or full database download
@@ -136,11 +130,7 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
         } catch (IOException e) {
             //There was a network error
             errorMessage = mContext.getString(R.string.error_network);
-            e.printStackTrace();
-            mTracker.send(new HitBuilders.ExceptionBuilder()
-                    .setDescription("Network exception:GetPriceList, Message: " + e.getMessage())
-                    .setFatal(false)
-                    .build());
+            Crashlytics.logException(e);
         }
 
         return -1;

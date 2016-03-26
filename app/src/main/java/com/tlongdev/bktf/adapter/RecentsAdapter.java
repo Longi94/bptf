@@ -26,8 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
+import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
@@ -45,7 +44,6 @@ import butterknife.ButterKnife;
  */
 public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHolder> {
 
-    @Inject Tracker mTracker;
     @Inject Context mContext;
 
     private Cursor mDataSet;
@@ -131,11 +129,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
                 //Properly format the price
                 holder.price.setText(item.getPrice().getFormattedPrice(mContext));
             } catch (Throwable t) {
-                t.printStackTrace();
-                mTracker.send(new HitBuilders.ExceptionBuilder()
-                        .setDescription("Formatter exception:RecentsAdapter, Message: " + t.getMessage())
-                        .setFatal(false)
-                        .build());
+                Crashlytics.logException(t);
             }
         }
     }

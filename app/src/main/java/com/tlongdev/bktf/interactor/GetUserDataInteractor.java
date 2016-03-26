@@ -20,8 +20,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
+import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
@@ -50,7 +49,6 @@ public class GetUserDataInteractor extends AsyncTask<Void, Void, Integer> {
 
     @Inject BackpackTfInterface mBackpackTfInterface;
     @Inject SteamUserInterface mSteamUserInterface;
-    @Inject Tracker mTracker;
     @Inject SharedPreferences mPrefs;
     @Inject Context mContext;
     @Inject ProfileManager mProfileManager;
@@ -160,13 +158,7 @@ public class GetUserDataInteractor extends AsyncTask<Void, Void, Integer> {
         } catch (IOException e) {
             //There was a network error
             errorMessage = mContext.getString(R.string.error_network);
-            e.printStackTrace();
-
-            mTracker.send(new HitBuilders.ExceptionBuilder()
-                    .setDescription("Network exception:GetUserInfo, Message: " + e.getMessage())
-                    .setFatal(false)
-                    .build());
-
+            Crashlytics.logException(e);
             return -1;
         }
     }

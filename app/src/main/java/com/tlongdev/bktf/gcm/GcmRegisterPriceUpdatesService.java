@@ -22,6 +22,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
@@ -36,12 +37,12 @@ import java.io.IOException;
  */
 public class GcmRegisterPriceUpdatesService extends IntentService {
 
-    private static final String TAG = "GcmPriceUpdatesService";
+    private static final String LOG_TAG = GcmRegisterPriceUpdatesService.class.getSimpleName();
 
     public static final String EXTRA_SUBSCRIBE = "sub_or_unsub";
 
     public GcmRegisterPriceUpdatesService() {
-        super(TAG);
+        super(LOG_TAG);
     }
 
     @Override
@@ -54,23 +55,23 @@ public class GcmRegisterPriceUpdatesService extends IntentService {
         try {
             // request token that will be used by the server to send push notifications
             String token = instanceID.getToken(senderId, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
-            Log.d(TAG, "GCM Registration Token: " + token);
+            Log.d(LOG_TAG, "GCM Registration Token: " + token);
 
             GcmPubSub pubSub = GcmPubSub.getInstance(this);
             if (intent.getBooleanExtra(EXTRA_SUBSCRIBE, false)) {
                 pubSub.subscribe(token, "/topics/price_updates", null);
                 prefs.edit().putBoolean(getString(R.string.pref_registered_topic_price_updates), true)
                         .apply();
-                Log.d(TAG, "Registered to /topics/price_updates");
+                Log.d(LOG_TAG, "Registered to /topics/price_updates");
             } else {
                 pubSub.unsubscribe(token, "/topics/price_updates");
                 prefs.edit().putBoolean(getString(R.string.pref_registered_topic_price_updates), false)
                         .apply();
-                Log.d(TAG, "Unregistered from /topics/price_updates");
+                Log.d(LOG_TAG, "Unregistered from /topics/price_updates");
             }
         } catch (IOException e) {
-            Log.d(TAG, "Failed to complete token refresh", e);
-            e.printStackTrace();
+            Log.d(LOG_TAG, "Failed to complete token refresh", e);
+            Crashlytics.logException(e);
         }
     }
 }

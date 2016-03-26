@@ -35,6 +35,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.CalculatorAdapter;
@@ -190,12 +191,7 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView, 
             priceBuds.setText(totalPrice.getFormattedPrice(getActivity(), Currency.BUD));
             priceUsd.setText(totalPrice.getFormattedPrice(getActivity(), Currency.USD));
         } catch (Throwable t) {
-            t.printStackTrace();
-
-            mTracker.send(new HitBuilders.ExceptionBuilder()
-                    .setDescription("Formatter exception:CalculatorFragment, Message: " + t.getMessage())
-                    .setFatal(false)
-                    .build());
+            Crashlytics.logException(t);
         }
     }
 

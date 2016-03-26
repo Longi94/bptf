@@ -19,8 +19,7 @@ package com.tlongdev.bktf.interactor;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
+import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.model.Item;
@@ -46,7 +45,6 @@ public class BackpackTfPriceHistoryInteractor extends AsyncTask<Void, Void, Inte
     private static final String LOG_TAG = BackpackTfPriceHistoryInteractor.class.getSimpleName();
 
     @Inject BackpackTfInterface mBackpackTfInterface;
-    @Inject Tracker mTracker;
 
     private final Item mItem;
 
@@ -98,11 +96,7 @@ public class BackpackTfPriceHistoryInteractor extends AsyncTask<Void, Void, Inte
             return -1;
 
         } catch (IOException e) {
-            e.printStackTrace();
-            mTracker.send(new HitBuilders.ExceptionBuilder()
-                    .setDescription("Network exception:GetPriceHistory, Message: " + e.getMessage())
-                    .setFatal(false)
-                    .build());
+            Crashlytics.logException(e);
         }
 
         return -1;

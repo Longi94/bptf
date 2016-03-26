@@ -21,8 +21,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
+import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.DecoratedWeaponEntry;
@@ -52,7 +51,6 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
     private static final String LOG_TAG = TlongdevItemSchemaInteractor.class.getSimpleName();
 
     @Inject TlongdevInterface mTlongdevInterface;
-    @Inject Tracker mTracker;
     @Inject Context mContext;
 
     private final Callback mCallback;
@@ -89,12 +87,7 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
         } catch (IOException e) {
             //There was a network error
             errorMessage = mContext.getString(R.string.error_network);
-            e.printStackTrace();
-
-            mTracker.send(new HitBuilders.ExceptionBuilder()
-                    .setDescription("Network exception:GetItemSchema, Message: " + e.getMessage())
-                    .setFatal(false)
-                    .build());
+            Crashlytics.logException(e);
         }
         return -1;
     }
