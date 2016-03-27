@@ -183,7 +183,7 @@
                 android:value=".ui.activity.SearchActivity" />
         </activity>
         <activity
-            android:name=".ui.activity.SteamIdActivity"
+            android:name=".ui.activity.WebActivity"
             android:parentActivityName=".ui.activity.LoginActivity"
             android:theme="@style/AppTheme">
             <meta-data

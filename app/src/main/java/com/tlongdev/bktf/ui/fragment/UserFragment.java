@@ -48,6 +48,7 @@ import com.tlongdev.bktf.presenter.fragment.UserPresenter;
 import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.activity.UserBackpackActivity;
+import com.tlongdev.bktf.ui.activity.WebActivity;
 import com.tlongdev.bktf.ui.view.fragment.UserView;
 import com.tlongdev.bktf.util.ProfileManager;
 import com.tlongdev.bktf.util.Utility;
@@ -239,10 +240,9 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
             Uri webPage = Uri.parse(url + steamId);
 
             //Open link in the device default web browser
-            Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
-            if (intent.resolveActivity(mContext.getPackageManager()) != null) {
-                startActivity(intent);
-            }
+            Intent intent = new Intent(getActivity(), WebActivity.class);
+            intent.putExtra(WebActivity.EXTRA_URL, webPage);
+            startActivity(intent);
         } else {
             if (privateBackpack) {
                 //The backpack is private, do nothing

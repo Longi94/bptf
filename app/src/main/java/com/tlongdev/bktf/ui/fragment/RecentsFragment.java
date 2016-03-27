@@ -22,7 +22,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -55,6 +54,7 @@ import com.tlongdev.bktf.presenter.fragment.RecentsPresenter;
 import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
+import com.tlongdev.bktf.ui.activity.WebActivity;
 import com.tlongdev.bktf.ui.view.fragment.RecentsView;
 import com.tlongdev.bktf.util.Utility;
 
@@ -363,7 +363,9 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
                         }
                         break;
                     case R.id.backpack_tf:
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(item.getBackpackTfUrl())));
+                        Intent intent = new Intent(getActivity(), WebActivity.class);
+                        intent.putExtra(WebActivity.EXTRA_URL, item.getBackpackTfUrl());
+                        startActivity(intent);
                         break;
                 }
                 return true;

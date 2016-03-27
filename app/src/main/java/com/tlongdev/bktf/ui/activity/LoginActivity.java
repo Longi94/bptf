@@ -78,7 +78,9 @@ public class LoginActivity extends BptfActivity implements LoginView {
 
     @OnClick(R.id.what_is_id)
     public void showSteamIdInstructions() {
-        startActivity(new Intent(this, SteamIdActivity.class));
+        Intent intent = new Intent(this, WebActivity.class);
+        intent.putExtra(WebActivity.EXTRA_URL, "http://tlongdev.com/steamid.html");
+        startActivity(intent);
     }
 
     @OnClick(R.id.enter)

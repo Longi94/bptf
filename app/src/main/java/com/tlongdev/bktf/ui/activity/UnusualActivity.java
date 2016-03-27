@@ -17,7 +17,6 @@
 package com.tlongdev.bktf.ui.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -157,8 +156,9 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
                         }
                         break;
                     case R.id.backpack_tf:
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
-                                item.getBackpackTfUrl())));
+                        Intent intent = new Intent(UnusualActivity.this, WebActivity.class);
+                        intent.putExtra(WebActivity.EXTRA_URL, item.getBackpackTfUrl());
+                        startActivity(intent);
                         break;
                 }
                 return true;

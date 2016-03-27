@@ -18,7 +18,6 @@ package com.tlongdev.bktf.ui.activity;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
@@ -216,8 +215,9 @@ public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui
                         }
                         break;
                     case R.id.backpack_tf:
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
-                                item.getBackpackTfUrl())));
+                        Intent intent = new Intent(SearchActivity.this, WebActivity.class);
+                        intent.putExtra(WebActivity.EXTRA_URL, item.getBackpackTfUrl());
+                        startActivity(intent);
                         break;
                 }
                 return true;
