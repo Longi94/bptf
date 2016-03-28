@@ -51,7 +51,6 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
     public @interface UnusualAdapterType{}
 
     public static final int TYPE_HATS = 0;
-
     public static final int TYPE_EFFECTS = 1;
     public static final int TYPE_SPECIFIC_HAT = 2;
 

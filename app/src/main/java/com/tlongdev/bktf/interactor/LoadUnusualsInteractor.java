@@ -115,6 +115,9 @@ public class LoadUnusualsInteractor extends AsyncTask<Void, Void, Void> {
 
                 Item item = new Item();
                 item.setName(cursor.getString(cursor.getColumnIndex("name")));
+                item.setTradable(true);
+                item.setCraftable(true);
+                item.setAustralium(false);
                 item.setDefindex(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_DEFINDEX)));
                 item.setPriceIndex(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE_INDEX)));
                 item.setQuality(Quality.UNUSUAL);
