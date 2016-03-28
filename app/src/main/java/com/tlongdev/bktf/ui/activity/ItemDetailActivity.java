@@ -68,7 +68,7 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
     @Bind(R.id.text_view_origin) TextView origin;
     @Bind(R.id.text_view_paint) TextView paint;
     @Bind(R.id.text_view_price) TextView priceView;
-    @Bind(R.id.relative_layout_image) FrameLayout layout;
+    @Bind(R.id.image_layout) FrameLayout layout;
 
     //References to the image view
     @Bind(R.id.icon) ImageView icon;

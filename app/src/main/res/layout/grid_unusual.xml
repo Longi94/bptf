@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--Layout resources for grid items with prices-->
+<!--suppress AndroidDomInspection -->
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -15,22 +16,22 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <FrameLayout
+        <android.support.percent.PercentFrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/tf2_unusual_color_dark">
 
-            <com.tlongdev.bktf.ui.view.RatioHeightImageView
+            <ImageView
                 android:id="@+id/effect"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                app:layout_aspectRatio="100%"
+                app:layout_widthPercent="100%"
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"/>
 
-            <com.tlongdev.bktf.ui.view.RatioHeightImageView
+            <ImageView
                 android:id="@+id/icon"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                app:layout_aspectRatio="100%"
+                app:layout_widthPercent="100%"
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"/>
 
@@ -49,7 +50,7 @@
                 app:srcCompat="@drawable/ic_more_vert_white"
                 tools:ignore="MissingPrefix"/>
 
-        </FrameLayout>
+        </android.support.percent.PercentFrameLayout>
 
         <ImageView
             android:layout_width="match_parent"

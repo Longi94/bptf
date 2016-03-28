@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--suppress AndroidDomInspection -->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -25,41 +27,41 @@
             android:padding="16dp"
             tools:context=".ui.activity.ItemDetailActivity">
 
-            <com.tlongdev.bktf.ui.view.RatioHeightFrameLayout
-                android:id="@+id/relative_layout_image"
+            <android.support.percent.PercentFrameLayout
+                android:id="@+id/image_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
-                <com.tlongdev.bktf.ui.view.RatioHeightImageView
+                <ImageView
                     android:id="@+id/quality"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
-                    android:visibility="gone"/>
+                    android:visibility="gone"
+                    app:layout_aspectRatio="100%"
+                    app:layout_widthPercent="100%"/>
 
-                <com.tlongdev.bktf.ui.view.RatioHeightImageView
+                <ImageView
                     android:id="@+id/effect"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:scaleType="centerCrop"/>
+                    android:scaleType="centerCrop"
+                    app:layout_aspectRatio="100%"
+                    app:layout_widthPercent="100%"/>
 
-                <com.tlongdev.bktf.ui.view.RatioHeightImageView
+                <ImageView
                     android:id="@+id/icon"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:scaleType="centerCrop"/>
+                    android:scaleType="centerCrop"
+                    app:layout_aspectRatio="100%"
+                    app:layout_widthPercent="100%"/>
 
-                <com.tlongdev.bktf.ui.view.RatioHeightImageView
+                <ImageView
                     android:id="@+id/paint"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:scaleType="centerCrop"/>
+                    android:scaleType="centerCrop"
+                    app:layout_aspectRatio="100%"
+                    app:layout_widthPercent="100%"/>
 
-            </com.tlongdev.bktf.ui.view.RatioHeightFrameLayout>
+            </android.support.percent.PercentFrameLayout>
 
             <TextView
                 android:id="@+id/text_view_name"
