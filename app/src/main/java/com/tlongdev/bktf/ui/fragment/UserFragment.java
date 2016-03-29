@@ -41,6 +41,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.User;
@@ -91,6 +93,7 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
     @Bind(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
     @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
     @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbarLayout;
+    @Bind(R.id.ad_view) AdView mAdView;
 
     //Stores whether the backpack is private or not
     private boolean privateBackpack = false;
@@ -161,6 +164,8 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
 
         //Update all the views to show te user data
         updateUserPage(mUser);
+
+        mAdView.loadAd(new AdRequest.Builder().build());
 
         return rootView;
     }

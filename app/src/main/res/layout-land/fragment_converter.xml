@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!--Layout resource for simple calculator-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -36,60 +37,80 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:baselineAligned="false"
-            android:orientation="vertical"
-            android:padding="8dp">
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/edit_text_earbuds"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:drawableLeft="@drawable/ic_earbuds_18dp"
-                android:drawablePadding="4dp"
-                android:drawableStart="@drawable/ic_earbuds_18dp"
-                android:inputType="number"
-                android:lines="1"
-                android:scrollHorizontally="true"/>
+                android:baselineAligned="false"
+                android:orientation="vertical"
+                android:padding="8dp">
 
-            <EditText
-                android:id="@+id/edit_text_metal"
+                <EditText
+                    android:id="@+id/edit_text_earbuds"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:drawableLeft="@drawable/ic_earbuds_18dp"
+                    android:drawablePadding="4dp"
+                    android:drawableStart="@drawable/ic_earbuds_18dp"
+                    android:inputType="number"
+                    android:lines="1"
+                    android:scrollHorizontally="true"/>
+
+                <EditText
+                    android:id="@+id/edit_text_metal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:drawableLeft="@drawable/ic_metal_white_18dp"
+                    android:drawablePadding="4dp"
+                    android:drawableStart="@drawable/ic_metal_white_18dp"
+                    android:inputType="number"
+                    android:lines="1"
+                    android:scrollHorizontally="true"/>
+
+                <EditText
+                    android:id="@+id/edit_text_keys"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:drawableLeft="@drawable/ic_vpn_key_white_18dp"
+                    android:drawablePadding="4dp"
+                    android:drawableStart="@drawable/ic_vpn_key_white_18dp"
+                    android:inputType="number"
+                    android:lines="1"
+                    android:scrollHorizontally="true"/>
+
+                <EditText
+                    android:id="@+id/edit_text_usd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:drawableLeft="@drawable/ic_money_white_wrapper"
+                    android:drawablePadding="4dp"
+                    android:drawableStart="@drawable/ic_money_white_wrapper"
+                    android:inputType="number"
+                    android:lines="1"
+                    android:scrollHorizontally="true"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/ad_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:drawableLeft="@drawable/ic_metal_white_18dp"
-                android:drawablePadding="4dp"
-                android:drawableStart="@drawable/ic_metal_white_18dp"
-                android:inputType="number"
-                android:lines="1"
-                android:scrollHorizontally="true"/>
-
-            <EditText
-                android:id="@+id/edit_text_keys"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:drawableLeft="@drawable/ic_vpn_key_white_18dp"
-                android:drawablePadding="4dp"
-                android:drawableStart="@drawable/ic_vpn_key_white_18dp"
-                android:inputType="number"
-                android:lines="1"
-                android:scrollHorizontally="true"/>
-
-            <EditText
-                android:id="@+id/edit_text_usd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:drawableLeft="@drawable/ic_money_white_wrapper"
-                android:drawablePadding="4dp"
-                android:drawableStart="@drawable/ic_money_white_wrapper"
-                android:inputType="number"
-                android:lines="1"
-                android:scrollHorizontally="true"/>
+                ads:adSize="BANNER"
+                ads:adUnitId="@string/BANNER_AD_UNIT_ID"/>
 
         </LinearLayout>
 

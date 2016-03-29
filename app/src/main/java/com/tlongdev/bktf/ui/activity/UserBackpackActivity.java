@@ -30,6 +30,8 @@ import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.BackpackAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
@@ -51,7 +53,8 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
     public static final String EXTRA_NAME = "name";
     public static final String EXTRA_GUEST = "guest";
 
-    @Bind(R.id.list_view_backpack) RecyclerView mRecyclerView;
+    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
+    @Bind(R.id.ad_view) AdView mAdView;
 
     //Adapters used for the listview
     private BackpackAdapter mAdapter;
@@ -113,6 +116,8 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
 
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
+
+        mAdView.loadAd(new AdRequest.Builder().build());
 
         mPresenter.loadBackpackItems(isGuest);
     }

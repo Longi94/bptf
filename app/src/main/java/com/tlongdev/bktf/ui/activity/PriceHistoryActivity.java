@@ -31,6 +31,8 @@ import android.widget.TextView;
 
 import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.HistoryAdapter;
@@ -58,6 +60,7 @@ public class PriceHistoryActivity extends BptfActivity implements PriceHistoryVi
     @Bind(R.id.progress_bar) ProgressBar progressBar;
     @Bind(R.id.fail_text) TextView failText;
     @Bind(R.id.toolbar) Toolbar mToolbar;
+    @Bind(R.id.ad_view) AdView mAdView;
 
     private PriceHistoryPresenter mPresenter;
 
@@ -91,6 +94,8 @@ public class PriceHistoryActivity extends BptfActivity implements PriceHistoryVi
             progressBar.setVisibility(View.GONE);
             failText.setVisibility(View.VISIBLE);
         }
+
+        mAdView.loadAd(new AdRequest.Builder().build());
     }
 
     @Override

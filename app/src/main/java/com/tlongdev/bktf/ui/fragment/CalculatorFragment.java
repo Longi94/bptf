@@ -36,6 +36,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.CalculatorAdapter;
@@ -67,6 +69,7 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView, 
     @Bind(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
     @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
     @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
+    @Bind(R.id.ad_view) AdView mAdView;
 
     private CalculatorAdapter mAdapter;
     private CalculatorPresenter mPresenter;
@@ -115,6 +118,8 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView, 
         priceKeys.setText(getString(R.string.currency_key_plural, "0"));
         priceBuds.setText(getString(R.string.currency_bud_plural, "0"));
         priceUsd.setText("$0");
+
+        mAdView.loadAd(new AdRequest.Builder().build());
 
         return rootView;
     }
