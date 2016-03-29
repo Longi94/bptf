@@ -22,6 +22,7 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.BuildConfig;
+import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.network.BackpackTfInterface;
@@ -106,10 +107,17 @@ public class BackpackTfPriceHistoryInteractor extends AsyncTask<Void, Void, Inte
     private Price mapToPrice(BackpackTfPriceHistory history) {
         Price price = new Price();
 
-        price.setValue(history.getValue());
-        price.setCurrency(history.getCurrency());
-        price.setHighValue(history.getValueHigh());
-        price.setLastUpdate(history.getTimestamp());
+        if (history.getCurrency().equals(Currency.HAT)) { //OMG
+            price.setValue(history.getValue() * 1.33);
+            price.setCurrency(Currency.METAL);
+            price.setHighValue(history.getValueHigh() * 1.33);
+        } else {
+            price.setValue(history.getValue());
+            price.setCurrency(history.getCurrency());
+            price.setHighValue(history.getValueHigh());
+        }
+
+        price.setLastUpdate(history.getTimestamp() * 1000L);
 
         return price;
     }

@@ -115,7 +115,18 @@ public class PriceHistoryActivity extends BptfActivity implements PriceHistoryVi
     @Override
     public void showHistory(List<Price> prices) {
         mRecyclerView.setAdapter(new HistoryAdapter(mApplication, prices, mItem));
-        animateViews();
+
+        Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.simple_fade_in);
+        Animation fadeOut = AnimationUtils.loadAnimation(this, R.anim.simple_fade_in);
+
+        fadeIn.setDuration(500);
+        fadeOut.setDuration(500);
+
+        mRecyclerView.startAnimation(fadeIn);
+        mRecyclerView.setVisibility(View.VISIBLE);
+
+        progressBar.startAnimation(fadeOut);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -123,11 +134,7 @@ public class PriceHistoryActivity extends BptfActivity implements PriceHistoryVi
         if (errorMessage != null) {
             Log.d(LOG_TAG, errorMessage);
         }
-        animateViews();
-    }
 
-    private void animateViews() {
-        //Animate in the recycler view, so it's not that abrupt
         Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.simple_fade_in);
         Animation fadeOut = AnimationUtils.loadAnimation(this, R.anim.simple_fade_in);
 
