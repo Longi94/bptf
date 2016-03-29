@@ -45,6 +45,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.RecentsAdapter;
@@ -78,11 +80,12 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
     @Bind(R.id.image_view_metal_price) View metalPriceImage;
     @Bind(R.id.image_view_key_price) View keyPriceImage;
     @Bind(R.id.image_view_buds_price) View budsPriceImage;
+    @Bind(R.id.ad_view) AdView mAdView;
 
     /**
      * Adapter of the recycler view
      */
-    private RecentsAdapter adapter;
+    private RecentsAdapter mAdapter;
 
     private ProgressDialog loadingDialog;
 
@@ -127,8 +130,8 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) mContext).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
-        adapter = new RecentsAdapter(mApplication);
-        adapter.setListener(this);
+        mAdapter = new RecentsAdapter(mApplication);
+        mAdapter.setListener(this);
 
         DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
@@ -142,12 +145,14 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
 
         //Setup the recycler view
         mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, columnCount));
-        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setVisibility(View.GONE);
 
         //Set up the swipe refresh layout (color and listener)
         mSwipeRefreshLayout.setColorSchemeColors(Utility.getColor(mContext, R.color.accent));
         mSwipeRefreshLayout.setOnRefreshListener(this);
+
+        mAdView.loadAd(new AdRequest.Builder().build());
 
         return rootView;
     }
@@ -208,7 +213,7 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
 
     @Override
     public void showPrices(Cursor prices) {
-        adapter.swapCursor(prices);
+        mAdapter.swapCursor(prices);
 
         //Animate in the recycler view, so it's not that abrupt
         Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.simple_fade_in);
@@ -228,7 +233,7 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
 
     @Override
     public void showError() {
-        adapter.swapCursor(null);
+        mAdapter.swapCursor(null);
     }
 
     @Override
