@@ -40,6 +40,7 @@ import com.tlongdev.bktf.interactor.BackpackTfPriceHistoryInteractor;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.presenter.activity.PriceHistoryPresenter;
+import com.tlongdev.bktf.ui.view.AppearAdListener;
 import com.tlongdev.bktf.ui.view.activity.PriceHistoryView;
 import com.tlongdev.bktf.util.Utility;
 
@@ -95,6 +96,7 @@ public class PriceHistoryActivity extends BptfActivity implements PriceHistoryVi
             failText.setVisibility(View.VISIBLE);
         }
 
+        mAdView.setAdListener(new AppearAdListener(mAdView));
         mAdView.loadAd(new AdRequest.Builder().build());
     }
 

@@ -57,6 +57,7 @@ import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.activity.WebActivity;
+import com.tlongdev.bktf.ui.view.AppearAdListener;
 import com.tlongdev.bktf.ui.view.fragment.RecentsView;
 import com.tlongdev.bktf.util.Utility;
 
@@ -152,6 +153,7 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
         mSwipeRefreshLayout.setColorSchemeColors(Utility.getColor(mContext, R.color.accent));
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
+        mAdView.setAdListener(new AppearAdListener(mAdView));
         mAdView.loadAd(new AdRequest.Builder().build());
 
         return rootView;

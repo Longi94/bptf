@@ -301,6 +301,7 @@
                     android:id="@+id/ad_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     ads:adSize="BANNER"
                     ads:adUnitId="@string/BANNER_AD_UNIT_ID"/>
 

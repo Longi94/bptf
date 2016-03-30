@@ -48,6 +48,7 @@ import com.tlongdev.bktf.ui.activity.ItemChooserActivity;
 import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
+import com.tlongdev.bktf.ui.view.AppearAdListener;
 import com.tlongdev.bktf.ui.view.fragment.FavoritesView;
 import com.tlongdev.bktf.util.Utility;
 
@@ -120,6 +121,7 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), columnCount));
         mRecyclerView.setAdapter(mAdapter);
 
+        mAdView.setAdListener(new AppearAdListener(mAdView));
         mAdView.loadAd(new AdRequest.Builder().build());
 
         return rootView;

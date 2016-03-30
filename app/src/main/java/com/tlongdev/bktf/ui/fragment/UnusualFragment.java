@@ -47,6 +47,7 @@ import com.tlongdev.bktf.presenter.fragment.UnusualPresenter;
 import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.activity.UnusualActivity;
+import com.tlongdev.bktf.ui.view.AppearAdListener;
 import com.tlongdev.bktf.ui.view.fragment.UnusualView;
 import com.tlongdev.bktf.util.Utility;
 
@@ -135,6 +136,7 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
 
         mSearchInput.addTextChangedListener(this);
 
+        mAdView.setAdListener(new AppearAdListener(mAdView));
         mAdView.loadAd(new AdRequest.Builder().build());
 
         return rootView;

@@ -48,6 +48,7 @@ import com.tlongdev.bktf.presenter.fragment.CalculatorPresenter;
 import com.tlongdev.bktf.ui.activity.ItemChooserActivity;
 import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
+import com.tlongdev.bktf.ui.view.AppearAdListener;
 import com.tlongdev.bktf.ui.view.fragment.CalculatorView;
 
 import java.util.List;
@@ -119,6 +120,7 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView, 
         priceBuds.setText(getString(R.string.currency_bud_plural, "0"));
         priceUsd.setText("$0");
 
+        mAdView.setAdListener(new AppearAdListener(mAdView));
         mAdView.loadAd(new AdRequest.Builder().build());
 
         return rootView;

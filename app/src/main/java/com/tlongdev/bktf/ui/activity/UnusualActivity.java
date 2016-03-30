@@ -39,6 +39,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.UnusualAdapter;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.presenter.activity.UnusualPresenter;
+import com.tlongdev.bktf.ui.view.AppearAdListener;
 import com.tlongdev.bktf.ui.view.activity.UnusualView;
 import com.tlongdev.bktf.util.Utility;
 
@@ -108,6 +109,7 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
         mSearchInput.addTextChangedListener(this);
         mSearchInput.setHint(mDefindex != -1 ? "Effect" : "Name");
 
+        mAdView.setAdListener(new AppearAdListener(mAdView));
         mAdView.loadAd(new AdRequest.Builder().build());
 
         mPresenter.loadUnusuals(mDefindex, mIndex, "");

@@ -42,6 +42,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
+import com.tlongdev.bktf.ui.view.AppearAdListener;
 import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
@@ -240,6 +241,7 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
             Crashlytics.logException(t);
         }
 
+        mAdView.setAdListener(new AppearAdListener(mAdView));
         mAdView.loadAd(new AdRequest.Builder().build());
 
         return rootView;
