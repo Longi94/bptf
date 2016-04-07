@@ -33,10 +33,13 @@ import android.widget.EditText;
 
 import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.UnusualAdapter;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.presenter.activity.UnusualPresenter;
+import com.tlongdev.bktf.ui.view.AppearAdListener;
 import com.tlongdev.bktf.ui.view.activity.UnusualView;
 import com.tlongdev.bktf.util.Utility;
 
@@ -65,6 +68,7 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
     @Bind(R.id.search) EditText mSearchInput;
     @Bind(R.id.toolbar) Toolbar mToolbar;
     @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
+    @Bind(R.id.ad_view) AdView mAdView;
 
     private UnusualAdapter mAdapter;
     private UnusualPresenter mPresenter;
@@ -104,6 +108,9 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
 
         mSearchInput.addTextChangedListener(this);
         mSearchInput.setHint(mDefindex != -1 ? "Effect" : "Name");
+
+        mAdView.setAdListener(new AppearAdListener(mAdView));
+        mAdView.loadAd(new AdRequest.Builder().build());
 
         mPresenter.loadUnusuals(mDefindex, mIndex, "");
     }

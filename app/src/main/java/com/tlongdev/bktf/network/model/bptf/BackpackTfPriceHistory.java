@@ -27,11 +27,11 @@ public class BackpackTfPriceHistory {
 
     @SerializedName("value")
     @Expose
-    private int value;
+    private double value;
 
     @SerializedName("value_high")
     @Expose
-    private int valueHigh;
+    private double valueHigh;
 
     @SerializedName("currency")
     @Expose
@@ -39,13 +39,13 @@ public class BackpackTfPriceHistory {
 
     @SerializedName("timestamp")
     @Expose
-    private int timestamp;
+    private long timestamp;
 
-    public int getValue() {
+    public double getValue() {
         return value;
     }
 
-    public int getValueHigh() {
+    public double getValueHigh() {
         return valueHigh;
     }
 
@@ -53,7 +53,7 @@ public class BackpackTfPriceHistory {
         return currency;
     }
 
-    public int getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 }

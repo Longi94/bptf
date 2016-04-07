@@ -37,6 +37,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.gcm.GcmRegisterPriceUpdatesService;
 import com.tlongdev.bktf.model.User;
@@ -82,9 +84,6 @@ public class MainActivity extends BptfActivity {
     @Inject SharedPreferences mPrefs;
     @Inject ProfileManager mProfileManager;
 
-    /**
-     * The drawer layout and the navigation drawer
-     */
     @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @Bind(R.id.navigation_view) NavigationView mNavigationView;
 
@@ -101,22 +100,22 @@ public class MainActivity extends BptfActivity {
     /**
      * Variables used for managing fragments.
      */
-    private boolean userStateChanged = false;
+    private boolean mUserStateChanged = false;
 
     /**
      * Listener to be notified when the drawer opens. Mainly for fragments with toolbars so we can
      * expand the fragment's toolbar when the drawer opens.
      */
-    private OnDrawerOpenedListener drawerListener;
+    private OnDrawerOpenedListener mDrawerListener;
 
     /**
      * Views of the navigation header view.
      */
-    private TextView name;
-    private TextView backpack;
-    private ImageView avatar;
+    private TextView mName;
+    private TextView mBackpack;
+    private ImageView mAvatar;
 
-    private MenuItem userMenuItem;
+    private MenuItem mUserMenuItem;
 
     /**
      * Listener for the navigation drawer.
@@ -182,11 +181,11 @@ public class MainActivity extends BptfActivity {
         View navigationHeader = mNavigationView.getHeaderView(0);
 
         //Find the views of the navigation drawer header
-        name = (TextView) navigationHeader.findViewById(R.id.user_name);
-        backpack = (TextView) navigationHeader.findViewById(R.id.backpack_value);
-        avatar = (ImageView) navigationHeader.findViewById(R.id.avatar);
+        mName = (TextView) navigationHeader.findViewById(R.id.user_name);
+        mBackpack = (TextView) navigationHeader.findViewById(R.id.backpack_value);
+        mAvatar = (ImageView) navigationHeader.findViewById(R.id.avatar);
 
-        userMenuItem = mNavigationView.getMenu().getItem(2);
+        mUserMenuItem = mNavigationView.getMenu().getItem(2);
 
         //Check if there is a fragment to be restored
         if (savedInstanceState != null) {
@@ -202,7 +201,7 @@ public class MainActivity extends BptfActivity {
     @Override
     protected void onResume() {
         //If needed (mostly when the steamId was changed) reload a new instance of the UserFragment
-        if (userStateChanged) {
+        if (mUserStateChanged) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             if (mProfileManager.isSignedIn()) {
                 fragmentManager.beginTransaction()
@@ -215,7 +214,7 @@ public class MainActivity extends BptfActivity {
                         .replace(R.id.container, new RecentsFragment())
                         .commit();
             }
-            userStateChanged = false;
+            mUserStateChanged = false;
         }
         updateDrawer();
 
@@ -245,7 +244,7 @@ public class MainActivity extends BptfActivity {
                 if (mCurrentSelectedPosition == 2) {
                     if (data != null && data.getBooleanExtra("login_changed", false)) {
                         //User fragment needs to be reloaded if the steamId was changed
-                        userStateChanged = true;
+                        mUserStateChanged = true;
                     }
                 }
             }
@@ -305,7 +304,7 @@ public class MainActivity extends BptfActivity {
                 if (newFragment == null) {
                     newFragment = new RecentsFragment();
                 }
-                drawerListener = (RecentsFragment) newFragment;
+                mDrawerListener = (RecentsFragment) newFragment;
                 transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_RECENTS);
                 break;
             case 1:
@@ -313,7 +312,7 @@ public class MainActivity extends BptfActivity {
                 if (newFragment == null) {
                     newFragment = new UnusualFragment();
                 }
-                drawerListener = (UnusualFragment) newFragment;
+                mDrawerListener = (UnusualFragment) newFragment;
                 transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_UNUSUALS);
                 break;
             case 2:
@@ -321,7 +320,7 @@ public class MainActivity extends BptfActivity {
                 if (newFragment == null) {
                     newFragment = UserFragment.newInstance();
                 }
-                drawerListener = (UserFragment) newFragment;
+                mDrawerListener = (UserFragment) newFragment;
                 transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_USER);
                 break;
             case 3:
@@ -329,7 +328,7 @@ public class MainActivity extends BptfActivity {
                 if (newFragment == null) {
                     newFragment = new FavoritesFragment();
                 }
-                drawerListener = (FavoritesFragment) newFragment;
+                mDrawerListener = (FavoritesFragment) newFragment;
                 transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_FAVORITES);
                 break;
             case 4:
@@ -337,7 +336,7 @@ public class MainActivity extends BptfActivity {
                 if (newFragment == null) {
                     newFragment = new ConverterFragment();
                 }
-                drawerListener = null;
+                mDrawerListener = null;
                 transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_CONVERTER);
                 break;
             case 5:
@@ -345,7 +344,7 @@ public class MainActivity extends BptfActivity {
                 if (newFragment == null) {
                     newFragment = new CalculatorFragment();
                 }
-                drawerListener = (CalculatorFragment) newFragment;
+                mDrawerListener = (CalculatorFragment) newFragment;
                 transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_CALCULATOR);
                 break;
             default:
@@ -364,15 +363,15 @@ public class MainActivity extends BptfActivity {
             User user = mProfileManager.getUser();
 
             //Set the name
-            name.setText(user.getName());
+            mName.setText(user.getName());
 
             //Set the backpack value
             double bpValue = user.getBackpackValue();
             if (bpValue >= 0) {
-                backpack.setText(String.format("Backpack: %s", getString(R.string.currency_metal,
+                mBackpack.setText(String.format("Backpack: %s", getString(R.string.currency_metal,
                         String.valueOf(Math.round(bpValue)))));
             } else {
-                backpack.setText("Private backpack");
+                mBackpack.setText("Private backpack");
             }
 
             //Download the avatar (if needed) and set it
@@ -380,17 +379,17 @@ public class MainActivity extends BptfActivity {
                     .load(user.getAvatarUrl())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .transform(new CircleTransform(this))
-                    .into(avatar);
-            userMenuItem.setEnabled(true);
+                    .into(mAvatar);
+            mUserMenuItem.setEnabled(true);
         } else {
             Glide.with(this)
                     .load(R.drawable.steam_default_avatar)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .transform(new CircleTransform(this))
-                    .into(avatar);
-            name.setText(null);
-            backpack.setText(null);
-            userMenuItem.setEnabled(false);
+                    .into(mAvatar);
+            mName.setText(null);
+            mBackpack.setText(null);
+            mUserMenuItem.setEnabled(false);
         }
     }
 
@@ -417,8 +416,8 @@ public class MainActivity extends BptfActivity {
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 //Notify the listeners
-                if (drawerListener != null) {
-                    drawerListener.onDrawerOpened();
+                if (mDrawerListener != null) {
+                    mDrawerListener.onDrawerOpened();
                 }
             }
         };

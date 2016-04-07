@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!--Layout resource for simple calculator-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -22,7 +23,7 @@
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="@string/title_converter" />
+            app:title="@string/title_converter"/>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -53,7 +54,7 @@
                     android:drawableStart="@drawable/ic_earbuds_18dp"
                     android:inputType="number"
                     android:lines="1"
-                    android:scrollHorizontally="true" />
+                    android:scrollHorizontally="true"/>
 
                 <EditText
                     android:id="@+id/edit_text_metal"
@@ -64,7 +65,7 @@
                     android:drawableStart="@drawable/ic_metal_white_18dp"
                     android:inputType="number"
                     android:lines="1"
-                    android:scrollHorizontally="true" />
+                    android:scrollHorizontally="true"/>
 
             </LinearLayout>
 
@@ -83,7 +84,7 @@
                     android:drawableStart="@drawable/ic_vpn_key_white_18dp"
                     android:inputType="number"
                     android:lines="1"
-                    android:scrollHorizontally="true" />
+                    android:scrollHorizontally="true"/>
 
                 <EditText
                     android:id="@+id/edit_text_usd"
@@ -94,7 +95,7 @@
                     android:drawableStart="@drawable/ic_money_white_wrapper"
                     android:inputType="number"
                     android:lines="1"
-                    android:scrollHorizontally="true" />
+                    android:scrollHorizontally="true"/>
 
             </LinearLayout>
 
@@ -128,7 +129,7 @@
                         android:gravity="center"
                         android:text="1"
                         android:textColor="@color/text_primary"
-                        android:textSize="40sp" />
+                        android:textSize="40sp"/>
 
                     <TextView
                         android:id="@+id/calculator_2"
@@ -140,7 +141,7 @@
                         android:gravity="center"
                         android:text="2"
                         android:textColor="@color/text_primary"
-                        android:textSize="40sp" />
+                        android:textSize="40sp"/>
 
                     <TextView
                         android:id="@+id/calculator_3"
@@ -152,7 +153,7 @@
                         android:gravity="center"
                         android:text="3"
                         android:textColor="@color/text_primary"
-                        android:textSize="40sp" />
+                        android:textSize="40sp"/>
 
                 </LinearLayout>
 
@@ -172,7 +173,7 @@
                         android:gravity="center"
                         android:text="4"
                         android:textColor="@color/text_primary"
-                        android:textSize="40sp" />
+                        android:textSize="40sp"/>
 
                     <TextView
                         android:id="@+id/calculator_5"
@@ -184,7 +185,7 @@
                         android:gravity="center"
                         android:text="5"
                         android:textColor="@color/text_primary"
-                        android:textSize="40sp" />
+                        android:textSize="40sp"/>
 
                     <TextView
                         android:id="@+id/calculator_6"
@@ -196,7 +197,7 @@
                         android:gravity="center"
                         android:text="6"
                         android:textColor="@color/text_primary"
-                        android:textSize="40sp" />
+                        android:textSize="40sp"/>
 
                 </LinearLayout>
 
@@ -216,7 +217,7 @@
                         android:gravity="center"
                         android:text="7"
                         android:textColor="@color/text_primary"
-                        android:textSize="40sp" />
+                        android:textSize="40sp"/>
 
                     <TextView
                         android:id="@+id/calculator_8"
@@ -228,7 +229,7 @@
                         android:gravity="center"
                         android:text="8"
                         android:textColor="@color/text_primary"
-                        android:textSize="40sp" />
+                        android:textSize="40sp"/>
 
                     <TextView
                         android:id="@+id/calculator_9"
@@ -240,7 +241,7 @@
                         android:gravity="center"
                         android:text="9"
                         android:textColor="@color/text_primary"
-                        android:textSize="40sp" />
+                        android:textSize="40sp"/>
 
                 </LinearLayout>
 
@@ -260,7 +261,7 @@
                         android:gravity="center"
                         android:text="."
                         android:textColor="@color/text_primary"
-                        android:textSize="40sp" />
+                        android:textSize="40sp"/>
 
                     <TextView
                         android:id="@+id/calculator_0"
@@ -272,7 +273,7 @@
                         android:gravity="center"
                         android:text="0"
                         android:textColor="@color/text_primary"
-                        android:textSize="40sp" />
+                        android:textSize="40sp"/>
 
                     <TextView
                         android:id="@+id/calculator_delete"
@@ -284,9 +285,17 @@
                         android:gravity="center"
                         android:text="DEL"
                         android:textColor="@color/text_primary"
-                        android:textSize="24sp" />
+                        android:textSize="24sp"/>
 
                 </LinearLayout>
+
+                <com.google.android.gms.ads.AdView
+                    android:id="@+id/ad_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    ads:adSize="BANNER"
+                    ads:adUnitId="@string/BANNER_AD_UNIT_ID"/>
 
             </LinearLayout>
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!--Layout resource for simple calculator-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -37,7 +38,9 @@
             android:layout_weight="1"
             android:baselineAligned="false"
             android:orientation="vertical"
-            android:padding="48dp">
+            android:paddingEnd="48dp"
+            android:paddingStart="48dp"
+            android:paddingTop="48dp">
 
             <EditText
                 android:id="@+id/edit_text_earbuds"
@@ -82,6 +85,19 @@
                 android:inputType="number"
                 android:lines="1"
                 android:scrollHorizontally="true"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/ad_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                ads:adSize="BANNER"
+                ads:adUnitId="@string/BANNER_AD_UNIT_ID"/>
 
         </LinearLayout>
 

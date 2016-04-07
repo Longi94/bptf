@@ -31,6 +31,8 @@ import android.widget.TextView;
 
 import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.HistoryAdapter;
@@ -38,6 +40,7 @@ import com.tlongdev.bktf.interactor.BackpackTfPriceHistoryInteractor;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.presenter.activity.PriceHistoryPresenter;
+import com.tlongdev.bktf.ui.view.AppearAdListener;
 import com.tlongdev.bktf.ui.view.activity.PriceHistoryView;
 import com.tlongdev.bktf.util.Utility;
 
@@ -58,6 +61,7 @@ public class PriceHistoryActivity extends BptfActivity implements PriceHistoryVi
     @Bind(R.id.progress_bar) ProgressBar progressBar;
     @Bind(R.id.fail_text) TextView failText;
     @Bind(R.id.toolbar) Toolbar mToolbar;
+    @Bind(R.id.ad_view) AdView mAdView;
 
     private PriceHistoryPresenter mPresenter;
 
@@ -91,6 +95,9 @@ public class PriceHistoryActivity extends BptfActivity implements PriceHistoryVi
             progressBar.setVisibility(View.GONE);
             failText.setVisibility(View.VISIBLE);
         }
+
+        mAdView.setAdListener(new AppearAdListener(mAdView));
+        mAdView.loadAd(new AdRequest.Builder().build());
     }
 
     @Override
@@ -110,7 +117,18 @@ public class PriceHistoryActivity extends BptfActivity implements PriceHistoryVi
     @Override
     public void showHistory(List<Price> prices) {
         mRecyclerView.setAdapter(new HistoryAdapter(mApplication, prices, mItem));
-        animateViews();
+
+        Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.simple_fade_in);
+        Animation fadeOut = AnimationUtils.loadAnimation(this, R.anim.simple_fade_in);
+
+        fadeIn.setDuration(500);
+        fadeOut.setDuration(500);
+
+        mRecyclerView.startAnimation(fadeIn);
+        mRecyclerView.setVisibility(View.VISIBLE);
+
+        progressBar.startAnimation(fadeOut);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -118,11 +136,7 @@ public class PriceHistoryActivity extends BptfActivity implements PriceHistoryVi
         if (errorMessage != null) {
             Log.d(LOG_TAG, errorMessage);
         }
-        animateViews();
-    }
 
-    private void animateViews() {
-        //Animate in the recycler view, so it's not that abrupt
         Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.simple_fade_in);
         Animation fadeOut = AnimationUtils.loadAnimation(this, R.anim.simple_fade_in);
 

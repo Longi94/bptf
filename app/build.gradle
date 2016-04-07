@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
 
-def getKey(Properties properties, String name) {
-    return properties.containsKey(name) ? properties.getProperty(name) : "DUMMY_KEY"
+def getKey(Properties properties, String name, String defaultValue) {
+    return properties.containsKey(name) ? properties.getProperty(name) : defaultValue
 }
 
 android {
@@ -19,7 +19,7 @@ android {
 
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
-                output.outputFile = new File((String)output.outputFile.parent, "bptf-" + versionName + ".apk")
+                output.outputFile = new File((String) output.outputFile.parent, "bptf-" + versionName + ".apk")
             }
         }
 
@@ -30,8 +30,9 @@ android {
             keys.load(project.rootProject.file('keys.properties').newDataInputStream())
         }
 
-        buildConfigField("String", "BACKPACK_TF_API_KEY", "\"${getKey(keys, "BACKPACK_TF_API_KEY")}\"")
-        buildConfigField("String", "STEAM_WEB_API_KEY", "\"${getKey(keys, "STEAM_WEB_API_KEY")}\"")
+        buildConfigField("String", "BACKPACK_TF_API_KEY", "\"${getKey(keys, "BACKPACK_TF_API_KEY", "DUMMY_KEY")}\"")
+        buildConfigField("String", "STEAM_WEB_API_KEY", "\"${getKey(keys, "STEAM_WEB_API_KEY", "DUMMY_KEY")}\"")
+        resValue("string", "BANNER_AD_UNIT_ID", "${getKey(keys, "BANNER_AD_UNIT_ID", "ca-app-pub-3940256099942544/6300978111")}")
     }
     buildTypes {
         release {
@@ -41,6 +42,7 @@ android {
         }
         debug {
             testCoverageEnabled true
+            resValue("string", "BANNER_AD_UNIT_ID", "ca-app-pub-3940256099942544/6300978111")
         }
     }
     compileOptions {
@@ -80,6 +82,7 @@ dependencies {
     compile 'com.f2prateek.dart:dart:2.0.0'
     compile 'com.google.android.gms:play-services-analytics:8.4.0'
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
+    compile 'com.google.android.gms:play-services-ads:8.4.0'
     compile 'com.google.dagger:dagger:2.0.2'
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.3'
     compile 'com.github.bumptech.glide:glide:3.7.0'

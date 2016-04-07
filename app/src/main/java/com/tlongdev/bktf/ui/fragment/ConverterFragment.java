@@ -35,11 +35,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
+import com.tlongdev.bktf.ui.view.AppearAdListener;
 import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
@@ -66,6 +69,7 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
     @Bind(R.id.edit_text_keys) EditText inputKeys;
     @Bind(R.id.edit_text_metal) EditText inputMetal;
     @Bind(R.id.edit_text_usd) EditText inputUsd;
+    @Bind(R.id.ad_view) AdView mAdView;
 
     /**
      * the view that is currently in focus
@@ -236,6 +240,9 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
         } catch (Throwable t) {
             Crashlytics.logException(t);
         }
+
+        mAdView.setAdListener(new AppearAdListener(mAdView));
+        mAdView.loadAd(new AdRequest.Builder().build());
 
         return rootView;
     }
