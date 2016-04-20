@@ -29,6 +29,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,8 +38,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.gcm.GcmRegisterPriceUpdatesService;
 import com.tlongdev.bktf.model.User;
@@ -61,7 +61,7 @@ import butterknife.ButterKnife;
  * Tha main activity if the application. Navigation drawer is used. This is where most of the
  * fragments are shown.
  */
-public class MainActivity extends BptfActivity {
+public class MainActivity extends AppCompatActivity {
 
     /**
      * Request codes for onActivityResult
@@ -162,8 +162,9 @@ public class MainActivity extends BptfActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        mApplication.getActivityComponent().inject(this);
-        mApplication.startTracking();
+        BptfApplication application = (BptfApplication) getApplication();
+        application.getActivityComponent().inject(this);
+        application.startTracking();
 
         //Set the default values for all preferences when the app is first loaded
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
