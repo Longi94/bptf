@@ -13,6 +13,8 @@ public class AppearAdListener extends AdListener {
 
     private AdView mAdView;
 
+    private boolean mLoaded = false;
+
     public AppearAdListener(AdView adView) {
         mAdView = adView;
     }
@@ -21,5 +23,10 @@ public class AppearAdListener extends AdListener {
     public void onAdLoaded() {
         super.onAdLoaded();
         mAdView.setVisibility(View.VISIBLE);
+        mLoaded = true;
+    }
+
+    public boolean isLoaded() {
+        return mLoaded;
     }
 }
