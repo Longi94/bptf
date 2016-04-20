@@ -41,7 +41,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
@@ -51,7 +50,6 @@ import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.activity.UserBackpackActivity;
 import com.tlongdev.bktf.ui.activity.WebActivity;
-import com.tlongdev.bktf.ui.view.AppearAdListener;
 import com.tlongdev.bktf.ui.view.fragment.UserView;
 import com.tlongdev.bktf.util.ProfileManager;
 import com.tlongdev.bktf.util.Utility;
@@ -166,8 +164,7 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
         //Update all the views to show te user data
         updateUserPage(mUser);
 
-        mAdView.setAdListener(new AppearAdListener(mAdView));
-        mAdView.loadAd(new AdRequest.Builder().build());
+        mAdManager.addAdView(mAdView);
 
         return rootView;
     }

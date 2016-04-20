@@ -36,7 +36,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
@@ -48,7 +47,6 @@ import com.tlongdev.bktf.presenter.fragment.CalculatorPresenter;
 import com.tlongdev.bktf.ui.activity.ItemChooserActivity;
 import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
-import com.tlongdev.bktf.ui.view.AppearAdListener;
 import com.tlongdev.bktf.ui.view.fragment.CalculatorView;
 
 import java.util.List;
@@ -120,8 +118,7 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView, 
         priceBuds.setText(getString(R.string.currency_bud_plural, "0"));
         priceUsd.setText("$0");
 
-        mAdView.setAdListener(new AppearAdListener(mAdView));
-        mAdView.loadAd(new AdRequest.Builder().build());
+        mAdManager.addAdView(mAdView);
 
         return rootView;
     }

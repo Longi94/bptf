@@ -30,7 +30,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.SearchAdapter;
@@ -38,7 +37,6 @@ import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Quality;
 import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.presenter.activity.SearchPresenter;
-import com.tlongdev.bktf.ui.view.AppearAdListener;
 import com.tlongdev.bktf.util.Utility;
 
 import butterknife.Bind;
@@ -96,8 +94,7 @@ public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, columnCount));
         mRecyclerView.setAdapter(mAdapter);
 
-        mAdView.setAdListener(new AppearAdListener(mAdView));
-        mAdView.loadAd(new AdRequest.Builder().build());
+        mAdManager.addAdView(mAdView);
     }
 
     @Override

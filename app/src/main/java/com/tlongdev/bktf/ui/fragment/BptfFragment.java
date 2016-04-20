@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
+import com.tlongdev.bktf.ads.AdManager;
 import com.tlongdev.bktf.ui.view.BaseView;
 
 import javax.inject.Inject;
@@ -34,6 +35,7 @@ import javax.inject.Inject;
 public abstract class BptfFragment extends Fragment implements BaseView {
 
     @Inject Tracker mTracker;
+    @Inject AdManager mAdManager;
 
     protected BptfApplication mApplication;
 

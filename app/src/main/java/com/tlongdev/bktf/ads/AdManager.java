@@ -52,7 +52,7 @@ public class AdManager implements SharedPreferences.OnSharedPreferenceChangeList
         }
     }
 
-    private void addAdView(AdView adView) {
+    public void addAdView(AdView adView) {
         mAdViews.add(adView);
         if (mAdsEnabled) {
             adView.setAdListener(new AppearAdListener(adView));
@@ -60,7 +60,7 @@ public class AdManager implements SharedPreferences.OnSharedPreferenceChangeList
         }
     }
 
-    private void removeAdView(AdView adView) {
+    public void removeAdView(AdView adView) {
         mAdViews.remove(adView);
     }
 }

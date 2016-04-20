@@ -37,7 +37,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
@@ -47,7 +46,6 @@ import com.tlongdev.bktf.presenter.fragment.UnusualPresenter;
 import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.activity.UnusualActivity;
-import com.tlongdev.bktf.ui.view.AppearAdListener;
 import com.tlongdev.bktf.ui.view.fragment.UnusualView;
 import com.tlongdev.bktf.util.Utility;
 
@@ -135,9 +133,7 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
         mRecyclerView.setAdapter(mAdapter);
 
         mSearchInput.addTextChangedListener(this);
-
-        mAdView.setAdListener(new AppearAdListener(mAdView));
-        mAdView.loadAd(new AdRequest.Builder().build());
+        mAdManager.addAdView(mAdView);
 
         return rootView;
     }

@@ -30,14 +30,12 @@ import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.BackpackAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.presenter.activity.UserBackpackPresenter;
-import com.tlongdev.bktf.ui.view.AppearAdListener;
 import com.tlongdev.bktf.ui.view.activity.UserBackpackView;
 
 import java.util.List;
@@ -118,8 +116,7 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-        mAdView.setAdListener(new AppearAdListener(mAdView));
-        mAdView.loadAd(new AdRequest.Builder().build());
+        mAdManager.addAdView(mAdView);
 
         mPresenter.loadBackpackItems(isGuest);
     }

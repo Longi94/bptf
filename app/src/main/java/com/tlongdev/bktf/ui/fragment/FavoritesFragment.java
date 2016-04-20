@@ -37,7 +37,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
@@ -48,7 +47,6 @@ import com.tlongdev.bktf.ui.activity.ItemChooserActivity;
 import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
-import com.tlongdev.bktf.ui.view.AppearAdListener;
 import com.tlongdev.bktf.ui.view.fragment.FavoritesView;
 import com.tlongdev.bktf.util.Utility;
 
@@ -121,8 +119,7 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), columnCount));
         mRecyclerView.setAdapter(mAdapter);
 
-        mAdView.setAdListener(new AppearAdListener(mAdView));
-        mAdView.loadAd(new AdRequest.Builder().build());
+        mAdManager.addAdView(mAdView);
 
         return rootView;
     }

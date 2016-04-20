@@ -45,7 +45,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
@@ -57,7 +56,6 @@ import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.activity.WebActivity;
-import com.tlongdev.bktf.ui.view.AppearAdListener;
 import com.tlongdev.bktf.ui.view.fragment.RecentsView;
 import com.tlongdev.bktf.util.Utility;
 
@@ -153,8 +151,7 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
         mSwipeRefreshLayout.setColorSchemeColors(Utility.getColor(mContext, R.color.accent));
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        mAdView.setAdListener(new AppearAdListener(mAdView));
-        mAdView.loadAd(new AdRequest.Builder().build());
+        mAdManager.addAdView(mAdView);
 
         return rootView;
     }
