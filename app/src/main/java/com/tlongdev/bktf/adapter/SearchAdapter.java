@@ -107,7 +107,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 break;
             //Simple price view
             case VIEW_TYPE_PRICE:
-                if (mDataSet != null && mDataSet.moveToPosition(position)) {
+                if (mDataSet != null && mDataSet.moveToPosition(position - (getItemCount() - mDataSet.getCount()))) {
                     holder.priceLayout.setVisibility(View.VISIBLE);
                     holder.more.setVisibility(View.VISIBLE);
                     holder.loading.setVisibility(View.GONE);
