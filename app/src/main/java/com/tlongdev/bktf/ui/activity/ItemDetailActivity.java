@@ -203,7 +203,7 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
 
         if (BackpackItem.isPaint(item.getPaint())) {
             Glide.with(this)
-                    .load("file:///android_asset/paint/" + item.getPaint() + ".webp")
+                    .load("file:///android_asset/paint/" + item.getPaint() + ".png")
                     .into(paintView);
         }
 

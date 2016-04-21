@@ -554,11 +554,11 @@ public class Item implements Parcelable {
      */
     public String getIconUrl() {
         if (australium) {
-            return "file:///android_asset/australium/" + defindex + ".webp";
+            return "file:///android_asset/australium/" + defindex + ".png";
         } else if (weaponWear > 0) {
-            return "file:///android_asset/decorated/" + defindex + "/" + weaponWear + ".webp";
+            return "file:///android_asset/decorated/" + defindex + "/" + weaponWear + ".png";
         }
-        return "file:///android_asset/items/" + defindex + ".webp";
+        return "file:///android_asset/items/" + defindex + ".png";
     }
 
     /**
@@ -567,7 +567,7 @@ public class Item implements Parcelable {
      * @return Uri object
      */
     public String getEffectUrl() {
-        return "file:///android_asset/effect/" + priceIndex + ".webp";
+        return "file:///android_asset/effect/" + priceIndex + ".png";
     }
 
     public String getBackpackTfUrl() {
