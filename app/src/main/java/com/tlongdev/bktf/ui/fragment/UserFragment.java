@@ -387,8 +387,8 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
         }
 
         //Set the trust score and color the background according to it.
-        trustPositive.setText(String.format(Locale.US, "+%d", mUser.getTrustPositive()));
-        trustNegative.setText(String.format(Locale.US, "-%d", mUser.getTrustNegatvie()));
+        trustPositive.setText(String.format(Locale.ENGLISH, "+%d", mUser.getTrustPositive()));
+        trustNegative.setText(String.format(Locale.ENGLISH, "-%d", mUser.getTrustNegatvie()));
 
         //Raw keys
         int rawKeys = mUser.getRawKeys();
@@ -408,7 +408,7 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
         int itemNumber = mUser.getItemCount();
         int backpackSlotNumber = mUser.getBackpackSlots();
         if (itemNumber >= 0 && backpackSlotNumber >= 0)
-            backpackSlots.setText(String.format(Locale.US, "%s/%d", String.valueOf(itemNumber), backpackSlotNumber));
+            backpackSlots.setText(String.format(Locale.ENGLISH, "%s/%d", String.valueOf(itemNumber), backpackSlotNumber));
         else
             backpackSlots.setText("?/?");
     }

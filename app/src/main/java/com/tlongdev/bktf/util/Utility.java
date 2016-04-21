@@ -16,7 +16,6 @@
 
 package com.tlongdev.bktf.util;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -38,7 +37,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
 import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
@@ -46,6 +44,7 @@ import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
+import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.widget.FavoritesWidget;
 
 import org.json.JSONArray;
@@ -55,6 +54,7 @@ import org.json.JSONObject;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Utility class (static only).
@@ -165,7 +165,7 @@ public class Utility {
     public static String formatUnixTimeStamp(long unixSeconds) {
         Date date = new Date(unixSeconds * 1000L); // *1000 is to convert seconds to milliseconds
         //European format
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         return sdf.format(date);
     }
 

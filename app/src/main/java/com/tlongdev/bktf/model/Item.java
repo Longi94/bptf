@@ -573,9 +573,9 @@ public class Item implements Parcelable {
     public String getBackpackTfUrl() {
         String url;
         if (!australium) {
-            url = String.format(Locale.US, "http://backpack.tf/stats/%d/%d/%d/%d", quality, defindex, tradable ? 1 : 0, craftable ? 1 : 0);
+            url = String.format(Locale.ENGLISH, "http://backpack.tf/stats/%d/%d/%d/%d", quality, defindex, tradable ? 1 : 0, craftable ? 1 : 0);
         } else {
-            url = String.format(Locale.US, "http://backpack.tf/stats/%d/%s/%d/%d", quality, "Australium " + name, tradable ? 1 : 0, craftable ? 1 : 0);
+            url = String.format(Locale.ENGLISH, "http://backpack.tf/stats/%d/%s/%d/%d", quality, "Australium " + name, tradable ? 1 : 0, craftable ? 1 : 0);
         }
 
         return priceIndex > 0 ? url + "/" + priceIndex : url;
