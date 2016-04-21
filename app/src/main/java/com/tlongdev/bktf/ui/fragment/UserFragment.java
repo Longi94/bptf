@@ -23,6 +23,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -44,12 +45,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
+import com.tlongdev.bktf.customtabs.WebViewFallback;
 import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.presenter.fragment.UserPresenter;
 import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.activity.UserBackpackActivity;
-import com.tlongdev.bktf.ui.activity.WebActivity;
 import com.tlongdev.bktf.ui.view.fragment.UserView;
 import com.tlongdev.bktf.util.ProfileManager;
 import com.tlongdev.bktf.util.Utility;
@@ -245,9 +247,9 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
             Uri webPage = Uri.parse(url + steamId);
 
             //Open link in the device default web browser
-            Intent intent = new Intent(getActivity(), WebActivity.class);
-            intent.putExtra(WebActivity.EXTRA_URL, webPage);
-            startActivity(intent);
+            CustomTabsIntent intent = new CustomTabsIntent.Builder().build();
+            CustomTabActivityHelper.openCustomTab(getActivity(), intent, webPage,
+                    new WebViewFallback());
         } else {
             if (privateBackpack) {
                 //The backpack is private, do nothing

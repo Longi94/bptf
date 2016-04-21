@@ -17,8 +17,10 @@
 package com.tlongdev.bktf.ui.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -36,6 +38,8 @@ import com.f2prateek.dart.InjectExtra;
 import com.google.android.gms.ads.AdView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.UnusualAdapter;
+import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
+import com.tlongdev.bktf.customtabs.WebViewFallback;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.presenter.activity.UnusualPresenter;
 import com.tlongdev.bktf.ui.view.activity.UnusualView;
@@ -161,9 +165,10 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
                         }
                         break;
                     case R.id.backpack_tf:
-                        Intent intent = new Intent(UnusualActivity.this, WebActivity.class);
-                        intent.putExtra(WebActivity.EXTRA_URL, item.getBackpackTfUrl());
-                        startActivity(intent);
+                        Uri uri = Uri.parse(item.getBackpackTfUrl());
+                        CustomTabsIntent intent = new CustomTabsIntent.Builder().build();
+                        CustomTabActivityHelper.openCustomTab(UnusualActivity.this, intent, uri,
+                                new WebViewFallback());
                         break;
                 }
                 return true;

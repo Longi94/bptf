@@ -18,7 +18,9 @@ package com.tlongdev.bktf.ui.activity;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,6 +35,8 @@ import android.widget.PopupMenu;
 import com.google.android.gms.ads.AdView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.SearchAdapter;
+import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
+import com.tlongdev.bktf.customtabs.WebViewFallback;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Quality;
 import com.tlongdev.bktf.model.User;
@@ -220,9 +224,10 @@ public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui
                         }
                         break;
                     case R.id.backpack_tf:
-                        Intent intent = new Intent(SearchActivity.this, WebActivity.class);
-                        intent.putExtra(WebActivity.EXTRA_URL, item.getBackpackTfUrl());
-                        startActivity(intent);
+                        Uri uri = Uri.parse(item.getBackpackTfUrl());
+                        CustomTabsIntent intent = new CustomTabsIntent.Builder().build();
+                        CustomTabActivityHelper.openCustomTab(SearchActivity.this, intent, uri,
+                                new WebViewFallback());
                         break;
                 }
                 return true;

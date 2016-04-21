@@ -22,8 +22,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -49,13 +51,14 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.RecentsAdapter;
+import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
+import com.tlongdev.bktf.customtabs.WebViewFallback;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.presenter.fragment.RecentsPresenter;
 import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
-import com.tlongdev.bktf.ui.activity.WebActivity;
 import com.tlongdev.bktf.ui.view.fragment.RecentsView;
 import com.tlongdev.bktf.util.Utility;
 
@@ -368,9 +371,10 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
                         }
                         break;
                     case R.id.backpack_tf:
-                        Intent intent = new Intent(getActivity(), WebActivity.class);
-                        intent.putExtra(WebActivity.EXTRA_URL, item.getBackpackTfUrl());
-                        startActivity(intent);
+                        Uri uri = Uri.parse(item.getBackpackTfUrl());
+                        CustomTabsIntent intent = new CustomTabsIntent.Builder().build();
+                        CustomTabActivityHelper.openCustomTab(getActivity(), intent, uri,
+                                new WebViewFallback());
                         break;
                 }
                 return true;

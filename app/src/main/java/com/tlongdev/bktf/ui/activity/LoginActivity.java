@@ -17,14 +17,17 @@
 package com.tlongdev.bktf.ui.activity;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
+import com.tlongdev.bktf.customtabs.WebViewFallback;
 import com.tlongdev.bktf.presenter.activity.LoginPresenter;
 import com.tlongdev.bktf.ui.view.activity.LoginView;
 
@@ -78,9 +81,9 @@ public class LoginActivity extends BptfActivity implements LoginView {
 
     @OnClick(R.id.what_is_id)
     public void showSteamIdInstructions() {
-        Intent intent = new Intent(this, WebActivity.class);
-        intent.putExtra(WebActivity.EXTRA_URL, "http://tlongdev.com/steamid.html");
-        startActivity(intent);
+        Uri uri = Uri.parse("http://tlongdev.com/steamid.html");
+        CustomTabsIntent intent = new CustomTabsIntent.Builder().build();
+        CustomTabActivityHelper.openCustomTab(this, intent, uri, new WebViewFallback());
     }
 
     @OnClick(R.id.enter)
