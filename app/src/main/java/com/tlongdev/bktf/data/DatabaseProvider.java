@@ -37,16 +37,15 @@ public class DatabaseProvider extends ContentProvider {
     /**
      * URI matcher result codes
      */
-    public static final int RAW_QUERY = 99;
-    public static final int PRICE_LIST = 100;
-    public static final int ITEM_SCHEMA = 101;
-    public static final int ORIGIN_NAMES = 102;
-    public static final int UNUSUAL_SCHEMA = 103;
-    public static final int BACKPACK = 104;
-    public static final int BACKPACK_GUEST = 105;
-    public static final int FAVORITES = 106;
-    public static final int CALCULATOR = 107;
-    public static final int DECORATED_WEAPON = 108;
+    private static final int PRICE_LIST = 100;
+    private static final int ITEM_SCHEMA = 101;
+    private static final int ORIGIN_NAMES = 102;
+    private static final int UNUSUAL_SCHEMA = 103;
+    private static final int BACKPACK = 104;
+    private static final int BACKPACK_GUEST = 105;
+    private static final int FAVORITES = 106;
+    private static final int CALCULATOR = 107;
+    private static final int DECORATED_WEAPON = 108;
 
     /**
      * The URI Matcher used by this content provider
@@ -74,7 +73,6 @@ public class DatabaseProvider extends ContentProvider {
         final String authority = DatabaseContract.CONTENT_AUTHORITY;
 
         // For each type of URI you want to add, create a corresponding code.
-        matcher.addURI(authority, DatabaseContract.PATH_RAW_QUERY, RAW_QUERY);
         matcher.addURI(authority, DatabaseContract.PATH_PRICE_LIST, PRICE_LIST);
         matcher.addURI(authority, DatabaseContract.PATH_ITEM_SCHEMA, ITEM_SCHEMA);
         matcher.addURI(authority, DatabaseContract.PATH_UNUSUAL_SCHEMA, UNUSUAL_SCHEMA);
@@ -101,11 +99,6 @@ public class DatabaseProvider extends ContentProvider {
         Cursor retCursor;
         String tableName;
         switch (sUriMatcher.match(uri)) {
-            case RAW_QUERY:
-                retCursor = mOpenHelper.getReadableDatabase().rawQuery(selection, selectionArgs);
-                if (retCursor != null)
-                    retCursor.setNotificationUri(getContext().getContentResolver(), uri);
-                return retCursor;
             case PRICE_LIST:
                 tableName = PriceEntry.TABLE_NAME;
                 break;

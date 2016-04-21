@@ -17,13 +17,14 @@
 package com.tlongdev.bktf.model;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.tlongdev.bktf.R;
 
-/**
- * Created by Long on 2015. 10. 31..
- */
 public class BackpackItem extends Item {
+
+    private int id;
 
     private int uniqueId;
     private int originalId;
@@ -40,37 +41,61 @@ public class BackpackItem extends Item {
 
     private boolean equipped;
 
-    public BackpackItem() {
-        this(0, null, 0, false, false, false, 0, null, 0, 0, 0, 0, 0, 0, null, null, null, null, null, false);
+    public static final Parcelable.Creator<BackpackItem> CREATOR = new Creator<BackpackItem>() {
+        @Override
+        public BackpackItem createFromParcel(Parcel source) {
+            return new BackpackItem(source);
+        }
+
+        @Override
+        public BackpackItem[] newArray(int size) {
+            return new BackpackItem[size];
+        }
+    };
+
+    public BackpackItem() {}
+
+    private BackpackItem(Parcel source) {
+        super(source);
+        uniqueId = source.readInt();
+        originalId = source.readInt();
+        level = source.readInt();
+        origin = source.readInt();
+        paint = source.readInt();
+        craftNumber = source.readInt();
+
+        customName = source.readString();
+        customDescription = source.readString();
+        creatorName = source.readString();
+        gifterName = source.readString();
+        containedItem = source.readString();
+
+        equipped = source.readByte() != 0;
     }
 
-    public BackpackItem(int defindex, String name, int quality, boolean tradable, boolean craftable,
-                        boolean australium, int priceIndex, Price price, int uniqueId, int originalId,
-                        int level, int origin, int paint, int craftNumber, String customName,
-                        String customDescription, String creatorName, String gifterName, String containedItem, boolean equipped) {
-        this(defindex, name, quality, tradable, craftable, australium, priceIndex, 0, price, uniqueId,
-                originalId, level, origin, paint, craftNumber, customName, customDescription, creatorName,
-                gifterName, containedItem, equipped);
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public BackpackItem(int defindex, String name, int quality, boolean tradable, boolean craftable,
-                        boolean australium, int priceIndex, int weaponWear, Price price, int uniqueId,
-                        int originalId, int level, int origin, int paint, int craftNumber, String customName,
-                        String customDescription, String creatorName, String gifterName, String containedItem,
-                        boolean equipped) {
-        super(defindex, name, quality, tradable, craftable, australium, priceIndex, weaponWear, price);
-        this.uniqueId = uniqueId;
-        this.originalId = originalId;
-        this.level = level;
-        this.origin = origin;
-        this.paint = paint;
-        this.craftNumber = craftNumber;
-        this.customName = customName;
-        this.customDescription = customDescription;
-        this.creatorName = creatorName;
-        this.gifterName = gifterName;
-        this.containedItem = containedItem;
-        this.equipped = equipped;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+
+        dest.writeInt(uniqueId);
+        dest.writeInt(originalId);
+        dest.writeInt(level);
+        dest.writeInt(origin);
+        dest.writeInt(paint);
+        dest.writeInt(craftNumber);
+
+        dest.writeString(customName);
+        dest.writeString(customDescription);
+        dest.writeString(creatorName);
+        dest.writeString(gifterName);
+        dest.writeString(containedItem);
+
+        dest.writeByte((byte) (equipped ? 1 : 0));
     }
 
     public int getUniqueId() {
@@ -280,5 +305,13 @@ public class BackpackItem extends Item {
             default:
                 return false;
         }
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

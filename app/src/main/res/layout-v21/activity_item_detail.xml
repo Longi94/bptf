@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--suppress AndroidDomInspection -->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -20,50 +23,50 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipToPadding="false"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="16dp"
-            android:clipToPadding="false"
-            tools:context=".activity.ItemDetailActivity">
+            tools:context=".ui.activity.ItemDetailActivity">
 
-            <com.tlongdev.bktf.view.RatioHeightFrameLayout
-                android:id="@+id/relative_layout_image"
+            <android.support.percent.PercentFrameLayout
+                android:id="@+id/image_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <com.tlongdev.bktf.view.RatioHeightImageView
+                <ImageView
                     android:id="@+id/quality"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
-                    android:transitionName="quality_transition" />
+                    android:transitionName="quality_transition"
+                    app:layout_aspectRatio="100%"
+                    app:layout_widthPercent="100%"/>
 
-                <com.tlongdev.bktf.view.RatioHeightImageView
+                <ImageView
                     android:id="@+id/effect"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
-                    android:transitionName="effect_transition" />
+                    android:transitionName="effect_transition"
+                    app:layout_aspectRatio="100%"
+                    app:layout_widthPercent="100%"/>
 
-                <com.tlongdev.bktf.view.RatioHeightImageView
+                <ImageView
                     android:id="@+id/icon"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
-                    android:transitionName="icon_transition" />
+                    android:transitionName="icon_transition"
+                    app:layout_aspectRatio="100%"
+                    app:layout_widthPercent="100%"/>
 
-                <com.tlongdev.bktf.view.RatioHeightImageView
+                <ImageView
                     android:id="@+id/paint"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
-                    android:transitionName="paint_transition" />
+                    android:transitionName="paint_transition"
+                    app:layout_aspectRatio="100%"
+                    app:layout_widthPercent="100%"/>
 
-            </com.tlongdev.bktf.view.RatioHeightFrameLayout>
+            </android.support.percent.PercentFrameLayout>
 
             <TextView
                 android:id="@+id/text_view_name"
@@ -74,14 +77,14 @@
                 android:paddingTop="8dp"
                 android:textColor="@color/text_primary"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/text_view_level"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/text_primary" />
+                android:textColor="@color/text_primary"/>
 
             <TextView
                 android:id="@+id/text_view_effect_name"
@@ -89,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/text_primary"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/text_view_custom_name"
@@ -97,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/text_primary"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/text_view_custom_desc"
@@ -105,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/text_primary"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/text_view_crafted"
@@ -113,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/text_primary"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/text_view_gifted"
@@ -121,14 +124,14 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/text_primary"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/text_view_origin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/text_primary" />
+                android:textColor="@color/text_primary"/>
 
             <TextView
                 android:id="@+id/text_view_paint"
@@ -136,7 +139,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/text_primary"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/text_view_price"
@@ -145,7 +148,7 @@
                 android:gravity="center"
                 android:paddingTop="8dp"
                 android:textColor="@color/text_primary"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
         </LinearLayout>
 

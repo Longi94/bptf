@@ -17,30 +17,26 @@
 package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.gms.analytics.HitBuilders;
+import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.activity.PriceHistoryActivity;
-import com.tlongdev.bktf.activity.SearchActivity;
-import com.tlongdev.bktf.activity.UserActivity;
+import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
+import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
-import com.tlongdev.bktf.util.Utility;
+import com.tlongdev.bktf.model.User;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -50,178 +46,95 @@ import butterknife.ButterKnife;
  */
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
-    /**
-     * Log tag for logging.
-     */
-    @SuppressWarnings("unused")
-    private static final String LOG_TAG = SearchAdapter.class.getSimpleName();
-
-    /**
-     * View type IDs
-     */
     private static final int VIEW_TYPE_PRICE = 0;
     private static final int VIEW_TYPE_USER = 1;
     private static final int VIEW_TYPE_LOADING = 2;
 
-    /**
-     * The data set
-     */
+    @Inject Context mContext;
+
     private Cursor mDataSet;
+    private boolean mLoading;
+    private User mUser;
 
-    /**
-     * The context
-     */
-    private Context mContext;
+    private OnSearchClickListener mListener;
 
-    /**
-     * Whether we found a user for the string query or not
-     */
-    private boolean userFound = false;
-
-    /**
-     * Whether we are searching for the user or not
-     */
-    private boolean loading;
-
-    /**
-     * Some info on the user we found
-     */
-    private String[] userInfo;
-
-    /**
-     * Constructor.
-     *
-     * @param context the context
-     * @param dataSet the data set
-     */
-    public SearchAdapter(Context context, Cursor dataSet) {
-        this.mContext = context;
-        this.mDataSet = dataSet;
+    public SearchAdapter(BptfApplication application) {
+        application.getAdapterComponent().inject(this);
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_search, parent, false);
-
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_search, parent, false);
         return new ViewHolder(v);
     }
 
+    @SuppressWarnings("WrongConstant")
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        if (mDataSet != null && mDataSet.moveToPosition(position)) {
-            switch (getItemViewType(position)) {
-                //We found a user, show some info
-                case VIEW_TYPE_USER:
-                    holder.more.setVisibility(View.GONE);
-                    if (userFound) {
-                        holder.loading.setVisibility(View.GONE);
-                        holder.priceLayout.setVisibility(View.VISIBLE);
+        switch (getItemViewType(position)) {
+            //We found a user, show some info
+            case VIEW_TYPE_USER:
+                holder.more.setVisibility(View.GONE);
+                if (mUser != null) {
+                    holder.loading.setVisibility(View.GONE);
+                    holder.priceLayout.setVisibility(View.VISIBLE);
 
-                        //open the user activity when the user clicks on the view
-                        holder.root.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(mContext, UserActivity.class);
-                                intent.putExtra(UserActivity.STEAM_ID_KEY, userInfo[1]);
-                                intent.putExtra(UserActivity.JSON_USER_SUMMARIES_KEY, userInfo[2]);
-                                mContext.startActivity(intent);
+                    //open the user activity when the user clicks on the view
+                    holder.root.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (mListener != null) {
+                                mListener.onUserClicked(mUser);
                             }
-                        });
-
-                        //The name
-                        holder.name.setText(mDataSet.getString(SearchActivity.COLUMN_NAME));
-                        //The avatar of the user
-                        String path = PreferenceManager.getDefaultSharedPreferences(mContext).
-                                getString(mContext.getString(R.string.pref_search_avatar_url), "");
-
-                        if (!path.equals("")) {
-                            Glide.with(mContext)
-                                    .load(path)
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                    .into(holder.icon);
                         }
-                    }
-                    break;
-                //Lading view, searching for the user
-                case VIEW_TYPE_LOADING:
-                    holder.loading.setVisibility(View.VISIBLE);
-                    holder.priceLayout.setVisibility(View.GONE);
+                    });
 
-                    holder.name.setText(null);
-                    holder.icon.setImageDrawable(null);
-                    break;
-                //Simple price view
-                case VIEW_TYPE_PRICE:
+                    holder.name.setText(mUser.getName());
+                    Glide.with(mContext)
+                            .load(mUser.getAvatarUrl())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(holder.icon);
+                }
+                break;
+            //Lading view, searching for the user
+            case VIEW_TYPE_LOADING:
+                holder.loading.setVisibility(View.VISIBLE);
+                holder.priceLayout.setVisibility(View.GONE);
+
+                holder.name.setText(null);
+                holder.icon.setImageDrawable(null);
+                break;
+            //Simple price view
+            case VIEW_TYPE_PRICE:
+                if (mDataSet != null && mDataSet.moveToPosition(position - (getItemCount() - mDataSet.getCount()))) {
                     holder.priceLayout.setVisibility(View.VISIBLE);
                     holder.more.setVisibility(View.VISIBLE);
                     holder.loading.setVisibility(View.GONE);
 
-                    holder.root.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // TODO: 2015. 10. 26. Does nothing, fancy ripples for now
-                        }
-                    });
+                    Price price = new Price();
+                    price.setValue(mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE)));
+                    price.setHighValue(mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE_HIGH)));
+                    price.setCurrency(mDataSet.getString(mDataSet.getColumnIndex(PriceEntry.COLUMN_CURRENCY)));
 
                     //Get all the data from the cursor
-                    final Item item = new Item(
-                            mDataSet.getInt(SearchActivity.COLUMN_DEFINDEX),
-                            mDataSet.getString(SearchActivity.COLUMN_NAME),
-                            mDataSet.getInt(SearchActivity.COLUMN_QUALITY),
-                            mDataSet.getInt(SearchActivity.COLUMN_TRADABLE) == 1,
-                            mDataSet.getInt(SearchActivity.COLUMN_CRAFTABLE) == 1,
-                            mDataSet.getInt(SearchActivity.COLUMN_AUSTRALIUM) == 1,
-                            mDataSet.getInt(SearchActivity.COLUMN_PRICE_INDEX),
-                            new Price(
-                                    mDataSet.getDouble(SearchActivity.COLUMN_PRICE),
-                                    mDataSet.getDouble(SearchActivity.COLUMN_PRICE_HIGH),
-                                    0,
-                                    0,
-                                    0,
-                                    mDataSet.getString(SearchActivity.COLUMN_CURRENCY)
-                            )
-                    );
+                    final Item item = new Item();
+                    item.setDefindex(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_DEFINDEX)));
+                    item.setName(mDataSet.getString(mDataSet.getColumnIndex(ItemSchemaEntry.COLUMN_ITEM_NAME)));
+                    item.setQuality(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_QUALITY)));
+                    item.setTradable(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_TRADABLE)) == 1);
+                    item.setCraftable(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_CRAFTABLE)) == 1);
+                    item.setAustralium(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_AUSTRALIUM)) == 1);
+                    item.setPriceIndex(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE_INDEX)));
+                    item.setPrice(price);
 
                     holder.more.setOnClickListener(new View.OnClickListener() {
 
                         @Override
                         public void onClick(View v) {
-                            PopupMenu menu = new PopupMenu(mContext, holder.more);
-
-                            menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
-
-                            menu.getMenu().getItem(0).setTitle(
-                                    Utility.isFavorite(mContext, item) ? "Remove from favorites" : "Add to favorites");
-
-                            menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem menuItem) {
-                                    switch (menuItem.getItemId()) {
-                                        case R.id.history:
-
-                                            Intent i = new Intent(mContext, PriceHistoryActivity.class);
-
-                                            i.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
-
-                                            mContext.startActivity(i);
-                                            break;
-                                        case R.id.favorite:
-                                            if (Utility.isFavorite(mContext, item)) {
-                                                Utility.removeFromFavorites(mContext, item);
-                                            } else {
-                                                Utility.addToFavorites(mContext, item);
-                                            }
-                                            break;
-                                        case R.id.backpack_tf:
-                                            mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
-                                                    item.getBackpackTfUrl())));
-                                            break;
-                                    }
-                                    return true;
-                                }
-                            });
-
-                            menu.show();
+                            if (mListener != null) {
+                                mListener.onMoreClicked(v, item);
+                            }
                         }
                     });
 
@@ -245,15 +158,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     }
 
                     //Set the item icon
-                    Glide.with(mContext)
-                            .load(item.getIconUrl(mContext))
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(holder.icon);
+                    Glide.with(mContext).load(item.getIconUrl()).into(holder.icon);
 
                     if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
-                        Glide.with(mContext)
-                                .load(item.getEffectUrl())
-                                .into(holder.effect);
+                        Glide.with(mContext).load(item.getEffectUrl()).into(holder.effect);
                     } else {
                         Glide.clear(holder.effect);
                         holder.effect.setImageDrawable(null);
@@ -262,41 +170,36 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     try {
                         holder.price.setText(item.getPrice().getFormattedPrice(mContext));
                     } catch (Throwable t) {
-                        t.printStackTrace();
-
-                        ((BptfApplication)mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
-                                .setDescription("Formatter exception:SearchAdapter, Message: " + t.getMessage())
-                                .setFatal(false)
-                                .build());
+                        Crashlytics.logException(t);
                     }
-                    break;
-            }
+                }
+                break;
         }
     }
 
     @Override
     public int getItemCount() {
-        return mDataSet == null ? 0 : mDataSet.getCount();
+        int count = mDataSet == null ? 0 : mDataSet.getCount();
+        count += mUser != null || mLoading ? 1 : 0;
+        return count;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (loading) {
+        if (mLoading) {
             return position == 0 ? VIEW_TYPE_LOADING : VIEW_TYPE_PRICE;
         }
-        return userFound && position == 0 ? VIEW_TYPE_USER : VIEW_TYPE_PRICE;
+        return mUser != null && position == 0 ? VIEW_TYPE_USER : VIEW_TYPE_PRICE;
     }
 
     /**
      * Replaces the cursor of the adapter
      *
      * @param data          the cursor that will replace the current one
-     * @param closePrevious whether to close the previous cursor
      */
-    public void swapCursor(Cursor data, boolean closePrevious) {
-        if (closePrevious && mDataSet != null) mDataSet.close();
+    public void swapCursor(Cursor data) {
+        if (mDataSet != null) mDataSet.close();
         mDataSet = data;
-        notifyDataSetChanged();
     }
 
     /**
@@ -305,54 +208,39 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
      * @param loading whether it is loading or not
      */
     public void setLoading(boolean loading) {
-        this.loading = loading;
-        if (loading) {
-            userFound = false;
-        }
+        this.mLoading = loading;
     }
 
-    /**
-     * Tells the list that we found a user and it should show it
-     *
-     * @param userFound whether we found a user or not
-     * @param userInfo  some info about the user
-     */
-    public void setUserFound(boolean userFound, String[] userInfo) {
-        this.userFound = userFound;
-        this.userInfo = userInfo;
-        if (userFound) {
-            loading = false;
-        }
+    public void setUser(User user) {
+        mUser = user;
     }
 
-    /**
-     * The view holder.
-     */
+    public void setListener(OnSearchClickListener listener) {
+        mListener = listener;
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        View root;
-
+        final View root;
         @Bind(R.id.loading_layout) View loading;
         @Bind(R.id.price_layout) View priceLayout;
-
         @Bind(R.id.icon) ImageView icon;
         @Bind(R.id.icon_background) View background;
         @Bind(R.id.effect) ImageView effect;
         @Bind(R.id.more) ImageView more;
         @Bind(R.id.quality) ImageView quality;
-
         @Bind(R.id.name) TextView name;
         @Bind(R.id.price) TextView price;
 
-        /**
-         * Constructor.
-         *
-         * @param view the root view
-         */
         public ViewHolder(View view) {
             super(view);
             root = view;
             ButterKnife.bind(this, view);
         }
+    }
+
+    public interface OnSearchClickListener {
+        void onMoreClicked(View view, Item item);
+        void onUserClicked(User user);
     }
 }

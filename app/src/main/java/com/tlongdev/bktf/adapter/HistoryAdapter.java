@@ -37,6 +37,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.github.mikephil.charting.utils.Utils;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
@@ -48,7 +49,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -58,35 +62,22 @@ import butterknife.ButterKnife;
  */
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
-    /**
-     * View types
-     */
-    public static final int VIEW_TYPE_HEADER = 0;
-    public static final int VIEW_TYPE_NORMAL = 1;
+    private static final int VIEW_TYPE_HEADER = 0;
+    private static final int VIEW_TYPE_NORMAL = 1;
 
-    private Context mContext;
+    @Inject Context mContext;
 
-    /**
-     * The data set
-     */
-    private List<Price> mDataSet;
-    private Item mItem;
+    private final List<Price> mDataSet;
+    private final Item mItem;
 
     private LineData mData;
 
-    /**
-     * Constructor
-     *
-     * @param context context
-     * @param prices  the data set
-     * @param item    the item
-     */
-    public HistoryAdapter(Context context, List<Price> prices, Item item) {
+    public HistoryAdapter(BptfApplication application, List<Price> prices, Item item) {
+        application.getAdapterComponent().inject(this);
         this.mDataSet = prices;
-        this.mContext = context;
         this.mItem = item;
 
-        Utils.init(context);
+        Utils.init(mContext);
 
         if (prices != null && prices.size() > 1) {
             buildDataSet();
@@ -113,21 +104,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         return new ViewHolder(v);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) {
-            return VIEW_TYPE_HEADER;
-        } else {
-            return VIEW_TYPE_NORMAL;
-        }
+        return position == 0 ? VIEW_TYPE_HEADER : VIEW_TYPE_NORMAL;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         switch (getItemViewType(position)) {
@@ -137,7 +119,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                 holder.iconCard.setCardBackgroundColor(mItem.getColor(mContext, true));
 
                 Glide.with(mContext)
-                        .load(mItem.getIconUrl(mContext))
+                        .load(mItem.getIconUrl())
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(holder.icon);
                 Glide.with(mContext)
@@ -161,7 +143,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             case VIEW_TYPE_NORMAL:
                 Price price = mDataSet.get(position - 1);
                 holder.price.setText(price.getFormattedPrice(mContext));
-                holder.date.setText(new SimpleDateFormat("dd-MM-yyyy").format(new Date(price.getLastUpdate())));
+                holder.date.setText(new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+                        .format(new Date(price.getLastUpdate())));
 
                 if (position == 1) {
                     holder.separator.setVisibility(View.GONE);
@@ -172,16 +155,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int getItemCount() {
         if (mDataSet == null) return 1;
         return mDataSet.size() + 1;
     }
 
-    private static Comparator<Price> priceAgeComparator = new Comparator<Price>() {
+    private final static Comparator<Price> priceAgeComparator = new Comparator<Price>() {
         @Override
         public int compare(Price lhs, Price rhs) {
             if (lhs.getLastUpdate() > rhs.getLastUpdate()) {
@@ -205,7 +185,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         //Setup the X axis of the chart
         ArrayList<String> xValues = new ArrayList<>();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
 
         for (long day = 0; day < days * 1.1; day++) {
             xValues.add(dateFormat.format(new Date(first + (day * 86400000L))));
@@ -215,10 +195,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             ArrayList<Entry> entries = new ArrayList<>();
 
             for (Price price : mDataSet) {
-
                 int day = (int) TimeUnit.MILLISECONDS.toDays(price.getLastUpdate() - first);
                 entries.add(new Entry((float) price.getConvertedAveragePrice(mContext, mItem.getPrice().getCurrency()), day));
-
             }
 
             LineDataSet set = new LineDataSet(entries, mItem.getPrice().getCurrency());
@@ -239,21 +217,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         if (mDataSet != null && mDataSet.size() > 1) {
 
             chart.setData(mData);
-
             chart.setLogEnabled(true);
-
             chart.setDescription(null);
-
             chart.setDrawGridBackground(false);
-
             chart.setTouchEnabled(true);
-
             chart.setDragEnabled(true);
             chart.setScaleYEnabled(false);
             chart.setScaleXEnabled(true);
-
             chart.setPinchZoom(true);
-
             chart.getAxisRight().setEnabled(false);
             chart.getLegend().setEnabled(false);
 

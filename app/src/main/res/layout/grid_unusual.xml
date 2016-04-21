@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?><!--Layout resources for grid items with prices-->
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<!--suppress AndroidDomInspection -->
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
@@ -12,24 +16,24 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <FrameLayout
+        <android.support.percent.PercentFrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/tf2_unusual_color_dark">
 
-            <com.tlongdev.bktf.view.RatioHeightImageView
+            <ImageView
                 android:id="@+id/effect"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                app:layout_aspectRatio="100%"
+                app:layout_widthPercent="100%"
                 android:layout_gravity="center"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"/>
 
-            <com.tlongdev.bktf.view.RatioHeightImageView
+            <ImageView
                 android:id="@+id/icon"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                app:layout_aspectRatio="100%"
+                app:layout_widthPercent="100%"
                 android:layout_gravity="center"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"/>
 
             <ImageView
                 android:id="@+id/more"
@@ -43,14 +47,15 @@
                 android:paddingRight="4dp"
                 android:paddingStart="8dp"
                 android:paddingTop="8dp"
-                android:src="@drawable/ic_more_vert_white_18dp" />
+                app:srcCompat="@drawable/ic_more_vert_white"
+                tools:ignore="MissingPrefix"/>
 
-        </FrameLayout>
+        </android.support.percent.PercentFrameLayout>
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:src="@drawable/shadow_gradient_bottom" />
+            android:src="@drawable/shadow_gradient_bottom"/>
 
         <TextView
             android:id="@+id/name"
@@ -61,7 +66,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
             android:lines="2"
-            android:textColor="@color/text_primary" />
+            android:textColor="@color/text_primary"/>
 
         <TextView
             android:id="@+id/price"
@@ -73,7 +78,7 @@
             android:layout_marginTop="4dp"
             android:gravity="bottom|end"
             android:lines="2"
-            android:textColor="@color/text_secondary" />
+            android:textColor="@color/text_secondary"/>
 
     </LinearLayout>
 

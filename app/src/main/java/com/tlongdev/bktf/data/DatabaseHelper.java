@@ -36,7 +36,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 9;
     public static final String DATABASE_NAME = "bptf.db";
 
-    private Context mContext;
+    private final Context mContext;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -242,7 +242,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         editor.remove(mContext.getString(R.string.pref_last_item_schema_update));
         editor.remove(mContext.getString(R.string.pref_last_price_list_update));
-        editor.remove(mContext.getString(R.string.pref_last_user_data_update));
 
         editor.apply();
 

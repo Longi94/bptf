@@ -1,5 +1,5 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    android:key="@string/pref_main_preference_screen">
+                  android:key="@string/pref_main_preference_screen">
 
     <PreferenceCategory android:title="@string/pref_category_account">
 
@@ -12,16 +12,26 @@
 
         <ListPreference
             android:defaultValue="1"
-            android:key="@string/pref_auto_sync"
-            android:entryValues="@array/pref_auto_sync_values"
             android:entries="@array/pref_auto_sync_entries"
-            android:title="@string/pref_title_auto_sync" />
+            android:entryValues="@array/pref_auto_sync_values"
+            android:key="@string/pref_auto_sync"
+            android:title="@string/pref_title_auto_sync"/>
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="true"
             android:key="@string/pref_price_notification"
-            android:title="@string/pref_title_price_notification"
-            android:summary="@string/pref_summary_price_notification" />
+            android:summary="@string/pref_summary_price_notification"
+            android:title="@string/pref_title_price_notification"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Advertisements">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_ads_enabled"
+            android:summary="Turn on ads to support the development!"
+            android:title="Show ads"/>
 
     </PreferenceCategory>
 

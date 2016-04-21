@@ -54,3 +54,4 @@ $RECYCLE.BIN/
 *.lnk
 
 /keys.properties
+/app/fabric.properties

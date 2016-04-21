@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
@@ -17,7 +20,7 @@
             android:layout_weight="1"
             android:text="Backpack"
             android:textColor="@color/accent"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
 
         <ImageView
             android:id="@+id/backpack"
@@ -25,15 +28,16 @@
             android:layout_height="56dp"
             android:background="?android:attr/selectableItemBackground"
             android:padding="16dp"
-            android:src="@drawable/ic_arrow_forward_white_24dp"
-            android:tint="@color/accent" />
+            android:tint="@color/accent"
+            app:srcCompat="@drawable/ic_arrow_forward"
+            tools:ignore="MissingPrefix"/>
 
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/separator_color" />
+        android:background="@color/separator_color"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,12 +61,12 @@
                 android:lines="1"
                 android:text="@string/placeholder_unknown"
                 android:textColor="@color/text_primary"
-                android:textSize="32sp" />
+                android:textSize="32sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/user_page_refined" />
+                android:text="@string/user_page_refined"/>
 
         </LinearLayout>
 
@@ -82,12 +86,12 @@
                 android:lines="1"
                 android:text="@string/placeholder_unknown"
                 android:textColor="@color/text_primary"
-                android:textSize="32sp" />
+                android:textSize="32sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/user_page_usd" />
+                android:text="@string/user_page_usd"/>
 
         </LinearLayout>
 
@@ -114,12 +118,12 @@
                 android:lines="1"
                 android:text="@string/placeholder_unknown"
                 android:textColor="@color/text_primary"
-                android:textSize="32sp" />
+                android:textSize="32sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/user_page_metal" />
+                android:text="@string/user_page_metal"/>
 
         </LinearLayout>
 
@@ -138,12 +142,12 @@
                 android:lines="1"
                 android:text="@string/placeholder_unknown"
                 android:textColor="@color/text_primary"
-                android:textSize="32sp" />
+                android:textSize="32sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/user_page_keys" />
+                android:text="@string/user_page_keys"/>
 
         </LinearLayout>
 
@@ -157,12 +161,12 @@
         android:lines="1"
         android:text="@string/placeholder_slots_used"
         android:textColor="@color/text_primary"
-        android:textSize="32sp" />
+        android:textSize="32sp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="@string/user_page_slots" />
+        android:text="@string/user_page_slots"/>
 
 </LinearLayout>

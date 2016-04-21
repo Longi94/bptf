@@ -26,11 +26,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Item;
 
-import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -40,33 +42,18 @@ import butterknife.ButterKnife;
  */
 public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.ViewHolder> {
 
-    /**
-     * Log tag for logging.
-     */
-    @SuppressWarnings("unused")
-    private static final String LOG_TAG = CalculatorAdapter.class.getSimpleName();
+    @Inject Context mContext;
 
-    /**
-     * The context
-     */
-    private Context mContext;
-
-    private ArrayList<Item> mDataSet;
-    private ArrayList<Integer> mCountSet;
+    private List<Item> mDataSet;
+    private List<Integer> mCountSet;
 
     /**
      * The listener that will be notified when an items is edited.
      */
     private OnItemEditListener listener;
 
-    /**
-     * Constructor.
-     *
-     * @param context the context
-     */
-    public CalculatorAdapter(Context context, ArrayList<Item> dataSet) {
-        mContext = context;
-        mDataSet = dataSet;
+    public CalculatorAdapter(BptfApplication application) {
+        application.getAdapterComponent().inject(this);
     }
 
     @Override
@@ -78,15 +65,15 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 
         if (mDataSet != null && mDataSet.size() > position) {
 
             final Item item = mDataSet.get(position);
+            final int currentCount = mCountSet.get(position);
 
             Glide.with(mContext)
-                    .load(item.getIconUrl(mContext))
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .load(item.getIconUrl())
                     .into(holder.icon);
 
             if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
@@ -107,7 +94,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                 public void onClick(View v) {
                     if (listener != null) {
                         //Notify listener that an item was deleted
-                        listener.onItemDeleted(item, mCountSet.get(position));
+                        listener.onItemDeleted(item, currentCount);
                     }
                     notifyItemRemoved(mDataSet.indexOf(item));
                     mDataSet.remove(item);
@@ -134,7 +121,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                 holder.price.setText("Price unknown");
             }
 
-            holder.count.setText(String.valueOf(mCountSet.get(position)));
+            holder.count.setText(String.valueOf(currentCount));
 
             holder.count.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
@@ -155,12 +142,11 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                             holder.count.setText("1");
                         }
 
-                        int oldCount = mCountSet.get(position);
-                        if (listener != null && oldCount != count) {
-                            listener.onItemEdited(item, oldCount, count);
+                        if (listener != null && currentCount != count) {
+                            listener.onItemEdited(item, currentCount, count);
                         }
 
-                        mCountSet.set(position, count);
+                        mCountSet.set(currentCount, count);
                     }
                 }
             });
@@ -172,7 +158,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
         return mDataSet == null ? 0 : mDataSet.size();
     }
 
-    public void setDataSet(ArrayList<Item> dataSet, ArrayList<Integer> count) {
+    public void setDataSet(List<Item> dataSet, List<Integer> count) {
         mDataSet = dataSet;
         mCountSet = count;
     }
@@ -220,12 +206,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
      * Interface that will be notified when an item is edited/deleted.
      */
     public interface OnItemEditListener {
-        /**
-         * Called when an item is deleted.
-         *
-         * @param item  the id of the item
-         * @param count the number of the item(s)
-         */
+
         void onItemDeleted(Item item, int count);
 
         void onItemEdited(Item item, int oldCount, int newCount);

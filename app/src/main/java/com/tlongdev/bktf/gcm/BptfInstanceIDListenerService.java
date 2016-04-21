@@ -26,7 +26,7 @@ import com.tlongdev.bktf.R;
 
 public class BptfInstanceIDListenerService extends InstanceIDListenerService {
 
-    public static final String LOG_TAG = "BptfInstanceIDListener";
+    private static final String LOG_TAG = "BptfInstanceIDListener";
 
     public void onTokenRefresh() {
         Log.v(LOG_TAG, "token refreshed");

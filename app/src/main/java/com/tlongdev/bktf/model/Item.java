@@ -16,6 +16,7 @@
 
 package com.tlongdev.bktf.model;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Parcel;
@@ -26,6 +27,8 @@ import com.tlongdev.bktf.data.DatabaseContract;
 import com.tlongdev.bktf.data.DatabaseContract.DecoratedWeaponEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.util.Utility;
+
+import java.util.Locale;
 
 /**
  * Item class
@@ -42,6 +45,7 @@ public class Item implements Parcelable {
 
     private String name;
 
+    @Quality.Enum
     private int quality;
 
     private boolean tradable;
@@ -64,13 +68,14 @@ public class Item implements Parcelable {
 
         @Override
         public Item[] newArray(int size) {
-            return new Item[0];
+            return new Item[size];
         }
     };
 
-    public Item(Parcel source) {
+    protected Item(Parcel source) {
         defindex = source.readInt();
         name = source.readString();
+        //noinspection WrongConstant
         quality = source.readInt();
         tradable = source.readByte() != 0;
         craftable = source.readByte() != 0;
@@ -98,25 +103,7 @@ public class Item implements Parcelable {
         dest.writeParcelable(price, flags);
     }
 
-    public Item() {
-        this(0, null, 0, false, false, false, 0, null);
-    }
-
-    public Item(int defindex, String name, int quality, boolean tradable, boolean craftable, boolean australium, int priceIndex, Price price) {
-        this(defindex, name, quality, tradable, craftable, australium, priceIndex, 0, price);
-    }
-
-    public Item(int defindex, String name, int quality, boolean tradable, boolean craftable, boolean australium, int priceIndex, int weaponWear, Price price) {
-        this.defindex = defindex;
-        this.name = name;
-        this.quality = quality;
-        this.tradable = tradable;
-        this.craftable = craftable;
-        this.australium = australium;
-        this.priceIndex = priceIndex;
-        this.weaponWear = weaponWear;
-        this.price = price;
-    }
+    public Item() {}
 
     public int getDefindex() {
         return defindex;
@@ -134,11 +121,12 @@ public class Item implements Parcelable {
         this.name = name;
     }
 
+    @Quality.Enum
     public int getQuality() {
         return quality;
     }
 
-    public void setQuality(int quality) {
+    public void setQuality( @Quality.Enum int quality) {
         this.quality = quality;
     }
 
@@ -197,6 +185,7 @@ public class Item implements Parcelable {
      * @param isProper whether the name needs the definite article (The)
      * @return the formatted name
      */
+    @SuppressLint("SwitchIntDef")
     public String getFormattedName(Context context, boolean isProper) {
         //Empty string that will be appended.
         String formattedName = "";
@@ -330,7 +319,7 @@ public class Item implements Parcelable {
      */
     public boolean canHaveEffects() {
         //Unusuals, self-made and community items
-        if (quality == 5 || quality == 7 || quality == 9) {
+        if (quality == Quality.UNUSUAL || quality == Quality.COMMUNITY || quality == Quality.SELF_MADE) {
             return defindex != 267 && defindex != 266;
         } else if (defindex == 1899 || defindex == 125) { //Cheater's Lament and Traveler's Hat
             return true;
@@ -345,6 +334,7 @@ public class Item implements Parcelable {
      * @param isDark  whether to return the dark version of the color
      * @return the color of the item
      */
+    @SuppressLint("SwitchIntDef")
     public int getColor(Context context, boolean isDark) {
         switch (quality) {
             case Quality.GENUINE:
@@ -560,16 +550,15 @@ public class Item implements Parcelable {
     /**
      * Returns the url link for the icon if the item.
      *
-     * @param context the context
      * @return Uri object
      */
-    public String getIconUrl(Context context) {
+    public String getIconUrl() {
         if (australium) {
-            return "file:///android_asset/australium/" + defindex + ".webp";
+            return "file:///android_asset/australium/" + defindex + ".png";
         } else if (weaponWear > 0) {
-            return "file:///android_asset/decorated/" + defindex + "/" + weaponWear + ".webp";
+            return "file:///android_asset/decorated/" + defindex + "/" + weaponWear + ".png";
         }
-        return "file:///android_asset/items/" + defindex + ".webp";
+        return "file:///android_asset/items/" + defindex + ".png";
     }
 
     /**
@@ -578,15 +567,15 @@ public class Item implements Parcelable {
      * @return Uri object
      */
     public String getEffectUrl() {
-        return "file:///android_asset/effect/" + priceIndex + ".webp";
+        return "file:///android_asset/effect/" + priceIndex + ".png";
     }
 
     public String getBackpackTfUrl() {
         String url;
         if (!australium) {
-            url = String.format("http://backpack.tf/stats/%d/%d/%d/%d", quality, defindex, tradable ? 1 : 0, craftable ? 1 : 0);
+            url = String.format(Locale.ENGLISH, "http://backpack.tf/stats/%d/%d/%d/%d", quality, defindex, tradable ? 1 : 0, craftable ? 1 : 0);
         } else {
-            url = String.format("http://backpack.tf/stats/%d/%s/%d/%d", quality, "Australium " + name, tradable ? 1 : 0, craftable ? 1 : 0);
+            url = String.format(Locale.ENGLISH, "http://backpack.tf/stats/%d/%s/%d/%d", quality, "Australium " + name, tradable ? 1 : 0, craftable ? 1 : 0);
         }
 
         return priceIndex > 0 ? url + "/" + priceIndex : url;

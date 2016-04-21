@@ -18,9 +18,9 @@ package com.tlongdev.bktf.model;
 
 public class License {
 
-    private String name;
-    private String url;
-    private String license;
+    private final String name;
+    private final String url;
+    private final String license;
 
     public License(String name, String url, String license) {
         this.name = name;

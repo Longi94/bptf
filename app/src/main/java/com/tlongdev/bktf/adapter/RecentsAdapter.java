@@ -17,28 +17,24 @@
 package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.gms.analytics.HitBuilders;
+import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.activity.PriceHistoryActivity;
-import com.tlongdev.bktf.fragment.RecentsFragment;
+import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
+import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
-import com.tlongdev.bktf.util.Utility;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,31 +44,13 @@ import butterknife.ButterKnife;
  */
 public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHolder> {
 
-    /**
-     * Log tag for logging.
-     */
-    @SuppressWarnings("unused")
-    private static final String LOG_TAG = RecentsAdapter.class.getSimpleName();
+    @Inject Context mContext;
 
-    /**
-     * The context
-     */
-    private Context mContext;
-
-    /**
-     * The data set
-     */
     private Cursor mDataSet;
+    private OnMoreListener mListener;
 
-    /**
-     * Constructor.
-     *
-     * @param context the context
-     * @param dataSet the data set
-     */
-    public RecentsAdapter(Context context, Cursor dataSet) {
-        this.mContext = context;
-        this.mDataSet = dataSet;
+    public RecentsAdapter(BptfApplication application) {
+        application.getAdapterComponent().inject(this);
     }
 
     @Override
@@ -82,76 +60,35 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
         return new ViewHolder(v);
     }
 
+    @SuppressWarnings("WrongConstant")
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         if (mDataSet != null && mDataSet.moveToPosition(position)) {
-
-            holder.root.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // TODO: 2015. 10. 26. does nothing, this is for the fancy ripples for now
-                }
-            });
+            
+            Price price = new Price();
+            price.setValue(mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE)));
+            price.setHighValue(mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE_HIGH)));
+            price.setDifference(mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_DIFFERENCE)));
+            price.setCurrency(mDataSet.getString(mDataSet.getColumnIndex(PriceEntry.COLUMN_CURRENCY)));
+            price.setRawValue(mDataSet.getDouble(mDataSet.getColumnIndex("raw_price")));
 
             //Get all the data from the cursor
-            final Item item = new Item(
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_DEFI),
-                    mDataSet.getString(RecentsFragment.COL_PRICE_LIST_NAME),
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_QUAL),
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_TRAD) == 1,
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_CRAF) == 1,
-                    mDataSet.getInt(RecentsFragment.COL_AUSTRALIUM) == 1,
-                    mDataSet.getInt(RecentsFragment.COL_PRICE_LIST_INDE),
-                    new Price(
-                            mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PRIC),
-                            mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PMAX),
-                            mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_PRAW),
-                            0 /* TODO last update */,
-                            mDataSet.getDouble(RecentsFragment.COL_PRICE_LIST_DIFF),
-                            mDataSet.getString(RecentsFragment.COL_PRICE_LIST_CURR)
-                    )
-            );
+            final Item item = new Item();
+            item.setDefindex(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_DEFINDEX)));
+            item.setName(mDataSet.getString(mDataSet.getColumnIndex(ItemSchemaEntry.COLUMN_ITEM_NAME)));
+            item.setQuality(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_QUALITY)));
+            item.setTradable(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_TRADABLE)) == 1);
+            item.setCraftable(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_CRAFTABLE)) == 1);
+            item.setAustralium(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_AUSTRALIUM)) == 1);
+            item.setPriceIndex(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE_INDEX)));
+            item.setPrice(price);
 
             holder.more.setOnClickListener(new View.OnClickListener() {
-
                 @Override
                 public void onClick(View v) {
-                    PopupMenu menu = new PopupMenu(mContext, holder.more);
-
-                    menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
-
-                    menu.getMenu().getItem(0).setTitle(
-                            Utility.isFavorite(mContext, item) ? "Remove from favorites" : "Add to favorites");
-
-                    menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem menuItem) {
-                            switch (menuItem.getItemId()) {
-                                case R.id.history:
-
-                                    Intent i = new Intent(mContext, PriceHistoryActivity.class);
-
-                                    i.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
-
-                                    mContext.startActivity(i);
-                                    break;
-                                case R.id.favorite:
-                                    if (Utility.isFavorite(mContext, item)) {
-                                        Utility.removeFromFavorites(mContext, item);
-                                    } else {
-                                        Utility.addToFavorites(mContext, item);
-                                    }
-                                    break;
-                                case R.id.backpack_tf:
-                                    mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
-                                            item.getBackpackTfUrl())));
-                                    break;
-                            }
-                            return true;
-                        }
-                    });
-
-                    menu.show();
+                    if (mListener != null) {
+                        mListener.onMoreClicked(v, item);
+                    }
                 }
             });
 
@@ -179,15 +116,10 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
             }
 
             //Set the item icon
-            Glide.with(mContext)
-                    .load(item.getIconUrl(mContext))
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(holder.icon);
+            Glide.with(mContext).load(item.getIconUrl()).into(holder.icon);
 
             if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
-                Glide.with(mContext)
-                        .load(item.getEffectUrl())
-                        .into(holder.effect);
+                Glide.with(mContext).load(item.getEffectUrl()).into(holder.effect);
             } else {
                 Glide.clear(holder.effect);
                 holder.effect.setImageDrawable(null);
@@ -197,12 +129,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
                 //Properly format the price
                 holder.price.setText(item.getPrice().getFormattedPrice(mContext));
             } catch (Throwable t) {
-                t.printStackTrace();
-
-                ((BptfApplication)mContext.getApplicationContext()).getDefaultTracker().send(new HitBuilders.ExceptionBuilder()
-                        .setDescription("Formatter exception:RecentsAdapter, Message: " + t.getMessage())
-                        .setFatal(false)
-                        .build());
+                Crashlytics.logException(t);
             }
         }
     }
@@ -216,12 +143,15 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
      * Replaces the cursor of the adapter
      *
      * @param data          the cursor that will replace the current one
-     * @param closePrevious whether to close the previous cursor
      */
-    public void swapCursor(Cursor data, boolean closePrevious) {
-        if (closePrevious && mDataSet != null) mDataSet.close();
+    public void swapCursor(Cursor data) {
+        if (mDataSet != null) mDataSet.close();
         mDataSet = data;
         notifyDataSetChanged();
+    }
+
+    public void setListener(OnMoreListener listener) {
+        mListener = listener;
     }
 
     /**
@@ -229,27 +159,24 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        View root;
+        final View root;
         @Bind(R.id.more) View more;
         @Bind(R.id.icon_background) View background;
-
         @Bind(R.id.icon) ImageView icon;
         @Bind(R.id.effect) ImageView effect;
         @Bind(R.id.quality) ImageView quality;
-
         @Bind(R.id.name) TextView name;
         @Bind(R.id.price) TextView price;
         @Bind(R.id.difference) TextView difference;
 
-        /**
-         * Constructor.
-         *
-         * @param view the root view
-         */
         public ViewHolder(View view) {
             super(view);
             root = view;
             ButterKnife.bind(this, view);
         }
+    }
+
+    public interface OnMoreListener {
+        void onMoreClicked(View view, Item item);
     }
 }

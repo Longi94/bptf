@@ -26,38 +26,32 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.activity.SelectItemActivity;
+import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.model.Item;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Long on 2015. 12. 12..
- */
 public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.ViewHolder> {
 
-    /**
-     * The data set
-     */
-    private Cursor mDataSet;
+    @Inject Context mContext;
 
-    /**
-     * The context
-     */
-    private Context mContext;
+    private Cursor mDataSet;
 
     private OnItemSelectedListener listener;
 
-    public SelectItemAdapter(Context context, Cursor dataSet) {
-        this.mDataSet = dataSet;
-        this.mContext = context;
+    public SelectItemAdapter(BptfApplication application) {
+        application.getAdapterComponent().inject(this);
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.list_select_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_select_item, parent, false);
         return new ViewHolder(v);
     }
 
@@ -65,14 +59,12 @@ public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.Vi
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (mDataSet != null && mDataSet.moveToPosition(position)) {
             final Item item = new Item();
-            item.setDefindex(mDataSet.getInt(SelectItemActivity.COLUMN_DEFINDEX));
-            item.setName(mDataSet.getString(SelectItemActivity.COLUMN_NAME));
+            item.setDefindex(mDataSet.getInt(mDataSet.getColumnIndex(ItemSchemaEntry.COLUMN_DEFINDEX)));
+            item.setName(mDataSet.getString(mDataSet.getColumnIndex(ItemSchemaEntry.COLUMN_ITEM_NAME)));
 
             holder.name.setText(item.getName());
 
-            Glide.with(mContext)
-                    .load(item.getIconUrl(mContext))
-                    .into(holder.icon);
+            Glide.with(mContext).load(item.getIconUrl()).into(holder.icon);
 
             holder.root.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -94,10 +86,9 @@ public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.Vi
      * Replaces the cursor of the adapter
      *
      * @param data          the cursor that will replace the current one
-     * @param closePrevious whether to close the previous cursor
      */
-    public void swapCursor(Cursor data, boolean closePrevious) {
-        if (closePrevious && mDataSet != null) mDataSet.close();
+    public void swapCursor(Cursor data) {
+        if (mDataSet != null) mDataSet.close();
         mDataSet = data;
         notifyDataSetChanged();
     }
@@ -110,7 +101,7 @@ public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.Vi
 
         @Bind(R.id.icon) ImageView icon;
         @Bind(R.id.name) TextView name;
-        View root;
+        final View root;
 
         public ViewHolder(View view) {
             super(view);
