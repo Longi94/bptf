@@ -125,6 +125,7 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.detachView();
+        mAdManager.removeAdView(mAdView);
     }
 
     /**

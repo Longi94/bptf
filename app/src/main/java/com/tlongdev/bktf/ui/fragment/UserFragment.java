@@ -184,6 +184,7 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
     public void onDestroy() {
         super.onDestroy();
         mPresenter.detachView();
+        mAdManager.removeAdView(mAdView);
     }
 
     @Override

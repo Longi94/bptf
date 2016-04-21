@@ -252,6 +252,12 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mAdManager.removeAdView(mAdView);
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_converter, menu);
         super.onCreateOptionsMenu(menu, inflater);

@@ -140,6 +140,7 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView, 
     public void onDestroy() {
         super.onDestroy();
         mPresenter.detachView();
+        mAdManager.removeAdView(mAdView);
     }
 
     @OnClick(R.id.fab)

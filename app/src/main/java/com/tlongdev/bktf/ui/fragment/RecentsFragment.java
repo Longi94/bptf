@@ -173,6 +173,7 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
     public void onDestroy() {
         super.onDestroy();
         mPresenter.detachView();
+        mAdManager.removeAdView(mAdView);
     }
 
     @Override

@@ -101,6 +101,7 @@ public class PriceHistoryActivity extends BptfActivity implements PriceHistoryVi
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.detachView();
+        mAdManager.removeAdView(mAdView);
     }
 
     @Override

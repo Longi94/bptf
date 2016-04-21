@@ -141,6 +141,7 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
     public void onDestroy() {
         super.onDestroy();
         mPresenter.detachView();
+        mAdManager.removeAdView(mAdView);
     }
 
     @Override

@@ -116,6 +116,7 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.detachView();
+        mAdManager.removeAdView(mAdView);
     }
 
     @Override

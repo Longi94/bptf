@@ -155,6 +155,7 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
     public void onDestroy() {
         super.onDestroy();
         mPresenter.detachView();
+        mAdManager.removeAdView(mAdView);
     }
 
     @Override
