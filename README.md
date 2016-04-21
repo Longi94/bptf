@@ -3,20 +3,22 @@ The unofficial backpack.tf mobile application
 
 <a href="https://play.google.com/store/apps/details?id=com.tlongdev.bktf"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png" height="60"/></a>
 
-`master` [![Build Status](https://travis-ci.org/Longi94/bptf.svg?branch=master)](https://travis-ci.org/Longi94/bptf)
-
-`development` [![Build Status](https://travis-ci.org/Longi94/bptf.svg?branch=development)](https://travis-ci.org/Longi94/bptf)
+| `master` | `development` |
+| :---: | :---: |
+|[![Build Status](https://travis-ci.org/Longi94/bptf.svg?branch=master)](https://travis-ci.org/Longi94/bptf)|[![Build Status](https://travis-ci.org/Longi94/bptf.svg?branch=development)](https://travis-ci.org/Longi94/bptf)|
 
 ### Contribute!
 Fork this repository and contribute by creating a pull request. Notable contributions will be credited in the application. See the [contributing guidelines](https://github.com/Longi94/bptf/blob/master/CONTRIBUTING.md) before contributing.
 
 ### 3rd party libraries
 - [Butter Knife](http://jakewharton.github.io/butterknife/)
+- [Dagger 2](http://google.github.io/dagger/)
+- [Dart 2](https://github.com/f2prateek/dart)
 - [Glide](https://github.com/bumptech/glide)
-- [Jackson JSON Processor](http://wiki.fasterxml.com/JacksonHome)
 - [LicenseView](https://github.com/LarsWerkman/LicenseView)
 - [MPAndroidChart](https://github.com/PhilJay/MPAndroidChart)
 - [OkHttp](http://square.github.io/okhttp)
+- [Retrofit](http://square.github.io/retrofit/)
 
 ### License
 
