@@ -47,10 +47,6 @@ import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.widget.FavoritesWidget;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -219,71 +215,6 @@ public class Utility {
     }
 
     /**
-     * Retrieves the steamId from a properly formatted JSON returned by the ResolveSteamId api.
-     *
-     * @param userJsonStr JSON string
-     * @return steamId
-     * @throws JSONException
-     */
-    public static String parseSteamIdFromVanityJson(String userJsonStr) throws JSONException {
-        final String OWM_RESPONSE = "response";
-        final String OWM_SUCCESS = "success";
-        final String OWM_STEAM_ID = "steamid";
-        final String OWM_MESSAGE = "message";
-
-        JSONObject jsonObject = new JSONObject(userJsonStr);
-        JSONObject response = jsonObject.getJSONObject(OWM_RESPONSE);
-
-        if (response.getInt(OWM_SUCCESS) != 1) {
-            //Return the error message if unsuccessful.
-            return response.getString(OWM_MESSAGE);
-        }
-
-        return response.getString(OWM_STEAM_ID);
-    }
-
-    /**
-     * Retrieves the username from a properly formatted JSON returned by the GetPlayerSummaries Api.
-     *
-     * @param jsonString JSON string
-     * @return user name
-     * @throws JSONException
-     */
-    public static String parseUserNameFromJson(String jsonString) throws JSONException {
-        final String OWM_RESPONSE = "response";
-        final String OWM_PLAYERS = "players";
-        final String OWM_NAME = "personaname";
-
-        JSONObject jsonObject = new JSONObject(jsonString);
-        JSONObject response = jsonObject.getJSONObject(OWM_RESPONSE);
-        JSONArray players = response.getJSONArray(OWM_PLAYERS);
-        JSONObject player = players.getJSONObject(0);
-
-        return player.getString(OWM_NAME);
-    }
-
-    /**
-     * Retrieves the url for the user avatar from a proerly formatted JSON returned by the
-     * GetPlayerSummaries Api.
-     *
-     * @param jsonString JSON string
-     * @return avatar image link
-     * @throws JSONException
-     */
-    public static String parseAvatarUrlFromJson(String jsonString) throws JSONException {
-        final String OWM_RESPONSE = "response";
-        final String OWM_PLAYERS = "players";
-        final String OWM_AVATAR = "avatarfull";
-
-        JSONObject jsonObject = new JSONObject(jsonString);
-        JSONObject response = jsonObject.getJSONObject(OWM_RESPONSE);
-        JSONArray players = response.getJSONArray(OWM_PLAYERS);
-        JSONObject player = players.getJSONObject(0);
-
-        return player.getString(OWM_AVATAR);
-    }
-
-    /**
      * Check whether the user if connected to the internet.
      *
      * @param context context for accessing system service
@@ -302,7 +233,7 @@ public class Utility {
      * @param edit  shared preferences editor
      * @param key   preference key
      * @param value preference value
-     * @return sharedpreference editor
+     * @return shared preference editor
      */
     public static SharedPreferences.Editor putDouble(final SharedPreferences.Editor edit,
                                                      final String key, final double value) {
