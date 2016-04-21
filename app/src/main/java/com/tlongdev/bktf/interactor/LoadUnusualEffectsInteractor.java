@@ -42,6 +42,7 @@ import javax.inject.Named;
  * @since 2016. 03. 14.
  */
 public class LoadUnusualEffectsInteractor extends AsyncTask<Void, Void, Void> {
+
     @Inject @Named("readable") SQLiteDatabase mDatabase;
     @Inject SharedPreferences mPrefs;
     @Inject Context mContext;

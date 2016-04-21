@@ -37,7 +37,6 @@ public class DatabaseProvider extends ContentProvider {
     /**
      * URI matcher result codes
      */
-    private static final int RAW_QUERY = 99;
     private static final int PRICE_LIST = 100;
     private static final int ITEM_SCHEMA = 101;
     private static final int ORIGIN_NAMES = 102;
@@ -74,7 +73,6 @@ public class DatabaseProvider extends ContentProvider {
         final String authority = DatabaseContract.CONTENT_AUTHORITY;
 
         // For each type of URI you want to add, create a corresponding code.
-        matcher.addURI(authority, DatabaseContract.PATH_RAW_QUERY, RAW_QUERY);
         matcher.addURI(authority, DatabaseContract.PATH_PRICE_LIST, PRICE_LIST);
         matcher.addURI(authority, DatabaseContract.PATH_ITEM_SCHEMA, ITEM_SCHEMA);
         matcher.addURI(authority, DatabaseContract.PATH_UNUSUAL_SCHEMA, UNUSUAL_SCHEMA);
@@ -101,11 +99,6 @@ public class DatabaseProvider extends ContentProvider {
         Cursor retCursor;
         String tableName;
         switch (sUriMatcher.match(uri)) {
-            case RAW_QUERY:
-                retCursor = mOpenHelper.getReadableDatabase().rawQuery(selection, selectionArgs);
-                if (retCursor != null)
-                    retCursor.setNotificationUri(getContext().getContentResolver(), uri);
-                return retCursor;
             case PRICE_LIST:
                 tableName = PriceEntry.TABLE_NAME;
                 break;

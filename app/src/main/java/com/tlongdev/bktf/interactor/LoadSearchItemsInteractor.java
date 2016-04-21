@@ -16,16 +16,16 @@
 
 package com.tlongdev.bktf.interactor;
 
-import android.content.ContentResolver;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.data.DatabaseContract;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * @author Long
@@ -33,7 +33,7 @@ import javax.inject.Inject;
  */
 public class LoadSearchItemsInteractor extends AsyncTask<Void, Void, Cursor> {
 
-    @Inject ContentResolver mContentResolver;
+    @Inject @Named("readable") SQLiteDatabase mDatabase;
 
     private final String mQuery;
     private final boolean mFilter;
@@ -94,9 +94,7 @@ public class LoadSearchItemsInteractor extends AsyncTask<Void, Void, Cursor> {
             selectionArgs = new String[]{query, "5", "0"};
         }
 
-        Cursor cursor = mContentResolver.query(DatabaseContract.RAW_QUERY_URI,
-                null, sql, selectionArgs, null
-        );
+        Cursor cursor = mDatabase.rawQuery(sql, selectionArgs);
 
         if (cursor != null) {
             if (cursor.getCount() > 0) {

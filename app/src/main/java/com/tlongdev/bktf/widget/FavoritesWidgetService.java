@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,6 +20,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.Binder;
 import android.view.View;
@@ -29,6 +30,7 @@ import android.widget.RemoteViewsService;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.crashlytics.android.Crashlytics;
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract;
 import com.tlongdev.bktf.model.Item;
@@ -37,11 +39,14 @@ import com.tlongdev.bktf.util.Utility;
 
 import java.util.concurrent.ExecutionException;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 public class FavoritesWidgetService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return new FavoritesRemoteViewsFactory(getApplicationContext(), intent);
+        return new FavoritesRemoteViewsFactory((BptfApplication) getApplication(), intent);
     }
 
     /**
@@ -65,16 +70,17 @@ public class FavoritesWidgetService extends RemoteViewsService {
         public static final int COLUMN_DIFFERENCE = 10;
         public static final int COLUMN_AUSTRALIUM = 11;
 
-        private Cursor mDataSet;
+        @Inject Context mContext;
+        @Inject @Named("readable") SQLiteDatabase mDatabase;
 
-        private final Context mContext;
+        private Cursor mDataSet;
 
         private final int widgetId;
 
         private String sql;
 
-        public FavoritesRemoteViewsFactory(Context context, Intent intent) {
-            mContext = context;
+        public FavoritesRemoteViewsFactory(BptfApplication application, Intent intent) {
+            application.getServiceComponent().inject(this);
             widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0);
         }
 
@@ -108,10 +114,7 @@ public class FavoritesWidgetService extends RemoteViewsService {
 
             final long token = Binder.clearCallingIdentity();
             try {
-                mDataSet = mContext.getContentResolver().query(
-                        DatabaseContract.RAW_QUERY_URI,
-                        null, sql, null, null
-                );
+                mDataSet = mDatabase.rawQuery(sql, null);
             } finally {
                 Binder.restoreCallingIdentity(token);
             }
@@ -124,10 +127,7 @@ public class FavoritesWidgetService extends RemoteViewsService {
             }
             final long token = Binder.clearCallingIdentity();
             try {
-                mDataSet = mContext.getContentResolver().query(
-                        DatabaseContract.RAW_QUERY_URI,
-                        null, sql, null, null
-                );
+                mDataSet = mDatabase.rawQuery(sql, null);
             } finally {
                 Binder.restoreCallingIdentity(token);
             }
