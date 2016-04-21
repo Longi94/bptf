@@ -20,6 +20,7 @@ import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.component.ActivityComponent;
@@ -62,7 +63,8 @@ public class BptfApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics(), new Answers());
+        CrashlyticsCore crashlyticsCore = new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build();
+        Fabric.with(this, crashlyticsCore, new Answers());
 
         mActivityComponent = DaggerActivityComponent.builder()
                 .bptfAppModule(new BptfAppModule(this))
@@ -92,7 +94,7 @@ public class BptfApplication extends Application {
                 .build();
 
         ProfileManager manager = new ProfileManager(this);
-        if (manager.isSignedIn()) {
+        if (!BuildConfig.DEBUG && manager.isSignedIn()) {
             Crashlytics.setUserIdentifier(manager.getResolvedSteamId());
         }
     }

@@ -19,11 +19,11 @@ package com.tlongdev.bktf.ui.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.preference.SwitchPreference;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -161,7 +161,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
 
         updateLoginPreference();
 
-        final CheckBoxPreference notifPref = (CheckBoxPreference) findPreference(getString(R.string.pref_price_notification));
+        final SwitchPreference notifPref = (SwitchPreference) findPreference(getString(R.string.pref_price_notification));
         notifPref.setEnabled(!prefs.getString(getString(R.string.pref_auto_sync), "1").equals("0"));
 
         findPreference(getString(R.string.pref_auto_sync)).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {

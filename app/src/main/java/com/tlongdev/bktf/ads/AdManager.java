@@ -44,8 +44,7 @@ public class AdManager implements SharedPreferences.OnSharedPreferenceChangeList
             for (AdView adView : mAdViews) {
                 adView.setVisibility(mAdsEnabled ? View.VISIBLE : View.GONE);
 
-                if (mAdsEnabled && ((AppearAdListener)adView.getAdListener()).isLoaded()) {
-                    adView.setAdListener(new AppearAdListener(adView));
+                if (mAdsEnabled && !((AppearAdListener)adView.getAdListener()).isLoaded()) {
                     adView.loadAd(new AdRequest.Builder().build());
                 }
             }
@@ -54,8 +53,8 @@ public class AdManager implements SharedPreferences.OnSharedPreferenceChangeList
 
     public void addAdView(AdView adView) {
         mAdViews.add(adView);
+        adView.setAdListener(new AppearAdListener(adView));
         if (mAdsEnabled) {
-            adView.setAdListener(new AppearAdListener(adView));
             adView.loadAd(new AdRequest.Builder().build());
         }
     }
