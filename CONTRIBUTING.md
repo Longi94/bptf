@@ -18,5 +18,14 @@ STEAM_WEB_API_KEY=DUMMY_KEY
 - You need a backpack.tf API key (http://backpack.tf/api/register) for the price history function to work.
 - You need a steam web API key (http://steamcommunity.com/dev/apikey) in order to be able to download steam user data.
 
+## Technologies
+It would be really if you were somewhat familiar with the technologies and concepts. If not, I provided some userful links for you.
+- Dependency using dagger 2
+  - https://guides.codepath.com/android/Dependency-Injection-with-Dagger-2
+- Model-View-Presenter design pattern
+  - https://github.com/ivacf/archi
+- Retrofit
+  - https://guides.codepath.com/android/Consuming-APIs-with-Retrofit 
+
 ## No Coding
 - You can report issues or suggest new features in the [Steam group](http://steamcommunity.com/groups/bptfandroid) or [here on Github](https://github.com/Longi94/bptf/issues)
