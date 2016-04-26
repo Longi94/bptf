@@ -52,9 +52,10 @@ import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,13 +63,14 @@ import butterknife.OnClick;
 public class FavoritesFragment extends BptfFragment implements FavoritesView,
         MainActivity.OnDrawerOpenedListener, FavoritesAdapter.OnMoreListener {
 
-    @Bind(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
-    @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
-    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
-    @Bind(R.id.ad_view) AdView mAdView;
+    @BindView(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
+    @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.ad_view) AdView mAdView;
 
     private FavoritesPresenter mPresenter;
     private FavoritesAdapter mAdapter;
+    private Unbinder mUnbinder;
 
     /**
      * Constructor
@@ -97,7 +99,7 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_favorites, container, false);
-        ButterKnife.bind(this, rootView);
+        mUnbinder = ButterKnife.bind(this, rootView);
 
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
@@ -138,10 +140,11 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mPresenter.detachView();
+    public void onDestroyView() {
+        super.onDestroyView();
         mAdManager.removeAdView(mAdView);
+        mPresenter.detachView();
+        mUnbinder.unbind();
     }
 
     @Override

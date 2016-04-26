@@ -30,7 +30,7 @@ import com.tlongdev.bktf.adapter.SelectItemAdapter;
 import com.tlongdev.bktf.presenter.activity.SelectItemPresenter;
 import com.tlongdev.bktf.ui.view.activity.SelectItemView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SelectItemActivity extends BptfActivity implements SelectItemView, TextWatcher,
@@ -39,8 +39,8 @@ public class SelectItemActivity extends BptfActivity implements SelectItemView, 
     public static final String EXTRA_DEFINDEX = "defindex";
     public static final String EXTRA_NAME = "name";
 
-    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
-    @Bind(R.id.item_name) EditText inputName;
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.item_name) EditText inputName;
 
     private SelectItemPresenter mPresenter;
     private SelectItemAdapter mAdapter;

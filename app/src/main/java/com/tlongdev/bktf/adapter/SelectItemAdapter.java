@@ -33,7 +33,7 @@ import com.tlongdev.bktf.model.Item;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.ViewHolder> {
@@ -99,8 +99,8 @@ public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.icon) ImageView icon;
-        @Bind(R.id.name) TextView name;
+        @BindView(R.id.icon) ImageView icon;
+        @BindView(R.id.name) TextView name;
         final View root;
 
         public ViewHolder(View view) {

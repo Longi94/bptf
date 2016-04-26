@@ -54,7 +54,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -263,16 +263,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         /**
          * The views of the element
          */
-        @Nullable @Bind(R.id.effect) ImageView effect;
-        @Nullable @Bind(R.id.icon) ImageView icon;
-        @Nullable @Bind(R.id.quality) ImageView quality;
-        @Nullable @Bind(R.id.name) TextView name;
-        @Nullable @Bind(R.id.history_chart) LineChart historyChart;
-        @Nullable @Bind(R.id.icon_card) CardView iconCard;
+        @Nullable @BindView(R.id.effect) ImageView effect;
+        @Nullable @BindView(R.id.icon) ImageView icon;
+        @Nullable @BindView(R.id.quality) ImageView quality;
+        @Nullable @BindView(R.id.name) TextView name;
+        @Nullable @BindView(R.id.history_chart) LineChart historyChart;
+        @Nullable @BindView(R.id.icon_card) CardView iconCard;
 
-        @Nullable @Bind(R.id.price) TextView price;
-        @Nullable @Bind(R.id.date) TextView date;
-        @Nullable @Bind(R.id.separator) View separator;
+        @Nullable @BindView(R.id.price) TextView price;
+        @Nullable @BindView(R.id.date) TextView date;
+        @Nullable @BindView(R.id.separator) View separator;
 
         /**
          * Constructor

@@ -36,7 +36,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -230,11 +230,11 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @Nullable @Bind(R.id.text_view_header) public TextView header = null;
-        @Nullable @Bind(R.id.icon) public ImageView icon = null;
-        @Nullable @Bind(R.id.effect) public ImageView effect = null;
-        @Nullable @Bind(R.id.paint) public ImageView paint = null;
-        @Nullable @Bind(R.id.quality) public ImageView quality;
+        @Nullable @BindView(R.id.text_view_header) public TextView header = null;
+        @Nullable @BindView(R.id.icon) public ImageView icon = null;
+        @Nullable @BindView(R.id.effect) public ImageView effect = null;
+        @Nullable @BindView(R.id.paint) public ImageView paint = null;
+        @Nullable @BindView(R.id.quality) public ImageView quality;
         public CardView root = null;
 
         /**

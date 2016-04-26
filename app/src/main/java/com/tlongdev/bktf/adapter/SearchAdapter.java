@@ -38,7 +38,7 @@ import com.tlongdev.bktf.model.User;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -222,15 +222,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     class ViewHolder extends RecyclerView.ViewHolder {
 
         final View root;
-        @Bind(R.id.loading_layout) View loading;
-        @Bind(R.id.price_layout) View priceLayout;
-        @Bind(R.id.icon) ImageView icon;
-        @Bind(R.id.icon_background) View background;
-        @Bind(R.id.effect) ImageView effect;
-        @Bind(R.id.more) ImageView more;
-        @Bind(R.id.quality) ImageView quality;
-        @Bind(R.id.name) TextView name;
-        @Bind(R.id.price) TextView price;
+        @BindView(R.id.loading_layout) View loading;
+        @BindView(R.id.price_layout) View priceLayout;
+        @BindView(R.id.icon) ImageView icon;
+        @BindView(R.id.icon_background) View background;
+        @BindView(R.id.effect) ImageView effect;
+        @BindView(R.id.more) ImageView more;
+        @BindView(R.id.quality) ImageView quality;
+        @BindView(R.id.name) TextView name;
+        @BindView(R.id.price) TextView price;
 
         public ViewHolder(View view) {
             super(view);

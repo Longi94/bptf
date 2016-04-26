@@ -33,7 +33,7 @@ import com.tlongdev.bktf.presenter.activity.UserPresenter;
 import com.tlongdev.bktf.ui.fragment.UserFragment;
 import com.tlongdev.bktf.ui.view.activity.UserView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -51,7 +51,7 @@ public class UserActivity extends BptfActivity implements UserView{
     public static final String STEAM_ID_KEY = "steamid";
 
     //Progress bar that indicates downloading user data.
-    @Bind(R.id.progress_bar) ProgressBar progressBar;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
 
     @InjectExtra(STEAM_ID_KEY) String steamId;
 

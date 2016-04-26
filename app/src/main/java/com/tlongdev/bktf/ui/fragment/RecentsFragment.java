@@ -62,8 +62,9 @@ import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.view.fragment.RecentsView;
 import com.tlongdev.bktf.util.Utility;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * recents fragment. Shows a list of all the prices orderd by the time of the price update.
@@ -71,18 +72,18 @@ import butterknife.ButterKnife;
 public class RecentsFragment extends BptfFragment implements RecentsView,
         SwipeRefreshLayout.OnRefreshListener, MainActivity.OnDrawerOpenedListener, RecentsAdapter.OnMoreListener {
 
-    @Bind(R.id.progress_bar) ProgressBar progressBar;
-    @Bind(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
-    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
-    @Bind(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
-    @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
-    @Bind(R.id.text_view_metal_price) TextView mMetalPrice;
-    @Bind(R.id.text_view_key_price) TextView mKeyPrice;
-    @Bind(R.id.text_view_buds_price) TextView mBudsPrice;
-    @Bind(R.id.image_view_metal_price) View metalPriceImage;
-    @Bind(R.id.image_view_key_price) View keyPriceImage;
-    @Bind(R.id.image_view_buds_price) View budsPriceImage;
-    @Bind(R.id.ad_view) AdView mAdView;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
+    @BindView(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
+    @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.text_view_metal_price) TextView mMetalPrice;
+    @BindView(R.id.text_view_key_price) TextView mKeyPrice;
+    @BindView(R.id.text_view_buds_price) TextView mBudsPrice;
+    @BindView(R.id.image_view_metal_price) View metalPriceImage;
+    @BindView(R.id.image_view_key_price) View keyPriceImage;
+    @BindView(R.id.image_view_buds_price) View budsPriceImage;
+    @BindView(R.id.ad_view) AdView mAdView;
 
     /**
      * Adapter of the recycler view
@@ -94,6 +95,7 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
     private Context mContext;
 
     private RecentsPresenter mPresenter;
+    private Unbinder mUnbinder;
 
     /**
      * Constructor
@@ -127,7 +129,7 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
         mPresenter.attachView(this);
 
         View rootView = inflater.inflate(R.layout.fragment_recents, container, false);
-        ButterKnife.bind(this, rootView);
+        mUnbinder = ButterKnife.bind(this, rootView);
 
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) mContext).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
@@ -173,10 +175,11 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         mPresenter.detachView();
         mAdManager.removeAdView(mAdView);
+        mUnbinder.unbind();
     }
 
     @Override

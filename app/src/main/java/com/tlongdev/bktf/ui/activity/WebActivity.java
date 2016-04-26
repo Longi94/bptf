@@ -31,16 +31,16 @@ import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
 import com.tlongdev.bktf.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class WebActivity extends BptfActivity {
 
     public static final String EXTRA_URL = "url";
 
-    @Bind(R.id.web_view) WebView webView;
-    @Bind(R.id.toolbar) Toolbar mToolbar;
-    @Bind(R.id.progress_bar) ProgressBar mProgressBar;
+    @BindView(R.id.web_view) WebView webView;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.progress_bar) ProgressBar mProgressBar;
 
     @InjectExtra(EXTRA_URL) String mUrl;
 

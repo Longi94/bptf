@@ -36,7 +36,7 @@ import com.tlongdev.bktf.model.Price;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -160,14 +160,14 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         final View root;
-        @Bind(R.id.more) View more;
-        @Bind(R.id.icon_background) View background;
-        @Bind(R.id.icon) ImageView icon;
-        @Bind(R.id.effect) ImageView effect;
-        @Bind(R.id.quality) ImageView quality;
-        @Bind(R.id.name) TextView name;
-        @Bind(R.id.price) TextView price;
-        @Bind(R.id.difference) TextView difference;
+        @BindView(R.id.more) View more;
+        @BindView(R.id.icon_background) View background;
+        @BindView(R.id.icon) ImageView icon;
+        @BindView(R.id.effect) ImageView effect;
+        @BindView(R.id.quality) ImageView quality;
+        @BindView(R.id.name) TextView name;
+        @BindView(R.id.price) TextView price;
+        @BindView(R.id.difference) TextView difference;
 
         public ViewHolder(View view) {
             super(view);

@@ -40,7 +40,7 @@ import com.tlongdev.bktf.ui.view.activity.UserBackpackView;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -52,8 +52,8 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
     public static final String EXTRA_NAME = "name";
     public static final String EXTRA_GUEST = "guest";
 
-    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
-    @Bind(R.id.ad_view) AdView mAdView;
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.ad_view) AdView mAdView;
 
     //Adapters used for the listview
     private BackpackAdapter mAdapter;

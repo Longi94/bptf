@@ -44,7 +44,7 @@ import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class PriceHistoryActivity extends BptfActivity implements PriceHistoryView {
@@ -55,11 +55,11 @@ public class PriceHistoryActivity extends BptfActivity implements PriceHistoryVi
 
     @InjectExtra(EXTRA_ITEM) Item mItem;
 
-    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
-    @Bind(R.id.progress_bar) ProgressBar progressBar;
-    @Bind(R.id.fail_text) TextView failText;
-    @Bind(R.id.toolbar) Toolbar mToolbar;
-    @Bind(R.id.ad_view) AdView mAdView;
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
+    @BindView(R.id.fail_text) TextView failText;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.ad_view) AdView mAdView;
 
     private PriceHistoryPresenter mPresenter;
 

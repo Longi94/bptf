@@ -28,7 +28,7 @@ import com.tlongdev.bktf.model.License;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class LicensesAdapter extends RecyclerView.Adapter<LicensesAdapter.ViewHolder>{
@@ -77,9 +77,9 @@ public class LicensesAdapter extends RecyclerView.Adapter<LicensesAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.name) TextView name;
-        @Bind(R.id.link) TextView link;
-        @Bind(R.id.license) TextView license;
+        @BindView(R.id.name) TextView name;
+        @BindView(R.id.link) TextView link;
+        @BindView(R.id.license) TextView license;
 
         public ViewHolder(View view) {
             super(view);

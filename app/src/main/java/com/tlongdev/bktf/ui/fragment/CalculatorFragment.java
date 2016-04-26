@@ -51,9 +51,10 @@ import com.tlongdev.bktf.ui.view.fragment.CalculatorView;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
  * Calculator fragment. Let's the user create a list of items and it will calculate the total value
@@ -61,17 +62,18 @@ import butterknife.OnClick;
  */
 public class CalculatorFragment extends BptfFragment implements CalculatorView, MainActivity.OnDrawerOpenedListener{
 
-    @Bind(R.id.text_view_price_metal) TextView priceMetal;
-    @Bind(R.id.text_view_price_keys) TextView priceKeys;
-    @Bind(R.id.text_view_price_buds) TextView priceBuds;
-    @Bind(R.id.text_view_price_usd) TextView priceUsd;
-    @Bind(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
-    @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
-    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
-    @Bind(R.id.ad_view) AdView mAdView;
+    @BindView(R.id.text_view_price_metal) TextView priceMetal;
+    @BindView(R.id.text_view_price_keys) TextView priceKeys;
+    @BindView(R.id.text_view_price_buds) TextView priceBuds;
+    @BindView(R.id.text_view_price_usd) TextView priceUsd;
+    @BindView(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
+    @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.ad_view) AdView mAdView;
 
     private CalculatorAdapter mAdapter;
     private CalculatorPresenter mPresenter;
+    private Unbinder mUnbinder;
 
     public CalculatorFragment() {
         // Required empty public constructor
@@ -91,7 +93,7 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView, 
         mPresenter.attachView(this);
 
         View rootView = inflater.inflate(R.layout.fragment_calculator, container, false);
-        ButterKnife.bind(this, rootView);
+        mUnbinder = ButterKnife.bind(this, rootView);
 
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
@@ -137,10 +139,11 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView, 
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         mPresenter.detachView();
         mAdManager.removeAdView(mAdView);
+        mUnbinder.unbind();
     }
 
     @OnClick(R.id.fab)

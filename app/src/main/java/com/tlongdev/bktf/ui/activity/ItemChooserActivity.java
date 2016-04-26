@@ -44,7 +44,7 @@ import com.tlongdev.bktf.ui.view.activity.ItemChooserView;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -58,18 +58,18 @@ public class ItemChooserActivity extends BptfActivity implements ItemChooserView
     public static final String EXTRA_ITEM = "item";
     public static final String EXTRA_IS_FROM_CALCULATOR = "calculator";
 
-    @Bind(R.id.quality) Spinner qualitySpinner;
-    @Bind(R.id.effect) Spinner effectSpinner;
-    @Bind(R.id.weapon_wear) Spinner wearSpinner;
-    @Bind(R.id.title_effect) TextView titleEffect;
-    @Bind(R.id.title_wear) TextView titleWear;
-    @Bind(R.id.icon) ImageView icon;
-    @Bind(R.id.item_text) TextView itemText;
-    @Bind(R.id.item_name) TextView itemName;
-    @Bind(R.id.tradable) CheckBox tradable;
-    @Bind(R.id.craftable) CheckBox craftable;
-    @Bind(R.id.australium) CheckBox australium;
-    @Bind(R.id.fab) FloatingActionButton fab;
+    @BindView(R.id.quality) Spinner qualitySpinner;
+    @BindView(R.id.effect) Spinner effectSpinner;
+    @BindView(R.id.weapon_wear) Spinner wearSpinner;
+    @BindView(R.id.title_effect) TextView titleEffect;
+    @BindView(R.id.title_wear) TextView titleWear;
+    @BindView(R.id.icon) ImageView icon;
+    @BindView(R.id.item_text) TextView itemText;
+    @BindView(R.id.item_name) TextView itemName;
+    @BindView(R.id.tradable) CheckBox tradable;
+    @BindView(R.id.craftable) CheckBox craftable;
+    @BindView(R.id.australium) CheckBox australium;
+    @BindView(R.id.fab) FloatingActionButton fab;
 
     @SuppressWarnings("NullableProblems")
     @Nullable

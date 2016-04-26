@@ -36,7 +36,7 @@ import com.tlongdev.bktf.presenter.activity.ItemDetailPresenter;
 import com.tlongdev.bktf.ui.view.activity.ItemDetailView;
 import com.tlongdev.bktf.util.Utility;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -58,24 +58,24 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
     @InjectExtra(EXTRA_ITEM_TYPE) String mItemType;
 
     //References to all the text views in the view
-    @Bind(R.id.text_view_name) TextView name;
-    @Bind(R.id.text_view_level) TextView level;
-    @Bind(R.id.text_view_effect_name) TextView effect;
-    @Bind(R.id.text_view_custom_name) TextView customName;
-    @Bind(R.id.text_view_custom_desc) TextView customDesc;
-    @Bind(R.id.text_view_crafted) TextView crafterName;
-    @Bind(R.id.text_view_gifted) TextView gifterName;
-    @Bind(R.id.text_view_origin) TextView origin;
-    @Bind(R.id.text_view_paint) TextView paint;
-    @Bind(R.id.text_view_price) TextView priceView;
-    @Bind(R.id.image_layout) FrameLayout layout;
+    @BindView(R.id.text_view_name) TextView name;
+    @BindView(R.id.text_view_level) TextView level;
+    @BindView(R.id.text_view_effect_name) TextView effect;
+    @BindView(R.id.text_view_custom_name) TextView customName;
+    @BindView(R.id.text_view_custom_desc) TextView customDesc;
+    @BindView(R.id.text_view_crafted) TextView crafterName;
+    @BindView(R.id.text_view_gifted) TextView gifterName;
+    @BindView(R.id.text_view_origin) TextView origin;
+    @BindView(R.id.text_view_paint) TextView paint;
+    @BindView(R.id.text_view_price) TextView priceView;
+    @BindView(R.id.image_layout) FrameLayout layout;
 
     //References to the image view
-    @Bind(R.id.icon) ImageView icon;
-    @Bind(R.id.effect) ImageView effectView;
-    @Bind(R.id.paint) ImageView paintView;
-    @Bind(R.id.quality) ImageView quality;
-    @Bind(R.id.card_view) CardView cardView;
+    @BindView(R.id.icon) ImageView icon;
+    @BindView(R.id.effect) ImageView effectView;
+    @BindView(R.id.paint) ImageView paintView;
+    @BindView(R.id.quality) ImageView quality;
+    @BindView(R.id.card_view) CardView cardView;
 
     private ItemDetailPresenter mPresenter;
 

@@ -47,7 +47,7 @@ import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -67,10 +67,10 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
     @InjectExtra(EXTRA_PRICE_INDEX) int mIndex = -1;
     @InjectExtra(EXTRA_NAME) String mName;
 
-    @Bind(R.id.search) EditText mSearchInput;
-    @Bind(R.id.toolbar) Toolbar mToolbar;
-    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
-    @Bind(R.id.ad_view) AdView mAdView;
+    @BindView(R.id.search) EditText mSearchInput;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.ad_view) AdView mAdView;
 
     private UnusualAdapter mAdapter;
     private UnusualPresenter mPresenter;

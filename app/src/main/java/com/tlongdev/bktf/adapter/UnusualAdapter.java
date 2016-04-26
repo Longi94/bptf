@@ -38,7 +38,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -180,11 +180,11 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
 
         final View root;
 
-        @Bind(R.id.icon) ImageView icon;
-        @Bind(R.id.effect) ImageView effect;
-        @Bind(R.id.price) TextView price;
-        @Bind(R.id.name) TextView name;
-        @Bind(R.id.more) View more;
+        @BindView(R.id.icon) ImageView icon;
+        @BindView(R.id.effect) ImageView effect;
+        @BindView(R.id.price) TextView price;
+        @BindView(R.id.name) TextView name;
+        @BindView(R.id.more) View more;
 
         public ViewHolder(View view) {
             super(view);

@@ -53,8 +53,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * The unusual fragment, that shows a list of unusual item categories. Either categorized by
@@ -65,11 +66,11 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
 
     @Inject Context mContext;
 
-    @Bind(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
-    @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
-    @Bind(R.id.search) EditText mSearchInput;
-    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
-    @Bind(R.id.ad_view) AdView mAdView;
+    @BindView(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
+    @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.search) EditText mSearchInput;
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.ad_view) AdView mAdView;
 
     /**
      * the current sort type
@@ -93,6 +94,7 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
     private MenuItem effectMenuItem;
 
     private UnusualPresenter mPresenter;
+    private Unbinder mUnbinder;
 
     /**
      * Constructor.
@@ -113,7 +115,7 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_unusual, container, false);
-        ButterKnife.bind(this, rootView);
+        mUnbinder = ButterKnife.bind(this, rootView);
         mApplication.getFragmentComponent().inject(this);
 
         mPresenter = new UnusualPresenter(mApplication);
@@ -152,10 +154,11 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         mPresenter.detachView();
         mAdManager.removeAdView(mAdView);
+        mUnbinder.unbind();
     }
 
     @Override

@@ -32,13 +32,13 @@ import com.tlongdev.bktf.ui.view.activity.LicensesView;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class LicensesActivity extends BptfActivity implements LicensesView, LicensesAdapter.OnClickListener {
 
-    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
-    @Bind(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
 
     private LicensesPresenter mPresenter;
 

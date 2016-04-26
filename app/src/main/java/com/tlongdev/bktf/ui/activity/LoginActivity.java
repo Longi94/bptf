@@ -31,14 +31,14 @@ import com.tlongdev.bktf.customtabs.WebViewFallback;
 import com.tlongdev.bktf.presenter.activity.LoginPresenter;
 import com.tlongdev.bktf.ui.view.activity.LoginView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginActivity extends BptfActivity implements LoginView {
 
-    @Bind(R.id.steam_id) EditText steamIdInput;
-    @Bind(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.steam_id) EditText steamIdInput;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
 
     private ProgressDialog loadingDialog;
     private LoginPresenter mPresenter;

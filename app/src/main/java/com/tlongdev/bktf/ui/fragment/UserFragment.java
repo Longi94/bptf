@@ -60,9 +60,10 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
  * Fragment for displaying the user profile.
@@ -75,26 +76,26 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
     @Inject ProfileManager mProfileManager;
     @Inject Context mContext;
 
-    @Bind(R.id.text_view_player_reputation) TextView playerReputation;
-    @Bind(R.id.trust_positive) TextView trustPositive;
-    @Bind(R.id.trust_negative) TextView trustNegative;
-    @Bind(R.id.steamrep_status) ImageView steamRepStatus;
-    @Bind(R.id.vac_status) ImageView vacStatus;
-    @Bind(R.id.trade_status) ImageView tradeStatus;
-    @Bind(R.id.community_status) ImageView communityStatus;
-    @Bind(R.id.text_view_bp_refined) TextView backpackValueRefined;
-    @Bind(R.id.text_view_bp_raw_metal) TextView backpackRawMetal;
-    @Bind(R.id.text_view_bp_raw_keys) TextView backpackRawKeys;
-    @Bind(R.id.text_view_bp_usd) TextView backpackValueUsd;
-    @Bind(R.id.text_view_bp_slots) TextView backpackSlots;
-    @Bind(R.id.text_view_user_since) TextView userSinceText;
-    @Bind(R.id.text_view_user_last_online) TextView lastOnlineText;
-    @Bind(R.id.avatar) ImageView avatar;
-    @Bind(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
-    @Bind(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
-    @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
-    @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbarLayout;
-    @Bind(R.id.ad_view) AdView mAdView;
+    @BindView(R.id.text_view_player_reputation) TextView playerReputation;
+    @BindView(R.id.trust_positive) TextView trustPositive;
+    @BindView(R.id.trust_negative) TextView trustNegative;
+    @BindView(R.id.steamrep_status) ImageView steamRepStatus;
+    @BindView(R.id.vac_status) ImageView vacStatus;
+    @BindView(R.id.trade_status) ImageView tradeStatus;
+    @BindView(R.id.community_status) ImageView communityStatus;
+    @BindView(R.id.text_view_bp_refined) TextView backpackValueRefined;
+    @BindView(R.id.text_view_bp_raw_metal) TextView backpackRawMetal;
+    @BindView(R.id.text_view_bp_raw_keys) TextView backpackRawKeys;
+    @BindView(R.id.text_view_bp_usd) TextView backpackValueUsd;
+    @BindView(R.id.text_view_bp_slots) TextView backpackSlots;
+    @BindView(R.id.text_view_user_since) TextView userSinceText;
+    @BindView(R.id.text_view_user_last_online) TextView lastOnlineText;
+    @BindView(R.id.avatar) ImageView avatar;
+    @BindView(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
+    @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbarLayout;
+    @BindView(R.id.ad_view) AdView mAdView;
 
     //Stores whether the backpack is private or not
     private boolean privateBackpack = false;
@@ -103,6 +104,8 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
 
     private User mUser;
     private boolean searchedUser;
+
+    private Unbinder mUnbinder;
 
     /**
      * Constructor
@@ -148,7 +151,7 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
         mPresenter.setSearchedUser(searchedUser);
 
         View rootView = inflater.inflate(R.layout.fragment_user, container, false);
-        ButterKnife.bind(this, rootView);
+        mUnbinder = ButterKnife.bind(this, rootView);
 
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
@@ -183,10 +186,11 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         mPresenter.detachView();
         mAdManager.removeAdView(mAdView);
+        mUnbinder.unbind();
     }
 
     @Override
