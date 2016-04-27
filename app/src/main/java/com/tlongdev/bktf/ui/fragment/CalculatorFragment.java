@@ -51,6 +51,8 @@ import com.tlongdev.bktf.ui.view.fragment.CalculatorView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -62,6 +64,8 @@ import butterknife.Unbinder;
  */
 public class CalculatorFragment extends BptfFragment implements CalculatorView, MainActivity.OnDrawerOpenedListener{
 
+    @Inject CalculatorPresenter mPresenter;
+
     @BindView(R.id.text_view_price_metal) TextView priceMetal;
     @BindView(R.id.text_view_price_keys) TextView priceKeys;
     @BindView(R.id.text_view_price_buds) TextView priceBuds;
@@ -72,7 +76,6 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView, 
     @BindView(R.id.ad_view) AdView mAdView;
 
     private CalculatorAdapter mAdapter;
-    private CalculatorPresenter mPresenter;
     private Unbinder mUnbinder;
 
     public CalculatorFragment() {
@@ -89,11 +92,13 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView, 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mPresenter = new CalculatorPresenter(mApplication);
-        mPresenter.attachView(this);
-
         View rootView = inflater.inflate(R.layout.fragment_calculator, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
+
+        mApplication.getFragmentComponent().inject(this);
+
+        mPresenter = new CalculatorPresenter(mApplication);
+        mPresenter.attachView(this);
 
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));

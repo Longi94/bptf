@@ -44,6 +44,8 @@ import com.tlongdev.bktf.ui.view.activity.ItemChooserView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -57,6 +59,8 @@ public class ItemChooserActivity extends BptfActivity implements ItemChooserView
 
     public static final String EXTRA_ITEM = "item";
     public static final String EXTRA_IS_FROM_CALCULATOR = "calculator";
+
+    @Inject ItemChooserPresenter mPresenter;
 
     @BindView(R.id.quality) Spinner qualitySpinner;
     @BindView(R.id.effect) Spinner effectSpinner;
@@ -79,7 +83,6 @@ public class ItemChooserActivity extends BptfActivity implements ItemChooserView
     private QualityAdapter qualityAdapter;
     private WeaponWearAdapter wearAdapter;
     private EffectAdapter effectAdapter;
-    private ItemChooserPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +90,8 @@ public class ItemChooserActivity extends BptfActivity implements ItemChooserView
         setContentView(R.layout.activity_item_chooser);
         ButterKnife.bind(this);
         Dart.inject(this);
+
+        mApplication.getActivityComponent().inject(this);
 
         mPresenter = new ItemChooserPresenter(mApplication);
         mPresenter.attachView(this);

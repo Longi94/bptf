@@ -52,6 +52,8 @@ import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -63,12 +65,13 @@ import butterknife.Unbinder;
 public class FavoritesFragment extends BptfFragment implements FavoritesView,
         MainActivity.OnDrawerOpenedListener, FavoritesAdapter.OnMoreListener {
 
+    @Inject FavoritesPresenter mPresenter;
+
     @BindView(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
     @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
     @BindView(R.id.ad_view) AdView mAdView;
 
-    private FavoritesPresenter mPresenter;
     private FavoritesAdapter mAdapter;
     private Unbinder mUnbinder;
 
@@ -94,12 +97,14 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mPresenter = new FavoritesPresenter(mApplication);
-        mPresenter.attachView(this);
-
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_favorites, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
+
+        mApplication.getFragmentComponent().inject(this);
+
+        mPresenter = new FavoritesPresenter(mApplication);
+        mPresenter.attachView(this);
 
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));

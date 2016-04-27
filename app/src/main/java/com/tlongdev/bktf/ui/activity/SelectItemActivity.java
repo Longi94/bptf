@@ -30,6 +30,8 @@ import com.tlongdev.bktf.adapter.SelectItemAdapter;
 import com.tlongdev.bktf.presenter.activity.SelectItemPresenter;
 import com.tlongdev.bktf.ui.view.activity.SelectItemView;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -39,10 +41,11 @@ public class SelectItemActivity extends BptfActivity implements SelectItemView, 
     public static final String EXTRA_DEFINDEX = "defindex";
     public static final String EXTRA_NAME = "name";
 
+    @Inject SelectItemPresenter mPresenter;
+
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
     @BindView(R.id.item_name) EditText inputName;
 
-    private SelectItemPresenter mPresenter;
     private SelectItemAdapter mAdapter;
 
     @Override
@@ -50,6 +53,8 @@ public class SelectItemActivity extends BptfActivity implements SelectItemView, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_item);
         ButterKnife.bind(this);
+
+        mApplication.getActivityComponent().inject(this);
 
         mPresenter = new SelectItemPresenter(mApplication);
         mPresenter.attachView(this);

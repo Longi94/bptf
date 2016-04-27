@@ -91,6 +91,7 @@ dependencies {
     }
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

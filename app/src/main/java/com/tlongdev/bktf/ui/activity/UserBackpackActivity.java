@@ -40,6 +40,8 @@ import com.tlongdev.bktf.ui.view.activity.UserBackpackView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -52,6 +54,8 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
     public static final String EXTRA_NAME = "name";
     public static final String EXTRA_GUEST = "guest";
 
+    @Inject UserBackpackPresenter mPresenter;
+
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
     @BindView(R.id.ad_view) AdView mAdView;
 
@@ -61,8 +65,6 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
     //Boolean to decide which database table to load from
     private boolean isGuest;
 
-    private UserBackpackPresenter mPresenter;
-
     /**
      * {@inheritDoc}
      */
@@ -71,6 +73,8 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_backpack);
         ButterKnife.bind(this);
+
+        mApplication.getActivityComponent().inject(this);
 
         mPresenter = new UserBackpackPresenter(mApplication);
         mPresenter.attachView(this);

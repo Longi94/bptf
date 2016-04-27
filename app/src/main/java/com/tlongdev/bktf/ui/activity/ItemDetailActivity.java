@@ -36,6 +36,8 @@ import com.tlongdev.bktf.presenter.activity.ItemDetailPresenter;
 import com.tlongdev.bktf.ui.view.activity.ItemDetailView;
 import com.tlongdev.bktf.util.Utility;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -50,6 +52,8 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
     public static final String EXTRA_ITEM_NAME = "name";
     public static final String EXTRA_ITEM_TYPE = "type";
     public static final String EXTRA_PROPER_NAME = "proper";
+
+    @Inject ItemDetailPresenter mPresenter;
 
     @InjectExtra(EXTRA_GUEST) boolean isGuest;
     @InjectExtra(EXTRA_ITEM_ID) int mId;
@@ -77,14 +81,14 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
     @BindView(R.id.quality) ImageView quality;
     @BindView(R.id.card_view) CardView cardView;
 
-    private ItemDetailPresenter mPresenter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
         ButterKnife.bind(this);
         Dart.inject(this);
+
+        mApplication.getActivityComponent().inject(this);
 
         mPresenter = new ItemDetailPresenter(mApplication);
         mPresenter.attachView(this);
@@ -211,8 +215,7 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
 
         Price price = item.getPrice();
 
-        if (price != null)
-        {
+        if (price != null) {
             //Show the priceView
             priceView.setVisibility(View.VISIBLE);
             priceView.setText(String.format("%s: %s",

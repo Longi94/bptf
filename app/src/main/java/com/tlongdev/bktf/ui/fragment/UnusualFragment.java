@@ -64,6 +64,7 @@ import butterknife.Unbinder;
 public class UnusualFragment extends BptfFragment implements UnusualView,
         MainActivity.OnDrawerOpenedListener, TextWatcher, UnusualAdapter.OnItemClickListener {
 
+    @Inject UnusualPresenter mPresenter;
     @Inject Context mContext;
 
     @BindView(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
@@ -93,7 +94,6 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
      */
     private MenuItem effectMenuItem;
 
-    private UnusualPresenter mPresenter;
     private Unbinder mUnbinder;
 
     /**
@@ -116,6 +116,7 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
 
         View rootView = inflater.inflate(R.layout.fragment_unusual, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
+
         mApplication.getFragmentComponent().inject(this);
 
         mPresenter = new UnusualPresenter(mApplication);

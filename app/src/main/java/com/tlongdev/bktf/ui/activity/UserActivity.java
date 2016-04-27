@@ -33,6 +33,8 @@ import com.tlongdev.bktf.presenter.activity.UserPresenter;
 import com.tlongdev.bktf.ui.fragment.UserFragment;
 import com.tlongdev.bktf.ui.view.activity.UserView;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -50,12 +52,12 @@ public class UserActivity extends BptfActivity implements UserView{
     //Keys for extra data in the intent.
     public static final String STEAM_ID_KEY = "steamid";
 
+    @Inject UserPresenter mPresenter;
+
     //Progress bar that indicates downloading user data.
     @BindView(R.id.progress_bar) ProgressBar progressBar;
 
     @InjectExtra(STEAM_ID_KEY) String steamId;
-
-    private UserPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,8 @@ public class UserActivity extends BptfActivity implements UserView{
         setContentView(R.layout.activity_user);
         ButterKnife.bind(this);
         Dart.inject(this);
+
+        mApplication.getActivityComponent().inject(this);
 
         mPresenter = new UserPresenter(mApplication);
         mPresenter.attachView(this);

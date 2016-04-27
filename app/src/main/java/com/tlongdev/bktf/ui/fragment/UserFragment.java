@@ -72,6 +72,7 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
 
     private static final String USER_PARAM = "user_param";
 
+    @Inject UserPresenter mPresenter;
     @Inject SharedPreferences mPrefs;
     @Inject ProfileManager mProfileManager;
     @Inject Context mContext;
@@ -99,8 +100,6 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
 
     //Stores whether the backpack is private or not
     private boolean privateBackpack = false;
-
-    private UserPresenter mPresenter;
 
     private User mUser;
     private boolean searchedUser;
@@ -144,14 +143,14 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
             searchedUser = true;
         }
 
+        View rootView = inflater.inflate(R.layout.fragment_user, container, false);
+        mUnbinder = ButterKnife.bind(this, rootView);
+
         mApplication.getFragmentComponent().inject(this);
 
         mPresenter = new UserPresenter(mApplication);
         mPresenter.attachView(this);
         mPresenter.setSearchedUser(searchedUser);
-
-        View rootView = inflater.inflate(R.layout.fragment_user, container, false);
-        mUnbinder = ButterKnife.bind(this, rootView);
 
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));

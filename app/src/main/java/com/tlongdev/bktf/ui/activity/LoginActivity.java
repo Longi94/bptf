@@ -31,23 +31,28 @@ import com.tlongdev.bktf.customtabs.WebViewFallback;
 import com.tlongdev.bktf.presenter.activity.LoginPresenter;
 import com.tlongdev.bktf.ui.view.activity.LoginView;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginActivity extends BptfActivity implements LoginView {
 
+    @Inject LoginPresenter mPresenter;
+
     @BindView(R.id.steam_id) EditText steamIdInput;
     @BindView(R.id.toolbar) Toolbar mToolbar;
 
     private ProgressDialog loadingDialog;
-    private LoginPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
+        mApplication.getActivityComponent().inject(this);
 
         mPresenter = new LoginPresenter(mApplication);
         mPresenter.attachView(this);

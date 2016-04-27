@@ -43,11 +43,15 @@ import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.presenter.activity.SearchPresenter;
 import com.tlongdev.bktf.util.Utility;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui.view.activity.SearchView, SearchAdapter.OnSearchClickListener {
+
+    @Inject SearchPresenter mPresenter;
 
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
     @BindView(R.id.toolbar) Toolbar mToolbar;
@@ -63,13 +67,13 @@ public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui
     private int filterQuality = Quality.UNIQUE;
     private String mQuery;
 
-    private SearchPresenter mPresenter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
+
+        mApplication.getActivityComponent().inject(this);
 
         mPresenter = new SearchPresenter(mApplication);
         mPresenter.attachView(this);

@@ -62,6 +62,8 @@ import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.view.fragment.RecentsView;
 import com.tlongdev.bktf.util.Utility;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -71,6 +73,8 @@ import butterknife.Unbinder;
  */
 public class RecentsFragment extends BptfFragment implements RecentsView,
         SwipeRefreshLayout.OnRefreshListener, MainActivity.OnDrawerOpenedListener, RecentsAdapter.OnMoreListener {
+
+    @Inject RecentsPresenter mPresenter;
 
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
@@ -94,7 +98,6 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
 
     private Context mContext;
 
-    private RecentsPresenter mPresenter;
     private Unbinder mUnbinder;
 
     /**
@@ -125,11 +128,13 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mPresenter = new RecentsPresenter(mApplication);
-        mPresenter.attachView(this);
-
         View rootView = inflater.inflate(R.layout.fragment_recents, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
+
+        mApplication.getFragmentComponent().inject(this);
+
+        mPresenter = new RecentsPresenter(mApplication);
+        mPresenter.attachView(this);
 
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) mContext).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));

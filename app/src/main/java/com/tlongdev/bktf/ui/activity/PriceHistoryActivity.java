@@ -44,6 +44,8 @@ import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -53,6 +55,8 @@ public class PriceHistoryActivity extends BptfActivity implements PriceHistoryVi
 
     public static final String EXTRA_ITEM = "item";
 
+    @Inject PriceHistoryPresenter mPresenter;
+
     @InjectExtra(EXTRA_ITEM) Item mItem;
 
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
@@ -61,14 +65,14 @@ public class PriceHistoryActivity extends BptfActivity implements PriceHistoryVi
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.ad_view) AdView mAdView;
 
-    private PriceHistoryPresenter mPresenter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_price_history);
         ButterKnife.bind(this);
         Dart.inject(this);
+
+        mApplication.getActivityComponent().inject(this);
 
         mPresenter = new PriceHistoryPresenter(mApplication);
         mPresenter.attachView(this);
