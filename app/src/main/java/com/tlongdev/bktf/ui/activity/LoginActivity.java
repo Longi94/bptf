@@ -54,7 +54,6 @@ public class LoginActivity extends BptfActivity implements LoginView {
 
         mApplication.getActivityComponent().inject(this);
 
-        mPresenter = new LoginPresenter(mApplication);
         mPresenter.attachView(this);
 
         setSupportActionBar(mToolbar);

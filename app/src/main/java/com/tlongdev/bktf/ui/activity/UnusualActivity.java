@@ -87,7 +87,6 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
 
         mApplication.getActivityComponent().inject(this);
 
-        mPresenter = new UnusualPresenter(mApplication);
         mPresenter.attachView(this);
 
         setSupportActionBar(mToolbar);

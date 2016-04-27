@@ -90,7 +90,6 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
 
         mApplication.getActivityComponent().inject(this);
 
-        mPresenter = new ItemDetailPresenter(mApplication);
         mPresenter.attachView(this);
 
         //Scale the icon, so the width of the image view is on third of the screen's width

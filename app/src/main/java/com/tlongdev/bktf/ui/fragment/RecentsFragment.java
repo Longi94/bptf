@@ -133,7 +133,6 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
 
         mApplication.getFragmentComponent().inject(this);
 
-        mPresenter = new RecentsPresenter(mApplication);
         mPresenter.attachView(this);
 
         //Set the toolbar to the main activity's action bar

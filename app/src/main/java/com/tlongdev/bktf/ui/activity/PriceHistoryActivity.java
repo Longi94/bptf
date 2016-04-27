@@ -74,7 +74,6 @@ public class PriceHistoryActivity extends BptfActivity implements PriceHistoryVi
 
         mApplication.getActivityComponent().inject(this);
 
-        mPresenter = new PriceHistoryPresenter(mApplication);
         mPresenter.attachView(this);
 
         setSupportActionBar(mToolbar);

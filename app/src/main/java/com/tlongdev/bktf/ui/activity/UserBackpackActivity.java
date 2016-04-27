@@ -76,7 +76,6 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
 
         mApplication.getActivityComponent().inject(this);
 
-        mPresenter = new UserBackpackPresenter(mApplication);
         mPresenter.attachView(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

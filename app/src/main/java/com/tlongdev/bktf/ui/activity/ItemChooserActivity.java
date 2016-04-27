@@ -93,7 +93,6 @@ public class ItemChooserActivity extends BptfActivity implements ItemChooserView
 
         mApplication.getActivityComponent().inject(this);
 
-        mPresenter = new ItemChooserPresenter(mApplication);
         mPresenter.attachView(this);
 
         setTitle(null);

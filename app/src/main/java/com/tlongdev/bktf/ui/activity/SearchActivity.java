@@ -75,7 +75,6 @@ public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui
 
         mApplication.getActivityComponent().inject(this);
 
-        mPresenter = new SearchPresenter(mApplication);
         mPresenter.attachView(this);
 
         setSupportActionBar(mToolbar);

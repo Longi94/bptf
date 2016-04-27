@@ -119,7 +119,6 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
 
         mApplication.getFragmentComponent().inject(this);
 
-        mPresenter = new UnusualPresenter(mApplication);
         mPresenter.attachView(this);
 
         //Set the toolbar to the main activity's action bar

@@ -103,7 +103,6 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
 
         mApplication.getFragmentComponent().inject(this);
 
-        mPresenter = new FavoritesPresenter(mApplication);
         mPresenter.attachView(this);
 
         //Set the toolbar to the main activity's action bar

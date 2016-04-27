@@ -68,7 +68,6 @@ public class UserActivity extends BptfActivity implements UserView{
 
         mApplication.getActivityComponent().inject(this);
 
-        mPresenter = new UserPresenter(mApplication);
         mPresenter.attachView(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

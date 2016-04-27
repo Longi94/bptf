@@ -38,6 +38,7 @@ import com.tlongdev.bktf.component.ProfileManagerComponent;
 import com.tlongdev.bktf.component.ServiceComponent;
 import com.tlongdev.bktf.module.BptfAppModule;
 import com.tlongdev.bktf.module.NetworkModule;
+import com.tlongdev.bktf.module.PresenterModule;
 import com.tlongdev.bktf.module.StorageModule;
 import com.tlongdev.bktf.util.ProfileManager;
 
@@ -73,13 +74,16 @@ public class BptfApplication extends Application {
         BptfAppModule appModule = new BptfAppModule(this);
         StorageModule storageModule = new StorageModule();
         NetworkModule networkModule = new NetworkModule();
+        PresenterModule presenterModule = new PresenterModule();
 
         mActivityComponent = DaggerActivityComponent.builder()
                 .bptfAppModule(appModule)
+                .presenterModule(presenterModule)
                 .build();
 
         mFragmentComponent = DaggerFragmentComponent.builder()
                 .bptfAppModule(appModule)
+                .presenterModule(presenterModule)
                 .build();
 
         mInteractorComponent = DaggerInteractorComponent.builder()

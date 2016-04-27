@@ -148,7 +148,6 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
 
         mApplication.getFragmentComponent().inject(this);
 
-        mPresenter = new UserPresenter(mApplication);
         mPresenter.attachView(this);
         mPresenter.setSearchedUser(searchedUser);
 

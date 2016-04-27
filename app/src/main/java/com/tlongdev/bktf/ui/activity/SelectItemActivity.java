@@ -56,7 +56,6 @@ public class SelectItemActivity extends BptfActivity implements SelectItemView, 
 
         mApplication.getActivityComponent().inject(this);
 
-        mPresenter = new SelectItemPresenter(mApplication);
         mPresenter.attachView(this);
 
         setFinishOnTouchOutside(false);

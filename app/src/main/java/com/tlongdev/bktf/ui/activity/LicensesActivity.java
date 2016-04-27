@@ -52,7 +52,6 @@ public class LicensesActivity extends BptfActivity implements LicensesView, Lice
 
         mApplication.getActivityComponent().inject(this);
 
-        mPresenter = new LicensesPresenter(mApplication);
         mPresenter.attachView(this);
 
         setSupportActionBar(mToolbar);

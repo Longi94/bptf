@@ -97,7 +97,6 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView, 
 
         mApplication.getFragmentComponent().inject(this);
 
-        mPresenter = new CalculatorPresenter(mApplication);
         mPresenter.attachView(this);
 
         //Set the toolbar to the main activity's action bar
