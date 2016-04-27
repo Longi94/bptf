@@ -2,6 +2,7 @@ package com.tlongdev.bktf.ads;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.View;
 
@@ -22,6 +23,8 @@ public class AdManager implements SharedPreferences.OnSharedPreferenceChangeList
     private Context mContext;
 
     private boolean mAdsEnabled;
+
+    private boolean mInit = true;
 
     private Set<AdView> mAdViews = new HashSet<>();
 
@@ -51,11 +54,23 @@ public class AdManager implements SharedPreferences.OnSharedPreferenceChangeList
         }
     }
 
-    public void addAdView(AdView adView) {
+    public void addAdView(final AdView adView) {
         mAdViews.add(adView);
         adView.setAdListener(new AppearAdListener(adView));
         if (mAdsEnabled) {
-            adView.loadAd(new AdRequest.Builder().build());
+            if (!mInit) {
+                adView.loadAd(new AdRequest.Builder().build());
+            } else {
+                mInit = false;
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        AdRequest adRequest = new AdRequest.Builder().build();
+                        adView.loadAd(adRequest);
+                    }
+                }, 1000);
+            }
         }
     }
 
