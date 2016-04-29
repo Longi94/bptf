@@ -33,22 +33,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.gcm.GcmRegisterPriceUpdatesService;
-import com.tlongdev.bktf.model.User;
+import com.tlongdev.bktf.ui.NavigationDrawerManager;
 import com.tlongdev.bktf.ui.fragment.CalculatorFragment;
 import com.tlongdev.bktf.ui.fragment.ConverterFragment;
 import com.tlongdev.bktf.ui.fragment.FavoritesFragment;
 import com.tlongdev.bktf.ui.fragment.RecentsFragment;
 import com.tlongdev.bktf.ui.fragment.UnusualFragment;
 import com.tlongdev.bktf.ui.fragment.UserFragment;
-import com.tlongdev.bktf.util.CircleTransform;
 import com.tlongdev.bktf.util.ProfileManager;
 import com.tlongdev.bktf.util.Utility;
 
@@ -83,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Inject SharedPreferences mPrefs;
     @Inject ProfileManager mProfileManager;
+    @Inject NavigationDrawerManager mNavigationDrawerManager;
 
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.navigation_view) NavigationView mNavigationView;
@@ -107,15 +103,6 @@ public class MainActivity extends AppCompatActivity {
      * expand the fragment's toolbar when the drawer opens.
      */
     private OnDrawerOpenedListener mDrawerListener;
-
-    /**
-     * Views of the navigation header view.
-     */
-    private TextView mName;
-    private TextView mBackpack;
-    private ImageView mAvatar;
-
-    private MenuItem mUserMenuItem;
 
     /**
      * Listener for the navigation drawer.
@@ -178,15 +165,8 @@ public class MainActivity extends AppCompatActivity {
         //The navigation view
         mNavigationView.setNavigationItemSelectedListener(navigationListener);
 
-        //User clicked on the header
-        View navigationHeader = mNavigationView.getHeaderView(0);
-
-        //Find the views of the navigation drawer header
-        mName = (TextView) navigationHeader.findViewById(R.id.user_name);
-        mBackpack = (TextView) navigationHeader.findViewById(R.id.backpack_value);
-        mAvatar = (ImageView) navigationHeader.findViewById(R.id.avatar);
-
-        mUserMenuItem = mNavigationView.getMenu().getItem(2);
+        mNavigationDrawerManager.attachView(mNavigationView.getHeaderView(0));
+        mNavigationDrawerManager.setUserMenuItem(mNavigationView.getMenu().getItem(2));
 
         //Check if there is a fragment to be restored
         if (savedInstanceState != null) {
@@ -217,7 +197,6 @@ public class MainActivity extends AppCompatActivity {
             }
             mUserStateChanged = false;
         }
-        updateDrawer();
 
         boolean autoSync = !mPrefs.getString(getString(R.string.pref_auto_sync), "1").equals("0");
 
@@ -228,6 +207,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mNavigationDrawerManager.detachView();
     }
 
     @Override
@@ -354,44 +339,6 @@ public class MainActivity extends AppCompatActivity {
 
         //Commit the transaction
         transaction.commit();
-    }
-
-    /**
-     * Updates the information in the navigation drawer header.
-     */
-    public void updateDrawer() {
-        if (mProfileManager.isSignedIn()) {
-            User user = mProfileManager.getUser();
-
-            //Set the name
-            mName.setText(user.getName());
-
-            //Set the backpack value
-            double bpValue = user.getBackpackValue();
-            if (bpValue >= 0) {
-                mBackpack.setText(String.format("Backpack: %s", getString(R.string.currency_metal,
-                        String.valueOf(Math.round(bpValue)))));
-            } else {
-                mBackpack.setText("Private backpack");
-            }
-
-            //Download the avatar (if needed) and set it
-            Glide.with(this)
-                    .load(user.getAvatarUrl())
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .transform(new CircleTransform(this))
-                    .into(mAvatar);
-            mUserMenuItem.setEnabled(true);
-        } else {
-            Glide.with(this)
-                    .load(R.drawable.steam_default_avatar)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .transform(new CircleTransform(this))
-                    .into(mAvatar);
-            mName.setText(null);
-            mBackpack.setText(null);
-            mUserMenuItem.setEnabled(false);
-        }
     }
 
     /**

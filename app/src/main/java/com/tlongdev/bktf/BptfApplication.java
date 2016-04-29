@@ -26,11 +26,13 @@ import com.tlongdev.bktf.component.ActivityComponent;
 import com.tlongdev.bktf.component.AdapterComponent;
 import com.tlongdev.bktf.component.DaggerActivityComponent;
 import com.tlongdev.bktf.component.DaggerAdapterComponent;
+import com.tlongdev.bktf.component.DaggerDrawerManagerComponent;
 import com.tlongdev.bktf.component.DaggerFragmentComponent;
 import com.tlongdev.bktf.component.DaggerInteractorComponent;
 import com.tlongdev.bktf.component.DaggerPresenterComponent;
 import com.tlongdev.bktf.component.DaggerProfileManagerComponent;
 import com.tlongdev.bktf.component.DaggerServiceComponent;
+import com.tlongdev.bktf.component.DrawerManagerComponent;
 import com.tlongdev.bktf.component.FragmentComponent;
 import com.tlongdev.bktf.component.InteractorComponent;
 import com.tlongdev.bktf.component.PresenterComponent;
@@ -63,6 +65,8 @@ public class BptfApplication extends Application {
     private AdapterComponent mAdapterComponent;
 
     private ServiceComponent mServiceComponent;
+
+    private DrawerManagerComponent mDrawerManagerComponent;
 
     @Override
     public void onCreate() {
@@ -108,6 +112,10 @@ public class BptfApplication extends Application {
         mServiceComponent = DaggerServiceComponent.builder()
                 .bptfAppModule(appModule)
                 .storageModule(storageModule)
+                .build();
+
+        mDrawerManagerComponent = DaggerDrawerManagerComponent.builder()
+                .bptfAppModule(appModule)
                 .build();
 
         if (!BuildConfig.DEBUG) {
@@ -163,5 +171,9 @@ public class BptfApplication extends Application {
 
     public ServiceComponent getServiceComponent() {
         return mServiceComponent;
+    }
+
+    public DrawerManagerComponent getDrawerManagerComponent() {
+        return mDrawerManagerComponent;
     }
 }

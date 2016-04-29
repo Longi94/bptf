@@ -15,6 +15,4 @@ public interface UserView extends BaseView {
     void updateUserPage(User user);
 
     void backpack(boolean _private);
-
-    void updateDrawer();
 }

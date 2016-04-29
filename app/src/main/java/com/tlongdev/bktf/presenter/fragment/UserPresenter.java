@@ -133,7 +133,6 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
             mView.backpack(false);
             mView.updateUserPage(mProfileManager.getUser());
             mView.hideRefreshingAnimation();
-            mView.updateDrawer();
         }
     }
 
@@ -151,7 +150,6 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
             mView.backpack(true);
             mView.updateUserPage(user);
             mView.hideRefreshingAnimation();
-            mView.updateDrawer();
         }
     }
 

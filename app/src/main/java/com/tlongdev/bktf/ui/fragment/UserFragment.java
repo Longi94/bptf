@@ -447,9 +447,4 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
     public void backpack(boolean _private) {
         privateBackpack = _private;
     }
-
-    @Override
-    public void updateDrawer() {
-        ((MainActivity) getActivity()).updateDrawer();
-    }
 }

@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,6 +24,9 @@ import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.User;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 /**
@@ -37,6 +40,8 @@ public class ProfileManager {
     @Inject Context mContext;
 
     private User mUserCache;
+
+    private List<OnUpdateListener> mListeners = new LinkedList<>();
 
     public ProfileManager(BptfApplication application) {
         application.getProfileManagerComponent().inject(this);
@@ -76,6 +81,10 @@ public class ProfileManager {
         String json = mGson.toJson(user);
         mEditor.putString(mContext.getString(R.string.pref_user_data), json);
         mEditor.apply();
+
+        for (OnUpdateListener listener : mListeners) {
+            listener.onUpdate(mUserCache);
+        }
     }
 
     /**
@@ -96,5 +105,23 @@ public class ProfileManager {
     public void logOut() {
         mEditor.remove(mContext.getString(R.string.pref_user_data));
         mEditor.apply();
+
+        for (OnUpdateListener listener : mListeners) {
+            listener.onLogOut();
+        }
+    }
+
+    public void addOnProfileUpdateListener(OnUpdateListener listener) {
+        mListeners.add(listener);
+    }
+
+    public void removeOnUpdateListener(OnUpdateListener listener) {
+        mListeners.remove(listener);
+    }
+
+    public interface OnUpdateListener {
+        void onLogOut();
+
+        void onUpdate(User user);
     }
 }

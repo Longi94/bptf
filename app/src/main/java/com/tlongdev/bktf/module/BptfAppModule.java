@@ -25,6 +25,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.ads.AdManager;
+import com.tlongdev.bktf.ui.NavigationDrawerManager;
 import com.tlongdev.bktf.util.ProfileManager;
 
 import javax.inject.Singleton;
@@ -91,5 +92,11 @@ public class BptfAppModule {
     @Singleton
     AdManager provideAdManager(Application application) {
         return new AdManager(application);
+    }
+
+    @Provides
+    @Singleton
+    NavigationDrawerManager provideNavigationDrawerManager(Application application) {
+        return new NavigationDrawerManager((BptfApplication) application);
     }
 }
