@@ -126,10 +126,9 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-        setRetainInstance(true);
     }
 
     /**

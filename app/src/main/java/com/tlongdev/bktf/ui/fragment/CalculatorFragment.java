@@ -83,10 +83,9 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView, 
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-        setRetainInstance(true);
     }
 
     @Override

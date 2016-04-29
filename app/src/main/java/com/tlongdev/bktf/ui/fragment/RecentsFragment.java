@@ -108,12 +108,6 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-    }
-
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
@@ -217,7 +211,8 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
      * Fully expand the toolbar with animation.
      */
     private void expandToolbar() {
-        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
+        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams)
+                mAppBarLayout.getLayoutParams()).getBehavior();
         behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
     }
 

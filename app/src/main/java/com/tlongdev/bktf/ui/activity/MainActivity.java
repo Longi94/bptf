@@ -64,18 +64,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_SETTINGS = 100;
     public static final int REQUEST_NEW_ITEM = 101;
 
-    private static final String FRAGMENT_TAG_RECENTS = "recents";
-    private static final String FRAGMENT_TAG_UNUSUALS = "unusuals";
-    private static final String FRAGMENT_TAG_USER = "user";
-    private static final String FRAGMENT_TAG_FAVORITES = "favorites";
-    private static final String FRAGMENT_TAG_CONVERTER = "converter";
-    private static final String FRAGMENT_TAG_CALCULATOR = "calculator";
-
-    /**
-     * Remember the position of the selected item.
-     */
-    private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
-
     @Inject SharedPreferences mPrefs;
     @Inject ProfileManager mProfileManager;
     @Inject NavigationDrawerManager mNavigationDrawerManager;
@@ -169,10 +157,7 @@ public class MainActivity extends AppCompatActivity {
         mNavigationDrawerManager.setUserMenuItem(mNavigationView.getMenu().getItem(2));
 
         //Check if there is a fragment to be restored
-        if (savedInstanceState != null) {
-            switchFragment(savedInstanceState.getInt(STATE_SELECTED_POSITION));
-            mNavigationView.getMenu().getItem(mCurrentSelectedPosition).setChecked(true);
-        } else {
+        if (savedInstanceState == null) {
             mNavigationView.getMenu().getItem(0).setChecked(true);
             // Select either the default item (0) or the last selected item.
             switchFragment(0);
@@ -213,13 +198,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mNavigationDrawerManager.detachView();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        //Save the current fragment to be restored.
-        outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
     }
 
     @Override
@@ -286,52 +264,34 @@ public class MainActivity extends AppCompatActivity {
         //Initialize fragments and add them is the drawer listener
         switch (position) {
             case 0:
-                newFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_RECENTS);
-                if (newFragment == null) {
-                    newFragment = new RecentsFragment();
-                }
+                newFragment = new RecentsFragment();
                 mDrawerListener = (RecentsFragment) newFragment;
-                transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_RECENTS);
+                transaction.replace(R.id.container, newFragment);
                 break;
             case 1:
-                newFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_UNUSUALS);
-                if (newFragment == null) {
-                    newFragment = new UnusualFragment();
-                }
+                newFragment = new UnusualFragment();
                 mDrawerListener = (UnusualFragment) newFragment;
-                transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_UNUSUALS);
+                transaction.replace(R.id.container, newFragment);
                 break;
             case 2:
-                newFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_USER);
-                if (newFragment == null) {
-                    newFragment = UserFragment.newInstance();
-                }
+                newFragment = UserFragment.newInstance();
                 mDrawerListener = (UserFragment) newFragment;
-                transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_USER);
+                transaction.replace(R.id.container, newFragment);
                 break;
             case 3:
-                newFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_FAVORITES);
-                if (newFragment == null) {
-                    newFragment = new FavoritesFragment();
-                }
+                newFragment = new FavoritesFragment();
                 mDrawerListener = (FavoritesFragment) newFragment;
-                transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_FAVORITES);
+                transaction.replace(R.id.container, newFragment);
                 break;
             case 4:
-                newFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_CONVERTER);
-                if (newFragment == null) {
-                    newFragment = new ConverterFragment();
-                }
+                newFragment = new ConverterFragment();
                 mDrawerListener = null;
-                transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_CONVERTER);
+                transaction.replace(R.id.container, newFragment);
                 break;
             case 5:
-                newFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_CALCULATOR);
-                if (newFragment == null) {
-                    newFragment = new CalculatorFragment();
-                }
+                newFragment = new CalculatorFragment();
                 mDrawerListener = (CalculatorFragment) newFragment;
-                transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_CALCULATOR);
+                transaction.replace(R.id.container, newFragment);
                 break;
             default:
                 throw new IllegalArgumentException("unknown fragment to switch to: " + position);
