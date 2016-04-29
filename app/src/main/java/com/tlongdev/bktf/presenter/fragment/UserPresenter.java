@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,7 +40,7 @@ import javax.inject.Inject;
  * @author Long
  * @since 2016. 03. 15.
  */
-public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.Callback, SwipeRefreshLayout.OnRefreshListener, Tf2UserBackpackInteractor.Callback {
+public class UserPresenter implements Presenter<UserView>, GetUserDataInteractor.Callback, SwipeRefreshLayout.OnRefreshListener, Tf2UserBackpackInteractor.Callback {
 
     @Inject SharedPreferences mPrefs;
     @Inject SharedPreferences.Editor mEditor;
@@ -52,6 +52,8 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
     private final BptfApplication mApplication;
     private boolean mSearchedUser;
 
+    private boolean mLoading = false;
+
     public UserPresenter(BptfApplication application) {
         mApplication = application;
         application.getPresenterComponent().inject(this);
@@ -60,6 +62,10 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
     @Override
     public void attachView(UserView view) {
         mView = view;
+
+        if (mView != null && mLoading) {
+            mView.showRefreshingAnimation();
+        }
     }
 
     @Override
@@ -74,16 +80,8 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
                 - user.getLastUpdated() >= 3600000L) {
 
             //Start the task and listen for the end
-            GetUserDataInteractor task = new GetUserDataInteractor(mApplication,
-                    mProfileManager.getUser(), false, this);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
+            getUserData(false);
             mView.showRefreshingAnimation();
-
-            mTracker.send(new HitBuilders.EventBuilder()
-                    .setCategory("Request")
-                    .setAction("UserData")
-                    .build());
         }
     }
 
@@ -102,24 +100,31 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
 
     @Override
     public void onUserInfoFailed(String errorMessage) {
+        mLoading = false;
         if (mView != null) {
             mView.hideRefreshingAnimation();
             mView.showToast("bptf: " + errorMessage, Toast.LENGTH_SHORT);
         }
     }
 
+    private void getUserData(boolean isGuest) {
+        //Start fetching the data and listen for the end
+        GetUserDataInteractor interactor = new GetUserDataInteractor(mApplication,
+                mProfileManager.getUser(), isGuest, this);
+        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        mLoading = true;
+
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Request")
+                .setAction("UserData")
+                .build());
+    }
+
     @Override
     public void onRefresh() {
         if (Utility.isNetworkAvailable(mContext)) {
-            //Start fetching the data and listen for the end
-            GetUserDataInteractor interactor = new GetUserDataInteractor(mApplication,
-                    mProfileManager.getUser(), true, this);
-            interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-            mTracker.send(new HitBuilders.EventBuilder()
-                    .setCategory("Request")
-                    .setAction("UserData")
-                    .build());
+            getUserData(true);
         } else {
             //There is no internet connection, notify the user
             mView.showToast("bptf: " + mContext.getString(R.string.error_no_network), Toast.LENGTH_SHORT);
@@ -129,6 +134,7 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
 
     @Override
     public void onUserBackpackFinished(User user) {
+        mLoading = false;
         if (mView != null) {
             mView.backpack(false);
             mView.updateUserPage(mProfileManager.getUser());
@@ -146,6 +152,7 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
         user.setRawMetal(-1);
         mProfileManager.saveUser(user);
 
+        mLoading = false;
         if (mView != null) {
             mView.backpack(true);
             mView.updateUserPage(user);
@@ -156,6 +163,7 @@ public class UserPresenter implements Presenter<UserView>,GetUserDataInteractor.
     @Override
     public void onUserBackpackFailed(String errorMessage) {
         //Stop the refreshing animation and update the UI
+        mLoading = false;
         if (mView != null) {
             mView.updateUserPage(mProfileManager.getUser());
             mView.hideRefreshingAnimation();

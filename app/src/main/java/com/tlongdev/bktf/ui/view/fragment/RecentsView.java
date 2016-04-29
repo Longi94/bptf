@@ -28,8 +28,6 @@ import com.tlongdev.bktf.ui.view.BaseView;
 public interface RecentsView extends BaseView {
     void showPrices(Cursor prices);
 
-    void showError();
-
     void showRefreshAnimation();
 
     void hideRefreshingAnimation();
