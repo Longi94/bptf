@@ -205,7 +205,7 @@ public class Item implements Parcelable {
                     DatabaseContract.ItemSchemaEntry.CONTENT_URI,
                     new String[]{ItemSchemaEntry.COLUMN_ITEM_NAME, ItemSchemaEntry.COLUMN_TYPE_NAME, ItemSchemaEntry.COLUMN_PROPER_NAME},
                     ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX + " = ?",
-                    new String[]{String.valueOf(defindex)},
+                    new String[]{String.valueOf(priceIndex)},
                     null
             );
 
