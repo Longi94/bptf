@@ -56,7 +56,6 @@ import com.tlongdev.bktf.customtabs.WebViewFallback;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.presenter.fragment.RecentsPresenter;
-import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.view.fragment.RecentsView;
@@ -72,7 +71,7 @@ import butterknife.Unbinder;
  * recents fragment. Shows a list of all the prices orderd by the time of the price update.
  */
 public class RecentsFragment extends BptfFragment implements RecentsView,
-        SwipeRefreshLayout.OnRefreshListener, MainActivity.OnDrawerOpenedListener, RecentsAdapter.OnMoreListener {
+        SwipeRefreshLayout.OnRefreshListener, RecentsAdapter.OnMoreListener {
 
     @Inject RecentsPresenter mPresenter;
 
@@ -200,20 +199,6 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
     @Override
     public void onRefresh() {
         mPresenter.downloadPrices();
-    }
-
-    @Override
-    public void onDrawerOpened() {
-        expandToolbar();
-    }
-
-    /**
-     * Fully expand the toolbar with animation.
-     */
-    private void expandToolbar() {
-        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams)
-                mAppBarLayout.getLayoutParams()).getBehavior();
-        behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
     }
 
     @Override

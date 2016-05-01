@@ -63,7 +63,7 @@ import butterknife.Unbinder;
  * A simple {@link Fragment} subclass.
  */
 public class FavoritesFragment extends BptfFragment implements FavoritesView,
-        MainActivity.OnDrawerOpenedListener, FavoritesAdapter.OnMoreListener {
+        FavoritesAdapter.OnMoreListener {
 
     @Inject FavoritesPresenter mPresenter;
 
@@ -177,11 +177,6 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onDrawerOpened() {
-        expandToolbar();
-    }
-
     @OnClick(R.id.fab)
     public void addItem() {
         startActivityForResult(new Intent(getActivity(), ItemChooserActivity.class), MainActivity.REQUEST_NEW_ITEM);
@@ -191,14 +186,6 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
     public void showFavorites(List<Item> items) {
         mAdapter.setDataSet(items);
         mAdapter.notifyDataSetChanged();
-    }
-
-    /**
-     * Fully expand the toolbar with animation.
-     */
-    private void expandToolbar() {
-        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
-        behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
     }
 
     @Override

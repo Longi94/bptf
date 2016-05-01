@@ -22,7 +22,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -85,12 +84,6 @@ public class MainActivity extends AppCompatActivity {
      * Variables used for managing fragments.
      */
     private boolean mUserStateChanged = false;
-
-    /**
-     * Listener to be notified when the drawer opens. Mainly for fragments with toolbars so we can
-     * expand the fragment's toolbar when the drawer opens.
-     */
-    private OnDrawerOpenedListener mDrawerListener;
 
     /**
      * Listener for the navigation drawer.
@@ -259,39 +252,26 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setCustomAnimations(R.anim.simple_fade_in, R.anim.simple_fade_out);
-        Fragment newFragment;
 
         //Initialize fragments and add them is the drawer listener
         switch (position) {
             case 0:
-                newFragment = new RecentsFragment();
-                mDrawerListener = (RecentsFragment) newFragment;
-                transaction.replace(R.id.container, newFragment);
+                transaction.replace(R.id.container, new RecentsFragment());
                 break;
             case 1:
-                newFragment = new UnusualFragment();
-                mDrawerListener = (UnusualFragment) newFragment;
-                transaction.replace(R.id.container, newFragment);
+                transaction.replace(R.id.container, new UnusualFragment());
                 break;
             case 2:
-                newFragment = UserFragment.newInstance();
-                mDrawerListener = (UserFragment) newFragment;
-                transaction.replace(R.id.container, newFragment);
+                transaction.replace(R.id.container, UserFragment.newInstance());
                 break;
             case 3:
-                newFragment = new FavoritesFragment();
-                mDrawerListener = (FavoritesFragment) newFragment;
-                transaction.replace(R.id.container, newFragment);
+                transaction.replace(R.id.container, new FavoritesFragment());
                 break;
             case 4:
-                newFragment = new ConverterFragment();
-                mDrawerListener = null;
-                transaction.replace(R.id.container, newFragment);
+                transaction.replace(R.id.container, new ConverterFragment());
                 break;
             case 5:
-                newFragment = new CalculatorFragment();
-                mDrawerListener = (CalculatorFragment) newFragment;
-                transaction.replace(R.id.container, newFragment);
+                transaction.replace(R.id.container, new CalculatorFragment());
                 break;
             default:
                 throw new IllegalArgumentException("unknown fragment to switch to: " + position);
@@ -323,10 +303,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                //Notify the listeners
-                if (mDrawerListener != null) {
-                    mDrawerListener.onDrawerOpened();
-                }
+                Utility.hideKeyboard(MainActivity.this);
             }
         };
 
@@ -339,16 +316,5 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mDrawerLayout.addDrawerListener(mDrawerToggle);
-    }
-
-    /**
-     * Interface for listening drawer open events.
-     */
-    public interface OnDrawerOpenedListener {
-
-        /**
-         * Called when the navigation drawer is opened.
-         */
-        void onDrawerOpened();
     }
 }

@@ -49,7 +49,6 @@ import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
 import com.tlongdev.bktf.customtabs.WebViewFallback;
 import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.presenter.fragment.UserPresenter;
-import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.activity.UserBackpackActivity;
 import com.tlongdev.bktf.ui.view.fragment.UserView;
@@ -68,7 +67,7 @@ import butterknife.Unbinder;
 /**
  * Fragment for displaying the user profile.
  */
-public class UserFragment extends BptfFragment implements UserView, View.OnClickListener, MainActivity.OnDrawerOpenedListener {
+public class UserFragment extends BptfFragment implements UserView, View.OnClickListener {
 
     private static final String USER_PARAM = "user_param";
 
@@ -410,19 +409,6 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
             backpackSlots.setText(String.format(Locale.ENGLISH, "%s/%d", String.valueOf(itemNumber), backpackSlotNumber));
         else
             backpackSlots.setText("?/?");
-    }
-
-    @Override
-    public void onDrawerOpened() {
-        expandToolbar();
-    }
-
-    /**
-     * Fully expand the toolbar with animation.
-     */
-    private void expandToolbar() {
-        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
-        behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
     }
 
     @Override
