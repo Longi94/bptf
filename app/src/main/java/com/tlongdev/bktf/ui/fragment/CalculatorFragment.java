@@ -62,7 +62,7 @@ import butterknife.Unbinder;
  * Calculator fragment. Let's the user create a list of items and it will calculate the total value
  * of the items
  */
-public class CalculatorFragment extends BptfFragment implements CalculatorView, MainActivity.OnDrawerOpenedListener{
+public class CalculatorFragment extends BptfFragment implements CalculatorView {
 
     @Inject CalculatorPresenter mPresenter;
 
@@ -190,11 +190,6 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView, 
     }
 
     @Override
-    public void onDrawerOpened() {
-        expandToolbar();
-    }
-
-    @Override
     public void updatePrices(Price totalPrice) {
         try {
             priceMetal.setText(totalPrice.getFormattedPrice(getActivity(), Currency.METAL));
@@ -204,14 +199,6 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView, 
         } catch (Throwable t) {
             Crashlytics.logException(t);
         }
-    }
-
-    /**
-     * Fully expand the toolbar with animation.
-     */
-    private void expandToolbar() {
-        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
-        behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
     }
 
     @Override

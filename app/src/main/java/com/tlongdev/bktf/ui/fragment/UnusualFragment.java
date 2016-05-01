@@ -43,11 +43,9 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.UnusualAdapter;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.presenter.fragment.UnusualPresenter;
-import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.activity.UnusualActivity;
 import com.tlongdev.bktf.ui.view.fragment.UnusualView;
-import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
 
@@ -62,7 +60,7 @@ import butterknife.Unbinder;
  * hats or effects.
  */
 public class UnusualFragment extends BptfFragment implements UnusualView,
-        MainActivity.OnDrawerOpenedListener, TextWatcher, UnusualAdapter.OnItemClickListener {
+        TextWatcher, UnusualAdapter.OnItemClickListener {
 
     @Inject UnusualPresenter mPresenter;
     @Inject Context mContext;
@@ -217,7 +215,7 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
                     //Show hats sorted by their average price
                     mPresenter.loadUnusualHats("", mCurrentSort);
 
-                    effectMenuItem.setIcon(R.drawable.ic_star_outline_white);
+                    effectMenuItem.setIcon(R.drawable.ic_star_outline_white_24dp);
                     getActivity().setTitle(getString(R.string.title_unusuals));
 
                     mSearchInput.setHint("Name");
@@ -225,7 +223,7 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
                     //Show effects
                     mPresenter.loadUnusualEffects("", mCurrentSort);
 
-                    effectMenuItem.setIcon(R.drawable.ic_star_white);
+                    effectMenuItem.setIcon(R.drawable.ic_star_white_24dp);
                     getActivity().setTitle(getString(R.string.title_effects));
 
                     mSearchInput.setHint("Effect");
@@ -240,20 +238,6 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    /**
-     * Fully expand the toolbar with animation.
-     */
-    private void expandToolbar() {
-        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
-        behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
-    }
-
-    @Override
-    public void onDrawerOpened() {
-        expandToolbar();
-        Utility.hideKeyboard(getActivity());
     }
 
     @Override

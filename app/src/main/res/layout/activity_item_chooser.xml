@@ -186,6 +186,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_margin="16dp"
-        app:srcCompat="@drawable/ic_done_white"/>
+        android:src="@drawable/ic_done_white_48dp"/>
 
 </LinearLayout>

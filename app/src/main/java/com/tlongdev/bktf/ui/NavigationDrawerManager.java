@@ -115,6 +115,9 @@ public class NavigationDrawerManager implements SharedPreferences.OnSharedPrefer
 
     public void setUserMenuItem(MenuItem userMenuItem) {
         mUserMenuItem = userMenuItem;
+        if (mUserMenuItem != null) {
+            mUserMenuItem.setEnabled(mProfileManager.isSignedIn());
+        }
     }
 
     @Override

@@ -14,16 +14,14 @@ android {
         applicationId "com.tlongdev.bktf"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 42
-        versionName "2.1.0"
+        versionCode 43
+        versionName "2.1.1"
 
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
                 output.outputFile = new File((String) output.outputFile.parent, "bptf-" + versionName + ".apk")
             }
         }
-
-        vectorDrawables.useSupportLibrary = true
 
         Properties keys = new Properties()
         if (project.rootProject.file('keys.properties').exists()) {
