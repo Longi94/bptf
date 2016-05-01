@@ -217,7 +217,7 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
                     //Show hats sorted by their average price
                     mPresenter.loadUnusualHats("", mCurrentSort);
 
-                    effectMenuItem.setIcon(R.drawable.ic_star_outline_white);
+                    effectMenuItem.setIcon(R.drawable.ic_star_outline_white_24dp);
                     getActivity().setTitle(getString(R.string.title_unusuals));
 
                     mSearchInput.setHint("Name");
@@ -225,7 +225,7 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
                     //Show effects
                     mPresenter.loadUnusualEffects("", mCurrentSort);
 
-                    effectMenuItem.setIcon(R.drawable.ic_star_white);
+                    effectMenuItem.setIcon(R.drawable.ic_star_white_24dp);
                     getActivity().setTitle(getString(R.string.title_effects));
 
                     mSearchInput.setHint("Effect");

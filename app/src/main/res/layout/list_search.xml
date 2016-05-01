@@ -126,7 +126,7 @@
                 android:paddingRight="4dp"
                 android:paddingStart="8dp"
                 android:paddingTop="8dp"
-                app:srcCompat="@drawable/ic_more_vert_white"
+                android:src="@drawable/ic_more_vert_white_18dp"
                 tools:ignore="MissingPrefix"/>
 
         </RelativeLayout>

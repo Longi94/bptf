@@ -91,9 +91,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    android:drawableLeft="@drawable/ic_money_white_wrapper"
+                    android:drawableLeft="@drawable/ic_attach_money_white_24dp"
                     android:drawablePadding="4dp"
-                    android:drawableStart="@drawable/ic_money_white_wrapper"
+                    android:drawableStart="@drawable/ic_attach_money_white_24dp"
                     android:inputType="number"
                     android:lines="1"
                     android:scrollHorizontally="true"/>

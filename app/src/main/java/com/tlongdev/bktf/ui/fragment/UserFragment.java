@@ -334,8 +334,8 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
         }
 
         //Load drawables for player statuses
-        Drawable statusOk = getResources().getDrawable(R.drawable.ic_done_white);
-        Drawable statusBad = getResources().getDrawable(R.drawable.ic_close_white);
+        Drawable statusOk = getResources().getDrawable(R.drawable.ic_done_white_48dp);
+        Drawable statusBad = getResources().getDrawable(R.drawable.ic_close_white_48dp);
         if (statusOk != null) statusOk.setColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY);
         if (statusBad != null) statusBad.setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
 

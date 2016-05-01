@@ -29,7 +29,7 @@
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:padding="16dp"
             android:tint="@color/accent"
-            app:srcCompat="@drawable/ic_arrow_forward"
+            android:src="@drawable/ic_arrow_forward_white_24dp"
             tools:ignore="MissingPrefix"/>
 
     </LinearLayout>
