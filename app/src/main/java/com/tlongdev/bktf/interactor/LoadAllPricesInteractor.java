@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package com.tlongdev.bktf.interactor;
 
 import android.content.Context;
