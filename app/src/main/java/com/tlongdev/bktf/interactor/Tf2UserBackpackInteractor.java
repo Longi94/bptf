@@ -116,11 +116,11 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
     protected void onPostExecute(Integer integer) {
         if (mCallback != null) {
             if (integer == 0) {
-                //Notify the listener that the backpack was private
-                mCallback.onPrivateBackpack();
-            } else if (integer >= 1) {
                 //Notify the user that the fetching finished and pass on the data
                 mCallback.onUserBackpackFinished(mUser);
+            } else if (integer >= 1) {
+                //Notify the listener that the backpack was private
+                mCallback.onPrivateBackpack();
             } else {
                 mCallback.onUserBackpackFailed(errorMessage);
             }
@@ -187,12 +187,12 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
                         mProfileManager.saveUser(mUser);
                     }
                 }
-                return 1;
+                return 0;
             case 8: //Invalid ID, shouldn't reach
                 throw new IllegalStateException(
                         "Steam ID provided for backpack fetching was invalid: " + mUser.getResolvedSteamId());
             case 15: //Backpack is private
-                return 2;
+                return 1;
             case 18: //ID doesn't exist, shouldn't reach
                 throw new IllegalStateException(
                         "Steam ID provided for backpack fetching doesn't exist: " + mUser.getResolvedSteamId());
