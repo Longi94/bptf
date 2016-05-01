@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -97,6 +97,9 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
     @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbarLayout;
     @BindView(R.id.ad_view) AdView mAdView;
+    @BindView(R.id.private_text) TextView mPrivateBackpackText;
+    @BindView(R.id.backpack) ImageView mBackpackButton;
+    @BindView(R.id.backpack_content) View mBackpackContent;
 
     //Stores whether the backpack is private or not
     private boolean privateBackpack = false;
@@ -209,61 +212,53 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
     }
 
     @OnClick({R.id.button_bazaar_tf, R.id.button_steamrep, R.id.button_tf2op, R.id.button_tf2tp,
-            R.id.button_steam_community, R.id.backpack})
+            R.id.button_steam_community})
     public void onClick(View v) {
         //Handle all the buttons here
 
         //Get the steam id, do nothing if there is no steam id
         String steamId = mUser.getResolvedSteamId();
         if (steamId.equals("")) {
-            showToast( "bptf: " + getString(R.string.error_no_steam_id), Toast.LENGTH_SHORT);
+            showToast("bptf: " + getString(R.string.error_no_steam_id), Toast.LENGTH_SHORT);
             return;
         }
 
-        //All buttons (except the backpack one) open a link in the browser
-        if (v.getId() != R.id.backpack) {
-
-            String url;
-            switch (v.getId()) {
-                case R.id.button_bazaar_tf:
-                    url = getString(R.string.link_bazaar_tf);
-                    break;
-                case R.id.button_steamrep:
-                    url = getString(R.string.link_steamrep);
-                    break;
-                case R.id.button_tf2op:
-                    url = getString(R.string.link_tf2op);
-                    break;
-                case R.id.button_tf2tp:
-                    url = getString(R.string.link_tf2tp);
-                    break;
-                case R.id.button_steam_community:
-                    url = getString(R.string.link_steam_community);
-                    break;
-                default:
-                    return;
-            }
-
-            //Create an URI for the intent.
-            Uri webPage = Uri.parse(url + steamId);
-
-            //Open link in the device default web browser
-            CustomTabsIntent intent = new CustomTabsIntent.Builder().build();
-            CustomTabActivityHelper.openCustomTab(getActivity(), intent, webPage,
-                    new WebViewFallback());
-        } else {
-            if (privateBackpack) {
-                //The backpack is private, do nothing
-                showToast(getString(R.string.message_private_backpack_own), Toast.LENGTH_SHORT);
-            } else {
-                //Else the user clicked on the backpack button. Start the backpack activity. Pass
-                //the steamId and whether it's the user's backpack or not
-                Intent i = new Intent(getActivity(), UserBackpackActivity.class);
-                i.putExtra(UserBackpackActivity.EXTRA_NAME, mCollapsingToolbarLayout.getTitle());
-                i.putExtra(UserBackpackActivity.EXTRA_GUEST, searchedUser);
-                startActivity(i);
-            }
+        String url;
+        switch (v.getId()) {
+            case R.id.button_bazaar_tf:
+                url = getString(R.string.link_bazaar_tf);
+                break;
+            case R.id.button_steamrep:
+                url = getString(R.string.link_steamrep);
+                break;
+            case R.id.button_tf2op:
+                url = getString(R.string.link_tf2op);
+                break;
+            case R.id.button_tf2tp:
+                url = getString(R.string.link_tf2tp);
+                break;
+            case R.id.button_steam_community:
+                url = getString(R.string.link_steam_community);
+                break;
+            default:
+                return;
         }
+
+        //Create an URI for the intent.
+        Uri webPage = Uri.parse(url + steamId);
+
+        //Open link in the device default web browser
+        CustomTabsIntent intent = new CustomTabsIntent.Builder().build();
+        CustomTabActivityHelper.openCustomTab(getActivity(), intent, webPage,
+                new WebViewFallback());
+    }
+
+    @OnClick(R.id.backpack)
+    public void onBackpackClick() {
+        Intent i = new Intent(getActivity(), UserBackpackActivity.class);
+        i.putExtra(UserBackpackActivity.EXTRA_NAME, mCollapsingToolbarLayout.getTitle());
+        i.putExtra(UserBackpackActivity.EXTRA_GUEST, searchedUser);
+        startActivity(i);
     }
 
     @Override
@@ -374,11 +369,14 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
 
         //Backpack value
         double bpValue = mUser.getBackpackValue();
+
+        backpack(privateBackpack);
+
         if (bpValue == -1) {
             //Value is unknown (probably private)
             backpackValueRefined.setText("?");
             backpackValueUsd.setText("?");
-        } else if (!privateBackpack) {
+        } else {
             //Properly format the backpack value (is int, does it have a fraction smaller than 0.01)
             backpackValueRefined.setText(String.valueOf(Math.round(bpValue)));
 
@@ -445,5 +443,19 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
     @Override
     public void backpack(boolean _private) {
         privateBackpack = _private;
+
+        if (mPrivateBackpackText != null) {
+            if (_private) {
+                mPrivateBackpackText.setVisibility(View.VISIBLE);
+                mBackpackButton.setEnabled(false);
+                mBackpackButton.setVisibility(View.GONE);
+                mBackpackContent.setVisibility(View.GONE);
+            } else {
+                mPrivateBackpackText.setVisibility(View.GONE);
+                mBackpackButton.setEnabled(true);
+                mBackpackButton.setVisibility(View.VISIBLE);
+                mBackpackContent.setVisibility(View.VISIBLE);
+            }
+        }
     }
 }
