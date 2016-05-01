@@ -159,7 +159,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
                     ContentValues[] cvArray = new ContentValues[cVVector.size()];
                     cVVector.toArray(cvArray);
 
-                    //Content uri based on which talbe to insert into
+                    //Content uri based on which table to insert into
                     Uri contentUri;
                     if (!mIsGuest) {
                         contentUri = UserBackpackEntry.CONTENT_URI;

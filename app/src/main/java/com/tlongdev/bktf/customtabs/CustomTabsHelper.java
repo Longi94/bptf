@@ -37,7 +37,7 @@ public class CustomTabsHelper {
     }
 
     /**
-     * Goes through all apps that handle VIEW intents and have a warmup service. Picks
+     * Goes through all apps that handle VIEW intents and have a warm up service. Picks
      * the one chosen by the user if there is one, otherwise makes a best effort to return a
      * valid package name.
      *

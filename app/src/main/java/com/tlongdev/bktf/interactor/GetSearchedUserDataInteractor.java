@@ -204,7 +204,7 @@ public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer
             mUser.setVacBanned(player.getBanVac());
 
             if (player.getBackpackTfTrust() != null) {
-                mUser.setTrustNegatvie(player.getBackpackTfTrust().getAgainst());
+                mUser.setTrustNegative(player.getBackpackTfTrust().getAgainst());
                 mUser.setTrustPositive(player.getBackpackTfTrust().getFor());
             }
         }

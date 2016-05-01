@@ -206,7 +206,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
      */
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        //Start the appropiate services if these settings have been changed
+        //Start the appropriate services if these settings have been changed
     }
 
     @Override

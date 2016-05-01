@@ -389,7 +389,7 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
 
         //Set the trust score and color the background according to it.
         trustPositive.setText(String.format(Locale.ENGLISH, "+%d", mUser.getTrustPositive()));
-        trustNegative.setText(String.format(Locale.ENGLISH, "-%d", mUser.getTrustNegatvie()));
+        trustNegative.setText(String.format(Locale.ENGLISH, "-%d", mUser.getTrustNegative()));
 
         //Raw keys
         int rawKeys = mUser.getRawKeys();

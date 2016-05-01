@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void setSupportActionBar(Toolbar toolbar) {
         super.setSupportActionBar(toolbar);
-        //Since each fragment has it's own toolbar we need to re add the drawer toggle everytime we
+        //Since each fragment has it's own toolbar we need to re add the drawer toggle every time we
         //switch fragments
         restoreNavigationIcon();
     }

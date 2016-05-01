@@ -59,7 +59,7 @@ public class User implements Parcelable {
 
     private int trustPositive;
 
-    private int trustNegatvie;
+    private int trustNegative;
 
     private int rawKeys;
 
@@ -101,7 +101,7 @@ public class User implements Parcelable {
         backpackValue = source.readDouble();
         lastUpdated = source.readLong();
         trustPositive = source.readInt();
-        trustNegatvie = source.readInt();
+        trustNegative = source.readInt();
         rawKeys = source.readInt();
         rawMetal = source.readDouble();
         backpackSlots = source.readInt();
@@ -132,7 +132,7 @@ public class User implements Parcelable {
         dest.writeDouble(backpackValue);
         dest.writeLong(lastUpdated);
         dest.writeInt(trustPositive);
-        dest.writeInt(trustNegatvie);
+        dest.writeInt(trustNegative);
         dest.writeInt(rawKeys);
         dest.writeDouble(rawMetal);
         dest.writeInt(backpackSlots);
@@ -259,12 +259,12 @@ public class User implements Parcelable {
         this.trustPositive = trustPositive;
     }
 
-    public int getTrustNegatvie() {
-        return trustNegatvie;
+    public int getTrustNegative() {
+        return trustNegative;
     }
 
-    public void setTrustNegatvie(int trustNegatvie) {
-        this.trustNegatvie = trustNegatvie;
+    public void setTrustNegative(int trustNegative) {
+        this.trustNegative = trustNegative;
     }
 
     public int getRawKeys() {
