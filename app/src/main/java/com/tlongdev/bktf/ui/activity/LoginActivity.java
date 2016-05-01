@@ -31,17 +31,20 @@ import com.tlongdev.bktf.customtabs.WebViewFallback;
 import com.tlongdev.bktf.presenter.activity.LoginPresenter;
 import com.tlongdev.bktf.ui.view.activity.LoginView;
 
-import butterknife.Bind;
+import javax.inject.Inject;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginActivity extends BptfActivity implements LoginView {
 
-    @Bind(R.id.steam_id) EditText steamIdInput;
-    @Bind(R.id.toolbar) Toolbar mToolbar;
+    @Inject LoginPresenter mPresenter;
+
+    @BindView(R.id.steam_id) EditText steamIdInput;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
 
     private ProgressDialog loadingDialog;
-    private LoginPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +52,8 @@ public class LoginActivity extends BptfActivity implements LoginView {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        mPresenter = new LoginPresenter(mApplication);
+        mApplication.getActivityComponent().inject(this);
+
         mPresenter.attachView(this);
 
         setSupportActionBar(mToolbar);

@@ -40,7 +40,9 @@ import com.tlongdev.bktf.ui.view.activity.UserBackpackView;
 
 import java.util.List;
 
-import butterknife.Bind;
+import javax.inject.Inject;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -52,16 +54,16 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
     public static final String EXTRA_NAME = "name";
     public static final String EXTRA_GUEST = "guest";
 
-    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
-    @Bind(R.id.ad_view) AdView mAdView;
+    @Inject UserBackpackPresenter mPresenter;
+
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.ad_view) AdView mAdView;
 
     //Adapters used for the listview
     private BackpackAdapter mAdapter;
 
     //Boolean to decide which database table to load from
     private boolean isGuest;
-
-    private UserBackpackPresenter mPresenter;
 
     /**
      * {@inheritDoc}
@@ -72,7 +74,8 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
         setContentView(R.layout.activity_user_backpack);
         ButterKnife.bind(this);
 
-        mPresenter = new UserBackpackPresenter(mApplication);
+        mApplication.getActivityComponent().inject(this);
+
         mPresenter.attachView(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

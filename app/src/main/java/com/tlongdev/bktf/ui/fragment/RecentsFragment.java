@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -62,8 +62,11 @@ import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.view.fragment.RecentsView;
 import com.tlongdev.bktf.util.Utility;
 
-import butterknife.Bind;
+import javax.inject.Inject;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * recents fragment. Shows a list of all the prices orderd by the time of the price update.
@@ -71,18 +74,20 @@ import butterknife.ButterKnife;
 public class RecentsFragment extends BptfFragment implements RecentsView,
         SwipeRefreshLayout.OnRefreshListener, MainActivity.OnDrawerOpenedListener, RecentsAdapter.OnMoreListener {
 
-    @Bind(R.id.progress_bar) ProgressBar progressBar;
-    @Bind(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
-    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
-    @Bind(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
-    @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
-    @Bind(R.id.text_view_metal_price) TextView mMetalPrice;
-    @Bind(R.id.text_view_key_price) TextView mKeyPrice;
-    @Bind(R.id.text_view_buds_price) TextView mBudsPrice;
-    @Bind(R.id.image_view_metal_price) View metalPriceImage;
-    @Bind(R.id.image_view_key_price) View keyPriceImage;
-    @Bind(R.id.image_view_buds_price) View budsPriceImage;
-    @Bind(R.id.ad_view) AdView mAdView;
+    @Inject RecentsPresenter mPresenter;
+
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
+    @BindView(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
+    @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.text_view_metal_price) TextView mMetalPrice;
+    @BindView(R.id.text_view_key_price) TextView mKeyPrice;
+    @BindView(R.id.text_view_buds_price) TextView mBudsPrice;
+    @BindView(R.id.image_view_metal_price) View metalPriceImage;
+    @BindView(R.id.image_view_key_price) View keyPriceImage;
+    @BindView(R.id.image_view_buds_price) View budsPriceImage;
+    @BindView(R.id.ad_view) AdView mAdView;
 
     /**
      * Adapter of the recycler view
@@ -93,19 +98,13 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
 
     private Context mContext;
 
-    private RecentsPresenter mPresenter;
+    private Unbinder mUnbinder;
 
     /**
      * Constructor
      */
     public RecentsFragment() {
         //Required empty constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
     }
 
     @Override
@@ -123,11 +122,12 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mPresenter = new RecentsPresenter(mApplication);
-        mPresenter.attachView(this);
-
         View rootView = inflater.inflate(R.layout.fragment_recents, container, false);
-        ButterKnife.bind(this, rootView);
+        mUnbinder = ButterKnife.bind(this, rootView);
+
+        mApplication.getFragmentComponent().inject(this);
+
+        mPresenter.attachView(this);
 
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) mContext).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
@@ -173,10 +173,11 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         mPresenter.detachView();
         mAdManager.removeAdView(mAdView);
+        mUnbinder.unbind();
     }
 
     @Override
@@ -210,7 +211,8 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
      * Fully expand the toolbar with animation.
      */
     private void expandToolbar() {
-        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
+        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams)
+                mAppBarLayout.getLayoutParams()).getBehavior();
         behavior.onNestedFling(mCoordinatorLayout, mAppBarLayout, null, 0, -1000, true);
     }
 
@@ -232,11 +234,6 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
             progressBar.startAnimation(fadeOut);
             progressBar.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public void showError() {
-        mAdapter.swapCursor(null);
     }
 
     @Override

@@ -19,7 +19,7 @@ STEAM_WEB_API_KEY=DUMMY_KEY
 - You need a steam web API key (http://steamcommunity.com/dev/apikey) in order to be able to download steam user data.
 
 ## Technologies
-It would be really if you were somewhat familiar with the technologies and concepts. If not, I provided some userful links for you.
+It would be really if you were somewhat familiar with the technologies and concepts. If not, I provided some useful links for you.
 - Dependency using dagger 2
   - https://guides.codepath.com/android/Dependency-Injection-with-Dagger-2
 - Model-View-Presenter design pattern

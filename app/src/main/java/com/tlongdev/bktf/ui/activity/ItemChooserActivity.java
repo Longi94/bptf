@@ -44,7 +44,9 @@ import com.tlongdev.bktf.ui.view.activity.ItemChooserView;
 
 import java.util.List;
 
-import butterknife.Bind;
+import javax.inject.Inject;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -58,18 +60,20 @@ public class ItemChooserActivity extends BptfActivity implements ItemChooserView
     public static final String EXTRA_ITEM = "item";
     public static final String EXTRA_IS_FROM_CALCULATOR = "calculator";
 
-    @Bind(R.id.quality) Spinner qualitySpinner;
-    @Bind(R.id.effect) Spinner effectSpinner;
-    @Bind(R.id.weapon_wear) Spinner wearSpinner;
-    @Bind(R.id.title_effect) TextView titleEffect;
-    @Bind(R.id.title_wear) TextView titleWear;
-    @Bind(R.id.icon) ImageView icon;
-    @Bind(R.id.item_text) TextView itemText;
-    @Bind(R.id.item_name) TextView itemName;
-    @Bind(R.id.tradable) CheckBox tradable;
-    @Bind(R.id.craftable) CheckBox craftable;
-    @Bind(R.id.australium) CheckBox australium;
-    @Bind(R.id.fab) FloatingActionButton fab;
+    @Inject ItemChooserPresenter mPresenter;
+
+    @BindView(R.id.quality) Spinner qualitySpinner;
+    @BindView(R.id.effect) Spinner effectSpinner;
+    @BindView(R.id.weapon_wear) Spinner wearSpinner;
+    @BindView(R.id.title_effect) TextView titleEffect;
+    @BindView(R.id.title_wear) TextView titleWear;
+    @BindView(R.id.icon) ImageView icon;
+    @BindView(R.id.item_text) TextView itemText;
+    @BindView(R.id.item_name) TextView itemName;
+    @BindView(R.id.tradable) CheckBox tradable;
+    @BindView(R.id.craftable) CheckBox craftable;
+    @BindView(R.id.australium) CheckBox australium;
+    @BindView(R.id.fab) FloatingActionButton fab;
 
     @SuppressWarnings("NullableProblems")
     @Nullable
@@ -79,7 +83,6 @@ public class ItemChooserActivity extends BptfActivity implements ItemChooserView
     private QualityAdapter qualityAdapter;
     private WeaponWearAdapter wearAdapter;
     private EffectAdapter effectAdapter;
-    private ItemChooserPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +91,8 @@ public class ItemChooserActivity extends BptfActivity implements ItemChooserView
         ButterKnife.bind(this);
         Dart.inject(this);
 
-        mPresenter = new ItemChooserPresenter(mApplication);
+        mApplication.getActivityComponent().inject(this);
+
         mPresenter.attachView(this);
 
         setTitle(null);

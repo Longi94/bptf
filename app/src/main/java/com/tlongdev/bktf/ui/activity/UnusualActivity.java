@@ -47,7 +47,9 @@ import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
 
-import butterknife.Bind;
+import javax.inject.Inject;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -59,6 +61,8 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
     public static final String EXTRA_NAME = "name";
     public static final String EXTRA_PRICE_INDEX = "index";
 
+    @Inject UnusualPresenter mPresenter;
+
     @SuppressWarnings("NullableProblems")
     @Nullable
     @InjectExtra(EXTRA_DEFINDEX) int mDefindex = -1;
@@ -67,13 +71,12 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
     @InjectExtra(EXTRA_PRICE_INDEX) int mIndex = -1;
     @InjectExtra(EXTRA_NAME) String mName;
 
-    @Bind(R.id.search) EditText mSearchInput;
-    @Bind(R.id.toolbar) Toolbar mToolbar;
-    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
-    @Bind(R.id.ad_view) AdView mAdView;
+    @BindView(R.id.search) EditText mSearchInput;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.ad_view) AdView mAdView;
 
     private UnusualAdapter mAdapter;
-    private UnusualPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +85,8 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
         ButterKnife.bind(this);
         Dart.inject(this);
 
-        mPresenter = new UnusualPresenter(mApplication);
+        mApplication.getActivityComponent().inject(this);
+
         mPresenter.attachView(this);
 
         setSupportActionBar(mToolbar);

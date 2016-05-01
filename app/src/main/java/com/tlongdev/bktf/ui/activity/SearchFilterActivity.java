@@ -35,7 +35,7 @@ import com.tlongdev.bktf.model.Quality;
 
 import java.util.Arrays;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -63,11 +63,11 @@ public class SearchFilterActivity extends BptfActivity {
     @Nullable
     @InjectExtra(EXTRA_AUSTRALIUM) boolean mAustralium = true;
 
-    @Bind(R.id.quality) Spinner qualitySpinner;
-    @Bind(R.id.tradable) CheckBox tradable;
-    @Bind(R.id.craftable) CheckBox craftable;
-    @Bind(R.id.australium) CheckBox australium;
-    @Bind(R.id.enable) Switch enableSwitch;
+    @BindView(R.id.quality) Spinner qualitySpinner;
+    @BindView(R.id.tradable) CheckBox tradable;
+    @BindView(R.id.craftable) CheckBox craftable;
+    @BindView(R.id.australium) CheckBox australium;
+    @BindView(R.id.enable) Switch enableSwitch;
 
     private QualityAdapter qualityAdapter;
 

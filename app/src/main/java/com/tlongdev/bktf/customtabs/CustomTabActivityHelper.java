@@ -25,7 +25,7 @@ public class CustomTabActivityHelper implements ServiceConnectionCallback {
     private ConnectionCallback mConnectionCallback;
 
     /**
-     * Opens the URL on a Custom Tab if possible. Otherwise fallsback to opening it on a WebView.
+     * Opens the URL on a Custom Tab if possible. Otherwise falls back to opening it on a WebView.
      *
      * @param activity The host activity.
      * @param customTabsIntent a CustomTabsIntent to be used if Custom Tabs is available.
@@ -38,7 +38,7 @@ public class CustomTabActivityHelper implements ServiceConnectionCallback {
                                      CustomTabFallback fallback) {
         String packageName = CustomTabsHelper.getPackageNameToUse(activity);
 
-        //If we cant find a package name, it means theres no browser that supports
+        //If we cant find a package name, it means there's no browser that supports
         //Chrome Custom Tabs installed. So, we fallback to the webview
         if (packageName == null || Build.VERSION.SDK_INT < 15) {
             if (fallback != null) {
@@ -88,7 +88,7 @@ public class CustomTabActivityHelper implements ServiceConnectionCallback {
 
     /**
      * Binds the Activity to the Custom Tabs Service.
-     * @param activity the activity to be binded to the service.
+     * @param activity the activity to be bound to the service.
      */
     public void bindCustomTabsService(Activity activity) {
         if (mClient != null) return;

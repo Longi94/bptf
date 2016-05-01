@@ -14,35 +14,21 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.ui.view;
+package com.tlongdev.bktf.component;
 
-import android.view.View;
+import com.tlongdev.bktf.module.BptfAppModule;
+import com.tlongdev.bktf.ui.NavigationDrawerManager;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdView;
+import javax.inject.Singleton;
+
+import dagger.Component;
 
 /**
  * @author longi
- * @since 2016.03.30.
+ * @since 2016.04.29.
  */
-public class AppearAdListener extends AdListener {
-
-    private AdView mAdView;
-
-    private boolean mLoaded = false;
-
-    public AppearAdListener(AdView adView) {
-        mAdView = adView;
-    }
-
-    @Override
-    public void onAdLoaded() {
-        super.onAdLoaded();
-        mAdView.setVisibility(View.VISIBLE);
-        mLoaded = true;
-    }
-
-    public boolean isLoaded() {
-        return mLoaded;
-    }
+@Singleton
+@Component(modules = {BptfAppModule.class})
+public interface DrawerManagerComponent {
+    void inject(NavigationDrawerManager navigationDrawerManager);
 }

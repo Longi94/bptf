@@ -33,28 +33,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.gcm.GcmRegisterPriceUpdatesService;
-import com.tlongdev.bktf.model.User;
+import com.tlongdev.bktf.ui.NavigationDrawerManager;
 import com.tlongdev.bktf.ui.fragment.CalculatorFragment;
 import com.tlongdev.bktf.ui.fragment.ConverterFragment;
 import com.tlongdev.bktf.ui.fragment.FavoritesFragment;
 import com.tlongdev.bktf.ui.fragment.RecentsFragment;
 import com.tlongdev.bktf.ui.fragment.UnusualFragment;
 import com.tlongdev.bktf.ui.fragment.UserFragment;
-import com.tlongdev.bktf.util.CircleTransform;
 import com.tlongdev.bktf.util.ProfileManager;
 import com.tlongdev.bktf.util.Utility;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -69,23 +64,12 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_SETTINGS = 100;
     public static final int REQUEST_NEW_ITEM = 101;
 
-    private static final String FRAGMENT_TAG_RECENTS = "recents";
-    private static final String FRAGMENT_TAG_UNUSUALS = "unusuals";
-    private static final String FRAGMENT_TAG_USER = "user";
-    private static final String FRAGMENT_TAG_FAVORITES = "favorites";
-    private static final String FRAGMENT_TAG_CONVERTER = "converter";
-    private static final String FRAGMENT_TAG_CALCULATOR = "calculator";
-
-    /**
-     * Remember the position of the selected item.
-     */
-    private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
-
     @Inject SharedPreferences mPrefs;
     @Inject ProfileManager mProfileManager;
+    @Inject NavigationDrawerManager mNavigationDrawerManager;
 
-    @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    @Bind(R.id.navigation_view) NavigationView mNavigationView;
+    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @BindView(R.id.navigation_view) NavigationView mNavigationView;
 
     /**
      * Helper component that ties the action bar to the navigation drawer.
@@ -107,15 +91,6 @@ public class MainActivity extends AppCompatActivity {
      * expand the fragment's toolbar when the drawer opens.
      */
     private OnDrawerOpenedListener mDrawerListener;
-
-    /**
-     * Views of the navigation header view.
-     */
-    private TextView mName;
-    private TextView mBackpack;
-    private ImageView mAvatar;
-
-    private MenuItem mUserMenuItem;
 
     /**
      * Listener for the navigation drawer.
@@ -178,21 +153,11 @@ public class MainActivity extends AppCompatActivity {
         //The navigation view
         mNavigationView.setNavigationItemSelectedListener(navigationListener);
 
-        //User clicked on the header
-        View navigationHeader = mNavigationView.getHeaderView(0);
-
-        //Find the views of the navigation drawer header
-        mName = (TextView) navigationHeader.findViewById(R.id.user_name);
-        mBackpack = (TextView) navigationHeader.findViewById(R.id.backpack_value);
-        mAvatar = (ImageView) navigationHeader.findViewById(R.id.avatar);
-
-        mUserMenuItem = mNavigationView.getMenu().getItem(2);
+        mNavigationDrawerManager.attachView(mNavigationView.getHeaderView(0));
+        mNavigationDrawerManager.setUserMenuItem(mNavigationView.getMenu().getItem(2));
 
         //Check if there is a fragment to be restored
-        if (savedInstanceState != null) {
-            switchFragment(savedInstanceState.getInt(STATE_SELECTED_POSITION));
-            mNavigationView.getMenu().getItem(mCurrentSelectedPosition).setChecked(true);
-        } else {
+        if (savedInstanceState == null) {
             mNavigationView.getMenu().getItem(0).setChecked(true);
             // Select either the default item (0) or the last selected item.
             switchFragment(0);
@@ -217,7 +182,6 @@ public class MainActivity extends AppCompatActivity {
             }
             mUserStateChanged = false;
         }
-        updateDrawer();
 
         boolean autoSync = !mPrefs.getString(getString(R.string.pref_auto_sync), "1").equals("0");
 
@@ -231,10 +195,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        //Save the current fragment to be restored.
-        outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
+    protected void onDestroy() {
+        super.onDestroy();
+        mNavigationDrawerManager.detachView();
     }
 
     @Override
@@ -264,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void setSupportActionBar(Toolbar toolbar) {
         super.setSupportActionBar(toolbar);
-        //Since each fragment has it's own toolbar we need to re add the drawer toggle everytime we
+        //Since each fragment has it's own toolbar we need to re add the drawer toggle every time we
         //switch fragments
         restoreNavigationIcon();
     }
@@ -301,52 +264,34 @@ public class MainActivity extends AppCompatActivity {
         //Initialize fragments and add them is the drawer listener
         switch (position) {
             case 0:
-                newFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_RECENTS);
-                if (newFragment == null) {
-                    newFragment = new RecentsFragment();
-                }
+                newFragment = new RecentsFragment();
                 mDrawerListener = (RecentsFragment) newFragment;
-                transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_RECENTS);
+                transaction.replace(R.id.container, newFragment);
                 break;
             case 1:
-                newFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_UNUSUALS);
-                if (newFragment == null) {
-                    newFragment = new UnusualFragment();
-                }
+                newFragment = new UnusualFragment();
                 mDrawerListener = (UnusualFragment) newFragment;
-                transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_UNUSUALS);
+                transaction.replace(R.id.container, newFragment);
                 break;
             case 2:
-                newFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_USER);
-                if (newFragment == null) {
-                    newFragment = UserFragment.newInstance();
-                }
+                newFragment = UserFragment.newInstance();
                 mDrawerListener = (UserFragment) newFragment;
-                transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_USER);
+                transaction.replace(R.id.container, newFragment);
                 break;
             case 3:
-                newFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_FAVORITES);
-                if (newFragment == null) {
-                    newFragment = new FavoritesFragment();
-                }
+                newFragment = new FavoritesFragment();
                 mDrawerListener = (FavoritesFragment) newFragment;
-                transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_FAVORITES);
+                transaction.replace(R.id.container, newFragment);
                 break;
             case 4:
-                newFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_CONVERTER);
-                if (newFragment == null) {
-                    newFragment = new ConverterFragment();
-                }
+                newFragment = new ConverterFragment();
                 mDrawerListener = null;
-                transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_CONVERTER);
+                transaction.replace(R.id.container, newFragment);
                 break;
             case 5:
-                newFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_CALCULATOR);
-                if (newFragment == null) {
-                    newFragment = new CalculatorFragment();
-                }
+                newFragment = new CalculatorFragment();
                 mDrawerListener = (CalculatorFragment) newFragment;
-                transaction.replace(R.id.container, newFragment, FRAGMENT_TAG_CALCULATOR);
+                transaction.replace(R.id.container, newFragment);
                 break;
             default:
                 throw new IllegalArgumentException("unknown fragment to switch to: " + position);
@@ -354,44 +299,6 @@ public class MainActivity extends AppCompatActivity {
 
         //Commit the transaction
         transaction.commit();
-    }
-
-    /**
-     * Updates the information in the navigation drawer header.
-     */
-    public void updateDrawer() {
-        if (mProfileManager.isSignedIn()) {
-            User user = mProfileManager.getUser();
-
-            //Set the name
-            mName.setText(user.getName());
-
-            //Set the backpack value
-            double bpValue = user.getBackpackValue();
-            if (bpValue >= 0) {
-                mBackpack.setText(String.format("Backpack: %s", getString(R.string.currency_metal,
-                        String.valueOf(Math.round(bpValue)))));
-            } else {
-                mBackpack.setText("Private backpack");
-            }
-
-            //Download the avatar (if needed) and set it
-            Glide.with(this)
-                    .load(user.getAvatarUrl())
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .transform(new CircleTransform(this))
-                    .into(mAvatar);
-            mUserMenuItem.setEnabled(true);
-        } else {
-            Glide.with(this)
-                    .load(R.drawable.steam_default_avatar)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .transform(new CircleTransform(this))
-                    .into(mAvatar);
-            mName.setText(null);
-            mBackpack.setText(null);
-            mUserMenuItem.setEnabled(false);
-        }
     }
 
     /**
@@ -431,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
     }
 
     /**

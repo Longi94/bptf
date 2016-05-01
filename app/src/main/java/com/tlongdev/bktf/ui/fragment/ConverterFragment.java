@@ -43,11 +43,12 @@ import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.util.Utility;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnFocusChange;
 import butterknife.OnTouch;
+import butterknife.Unbinder;
 
 /**
  * Converter fragment. Let's the user quickly convert between currencies.
@@ -63,16 +64,18 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
     /**
      * Inputs
      */
-    @Bind(R.id.edit_text_earbuds) EditText inputEarbuds;
-    @Bind(R.id.edit_text_keys) EditText inputKeys;
-    @Bind(R.id.edit_text_metal) EditText inputMetal;
-    @Bind(R.id.edit_text_usd) EditText inputUsd;
-    @Bind(R.id.ad_view) AdView mAdView;
+    @BindView(R.id.edit_text_earbuds) EditText inputEarbuds;
+    @BindView(R.id.edit_text_keys) EditText inputKeys;
+    @BindView(R.id.edit_text_metal) EditText inputMetal;
+    @BindView(R.id.edit_text_usd) EditText inputUsd;
+    @BindView(R.id.ad_view) AdView mAdView;
 
     /**
      * the view that is currently in focus
      */
     private EditText focus;
+
+    private Unbinder mUnbinder;
 
     /**
      * Constructor.
@@ -82,10 +85,9 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-        setRetainInstance(true);
     }
 
     @Override
@@ -93,8 +95,7 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_converter, container, false);
-
-        ButterKnife.bind(this, rootView);
+        mUnbinder = ButterKnife.bind(this, rootView);
 
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
@@ -252,9 +253,10 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         mAdManager.removeAdView(mAdView);
+        mUnbinder.unbind();
     }
 
     @Override

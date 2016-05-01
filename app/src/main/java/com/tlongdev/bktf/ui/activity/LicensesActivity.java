@@ -32,15 +32,17 @@ import com.tlongdev.bktf.ui.view.activity.LicensesView;
 
 import java.util.List;
 
-import butterknife.Bind;
+import javax.inject.Inject;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class LicensesActivity extends BptfActivity implements LicensesView, LicensesAdapter.OnClickListener {
 
-    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
-    @Bind(R.id.toolbar) Toolbar mToolbar;
+    @Inject LicensesPresenter mPresenter;
 
-    private LicensesPresenter mPresenter;
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +50,8 @@ public class LicensesActivity extends BptfActivity implements LicensesView, Lice
         setContentView(R.layout.activity_licenses);
         ButterKnife.bind(this);
 
-        mPresenter = new LicensesPresenter(mApplication);
+        mApplication.getActivityComponent().inject(this);
+
         mPresenter.attachView(this);
 
         setSupportActionBar(mToolbar);

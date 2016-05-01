@@ -1,3 +1,6 @@
+-dontobfuscate
+-optimizations !code/allocation/variable
+
 -dontwarn android.support.**
 -keep class android.support.** { *; }
 -keep interface android.support.** { *; }

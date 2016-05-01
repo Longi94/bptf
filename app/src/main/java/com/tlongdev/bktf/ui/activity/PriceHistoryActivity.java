@@ -44,7 +44,9 @@ import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
 
-import butterknife.Bind;
+import javax.inject.Inject;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class PriceHistoryActivity extends BptfActivity implements PriceHistoryView {
@@ -53,15 +55,15 @@ public class PriceHistoryActivity extends BptfActivity implements PriceHistoryVi
 
     public static final String EXTRA_ITEM = "item";
 
+    @Inject PriceHistoryPresenter mPresenter;
+
     @InjectExtra(EXTRA_ITEM) Item mItem;
 
-    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
-    @Bind(R.id.progress_bar) ProgressBar progressBar;
-    @Bind(R.id.fail_text) TextView failText;
-    @Bind(R.id.toolbar) Toolbar mToolbar;
-    @Bind(R.id.ad_view) AdView mAdView;
-
-    private PriceHistoryPresenter mPresenter;
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
+    @BindView(R.id.fail_text) TextView failText;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.ad_view) AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,8 @@ public class PriceHistoryActivity extends BptfActivity implements PriceHistoryVi
         ButterKnife.bind(this);
         Dart.inject(this);
 
-        mPresenter = new PriceHistoryPresenter(mApplication);
+        mApplication.getActivityComponent().inject(this);
+
         mPresenter.attachView(this);
 
         setSupportActionBar(mToolbar);

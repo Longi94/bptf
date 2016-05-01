@@ -34,7 +34,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -182,14 +182,14 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.icon) ImageView icon;
-        @Bind(R.id.name) TextView name;
-        @Bind(R.id.price) TextView price;
-        @Bind(R.id.effect) ImageView effect;
-        @Bind(R.id.delete) ImageView delete;
-        @Bind(R.id.quality) ImageView quality;
-        @Bind(R.id.count) EditText count;
-        @Bind(R.id.icon_background) View background;
+        @BindView(R.id.icon) ImageView icon;
+        @BindView(R.id.name) TextView name;
+        @BindView(R.id.price) TextView price;
+        @BindView(R.id.effect) ImageView effect;
+        @BindView(R.id.delete) ImageView delete;
+        @BindView(R.id.quality) ImageView quality;
+        @BindView(R.id.count) EditText count;
+        @BindView(R.id.icon_background) View background;
 
         /**
          * Constructor
