@@ -236,7 +236,9 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
 
     @Override
     public void hideRefreshingAnimation() {
-        mSwipeRefreshLayout.setRefreshing(false);
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     @Override
