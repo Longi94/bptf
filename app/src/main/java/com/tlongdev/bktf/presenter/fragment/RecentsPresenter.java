@@ -194,7 +194,6 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
 
     @Override
     public void onItemSchemaFinished() {
-
         if (mView != null) {
             mView.dismissLoadingDialog();
         }
@@ -230,6 +229,8 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
 
     @Override
     public void onLoadCurrencyPricesFinished(Price metalPrice, Price keyPrice, Price budPrice) {
-        mView.updateCurrencyHeader(metalPrice, keyPrice, budPrice);
+        if (mView != null) {
+            mView.updateCurrencyHeader(metalPrice, keyPrice, budPrice);
+        }
     }
 }
