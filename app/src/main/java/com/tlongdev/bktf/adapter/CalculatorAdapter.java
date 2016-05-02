@@ -117,8 +117,10 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                         //Notify listener that an item was deleted
                         listener.onItemDeleted(item, mCountSet.get(holder.getAdapterPosition()));
                     }
-                    notifyItemRemoved(mDataSet.indexOf(item));
-                    mDataSet.remove(item);
+                    int removedPos = holder.getAdapterPosition();
+                    mDataSet.remove(removedPos);
+                    mCountSet.remove(removedPos);
+                    notifyItemRemoved(removedPos);
                 }
             });
 
