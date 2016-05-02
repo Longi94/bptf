@@ -28,6 +28,7 @@ import android.support.annotation.Nullable;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -150,7 +151,7 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
         mRecyclerView.setVisibility(View.GONE);
 
         //Set up the swipe refresh layout (color and listener)
-        mSwipeRefreshLayout.setColorSchemeColors(Utility.getColor(mContext, R.color.accent));
+        mSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(mContext, R.color.accent));
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         mAdManager.addAdView(mAdView);

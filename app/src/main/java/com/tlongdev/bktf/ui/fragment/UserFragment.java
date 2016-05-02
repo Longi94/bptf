@@ -27,6 +27,7 @@ import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -157,7 +158,7 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
 
         //Set the color of the refreshing animation
         if (!searchedUser) {
-            mSwipeRefreshLayout.setColorSchemeColors(Utility.getColor(mContext, R.color.accent));
+            mSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(mContext, R.color.accent));
             mSwipeRefreshLayout.setOnRefreshListener(mPresenter);
 
             mUser = mProfileManager.getUser();
@@ -300,41 +301,41 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
                     lastOnlineText.setText(String.format("%s %s", getString(R.string.user_page_last_online), Utility.formatLastOnlineTime(mContext,
                             System.currentTimeMillis() - lastOnline * 1000L)));
                 }
-                lastOnlineText.setTextColor(Utility.getColor(mContext, R.color.text_primary));
+                lastOnlineText.setTextColor(ContextCompat.getColor(mContext, R.color.text_primary));
                 break;
             case 1:
                 lastOnlineText.setText(getString(R.string.user_page_status_online));
-                lastOnlineText.setTextColor(Utility.getColor(mContext, R.color.player_online));
+                lastOnlineText.setTextColor(ContextCompat.getColor(mContext, R.color.player_online));
                 break;
             case 2:
                 lastOnlineText.setText(getString(R.string.user_page_status_busy));
-                lastOnlineText.setTextColor(Utility.getColor(mContext, R.color.player_online));
+                lastOnlineText.setTextColor(ContextCompat.getColor(mContext, R.color.player_online));
                 break;
             case 3:
                 lastOnlineText.setText(getString(R.string.user_page_status_away));
-                lastOnlineText.setTextColor(Utility.getColor(mContext, R.color.player_online));
+                lastOnlineText.setTextColor(ContextCompat.getColor(mContext, R.color.player_online));
                 break;
             case 4:
                 lastOnlineText.setText(getString(R.string.user_page_status_snooze));
-                lastOnlineText.setTextColor(Utility.getColor(mContext, R.color.player_online));
+                lastOnlineText.setTextColor(ContextCompat.getColor(mContext, R.color.player_online));
                 break;
             case 5:
                 lastOnlineText.setText(getString(R.string.user_page_status_trade));
-                lastOnlineText.setTextColor(Utility.getColor(mContext, R.color.player_online));
+                lastOnlineText.setTextColor(ContextCompat.getColor(mContext, R.color.player_online));
                 break;
             case 6:
                 lastOnlineText.setText(getString(R.string.user_page_status_play));
-                lastOnlineText.setTextColor(Utility.getColor(mContext, R.color.player_online));
+                lastOnlineText.setTextColor(ContextCompat.getColor(mContext, R.color.player_online));
                 break;
             case 7:
                 lastOnlineText.setText(getString(R.string.user_page_status_in_game));
-                lastOnlineText.setTextColor(Utility.getColor(mContext, R.color.player_in_game));
+                lastOnlineText.setTextColor(ContextCompat.getColor(mContext, R.color.player_in_game));
                 break;
         }
 
         //Load drawables for player statuses
-        Drawable statusOk = getResources().getDrawable(R.drawable.ic_done_white_48dp);
-        Drawable statusBad = getResources().getDrawable(R.drawable.ic_close_white_48dp);
+        Drawable statusOk = ContextCompat.getDrawable(getActivity(), R.drawable.ic_done_white_48dp);
+        Drawable statusBad = ContextCompat.getDrawable(getActivity(), R.drawable.ic_close_white_48dp);
         if (statusOk != null) statusOk.setColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY);
         if (statusBad != null) statusBad.setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
 

@@ -23,6 +23,7 @@ import android.preference.PreferenceActivity;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
@@ -33,7 +34,6 @@ import android.view.ViewGroup;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.util.Utility;
 
 import javax.inject.Inject;
 
@@ -58,7 +58,7 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
 
         //Set the color of the status bar
         if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(Utility.getColor(this, R.color.primary_dark));
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.primary_dark));
         }
     }
 

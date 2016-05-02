@@ -8,6 +8,7 @@ import android.support.customtabs.CustomTabsClient;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.customtabs.CustomTabsServiceConnection;
 import android.support.customtabs.CustomTabsSession;
+import android.support.v4.content.ContextCompat;
 
 import com.tlongdev.bktf.R;
 
@@ -47,7 +48,7 @@ public class CustomTabActivityHelper implements ServiceConnectionCallback {
         } else {
             customTabsIntent.intent.setPackage(packageName);
             customTabsIntent.intent.putExtra(EXTRA_CUSTOM_TABS_TOOLBAR_COLOR,
-                    activity.getResources().getColor(R.color.primary));
+                    ContextCompat.getColor(activity, R.color.primary));
             customTabsIntent.launchUrl(activity, uri);
         }
     }

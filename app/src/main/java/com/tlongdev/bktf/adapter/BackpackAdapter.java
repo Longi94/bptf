@@ -18,6 +18,7 @@ package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,7 +31,6 @@ import com.bumptech.glide.Glide;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.BackpackItem;
-import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
 
@@ -130,7 +130,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                 holder.icon.setImageDrawable(null);
                 holder.effect.setImageDrawable(null);
                 holder.paint.setImageDrawable(null);
-                holder.root.setCardBackgroundColor(Utility.getColor(mContext, R.color.card_color));
+                holder.root.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.card_color));
                 holder.root.setOnClickListener(null);
                 holder.quality.setVisibility(View.GONE);
 
