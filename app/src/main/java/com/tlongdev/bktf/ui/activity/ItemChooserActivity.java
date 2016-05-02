@@ -105,6 +105,9 @@ public class ItemChooserActivity extends BptfActivity implements ItemChooserView
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        effectAdapter = new EffectAdapter(this);
+        effectSpinner.setAdapter(effectAdapter);
+
         qualityAdapter = new QualityAdapter(this);
         qualitySpinner.setAdapter(qualityAdapter);
         qualitySpinner.setSelection(7);
@@ -218,7 +221,7 @@ public class ItemChooserActivity extends BptfActivity implements ItemChooserView
 
     @Override
     public void showEffects(List<Item> items) {
-        effectAdapter = new EffectAdapter(this, items);
-        effectSpinner.setAdapter(effectAdapter);
+        effectAdapter.setDataSet(items);
+        effectAdapter.notifyDataSetChanged();
     }
 }
