@@ -149,7 +149,7 @@ public class Utility {
      */
     public static boolean isSteamId(String id) {
         //Every steamId looks like this: 7656119XXXXXXXXX
-        return id.matches("7656119[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]");
+        return id != null && id.matches("7656119[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]");
     }
 
     /**

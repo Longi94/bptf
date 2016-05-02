@@ -71,8 +71,8 @@ public class GetUserDataInteractor extends AsyncTask<Void, Void, Integer> {
      *
      * @param manualSync whether the updated was initiated by the user
      */
-    public GetUserDataInteractor(BptfApplication application, User user,
-                                 boolean manualSync, Callback callback) {
+    public GetUserDataInteractor(BptfApplication application, User user, boolean manualSync,
+                                 Callback callback) {
         application.getInteractorComponent().inject(this);
         this.manualSync = manualSync;
         mCallback = callback;

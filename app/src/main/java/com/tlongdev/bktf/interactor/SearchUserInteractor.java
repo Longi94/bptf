@@ -58,6 +58,10 @@ public class SearchUserInteractor extends AsyncTask<Void, Void, Integer> {
 
     @Override
     protected Integer doInBackground(Void... params) {
+        if (mQuery == null) {
+            return -1;
+        }
+
         try {
             if (!Utility.isSteamId(mQuery)) {
                 Response<VanityUrl> response =
