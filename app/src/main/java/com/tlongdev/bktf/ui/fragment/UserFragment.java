@@ -217,7 +217,7 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
 
         //Get the steam id, do nothing if there is no steam id
         String steamId = mUser.getResolvedSteamId();
-        if (steamId.equals("")) {
+        if (steamId == null || steamId.equals("")) {
             showToast("bptf: " + getString(R.string.error_no_steam_id), Toast.LENGTH_SHORT);
             return;
         }
