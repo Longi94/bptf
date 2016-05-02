@@ -117,7 +117,8 @@
                     <Spinner
                         android:id="@+id/quality"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:padding="16dp"/>
 
                     <TextView
                         android:id="@+id/title_effect"
@@ -131,6 +132,7 @@
                         android:id="@+id/effect"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:padding="16dp"
                         android:visibility="gone"/>
 
                     <TextView
