@@ -16,10 +16,12 @@
 
 package com.tlongdev.bktf.adapter.spinner;
 
+import android.app.Activity;
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,32 +31,60 @@ import com.tlongdev.bktf.model.Item;
 
 import java.util.List;
 
-public class EffectAdapter extends ArrayAdapter<Item> {
+public class EffectAdapter extends BaseAdapter {
 
     private final Context mContext;
-    private final List<Item> mDataSet;
+    private List<Item> mDataSet;
 
-    public EffectAdapter(Context context, List<Item> items) {
-        super(context, R.layout.effect_spinner_item);
+    public EffectAdapter(Context context) {
         mContext = context;
-        mDataSet = items;
+    }
+
+    @Override
+    public int getCount() {
+        return mDataSet == null ? 0 : mDataSet.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return mDataSet != null ? mDataSet.get(position) : null;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View rootView = super.getView(position, convertView, parent);
-        setView(rootView, position);
-        return rootView;
+        if(convertView == null){
+            LayoutInflater lInflater = (LayoutInflater)mContext.getSystemService(
+                    Activity.LAYOUT_INFLATER_SERVICE);
+
+            convertView = lInflater.inflate(R.layout.effect_spinner_item, null);
+        }
+
+        setView(convertView, position);
+        return convertView;
     }
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        View rootView = super.getDropDownView(position, convertView, parent);
-        setView(rootView, position);
-        return rootView;
+        if(convertView == null){
+            LayoutInflater lInflater = (LayoutInflater)mContext.getSystemService(
+                    Activity.LAYOUT_INFLATER_SERVICE);
+
+            convertView = lInflater.inflate(R.layout.effect_spinner_item, null);
+        }
+        setView(convertView, position);
+        return convertView;
     }
 
     private void setView(View view, int position) {
+        if (view == null) {
+            return;
+        }
+
         Item effect = mDataSet.get(position);
         TextView text = (TextView) view.findViewById(R.id.text1);
         text.setText(effect.getName());
@@ -65,5 +95,9 @@ public class EffectAdapter extends ArrayAdapter<Item> {
 
     public int getEffectId(int selectedItemPosition) {
         return mDataSet.get(selectedItemPosition).getPriceIndex();
+    }
+
+    public void setDataSet(List<Item> dataSet) {
+        mDataSet = dataSet;
     }
 }

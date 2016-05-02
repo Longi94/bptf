@@ -70,7 +70,6 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
         if (mDataSet != null && mDataSet.size() > position) {
 
             final Item item = mDataSet.get(position);
-            final int currentCount = mCountSet.get(position);
 
             Glide.with(mContext)
                     .load(item.getIconUrl())
@@ -88,18 +87,6 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
             holder.name.setText(item.getFormattedName(mContext));
 
             holder.background.setBackgroundColor(item.getColor(mContext, true));
-
-            holder.delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        //Notify listener that an item was deleted
-                        listener.onItemDeleted(item, currentCount);
-                    }
-                    notifyItemRemoved(mDataSet.indexOf(item));
-                    mDataSet.remove(item);
-                }
-            });
 
             if (!item.isTradable()) {
                 holder.quality.setVisibility(View.VISIBLE);
@@ -121,7 +108,21 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                 holder.price.setText("Price unknown");
             }
 
-            holder.count.setText(String.valueOf(currentCount));
+            holder.count.setText(String.valueOf(mCountSet.get(position)));
+
+            holder.delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        //Notify listener that an item was deleted
+                        listener.onItemDeleted(item, mCountSet.get(holder.getAdapterPosition()));
+                    }
+                    int removedPos = holder.getAdapterPosition();
+                    mDataSet.remove(removedPos);
+                    mCountSet.remove(removedPos);
+                    notifyItemRemoved(removedPos);
+                }
+            });
 
             holder.count.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
@@ -142,11 +143,11 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                             holder.count.setText("1");
                         }
 
-                        if (listener != null && currentCount != count) {
-                            listener.onItemEdited(item, currentCount, count);
+                        if (listener != null && mCountSet.get(holder.getAdapterPosition()) != count) {
+                            listener.onItemEdited(item, mCountSet.get(holder.getAdapterPosition()), count);
                         }
 
-                        mCountSet.set(currentCount, count);
+                        mCountSet.set(holder.getAdapterPosition(), count);
                     }
                 }
             });

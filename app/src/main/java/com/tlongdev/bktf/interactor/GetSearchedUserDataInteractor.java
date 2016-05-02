@@ -75,6 +75,10 @@ public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer
      */
     @Override
     protected Integer doInBackground(Void... params) {
+        if (mSteamId == null) {
+            errorMessage = "no steamID provided";
+            return -1;
+        }
 
         try {
             //Check if the given steamid is a resolved 64bit steamId

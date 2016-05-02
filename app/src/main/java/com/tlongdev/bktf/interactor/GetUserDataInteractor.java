@@ -71,8 +71,8 @@ public class GetUserDataInteractor extends AsyncTask<Void, Void, Integer> {
      *
      * @param manualSync whether the updated was initiated by the user
      */
-    public GetUserDataInteractor(BptfApplication application, User user,
-                                 boolean manualSync, Callback callback) {
+    public GetUserDataInteractor(BptfApplication application, User user, boolean manualSync,
+                                 Callback callback) {
         application.getInteractorComponent().inject(this);
         this.manualSync = manualSync;
         mCallback = callback;
@@ -219,7 +219,10 @@ public class GetUserDataInteractor extends AsyncTask<Void, Void, Integer> {
         }
 
         if (player.getSuccess() == 1) {
-            mUser.setBackpackValue(player.getBackpackValue().get440());
+            if (player.getBackpackValue() != null) {
+                mUser.setBackpackValue(player.getBackpackValue().get440());
+            }
+
             mUser.setName(player.getName());
             mUser.setReputation(player.getBackpackTfReputation());
             mUser.setInGroup(player.getBackpackTfGroup());
