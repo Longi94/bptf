@@ -34,6 +34,7 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import com.tlongdev.bktf.R;
@@ -432,11 +433,18 @@ public class Utility {
     }
 
     public static void hideKeyboard(Activity activity) {
+        if (activity == null) {
+            return;
+        }
+
+        //overkill?
         View view = activity.getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+
+        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 }
 

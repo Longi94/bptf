@@ -112,6 +112,12 @@ public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui
     }
 
     @Override
+    public void onBackPressed() {
+        Utility.hideKeyboard(this);
+        super.onBackPressed();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_search, menu);

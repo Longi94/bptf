@@ -17,7 +17,6 @@
 package com.tlongdev.bktf.ui.fragment;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -31,7 +30,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.crashlytics.android.Crashlytics;
@@ -250,6 +249,7 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
         super.onResume();
         mTracker.setScreenName(ConverterFragment.class.getName());
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        Utility.hideKeyboard(getActivity());
     }
 
     @Override
@@ -375,10 +375,7 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
             R.id.edit_text_usd})
     public boolean onTouch(View v, MotionEvent event){
         v.onTouchEvent(event);
-        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
-            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-        }
+        Utility.hideKeyboard(getActivity());
         return true;
     }
 }
