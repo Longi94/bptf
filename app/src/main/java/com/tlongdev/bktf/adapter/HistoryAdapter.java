@@ -18,6 +18,7 @@ package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -180,7 +181,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
         long days = TimeUnit.MILLISECONDS.toDays(last - first);
 
-        int textColor = Utility.getColor(mContext, R.color.text_primary);
+        int textColor = ContextCompat.getColor(mContext, R.color.text_primary);
 
         //Setup the X axis of the chart
         ArrayList<String> xValues = new ArrayList<>();
@@ -228,7 +229,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             chart.getAxisRight().setEnabled(false);
             chart.getLegend().setEnabled(false);
 
-            int textColor = Utility.getColor(mContext, R.color.text_primary);
+            int textColor = ContextCompat.getColor(mContext, R.color.text_primary);
 
             XAxis xAxis = chart.getXAxis();
             xAxis.setAvoidFirstLastClipping(true);

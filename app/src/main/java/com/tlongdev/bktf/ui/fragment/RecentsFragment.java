@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,6 +28,7 @@ import android.support.annotation.Nullable;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -150,7 +151,7 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
         mRecyclerView.setVisibility(View.GONE);
 
         //Set up the swipe refresh layout (color and listener)
-        mSwipeRefreshLayout.setColorSchemeColors(Utility.getColor(mContext, R.color.accent));
+        mSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(mContext, R.color.accent));
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         mAdManager.addAdView(mAdView);
@@ -236,7 +237,9 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
 
     @Override
     public void hideRefreshingAnimation() {
-        mSwipeRefreshLayout.setRefreshing(false);
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     @Override

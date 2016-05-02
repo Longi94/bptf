@@ -21,6 +21,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v4.content.ContextCompat;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract;
@@ -338,40 +339,40 @@ public class Item implements Parcelable {
     public int getColor(Context context, boolean isDark) {
         switch (quality) {
             case Quality.GENUINE:
-                return isDark ? Utility.getColor(context, R.color.tf2_genuine_color_dark)
-                        : Utility.getColor(context, R.color.tf2_genuine_color);
+                return isDark ? ContextCompat.getColor(context, R.color.tf2_genuine_color_dark)
+                        : ContextCompat.getColor(context, R.color.tf2_genuine_color);
             case Quality.VINTAGE:
-                return isDark ? Utility.getColor(context, R.color.tf2_vintage_color_dark)
-                        : Utility.getColor(context, R.color.tf2_vintage_color);
+                return isDark ? ContextCompat.getColor(context, R.color.tf2_vintage_color_dark)
+                        : ContextCompat.getColor(context, R.color.tf2_vintage_color);
             case Quality.UNUSUAL:
-                return isDark ? Utility.getColor(context, R.color.tf2_unusual_color_dark)
-                        : Utility.getColor(context, R.color.tf2_unusual_color);
+                return isDark ? ContextCompat.getColor(context, R.color.tf2_unusual_color_dark)
+                        : ContextCompat.getColor(context, R.color.tf2_unusual_color);
             case Quality.UNIQUE:
-                return isDark ? Utility.getColor(context, R.color.tf2_unique_color_dark)
-                        : Utility.getColor(context, R.color.tf2_unique_color);
+                return isDark ? ContextCompat.getColor(context, R.color.tf2_unique_color_dark)
+                        : ContextCompat.getColor(context, R.color.tf2_unique_color);
             case Quality.COMMUNITY:
-                return isDark ? Utility.getColor(context, R.color.tf2_community_color_dark)
-                        : Utility.getColor(context, R.color.tf2_community_color);
+                return isDark ? ContextCompat.getColor(context, R.color.tf2_community_color_dark)
+                        : ContextCompat.getColor(context, R.color.tf2_community_color);
             case Quality.VALVE:
-                return isDark ? Utility.getColor(context, R.color.tf2_valve_color_dark)
-                        : Utility.getColor(context, R.color.tf2_valve_color);
+                return isDark ? ContextCompat.getColor(context, R.color.tf2_valve_color_dark)
+                        : ContextCompat.getColor(context, R.color.tf2_valve_color);
             case Quality.SELF_MADE:
-                return isDark ? Utility.getColor(context, R.color.tf2_community_color_dark)
-                        : Utility.getColor(context, R.color.tf2_community_color);
+                return isDark ? ContextCompat.getColor(context, R.color.tf2_community_color_dark)
+                        : ContextCompat.getColor(context, R.color.tf2_community_color);
             case Quality.STRANGE:
-                return isDark ? Utility.getColor(context, R.color.tf2_strange_color_dark)
-                        : Utility.getColor(context, R.color.tf2_strange_color);
+                return isDark ? ContextCompat.getColor(context, R.color.tf2_strange_color_dark)
+                        : ContextCompat.getColor(context, R.color.tf2_strange_color);
             case Quality.HAUNTED:
-                return isDark ? Utility.getColor(context, R.color.tf2_haunted_color_dark)
-                        : Utility.getColor(context, R.color.tf2_haunted_color);
+                return isDark ? ContextCompat.getColor(context, R.color.tf2_haunted_color_dark)
+                        : ContextCompat.getColor(context, R.color.tf2_haunted_color);
             case Quality.COLLECTORS:
-                return isDark ? Utility.getColor(context, R.color.tf2_collectors_color_dark)
-                        : Utility.getColor(context, R.color.tf2_collectors_color);
+                return isDark ? ContextCompat.getColor(context, R.color.tf2_collectors_color_dark)
+                        : ContextCompat.getColor(context, R.color.tf2_collectors_color);
             case Quality.PAINTKITWEAPON:
                 return getDecoratedWeaponColor(context, isDark);
             default:
-                return isDark ? Utility.getColor(context, R.color.tf2_normal_color_dark)
-                        : Utility.getColor(context, R.color.tf2_normal_color);
+                return isDark ? ContextCompat.getColor(context, R.color.tf2_normal_color_dark)
+                        : ContextCompat.getColor(context, R.color.tf2_normal_color);
         }
     }
 
@@ -418,7 +419,7 @@ public class Item implements Parcelable {
             }
             cursor.close();
         }
-        return colorResource == 0 ? Utility.getColor(context, R.color.tf2_normal_color) : Utility.getColor(context, colorResource);
+        return colorResource == 0 ? ContextCompat.getColor(context, R.color.tf2_normal_color) : ContextCompat.getColor(context, colorResource);
     }
 
     /**

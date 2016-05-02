@@ -24,6 +24,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
 
         //Setup the drawer
-        mDrawerLayout.setStatusBarBackgroundColor(Utility.getColor(this, R.color.primary_dark));
+        mDrawerLayout.setStatusBarBackgroundColor(ContextCompat.getColor(this, R.color.primary_dark));
 
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
