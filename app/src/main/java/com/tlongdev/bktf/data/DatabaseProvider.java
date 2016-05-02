@@ -140,8 +140,9 @@ public class DatabaseProvider extends ContentProvider {
                 sortOrder
         );
 
-        if (retCursor != null)
+        if (getContext() != null && retCursor != null) {
             retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        }
         return retCursor;
     }
 
@@ -263,7 +264,7 @@ public class DatabaseProvider extends ContentProvider {
         }
 
         // Because a null deletes all rows
-        if (selection == null || rowsDeleted != 0) {
+        if (getContext() != null && (selection == null || rowsDeleted != 0)) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
 
@@ -307,7 +308,7 @@ public class DatabaseProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
-        if (rowsUpdated != 0) {
+        if (getContext() != null && rowsUpdated != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
 
@@ -364,7 +365,9 @@ public class DatabaseProvider extends ContentProvider {
             db.endTransaction();
         }
 
-        getContext().getContentResolver().notifyChange(uri, null);
+        if (getContext() != null) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
 
         return returnCount;
     }
