@@ -108,7 +108,7 @@ public class ItemChooserActivity extends BptfActivity implements ItemChooserView
         effectAdapter = new EffectAdapter(this);
         effectSpinner.setAdapter(effectAdapter);
 
-        qualityAdapter = new QualityAdapter(this);
+        qualityAdapter = new QualityAdapter(mApplication);
         qualitySpinner.setAdapter(qualityAdapter);
         qualitySpinner.setSelection(7);
         qualitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

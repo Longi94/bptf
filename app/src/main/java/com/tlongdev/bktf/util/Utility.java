@@ -30,9 +30,9 @@ import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -78,12 +78,7 @@ public class Utility {
      * @return A single color value in the form 0xAARRGGBB.
      */
     public static int getColor(Context context, int id) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            return context.getResources().getColor(id, null);
-        } else {
-            //noinspection deprecation
-            return context.getResources().getColor(id);
-        }
+        return ContextCompat.getColor(context, id);
     }
 
     /**

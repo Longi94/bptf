@@ -16,18 +16,20 @@
 
 package com.tlongdev.bktf.adapter.spinner;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Quality;
 
-public class QualityAdapter extends ArrayAdapter<String> {
+public class QualityAdapter extends BaseAdapter {
 
     private static final String[] QUALITIES = {
             "Collector's", "Decorated Weapon", "Genuine", "Haunted", "Normal", "Self-Made",
@@ -43,7 +45,6 @@ public class QualityAdapter extends ArrayAdapter<String> {
     private final Context mContext;
 
     public QualityAdapter(Context context) {
-        super(context, R.layout.quality_spinner_item, QUALITIES);
         quality = new Item();
         quality.setDefindex(15059);
         mContext = context;
@@ -51,25 +52,51 @@ public class QualityAdapter extends ArrayAdapter<String> {
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        View rootView = super.getView(position, convertView, parent);
-        setView(rootView, position);
-        return rootView;
+        if (convertView == null) {
+            LayoutInflater lInflater = (LayoutInflater) mContext.getSystemService(
+                    Activity.LAYOUT_INFLATER_SERVICE);
+
+            convertView = lInflater.inflate(R.layout.quality_spinner_item, null);
+        }
+        setView(convertView, position);
+        return convertView;
+    }
+
+    @Override
+    public int getCount() {
+        return QUALITY_IDS.length;
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return QUALITY_IDS[position];
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View rootView = super.getDropDownView(position, convertView, parent);
-        setView(rootView, position);
-        return rootView;
+        if (convertView == null) {
+            LayoutInflater lInflater = (LayoutInflater) mContext.getSystemService(
+                    Activity.LAYOUT_INFLATER_SERVICE);
+
+            convertView = lInflater.inflate(R.layout.quality_spinner_item, null);
+        }
+        setView(convertView, position);
+        return convertView;
     }
 
     private void setView(View view, int position) {
         TextView text = (TextView) view.findViewById(R.id.text1);
-        text.setText(getItem(position));
+        text.setText(QUALITIES[position]);
 
         quality.setQuality(QUALITY_IDS[position]);
 
-        text.getCompoundDrawables()[0].setColorFilter(quality.getColor(mContext, false), PorterDuff.Mode.MULTIPLY);
+        int color = quality.getColor(mContext, false);
+        text.getCompoundDrawables()[0].setColorFilter(color, PorterDuff.Mode.MULTIPLY);
     }
 
     public int getQualityId(int selectedItemPosition) {
