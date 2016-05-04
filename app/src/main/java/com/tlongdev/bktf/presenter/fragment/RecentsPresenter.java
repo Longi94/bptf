@@ -86,9 +86,13 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
             if (Utility.isNetworkAvailable(mContext)) {
                 callTlongdevPrices(false, true);
                 //Show the progress dialog
-                mView.showLoadingDialog("Downloading prices...");
+                if (mView != null) {
+                    mView.showLoadingDialog("Downloading prices...");
+                }
             } else {
-                mView.showErrorDialog();
+                if (mView != null) {
+                    mView.showErrorDialog();
+                }
             }
         } else {
             LoadAllPricesInteractor interactor = new LoadAllPricesInteractor(mApplication, this);
@@ -98,7 +102,9 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
             if (System.currentTimeMillis() - mPrefs.getLong(mContext.getString(R.string.pref_last_price_list_update), 0) >= 3600000L
                     && Utility.isNetworkAvailable(mContext)) {
                 callTlongdevPrices(true, false);
-                mView.showRefreshAnimation();
+                if (mView != null) {
+                    mView.showRefreshAnimation();
+                }
             }
         }
     }
