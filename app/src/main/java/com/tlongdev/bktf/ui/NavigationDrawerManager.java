@@ -122,7 +122,8 @@ public class NavigationDrawerManager implements SharedPreferences.OnSharedPrefer
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key == null || !key.equals(mContext.getString(R.string.pref_user_data))) {
+        if (mContext == null || key == null ||
+                !key.equals(mContext.getString(R.string.pref_user_data))) {
             return;
         }
 
