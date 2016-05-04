@@ -109,6 +109,8 @@ public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui
         super.onDestroy();
         mPresenter.detachView();
         mAdManager.removeAdView(mAdView);
+
+        mAdapter.closeCursor();
     }
 
     @Override

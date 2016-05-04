@@ -219,6 +219,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         mListener = listener;
     }
 
+    public void closeCursor() {
+        if (mDataSet != null) {
+            mDataSet.close();
+        }
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
 
         final View root;

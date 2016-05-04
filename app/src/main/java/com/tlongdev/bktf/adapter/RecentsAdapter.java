@@ -154,6 +154,12 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
         mListener = listener;
     }
 
+    public void closeCursor() {
+        if (mDataSet != null) {
+            mDataSet.close();
+        }
+    }
+
     /**
      * The view holder.
      */

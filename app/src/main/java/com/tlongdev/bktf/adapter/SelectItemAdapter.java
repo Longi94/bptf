@@ -97,6 +97,12 @@ public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.Vi
         this.listener = listener;
     }
 
+    public void closeCursor() {
+        if (mDataSet != null) {
+            mDataSet.close();
+        }
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.icon) ImageView icon;

@@ -73,6 +73,8 @@ public class SelectItemActivity extends BptfActivity implements SelectItemView, 
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.detachView();
+
+        mAdapter.closeCursor();
     }
 
     @Override
