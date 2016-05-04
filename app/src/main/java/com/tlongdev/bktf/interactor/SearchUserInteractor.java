@@ -104,7 +104,7 @@ public class SearchUserInteractor extends AsyncTask<Void, Void, Integer> {
             }
 
         } catch (IOException e) {
-            Crashlytics.logException(e);
+            e.printStackTrace();
         }
         return 0;
     }

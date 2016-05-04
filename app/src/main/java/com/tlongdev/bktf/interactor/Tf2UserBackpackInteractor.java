@@ -105,6 +105,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
 
         } catch (IOException e) {
             errorMessage = mContext.getString(R.string.error_network);
+            e.printStackTrace();
             return -1;
         }
     }

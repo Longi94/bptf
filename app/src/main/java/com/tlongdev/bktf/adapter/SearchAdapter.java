@@ -171,6 +171,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                         holder.price.setText(item.getPrice().getFormattedPrice(mContext));
                     } catch (Throwable t) {
                         Crashlytics.logException(t);
+                        t.printStackTrace();
                     }
                 }
                 break;
@@ -217,6 +218,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     public void setListener(OnSearchClickListener listener) {
         mListener = listener;
+    }
+
+    public void closeCursor() {
+        if (mDataSet != null) {
+            mDataSet.close();
+        }
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

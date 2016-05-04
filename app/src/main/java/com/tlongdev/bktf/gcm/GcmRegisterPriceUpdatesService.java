@@ -72,6 +72,7 @@ public class GcmRegisterPriceUpdatesService extends IntentService {
         } catch (IOException e) {
             Log.d(LOG_TAG, "Failed to complete token refresh", e);
             Crashlytics.logException(e);
+            e.printStackTrace();
         }
     }
 }

@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
-import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
@@ -158,7 +157,7 @@ public class GetUserDataInteractor extends AsyncTask<Void, Void, Integer> {
         } catch (IOException e) {
             //There was a network error
             errorMessage = mContext.getString(R.string.error_network);
-            Crashlytics.logException(e);
+            e.printStackTrace();
             return -1;
         }
     }

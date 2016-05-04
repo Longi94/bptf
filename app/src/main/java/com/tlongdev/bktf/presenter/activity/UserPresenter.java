@@ -1,4 +1,4 @@
-/**
+    /**
  * Copyright 2016 Long Tran
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -80,7 +80,9 @@ public class UserPresenter implements Presenter<UserView>,GetSearchedUserDataInt
 
     @Override
     public void onPrivateBackpack() {
-        mView.privateBackpack(mUser);
+        if (mView != null) {
+            mView.privateBackpack(mUser);
+        }
     }
 
     @Override

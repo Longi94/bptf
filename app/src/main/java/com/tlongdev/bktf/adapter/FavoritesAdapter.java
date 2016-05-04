@@ -110,6 +110,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
                     holder.price.setText(item.getPrice().getFormattedPrice(mContext));
                 } catch (Throwable t) {
                     Crashlytics.logException(t);
+                    t.printStackTrace();
                 }
             } else {
                 holder.price.setText("Price Unknown");

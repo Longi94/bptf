@@ -19,7 +19,6 @@ package com.tlongdev.bktf.interactor;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
@@ -136,7 +135,7 @@ public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer
         } catch (IOException e) {
             //There was a network error
             errorMessage = mContext.getString(R.string.error_network);
-            Crashlytics.logException(e);
+            e.printStackTrace();
             return -1;
         }
     }
@@ -197,7 +196,10 @@ public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer
         }
 
         if (player.getSuccess() == 1) {
-            mUser.setBackpackValue(player.getBackpackValue().get440());
+            if (player.getBackpackValue() != null) {
+                mUser.setBackpackValue(player.getBackpackValue().get440());
+            }
+
             mUser.setName(player.getName());
             mUser.setReputation(player.getBackpackTfReputation());
             mUser.setInGroup(player.getBackpackTfGroup());

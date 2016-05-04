@@ -198,6 +198,7 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView {
             priceUsd.setText(totalPrice.getFormattedPrice(getActivity(), Currency.USD));
         } catch (Throwable t) {
             Crashlytics.logException(t);
+            t.printStackTrace();
         }
     }
 

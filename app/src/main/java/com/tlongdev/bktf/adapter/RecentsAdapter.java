@@ -130,6 +130,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
                 holder.price.setText(item.getPrice().getFormattedPrice(mContext));
             } catch (Throwable t) {
                 Crashlytics.logException(t);
+                t.printStackTrace();
             }
         }
     }
@@ -152,6 +153,12 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
 
     public void setListener(OnMoreListener listener) {
         mListener = listener;
+    }
+
+    public void closeCursor() {
+        if (mDataSet != null) {
+            mDataSet.close();
+        }
     }
 
     /**
