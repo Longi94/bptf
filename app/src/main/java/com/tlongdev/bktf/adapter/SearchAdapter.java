@@ -171,6 +171,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                         holder.price.setText(item.getPrice().getFormattedPrice(mContext));
                     } catch (Throwable t) {
                         Crashlytics.logException(t);
+                        t.printStackTrace();
                     }
                 }
                 break;

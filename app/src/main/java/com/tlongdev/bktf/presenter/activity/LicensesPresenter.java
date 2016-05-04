@@ -64,6 +64,7 @@ public class LicensesPresenter implements Presenter<LicensesView> {
             licenses = ParseLicenseXml.Parse(mContext.getResources().getXml(R.xml.licenses));
         } catch (XmlPullParserException | IOException e) {
             Crashlytics.logException(e);
+            e.printStackTrace();
         }
         mView.showLicenses(licenses);
     }

@@ -130,7 +130,7 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
         } catch (IOException e) {
             //There was a network error
             errorMessage = mContext.getString(R.string.error_network);
-            Crashlytics.logException(e);
+            e.printStackTrace();
         }
 
         return -1;

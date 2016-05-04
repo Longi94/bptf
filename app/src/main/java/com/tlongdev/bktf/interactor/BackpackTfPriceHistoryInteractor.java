@@ -19,7 +19,6 @@ package com.tlongdev.bktf.interactor;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.model.Currency;
@@ -97,7 +96,7 @@ public class BackpackTfPriceHistoryInteractor extends AsyncTask<Void, Void, Inte
             return -1;
 
         } catch (IOException e) {
-            Crashlytics.logException(e);
+            e.printStackTrace();
         }
 
         return -1;

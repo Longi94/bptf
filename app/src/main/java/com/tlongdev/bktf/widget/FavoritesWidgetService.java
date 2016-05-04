@@ -204,6 +204,7 @@ public class FavoritesWidgetService extends RemoteViewsService {
                 } catch (InterruptedException | ExecutionException e) {
                     Crashlytics.logException(e);
                     rv.setImageViewBitmap(R.id.effect, null);
+                    e.printStackTrace();
                 }
 
                 if (!item.isTradable()) {

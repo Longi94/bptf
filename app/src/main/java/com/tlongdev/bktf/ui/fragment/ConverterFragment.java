@@ -30,7 +30,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.crashlytics.android.Crashlytics;
@@ -124,6 +123,7 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
                     }
                 } catch (Throwable t) {
                     Crashlytics.logException(t);
+                    t.printStackTrace();
                 }
             }
 
@@ -155,6 +155,7 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
                     }
                 } catch (Throwable t) {
                     Crashlytics.logException(t);
+                    t.printStackTrace();
                 }
             }
 
@@ -186,6 +187,7 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
                     }
                 } catch (Throwable t) {
                     Crashlytics.logException(t);
+                    t.printStackTrace();
                 }
             }
 
@@ -217,6 +219,7 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
                     }
                 } catch (Throwable t) {
                     Crashlytics.logException(t);
+                    t.printStackTrace();
                 }
             }
 
@@ -237,6 +240,7 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
             inputUsd.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.USD, false))));
         } catch (Throwable t) {
             Crashlytics.logException(t);
+            t.printStackTrace();
         }
 
         mAdManager.addAdView(mAdView);
