@@ -44,13 +44,13 @@ public class NavigationDrawerManager implements SharedPreferences.OnSharedPrefer
 
     @Inject ProfileManager mProfileManager;
     @Inject SharedPreferences mPrefs;
-    @Inject Context mContext;
 
     @BindView(R.id.user_name) TextView mName;
     @BindView(R.id.backpack_value) TextView mBackpack;
     @BindView(R.id.avatar) ImageView mAvatar;
 
     private MenuItem mUserMenuItem;
+    private Context mContext;
 
     public NavigationDrawerManager(BptfApplication application) {
         application.getDrawerManagerComponent().inject(this);
