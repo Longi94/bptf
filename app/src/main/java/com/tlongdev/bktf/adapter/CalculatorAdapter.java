@@ -113,14 +113,16 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
             holder.delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (listener != null) {
-                        //Notify listener that an item was deleted
-                        listener.onItemDeleted(item, mCountSet.get(holder.getAdapterPosition()));
+                    if (mDataSet.contains(item)){
+                        if (listener != null) {
+                            //Notify listener that an item was deleted
+                            listener.onItemDeleted(item, mCountSet.get(holder.getAdapterPosition()));
+                        }
+                        int removedPos = holder.getAdapterPosition();
+                        mDataSet.remove(removedPos);
+                        mCountSet.remove(removedPos);
+                        notifyItemRemoved(removedPos);
                     }
-                    int removedPos = holder.getAdapterPosition();
-                    mDataSet.remove(removedPos);
-                    mCountSet.remove(removedPos);
-                    notifyItemRemoved(removedPos);
                 }
             });
 
