@@ -30,13 +30,11 @@ import com.tlongdev.bktf.component.DaggerDrawerManagerComponent;
 import com.tlongdev.bktf.component.DaggerFragmentComponent;
 import com.tlongdev.bktf.component.DaggerInteractorComponent;
 import com.tlongdev.bktf.component.DaggerPresenterComponent;
-import com.tlongdev.bktf.component.DaggerProfileManagerComponent;
 import com.tlongdev.bktf.component.DaggerServiceComponent;
 import com.tlongdev.bktf.component.DrawerManagerComponent;
 import com.tlongdev.bktf.component.FragmentComponent;
 import com.tlongdev.bktf.component.InteractorComponent;
 import com.tlongdev.bktf.component.PresenterComponent;
-import com.tlongdev.bktf.component.ProfileManagerComponent;
 import com.tlongdev.bktf.component.ServiceComponent;
 import com.tlongdev.bktf.module.BptfAppModule;
 import com.tlongdev.bktf.module.NetworkModule;
@@ -59,8 +57,6 @@ public class BptfApplication extends Application {
     private InteractorComponent mInteractorComponent;
 
     private PresenterComponent mPresenterComponent;
-
-    private ProfileManagerComponent mProfileManagerComponent;
 
     private AdapterComponent mAdapterComponent;
 
@@ -100,11 +96,6 @@ public class BptfApplication extends Application {
                 .bptfAppModule(appModule)
                 .build();
 
-        mProfileManagerComponent = DaggerProfileManagerComponent.builder()
-                .bptfAppModule(appModule)
-                .storageModule(storageModule)
-                .build();
-
         mAdapterComponent = DaggerAdapterComponent.builder()
                 .bptfAppModule(appModule)
                 .build();
@@ -119,7 +110,7 @@ public class BptfApplication extends Application {
                 .build();
 
         if (!BuildConfig.DEBUG) {
-            ProfileManager manager = new ProfileManager(this);
+            ProfileManager manager = ProfileManager.getInstance(this);
             if (manager.isSignedIn()) {
                 Crashlytics.setUserIdentifier(manager.getResolvedSteamId());
             }
@@ -159,10 +150,6 @@ public class BptfApplication extends Application {
 
     public PresenterComponent getPresenterComponent() {
         return mPresenterComponent;
-    }
-
-    public ProfileManagerComponent getProfileManagerComponent() {
-        return mProfileManagerComponent;
     }
 
     public AdapterComponent getAdapterComponent() {

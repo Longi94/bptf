@@ -85,7 +85,7 @@ public class BptfAppModule {
     @Provides
     @Singleton
     ProfileManager provideProfileManager(Application application) {
-        return new ProfileManager((BptfApplication) application);
+        return ProfileManager.getInstance(application);
     }
 
     @Provides
