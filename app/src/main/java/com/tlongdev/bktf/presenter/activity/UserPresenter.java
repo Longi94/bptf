@@ -35,6 +35,9 @@ public class UserPresenter implements Presenter<UserView>,GetSearchedUserDataInt
     private final BptfApplication mApplication;
     private User mUser;
 
+    private boolean mNotLoaded = false;
+    private String mSteamId = "";
+
     public UserPresenter(BptfApplication application) {
         application.getPresenterComponent().inject(this);
         mApplication = application;
@@ -51,10 +54,20 @@ public class UserPresenter implements Presenter<UserView>,GetSearchedUserDataInt
     }
 
     public void loadData(String steamId) {
-        GetSearchedUserDataInteractor interactor = new GetSearchedUserDataInteractor(
-                mApplication, steamId, this
-        );
-        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if (!steamId.equals(mSteamId)) {
+            mNotLoaded = false;
+            mSteamId = steamId;
+        }
+
+        if (!mNotLoaded) {
+            GetSearchedUserDataInteractor interactor = new GetSearchedUserDataInteractor(
+                    mApplication, steamId, this
+            );
+            interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            mNotLoaded = true;
+        } else {
+            mView.hideLoadingAnimation();
+        }
     }
 
     @Override

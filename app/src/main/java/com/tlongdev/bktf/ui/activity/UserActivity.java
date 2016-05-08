@@ -17,11 +17,13 @@
 package com.tlongdev.bktf.ui.activity;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -70,15 +72,6 @@ public class UserActivity extends BptfActivity implements UserView{
 
         mPresenter.attachView(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        //Show the home button as back button
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
         Log.d(LOG_TAG, "steamID: " + steamId);
 
         mPresenter.loadData(steamId);
@@ -88,6 +81,28 @@ public class UserActivity extends BptfActivity implements UserView{
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.detachView();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void setSupportActionBar(@Nullable Toolbar toolbar) {
+        super.setSupportActionBar(toolbar);
+
+        //Show the home button as back button
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -112,6 +127,11 @@ public class UserActivity extends BptfActivity implements UserView{
         transaction.replace(R.id.container, fragment);
         transaction.commit();
 
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideLoadingAnimation() {
         progressBar.setVisibility(View.GONE);
     }
 }
