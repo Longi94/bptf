@@ -50,7 +50,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
     /**
      * The listener that will be notified when an items is edited.
      */
-    private OnItemEditListener listener;
+    private OnItemEditListener mListener;
 
     public CalculatorAdapter(BptfApplication application) {
         application.getAdapterComponent().inject(this);
@@ -114,9 +114,9 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                 @Override
                 public void onClick(View v) {
                     if (mDataSet.contains(item)){
-                        if (listener != null) {
+                        if (mListener != null) {
                             //Notify listener that an item was deleted
-                            listener.onItemDeleted(item, mCountSet.get(holder.getAdapterPosition()));
+                            mListener.onItemDeleted(item, mCountSet.get(holder.getAdapterPosition()));
                         }
                         int removedPos = holder.getAdapterPosition();
                         mDataSet.remove(removedPos);
@@ -145,8 +145,8 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                             holder.count.setText("1");
                         }
 
-                        if (listener != null && mCountSet.get(holder.getAdapterPosition()) != count) {
-                            listener.onItemEdited(item, mCountSet.get(holder.getAdapterPosition()), count);
+                        if (mListener != null && mCountSet.get(holder.getAdapterPosition()) != count) {
+                            mListener.onItemEdited(item, mCountSet.get(holder.getAdapterPosition()), count);
                         }
 
                         mCountSet.set(holder.getAdapterPosition(), count);
@@ -172,7 +172,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
      * @param listener the listener to be set
      */
     public void setListener(OnItemEditListener listener) {
-        this.listener = listener;
+        this.mListener = listener;
     }
 
     public void clearDataSet() {

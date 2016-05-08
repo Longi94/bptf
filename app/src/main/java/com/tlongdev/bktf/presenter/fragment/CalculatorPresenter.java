@@ -23,7 +23,7 @@ import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.adapter.CalculatorAdapter;
-import com.tlongdev.bktf.data.DatabaseContract;
+import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.interactor.LoadCalculatorItemsInteractor;
 import com.tlongdev.bktf.model.Currency;
@@ -141,16 +141,16 @@ public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalcul
 
         ContentValues cv = new ContentValues();
 
-        cv.put(DatabaseContract.CalculatorEntry.COLUMN_DEFINDEX, item.getDefindex());
-        cv.put(DatabaseContract.CalculatorEntry.COLUMN_ITEM_QUALITY, item.getQuality());
-        cv.put(DatabaseContract.CalculatorEntry.COLUMN_ITEM_TRADABLE, item.isTradable() ? 1 : 0);
-        cv.put(DatabaseContract.CalculatorEntry.COLUMN_ITEM_CRAFTABLE, item.isCraftable() ? 1 : 0);
-        cv.put(DatabaseContract.CalculatorEntry.COLUMN_PRICE_INDEX, item.getPriceIndex());
-        cv.put(DatabaseContract.CalculatorEntry.COLUMN_AUSTRALIUM, item.isAustralium() ? 1 : 0);
-        cv.put(DatabaseContract.CalculatorEntry.COLUMN_WEAPON_WEAR, item.getWeaponWear());
-        cv.put(DatabaseContract.CalculatorEntry.COLUMN_COUNT, 1);
+        cv.put(CalculatorEntry.COLUMN_DEFINDEX, item.getDefindex());
+        cv.put(CalculatorEntry.COLUMN_ITEM_QUALITY, item.getQuality());
+        cv.put(CalculatorEntry.COLUMN_ITEM_TRADABLE, item.isTradable() ? 1 : 0);
+        cv.put(CalculatorEntry.COLUMN_ITEM_CRAFTABLE, item.isCraftable() ? 1 : 0);
+        cv.put(CalculatorEntry.COLUMN_PRICE_INDEX, item.getPriceIndex());
+        cv.put(CalculatorEntry.COLUMN_AUSTRALIUM, item.isAustralium() ? 1 : 0);
+        cv.put(CalculatorEntry.COLUMN_WEAPON_WEAR, item.getWeaponWear());
+        cv.put(CalculatorEntry.COLUMN_COUNT, 1);
 
-        mContentResolver.insert(DatabaseContract.CalculatorEntry.CONTENT_URI, cv);
+        mContentResolver.insert(CalculatorEntry.CONTENT_URI, cv);
         loadItems();
     }
 
@@ -161,7 +161,7 @@ public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalcul
             mView.clearItems();
         }
 
-        mContentResolver.delete(DatabaseContract.CalculatorEntry.CONTENT_URI, null, null);
+        mContentResolver.delete(CalculatorEntry.CONTENT_URI, null, null);
     }
 
     @Override
@@ -175,14 +175,14 @@ public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalcul
             mView.updatePrices(mTotalPrice);
         }
 
-        mContentResolver.delete(DatabaseContract.CalculatorEntry.CONTENT_URI,
-                DatabaseContract.CalculatorEntry.COLUMN_DEFINDEX + " = ? AND " +
-                        DatabaseContract.CalculatorEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
-                        DatabaseContract.CalculatorEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
-                        DatabaseContract.CalculatorEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
-                        DatabaseContract.CalculatorEntry.COLUMN_PRICE_INDEX + " = ? AND " +
-                        DatabaseContract.CalculatorEntry.COLUMN_AUSTRALIUM + " = ? AND " +
-                        DatabaseContract.CalculatorEntry.COLUMN_WEAPON_WEAR + " = ?",
+        mContentResolver.delete(CalculatorEntry.CONTENT_URI,
+                CalculatorEntry.COLUMN_DEFINDEX + " = ? AND " +
+                        CalculatorEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
+                        CalculatorEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
+                        CalculatorEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
+                        CalculatorEntry.COLUMN_PRICE_INDEX + " = ? AND " +
+                        CalculatorEntry.COLUMN_AUSTRALIUM + " = ? AND " +
+                        CalculatorEntry.COLUMN_WEAPON_WEAR + " = ?",
                 new String[]{String.valueOf(item.getDefindex()),
                         String.valueOf(item.getQuality()),
                         item.isTradable() ? "1" : "0",
@@ -199,7 +199,9 @@ public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalcul
         int diff = newCount - oldCount;
         if (diff == 0) return;
 
-        mTotalPrice.setValue(mTotalPrice.getValue() + diff * item.getPrice().getRawValue());
+        if (item.getPrice() != null) {
+            mTotalPrice.setValue(mTotalPrice.getValue() + diff * item.getPrice().getRawValue());
+        }
 
         if (mView != null) {
             mView.updatePrices(mTotalPrice);
@@ -207,17 +209,17 @@ public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalcul
 
 
         ContentValues values = new ContentValues();
-        values.put(DatabaseContract.CalculatorEntry.COLUMN_COUNT, newCount);
+        values.put(CalculatorEntry.COLUMN_COUNT, newCount);
 
-        mContentResolver.update(DatabaseContract.CalculatorEntry.CONTENT_URI,
+        mContentResolver.update(CalculatorEntry.CONTENT_URI,
                 values,
-                DatabaseContract.CalculatorEntry.COLUMN_DEFINDEX + " = ? AND " +
-                        DatabaseContract.CalculatorEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
-                        DatabaseContract.CalculatorEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
-                        DatabaseContract.CalculatorEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
-                        DatabaseContract.CalculatorEntry.COLUMN_PRICE_INDEX + " = ? AND " +
-                        DatabaseContract.CalculatorEntry.COLUMN_AUSTRALIUM + " = ? AND " +
-                        DatabaseContract.CalculatorEntry.COLUMN_WEAPON_WEAR + " = ?",
+                CalculatorEntry.COLUMN_DEFINDEX + " = ? AND " +
+                        CalculatorEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
+                        CalculatorEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
+                        CalculatorEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
+                        CalculatorEntry.COLUMN_PRICE_INDEX + " = ? AND " +
+                        CalculatorEntry.COLUMN_AUSTRALIUM + " = ? AND " +
+                        CalculatorEntry.COLUMN_WEAPON_WEAR + " = ?",
                 new String[]{String.valueOf(item.getDefindex()),
                         String.valueOf(item.getQuality()),
                         item.isTradable() ? "1" : "0",
