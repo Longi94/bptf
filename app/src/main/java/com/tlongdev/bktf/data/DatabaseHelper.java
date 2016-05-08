@@ -33,6 +33,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @SuppressWarnings("unused")
     private static final String LOG_TAG = DatabaseHelper.class.getSimpleName();
 
+    private static DatabaseHelper ourInstance;
+
+    public static DatabaseHelper getInstance(Context context) {
+        if (ourInstance == null) {
+            ourInstance = new DatabaseHelper(context);
+        }
+        return ourInstance;
+    }
+
     private static final int DATABASE_VERSION = 9;
     public static final String DATABASE_NAME = "bptf.db";
 

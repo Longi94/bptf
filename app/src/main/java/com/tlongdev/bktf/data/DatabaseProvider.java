@@ -88,7 +88,7 @@ public class DatabaseProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        mOpenHelper = new DatabaseHelper(getContext());
+        mOpenHelper = DatabaseHelper.getInstance(getContext());
         return true;
     }
 
