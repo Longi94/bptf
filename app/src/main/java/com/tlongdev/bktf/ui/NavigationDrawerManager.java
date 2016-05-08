@@ -17,7 +17,6 @@
 package com.tlongdev.bktf.ui;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,13 +24,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.util.CircleTransform;
 import com.tlongdev.bktf.util.ProfileManager;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,22 +36,19 @@ import butterknife.ButterKnife;
  * @author longi
  * @since 2016.04.29.
  */
-public class NavigationDrawerManager implements SharedPreferences.OnSharedPreferenceChangeListener {
-
-    @Inject ProfileManager mProfileManager;
-    @Inject SharedPreferences mPrefs;
+public class NavigationDrawerManager implements ProfileManager.OnUpdateListener {
 
     @BindView(R.id.user_name) TextView mName;
     @BindView(R.id.backpack_value) TextView mBackpack;
     @BindView(R.id.avatar) ImageView mAvatar;
 
+    private ProfileManager mProfileManager;
     private MenuItem mUserMenuItem;
     private Context mContext;
 
-    public NavigationDrawerManager(BptfApplication application) {
-        application.getDrawerManagerComponent().inject(this);
-        //mProfileManager.addOnProfileUpdateListener(this);
-        mPrefs.registerOnSharedPreferenceChangeListener(this);
+    public NavigationDrawerManager(Context context) {
+        mProfileManager = ProfileManager.getInstance(context);
+        mProfileManager.addOnProfileUpdateListener(this);
     }
 
     public void attachView(View header) {
@@ -63,7 +56,7 @@ public class NavigationDrawerManager implements SharedPreferences.OnSharedPrefer
 
         mContext = header.getContext();
         if (mProfileManager.isSignedIn()) {
-            update(mProfileManager.getUser());
+            onUpdate(mProfileManager.getUser());
         }
     }
 
@@ -74,6 +67,14 @@ public class NavigationDrawerManager implements SharedPreferences.OnSharedPrefer
         mContext = null;
     }
 
+    public void setUserMenuItem(MenuItem userMenuItem) {
+        mUserMenuItem = userMenuItem;
+        if (mUserMenuItem != null) {
+            mUserMenuItem.setEnabled(mProfileManager.isSignedIn());
+        }
+    }
+
+    @Override
     public void onLogOut() {
         Glide.with(mContext)
                 .load(R.drawable.steam_default_avatar)
@@ -88,7 +89,8 @@ public class NavigationDrawerManager implements SharedPreferences.OnSharedPrefer
         }
     }
 
-    public void update(User user) {
+    @Override
+    public void onUpdate(User user) {
         //Set the name
         mName.setText(user.getName());
 
@@ -110,27 +112,6 @@ public class NavigationDrawerManager implements SharedPreferences.OnSharedPrefer
                 .into(mAvatar);
         if (mUserMenuItem != null) {
             mUserMenuItem.setEnabled(true);
-        }
-    }
-
-    public void setUserMenuItem(MenuItem userMenuItem) {
-        mUserMenuItem = userMenuItem;
-        if (mUserMenuItem != null) {
-            mUserMenuItem.setEnabled(mProfileManager.isSignedIn());
-        }
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (mContext == null || key == null ||
-                !key.equals(mContext.getString(R.string.pref_user_data))) {
-            return;
-        }
-
-        if (mProfileManager.isSignedIn()) {
-            update(mProfileManager.getUser());
-        } else {
-            onLogOut();
         }
     }
 }
