@@ -57,6 +57,8 @@ public class NavigationDrawerManager implements ProfileManager.OnUpdateListener 
         mContext = header.getContext();
         if (mProfileManager.isSignedIn()) {
             onUpdate(mProfileManager.getUser());
+        } else {
+            onLogOut();
         }
     }
 
