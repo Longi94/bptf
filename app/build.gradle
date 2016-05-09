@@ -39,7 +39,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard_general.pro', 'disable_logs.pro'
         }
         debug {
-            testCoverageEnabled true
             resValue("string", "BANNER_AD_UNIT_ID", "ca-app-pub-3940256099942544/6300978111")
         }
     }
