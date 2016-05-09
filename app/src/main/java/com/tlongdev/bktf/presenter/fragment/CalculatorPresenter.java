@@ -229,4 +229,8 @@ public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalcul
                         String.valueOf(item.getWeaponWear())
                 });
     }
+
+    public Price getTotalPrice() {
+        return mTotalPrice;
+    }
 }

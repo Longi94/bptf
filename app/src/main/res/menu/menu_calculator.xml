@@ -13,6 +13,12 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/action_currency"
+        android:orderInCategory="130"
+        android:title="Currency exchange"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/action_clear"
         android:orderInCategory="150"
         android:title="@string/action_clear"
