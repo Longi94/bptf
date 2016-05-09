@@ -219,4 +219,7 @@
     <string name="pref_ads_enabled">pref_ads_enabled</string>
     <string name="pref_currency_rates">pref_currency_rates</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

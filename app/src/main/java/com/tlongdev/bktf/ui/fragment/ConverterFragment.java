@@ -19,6 +19,7 @@ package com.tlongdev.bktf.ui.fragment;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -39,6 +40,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
+import com.tlongdev.bktf.util.CurrencyRatesManager;
 import com.tlongdev.bktf.util.Utility;
 
 import butterknife.BindView;
@@ -75,6 +77,8 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
 
     private Unbinder mUnbinder;
 
+    private CurrencyRatesManager mCurrencyRatesManager;
+
     /**
      * Constructor.
      */
@@ -94,6 +98,8 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_converter, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
+
+        mCurrencyRatesManager = CurrencyRatesManager.getInstance(mApplication);
 
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
@@ -276,9 +282,17 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
             case R.id.action_search:
                 //Start the search activity
                 startActivity(new Intent(getActivity(), SearchActivity.class));
-                break;
+                return true;
+            case R.id.action_currency:
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                CurrencyFragment currencyFragment = CurrencyFragment.newInstance(
+                        Double.parseDouble(inputUsd.getText().toString())
+                );
+                currencyFragment.show(fm, "fragment_currency");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return true;
     }
 
     @SuppressLint("SetTextI18n")

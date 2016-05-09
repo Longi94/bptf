@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.ads.AdManager;
 import com.tlongdev.bktf.ui.NavigationDrawerManager;
+import com.tlongdev.bktf.util.CurrencyRatesManager;
 import com.tlongdev.bktf.util.ProfileManager;
 
 import javax.inject.Singleton;
@@ -97,6 +98,12 @@ public class BptfAppModule {
     @Provides
     @Singleton
     NavigationDrawerManager provideNavigationDrawerManager(Application application) {
-        return new NavigationDrawerManager((BptfApplication) application);
+        return new NavigationDrawerManager(application);
+    }
+
+    @Provides
+    @Singleton
+    CurrencyRatesManager provideCurrencyRatesManager(BptfApplication application) {
+        return CurrencyRatesManager.getInstance(application);
     }
 }

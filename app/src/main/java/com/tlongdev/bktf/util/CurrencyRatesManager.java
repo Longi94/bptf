@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class CurrencyRatesManager {
 
-    private static final long SIX_HOURS = 21600000L;
+    public static final long SIX_HOURS = 21600000L;
 
     private static CurrencyRatesManager ourInstance;
 
@@ -59,7 +59,7 @@ public class CurrencyRatesManager {
         mGson = new Gson();
     }
 
-    private void getCurrencyRates(final Callback callback) {
+    public void getCurrencyRates(final Callback callback) {
 
         if (mCache == null) {
             String json = mPrefs.getString(mApplication.getString(R.string.pref_currency_rates), null);
@@ -92,8 +92,15 @@ public class CurrencyRatesManager {
 
         @Override
         public void onGetCurrencyExchangeRatesFinished(Map<String, Double> rates) {
+            if (mCache == null) {
+                mCache = new CurrencyRates();
+            }
             mCache.setRates(rates);
             mCache.setLastUpdate(System.currentTimeMillis());
+
+            mPrefs.edit().putString(mApplication.getString(R.string.pref_currency_rates),
+                    mGson.toJson(mCache)).apply();
+
             if (mCallback != null) {
                 mCallback.currencyRates(mCache, null);
             }

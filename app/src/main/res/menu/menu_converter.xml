@@ -12,4 +12,10 @@
         android:title="@string/search_title"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/action_currency"
+        android:orderInCategory="150"
+        android:title="Other currencies"
+        app:showAsAction="never"/>
+
 </menu>
