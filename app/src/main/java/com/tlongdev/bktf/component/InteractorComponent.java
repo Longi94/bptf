@@ -17,6 +17,7 @@
 package com.tlongdev.bktf.component;
 
 import com.tlongdev.bktf.interactor.BackpackTfPriceHistoryInteractor;
+import com.tlongdev.bktf.interactor.GetCurrencyExchangeRatesInteractor;
 import com.tlongdev.bktf.interactor.LoadItemDetailsInteractor;
 import com.tlongdev.bktf.interactor.GetSearchedUserDataInteractor;
 import com.tlongdev.bktf.interactor.GetUserDataInteractor;
@@ -84,4 +85,6 @@ public interface InteractorComponent {
     void inject(LoadSearchItemsInteractor loadSearchItemsInteractor);
 
     void inject(LoadItemDetailsInteractor loadItemDetailsInteractor);
+
+    void inject(GetCurrencyExchangeRatesInteractor getCurrencyExchangeRatesInteractor);
 }
