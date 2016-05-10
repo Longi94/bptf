@@ -23,6 +23,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +52,7 @@ public class CurrencyFragment extends DialogFragment implements CurrencyView {
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
     @BindView(R.id.base) TextView mBaseText;
     @BindView(R.id.age) TextView mAgeText;
+    @BindView(R.id.progress_bar) ProgressBar mProgressBar;
 
     private double mUsd;
 
@@ -124,11 +126,19 @@ public class CurrencyFragment extends DialogFragment implements CurrencyView {
             mAgeText.setText(String.format(Locale.ENGLISH,
                     "Exchange rates were last updated %d hours ago.", age / (1000 * 60 * 60)));
         }
+
+        mProgressBar.setVisibility(View.GONE);
+        mAgeText.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+        mBaseText.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showError(String errorMessage) {
         mAgeText.setText("Failed to download exchange rates. Try again later");
         showToast(errorMessage, Toast.LENGTH_SHORT);
+
+        mProgressBar.setVisibility(View.GONE);
+        mAgeText.setVisibility(View.VISIBLE);
     }
 }
