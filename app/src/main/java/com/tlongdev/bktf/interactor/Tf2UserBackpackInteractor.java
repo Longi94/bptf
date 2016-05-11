@@ -119,9 +119,15 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
             if (integer == 0) {
                 //Notify the user that the fetching finished and pass on the data
                 mCallback.onUserBackpackFinished(mUser);
+                if (!mIsGuest) {
+                    mProfileManager.saveUser(mUser);
+                }
             } else if (integer >= 1) {
                 //Notify the listener that the backpack was private
                 mCallback.onPrivateBackpack();
+                if (!mIsGuest) {
+                    mProfileManager.saveUser(mUser);
+                }
             } else {
                 mCallback.onUserBackpackFailed(errorMessage);
             }
@@ -183,10 +189,6 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
                     mUser.setRawKeys(rawKeys);
                     mUser.setBackpackSlots(backpackSlots);
                     mUser.setItemCount(itemNumber);
-
-                    if (!mIsGuest) {
-                        mProfileManager.saveUser(mUser);
-                    }
                 }
                 return 0;
             case 8: //Invalid ID, shouldn't reach

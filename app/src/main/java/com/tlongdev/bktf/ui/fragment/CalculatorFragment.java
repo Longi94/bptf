@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -180,13 +181,21 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView {
             case R.id.action_search:
                 //Start the search activity
                 startActivity(new Intent(getActivity(), SearchActivity.class));
-                break;
+                return true;
             case R.id.action_clear:
                 //Clear the items
                 mPresenter.clearItems();
-                break;
+                return true;
+            case R.id.action_currency:
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                CurrencyFragment currencyFragment = CurrencyFragment.newInstance(
+                        mPresenter.getTotalPrice().getConvertedPrice(getActivity(), Currency.USD, false)
+                );
+                currencyFragment.show(fm, "fragment_currency");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return true;
     }
 
     @Override

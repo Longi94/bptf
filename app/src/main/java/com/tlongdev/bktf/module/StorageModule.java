@@ -39,14 +39,14 @@ public class StorageModule {
     @Singleton
     @Named("readable")
     SQLiteDatabase provideReadableDatabase(Application application) {
-        return new DatabaseHelper(application).getReadableDatabase();
+        return DatabaseHelper.getInstance(application).getReadableDatabase();
     }
 
     @Provides
     @Singleton
     @Named("writable")
     SQLiteDatabase provideWritableDatabase(Application application) {
-        return new DatabaseHelper(application).getWritableDatabase();
+        return DatabaseHelper.getInstance(application).getWritableDatabase();
     }
 
     @Provides

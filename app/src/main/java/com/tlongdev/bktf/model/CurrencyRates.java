@@ -14,21 +14,32 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.component;
+package com.tlongdev.bktf.model;
 
-import com.tlongdev.bktf.module.BptfAppModule;
-import com.tlongdev.bktf.ui.NavigationDrawerManager;
-
-import javax.inject.Singleton;
-
-import dagger.Component;
+import java.util.Map;
 
 /**
- * @author longi
- * @since 2016.04.29.
+ * @author lngtr
+ * @since 2016. 05. 09.
  */
-@Singleton
-@Component(modules = {BptfAppModule.class})
-public interface DrawerManagerComponent {
-    void inject(NavigationDrawerManager navigationDrawerManager);
+public class CurrencyRates {
+    private Map<String, Double> rates;
+
+    private long lastUpdate;
+
+    public Map<String, Double> getRates() {
+        return rates;
+    }
+
+    public void setRates(Map<String, Double> rates) {
+        this.rates = rates;
+    }
+
+    public long getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(long lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
 }

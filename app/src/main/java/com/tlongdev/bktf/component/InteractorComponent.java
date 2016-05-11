@@ -17,26 +17,26 @@
 package com.tlongdev.bktf.component;
 
 import com.tlongdev.bktf.interactor.BackpackTfPriceHistoryInteractor;
-import com.tlongdev.bktf.interactor.LoadItemDetailsInteractor;
+import com.tlongdev.bktf.interactor.GetCurrencyExchangeRatesInteractor;
 import com.tlongdev.bktf.interactor.GetSearchedUserDataInteractor;
 import com.tlongdev.bktf.interactor.GetUserDataInteractor;
-import com.tlongdev.bktf.interactor.LoadAllPricesInteractor;
 import com.tlongdev.bktf.interactor.LoadBackpackItemsInteractor;
 import com.tlongdev.bktf.interactor.LoadCalculatorItemsInteractor;
 import com.tlongdev.bktf.interactor.LoadCurrencyPricesInteractor;
 import com.tlongdev.bktf.interactor.LoadFavoritesInteractor;
+import com.tlongdev.bktf.interactor.LoadItemDetailsInteractor;
 import com.tlongdev.bktf.interactor.LoadSearchItemsInteractor;
 import com.tlongdev.bktf.interactor.LoadSelectorItemsInteractor;
 import com.tlongdev.bktf.interactor.LoadUnusualEffectsInteractor;
 import com.tlongdev.bktf.interactor.LoadUnusualHatCategoriesInteractor;
 import com.tlongdev.bktf.interactor.LoadUnusualsInteractor;
 import com.tlongdev.bktf.interactor.SearchUserInteractor;
+import com.tlongdev.bktf.interactor.Tf2UserBackpackInteractor;
 import com.tlongdev.bktf.interactor.TlongdevItemSchemaInteractor;
 import com.tlongdev.bktf.interactor.TlongdevPriceListInteractor;
 import com.tlongdev.bktf.module.BptfAppModule;
 import com.tlongdev.bktf.module.NetworkModule;
 import com.tlongdev.bktf.module.StorageModule;
-import com.tlongdev.bktf.interactor.Tf2UserBackpackInteractor;
 
 import javax.inject.Singleton;
 
@@ -52,8 +52,6 @@ public interface InteractorComponent {
     void inject(TlongdevPriceListInteractor tlongdevPriceListInteractor);
 
     void inject(TlongdevItemSchemaInteractor tlongdevItemSchemaInteractor);
-
-    void inject(LoadAllPricesInteractor loadAllPricesInteractor);
 
     void inject(LoadCalculatorItemsInteractor loadCalculatorItemsInteractor);
 
@@ -84,4 +82,6 @@ public interface InteractorComponent {
     void inject(LoadSearchItemsInteractor loadSearchItemsInteractor);
 
     void inject(LoadItemDetailsInteractor loadItemDetailsInteractor);
+
+    void inject(GetCurrencyExchangeRatesInteractor getCurrencyExchangeRatesInteractor);
 }

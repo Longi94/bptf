@@ -18,33 +18,41 @@ package com.tlongdev.bktf.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.User;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 /**
  * Profile related static utility functions.
  */
 public class ProfileManager {
 
-    @Inject SharedPreferences mPrefs;
-    @Inject SharedPreferences.Editor mEditor;
-    @Inject Gson mGson;
-    @Inject Context mContext;
+    private static ProfileManager ourInstance;
+
+    public static ProfileManager getInstance(Context context) {
+        if (ourInstance == null) {
+            ourInstance = new ProfileManager(context);
+        }
+        return ourInstance;
+    }
+
+    private SharedPreferences mPrefs;
+    private Gson mGson;
+    private Context mContext;
 
     private User mUserCache;
 
     private List<OnUpdateListener> mListeners = new LinkedList<>();
 
-    public ProfileManager(BptfApplication application) {
-        application.getProfileManagerComponent().inject(this);
+    private ProfileManager(Context context) {
+        mContext = context;
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        mGson = new Gson();
     }
 
     /**
@@ -79,8 +87,7 @@ public class ProfileManager {
     public void saveUser(User user) {
         mUserCache = user;
         String json = mGson.toJson(user);
-        mEditor.putString(mContext.getString(R.string.pref_user_data), json);
-        mEditor.apply();
+        mPrefs.edit().putString(mContext.getString(R.string.pref_user_data), json).apply();
 
         for (OnUpdateListener listener : mListeners) {
             listener.onUpdate(mUserCache);
@@ -103,8 +110,7 @@ public class ProfileManager {
      * Deletes data about the user
      */
     public void logOut() {
-        mEditor.remove(mContext.getString(R.string.pref_user_data));
-        mEditor.apply();
+        mPrefs.edit().remove(mContext.getString(R.string.pref_user_data)).apply();
 
         for (OnUpdateListener listener : mListeners) {
             listener.onLogOut();

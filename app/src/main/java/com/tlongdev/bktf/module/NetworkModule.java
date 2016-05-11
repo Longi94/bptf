@@ -18,6 +18,7 @@ package com.tlongdev.bktf.module;
 
 import com.google.gson.Gson;
 import com.tlongdev.bktf.network.BackpackTfInterface;
+import com.tlongdev.bktf.network.FixerIoInterface;
 import com.tlongdev.bktf.network.SteamUserInterface;
 import com.tlongdev.bktf.network.Tf2Interface;
 import com.tlongdev.bktf.network.TlongdevInterface;
@@ -29,6 +30,7 @@ import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 /**
  * @author Long
@@ -40,10 +42,10 @@ public class NetworkModule {
     @Provides
     @Singleton
     @Named("tlongdev")
-    Retrofit provideTlongdevRetrofit(Gson gson) {
+    Retrofit provideTlongdevRetrofit() {
         return new Retrofit.Builder()
                 .baseUrl(TlongdevInterface.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(JacksonConverterFactory.create())
                 .build();
     }
 
@@ -79,6 +81,16 @@ public class NetworkModule {
 
     @Provides
     @Singleton
+    @Named("fixer_io")
+    Retrofit provideFixerIoRetrofit(Gson gson) {
+        return new Retrofit.Builder()
+                .baseUrl(FixerIoInterface.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+    }
+
+    @Provides
+    @Singleton
     TlongdevInterface provideTlongdevInterface(@Named("tlongdev") Retrofit retrofit) {
         return retrofit.create(TlongdevInterface.class);
     }
@@ -99,5 +111,11 @@ public class NetworkModule {
     @Singleton
     Tf2Interface provideTf2Interface(@Named("tf2") Retrofit retrofit) {
         return retrofit.create(Tf2Interface.class);
+    }
+
+    @Provides
+    @Singleton
+    FixerIoInterface provideFixerIoInterface(@Named("fixer_io") Retrofit retrofit) {
+        return retrofit.create(FixerIoInterface.class);
     }
 }

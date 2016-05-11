@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.component;
+package com.tlongdev.bktf.ui.view.fragment;
 
-import com.tlongdev.bktf.module.BptfAppModule;
-import com.tlongdev.bktf.module.StorageModule;
-import com.tlongdev.bktf.util.ProfileManager;
-
-import javax.inject.Singleton;
-
-import dagger.Component;
+import com.tlongdev.bktf.model.CurrencyRates;
+import com.tlongdev.bktf.ui.view.BaseView;
 
 /**
- * @author Long
- * @since 2016. 03. 19.
+ * @author lngtr
+ * @since 2016. 05. 09.
  */
-@Singleton
-@Component(modules = {BptfAppModule.class, StorageModule.class})
-public interface ProfileManagerComponent {
-    void inject(ProfileManager profileManager);
+public interface CurrencyView extends BaseView {
+    void showCurrencyRates(CurrencyRates rates);
+
+    void showError(String errorMessage);
 }

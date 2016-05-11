@@ -16,7 +16,7 @@
 
 package com.tlongdev.bktf.network.model.fixerio;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Long
@@ -25,7 +25,7 @@ import java.util.HashMap;
 public class CurrencyRates {
     private String base;
     private String date;
-    private HashMap<String, Double> rates;
+    private Map<String, Double> rates;
 
     public String getBase() {
         return base;
@@ -43,11 +43,11 @@ public class CurrencyRates {
         this.date = date;
     }
 
-    public HashMap<String, Double> getRates() {
+    public Map<String, Double> getRates() {
         return rates;
     }
 
-    public void setRates(HashMap<String, Double> rates) {
+    public void setRates(Map<String, Double> rates) {
         this.rates = rates;
     }
 }

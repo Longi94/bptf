@@ -151,7 +151,6 @@ public class GetUserDataInteractor extends AsyncTask<Void, Void, Integer> {
             }
 
             mUser.setLastUpdated(System.currentTimeMillis());
-            mProfileManager.saveUser(mUser);
 
             return 0;
         } catch (IOException e) {
@@ -171,6 +170,7 @@ public class GetUserDataInteractor extends AsyncTask<Void, Void, Integer> {
         if (mCallback != null) {
             if (integer >= 0) {
                 //notify the mCallback, that the fetching has finished.
+                mProfileManager.saveUser(mUser);
                 mCallback.onUserInfoFinished(mUser);
             } else {
                 mCallback.onUserInfoFailed(errorMessage);

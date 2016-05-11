@@ -156,13 +156,21 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
 
         mAdManager.addAdView(mAdView);
 
+        if (savedInstanceState != null) {
+            updateCurrencyHeader(
+                    (Price) savedInstanceState.getParcelable(RecentsPresenter.STATE_METAL),
+                    (Price) savedInstanceState.getParcelable(RecentsPresenter.STATE_KEY),
+                    (Price) savedInstanceState.getParcelable(RecentsPresenter.STATE_BUDS)
+            );
+        }
+
         return rootView;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPresenter.loadPrices();
+        mPresenter.loadPrices(savedInstanceState != null);
     }
 
     @Override
@@ -178,8 +186,12 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
         mPresenter.detachView();
         mAdManager.removeAdView(mAdView);
         mUnbinder.unbind();
+    }
 
-        mAdapter.closeCursor();
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        mPresenter.saveCurrencyPrices(outState);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -246,24 +258,30 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
 
     @Override
     public void updateCurrencyHeader(Price metalPrice, Price keyPrice, Price budPrice) {
-        mMetalPrice.setText(metalPrice.getFormattedPrice(getActivity()));
-        mKeyPrice.setText(keyPrice.getFormattedPrice(getActivity()));
-        mBudsPrice.setText(budPrice.getFormattedPrice(getActivity()));
+        if (metalPrice != null) {
+            mMetalPrice.setText(metalPrice.getFormattedPrice(getActivity()));
+            if (metalPrice.getDifference() > 0.0) {
+                metalPriceImage.setBackgroundColor(0xff008504);
+            } else {
+                metalPriceImage.setBackgroundColor(0xff850000);
+            }
+        }
+        if (keyPrice != null) {
+            mKeyPrice.setText(keyPrice.getFormattedPrice(getActivity()));
+            if (keyPrice.getDifference() > 0.0) {
+                keyPriceImage.setBackgroundColor(0xff008504);
+            } else {
+                keyPriceImage.setBackgroundColor(0xff850000);
+            }
+        }
 
-        if (metalPrice.getDifference() > 0.0) {
-            metalPriceImage.setBackgroundColor(0xff008504);
-        } else {
-            metalPriceImage.setBackgroundColor(0xff850000);
-        }
-        if (keyPrice.getDifference() > 0.0) {
-            keyPriceImage.setBackgroundColor(0xff008504);
-        } else {
-            keyPriceImage.setBackgroundColor(0xff850000);
-        }
-        if (budPrice.getDifference() > 0) {
-            budsPriceImage.setBackgroundColor(0xff008504);
-        } else {
-            budsPriceImage.setBackgroundColor(0xff850000);
+        if (budPrice != null) {
+            mBudsPrice.setText(budPrice.getFormattedPrice(getActivity()));
+            if (budPrice.getDifference() > 0) {
+                budsPriceImage.setBackgroundColor(0xff008504);
+            } else {
+                budsPriceImage.setBackgroundColor(0xff850000);
+            }
         }
     }
 

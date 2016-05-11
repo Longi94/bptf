@@ -21,6 +21,7 @@ import com.tlongdev.bktf.module.PresenterModule;
 import com.tlongdev.bktf.ui.fragment.BptfFragment;
 import com.tlongdev.bktf.ui.fragment.CalculatorFragment;
 import com.tlongdev.bktf.ui.fragment.ConverterFragment;
+import com.tlongdev.bktf.ui.fragment.CurrencyFragment;
 import com.tlongdev.bktf.ui.fragment.FavoritesFragment;
 import com.tlongdev.bktf.ui.fragment.RecentsFragment;
 import com.tlongdev.bktf.ui.fragment.UnusualFragment;
@@ -51,4 +52,6 @@ public interface FragmentComponent {
     void inject(FavoritesFragment favoritesFragment);
 
     void inject(RecentsFragment recentsFragment);
+
+    void inject(CurrencyFragment currencyFragment);
 }

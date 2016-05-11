@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Menu resource used in the simple fragment calculator-->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.fragment.ConverterFragment">
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".ui.fragment.ConverterFragment">
 
     <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_search_white_24dp"
         android:orderInCategory="100"
         android:title="@string/search_title"
-        app:showAsAction="always" />
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_currency"
+        android:orderInCategory="150"
+        android:title="Currency exchange"
+        app:showAsAction="never"/>
 
 </menu>

@@ -30,7 +30,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.gcm.GcmRegisterPriceUpdatesService;
 import com.tlongdev.bktf.util.ProfileManager;
@@ -186,7 +185,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         findPreference(getString(R.string.pref_key_login)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                ProfileManager manager = new ProfileManager((BptfApplication) getApplication());
+                ProfileManager manager = ProfileManager.getInstance(getApplication());
                 if (manager.isSignedIn()) {
                     manager.logOut();
                     updateLoginPreference();
@@ -222,7 +221,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
     }
 
     private void updateLoginPreference() {
-        ProfileManager manager = new ProfileManager((BptfApplication) getApplication());
+        ProfileManager manager = ProfileManager.getInstance(getApplication());
         Preference login = findPreference(getString(R.string.pref_key_login));
         if (manager.isSignedIn()) {
             login.setTitle("Log out");

@@ -30,6 +30,7 @@ import com.tlongdev.bktf.presenter.activity.UnusualPresenter;
 import com.tlongdev.bktf.presenter.activity.UserBackpackPresenter;
 import com.tlongdev.bktf.presenter.activity.UserPresenter;
 import com.tlongdev.bktf.presenter.fragment.CalculatorPresenter;
+import com.tlongdev.bktf.presenter.fragment.CurrencyPresenter;
 import com.tlongdev.bktf.presenter.fragment.FavoritesPresenter;
 import com.tlongdev.bktf.presenter.fragment.RecentsPresenter;
 
@@ -133,5 +134,11 @@ public class PresenterModule {
     @Singleton
     com.tlongdev.bktf.presenter.fragment.UserPresenter provideUserFragmentPresenter(Application application) {
         return new com.tlongdev.bktf.presenter.fragment.UserPresenter((BptfApplication) application);
+    }
+
+    @Provides
+    @Singleton
+    CurrencyPresenter provideCurrencyPresenter(Application application) {
+        return new CurrencyPresenter((BptfApplication) application);
     }
 }

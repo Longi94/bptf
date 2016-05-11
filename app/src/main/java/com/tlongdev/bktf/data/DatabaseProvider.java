@@ -25,6 +25,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.tlongdev.bktf.data.DatabaseContract.*;
+import com.tlongdev.bktf.util.Utility;
 
 public class DatabaseProvider extends ContentProvider {
 
@@ -46,6 +47,7 @@ public class DatabaseProvider extends ContentProvider {
     private static final int FAVORITES = 106;
     private static final int CALCULATOR = 107;
     private static final int DECORATED_WEAPON = 108;
+    private static final int ALL_PRICES = 109;
 
     /**
      * The URI Matcher used by this content provider
@@ -82,13 +84,14 @@ public class DatabaseProvider extends ContentProvider {
         matcher.addURI(authority, DatabaseContract.PATH_FAVORITES, FAVORITES);
         matcher.addURI(authority, DatabaseContract.PATH_CALCULATOR, CALCULATOR);
         matcher.addURI(authority, DatabaseContract.PATH_BACKPACK + "/guest", BACKPACK_GUEST);
+        matcher.addURI(authority, DatabaseContract.PATH_PRICE_LIST + "/all", ALL_PRICES);
 
         return matcher;
     }
 
     @Override
     public boolean onCreate() {
-        mOpenHelper = new DatabaseHelper(getContext());
+        mOpenHelper = DatabaseHelper.getInstance(getContext());
         return true;
     }
 
@@ -126,6 +129,12 @@ public class DatabaseProvider extends ContentProvider {
             case DECORATED_WEAPON:
                 tableName = DecoratedWeaponEntry.TABLE_NAME;
                 break;
+            case ALL_PRICES:
+                retCursor = queryAllPrices();
+                if (getContext() != null && retCursor != null) {
+                    retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+                }
+                return retCursor;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -370,5 +379,36 @@ public class DatabaseProvider extends ContentProvider {
         }
 
         return returnCount;
+    }
+
+    private Cursor queryAllPrices() {
+        Cursor cursor = mOpenHelper.getReadableDatabase().rawQuery("SELECT " +
+                        DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_DEFINDEX + "," +
+                        DatabaseContract.ItemSchemaEntry.TABLE_NAME + "." + DatabaseContract.ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
+                        DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_ITEM_QUALITY + "," +
+                        DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_ITEM_TRADABLE + "," +
+                        DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_ITEM_CRAFTABLE + "," +
+                        DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_PRICE_INDEX + "," +
+                        DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_CURRENCY + "," +
+                        DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_PRICE + "," +
+                        DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_PRICE_HIGH + "," +
+                        Utility.getRawPriceQueryString(getContext()) + " raw_price," +
+                        DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_DIFFERENCE + "," +
+                        DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_AUSTRALIUM +
+                        " FROM " + DatabaseContract.PriceEntry.TABLE_NAME +
+                        " LEFT JOIN " + DatabaseContract.ItemSchemaEntry.TABLE_NAME +
+                        " ON " + DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_DEFINDEX + " = " + DatabaseContract.ItemSchemaEntry.TABLE_NAME + "." + DatabaseContract.ItemSchemaEntry.COLUMN_DEFINDEX +
+                        " ORDER BY " + DatabaseContract.PriceEntry.COLUMN_LAST_UPDATE + " DESC",
+                null
+        );
+
+        //Raw query is lazy, it won't actually query until we actually ask for the data.
+        if (cursor != null) {
+            if (cursor.getCount() > 0) {
+                return cursor;
+            }
+        }
+
+        return cursor;
     }
 }
