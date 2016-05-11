@@ -75,11 +75,17 @@ public class CurrencyRatesManager {
             return;
         }
 
-        mFixerIoCallback.setCallback(callback);
-        GetCurrencyExchangeRatesInteractor interactor = new GetCurrencyExchangeRatesInteractor(
-                mApplication, mFixerIoCallback
-        );
-        interactor.execute();
+        if (Utility.isNetworkAvailable(mApplication)) {
+            mFixerIoCallback.setCallback(callback);
+            GetCurrencyExchangeRatesInteractor interactor = new GetCurrencyExchangeRatesInteractor(
+                    mApplication, mFixerIoCallback
+            );
+            interactor.execute();
+        } else {
+            if (callback != null) {
+                callback.currencyRates(mCache, null);
+            }
+        }
     }
 
     public interface Callback {
