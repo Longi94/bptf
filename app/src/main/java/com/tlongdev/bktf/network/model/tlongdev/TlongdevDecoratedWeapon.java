@@ -16,8 +16,7 @@
 
 package com.tlongdev.bktf.network.model.tlongdev;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author Long
@@ -25,12 +24,10 @@ import com.google.gson.annotations.SerializedName;
  */
 public class TlongdevDecoratedWeapon {
 
-    @SerializedName("defindex")
-    @Expose
+    @JsonProperty("defindex")
     private int defindex;
 
-    @SerializedName("grade")
-    @Expose
+    @JsonProperty("grade")
     private int grade;
 
     public int getDefindex() {

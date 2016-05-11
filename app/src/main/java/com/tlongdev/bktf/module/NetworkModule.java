@@ -30,6 +30,7 @@ import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 /**
  * @author Long
@@ -41,10 +42,10 @@ public class NetworkModule {
     @Provides
     @Singleton
     @Named("tlongdev")
-    Retrofit provideTlongdevRetrofit(Gson gson) {
+    Retrofit provideTlongdevRetrofit() {
         return new Retrofit.Builder()
                 .baseUrl(TlongdevInterface.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(JacksonConverterFactory.create())
                 .build();
     }
 

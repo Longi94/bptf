@@ -16,8 +16,7 @@
 
 package com.tlongdev.bktf.network.model.tlongdev;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author Long
@@ -25,60 +24,46 @@ import com.google.gson.annotations.SerializedName;
  */
 public class TlongdevPrice {
 
-    @SerializedName("defindex")
-    @Expose
+    @JsonProperty("defindex")
     private Integer defindex;
 
-    @SerializedName("item_name")
-    @Expose
+    @JsonProperty("item_name")
     private String itemName;
 
-    @SerializedName("quality")
-    @Expose
+    @JsonProperty("quality")
     private Integer quality;
 
-    @SerializedName("tradable")
-    @Expose
+    @JsonProperty("tradable")
     private Integer tradable;
 
-    @SerializedName("craftable")
-    @Expose
+    @JsonProperty("craftable")
     private Integer craftable;
 
-    @SerializedName("price_index")
-    @Expose
+    @JsonProperty("price_index")
     private Integer priceIndex;
 
-    @SerializedName("australium")
-    @Expose
+    @JsonProperty("australium")
     private Integer australium;
 
-    @SerializedName("value")
-    @Expose
+    @JsonProperty("value")
     private Double value;
 
-    @SerializedName("value_raw")
-    @Expose
+    @JsonProperty("value_raw")
     private Double valueRaw;
 
-    @SerializedName("currency")
-    @Expose
+    @JsonProperty("currency")
     private String currency;
 
-    @SerializedName("last_update")
-    @Expose
+    @JsonProperty("last_update")
     private Long lastUpdate;
 
-    @SerializedName("difference")
-    @Expose
+    @JsonProperty("difference")
     private Double difference;
 
-    @SerializedName("weapon_wear")
-    @Expose
+    @JsonProperty("weapon_wear")
     private Integer weaponWear;
 
-    @SerializedName("value_high")
-    @Expose
+    @JsonProperty("value_high")
     private Double valueHigh;
 
     public Integer getDefindex() {

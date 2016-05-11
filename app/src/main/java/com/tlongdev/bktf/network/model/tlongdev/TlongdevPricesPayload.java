@@ -16,8 +16,7 @@
 
 package com.tlongdev.bktf.network.model.tlongdev;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,20 +27,16 @@ import java.util.List;
  */
 public class TlongdevPricesPayload {
 
-    @SerializedName("success")
-    @Expose
+    @JsonProperty("success")
     private Integer success;
 
-    @SerializedName("count")
-    @Expose
+    @JsonProperty("count")
     private Integer count;
 
-    @SerializedName("prices")
-    @Expose
+    @JsonProperty("prices")
     private List<TlongdevPrice> prices = new ArrayList<>();
 
-    @SerializedName("message")
-    @Expose
+    @JsonProperty("message")
     private String message;
 
     public Integer getSuccess() {
