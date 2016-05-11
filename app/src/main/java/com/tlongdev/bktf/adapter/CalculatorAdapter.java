@@ -129,7 +129,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
             holder.count.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
-                    if (!hasFocus) {
+                    if (!hasFocus && mDataSet.contains(item)) {
                         String countStr = holder.count.getText().toString();
 
                         int count = 1;
