@@ -21,13 +21,16 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.interactor.LoadAllPricesInteractor;
+import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.interactor.LoadCurrencyPricesInteractor;
 import com.tlongdev.bktf.interactor.TlongdevItemSchemaInteractor;
 import com.tlongdev.bktf.interactor.TlongdevPriceListInteractor;
@@ -42,8 +45,9 @@ import javax.inject.Inject;
  * @author Long
  * @since 2016. 03. 10.
  */
-public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesInteractor.Callback,
-        TlongdevPriceListInteractor.Callback, TlongdevItemSchemaInteractor.Callback, LoadCurrencyPricesInteractor.Callback {
+public class RecentsPresenter implements Presenter<RecentsView>,
+        TlongdevPriceListInteractor.Callback, TlongdevItemSchemaInteractor.Callback,
+        LoadCurrencyPricesInteractor.Callback, LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String STATE_METAL = "metal";
     public static final String STATE_KEY = "key";
@@ -59,6 +63,8 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
 
     private boolean mLoading = false;
 
+    private LoaderManager mLoaderManager;
+
     private Cursor mCache;
     private Price mMetalCache;
     private Price mKeyCache;
@@ -73,22 +79,17 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
     public void attachView(RecentsView view) {
         mView = view;
 
-        if (mView != null && mLoading) {
-            mView.showRefreshAnimation();
+        if (mView != null) {
+            if (mLoading) {
+                mView.showRefreshAnimation();
+            }
+            mLoaderManager = mView.getLoaderManager();
         }
     }
 
     @Override
     public void detachView() {
         mView = null;
-    }
-
-    @Override
-    public void onLoadPricesFinished(Cursor prices) {
-        mCache = prices;
-        if (mView != null) {
-            mView.showPrices(prices);
-        }
     }
 
     public void loadPrices(boolean fromCache) {
@@ -111,8 +112,8 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
                     mView.showPrices(mCache);
                 }
             } else {
-                LoadAllPricesInteractor interactor = new LoadAllPricesInteractor(mApplication, this);
-                interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                mLoaderManager.initLoader(0, null, this);
+
                 loadCurrencyPrices();
                 //Update database if the last update happened more than an hour ago
                 if (System.currentTimeMillis() - mPrefs.getLong(mContext.getString(R.string.pref_last_price_list_update), 0) >= 3600000L
@@ -264,5 +265,26 @@ public class RecentsPresenter implements Presenter<RecentsView>, LoadAllPricesIn
         outState.putParcelable(STATE_KEY, mKeyCache);
         outState.putParcelable(STATE_METAL, mMetalCache);
         outState.putParcelable(STATE_BUDS, mBudCache);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(mApplication,
+                PriceEntry.ALL_PRICES_URI, null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mCache = data;
+        if (mView != null) {
+            mView.showPrices(data);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        if (mView != null) {
+            mView.showPrices(mCache);
+        }
     }
 }
