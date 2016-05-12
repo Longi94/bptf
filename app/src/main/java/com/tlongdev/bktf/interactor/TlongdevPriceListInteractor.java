@@ -23,6 +23,9 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.google.gson.stream.JsonReader;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
@@ -34,7 +37,6 @@ import com.tlongdev.bktf.util.Utility;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Vector;
 
 import javax.inject.Inject;
@@ -133,34 +135,39 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
     }
 
     private int parseJson(InputStream inputStream) throws IOException {
-
-        JsonReader reader = new JsonReader(new InputStreamReader(inputStream));
+        //Create a parser from the input stream for fast parsing and low impact on memory
+        JsonFactory factory = new JsonFactory();
+        JsonParser parser = factory.createParser(inputStream);
 
         Vector<ContentValues> cVVector = new Vector<>();
         int retVal = 0;
         int count = 0;
 
-        reader.beginObject();
+        //Not a JSON if it doesn't start with START OBJECT
+        if (parser.nextToken() != JsonToken.START_OBJECT) {
+            return -1;
+        }
 
-        while (reader.hasNext()) {
-            String name = reader.nextName();
+        while (parser.nextToken() != JsonToken.END_OBJECT) {
+            String name = parser.getCurrentName();
+            parser.nextToken();
+
             switch (name) {
                 case "success":
-                    if (reader.nextInt() == 0) {
+                    if (parser.getIntValue() == 0) {
                         retVal = 1;
                     }
                     break;
                 case "message":
-                    errorMessage = reader.nextString();
+                    errorMessage = parser.getText();
                     break;
                 case "count":
-                    count = reader.nextInt();
+                    count = parser.getIntValue();
                     break;
                 case "prices":
-                    reader.beginArray();
 
-                    while (reader.hasNext()) {
-                        ContentValues values = buildContentValues(reader);
+                    while (parser.nextToken() != JsonToken.END_ARRAY) {
+                        ContentValues values = buildContentValues(parser);
                         cVVector.add(values);
                     }
 
@@ -172,18 +179,101 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
                                 .bulkInsert(PriceEntry.CONTENT_URI, cvArray);
                         Log.v(LOG_TAG, "inserted " + rowsInserted + " rows into prices table");
                     }
-
-                    reader.endArray();
-                    break;
-                default:
-                    reader.skipValue();;
                     break;
             }
         }
 
-        reader.endObject();
+        parser.close();
 
         return retVal;
+    }
+
+    private ContentValues buildContentValues(JsonParser parser) throws IOException {
+        ContentValues values = new ContentValues();
+
+        int defindex = 0;
+        int quality = 0;
+        int tradable = 0;
+        int craftable = 0;
+        double value = 0;
+        Double high = null;
+        double raw = 0;
+
+        while (parser.nextToken() != JsonToken.END_OBJECT) {
+            parser.nextToken();
+            switch (parser.getCurrentName()) {
+                case "defindex":
+                    Item item = new Item();
+                    item.setDefindex(parser.getIntValue());
+                    defindex = item.getFixedDefindex();
+                    values.put(PriceEntry.COLUMN_DEFINDEX, defindex);
+                    break;
+                case "quality":
+                    quality = parser.getIntValue();
+                    values.put(PriceEntry.COLUMN_ITEM_QUALITY, quality);
+                    break;
+                case "tradable":
+                    tradable = parser.getIntValue();
+                    values.put(PriceEntry.COLUMN_ITEM_TRADABLE, tradable);
+                    break;
+                case "craftable":
+                    craftable = parser.getIntValue();
+                    values.put(PriceEntry.COLUMN_ITEM_CRAFTABLE, craftable);
+                    break;
+                case "price_index":
+                    values.put(PriceEntry.COLUMN_PRICE_INDEX, parser.getIntValue());
+                    break;
+                case "australium":
+                    values.put(PriceEntry.COLUMN_AUSTRALIUM, parser.getIntValue());
+                    break;
+                case "currency":
+                    values.put(PriceEntry.COLUMN_CURRENCY, parser.getText());
+                    break;
+                case "value":
+                    value = parser.getDoubleValue();
+                    values.put(PriceEntry.COLUMN_PRICE, value);
+                    break;
+                case "value_high":
+                    high = parser.getDoubleValue();
+                    values.put(PriceEntry.COLUMN_PRICE_HIGH, high);
+                    break;
+                case "value_raw":
+                    raw = parser.getDoubleValue();
+                    break;
+                case "last_update":
+                    values.put(PriceEntry.COLUMN_LAST_UPDATE, parser.getLongValue());
+                    break;
+                case "difference":
+                    values.put(PriceEntry.COLUMN_DIFFERENCE, parser.getDoubleValue());
+                    break;
+            }
+        }
+
+        values.put(PriceEntry.COLUMN_WEAPON_WEAR, 0);
+
+        if (quality == Quality.UNIQUE && tradable == 1 && craftable == 1) {
+            if (defindex == 143) { //buds
+                Utility.putDouble(mEditor, mContext.getString(R.string.pref_buds_raw), raw);
+                mEditor.apply();
+            } else if (defindex == 5002) { //metal
+
+                double highPrice = high == null ? 0 : high;
+
+                if (highPrice > value) {
+                    //If the metal has a high price, save the average as raw.
+                    Utility.putDouble(mEditor, mContext.getString(R.string.pref_metal_raw_usd), ((value + highPrice) / 2));
+                } else {
+                    //save as raw price
+                    Utility.putDouble(mEditor, mContext.getString(R.string.pref_metal_raw_usd), value);
+                }
+                mEditor.apply();
+            } else if (defindex == 5021) { //key
+                Utility.putDouble(mEditor, mContext.getString(R.string.pref_key_raw), raw);
+                mEditor.apply();
+            }
+        }
+
+        return values;
     }
 
     private ContentValues buildContentValues(JsonReader reader) throws IOException {
