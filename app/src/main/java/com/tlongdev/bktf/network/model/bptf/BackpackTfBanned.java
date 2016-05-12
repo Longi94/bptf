@@ -14,26 +14,19 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.network;
-
-import com.tlongdev.bktf.network.model.tlongdev.TlongdevItemSchemaPayload;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
+package com.tlongdev.bktf.network.model.bptf;
 
 /**
- * @author Long
- * @since 2016. 03. 10.
+ * @author lngtr
+ * @since 2016. 05. 12.
  */
-public interface TlongdevInterface {
+public class BackpackTfBanned {
 
-    String BASE_URL = "http://tlongdev.com/api/v1/";
+    private Long start;
 
-    @GET("prices")
-    Call<ResponseBody> getPrices(@Query("since") long since);
+    private Long end;
 
-    @GET("item_schema")
-    Call<TlongdevItemSchemaPayload> getItemSchema();
+    private String reason;
+
+
 }

@@ -16,7 +16,7 @@
 
 package com.tlongdev.bktf.network.model.tlongdev;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Long
@@ -24,19 +24,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class TlongdevItem {
 
-    @JsonProperty("defindex")
+    @SerializedName("defindex")
     private Integer defindex;
 
-    @JsonProperty("name")
+    @SerializedName("name")
     private String name;
 
-    @JsonProperty("description")
+    @SerializedName("description")
     private String description;
 
-    @JsonProperty("type_name")
+    @SerializedName("type_name")
     private String typeName;
 
-    @JsonProperty("proper_name")
+    @SerializedName("proper_name")
     private Integer properName;
 
     public Integer getDefindex() {

@@ -16,7 +16,7 @@
 
 package com.tlongdev.bktf.network.model.tlongdev;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Long
@@ -24,10 +24,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class TlongdevParticleName {
 
-    @JsonProperty("id")
+    @SerializedName("id")
     private int id;
 
-    @JsonProperty("name")
+    @SerializedName("name")
     private String name;
 
     public int getId() {

@@ -16,7 +16,7 @@
 
 package com.tlongdev.bktf.network.model.tlongdev;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,22 +27,22 @@ import java.util.List;
  */
 public class TlongdevItemSchemaPayload {
 
-    @JsonProperty("success")
+    @SerializedName("success")
     private Integer success;
 
-    @JsonProperty("items")
+    @SerializedName("items")
     private List<TlongdevItem> items = new ArrayList<>();
 
-    @JsonProperty("origins")
+    @SerializedName("origins")
     private List<TlongdevOrigin> origins = new ArrayList<>();
 
-    @JsonProperty("particle_names")
+    @SerializedName("particle_names")
     private List<TlongdevParticleName> particleName = new ArrayList<>();
 
-    @JsonProperty("decorated_weapons")
+    @SerializedName("decorated_weapons")
     private List<TlongdevDecoratedWeapon> decoratedWeapons = new ArrayList<>();
 
-    @JsonProperty("message")
+    @SerializedName("message")
     private String message;
 
     public Integer getSuccess() {

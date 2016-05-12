@@ -27,81 +27,81 @@ public class BackpackTfBans {
 
     @SerializedName("all")
     @Expose
-    private boolean all;
+    private BackpackTfBanned all;
 
     @SerializedName("suggestions")
     @Expose
-    private boolean suggestions;
+    private BackpackTfBanned suggestions;
 
     @SerializedName("comments")
     @Expose
-    private boolean comments;
+    private BackpackTfBanned comments;
 
     @SerializedName("trust")
     @Expose
-    private boolean trust;
+    private BackpackTfBanned trust;
 
     @SerializedName("issues")
     @Expose
-    private boolean issues;
+    private BackpackTfBanned issues;
 
     @SerializedName("chat")
     @Expose
-    private boolean chat;
+    private BackpackTfBanned chat;
 
     @SerializedName("classifieds")
     @Expose
-    private boolean classifieds;
+    private BackpackTfBanned classifieds;
 
     @SerializedName("lotto")
     @Expose
-    private boolean lotto;
+    private BackpackTfBanned lotto;
 
     @SerializedName("customizations")
     @Expose
-    private boolean customizations;
+    private BackpackTfBanned customizations;
 
     @SerializedName("reports")
     @Expose
-    private boolean reports;
+    private BackpackTfBanned reports;
 
-    public boolean getAll() {
+    public BackpackTfBanned getAll() {
         return all;
     }
 
-    public boolean getSuggestions() {
+    public BackpackTfBanned getSuggestions() {
         return suggestions;
     }
 
-    public boolean getComments() {
+    public BackpackTfBanned getComments() {
         return comments;
     }
 
-    public boolean getTrust() {
+    public BackpackTfBanned getTrust() {
         return trust;
     }
 
-    public boolean getIssues() {
+    public BackpackTfBanned getIssues() {
         return issues;
     }
 
-    public boolean getChat() {
+    public BackpackTfBanned getChat() {
         return chat;
     }
 
-    public boolean getClassifieds() {
+    public BackpackTfBanned getClassifieds() {
         return classifieds;
     }
 
-    public boolean getLotto() {
+    public BackpackTfBanned getLotto() {
         return lotto;
     }
 
-    public boolean getCustomizations() {
+    public BackpackTfBanned getCustomizations() {
         return customizations;
     }
 
-    public boolean getReports() {
+    public BackpackTfBanned getReports() {
         return reports;
     }
 }
