@@ -55,7 +55,7 @@ public class BackpackTfPlayer {
 
     @SerializedName("backpack_tf_banned")
     @Expose
-    private boolean backpackTfBanned;
+    private BackpackTfBanned backpackTfBanned;
 
     @SerializedName("backpack_tf_bans")
     @Expose
@@ -113,7 +113,7 @@ public class BackpackTfPlayer {
         return backpackTfGroup;
     }
 
-    public boolean getBackpackTfBanned() {
+    public BackpackTfBanned getBackpackTfBanned() {
         return backpackTfBanned;
     }
 

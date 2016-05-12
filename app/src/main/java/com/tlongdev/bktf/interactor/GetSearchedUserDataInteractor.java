@@ -203,7 +203,7 @@ public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer
             mUser.setName(player.getName());
             mUser.setReputation(player.getBackpackTfReputation());
             mUser.setInGroup(player.getBackpackTfGroup());
-            mUser.setBanned(player.getBackpackTfBanned());
+            mUser.setBanned(player.getBackpackTfBanned() != null);
             mUser.setScammer(player.getSteamrepScammer());
             mUser.setEconomyBanned(player.getBanCommunity());
             mUser.setCommunityBanned(player.getBanCommunity());
