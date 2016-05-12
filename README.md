@@ -3,10 +3,6 @@ The unofficial backpack.tf mobile application
 
 <a href="https://play.google.com/store/apps/details?id=com.tlongdev.bktf"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png" height="60"/></a>
 
-| `master` | `development` |
-| :---: | :---: |
-|[![Build Status](https://travis-ci.org/Longi94/bptf.svg?branch=master)](https://travis-ci.org/Longi94/bptf)|[![Build Status](https://travis-ci.org/Longi94/bptf.svg?branch=development)](https://travis-ci.org/Longi94/bptf)|
-
 ### Contribute!
 Fork this repository and contribute by creating a pull request. Notable contributions will be credited in the application. See the [contributing guidelines](https://github.com/Longi94/bptf/blob/master/CONTRIBUTING.md) before contributing.
 
