@@ -17,8 +17,8 @@
 package com.tlongdev.bktf.network;
 
 import com.tlongdev.bktf.network.model.tlongdev.TlongdevItemSchemaPayload;
-import com.tlongdev.bktf.network.model.tlongdev.TlongdevPricesPayload;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -32,7 +32,7 @@ public interface TlongdevInterface {
     String BASE_URL = "http://tlongdev.com/api/v1/";
 
     @GET("prices")
-    Call<TlongdevPricesPayload> getPrices(@Query("since") long since);
+    Call<ResponseBody> getPrices(@Query("since") long since);
 
     @GET("item_schema")
     Call<TlongdevItemSchemaPayload> getItemSchema();
