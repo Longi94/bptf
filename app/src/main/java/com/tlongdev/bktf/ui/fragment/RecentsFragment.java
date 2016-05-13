@@ -218,7 +218,7 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
 
     @Override
     public void showPrices(Cursor prices) {
-        mAdapter.swapCursor(prices);
+        mAdapter.changeCursor(prices);
 
         //Animate in the recycler view, so it's not that abrupt
         Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.simple_fade_in);
