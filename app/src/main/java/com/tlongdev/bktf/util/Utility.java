@@ -131,6 +131,8 @@ public class Utility {
         return id != null && id.matches("7656119[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]");
     }
 
+    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
     /**
      * Format the unix timestamp the a user readable string.
      *
@@ -140,7 +142,6 @@ public class Utility {
     public static String formatUnixTimeStamp(long unixSeconds) {
         Date date = new Date(unixSeconds * 1000L); // *1000 is to convert seconds to milliseconds
         //European format
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         return sdf.format(date);
     }
 
@@ -232,6 +233,8 @@ public class Utility {
         return Double.longBitsToDouble(prefs.getLong(key, Double.doubleToLongBits(defaultValue)));
     }
 
+    private static DecimalFormat df = new DecimalFormat("#.##");
+
     /**
      * Format floating point numbers to 2 decimal places
      *
@@ -239,7 +242,7 @@ public class Utility {
      * @return the formatted string
      */
     public static String formatDouble(double value) {
-        return new DecimalFormat("#.##").format(value);
+        return df.format(value);
     }
 
 
