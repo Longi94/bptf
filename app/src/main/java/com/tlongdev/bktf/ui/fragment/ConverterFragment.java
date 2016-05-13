@@ -40,7 +40,6 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
-import com.tlongdev.bktf.util.CurrencyRatesManager;
 import com.tlongdev.bktf.util.Utility;
 
 import butterknife.BindView;
@@ -77,7 +76,7 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
 
     private Unbinder mUnbinder;
 
-    private CurrencyRatesManager mCurrencyRatesManager;
+    private Price mTempPrice = new Price();
 
     /**
      * Constructor.
@@ -99,8 +98,6 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
         View rootView = inflater.inflate(R.layout.fragment_converter, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
 
-        mCurrencyRatesManager = CurrencyRatesManager.getInstance(mApplication);
-
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
@@ -120,12 +117,11 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
                             inputMetal.setText(null);
                             inputUsd.setText(null);
                         } else {
-                            Price price = new Price();
-                            price.setValue(Double.parseDouble(text.replace(',', '.')));
-                            price.setCurrency(Currency.BUD);
-                            inputKeys.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false))));
-                            inputMetal.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false))));
-                            inputUsd.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.USD, false))));
+                            mTempPrice.setValue(Double.parseDouble(text.replace(',', '.')));
+                            mTempPrice.setCurrency(Currency.BUD);
+                            inputKeys.setText(String.valueOf(Utility.formatDouble(mTempPrice.getConvertedPrice(getActivity(), Currency.KEY, false))));
+                            inputMetal.setText(String.valueOf(Utility.formatDouble(mTempPrice.getConvertedPrice(getActivity(), Currency.METAL, false))));
+                            inputUsd.setText(String.valueOf(Utility.formatDouble(mTempPrice.getConvertedPrice(getActivity(), Currency.USD, false))));
                         }
                     }
                 } catch (Throwable t) {
@@ -153,12 +149,11 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
                             inputMetal.setText(null);
                             inputUsd.setText(null);
                         } else {
-                            Price price = new Price();
-                            price.setValue(Double.parseDouble(text.replace(',', '.')));
-                            price.setCurrency(Currency.KEY);
-                            inputEarbuds.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.BUD, false))));
-                            inputMetal.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false))));
-                            inputUsd.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.USD, false))));
+                            mTempPrice.setValue(Double.parseDouble(text.replace(',', '.')));
+                            mTempPrice.setCurrency(Currency.KEY);
+                            inputEarbuds.setText(String.valueOf(Utility.formatDouble(mTempPrice.getConvertedPrice(getActivity(), Currency.BUD, false))));
+                            inputMetal.setText(String.valueOf(Utility.formatDouble(mTempPrice.getConvertedPrice(getActivity(), Currency.METAL, false))));
+                            inputUsd.setText(String.valueOf(Utility.formatDouble(mTempPrice.getConvertedPrice(getActivity(), Currency.USD, false))));
                         }
                     }
                 } catch (Throwable t) {
@@ -186,12 +181,11 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
                             inputEarbuds.setText(null);
                             inputUsd.setText(null);
                         } else {
-                            Price price = new Price();
-                            price.setValue(Double.parseDouble(text.replace(',', '.')));
-                            price.setCurrency(Currency.METAL);
-                            inputKeys.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false))));
-                            inputEarbuds.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.BUD, false))));
-                            inputUsd.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.USD, false))));
+                            mTempPrice.setValue(Double.parseDouble(text.replace(',', '.')));
+                            mTempPrice.setCurrency(Currency.METAL);
+                            inputKeys.setText(String.valueOf(Utility.formatDouble(mTempPrice.getConvertedPrice(getActivity(), Currency.KEY, false))));
+                            inputEarbuds.setText(String.valueOf(Utility.formatDouble(mTempPrice.getConvertedPrice(getActivity(), Currency.BUD, false))));
+                            inputUsd.setText(String.valueOf(Utility.formatDouble(mTempPrice.getConvertedPrice(getActivity(), Currency.USD, false))));
                         }
                     }
                 } catch (Throwable t) {
@@ -219,12 +213,11 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
                             inputMetal.setText(null);
                             inputEarbuds.setText(null);
                         } else {
-                            Price price = new Price();
-                            price.setValue(Double.parseDouble(text.replace(',', '.')));
-                            price.setCurrency(Currency.USD);
-                            inputKeys.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false))));
-                            inputMetal.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false))));
-                            inputEarbuds.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.BUD, false))));
+                            mTempPrice.setValue(Double.parseDouble(text.replace(',', '.')));
+                            mTempPrice.setCurrency(Currency.USD);
+                            inputKeys.setText(String.valueOf(Utility.formatDouble(mTempPrice.getConvertedPrice(getActivity(), Currency.KEY, false))));
+                            inputMetal.setText(String.valueOf(Utility.formatDouble(mTempPrice.getConvertedPrice(getActivity(), Currency.METAL, false))));
+                            inputEarbuds.setText(String.valueOf(Utility.formatDouble(mTempPrice.getConvertedPrice(getActivity(), Currency.BUD, false))));
                         }
                     }
                 } catch (Throwable t) {
@@ -238,16 +231,15 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
             }
         });
 
-        //Set the initial values
-        Price price = new Price();
-        price.setValue(1.0);
-        price.setCurrency(Currency.BUD);
+        //Set the initial valuesmTempPrice
+        mTempPrice.setValue(1.0);
+        mTempPrice.setCurrency(Currency.BUD);
         inputEarbuds.setText("1");
         inputEarbuds.setSelection(inputEarbuds.length());
         try {
-            inputKeys.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false))));
-            inputMetal.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false))));
-            inputUsd.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.USD, false))));
+            inputKeys.setText(String.valueOf(Utility.formatDouble(mTempPrice.getConvertedPrice(getActivity(), Currency.KEY, false))));
+            inputMetal.setText(String.valueOf(Utility.formatDouble(mTempPrice.getConvertedPrice(getActivity(), Currency.METAL, false))));
+            inputUsd.setText(String.valueOf(Utility.formatDouble(mTempPrice.getConvertedPrice(getActivity(), Currency.USD, false))));
         } catch (Throwable t) {
             Crashlytics.logException(t);
             t.printStackTrace();
