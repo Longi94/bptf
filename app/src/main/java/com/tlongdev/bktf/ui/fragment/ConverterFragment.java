@@ -114,13 +114,14 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     if (inputEarbuds.isFocused()) {
-                        if (s.toString().equals("")) {
+                        String text = s.toString();
+                        if (text.isEmpty()) {
                             inputKeys.setText(null);
                             inputMetal.setText(null);
                             inputUsd.setText(null);
                         } else {
                             Price price = new Price();
-                            price.setValue(Double.parseDouble(s.toString()));
+                            price.setValue(Double.parseDouble(text.replace(',', '.')));
                             price.setCurrency(Currency.BUD);
                             inputKeys.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false))));
                             inputMetal.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false))));
@@ -146,13 +147,14 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     if (inputKeys.isFocused()) {
-                        if (s.toString().equals("")) {
+                        String text = s.toString();
+                        if (text.isEmpty()) {
                             inputEarbuds.setText(null);
                             inputMetal.setText(null);
                             inputUsd.setText(null);
                         } else {
                             Price price = new Price();
-                            price.setValue(Double.parseDouble(s.toString()));
+                            price.setValue(Double.parseDouble(text.replace(',', '.')));
                             price.setCurrency(Currency.KEY);
                             inputEarbuds.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.BUD, false))));
                             inputMetal.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false))));
@@ -178,13 +180,14 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     if (inputMetal.isFocused()) {
-                        if (s.toString().equals("")) {
+                        String text = s.toString();
+                        if (text.isEmpty()) {
                             inputKeys.setText(null);
                             inputEarbuds.setText(null);
                             inputUsd.setText(null);
                         } else {
                             Price price = new Price();
-                            price.setValue(Double.parseDouble(s.toString()));
+                            price.setValue(Double.parseDouble(text.replace(',', '.')));
                             price.setCurrency(Currency.METAL);
                             inputKeys.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false))));
                             inputEarbuds.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.BUD, false))));
@@ -210,13 +213,14 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     if (inputUsd.isFocused()) {
-                        if (s.toString().equals("")) {
+                        String text = s.toString();
+                        if (text.isEmpty()) {
                             inputKeys.setText(null);
                             inputMetal.setText(null);
                             inputEarbuds.setText(null);
                         } else {
                             Price price = new Price();
-                            price.setValue(Double.parseDouble(s.toString()));
+                            price.setValue(Double.parseDouble(text.replace(',', '.')));
                             price.setCurrency(Currency.USD);
                             inputKeys.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.KEY, false))));
                             inputMetal.setText(String.valueOf(Utility.formatDouble(price.getConvertedPrice(getActivity(), Currency.METAL, false))));
@@ -290,7 +294,7 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
                 if (input.isEmpty()) {
                     usd = 0;
                 } else {
-                    usd = Double.parseDouble(input);
+                    usd = Double.parseDouble(input.replace(',', '.'));
                 }
 
                 FragmentManager fm = getActivity().getSupportFragmentManager();
