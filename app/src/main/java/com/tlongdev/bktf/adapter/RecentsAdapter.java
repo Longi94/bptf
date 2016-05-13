@@ -42,14 +42,14 @@ import butterknife.ButterKnife;
 /**
  * Adapter for the recycler view in the recents fragment.
  */
-public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHolder> {
+public class RecentsAdapter extends CursorRecyclerViewAdapter<RecentsAdapter.ViewHolder> {
 
     @Inject Context mContext;
 
-    private Cursor mDataSet;
     private OnMoreListener mListener;
 
     public RecentsAdapter(BptfApplication application) {
+        super(application, null);
         application.getAdapterComponent().inject(this);
     }
 
@@ -62,93 +62,74 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
 
     @SuppressWarnings("WrongConstant")
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        if (mDataSet != null && mDataSet.moveToPosition(position)) {
-            
-            Price price = new Price();
-            price.setValue(mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE)));
-            price.setHighValue(mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE_HIGH)));
-            price.setDifference(mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_DIFFERENCE)));
-            price.setCurrency(mDataSet.getString(mDataSet.getColumnIndex(PriceEntry.COLUMN_CURRENCY)));
-            price.setRawValue(mDataSet.getDouble(mDataSet.getColumnIndex("raw_price")));
+    public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
+        Price price = new Price();
+        price.setValue(cursor.getDouble(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE)));
+        price.setHighValue(cursor.getDouble(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE_HIGH)));
+        price.setDifference(cursor.getDouble(cursor.getColumnIndex(PriceEntry.COLUMN_DIFFERENCE)));
+        price.setCurrency(cursor.getString(cursor.getColumnIndex(PriceEntry.COLUMN_CURRENCY)));
+        price.setRawValue(cursor.getDouble(cursor.getColumnIndex("raw_price")));
 
-            //Get all the data from the cursor
-            final Item item = new Item();
-            item.setDefindex(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_DEFINDEX)));
-            item.setName(mDataSet.getString(mDataSet.getColumnIndex(ItemSchemaEntry.COLUMN_ITEM_NAME)));
-            item.setQuality(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_QUALITY)));
-            item.setTradable(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_TRADABLE)) == 1);
-            item.setCraftable(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_CRAFTABLE)) == 1);
-            item.setAustralium(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_AUSTRALIUM)) == 1);
-            item.setPriceIndex(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE_INDEX)));
-            item.setPrice(price);
+        //Get all the data from the cursor
+        final Item item = new Item();
+        item.setDefindex(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_DEFINDEX)));
+        item.setName(cursor.getString(cursor.getColumnIndex(ItemSchemaEntry.COLUMN_ITEM_NAME)));
+        item.setQuality(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_ITEM_QUALITY)));
+        item.setTradable(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_ITEM_TRADABLE)) == 1);
+        item.setCraftable(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_ITEM_CRAFTABLE)) == 1);
+        item.setAustralium(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_AUSTRALIUM)) == 1);
+        item.setPriceIndex(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE_INDEX)));
+        item.setPrice(price);
 
-            holder.more.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null) {
-                        mListener.onMoreClicked(v, item);
-                    }
+        holder.more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onMoreClicked(v, item);
                 }
-            });
+            }
+        });
 
-            holder.name.setText(item.getFormattedName(mContext, false));
+        holder.name.setText(item.getFormattedName(mContext, false));
 
-            //Set the change indicator of the item
-            holder.difference.setTextColor(item.getPrice().getDifferenceColor());
-            holder.difference.setText(item.getPrice().getFormattedDifference(mContext));
+        //Set the change indicator of the item
+        holder.difference.setTextColor(item.getPrice().getDifferenceColor());
+        holder.difference.setText(item.getPrice().getFormattedDifference(mContext));
 
-            holder.icon.setImageDrawable(null);
-            holder.background.setBackgroundColor(item.getColor(mContext, true));
+        holder.icon.setImageDrawable(null);
+        holder.background.setBackgroundColor(item.getColor(mContext, true));
 
-            if (!item.isTradable()) {
-                holder.quality.setVisibility(View.VISIBLE);
-                if (!item.isCraftable()) {
-                    holder.quality.setImageResource(R.drawable.uncraft_untrad);
-                } else {
-                    holder.quality.setImageResource(R.drawable.untrad);
-                }
-            } else if (!item.isCraftable()) {
-                holder.quality.setVisibility(View.VISIBLE);
-                holder.quality.setImageResource(R.drawable.uncraft);
+        if (!item.isTradable()) {
+            holder.quality.setVisibility(View.VISIBLE);
+            if (!item.isCraftable()) {
+                holder.quality.setImageResource(R.drawable.uncraft_untrad);
             } else {
-                holder.quality.setVisibility(View.GONE);
+                holder.quality.setImageResource(R.drawable.untrad);
             }
-
-            //Set the item icon
-            Glide.with(mContext).load(item.getIconUrl()).into(holder.icon);
-
-            if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
-                Glide.with(mContext).load(item.getEffectUrl()).into(holder.effect);
-            } else {
-                Glide.clear(holder.effect);
-                holder.effect.setImageDrawable(null);
-            }
-
-            try {
-                //Properly format the price
-                holder.price.setText(item.getPrice().getFormattedPrice(mContext));
-            } catch (Throwable t) {
-                Crashlytics.logException(t);
-                t.printStackTrace();
-            }
+        } else if (!item.isCraftable()) {
+            holder.quality.setVisibility(View.VISIBLE);
+            holder.quality.setImageResource(R.drawable.uncraft);
+        } else {
+            holder.quality.setVisibility(View.GONE);
         }
-    }
 
-    @Override
-    public int getItemCount() {
-        return mDataSet == null ? 0 : mDataSet.getCount();
-    }
+        //Set the item icon
+        Glide.with(mContext).load(item.getIconUrl()).into(holder.icon);
 
-    /**
-     * Replaces the cursor of the adapter
-     *
-     * @param data          the cursor that will replace the current one
-     */
-    public void swapCursor(Cursor data) {
-        if (mDataSet != null) mDataSet.close();
-        mDataSet = data;
-        notifyDataSetChanged();
+        if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
+            Glide.with(mContext).load(item.getEffectUrl()).into(holder.effect);
+        } else {
+            Glide.clear(holder.effect);
+            holder.effect.setImageDrawable(null);
+        }
+
+        try {
+            //Properly format the price
+            holder.price.setText(item.getPrice().getFormattedPrice(mContext));
+        } catch (Throwable t) {
+            Crashlytics.logException(t);
+            t.printStackTrace();
+        }
     }
 
     public void setListener(OnMoreListener listener) {

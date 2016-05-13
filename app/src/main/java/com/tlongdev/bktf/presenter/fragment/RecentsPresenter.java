@@ -65,7 +65,6 @@ public class RecentsPresenter implements Presenter<RecentsView>,
 
     private LoaderManager mLoaderManager;
 
-    private Cursor mCache;
     private Price mMetalCache;
     private Price mKeyCache;
     private Price mBudCache;
@@ -107,21 +106,15 @@ public class RecentsPresenter implements Presenter<RecentsView>,
                 }
             }
         } else {
-            if (fromCache && mCache != null && !mCache.isClosed()) {
-                if (mView != null) {
-                    mView.showPrices(mCache);
-                }
-            } else {
-                mLoaderManager.initLoader(0, null, this);
+            mLoaderManager.initLoader(0, null, this);
 
-                loadCurrencyPrices();
-                //Update database if the last update happened more than an hour ago
-                if (System.currentTimeMillis() - mPrefs.getLong(mContext.getString(R.string.pref_last_price_list_update), 0) >= 3600000L
-                        && Utility.isNetworkAvailable(mContext)) {
-                    callTlongdevPrices(true, false);
-                    if (mView != null) {
-                        mView.showRefreshAnimation();
-                    }
+            loadCurrencyPrices();
+            //Update database if the last update happened more than an hour ago
+            if (System.currentTimeMillis() - mPrefs.getLong(mContext.getString(R.string.pref_last_price_list_update), 0) >= 3600000L
+                    && Utility.isNetworkAvailable(mContext)) {
+                callTlongdevPrices(true, false);
+                if (mView != null) {
+                    mView.showRefreshAnimation();
                 }
             }
         }
@@ -275,7 +268,6 @@ public class RecentsPresenter implements Presenter<RecentsView>,
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mCache = data;
         if (mView != null) {
             mView.showPrices(data);
         }
@@ -284,7 +276,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         if (mView != null) {
-            mView.showPrices(mCache);
+            mView.showPrices(null);
         }
     }
 }
