@@ -284,10 +284,17 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
                 startActivity(new Intent(getActivity(), SearchActivity.class));
                 return true;
             case R.id.action_currency:
+                String input = inputUsd.getText().toString();
+                double usd;
+
+                if (input.isEmpty()) {
+                    usd = 0;
+                } else {
+                    usd = Double.parseDouble(input);
+                }
+
                 FragmentManager fm = getActivity().getSupportFragmentManager();
-                CurrencyFragment currencyFragment = CurrencyFragment.newInstance(
-                        Double.parseDouble(inputUsd.getText().toString())
-                );
+                CurrencyFragment currencyFragment = CurrencyFragment.newInstance(usd);
                 currencyFragment.show(fm, "fragment_currency");
                 return true;
             default:
