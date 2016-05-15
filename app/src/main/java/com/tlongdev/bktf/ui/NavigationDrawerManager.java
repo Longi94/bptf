@@ -93,6 +93,14 @@ public class NavigationDrawerManager implements ProfileManager.OnUpdateListener 
 
     @Override
     public void onUpdate(User user) {
+        if (mUserMenuItem != null) {
+            mUserMenuItem.setEnabled(true);
+        }
+
+        if (mContext == null || mName == null || mBackpack == null || mAvatar == null) {
+            return;
+        }
+
         //Set the name
         mName.setText(user.getName());
 
@@ -112,8 +120,5 @@ public class NavigationDrawerManager implements ProfileManager.OnUpdateListener 
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .transform(new CircleTransform(mContext))
                 .into(mAvatar);
-        if (mUserMenuItem != null) {
-            mUserMenuItem.setEnabled(true);
-        }
     }
 }
