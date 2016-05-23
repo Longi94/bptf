@@ -41,8 +41,9 @@ import java.util.Vector;
 
 import javax.inject.Inject;
 
-import okhttp3.ResponseBody;
-import retrofit2.Response;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Task for fetching all data for prices database and updating it in the background.
@@ -114,14 +115,19 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
                 }
             }
 
-            Response<ResponseBody> response = mTlongdevInterface.getPrices(latestUpdate).execute();
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("http://tlongdev.com/api/v1/prices")
+                    .build();
+
+            Response response = client.newCall(request).execute();
 
             if (response.body() != null) {
                 return parseJson(response.body().byteStream());
-            } else if (response.raw().code() >= 500) {
-                errorMessage = "Server error: " + response.raw().code();
-            } else if (response.raw().code() >= 400) {
-                errorMessage = "Client error: " + response.raw().code();
+            } else if (response.code() >= 500) {
+                errorMessage = "Server error: " + response.code();
+            } else if (response.code() >= 400) {
+                errorMessage = "Client error: " + response.code();
             }
             return -1;
 
