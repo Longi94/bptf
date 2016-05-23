@@ -24,7 +24,6 @@ import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract;
 import com.tlongdev.bktf.data.DatabaseContract.DecoratedWeaponEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.util.Utility;
@@ -203,7 +202,7 @@ public class Item implements Parcelable {
         //Handle strangifier names differently
         if (defindex == 6522) {
             Cursor itemCursor = context.getContentResolver().query(
-                    DatabaseContract.ItemSchemaEntry.CONTENT_URI,
+                    ItemSchemaEntry.CONTENT_URI,
                     new String[]{ItemSchemaEntry.COLUMN_ITEM_NAME, ItemSchemaEntry.COLUMN_TYPE_NAME, ItemSchemaEntry.COLUMN_PROPER_NAME},
                     ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX + " = ?",
                     new String[]{String.valueOf(priceIndex)},
