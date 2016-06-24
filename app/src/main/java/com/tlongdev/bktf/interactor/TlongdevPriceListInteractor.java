@@ -20,13 +20,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-import com.google.gson.stream.JsonReader;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
@@ -115,9 +115,13 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
                 }
             }
 
+            Uri uri = Uri.parse("http://tlongdev.com/api/v1/prices").buildUpon()
+                    .appendQueryParameter("since", String.valueOf(latestUpdate))
+                    .build();
+
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url("http://tlongdev.com/api/v1/prices")
+                    .url(uri.toString())
                     .build();
 
             Response response = client.newCall(request).execute();
@@ -255,98 +259,6 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
             }
         }
 
-        values.put(PriceEntry.COLUMN_WEAPON_WEAR, 0);
-
-        if (quality == Quality.UNIQUE && tradable == 1 && craftable == 1) {
-            if (defindex == 143) { //buds
-                Utility.putDouble(mEditor, mContext.getString(R.string.pref_buds_raw), raw);
-                mEditor.apply();
-            } else if (defindex == 5002) { //metal
-
-                double highPrice = high == null ? 0 : high;
-
-                if (highPrice > value) {
-                    //If the metal has a high price, save the average as raw.
-                    Utility.putDouble(mEditor, mContext.getString(R.string.pref_metal_raw_usd), ((value + highPrice) / 2));
-                } else {
-                    //save as raw price
-                    Utility.putDouble(mEditor, mContext.getString(R.string.pref_metal_raw_usd), value);
-                }
-                mEditor.apply();
-            } else if (defindex == 5021) { //key
-                Utility.putDouble(mEditor, mContext.getString(R.string.pref_key_raw), raw);
-                mEditor.apply();
-            }
-        }
-
-        return values;
-    }
-
-    private ContentValues buildContentValues(JsonReader reader) throws IOException {
-        ContentValues values = new ContentValues();
-
-        int defindex = 0;
-        int quality = 0;
-        int tradable = 0;
-        int craftable = 0;
-        double value = 0;
-        Double high = null;
-        double raw = 0;
-
-        reader.beginObject();
-
-        while (reader.hasNext()) {
-            switch (reader.nextName()) {
-                case "defindex":
-                    Item item = new Item();
-                    item.setDefindex(reader.nextInt());
-                    defindex = item.getFixedDefindex();
-                    values.put(PriceEntry.COLUMN_DEFINDEX, defindex);
-                    break;
-                case "quality":
-                    quality = reader.nextInt();
-                    values.put(PriceEntry.COLUMN_ITEM_QUALITY, quality);
-                    break;
-                case "tradable":
-                    tradable = reader.nextInt();
-                    values.put(PriceEntry.COLUMN_ITEM_TRADABLE, tradable);
-                    break;
-                case "craftable":
-                    craftable = reader.nextInt();
-                    values.put(PriceEntry.COLUMN_ITEM_CRAFTABLE, craftable);
-                    break;
-                case "price_index":
-                    values.put(PriceEntry.COLUMN_PRICE_INDEX, reader.nextInt());
-                    break;
-                case "australium":
-                    values.put(PriceEntry.COLUMN_AUSTRALIUM, reader.nextInt());
-                    break;
-                case "currency":
-                    values.put(PriceEntry.COLUMN_CURRENCY, reader.nextString());
-                    break;
-                case "value":
-                    value = reader.nextDouble();
-                    values.put(PriceEntry.COLUMN_PRICE, value);
-                    break;
-                case "value_high":
-                    high = reader.nextDouble();
-                    values.put(PriceEntry.COLUMN_PRICE_HIGH, high);
-                    break;
-                case "value_raw":
-                    raw = reader.nextDouble();
-                    break;
-                case "last_update":
-                    values.put(PriceEntry.COLUMN_LAST_UPDATE, reader.nextLong());
-                    break;
-                case "difference":
-                    values.put(PriceEntry.COLUMN_DIFFERENCE, reader.nextDouble());
-                    break;
-                default:
-                    reader.skipValue();;
-                    break;
-            }
-        }
-        reader.endObject();
         values.put(PriceEntry.COLUMN_WEAPON_WEAR, 0);
 
         if (quality == Quality.UNIQUE && tradable == 1 && craftable == 1) {
