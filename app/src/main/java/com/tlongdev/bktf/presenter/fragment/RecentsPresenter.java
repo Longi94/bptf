@@ -91,7 +91,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,
         mView = null;
     }
 
-    public void loadPrices(boolean fromCache) {
+    public void loadPrices() {
         //Download whole database when the app is first opened.
         if (mPrefs.getBoolean(mContext.getString(R.string.pref_initial_load_v2), true)) {
             if (Utility.isNetworkAvailable(mContext)) {
@@ -180,10 +180,6 @@ public class RecentsPresenter implements Presenter<RecentsView>,
                 mView.showLoadingDialog("Downloading item schema...");
             }
         } else {
-            if (newItems > 0) {
-                loadPrices(false);
-            }
-
             if (System.currentTimeMillis() - mPrefs.getLong(mContext.getString(R.string.pref_last_item_schema_update), 0) >= 172800000L //2days
                     && Utility.isNetworkAvailable(mContext)) {
                 callTlongdevItemSchema();
@@ -214,8 +210,6 @@ public class RecentsPresenter implements Presenter<RecentsView>,
         if (mView != null) {
             mView.dismissLoadingDialog();
         }
-
-        loadPrices(false);
 
         //Save when the update finished
         mEditor.putLong(mContext.getString(R.string.pref_last_item_schema_update), System.currentTimeMillis());

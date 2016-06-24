@@ -41,8 +41,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -170,7 +168,7 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPresenter.loadPrices(savedInstanceState != null);
+        mPresenter.loadPrices();
     }
 
     @Override
@@ -219,21 +217,8 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
     @Override
     public void showPrices(Cursor prices) {
         mAdapter.changeCursor(prices);
-
-        //Animate in the recycler view, so it's not that abrupt
-        Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.simple_fade_in);
-        Animation fadeOut = AnimationUtils.loadAnimation(mContext, R.anim.simple_fade_in);
-
-        fadeIn.setDuration(500);
-        fadeOut.setDuration(500);
-
-        mRecyclerView.startAnimation(fadeIn);
         mRecyclerView.setVisibility(View.VISIBLE);
-
-        if (progressBar.getVisibility() == View.VISIBLE) {
-            progressBar.startAnimation(fadeOut);
-            progressBar.setVisibility(View.GONE);
-        }
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
