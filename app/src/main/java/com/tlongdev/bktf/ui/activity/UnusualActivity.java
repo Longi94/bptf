@@ -16,20 +16,15 @@
 
 package com.tlongdev.bktf.ui.activity;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -38,8 +33,6 @@ import com.f2prateek.dart.InjectExtra;
 import com.google.android.gms.ads.AdView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.UnusualAdapter;
-import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
-import com.tlongdev.bktf.customtabs.WebViewFallback;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.presenter.activity.UnusualPresenter;
 import com.tlongdev.bktf.ui.view.activity.UnusualView;
@@ -148,43 +141,7 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
 
     @Override
     public void onMoreClicked(View view, final Item item) {
-        PopupMenu menu = new PopupMenu(this, view);
-        menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
-        menu.getMenu().getItem(0).setTitle(
-                Utility.isFavorite(this, item) ? "Remove from favorites" : "Add to favorites");
-        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.history:
-                        Intent i = new Intent(UnusualActivity.this, PriceHistoryActivity.class);
-                        i.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
-                        startActivity(i);
-                        break;
-                    case R.id.favorite:
-                        if (Utility.isFavorite(UnusualActivity.this, item)) {
-                            Utility.removeFromFavorites(UnusualActivity.this, item);
-                        } else {
-                            Utility.addToFavorites(UnusualActivity.this, item);
-                        }
-                        break;
-                    case R.id.backpack_tf:
-                        Uri uri = Uri.parse(item.getBackpackTfUrl());
-                        CustomTabsIntent intent = new CustomTabsIntent.Builder().build();
-                        CustomTabActivityHelper.openCustomTab(UnusualActivity.this, intent, uri,
-                                new WebViewFallback());
-                        break;
-                    case R.id.wiki:
-                        CustomTabActivityHelper.openCustomTab(UnusualActivity.this,
-                                new CustomTabsIntent.Builder().build(),
-                                Uri.parse(item.getTf2WikiUrl()),
-                                new WebViewFallback());
-                        break;
-                }
-                return true;
-            }
-        });
-        menu.show();
+        Utility.createItemPopupMenu(this, view, item).show();
     }
 
     @Override

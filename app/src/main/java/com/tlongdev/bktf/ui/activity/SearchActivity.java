@@ -18,9 +18,7 @@ package com.tlongdev.bktf.ui.activity;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,13 +28,10 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.PopupMenu;
 
 import com.google.android.gms.ads.AdView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.SearchAdapter;
-import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
-import com.tlongdev.bktf.customtabs.WebViewFallback;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Quality;
 import com.tlongdev.bktf.model.User;
@@ -211,47 +206,7 @@ public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui
 
     @Override
     public void onMoreClicked(View view, final Item item) {
-        PopupMenu menu = new PopupMenu(this, view);
-        menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
-        menu.getMenu().getItem(0).setTitle(
-                Utility.isFavorite(this, item) ? "Remove from favorites" : "Add to favorites");
-        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.history:
-
-                        Intent i = new Intent(SearchActivity.this, PriceHistoryActivity.class);
-
-                        i.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
-
-                        startActivity(i);
-                        break;
-                    case R.id.favorite:
-                        if (Utility.isFavorite(SearchActivity.this, item)) {
-                            Utility.removeFromFavorites(SearchActivity.this, item);
-                        } else {
-                            Utility.addToFavorites(SearchActivity.this, item);
-                        }
-                        break;
-                    case R.id.backpack_tf:
-                        Uri uri = Uri.parse(item.getBackpackTfUrl());
-                        CustomTabsIntent intent = new CustomTabsIntent.Builder().build();
-                        CustomTabActivityHelper.openCustomTab(SearchActivity.this, intent, uri,
-                                new WebViewFallback());
-                        break;
-                    case R.id.wiki:
-                        CustomTabActivityHelper.openCustomTab(SearchActivity.this,
-                                new CustomTabsIntent.Builder().build(),
-                                Uri.parse(item.getTf2WikiUrl()),
-                                new WebViewFallback());
-                        break;
-                }
-                return true;
-            }
-        });
-
-        menu.show();
+        Utility.createItemPopupMenu(this, view, item).show();
     }
 
     @Override

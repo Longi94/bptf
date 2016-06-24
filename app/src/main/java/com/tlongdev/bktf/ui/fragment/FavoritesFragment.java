@@ -195,7 +195,8 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
     public void onMoreClicked(View view, final Item item) {
         PopupMenu menu = new PopupMenu(getActivity(), view);
         menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
-        menu.getMenu().getItem(0).setTitle("Remove from favorites");
+        menu.getMenu().findItem(R.id.favorite).setTitle("Remove from favorites");
+        menu.getMenu().findItem(R.id.calculator).setEnabled(!Utility.isInCalculator(getActivity(), item));
         menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -209,9 +210,15 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
                         Utility.removeFromFavorites(getActivity(), item);
                         mAdapter.removeItem(item);
                         break;
+                    case R.id.calculator:
+                        Utility.addToCalculator(getActivity(), item);
+                        menuItem.setEnabled(false);
+                        break;
                     case R.id.backpack_tf:
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
-                                item.getBackpackTfUrl())));
+                        CustomTabActivityHelper.openCustomTab(getActivity(),
+                                new CustomTabsIntent.Builder().build(),
+                                Uri.parse(item.getBackpackTfUrl()),
+                                new WebViewFallback());
                         break;
                     case R.id.wiki:
                         CustomTabActivityHelper.openCustomTab(getActivity(),

@@ -24,6 +24,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.NavUtils;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -33,6 +34,8 @@ import android.widget.LinearLayout;
 
 import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
+import com.tlongdev.bktf.customtabs.WebViewFallback;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -173,9 +176,11 @@ public class AboutActivity extends AppCompatPreferenceActivity implements Shared
                                     Uri.parse("market://details?id=" + appPackageName)));
                         } catch (android.content.ActivityNotFoundException e) {
                             //Play store is not present on the phone. Open the browser
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
-                                    "https://play.google.com/store/apps/details?id=" +
-                                            appPackageName)));
+                            CustomTabActivityHelper.openCustomTab(AboutActivity.this,
+                                    new CustomTabsIntent.Builder().build(),
+                                    Uri.parse("https://play.google.com/store/apps/details?id=" +
+                                            appPackageName),
+                                    new WebViewFallback());
                         }
                         return true;
                     }

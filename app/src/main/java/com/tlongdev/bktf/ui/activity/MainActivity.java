@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         mNavigationView.setNavigationItemSelectedListener(navigationListener);
 
         mNavigationDrawerManager.attachView(mNavigationView.getHeaderView(0));
-        mNavigationDrawerManager.setUserMenuItem(mNavigationView.getMenu().getItem(2));
+        mNavigationDrawerManager.setUserMenuItem(mNavigationView.getMenu().findItem(R.id.nav_user));
 
         //Check if there is a fragment to be restored
         if (savedInstanceState == null) {
