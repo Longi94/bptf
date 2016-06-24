@@ -174,6 +174,12 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
                         CustomTabActivityHelper.openCustomTab(UnusualActivity.this, intent, uri,
                                 new WebViewFallback());
                         break;
+                    case R.id.wiki:
+                        CustomTabActivityHelper.openCustomTab(UnusualActivity.this,
+                                new CustomTabsIntent.Builder().build(),
+                                Uri.parse(item.getTf2WikiUrl()),
+                                new WebViewFallback());
+                        break;
                 }
                 return true;
             }

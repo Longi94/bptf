@@ -378,9 +378,15 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
                         }
                         break;
                     case R.id.backpack_tf:
-                        Uri uri = Uri.parse(item.getBackpackTfUrl());
-                        CustomTabsIntent intent = new CustomTabsIntent.Builder().build();
-                        CustomTabActivityHelper.openCustomTab(getActivity(), intent, uri,
+                        CustomTabActivityHelper.openCustomTab(getActivity(),
+                                new CustomTabsIntent.Builder().build(),
+                                Uri.parse(item.getBackpackTfUrl()),
+                                new WebViewFallback());
+                        break;
+                    case R.id.wiki:
+                        CustomTabActivityHelper.openCustomTab(getActivity(),
+                                new CustomTabsIntent.Builder().build(),
+                                Uri.parse(item.getTf2WikiUrl()),
                                 new WebViewFallback());
                         break;
                 }

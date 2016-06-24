@@ -240,6 +240,12 @@ public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui
                         CustomTabActivityHelper.openCustomTab(SearchActivity.this, intent, uri,
                                 new WebViewFallback());
                         break;
+                    case R.id.wiki:
+                        CustomTabActivityHelper.openCustomTab(SearchActivity.this,
+                                new CustomTabsIntent.Builder().build(),
+                                Uri.parse(item.getTf2WikiUrl()),
+                                new WebViewFallback());
+                        break;
                 }
                 return true;
             }

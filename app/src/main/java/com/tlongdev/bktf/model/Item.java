@@ -580,4 +580,8 @@ public class Item implements Parcelable {
 
         return priceIndex > 0 ? url + "/" + priceIndex : url;
     }
+
+    public String getTf2WikiUrl() {
+        return String.format(Locale.ENGLISH, "http://wiki.teamfortress.com/scripts/itemredirect.php?id=%d&lang=en_US", defindex);
+    }
 }

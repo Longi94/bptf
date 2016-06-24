@@ -4,11 +4,17 @@
     <item
         android:id="@+id/favorite"
         android:title="Add to favorites" />
+
     <item
         android:id="@+id/history"
         android:title="History" />
+
     <item
         android:id="@+id/backpack_tf"
         android:title="backpack.tf" />
+
+    <item
+        android:id="@+id/wiki"
+        android:title="Wiki" />
 
 </menu>

@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
@@ -41,6 +42,8 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.FavoritesAdapter;
+import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
+import com.tlongdev.bktf.customtabs.WebViewFallback;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.presenter.fragment.FavoritesPresenter;
 import com.tlongdev.bktf.ui.activity.ItemChooserActivity;
@@ -209,6 +212,12 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
                     case R.id.backpack_tf:
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
                                 item.getBackpackTfUrl())));
+                        break;
+                    case R.id.wiki:
+                        CustomTabActivityHelper.openCustomTab(getActivity(),
+                                new CustomTabsIntent.Builder().build(),
+                                Uri.parse(item.getTf2WikiUrl()),
+                                new WebViewFallback());
                         break;
                 }
                 return true;
