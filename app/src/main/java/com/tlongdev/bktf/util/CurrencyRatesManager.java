@@ -17,6 +17,7 @@
 package com.tlongdev.bktf.util;
 
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
@@ -80,7 +81,7 @@ public class CurrencyRatesManager {
             GetCurrencyExchangeRatesInteractor interactor = new GetCurrencyExchangeRatesInteractor(
                     mApplication, mFixerIoCallback
             );
-            interactor.execute();
+            interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             if (callback != null) {
                 callback.currencyRates(mCache, null);
