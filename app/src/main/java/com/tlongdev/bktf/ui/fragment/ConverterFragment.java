@@ -361,9 +361,9 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
                 focus.setSelection(selectionStart);
             } else {
                 selectionStart = Math.max(0, selectionStart - 1);
-                focus.setText(prev.substring(0, selectionStart - 1) +
+                focus.setText(prev.substring(0, selectionStart) +
                         prev.substring(selectionEnd, prev.length()));
-                focus.setSelection(selectionStart - 1);
+                focus.setSelection(selectionStart);
             }
         }
     }
