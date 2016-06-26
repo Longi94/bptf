@@ -22,7 +22,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
@@ -71,7 +70,6 @@ public class GcmRegisterPriceUpdatesService extends IntentService {
             }
         } catch (IOException e) {
             Log.d(LOG_TAG, "Failed to complete token refresh", e);
-            Crashlytics.logException(e);
             e.printStackTrace();
         }
     }

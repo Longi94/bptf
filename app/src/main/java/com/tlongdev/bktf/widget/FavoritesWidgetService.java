@@ -203,8 +203,11 @@ public class FavoritesWidgetService extends RemoteViewsService {
                     } else {
                         rv.setImageViewBitmap(R.id.effect, null);
                     }
-                } catch (InterruptedException | ExecutionException e) {
+                } catch (InterruptedException e) {
                     Crashlytics.logException(e);
+                    rv.setImageViewBitmap(R.id.effect, null);
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
                     rv.setImageViewBitmap(R.id.effect, null);
                     e.printStackTrace();
                 }
