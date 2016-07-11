@@ -87,7 +87,8 @@ public class Price implements Parcelable {
         dest.writeString(currency);
     }
 
-    public Price() {}
+    public Price() {
+    }
 
     public double getValue() {
         return value;
@@ -145,7 +146,7 @@ public class Price implements Parcelable {
      * @param targetCurrency the target currency
      * @return the formatted price
      */
-    public String getFormattedPrice(Context context, String targetCurrency) {
+    public String getFormattedPrice(Context context, @Currency.Enum String targetCurrency) {
         //Initial string, that will be appended.
         String product = "";
 
@@ -191,6 +192,11 @@ public class Price implements Parcelable {
                     return context.getString(R.string.currency_key_plural, product);
             case Currency.USD:
                 return "$" + product;
+            case Currency.HAT:
+                if (low == 1.0 && high == 0.0)
+                    return product + " hat";
+                else
+                    return product + " hats";
             default:
                 //App should never reach this code
                 Log.e(LOG_TAG, "Error formatting price");
@@ -239,6 +245,9 @@ public class Price implements Parcelable {
                     case Currency.USD:
                         return price * (Utility.getDouble(prefs, context.getString(R.string.pref_buds_raw), 1)
                                 * Utility.getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1));
+                    case Currency.HAT:
+                        return price * Utility.getDouble(prefs, context.getString(R.string.pref_buds_raw), 1)
+                                / 1.22;
                 }
             case Currency.METAL:
                 switch (targetCurrency) {
@@ -248,6 +257,8 @@ public class Price implements Parcelable {
                         return price / Utility.getDouble(prefs, context.getString(R.string.pref_buds_raw), 1);
                     case Currency.USD:
                         return price * Utility.getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1);
+                    case Currency.HAT:
+                        return price / 1.22;
                 }
             case Currency.KEY:
                 switch (targetCurrency) {
@@ -259,6 +270,9 @@ public class Price implements Parcelable {
                     case Currency.USD:
                         return price * Utility.getDouble(prefs, context.getString(R.string.pref_key_raw), 1)
                                 * Utility.getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1);
+                    case Currency.HAT:
+                        return price * Utility.getDouble(prefs, context.getString(R.string.pref_key_raw), 1)
+                                / 1.22;
                 }
             case Currency.USD:
                 switch (targetCurrency) {
@@ -270,10 +284,24 @@ public class Price implements Parcelable {
                     case Currency.KEY:
                         return price / Utility.getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1)
                                 / Utility.getDouble(prefs, context.getString(R.string.pref_key_raw), 1);
+                    case Currency.HAT:
+                        return price / Utility.getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1)
+                                / 1.22;
+                }
+            case Currency.HAT:
+                switch (targetCurrency) {
+                    case Currency.METAL:
+                        return price * 1.22;
+                    case Currency.BUD:
+                        return price * 1.22 / Utility.getDouble(prefs, context.getString(R.string.pref_buds_raw), 1);
+                    case Currency.KEY:
+                        return price * 1.22 / Utility.getDouble(prefs, context.getString(R.string.pref_key_raw), 1);
+                    case Currency.USD:
+                        return price * 1.22 * Utility.getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1);
                 }
             default:
                 //Unknown currency was given, throw an exception.
-                String error = "Unknown target currency: " + currency;
+                String error = "Unknown currency: " + currency + " target currency: " + targetCurrency;
                 Log.e(LOG_TAG, error);
                 throw new IllegalArgumentException(error);
         }
