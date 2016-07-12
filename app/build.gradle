@@ -31,6 +31,10 @@ android {
         buildConfigField("String", "BACKPACK_TF_API_KEY", "\"${getKey(keys, "BACKPACK_TF_API_KEY", "DUMMY_KEY")}\"")
         buildConfigField("String", "STEAM_WEB_API_KEY", "\"${getKey(keys, "STEAM_WEB_API_KEY", "DUMMY_KEY")}\"")
         resValue("string", "BANNER_AD_UNIT_ID", "${getKey(keys, "BANNER_AD_UNIT_ID", "ca-app-pub-3940256099942544/6300978111")}")
+
+        manifestPlaceholders = [
+                fabricApiKey: "${getKey(keys, "FABRIC_API_KEY", "DUMMY_KEY")}"
+        ]
     }
     buildTypes {
         release {

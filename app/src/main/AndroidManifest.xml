@@ -23,7 +23,7 @@
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="b4c92b929954d1bf5ce57f368544cebb8ab16dec"/>
+            android:value="${fabricApiKey}"/>
 
         <provider
             android:name=".data.DatabaseProvider"
