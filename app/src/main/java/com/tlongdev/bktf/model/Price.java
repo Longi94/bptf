@@ -288,7 +288,7 @@ public class Price implements Parcelable {
                         return price / Utility.getDouble(prefs, context.getString(R.string.pref_metal_raw_usd), 1)
                                 / 1.22;
                 }
-            case Currency.HAT:
+            case Currency.HAT: // TODO: 2016. 07. 12. dinamycally handle currencies
                 switch (targetCurrency) {
                     case Currency.METAL:
                         return price * 1.22;

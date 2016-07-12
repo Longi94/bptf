@@ -14,8 +14,8 @@ android {
         applicationId "com.tlongdev.bktf"
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 47
-        versionName "2.1.5"
+        versionCode 48
+        versionName "2.1.6"
 
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
