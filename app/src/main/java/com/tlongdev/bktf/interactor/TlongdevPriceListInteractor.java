@@ -88,6 +88,10 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
      */
     @Override
     protected Integer doInBackground(Void... params) {
+        return run();
+    }
+
+    public Integer run() {
 
         if (System.currentTimeMillis() - mPrefs.getLong(mContext
                 .getString(R.string.pref_last_price_list_update), 0) < 3600000L
@@ -299,6 +303,14 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
                 mCallback.onPriceListFailed(errorMessage);
             }
         }
+    }
+
+    public int getRowsInserted() {
+        return rowsInserted;
+    }
+
+    public long getSinceParam() {
+        return latestUpdate;
     }
 
     /**

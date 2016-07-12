@@ -30,8 +30,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.gcm.GcmRegisterPriceUpdatesService;
 import com.tlongdev.bktf.util.ProfileManager;
 
 /**
@@ -173,9 +173,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
                 notifPref.setEnabled(!value.equals("0"));
 
                 if (prefs.getBoolean(getString(R.string.pref_registered_topic_price_updates), false) == value.equals("0")) {
-                    Intent intent = new Intent(SettingsActivity.this, GcmRegisterPriceUpdatesService.class);
-                    intent.putExtra(GcmRegisterPriceUpdatesService.EXTRA_SUBSCRIBE, !value.equals("0"));
-                    startService(intent);
+                    if (!value.equals("0")) {
+                        FirebaseMessaging.getInstance().subscribeToTopic("/topics/price_updates");
+                    } else {
+                        FirebaseMessaging.getInstance().unsubscribeFromTopic("/topics/price_updates");
+                    }
                 }
 
                 return true;

@@ -34,9 +34,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.gcm.GcmRegisterPriceUpdatesService;
 import com.tlongdev.bktf.ui.NavigationDrawerManager;
 import com.tlongdev.bktf.ui.fragment.CalculatorFragment;
 import com.tlongdev.bktf.ui.fragment.ConverterFragment;
@@ -180,9 +180,11 @@ public class MainActivity extends AppCompatActivity {
         boolean autoSync = !mPrefs.getString(getString(R.string.pref_auto_sync), "1").equals("0");
 
         if (mPrefs.getBoolean(getString(R.string.pref_registered_topic_price_updates), false) != autoSync) {
-            Intent intent = new Intent(this, GcmRegisterPriceUpdatesService.class);
-            intent.putExtra(GcmRegisterPriceUpdatesService.EXTRA_SUBSCRIBE, autoSync);
-            startService(intent);
+            if (autoSync) {
+                FirebaseMessaging.getInstance().subscribeToTopic("/topics/price_updates");
+            } else {
+                FirebaseMessaging.getInstance().unsubscribeFromTopic("/topics/price_updates");
+            }
         }
 
         super.onResume();
