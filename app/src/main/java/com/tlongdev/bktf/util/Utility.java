@@ -294,6 +294,8 @@ public class Utility {
                 PriceEntry.COLUMN_PRICE + " * " + budMultiplier +
                 " ) WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'usd' THEN ( " +
                 PriceEntry.COLUMN_PRICE + " * " + usdMultiplier +
+                " ) WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'hat' THEN ( " +
+                PriceEntry.COLUMN_PRICE + " * 1.22 " +
                 " ) ELSE ( " +
                 PriceEntry.COLUMN_PRICE +
                 " ) END " +
@@ -304,6 +306,8 @@ public class Utility {
                 " ( " + PriceEntry.COLUMN_PRICE + " + " + PriceEntry.COLUMN_PRICE_HIGH + ") / 2 * " + budMultiplier +
                 " ) WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'usd' THEN ( " +
                 " ( " + PriceEntry.COLUMN_PRICE + " + " + PriceEntry.COLUMN_PRICE_HIGH + ") / 2 * " + usdMultiplier +
+                " ) WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'hat' THEN ( " +
+                " ( " + PriceEntry.COLUMN_PRICE + " + " + PriceEntry.COLUMN_PRICE_HIGH + ") / 2 * 1.22 " +
                 " ) ELSE ( " +
                 " ( " + PriceEntry.COLUMN_PRICE + " + " + PriceEntry.COLUMN_PRICE_HIGH + ") / 2 " +
                 " ) END " +
