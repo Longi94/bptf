@@ -62,6 +62,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,
     private final BptfApplication mApplication;
 
     private boolean mLoading = false;
+    private boolean mLoaderInitialized = false;
 
     private LoaderManager mLoaderManager;
 
@@ -91,7 +92,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,
         mView = null;
     }
 
-    public void loadPrices(boolean fromCache) {
+    public void loadPrices() {
         //Download whole database when the app is first opened.
         if (mPrefs.getBoolean(mContext.getString(R.string.pref_initial_load_v2), true)) {
             if (Utility.isNetworkAvailable(mContext)) {
@@ -107,6 +108,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,
             }
         } else {
             mLoaderManager.initLoader(0, null, this);
+            mLoaderInitialized = true;
 
             loadCurrencyPrices();
             //Update database if the last update happened more than an hour ago
@@ -180,10 +182,6 @@ public class RecentsPresenter implements Presenter<RecentsView>,
                 mView.showLoadingDialog("Downloading item schema...");
             }
         } else {
-            if (newItems > 0) {
-                loadPrices(false);
-            }
-
             if (System.currentTimeMillis() - mPrefs.getLong(mContext.getString(R.string.pref_last_item_schema_update), 0) >= 172800000L //2days
                     && Utility.isNetworkAvailable(mContext)) {
                 callTlongdevItemSchema();
@@ -192,6 +190,10 @@ public class RecentsPresenter implements Presenter<RecentsView>,
                 if (mView != null) {
                     mView.hideRefreshingAnimation();
                     loadCurrencyPrices();
+                }
+
+                if (!mLoaderInitialized) {
+                    mLoaderManager.initLoader(0, null, this);
                 }
             }
         }
@@ -215,8 +217,6 @@ public class RecentsPresenter implements Presenter<RecentsView>,
             mView.dismissLoadingDialog();
         }
 
-        loadPrices(false);
-
         //Save when the update finished
         mEditor.putLong(mContext.getString(R.string.pref_last_item_schema_update), System.currentTimeMillis());
         mEditor.putBoolean(mContext.getString(R.string.pref_initial_load_v2), false);
@@ -227,6 +227,10 @@ public class RecentsPresenter implements Presenter<RecentsView>,
             //Stop animation
             mView.hideRefreshingAnimation();
             loadCurrencyPrices();
+        }
+
+        if (!mLoaderInitialized) {
+            mLoaderManager.initLoader(0, null, this);
         }
     }
 

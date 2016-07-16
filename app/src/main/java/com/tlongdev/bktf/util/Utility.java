@@ -28,14 +28,21 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.PopupMenu;
 
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
+import com.tlongdev.bktf.customtabs.WebViewFallback;
+import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
 import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
 import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
@@ -44,6 +51,7 @@ import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.ui.activity.MainActivity;
+import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.widget.FavoritesWidget;
 
 import java.text.DecimalFormat;
@@ -131,6 +139,8 @@ public class Utility {
         return id != null && id.matches("7656119[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]");
     }
 
+    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
     /**
      * Format the unix timestamp the a user readable string.
      *
@@ -140,7 +150,6 @@ public class Utility {
     public static String formatUnixTimeStamp(long unixSeconds) {
         Date date = new Date(unixSeconds * 1000L); // *1000 is to convert seconds to milliseconds
         //European format
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         return sdf.format(date);
     }
 
@@ -232,6 +241,8 @@ public class Utility {
         return Double.longBitsToDouble(prefs.getLong(key, Double.doubleToLongBits(defaultValue)));
     }
 
+    private static DecimalFormat df = new DecimalFormat("#.##");
+
     /**
      * Format floating point numbers to 2 decimal places
      *
@@ -239,7 +250,7 @@ public class Utility {
      * @return the formatted string
      */
     public static String formatDouble(double value) {
-        return new DecimalFormat("#.##").format(value);
+        return df.format(value);
     }
 
 
@@ -283,6 +294,8 @@ public class Utility {
                 PriceEntry.COLUMN_PRICE + " * " + budMultiplier +
                 " ) WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'usd' THEN ( " +
                 PriceEntry.COLUMN_PRICE + " * " + usdMultiplier +
+                " ) WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'hat' THEN ( " +
+                PriceEntry.COLUMN_PRICE + " * 1.22 " +
                 " ) ELSE ( " +
                 PriceEntry.COLUMN_PRICE +
                 " ) END " +
@@ -293,6 +306,8 @@ public class Utility {
                 " ( " + PriceEntry.COLUMN_PRICE + " + " + PriceEntry.COLUMN_PRICE_HIGH + ") / 2 * " + budMultiplier +
                 " ) WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'usd' THEN ( " +
                 " ( " + PriceEntry.COLUMN_PRICE + " + " + PriceEntry.COLUMN_PRICE_HIGH + ") / 2 * " + usdMultiplier +
+                " ) WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'hat' THEN ( " +
+                " ( " + PriceEntry.COLUMN_PRICE + " + " + PriceEntry.COLUMN_PRICE_HIGH + ") / 2 * 1.22 " +
                 " ) ELSE ( " +
                 " ( " + PriceEntry.COLUMN_PRICE + " + " + PriceEntry.COLUMN_PRICE_HIGH + ") / 2 " +
                 " ) END " +
@@ -369,6 +384,53 @@ public class Utility {
         return result;
     }
 
+    public static boolean isInCalculator(Context context, Item item) {
+        Cursor cursor = context.getContentResolver().query(
+                CalculatorEntry.CONTENT_URI,
+                null,
+                CalculatorEntry.COLUMN_DEFINDEX + " = ? AND " +
+                        CalculatorEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
+                        CalculatorEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
+                        CalculatorEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
+                        CalculatorEntry.COLUMN_PRICE_INDEX + " = ? AND " +
+                        CalculatorEntry.COLUMN_AUSTRALIUM + " = ? AND " +
+                        CalculatorEntry.COLUMN_WEAPON_WEAR + " = ?",
+                new String[]{String.valueOf(item.getDefindex()),
+                        String.valueOf(item.getQuality()),
+                        item.isTradable() ? "1" : "0",
+                        item.isCraftable() ? "1" : "0",
+                        String.valueOf(item.getPriceIndex()),
+                        item.isAustralium() ? "1" : "0",
+                        String.valueOf(item.getWeaponWear())
+                },
+                null
+        );
+
+        boolean result = false;
+
+        if (cursor != null) {
+            result = cursor.getCount() > 0;
+            cursor.close();
+        }
+
+        return result;
+    }
+
+    public static void addToCalculator(Context context, Item item) {
+        ContentValues cv = new ContentValues();
+
+        cv.put(CalculatorEntry.COLUMN_DEFINDEX, item.getDefindex());
+        cv.put(CalculatorEntry.COLUMN_ITEM_QUALITY, item.getQuality());
+        cv.put(CalculatorEntry.COLUMN_ITEM_TRADABLE, item.isTradable() ? 1 : 0);
+        cv.put(CalculatorEntry.COLUMN_ITEM_CRAFTABLE, item.isCraftable() ? 1 : 0);
+        cv.put(CalculatorEntry.COLUMN_PRICE_INDEX, item.getPriceIndex());
+        cv.put(CalculatorEntry.COLUMN_AUSTRALIUM, item.isAustralium() ? 1 : 0);
+        cv.put(CalculatorEntry.COLUMN_WEAPON_WEAR, item.getWeaponWear());
+        cv.put(CalculatorEntry.COLUMN_COUNT, 1);
+
+        context.getContentResolver().insert(CalculatorEntry.CONTENT_URI, cv);
+    }
+
     public static void createSimpleNotification(Context context, int id, String title, String message) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_notification)
@@ -423,6 +485,56 @@ public class Utility {
         }
 
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
+
+    public static PopupMenu createItemPopupMenu(final Activity activity, View anchor, final Item item) {
+        PopupMenu menu = new PopupMenu(activity, anchor);
+
+        menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
+
+        menu.getMenu().findItem(R.id.favorite).setTitle(
+                isFavorite(activity, item) ? "Remove from favorites" : "Add to favorites");
+
+        menu.getMenu().findItem(R.id.calculator).setEnabled(!isInCalculator(activity, item));
+
+        menu.setOnMenuItemClickListener(new android.widget.PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.history:
+                        Intent i = new Intent(activity, PriceHistoryActivity.class);
+                        i.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
+                        activity.startActivity(i);
+                        break;
+                    case R.id.favorite:
+                        if (isFavorite(activity, item)) {
+                            removeFromFavorites(activity, item);
+                        } else {
+                            addToFavorites(activity, item);
+                        }
+                        break;
+                    case R.id.calculator:
+                        addToCalculator(activity, item);
+                        menuItem.setEnabled(false);
+                        break;
+                    case R.id.backpack_tf:
+                        CustomTabActivityHelper.openCustomTab(activity,
+                                new CustomTabsIntent.Builder().build(),
+                                Uri.parse(item.getBackpackTfUrl()),
+                                new WebViewFallback());
+                        break;
+                    case R.id.wiki:
+                        CustomTabActivityHelper.openCustomTab(activity,
+                                new CustomTabsIntent.Builder().build(),
+                                Uri.parse(item.getTf2WikiUrl()),
+                                new WebViewFallback());
+                        break;
+                }
+                return true;
+            }
+        });
+
+        return menu;
     }
 }
 

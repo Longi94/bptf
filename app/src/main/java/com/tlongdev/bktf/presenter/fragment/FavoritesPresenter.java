@@ -22,7 +22,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.data.DatabaseContract;
+import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
 import com.tlongdev.bktf.interactor.LoadFavoritesInteractor;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Quality;
@@ -85,13 +85,13 @@ public class FavoritesPresenter implements Presenter<FavoritesView>,LoadFavorite
 
             ContentValues cv = new ContentValues();
 
-            cv.put(DatabaseContract.FavoritesEntry.COLUMN_DEFINDEX, defindex);
-            cv.put(DatabaseContract.FavoritesEntry.COLUMN_ITEM_QUALITY, Quality.UNIQUE);
-            cv.put(DatabaseContract.FavoritesEntry.COLUMN_ITEM_TRADABLE, 1);
-            cv.put(DatabaseContract.FavoritesEntry.COLUMN_ITEM_CRAFTABLE, 1);
-            cv.put(DatabaseContract.FavoritesEntry.COLUMN_PRICE_INDEX, 0);
-            cv.put(DatabaseContract.FavoritesEntry.COLUMN_AUSTRALIUM, 0);
-            cv.put(DatabaseContract.FavoritesEntry.COLUMN_WEAPON_WEAR, 0);
+            cv.put(FavoritesEntry.COLUMN_DEFINDEX, defindex);
+            cv.put(FavoritesEntry.COLUMN_ITEM_QUALITY, Quality.UNIQUE);
+            cv.put(FavoritesEntry.COLUMN_ITEM_TRADABLE, 1);
+            cv.put(FavoritesEntry.COLUMN_ITEM_CRAFTABLE, 1);
+            cv.put(FavoritesEntry.COLUMN_PRICE_INDEX, 0);
+            cv.put(FavoritesEntry.COLUMN_AUSTRALIUM, 0);
+            cv.put(FavoritesEntry.COLUMN_WEAPON_WEAR, 0);
 
             cVVector.add(cv);
         }
@@ -99,7 +99,7 @@ public class FavoritesPresenter implements Presenter<FavoritesView>,LoadFavorite
         ContentValues[] cvArray = new ContentValues[cVVector.size()];
         cVVector.toArray(cvArray);
         //Insert all the data into the database
-        int rowsInserted = mContentResolver.bulkInsert(DatabaseContract.FavoritesEntry.CONTENT_URI, cvArray);
+        int rowsInserted = mContentResolver.bulkInsert(FavoritesEntry.CONTENT_URI, cvArray);
         Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
         loadFavorites();
     }

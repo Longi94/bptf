@@ -32,7 +32,9 @@ import com.bumptech.glide.request.target.Target;
 import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract;
+import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
+import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
+import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.util.Utility;
@@ -87,29 +89,29 @@ public class FavoritesWidgetService extends RemoteViewsService {
         @Override
         public void onCreate() {
             sql = "SELECT " +
-                    DatabaseContract.FavoritesEntry.TABLE_NAME + "." + DatabaseContract.FavoritesEntry.COLUMN_DEFINDEX + "," +
-                    DatabaseContract.ItemSchemaEntry.TABLE_NAME + "." + DatabaseContract.ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
-                    DatabaseContract.FavoritesEntry.TABLE_NAME + "." + DatabaseContract.FavoritesEntry.COLUMN_ITEM_QUALITY + "," +
-                    DatabaseContract.FavoritesEntry.TABLE_NAME + "." + DatabaseContract.FavoritesEntry.COLUMN_ITEM_TRADABLE + "," +
-                    DatabaseContract.FavoritesEntry.TABLE_NAME + "." + DatabaseContract.FavoritesEntry.COLUMN_ITEM_CRAFTABLE + "," +
-                    DatabaseContract.FavoritesEntry.TABLE_NAME + "." + DatabaseContract.FavoritesEntry.COLUMN_PRICE_INDEX + "," +
-                    DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_CURRENCY + "," +
-                    DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_PRICE + "," +
-                    DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_PRICE_HIGH + "," +
+                    FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_DEFINDEX + "," +
+                    ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
+                    FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_QUALITY + "," +
+                    FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_TRADABLE + "," +
+                    FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_CRAFTABLE + "," +
+                    FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_PRICE_INDEX + "," +
+                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_CURRENCY + "," +
+                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE + "," +
+                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_HIGH + "," +
                     Utility.getRawPriceQueryString(mContext) + "," +
-                    DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_DIFFERENCE + "," +
-                    DatabaseContract.FavoritesEntry.TABLE_NAME + "." + DatabaseContract.FavoritesEntry.COLUMN_AUSTRALIUM +
-                    " FROM " + DatabaseContract.FavoritesEntry.TABLE_NAME +
-                    " LEFT JOIN " + DatabaseContract.PriceEntry.TABLE_NAME +
-                    " ON " + DatabaseContract.FavoritesEntry.TABLE_NAME + "." + DatabaseContract.FavoritesEntry.COLUMN_DEFINDEX + " = " + DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_DEFINDEX +
-                    " AND " + DatabaseContract.FavoritesEntry.TABLE_NAME + "." + DatabaseContract.FavoritesEntry.COLUMN_ITEM_TRADABLE + " = " + DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_ITEM_TRADABLE +
-                    " AND " + DatabaseContract.FavoritesEntry.TABLE_NAME + "." + DatabaseContract.FavoritesEntry.COLUMN_ITEM_CRAFTABLE + " = " + DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_ITEM_CRAFTABLE +
-                    " AND " + DatabaseContract.FavoritesEntry.TABLE_NAME + "." + DatabaseContract.FavoritesEntry.COLUMN_PRICE_INDEX + " = " + DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_PRICE_INDEX +
-                    " AND " + DatabaseContract.FavoritesEntry.TABLE_NAME + "." + DatabaseContract.FavoritesEntry.COLUMN_ITEM_QUALITY + " = " + DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_ITEM_QUALITY +
-                    " AND " + DatabaseContract.FavoritesEntry.TABLE_NAME + "." + DatabaseContract.FavoritesEntry.COLUMN_AUSTRALIUM + " = " + DatabaseContract.PriceEntry.TABLE_NAME + "." + DatabaseContract.PriceEntry.COLUMN_AUSTRALIUM +
-                    " LEFT JOIN " + DatabaseContract.ItemSchemaEntry.TABLE_NAME +
-                    " ON " + DatabaseContract.FavoritesEntry.TABLE_NAME + "." + DatabaseContract.FavoritesEntry.COLUMN_DEFINDEX + " = " + DatabaseContract.ItemSchemaEntry.TABLE_NAME + "." + DatabaseContract.ItemSchemaEntry.COLUMN_DEFINDEX +
-                    " ORDER BY " + DatabaseContract.ItemSchemaEntry.COLUMN_ITEM_NAME + " ASC";
+                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DIFFERENCE + "," +
+                    FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_AUSTRALIUM +
+                    " FROM " + FavoritesEntry.TABLE_NAME +
+                    " LEFT JOIN " + PriceEntry.TABLE_NAME +
+                    " ON " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_DEFINDEX + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX +
+                    " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_TRADABLE + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_TRADABLE +
+                    " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_CRAFTABLE + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_CRAFTABLE +
+                    " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_PRICE_INDEX + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX +
+                    " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_QUALITY + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY +
+                    " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_AUSTRALIUM + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM +
+                    " LEFT JOIN " + ItemSchemaEntry.TABLE_NAME +
+                    " ON " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
+                    " ORDER BY " + ItemSchemaEntry.COLUMN_ITEM_NAME + " ASC";
 
 
             final long token = Binder.clearCallingIdentity();
@@ -201,8 +203,11 @@ public class FavoritesWidgetService extends RemoteViewsService {
                     } else {
                         rv.setImageViewBitmap(R.id.effect, null);
                     }
-                } catch (InterruptedException | ExecutionException e) {
+                } catch (InterruptedException e) {
                     Crashlytics.logException(e);
+                    rv.setImageViewBitmap(R.id.effect, null);
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
                     rv.setImageViewBitmap(R.id.effect, null);
                     e.printStackTrace();
                 }

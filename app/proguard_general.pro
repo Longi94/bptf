@@ -53,3 +53,6 @@
 #for dart 2.0 only
 -keep class **Henson { *; }
 -keep class **$$IntentBuilder { *; }
+
+#http://stackoverflow.com/questions/26566385/shared-element-activity-transition-on-android-5
+-keep public class android.app.ActivityTransitionCoordinator

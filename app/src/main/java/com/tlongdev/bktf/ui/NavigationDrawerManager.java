@@ -78,6 +78,14 @@ public class NavigationDrawerManager implements ProfileManager.OnUpdateListener 
 
     @Override
     public void onLogOut() {
+        if (mUserMenuItem != null) {
+            mUserMenuItem.setEnabled(false);
+        }
+
+        if (mContext == null || mName == null || mBackpack == null || mAvatar == null) {
+            return;
+        }
+
         Glide.with(mContext)
                 .load(R.drawable.steam_default_avatar)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -85,14 +93,18 @@ public class NavigationDrawerManager implements ProfileManager.OnUpdateListener 
                 .into(mAvatar);
         mName.setText(null);
         mBackpack.setText(null);
-
-        if (mUserMenuItem != null) {
-            mUserMenuItem.setEnabled(false);
-        }
     }
 
     @Override
     public void onUpdate(User user) {
+        if (mUserMenuItem != null) {
+            mUserMenuItem.setEnabled(true);
+        }
+
+        if (mContext == null || mName == null || mBackpack == null || mAvatar == null) {
+            return;
+        }
+
         //Set the name
         mName.setText(user.getName());
 
@@ -112,8 +124,5 @@ public class NavigationDrawerManager implements ProfileManager.OnUpdateListener 
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .transform(new CircleTransform(mContext))
                 .into(mAvatar);
-        if (mUserMenuItem != null) {
-            mUserMenuItem.setEnabled(true);
-        }
     }
 }

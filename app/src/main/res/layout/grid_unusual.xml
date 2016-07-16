@@ -42,7 +42,7 @@
                 android:layout_gravity="top|end"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:paddingBottom="8dp"
-                android:paddingEnd="8dp"
+                android:paddingEnd="4dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="4dp"
                 android:paddingStart="8dp"

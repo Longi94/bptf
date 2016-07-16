@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 Long Tran
+ * Copyright 2016 Long Tran
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tlongdev.bktf.gcm;
+package com.tlongdev.bktf.fcm;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -22,12 +22,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.google.android.gms.gcm.GcmListenerService;
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
@@ -38,35 +37,18 @@ import com.tlongdev.bktf.util.Utility;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public class GcmMessageHandler extends GcmListenerService implements TlongdevPriceListInteractor.Callback {
+/**
+ * @author lngtr
+ * @since 2016. 05. 20.
+ */
+public class BptfMessagingService extends FirebaseMessagingService {
 
-    private static final String LOG_TAG = GcmMessageHandler.class.getSimpleName();
+    private static final String LOG_TAG = BptfMessagingService.class.getSimpleName();
 
     private static final int NOTIFICATION_ID = 100;
 
     @Inject @Named("readable") SQLiteDatabase mDatabase;
-
-    public void onMessageReceived(String from, Bundle data) {
-        Log.d(LOG_TAG, "Message received");
-
-        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo wifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-        if (from.startsWith("/topics/")) {
-            if (from.endsWith("price_updates")) {
-                String autoSync = prefs.getString(getString(R.string.pref_auto_sync), "1");
-
-                if (autoSync.equals("2") || (autoSync.equals("1") && wifi.isConnected())) {
-                    TlongdevPriceListInteractor interactor = new TlongdevPriceListInteractor((BptfApplication) getApplication(), true, true, this);
-                    interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
-            }
-        } else {
-            // normal downstream message.
-        }
-    }
+    @Inject SharedPreferences mPrefs;
 
     @Override
     public void onCreate() {
@@ -75,9 +57,33 @@ public class GcmMessageHandler extends GcmListenerService implements TlongdevPri
     }
 
     @Override
-    public void onPriceListFinished(int newItems, long sinceParam) {
+    public void onMessageReceived(RemoteMessage remoteMessage) {
+        Log.d(LOG_TAG, "Message received");
 
-        if (newItems > 0) {
+        String from = remoteMessage.getFrom();
+
+        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+        if (from.startsWith("/topics/")) {
+            if (from.endsWith("price_updates")) {
+                String autoSync = mPrefs.getString(getString(R.string.pref_auto_sync), "1");
+
+                if (autoSync.equals("2") || (autoSync.equals("1") && wifi.isConnected())) {
+                    TlongdevPriceListInteractor interactor = new TlongdevPriceListInteractor(
+                            (BptfApplication) getApplication(), true, true, null
+                    );
+                    interactor.run();
+                    checkNewPrices(interactor);
+                }
+            }
+        } else {
+            // normal downstream message.
+        }
+    }
+
+    private void checkNewPrices(TlongdevPriceListInteractor interactor) {
+        if (interactor.getRowsInserted() > 0) {
             Utility.notifyPricesWidgets(this);
         } else {
             return;
@@ -106,7 +112,7 @@ public class GcmMessageHandler extends GcmListenerService implements TlongdevPri
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 long update = cursor.getLong(1);
-                newPrice = newPrice || update > sinceParam;
+                newPrice = newPrice || update > interactor.getSinceParam();
             }
             cursor.close();
         }
@@ -114,10 +120,5 @@ public class GcmMessageHandler extends GcmListenerService implements TlongdevPri
         if (newPrice) {
             Utility.createSimpleNotification(this, NOTIFICATION_ID, "Prices updated", "The prices of your favorite items has been updated!");
         }
-    }
-
-    @Override
-    public void onPriceListFailed(String errorMessage) {
-        //do nothing
     }
 }

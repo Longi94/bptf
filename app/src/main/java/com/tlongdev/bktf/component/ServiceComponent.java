@@ -16,7 +16,7 @@
 
 package com.tlongdev.bktf.component;
 
-import com.tlongdev.bktf.gcm.GcmMessageHandler;
+import com.tlongdev.bktf.fcm.BptfMessagingService;
 import com.tlongdev.bktf.module.BptfAppModule;
 import com.tlongdev.bktf.module.StorageModule;
 import com.tlongdev.bktf.widget.FavoritesWidgetService;
@@ -34,5 +34,5 @@ import dagger.Component;
 public interface ServiceComponent {
     void inject(FavoritesWidgetService.FavoritesRemoteViewsFactory favoritesRemoteViewsFactory);
 
-    void inject(GcmMessageHandler gcmMessageHandler);
+    void inject(BptfMessagingService bptfMessagingService);
 }

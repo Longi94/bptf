@@ -22,7 +22,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.data.DatabaseContract;
+import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
 import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
@@ -88,13 +88,13 @@ public class LoadFavoritesInteractor extends AsyncTask<Void, Void, Void> {
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 Item item = new Item();
-                item.setDefindex(cursor.getInt(cursor.getColumnIndex(DatabaseContract.CalculatorEntry.COLUMN_DEFINDEX)));
+                item.setDefindex(cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_DEFINDEX)));
                 item.setName(cursor.getString(cursor.getColumnIndex(ItemSchemaEntry.COLUMN_ITEM_NAME)));
-                item.setQuality(cursor.getInt(cursor.getColumnIndex(DatabaseContract.CalculatorEntry.COLUMN_ITEM_QUALITY)));
-                item.setTradable(cursor.getInt(cursor.getColumnIndex(DatabaseContract.CalculatorEntry.COLUMN_ITEM_TRADABLE)) == 1);
-                item.setCraftable(cursor.getInt(cursor.getColumnIndex(DatabaseContract.CalculatorEntry.COLUMN_ITEM_CRAFTABLE)) == 1);
-                item.setAustralium(cursor.getInt(cursor.getColumnIndex(DatabaseContract.CalculatorEntry.COLUMN_AUSTRALIUM)) == 1);
-                item.setPriceIndex(cursor.getInt(cursor.getColumnIndex(DatabaseContract.CalculatorEntry.COLUMN_PRICE_INDEX)));
+                item.setQuality(cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_ITEM_QUALITY)));
+                item.setTradable(cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_ITEM_TRADABLE)) == 1);
+                item.setCraftable(cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_ITEM_CRAFTABLE)) == 1);
+                item.setAustralium(cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_AUSTRALIUM)) == 1);
+                item.setPriceIndex(cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_PRICE_INDEX)));
 
                 if (cursor.getString(cursor.getColumnIndex(PriceEntry.COLUMN_CURRENCY)) != null) {
                     Price price = new Price();
