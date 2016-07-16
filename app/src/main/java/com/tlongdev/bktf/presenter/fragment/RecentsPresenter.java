@@ -62,6 +62,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,
     private final BptfApplication mApplication;
 
     private boolean mLoading = false;
+    private boolean mLoaderInitialized = false;
 
     private LoaderManager mLoaderManager;
 
@@ -107,6 +108,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,
             }
         } else {
             mLoaderManager.initLoader(0, null, this);
+            mLoaderInitialized = true;
 
             loadCurrencyPrices();
             //Update database if the last update happened more than an hour ago
@@ -189,6 +191,10 @@ public class RecentsPresenter implements Presenter<RecentsView>,
                     mView.hideRefreshingAnimation();
                     loadCurrencyPrices();
                 }
+
+                if (!mLoaderInitialized) {
+                    mLoaderManager.initLoader(0, null, this);
+                }
             }
         }
 
@@ -221,6 +227,10 @@ public class RecentsPresenter implements Presenter<RecentsView>,
             //Stop animation
             mView.hideRefreshingAnimation();
             loadCurrencyPrices();
+        }
+
+        if (!mLoaderInitialized) {
+            mLoaderManager.initLoader(0, null, this);
         }
     }
 
