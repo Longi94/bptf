@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
@@ -58,6 +59,7 @@ public class UserActivity extends BptfActivity implements UserView{
 
     //Progress bar that indicates downloading user data.
     @BindView(R.id.progress_bar) ProgressBar progressBar;
+    @BindView(R.id.error_message) TextView mErrorMessage;
 
     @InjectExtra(STEAM_ID_KEY) String steamId;
 
@@ -133,5 +135,11 @@ public class UserActivity extends BptfActivity implements UserView{
     @Override
     public void hideLoadingAnimation() {
         progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showError() {
+        progressBar.setVisibility(View.GONE);
+        mErrorMessage.setVisibility(View.VISIBLE);
     }
 }

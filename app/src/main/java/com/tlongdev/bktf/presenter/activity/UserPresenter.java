@@ -17,6 +17,7 @@
 package com.tlongdev.bktf.presenter.activity;
 
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.interactor.GetSearchedUserDataInteractor;
@@ -35,7 +36,7 @@ public class UserPresenter implements Presenter<UserView>,GetSearchedUserDataInt
     private final BptfApplication mApplication;
     private User mUser;
 
-    private boolean mNotLoaded = false;
+    private boolean mLoaded = false;
     private String mSteamId = "";
 
     public UserPresenter(BptfApplication application) {
@@ -55,16 +56,16 @@ public class UserPresenter implements Presenter<UserView>,GetSearchedUserDataInt
 
     public void loadData(String steamId) {
         if (!steamId.equals(mSteamId)) {
-            mNotLoaded = false;
+            mLoaded = false;
             mSteamId = steamId;
         }
 
-        if (!mNotLoaded) {
+        if (!mLoaded) {
             GetSearchedUserDataInteractor interactor = new GetSearchedUserDataInteractor(
                     mApplication, steamId, this
             );
             interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            mNotLoaded = true;
+            mLoaded = true;
         } else {
             mView.hideLoadingAnimation();
         }
@@ -81,6 +82,11 @@ public class UserPresenter implements Presenter<UserView>,GetSearchedUserDataInt
 
     @Override
     public void onUserInfoFailed(String errorMessage) {
+        mLoaded = false;
+        if (mView != null) {
+            mView.showError();
+            mView.showToast(errorMessage, Toast.LENGTH_SHORT);
+        }
     }
 
     @Override
@@ -100,6 +106,10 @@ public class UserPresenter implements Presenter<UserView>,GetSearchedUserDataInt
 
     @Override
     public void onUserBackpackFailed(String errorMessage) {
-
+        mLoaded = false;
+        if (mView != null) {
+            mView.showError();
+            mView.showToast(errorMessage, Toast.LENGTH_SHORT);
+        }
     }
 }

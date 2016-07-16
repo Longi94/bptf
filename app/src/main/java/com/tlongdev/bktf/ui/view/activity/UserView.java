@@ -30,4 +30,6 @@ public interface UserView extends BaseView {
     void privateBackpack(User user);
 
     void hideLoadingAnimation();
+
+    void showError();
 }
