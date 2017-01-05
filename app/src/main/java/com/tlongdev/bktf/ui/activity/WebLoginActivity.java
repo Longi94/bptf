@@ -1,26 +1,9 @@
-/**
- * Copyright 2015 Long Tran
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.tlongdev.bktf.ui.activity;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -28,21 +11,18 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.f2prateek.dart.Dart;
-import com.f2prateek.dart.InjectExtra;
 import com.tlongdev.bktf.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class WebActivity extends BptfActivity {
+public class WebLoginActivity extends BptfActivity {
 
-    public static final String EXTRA_URL = "url";
+    public static final String EXTRA_STEAM_ID = "steam_id";
 
     @BindView(R.id.web_view) WebView webView;
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.progress_bar) ProgressBar mProgressBar;
-
-    @InjectExtra(EXTRA_URL) String mUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,13 +63,29 @@ public class WebActivity extends BptfActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
+                Uri uri = Uri.parse(url);
+
+                if (uri.getScheme().equals("bptf")) {
+                    if (uri.getHost().equals("login")) {
+                        Intent result = new Intent();
+                        result.putExtra(EXTRA_STEAM_ID, uri.getQueryParameter("id"));
+                        setResult(RESULT_OK, result);
+                    } else {
+                        setResult(RESULT_CANCELED);
+                    }
+                    finish();
+                    return true;
+                } else if (!url.startsWith("https://steamcommunity.com/openid/login") &&
+                        !url.startsWith("http://tlongdev.com/steam.php")) {
+                    //Do not let the user navigate away
+                    return true;
+                }
+                return false;
             }
         });
 
         if (savedInstanceState == null) {
-            webView.loadUrl(mUrl);
+            webView.loadUrl("http://tlongdev.com/steam.php");
         }
     }
 
@@ -106,31 +102,13 @@ public class WebActivity extends BptfActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_web, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_external:
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(webView.getUrl())));
-                return true;
             case android.R.id.home:
                 finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (webView.canGoBack()) {
-            webView.goBack();
-        } else {
-            finish();
         }
     }
 }

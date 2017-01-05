@@ -22,7 +22,7 @@ import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.presenter.activity.ItemChooserPresenter;
 import com.tlongdev.bktf.presenter.activity.ItemDetailPresenter;
 import com.tlongdev.bktf.presenter.activity.LicensesPresenter;
-import com.tlongdev.bktf.presenter.activity.LoginPresenter;
+import com.tlongdev.bktf.presenter.activity.SettingsPresenter;
 import com.tlongdev.bktf.presenter.activity.PriceHistoryPresenter;
 import com.tlongdev.bktf.presenter.activity.SearchPresenter;
 import com.tlongdev.bktf.presenter.activity.SelectItemPresenter;
@@ -66,8 +66,8 @@ public class PresenterModule {
 
     @Provides
     @Singleton
-    LoginPresenter provideLoginPresenter(Application application) {
-        return new LoginPresenter((BptfApplication) application);
+    SettingsPresenter provideLoginPresenter(Application application) {
+        return new SettingsPresenter((BptfApplication) application);
     }
 
     @Provides

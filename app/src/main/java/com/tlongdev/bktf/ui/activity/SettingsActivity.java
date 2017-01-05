@@ -16,6 +16,7 @@
 
 package com.tlongdev.bktf.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -29,10 +30,15 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.presenter.activity.SettingsPresenter;
+import com.tlongdev.bktf.ui.view.activity.SettingsView;
 import com.tlongdev.bktf.util.ProfileManager;
+
+import javax.inject.Inject;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -47,13 +53,17 @@ import com.tlongdev.bktf.util.ProfileManager;
  */
 @SuppressWarnings("deprecation")
 public class SettingsActivity extends AppCompatPreferenceActivity implements
-        SharedPreferences.OnSharedPreferenceChangeListener {
+        SharedPreferences.OnSharedPreferenceChangeListener, SettingsView {
 
     /**
      * Log tag for logging.
      */
     @SuppressWarnings("unused")
     private static final String LOG_TAG = SettingsActivity.class.getSimpleName();
+
+    @Inject SettingsPresenter mPresenter;
+
+    private ProgressDialog mLoadingDialog;
 
     /**
      * A preference value change listener that updates the preference's summary
@@ -110,6 +120,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mApplication.getActivityComponent().inject(this);
+
         //Re-add actionbar that was removed in recent build tools.
         LinearLayout root = (LinearLayout) findViewById(android.R.id.list)
                 .getParent().getParent().getParent();
@@ -121,11 +134,16 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         setSupportActionBar((Toolbar) toolbar.findViewById(R.id.toolbar));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mPresenter.attachView(this);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.detachView();
+    }
+
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -195,7 +213,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
                     i.putExtra("login_changed", true);
                     setResult(RESULT_OK, i);
                 } else {
-                    startActivityForResult(new Intent(SettingsActivity.this, LoginActivity.class), 0);
+                    startActivityForResult(new Intent(SettingsActivity.this, WebLoginActivity.class), 0);
                 }
                 return true;
             }
@@ -212,14 +230,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        updateLoginPreference();
-
         if (resultCode == RESULT_OK) {
-            Intent i = new Intent();
-            i.putExtra("login_changed", true);
-            setResult(RESULT_OK, i);
+            mPresenter.login(data.getStringExtra(WebLoginActivity.EXTRA_STEAM_ID));
+            mLoadingDialog = ProgressDialog.show(this, null, "Please wait...", true, false);
+        } else {
+            updateLoginPreference();
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void updateLoginPreference() {
@@ -232,5 +249,25 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
             login.setTitle("Log in");
             login.setSummary(null);
         }
+    }
+
+    @Override
+    public void dismissDialog() {
+        if (mLoadingDialog != null) {
+            mLoadingDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void userInfoDownloaded() {
+        updateLoginPreference();
+        Intent i = new Intent();
+        i.putExtra("login_changed", true);
+        setResult(RESULT_OK, i);
+    }
+
+    @Override
+    public void showToast(CharSequence message, int duration) {
+        Toast.makeText(this, message, duration).show();
     }
 }

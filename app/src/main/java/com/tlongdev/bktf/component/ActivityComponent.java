@@ -23,11 +23,11 @@ import com.tlongdev.bktf.ui.activity.BptfActivity;
 import com.tlongdev.bktf.ui.activity.ItemChooserActivity;
 import com.tlongdev.bktf.ui.activity.ItemDetailActivity;
 import com.tlongdev.bktf.ui.activity.LicensesActivity;
-import com.tlongdev.bktf.ui.activity.LoginActivity;
 import com.tlongdev.bktf.ui.activity.MainActivity;
 import com.tlongdev.bktf.ui.activity.PriceHistoryActivity;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
 import com.tlongdev.bktf.ui.activity.SelectItemActivity;
+import com.tlongdev.bktf.ui.activity.SettingsActivity;
 import com.tlongdev.bktf.ui.activity.UnusualActivity;
 import com.tlongdev.bktf.ui.activity.UserActivity;
 import com.tlongdev.bktf.ui.activity.UserBackpackActivity;
@@ -56,7 +56,7 @@ public interface ActivityComponent {
 
     void inject(LicensesActivity licensesActivity);
 
-    void inject(LoginActivity loginActivity);
+    void inject(SettingsActivity settingsActivity);
 
     void inject(PriceHistoryActivity priceHistoryActivity);
 

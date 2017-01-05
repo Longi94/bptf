@@ -19,7 +19,6 @@
         <meta-data
             android:name="com.tlongdev.bktf.util.GlideConfiguration"
             android:value="GlideModule"/>
-
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="${fabricApiKey}"/>
@@ -90,10 +89,6 @@
                 android:value=".ui.activity.MainActivity"/>
         </activity>
         <activity
-            android:name=".ui.activity.LoginActivity"
-            android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme"/>
-        <activity
             android:name=".ui.activity.PriceHistoryActivity"
             android:label="@string/title_activity_price_history"
             android:theme="@style/AppTheme"/>
@@ -123,7 +118,7 @@
 
         <service
             android:name=".widget.FavoritesWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"></service>
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
         <activity
             android:name=".ui.activity.AboutActivity"
@@ -152,23 +147,25 @@
         </activity>
         <activity
             android:name=".ui.activity.WebActivity"
-            android:parentActivityName=".ui.activity.LoginActivity"
             android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activity.LoginActivity"/>
         </activity>
-
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
 
-        <service
-            android:name=".fcm.BptfMessagingService">
+        <service android:name=".fcm.BptfMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
+
+        <activity
+            android:name=".ui.activity.WebLoginActivity"
+            android:parentActivityName=".ui.activity.SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activity.SettingsActivity"/>
+        </activity>
     </application>
 
 </manifest>

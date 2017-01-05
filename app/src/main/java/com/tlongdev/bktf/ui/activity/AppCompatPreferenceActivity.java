@@ -46,7 +46,7 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
     @Inject Tracker mTracker;
 
     private AppCompatDelegate mDelegate;
-    private BptfApplication mApplication;
+    protected BptfApplication mApplication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

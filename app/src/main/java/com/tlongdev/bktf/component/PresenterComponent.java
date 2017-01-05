@@ -20,7 +20,7 @@ import com.tlongdev.bktf.module.BptfAppModule;
 import com.tlongdev.bktf.module.StorageModule;
 import com.tlongdev.bktf.presenter.activity.ItemChooserPresenter;
 import com.tlongdev.bktf.presenter.activity.LicensesPresenter;
-import com.tlongdev.bktf.presenter.activity.LoginPresenter;
+import com.tlongdev.bktf.presenter.activity.SettingsPresenter;
 import com.tlongdev.bktf.presenter.activity.SelectItemPresenter;
 import com.tlongdev.bktf.presenter.activity.UserBackpackPresenter;
 import com.tlongdev.bktf.presenter.fragment.CalculatorPresenter;
@@ -58,7 +58,7 @@ public interface PresenterComponent {
 
     void inject(SelectItemPresenter selectItemPresenter);
 
-    void inject(LoginPresenter loginPresenter);
+    void inject(SettingsPresenter loginPresenter);
 
     void inject(LicensesPresenter licensesPresenter);
 

@@ -25,7 +25,7 @@ import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.interactor.GetUserDataInteractor;
 import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.presenter.Presenter;
-import com.tlongdev.bktf.ui.view.activity.LoginView;
+import com.tlongdev.bktf.ui.view.activity.SettingsView;
 import com.tlongdev.bktf.util.ProfileManager;
 
 import javax.inject.Inject;
@@ -34,22 +34,22 @@ import javax.inject.Inject;
  * @author Long
  * @since 2016. 03. 23.
  */
-public class LoginPresenter implements Presenter<LoginView>, GetUserDataInteractor.Callback {
+public class SettingsPresenter implements Presenter<SettingsView>, GetUserDataInteractor.Callback {
 
     @Inject Tracker mTracker;
     @Inject ProfileManager mProfileManager;
 
-    private LoginView mView;
+    private SettingsView mView;
 
     private final BptfApplication mApplication;
 
-    public LoginPresenter(BptfApplication application) {
+    public SettingsPresenter(BptfApplication application) {
         mApplication = application;
         application.getPresenterComponent().inject(this);
     }
 
     @Override
-    public void attachView(LoginView view) {
+    public void attachView(SettingsView view) {
         mView = view;
     }
 
@@ -75,7 +75,7 @@ public class LoginPresenter implements Presenter<LoginView>, GetUserDataInteract
     public void onUserInfoFinished(User user) {
         if (mView != null) {
             mView.dismissDialog();
-            mView.finish();
+            mView.userInfoDownloaded();
         }
     }
 
