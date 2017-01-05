@@ -29,6 +29,4 @@ public interface UserView extends BaseView {
     void hideRefreshingAnimation();
 
     void updateUserPage(User user);
-
-    void backpack(boolean _private);
 }

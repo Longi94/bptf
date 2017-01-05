@@ -27,7 +27,6 @@ import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.interactor.GetUserDataInteractor;
-import com.tlongdev.bktf.interactor.Tf2UserBackpackInteractor;
 import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.presenter.Presenter;
 import com.tlongdev.bktf.ui.view.fragment.UserView;
@@ -40,7 +39,8 @@ import javax.inject.Inject;
  * @author Long
  * @since 2016. 03. 15.
  */
-public class UserPresenter implements Presenter<UserView>, GetUserDataInteractor.Callback, SwipeRefreshLayout.OnRefreshListener, Tf2UserBackpackInteractor.Callback {
+public class UserPresenter implements Presenter<UserView>, GetUserDataInteractor.Callback,
+        SwipeRefreshLayout.OnRefreshListener {
 
     @Inject SharedPreferences mPrefs;
     @Inject SharedPreferences.Editor mEditor;
@@ -87,15 +87,11 @@ public class UserPresenter implements Presenter<UserView>, GetUserDataInteractor
 
     @Override
     public void onUserInfoFinished(User user) {
-        Tf2UserBackpackInteractor interactor = new Tf2UserBackpackInteractor(
-                mApplication, user, false, this
-        );
-        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Request")
-                .setAction("UserBackpack")
-                .build());
+        mLoading = false;
+        if (mView != null) {
+            mView.updateUserPage(mProfileManager.getUser());
+            mView.hideRefreshingAnimation();
+        }
     }
 
     @Override
@@ -129,45 +125,6 @@ public class UserPresenter implements Presenter<UserView>, GetUserDataInteractor
             //There is no internet connection, notify the user
             mView.showToast("bptf: " + mContext.getString(R.string.error_no_network), Toast.LENGTH_SHORT);
             mView.hideRefreshingAnimation();
-        }
-    }
-
-    @Override
-    public void onUserBackpackFinished(User user) {
-        mLoading = false;
-        if (mView != null) {
-            mView.backpack(false);
-            mView.updateUserPage(mProfileManager.getUser());
-            mView.hideRefreshingAnimation();
-        }
-    }
-
-    @Override
-    public void onPrivateBackpack() {
-        //Save all data that represent a private backpack
-        User user = mProfileManager.getUser();
-        user.setBackpackSlots(-1);
-        user.setItemCount(-1);
-        user.setRawKeys(-1);
-        user.setRawMetal(-1);
-        mProfileManager.saveUser(user);
-
-        mLoading = false;
-        if (mView != null) {
-            mView.backpack(true);
-            mView.updateUserPage(user);
-            mView.hideRefreshingAnimation();
-        }
-    }
-
-    @Override
-    public void onUserBackpackFailed(String errorMessage) {
-        //Stop the refreshing animation and update the UI
-        mLoading = false;
-        if (mView != null) {
-            mView.updateUserPage(mProfileManager.getUser());
-            mView.hideRefreshingAnimation();
-            mView.showToast("failed", Toast.LENGTH_SHORT);
         }
     }
 

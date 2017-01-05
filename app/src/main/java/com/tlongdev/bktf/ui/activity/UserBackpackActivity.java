@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,7 +30,10 @@ import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
 import com.google.android.gms.ads.AdView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.BackpackAdapter;
@@ -48,22 +52,27 @@ import butterknife.ButterKnife;
 /**
  * Activity for viewing user backpacks.
  */
-public class UserBackpackActivity extends BptfActivity implements UserBackpackView, BackpackAdapter.OnItemClickedListener {
+public class UserBackpackActivity extends BptfActivity implements UserBackpackView, BackpackAdapter.OnItemClickedListener, SwipeRefreshLayout.OnRefreshListener {
 
     //Keys for extra data in the intent
     public static final String EXTRA_NAME = "name";
     public static final String EXTRA_GUEST = "guest";
+    public static final String EXTRA_STEAM_ID = "steam_id";
 
     @Inject UserBackpackPresenter mPresenter;
 
+    @InjectExtra(EXTRA_NAME) String mUserName;
+    //Boolean to decide which database table to load from
+    @InjectExtra(EXTRA_GUEST) boolean mIsGuest;
+    @InjectExtra(EXTRA_STEAM_ID) String mSteamId;
+
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
     @BindView(R.id.ad_view) AdView mAdView;
+    @BindView(R.id.progress_bar) ProgressBar mProgressBar;
+    @BindView(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
 
     //Adapters used for the listview
     private BackpackAdapter mAdapter;
-
-    //Boolean to decide which database table to load from
-    private boolean isGuest;
 
     /**
      * {@inheritDoc}
@@ -73,6 +82,7 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_backpack);
         ButterKnife.bind(this);
+        Dart.inject(this);
 
         mApplication.getActivityComponent().inject(this);
 
@@ -85,14 +95,10 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+
+            //Set the actionbar title to xyz's backpack
+            actionBar.setTitle(getString(R.string.title_custom_backpack, mUserName));
         }
-
-        //Set the actionbar title to xyz's backpack
-        getSupportActionBar().setTitle(getString(R.string.title_custom_backpack,
-                getIntent().getStringExtra(EXTRA_NAME)));
-
-        //Decide which table to load data from according to the extra data from the intent
-        isGuest = getIntent().getBooleanExtra(EXTRA_GUEST, false);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -119,9 +125,11 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+
         mAdManager.addAdView(mAdView);
 
-        mPresenter.loadBackpackItems(isGuest);
+        mPresenter.getBackpackItems(mSteamId, mIsGuest);
     }
 
     @Override
@@ -150,6 +158,14 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
     public void showItems(List<BackpackItem> items, List<BackpackItem> newItems) {
         mAdapter.setDataSet(items, newItems);
         mAdapter.notifyDataSetChanged();
+
+        mProgressBar.setVisibility(View.GONE);
+        mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void privateBackpack() {
+
     }
 
     @Override
@@ -157,7 +173,7 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
         //Open the ItemDetailActivity and send some extra data to it
         Intent i = new Intent(this, ItemDetailActivity.class);
         i.putExtra(ItemDetailActivity.EXTRA_ITEM_ID, backpackItem.getId());
-        i.putExtra(ItemDetailActivity.EXTRA_GUEST, isGuest);
+        i.putExtra(ItemDetailActivity.EXTRA_GUEST, mIsGuest);
 
         Cursor itemCursor = getContentResolver().query(
                 ItemSchemaEntry.CONTENT_URI,
@@ -212,5 +228,10 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
         } else {
             startActivity(i);
         }
+    }
+
+    @Override
+    public void onRefresh() {
+
     }
 }

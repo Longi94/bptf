@@ -85,10 +85,7 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
     @BindView(R.id.trade_status) ImageView tradeStatus;
     @BindView(R.id.community_status) ImageView communityStatus;
     @BindView(R.id.text_view_bp_refined) TextView backpackValueRefined;
-    @BindView(R.id.text_view_bp_raw_metal) TextView backpackRawMetal;
-    @BindView(R.id.text_view_bp_raw_keys) TextView backpackRawKeys;
     @BindView(R.id.text_view_bp_usd) TextView backpackValueUsd;
-    @BindView(R.id.text_view_bp_slots) TextView backpackSlots;
     @BindView(R.id.text_view_user_since) TextView userSinceText;
     @BindView(R.id.text_view_user_last_online) TextView lastOnlineText;
     @BindView(R.id.avatar) ImageView avatar;
@@ -101,11 +98,8 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
     @BindView(R.id.backpack) ImageView mBackpackButton;
     @BindView(R.id.backpack_content) View mBackpackContent;
 
-    //Stores whether the backpack is private or not
-    private boolean privateBackpack = false;
-
     private User mUser;
-    private boolean searchedUser;
+    private boolean mSearchedUser;
 
     private Unbinder mUnbinder;
 
@@ -142,7 +136,7 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
                              Bundle savedInstanceState) {
         if (getArguments() != null) {
             mUser = getArguments().getParcelable(USER_PARAM);
-            searchedUser = true;
+            mSearchedUser = true;
         }
 
         View rootView = inflater.inflate(R.layout.fragment_user, container, false);
@@ -151,13 +145,13 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
         mApplication.getFragmentComponent().inject(this);
 
         mPresenter.attachView(this);
-        mPresenter.setSearchedUser(searchedUser);
+        mPresenter.setSearchedUser(mSearchedUser);
 
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 
         //Set the color of the refreshing animation
-        if (!searchedUser) {
+        if (!mSearchedUser) {
             mSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(mContext, R.color.accent));
             mSwipeRefreshLayout.setOnRefreshListener(mPresenter);
 
@@ -257,7 +251,8 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
     public void onBackpackClick() {
         Intent i = new Intent(getActivity(), UserBackpackActivity.class);
         i.putExtra(UserBackpackActivity.EXTRA_NAME, mCollapsingToolbarLayout.getTitle());
-        i.putExtra(UserBackpackActivity.EXTRA_GUEST, searchedUser);
+        i.putExtra(UserBackpackActivity.EXTRA_GUEST, mSearchedUser);
+        i.putExtra(UserBackpackActivity.EXTRA_STEAM_ID, mUser.getResolvedSteamId());
         startActivity(i);
     }
 
@@ -370,8 +365,6 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
         //Backpack value
         double bpValue = mUser.getBackpackValue();
 
-        backpack(privateBackpack);
-
         if (bpValue == -1) {
             //Value is unknown (probably private)
             backpackValueRefined.setText("?");
@@ -388,28 +381,6 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
         //Set the trust score and color the background according to it.
         trustPositive.setText(String.format(Locale.ENGLISH, "+%d", mUser.getTrustPositive()));
         trustNegative.setText(String.format(Locale.ENGLISH, "-%d", mUser.getTrustNegative()));
-
-        //Raw keys
-        int rawKeys = mUser.getRawKeys();
-        if (rawKeys >= 0)
-            backpackRawKeys.setText(String.valueOf(rawKeys));
-        else
-            backpackRawKeys.setText("?");
-
-        //Raw metal
-        double rawMetal = mUser.getRawMetal();
-        if (rawMetal >= 0)
-            backpackRawMetal.setText(String.valueOf(Utility.formatDouble(rawMetal)));
-        else
-            backpackRawMetal.setText("?");
-
-        //Number of slots and slots used
-        int itemNumber = mUser.getItemCount();
-        int backpackSlotNumber = mUser.getBackpackSlots();
-        if (itemNumber >= 0 && backpackSlotNumber >= 0)
-            backpackSlots.setText(String.format(Locale.ENGLISH, "%s/%d", String.valueOf(itemNumber), backpackSlotNumber));
-        else
-            backpackSlots.setText("?/?");
     }
 
     @Override
@@ -428,25 +399,6 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
     public void hideRefreshingAnimation() {
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setRefreshing(false);
-        }
-    }
-
-    @Override
-    public void backpack(boolean _private) {
-        privateBackpack = _private;
-
-        if (mPrivateBackpackText != null) {
-            if (_private) {
-                mPrivateBackpackText.setVisibility(View.VISIBLE);
-                mBackpackButton.setEnabled(false);
-                mBackpackButton.setVisibility(View.GONE);
-                mBackpackContent.setVisibility(View.GONE);
-            } else {
-                mPrivateBackpackText.setVisibility(View.GONE);
-                mBackpackButton.setEnabled(true);
-                mBackpackButton.setVisibility(View.VISIBLE);
-                mBackpackContent.setVisibility(View.VISIBLE);
-            }
         }
     }
 }

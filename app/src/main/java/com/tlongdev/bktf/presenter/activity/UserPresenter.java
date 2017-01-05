@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.interactor.GetSearchedUserDataInteractor;
-import com.tlongdev.bktf.interactor.Tf2UserBackpackInteractor;
 import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.presenter.Presenter;
 import com.tlongdev.bktf.ui.view.activity.UserView;
@@ -30,11 +29,10 @@ import com.tlongdev.bktf.ui.view.activity.UserView;
  * @author Long
  * @since 2016. 03. 19.
  */
-public class UserPresenter implements Presenter<UserView>,GetSearchedUserDataInteractor.Callback, Tf2UserBackpackInteractor.Callback {
+public class UserPresenter implements Presenter<UserView>, GetSearchedUserDataInteractor.Callback {
 
     private UserView mView;
     private final BptfApplication mApplication;
-    private User mUser;
 
     private boolean mLoaded = false;
     private String mSteamId = "";
@@ -73,39 +71,13 @@ public class UserPresenter implements Presenter<UserView>,GetSearchedUserDataInt
 
     @Override
     public void onUserInfoFinished(User user) {
-        mUser = user;
-        Tf2UserBackpackInteractor interactor = new Tf2UserBackpackInteractor(
-                mApplication, user, true, this
-        );
-        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    @Override
-    public void onUserInfoFailed(String errorMessage) {
-        mLoaded = false;
-        if (mView != null) {
-            mView.showError();
-            mView.showToast(errorMessage, Toast.LENGTH_SHORT);
-        }
-    }
-
-    @Override
-    public void onUserBackpackFinished(User user) {
-        mUser = user;
         if (mView != null) {
             mView.showData(user);
         }
     }
 
     @Override
-    public void onPrivateBackpack() {
-        if (mView != null) {
-            mView.privateBackpack(mUser);
-        }
-    }
-
-    @Override
-    public void onUserBackpackFailed(String errorMessage) {
+    public void onUserInfoFailed(String errorMessage) {
         mLoaded = false;
         if (mView != null) {
             mView.showError();

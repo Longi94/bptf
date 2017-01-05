@@ -28,4 +28,6 @@ import java.util.List;
 public interface UserBackpackView extends BaseView {
 
     void showItems(List<BackpackItem> items, List<BackpackItem> newItems);
+
+    void privateBackpack();
 }

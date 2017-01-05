@@ -44,7 +44,7 @@ import butterknife.ButterKnife;
 /**
  * Profile page activity.
  */
-public class UserActivity extends BptfActivity implements UserView{
+public class UserActivity extends BptfActivity implements UserView {
 
     /**
      * Log tag for logging.
@@ -113,20 +113,6 @@ public class UserActivity extends BptfActivity implements UserView{
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setCustomAnimations(R.anim.simple_fade_in, R.anim.simple_fade_out);
         transaction.replace(R.id.container, UserFragment.newInstance(user));
-        transaction.commit();
-
-        progressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void privateBackpack(User user) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.setCustomAnimations(R.anim.simple_fade_in, R.anim.simple_fade_out);
-
-        UserFragment fragment = UserFragment.newInstance(user);
-        fragment.backpack(true);
-        transaction.replace(R.id.container, fragment);
         transaction.commit();
 
         progressBar.setVisibility(View.GONE);

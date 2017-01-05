@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
 
-def getKey(Properties properties, String name, String defaultValue) {
+def String getKey(Properties properties, String name, String defaultValue) {
     return properties.containsKey(name) ? properties.getProperty(name) : defaultValue
 }
 
@@ -11,15 +11,15 @@ android {
     buildToolsVersion '24'
 
     defaultConfig {
-        applicationId "com.tlongdev.bktf"
+        applicationId 'com.tlongdev.bktf'
         minSdkVersion 14
         targetSdkVersion 24
         versionCode 48
-        versionName "2.2.0"
+        versionName '2.2.0'
 
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
-                output.outputFile = new File((String) output.outputFile.parent, "bptf-" + versionName + ".apk")
+                output.outputFile = new File((String) output.outputFile.parent, 'bptf-' + versionName + '.apk')
             }
         }
 
@@ -28,12 +28,12 @@ android {
             keys.load(project.rootProject.file('keys.properties').newDataInputStream())
         }
 
-        buildConfigField("String", "BACKPACK_TF_API_KEY", "\"${getKey(keys, "BACKPACK_TF_API_KEY", "DUMMY_KEY")}\"")
-        buildConfigField("String", "STEAM_WEB_API_KEY", "\"${getKey(keys, "STEAM_WEB_API_KEY", "DUMMY_KEY")}\"")
-        resValue("string", "BANNER_AD_UNIT_ID", "${getKey(keys, "BANNER_AD_UNIT_ID", "ca-app-pub-3940256099942544/6300978111")}")
+        buildConfigField('String', 'BACKPACK_TF_API_KEY', '"' + getKey(keys, 'BACKPACK_TF_API_KEY', 'DUMMY_KEY') + '"')
+        buildConfigField('String', 'STEAM_WEB_API_KEY', '"' + getKey(keys, 'STEAM_WEB_API_KEY', 'DUMMY_KEY') + '"')
+        resValue('string', 'BANNER_AD_UNIT_ID', getKey(keys, 'BANNER_AD_UNIT_ID', 'ca-app-pub-3940256099942544/6300978111'))
 
         manifestPlaceholders = [
-                fabricApiKey: "${getKey(keys, "FABRIC_API_KEY", "DUMMY_KEY")}"
+                fabricApiKey: getKey(keys, 'FABRIC_API_KEY', 'DUMMY_KEY')
         ]
     }
     buildTypes {
@@ -43,7 +43,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard_general.pro', 'disable_logs.pro'
         }
         debug {
-            resValue("string", "BANNER_AD_UNIT_ID", "ca-app-pub-3940256099942544/6300978111")
+            resValue('string', 'BANNER_AD_UNIT_ID', 'ca-app-pub-3940256099942544/6300978111')
         }
     }
     compileOptions {

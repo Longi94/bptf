@@ -23,7 +23,6 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.interactor.GetUserDataInteractor;
-import com.tlongdev.bktf.interactor.Tf2UserBackpackInteractor;
 import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.presenter.Presenter;
 import com.tlongdev.bktf.ui.view.activity.LoginView;
@@ -35,8 +34,7 @@ import javax.inject.Inject;
  * @author Long
  * @since 2016. 03. 23.
  */
-public class LoginPresenter implements Presenter<LoginView>, GetUserDataInteractor.Callback,
-        Tf2UserBackpackInteractor.Callback {
+public class LoginPresenter implements Presenter<LoginView>, GetUserDataInteractor.Callback {
 
     @Inject Tracker mTracker;
     @Inject ProfileManager mProfileManager;
@@ -75,44 +73,14 @@ public class LoginPresenter implements Presenter<LoginView>, GetUserDataInteract
 
     @Override
     public void onUserInfoFinished(User user) {
-        Tf2UserBackpackInteractor interactor = new Tf2UserBackpackInteractor(
-                mApplication, user, false, this
-        );
-        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Request")
-                .setAction("UserBackpack")
-                .build());
+        if (mView != null) {
+            mView.dismissDialog();
+            mView.finish();
+        }
     }
 
     @Override
     public void onUserInfoFailed(String errorMessage) {
-        mProfileManager.logOut();
-        if (mView != null) {
-            mView.dismissDialog();
-            mView.showToast(errorMessage, Toast.LENGTH_SHORT);
-        }
-    }
-
-    @Override
-    public void onUserBackpackFinished(User user) {
-        if (mView != null) {
-            mView.dismissDialog();
-            mView.finish();
-        }
-    }
-
-    @Override
-    public void onPrivateBackpack() {
-        if (mView != null) {
-            mView.dismissDialog();
-            mView.finish();
-        }
-    }
-
-    @Override
-    public void onUserBackpackFailed(String errorMessage) {
         mProfileManager.logOut();
         if (mView != null) {
             mView.dismissDialog();
