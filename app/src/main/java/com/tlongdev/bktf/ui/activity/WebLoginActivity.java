@@ -11,6 +11,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.f2prateek.dart.Dart;
+import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
 
 import butterknife.BindView;
@@ -35,6 +36,8 @@ public class WebLoginActivity extends BptfActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setTitle(null);
+
+        final String url = getString(R.string.link_steam_login, BuildConfig.TLONGDEV_API_VERSION);
 
         mProgressBar.setMax(100);
         webView.setWebChromeClient(new WebChromeClient() {
@@ -76,7 +79,7 @@ public class WebLoginActivity extends BptfActivity {
                     finish();
                     return true;
                 } else if (!url.startsWith("https://steamcommunity.com/openid/login") &&
-                        !url.startsWith("http://tlongdev.com/steam.php")) {
+                        !url.startsWith(url)) {
                     //Do not let the user navigate away
                     return true;
                 }
@@ -85,7 +88,7 @@ public class WebLoginActivity extends BptfActivity {
         });
 
         if (savedInstanceState == null) {
-            webView.loadUrl("http://tlongdev.com/steam.php");
+            webView.loadUrl(url);
         }
     }
 

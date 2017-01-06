@@ -41,9 +41,11 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard_general.pro', 'disable_logs.pro'
+            buildConfigField('String', 'TLONGDEV_API_VERSION', '"v1"')
         }
         debug {
             resValue('string', 'BANNER_AD_UNIT_ID', 'ca-app-pub-3940256099942544/6300978111')
+            buildConfigField('String', 'TLONGDEV_API_VERSION', '"dev"')
         }
     }
     compileOptions {
