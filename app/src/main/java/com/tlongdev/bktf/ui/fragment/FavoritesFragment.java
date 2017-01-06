@@ -200,11 +200,12 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
         menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
+                Intent intent;
                 switch (menuItem.getItemId()) {
                     case R.id.history:
-                        Intent i = new Intent(getActivity(), PriceHistoryActivity.class);
-                        i.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
-                        startActivity(i);
+                        intent = new Intent(getActivity(), PriceHistoryActivity.class);
+                        intent.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
+                        startActivity(intent);
                         break;
                     case R.id.favorite:
                         Utility.removeFromFavorites(getActivity(), item);
@@ -225,6 +226,10 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
                                 new CustomTabsIntent.Builder().build(),
                                 Uri.parse(item.getTf2WikiUrl()),
                                 new WebViewFallback());
+                        break;
+                    case R.id.tf2outpost:
+                        intent = new Intent(Intent.ACTION_VIEW, Utility.buildTf2OutpostSearchUrl(getActivity(), item));
+                        getActivity().startActivity(intent);
                         break;
                 }
                 return true;

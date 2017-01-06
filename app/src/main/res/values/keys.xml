@@ -7,6 +7,7 @@
     <string name="link_tf2tp" translatable="false">http://tf2tp.com/user/</string>
     <string name="link_steam_community" translatable="false">http://steamcommunity.com/profiles/</string>
     <string name="link_steam_login" translatable="false">http://tlongdev.com/api/%s/steam</string>
+    <string name="link_search_outpost" translatable="false">http://tlongdev.com/search_outpost.html</string>
 
     <string name="gcm_sender_id" translatable="false">999648321586</string>
 

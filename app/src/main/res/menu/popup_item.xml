@@ -21,4 +21,12 @@
         android:id="@+id/wiki"
         android:title="Wiki" />
 
+    <item
+        android:id="@+id/tf2outpost"
+        android:title="TF2Outpost" />
+
+    <item
+        android:id="@+id/bazaartf"
+        android:title="bazaar.tf" />
+
 </menu>

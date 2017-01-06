@@ -1,3 +1,4 @@
+
 /**
  * Copyright 2015 Long Tran
  *
@@ -500,11 +501,12 @@ public class Utility {
         menu.setOnMenuItemClickListener(new android.widget.PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
+                Intent intent;
                 switch (menuItem.getItemId()) {
                     case R.id.history:
-                        Intent i = new Intent(activity, PriceHistoryActivity.class);
-                        i.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
-                        activity.startActivity(i);
+                        intent = new Intent(activity, PriceHistoryActivity.class);
+                        intent.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
+                        activity.startActivity(intent);
                         break;
                     case R.id.favorite:
                         if (isFavorite(activity, item)) {
@@ -529,12 +531,35 @@ public class Utility {
                                 Uri.parse(item.getTf2WikiUrl()),
                                 new WebViewFallback());
                         break;
+                    case R.id.tf2outpost:
+                        intent = new Intent(Intent.ACTION_VIEW, buildTf2OutpostSearchUrl(activity, item));
+                        activity.startActivity(intent);
+                        break;
                 }
                 return true;
             }
         });
 
         return menu;
+    }
+
+    public static Uri buildTf2OutpostSearchUrl(Context context, Item item) {
+        Uri.Builder builder = Uri.parse(context.getString(R.string.link_search_outpost)).buildUpon()
+                .appendQueryParameter("defindex", String.valueOf(item.getDefindex()))
+                .appendQueryParameter("quality", String.valueOf(item.getQuality()))
+                .appendQueryParameter("uncraftable", item.isCraftable() ? "0" : "1");
+
+        if (item.canHaveEffects()) {
+            builder.appendQueryParameter("effect", String.valueOf(item.getPriceIndex()));
+        } else if (item.getPriceIndex() > 0) {
+            builder.appendQueryParameter("crate", String.valueOf(item.getPriceIndex()));
+        }
+
+        if (item.isAustralium()) {
+            builder.appendQueryParameter("australium", "1");
+        }
+
+        return builder.build();
     }
 }
 
