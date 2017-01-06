@@ -26,7 +26,7 @@
         android:title="TF2Outpost" />
 
     <item
-        android:id="@+id/bazaartf"
+        android:id="@+id/bazaar_tf"
         android:title="bazaar.tf" />
 
 </menu>

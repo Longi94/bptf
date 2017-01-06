@@ -535,6 +535,10 @@ public class Utility {
                         intent = new Intent(Intent.ACTION_VIEW, buildTf2OutpostSearchUrl(activity, item));
                         activity.startActivity(intent);
                         break;
+                    case R.id.bazaar_tf:
+                        intent = new Intent(Intent.ACTION_VIEW, buildBazaarSearchUrl(activity, item));
+                        activity.startActivity(intent);
+                        break;
                 }
                 return true;
             }
@@ -547,7 +551,8 @@ public class Utility {
         Uri.Builder builder = Uri.parse(context.getString(R.string.link_search_outpost)).buildUpon()
                 .appendQueryParameter("defindex", String.valueOf(item.getDefindex()))
                 .appendQueryParameter("quality", String.valueOf(item.getQuality()))
-                .appendQueryParameter("uncraftable", item.isCraftable() ? "0" : "1");
+                .appendQueryParameter("uncraftable", item.isCraftable() ? "0" : "1")
+                .appendQueryParameter("australium", item.isAustralium() ? "1" : "0");
 
         if (item.canHaveEffects()) {
             builder.appendQueryParameter("effect", String.valueOf(item.getPriceIndex()));
@@ -555,11 +560,27 @@ public class Utility {
             builder.appendQueryParameter("crate", String.valueOf(item.getPriceIndex()));
         }
 
-        if (item.isAustralium()) {
-            builder.appendQueryParameter("australium", "1");
+        return builder.build();
+    }
+
+    public static Uri buildBazaarSearchUrl(Context context, Item item) {
+        Uri.Builder builder = Uri.parse(context.getString(R.string.link_search_bazaar)).buildUpon()
+                .appendQueryParameter("sg", "440")
+                .appendQueryParameter("s", String.valueOf(item.getDefindex()));
+
+        String sp = "quality=" + String.valueOf(item.getQuality());
+
+        if (!item.isCraftable()) {
+            sp += ",flag_cannot_craft=1";
         }
 
-        return builder.build();
+        if (item.canHaveEffects()) {
+            sp += ",effect=" + String.valueOf(item.getPriceIndex());
+        } else if (item.getPriceIndex() > 0) {
+            sp += ",crate=" + String.valueOf(item.getPriceIndex());
+        }
+
+        return builder.appendQueryParameter("sp", sp).build();
     }
 }
 

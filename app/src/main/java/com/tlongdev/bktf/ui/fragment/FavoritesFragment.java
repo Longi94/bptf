@@ -231,6 +231,10 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
                         intent = new Intent(Intent.ACTION_VIEW, Utility.buildTf2OutpostSearchUrl(getActivity(), item));
                         getActivity().startActivity(intent);
                         break;
+                    case R.id.bazaar_tf:
+                        intent = new Intent(Intent.ACTION_VIEW, Utility.buildBazaarSearchUrl(getActivity(), item));
+                        getActivity().startActivity(intent);
+                        break;
                 }
                 return true;
             }
