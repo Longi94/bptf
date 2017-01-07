@@ -371,7 +371,9 @@ public class DatabaseProvider extends ContentProvider {
             }
             db.setTransactionSuccessful();
         } finally {
-            db.endTransaction();
+            if (db.inTransaction()) {
+                db.endTransaction();
+            }
         }
 
         if (getContext() != null) {
