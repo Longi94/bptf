@@ -178,7 +178,7 @@ public class ItemChooserActivity extends BptfActivity implements ItemChooserView
                     itemName.setVisibility(View.VISIBLE);
                     itemName.setText(mItem.getName());
                     Glide.with(this)
-                            .load(mItem.getIconUrl())
+                            .load(mItem.getIconUrl(this))
                             .into(icon);
 
                     fab.show();

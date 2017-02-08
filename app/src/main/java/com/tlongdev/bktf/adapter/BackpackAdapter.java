@@ -139,10 +139,10 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                     //Set the background to the color of the quality
                     holder.root.setCardBackgroundColor(backpackItem.getColor(mContext, true));
 
-                    Glide.with(mContext).load(backpackItem.getIconUrl()).into(holder.icon);
+                    Glide.with(mContext).load(backpackItem.getIconUrl(mContext)).into(holder.icon);
 
                     if (backpackItem.getPriceIndex() != 0 && backpackItem.canHaveEffects()) {
-                        Glide.with(mContext).load(backpackItem.getEffectUrl()).into(holder.effect);
+                        Glide.with(mContext).load(backpackItem.getEffectUrl(mContext)).into(holder.effect);
                     }
 
                     if (!backpackItem.isTradable()) {

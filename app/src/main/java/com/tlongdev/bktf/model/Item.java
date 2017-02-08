@@ -19,6 +19,7 @@ package com.tlongdev.bktf.model;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
@@ -552,13 +553,16 @@ public class Item implements Parcelable {
      *
      * @return Uri object
      */
-    public String getIconUrl() {
+    public Uri getIconUrl(Context context) {
+        String url = context.getString(R.string.link_icons);
+        Uri.Builder builder = Uri.parse(url).buildUpon()
+                .appendQueryParameter("defindex", String.valueOf(defindex));
         if (australium) {
-            return "file:///android_asset/australium/" + defindex + ".png";
+            builder.appendQueryParameter("australium", "1");
         } else if (weaponWear > 0) {
-            return "file:///android_asset/decorated/" + defindex + "/" + weaponWear + ".png";
+            builder.appendQueryParameter("wear", String.valueOf(weaponWear));
         }
-        return "file:///android_asset/items/" + defindex + ".png";
+        return builder.build();
     }
 
     /**
@@ -566,8 +570,10 @@ public class Item implements Parcelable {
      *
      * @return Uri object
      */
-    public String getEffectUrl() {
-        return "file:///android_asset/effect/" + priceIndex + ".png";
+    public Uri getEffectUrl(Context context) {
+        String url = context.getString(R.string.link_icons);
+        return Uri.parse(url).buildUpon()
+                .appendQueryParameter("effect", String.valueOf(priceIndex)).build();
     }
 
     public String getBackpackTfUrl() {

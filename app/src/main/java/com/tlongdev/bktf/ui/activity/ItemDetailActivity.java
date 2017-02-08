@@ -181,13 +181,13 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
 
         //Set the icon and the background
         Glide.with(this)
-                .load(item.getIconUrl())
+                .load(item.getIconUrl(this))
                 .dontAnimate()
                 .into(icon);
 
         if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
             Glide.with(this)
-                    .load(item.getEffectUrl())
+                    .load(item.getEffectUrl(this))
                     .dontAnimate()
                     .into(effectView);
         }

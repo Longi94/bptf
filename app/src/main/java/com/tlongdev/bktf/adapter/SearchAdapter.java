@@ -158,10 +158,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     }
 
                     //Set the item icon
-                    Glide.with(mContext).load(item.getIconUrl()).into(holder.icon);
+                    Glide.with(mContext).load(item.getIconUrl(mContext)).into(holder.icon);
 
                     if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
-                        Glide.with(mContext).load(item.getEffectUrl()).into(holder.effect);
+                        Glide.with(mContext).load(item.getEffectUrl(mContext)).into(holder.effect);
                     } else {
                         Glide.clear(holder.effect);
                         holder.effect.setImageDrawable(null);

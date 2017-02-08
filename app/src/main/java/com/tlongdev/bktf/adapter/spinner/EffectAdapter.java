@@ -89,7 +89,7 @@ public class EffectAdapter extends BaseAdapter {
         TextView text = (TextView) view.findViewById(R.id.text1);
         text.setText(effect.getName());
         Glide.with(mContext)
-                .load(effect.getEffectUrl())
+                .load(effect.getEffectUrl(mContext))
                 .into((ImageView) view.findViewById(R.id.effect));
     }
 

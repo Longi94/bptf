@@ -120,11 +120,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                 holder.iconCard.setCardBackgroundColor(mItem.getColor(mContext, true));
 
                 Glide.with(mContext)
-                        .load(mItem.getIconUrl())
+                        .load(mItem.getIconUrl(mContext))
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(holder.icon);
                 Glide.with(mContext)
-                        .load(mItem.getEffectUrl())
+                        .load(mItem.getEffectUrl(mContext))
                         .into(holder.effect);
 
                 holder.name.setText(mItem.getFormattedName(mContext));

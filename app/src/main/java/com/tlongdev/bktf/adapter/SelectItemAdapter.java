@@ -64,7 +64,7 @@ public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.Vi
 
             holder.name.setText(item.getName());
 
-            Glide.with(mContext).load(item.getIconUrl()).into(holder.icon);
+            Glide.with(mContext).load(item.getIconUrl(mContext)).into(holder.icon);
 
             holder.root.setOnClickListener(new View.OnClickListener() {
                 @Override
