@@ -226,7 +226,8 @@ public class Price implements Parcelable {
 
         double price = isHigh ? highValue : value;
 
-        if (currency.equals(targetCurrency))
+        // TODO: 4/9/2017 what to do with nulls and where the fuck do they come from
+        if (currency == null || currency.equals(targetCurrency))
             //The target currency equals the original currency, nothing to do.
             return price;
 
