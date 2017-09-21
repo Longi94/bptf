@@ -8,14 +8,14 @@ def getKey(Properties properties, String name, String defaultValue) {
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '24'
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         applicationId "com.tlongdev.bktf"
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 49
-        versionName "2.2.1"
+        versionCode 50
+        versionName "2.2.2"
 
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
@@ -28,12 +28,12 @@ android {
             keys.load(project.rootProject.file('keys.properties').newDataInputStream())
         }
 
-        buildConfigField("String", "BACKPACK_TF_API_KEY", "\"${getKey(keys, "BACKPACK_TF_API_KEY", "DUMMY_KEY")}\"")
-        buildConfigField("String", "STEAM_WEB_API_KEY", "\"${getKey(keys, "STEAM_WEB_API_KEY", "DUMMY_KEY")}\"")
+        buildConfigField("String", "BACKPACK_TF_API_KEY", "\"${getKey(keys, "BACKPACK_TF_API_KEY", "59726b45cf6c756db606045b")}\"")
+        buildConfigField("String", "STEAM_WEB_API_KEY", "\"${getKey(keys, "STEAM_WEB_API_KEY", "28FDEDBC9C629D932EC7E0AE4A25AC6A")}\"")
         resValue("string", "BANNER_AD_UNIT_ID", "${getKey(keys, "BANNER_AD_UNIT_ID", "ca-app-pub-3940256099942544/6300978111")}")
 
         manifestPlaceholders = [
-                fabricApiKey: "${getKey(keys, "FABRIC_API_KEY", "DUMMY_KEY")}"
+                fabricApiKey: "${getKey(keys, "FABRIC_API_KEY", "bfdf680832dd1c71d7b67b7e9e6d3e4a0107e18b")}"
         ]
     }
     buildTypes {

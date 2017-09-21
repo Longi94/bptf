@@ -10,7 +10,7 @@
         android:key="@string/pref_title_version"
         android:title="@string/pref_title_version"/>
 
-    <PreferenceScreen
+    <!--<PreferenceScreen
         android:icon="@drawable/ic_steam_white_24dp"
         android:title="@string/pref_title_steam">
 
@@ -18,7 +18,7 @@
             android:action="android.intent.action.VIEW"
             android:data="http://steamcommunity.com/groups/bptfandroid"/>
 
-    </PreferenceScreen>
+    </PreferenceScreen>-->
 
     <PreferenceScreen
         android:title="@string/pref_title_github_repo"

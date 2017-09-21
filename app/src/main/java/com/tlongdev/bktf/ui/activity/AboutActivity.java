@@ -157,7 +157,7 @@ public class AboutActivity extends AppCompatPreferenceActivity implements Shared
                     public boolean onPreferenceClick(Preference preference) {
                         //Start an email intent with my email as the target
                         Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                                "mailto", "dev@tlongdev.com", null));
+                                "mailto", "tlongdev@gmail.com", null));
                         if (intent.resolveActivity(getPackageManager()) != null) {
                             startActivity(Intent.createChooser(intent, getString(R.string.message_send_email)));
                         }
