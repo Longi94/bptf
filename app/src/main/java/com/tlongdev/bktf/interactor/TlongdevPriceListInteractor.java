@@ -28,7 +28,6 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
@@ -120,8 +119,7 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
                 }
             }
 
-            Uri uri = Uri.parse("http://tlongdev.com/api/" + BuildConfig.TLONGDEV_API_VERSION +
-                    "/prices").buildUpon()
+            Uri uri = Uri.parse("https://dragonbra.in/bptf/legacy/prices").buildUpon()
                     .appendQueryParameter("since", String.valueOf(latestUpdate))
                     .build();
 

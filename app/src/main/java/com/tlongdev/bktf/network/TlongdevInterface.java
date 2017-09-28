@@ -16,7 +16,6 @@
 
 package com.tlongdev.bktf.network;
 
-import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.network.model.tlongdev.TlongdevItemSchemaPayload;
 
 import retrofit2.Call;
@@ -28,8 +27,7 @@ import retrofit2.http.GET;
  */
 public interface TlongdevInterface {
 
-    String BASE_URL = "http://tlongdev.com/api/" + BuildConfig.TLONGDEV_API_VERSION +
-            "/";
+    String BASE_URL = "https://dragonbra.in/bptf/legacy/";
 
     @GET("item_schema")
     Call<TlongdevItemSchemaPayload> getItemSchema();
