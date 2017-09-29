@@ -24,7 +24,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 
-import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.DecoratedWeaponEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
@@ -555,7 +554,7 @@ public class Item implements Parcelable {
      * @return Uri object
      */
     public Uri getIconUrl(Context context) {
-        String url = context.getString(R.string.link_icons, BuildConfig.TLONGDEV_API_VERSION);
+        String url = context.getString(R.string.link_icons);
         Uri.Builder builder = Uri.parse(url).buildUpon()
                 .appendQueryParameter("defindex", String.valueOf(defindex));
         if (australium) {
@@ -572,7 +571,7 @@ public class Item implements Parcelable {
      * @return Uri object
      */
     public Uri getEffectUrl(Context context) {
-        String url = context.getString(R.string.link_icons, BuildConfig.TLONGDEV_API_VERSION);
+        String url = context.getString(R.string.link_icons);
         return Uri.parse(url).buildUpon()
                 .appendQueryParameter("effect", String.valueOf(priceIndex)).build();
     }

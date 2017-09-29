@@ -23,7 +23,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
 import com.tlongdev.bktf.model.Item;
@@ -93,7 +92,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
     protected Integer doInBackground(Void... params) {
         try {
             Response<PlayerItemsPayload> response = mTf2Interface.getUserBackpack(
-                    BuildConfig.STEAM_WEB_API_KEY, mResolvedSteamId).execute();
+                    mContext.getString(R.string.api_key_steam_web), mResolvedSteamId).execute();
 
             if (response.body() != null) {
                 return saveItems(response.body());

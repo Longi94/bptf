@@ -20,7 +20,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.network.BackpackTfInterface;
@@ -83,7 +82,8 @@ public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer
             //Check if the given steamid is a resolved 64bit steamId
             if (!Utility.isSteamId(mSteamId)) {
                 //First we try to resolve the steamId if the provided one isn't a 64bit steamId
-                Response<VanityUrl> response = mSteamUserInterface.resolveVanityUrl(BuildConfig.STEAM_WEB_API_KEY, mSteamId).execute();
+                Response<VanityUrl> response = mSteamUserInterface.resolveVanityUrl(
+                        mContext.getString(R.string.api_key_steam_web), mSteamId).execute();
                 if (response.body() != null) {
                     VanityUrl vanityUrl = response.body();
 
@@ -119,7 +119,8 @@ public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer
             }
 
             Response<UserSummariesPayload> steamResponse =
-                    mSteamUserInterface.getUserSummaries(BuildConfig.STEAM_WEB_API_KEY, mSteamId).execute();
+                    mSteamUserInterface.getUserSummaries(
+                            mContext.getString(R.string.api_key_steam_web), mSteamId).execute();
 
             if (steamResponse.body() != null) {
                 saveSteamData(steamResponse.body());

@@ -19,9 +19,8 @@ package com.tlongdev.bktf.interactor;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.BuildConfig;
+import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.network.SteamUserInterface;
 import com.tlongdev.bktf.network.model.steam.UserSummariesPayload;
@@ -65,7 +64,8 @@ public class SearchUserInteractor extends AsyncTask<Void, Void, Integer> {
         try {
             if (!Utility.isSteamId(mQuery)) {
                 Response<VanityUrl> response =
-                        mInterface.resolveVanityUrl(BuildConfig.STEAM_WEB_API_KEY, mQuery).execute();
+                        mInterface.resolveVanityUrl(
+                                mContext.getString(R.string.api_key_steam_web), mQuery).execute();
 
                 if (response.body() != null) {
                     VanityUrl vanityUrl = response.body();
@@ -89,7 +89,8 @@ public class SearchUserInteractor extends AsyncTask<Void, Void, Integer> {
             mUser.setResolvedSteamId(mQuery);
 
             Response<UserSummariesPayload> steamResponse =
-                    mInterface.getUserSummaries(BuildConfig.STEAM_WEB_API_KEY, mQuery).execute();
+                    mInterface.getUserSummaries(
+                            mContext.getString(R.string.api_key_steam_web), mQuery).execute();
 
             if (isCancelled()) {
                 return -1;

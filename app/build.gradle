@@ -2,10 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
 
-def String getKey(Properties properties, String name, String defaultValue) {
-    return properties.containsKey(name) ? properties.getProperty(name) : defaultValue
-}
-
 android {
     compileSdkVersion 25
     buildToolsVersion '25.0.2'
@@ -22,30 +18,14 @@ android {
                 output.outputFile = new File((String) output.outputFile.parent, 'bptf-' + versionName + '.apk')
             }
         }
-
-        Properties keys = new Properties()
-        if (project.rootProject.file('keys.properties').exists()) {
-            keys.load(project.rootProject.file('keys.properties').newDataInputStream())
-        }
-
-        buildConfigField('String', 'BACKPACK_TF_API_KEY', '"' + getKey(keys, 'BACKPACK_TF_API_KEY', '59726b45cf6c756db606045b') + '"')
-        buildConfigField('String', 'STEAM_WEB_API_KEY', '"' + getKey(keys, 'STEAM_WEB_API_KEY', '28FDEDBC9C629D932EC7E0AE4A25AC6A') + '"')
-        resValue('string', 'BANNER_AD_UNIT_ID', getKey(keys, 'BANNER_AD_UNIT_ID', 'ca-app-pub-3940256099942544/6300978111'))
-
-        manifestPlaceholders = [
-                fabricApiKey: getKey(keys, 'FABRIC_API_KEY', 'bfdf680832dd1c71d7b67b7e9e6d3e4a0107e18b')
-        ]
     }
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard_general.pro', 'disable_logs.pro'
-            buildConfigField('String', 'TLONGDEV_API_VERSION', '"v1"')
         }
         debug {
-            resValue('string', 'BANNER_AD_UNIT_ID', 'ca-app-pub-3940256099942544/6300978111')
-            buildConfigField('String', 'TLONGDEV_API_VERSION', '"dev"')
         }
     }
     compileOptions {

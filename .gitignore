@@ -53,5 +53,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-/keys.properties
-/app/fabric.properties
+/app/src/release/

@@ -11,7 +11,6 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.f2prateek.dart.Dart;
-import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
 
 import butterknife.BindView;
@@ -37,7 +36,7 @@ public class WebLoginActivity extends BptfActivity {
 
         setTitle(null);
 
-        final String url = getString(R.string.link_steam_login, BuildConfig.TLONGDEV_API_VERSION);
+        final String url = getString(R.string.link_steam_login);
 
         mProgressBar.setMax(100);
         webView.setWebChromeClient(new WebChromeClient() {

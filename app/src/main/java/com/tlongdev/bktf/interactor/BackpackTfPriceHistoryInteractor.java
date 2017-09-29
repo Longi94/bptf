@@ -16,11 +16,12 @@
 
 package com.tlongdev.bktf.interactor;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.BuildConfig;
+import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
@@ -43,6 +44,7 @@ public class BackpackTfPriceHistoryInteractor extends AsyncTask<Void, Void, Inte
      */
     @SuppressWarnings("unused")
     private static final String LOG_TAG = BackpackTfPriceHistoryInteractor.class.getSimpleName();
+    private final Context mContext;
 
     @Inject BackpackTfInterface mBackpackTfInterface;
 
@@ -55,6 +57,7 @@ public class BackpackTfPriceHistoryInteractor extends AsyncTask<Void, Void, Inte
     private final Callback mCallback;
 
     public BackpackTfPriceHistoryInteractor(BptfApplication application, Item item, Callback callback) {
+        mContext = application;
         application.getInteractorComponent().inject(this);
         mCallback = callback;
         mItem = item;
@@ -65,7 +68,7 @@ public class BackpackTfPriceHistoryInteractor extends AsyncTask<Void, Void, Inte
 
         try {
             Response<BackpackTfPriceHistoryPayload> response =
-                    mBackpackTfInterface.getPriceHistory(BuildConfig.BACKPACK_TF_API_KEY,
+                    mBackpackTfInterface.getPriceHistory(mContext.getString(R.string.api_key_backpack_tf),
                             String.valueOf(mItem.isAustralium() ? "Australium " + mItem.getName() : mItem.getDefindex()),
                             mItem.getQuality(),
                             mItem.isTradable() ? 1 : 0,
