@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.BackpackItem;
@@ -122,9 +123,9 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                     backpackItem = mDataSet.get(position - (position / 51) - 1);
                 }
 
-                Glide.clear(holder.icon);
-                Glide.clear(holder.effect);
-                Glide.clear(holder.paint);
+                Glide.with(mContext).clear(holder.icon);
+                Glide.with(mContext).clear(holder.effect);
+                Glide.with(mContext).clear(holder.paint);
 
                 //Reset item slot to an empty slot
                 holder.icon.setImageDrawable(null);
@@ -139,10 +140,16 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                     //Set the background to the color of the quality
                     holder.root.setCardBackgroundColor(backpackItem.getColor(mContext, true));
 
-                    Glide.with(mContext).load(backpackItem.getIconUrl(mContext)).into(holder.icon);
+                    Glide.with(mContext)
+                            .load(backpackItem.getIconUrl(mContext))
+                            .transition(DrawableTransitionOptions.withCrossFade())
+                            .into(holder.icon);
 
                     if (backpackItem.getPriceIndex() != 0 && backpackItem.canHaveEffects()) {
-                        Glide.with(mContext).load(backpackItem.getEffectUrl()).into(holder.effect);
+                        Glide.with(mContext)
+                                .load(backpackItem.getEffectUrl())
+                                .transition(DrawableTransitionOptions.withCrossFade())
+                                .into(holder.effect);
                     }
 
                     if (!backpackItem.isTradable()) {
@@ -160,6 +167,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                         if (BackpackItem.isPaint(backpackItem.getPaint())) {
                             Glide.with(mContext)
                                     .load("file:///android_asset/paint/" + backpackItem.getPaint() + ".png")
+                                    .transition(DrawableTransitionOptions.withCrossFade())
                                     .into(holder.paint);
                         }
 

@@ -43,6 +43,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
@@ -259,9 +261,12 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
     @Override
     public void updateUserPage(User user) {
         //Download avatar if needed.
+        RequestOptions options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
         Glide.with(this)
                 .load(mUser.getAvatarUrl())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .apply(options)
                 .into(avatar);
 
         //Set the player name

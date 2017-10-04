@@ -27,6 +27,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
@@ -91,9 +93,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     });
 
                     holder.name.setText(mUser.getName());
+
+                    RequestOptions options = new RequestOptions()
+                            .diskCacheStrategy(DiskCacheStrategy.ALL);
                     Glide.with(mContext)
                             .load(mUser.getAvatarUrl())
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .transition(DrawableTransitionOptions.withCrossFade())
+                            .apply(options)
                             .into(holder.icon);
                 }
                 break;
@@ -158,12 +164,18 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     }
 
                     //Set the item icon
-                    Glide.with(mContext).load(item.getIconUrl(mContext)).into(holder.icon);
+                    Glide.with(mContext)
+                            .load(item.getIconUrl(mContext))
+                            .transition(DrawableTransitionOptions.withCrossFade())
+                            .into(holder.icon);
 
                     if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
-                        Glide.with(mContext).load(item.getEffectUrl()).into(holder.effect);
+                        Glide.with(mContext)
+                                .load(item.getEffectUrl())
+                                .transition(DrawableTransitionOptions.withCrossFade())
+                                .into(holder.effect);
                     } else {
-                        Glide.clear(holder.effect);
+                        Glide.with(mContext).clear(holder.effect);
                         holder.effect.setImageDrawable(null);
                     }
 

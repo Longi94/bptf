@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
 import com.tlongdev.bktf.R;
@@ -182,13 +183,11 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
         //Set the icon and the background
         Glide.with(this)
                 .load(item.getIconUrl(this))
-                .dontAnimate()
                 .into(icon);
 
         if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
             Glide.with(this)
                     .load(item.getEffectUrl())
-                    .dontAnimate()
                     .into(effectView);
         }
 
@@ -207,6 +206,7 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
         if (BackpackItem.isPaint(item.getPaint())) {
             Glide.with(this)
                     .load("file:///android_asset/paint/" + item.getPaint() + ".png")
+                    .transition(DrawableTransitionOptions.withCrossFade())
                     .into(paintView);
         }
 

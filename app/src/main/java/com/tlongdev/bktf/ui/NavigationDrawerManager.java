@@ -24,6 +24,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.util.CircleTransform;
@@ -86,10 +88,13 @@ public class NavigationDrawerManager implements ProfileManager.OnUpdateListener 
             return;
         }
 
+        RequestOptions options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .transforms(new CircleTransform(mContext));
         Glide.with(mContext)
                 .load(R.drawable.steam_default_avatar)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .transform(new CircleTransform(mContext))
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .apply(options)
                 .into(mAvatar);
         mName.setText(null);
         mBackpack.setText(null);
@@ -119,10 +124,13 @@ public class NavigationDrawerManager implements ProfileManager.OnUpdateListener 
         }
 
         //Download the avatar (if needed) and set it
+        RequestOptions options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .transforms(new CircleTransform(mContext));
         Glide.with(mContext)
                 .load(user.getAvatarUrl())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .transform(new CircleTransform(mContext))
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .apply(options)
                 .into(mAvatar);
     }
 }

@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Currency;
@@ -87,7 +88,10 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                 //We are showing the hats, no effects
                 case TYPE_HATS:
 
-                    Glide.with(mContext).load(item.getIconUrl(mContext)).into(holder.icon);
+                    Glide.with(mContext)
+                            .load(item.getIconUrl(mContext))
+                            .transition(DrawableTransitionOptions.withCrossFade())
+                            .into(holder.icon);
 
                     holder.root.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -109,7 +113,10 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                 //We are showing the effects, no hats
                 case TYPE_EFFECTS:
 
-                    Glide.with(mContext).load(item.getEffectUrl()).into(holder.icon);
+                    Glide.with(mContext)
+                            .load(item.getEffectUrl())
+                            .transition(DrawableTransitionOptions.withCrossFade())
+                            .into(holder.icon);
 
                     holder.root.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -135,8 +142,14 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
 
                     holder.name.setText(item.getName());
 
-                    Glide.with(mContext).load(item.getIconUrl(mContext)).into(holder.icon);
-                    Glide.with(mContext).load(item.getEffectUrl()).into(holder.effect);
+                    Glide.with(mContext)
+                            .load(item.getIconUrl(mContext))
+                            .transition(DrawableTransitionOptions.withCrossFade())
+                            .into(holder.icon);
+                    Glide.with(mContext)
+                            .load(item.getEffectUrl())
+                            .transition(DrawableTransitionOptions.withCrossFade())
+                            .into(holder.effect);
 
                     holder.more.setOnClickListener(new View.OnClickListener() {
                         @Override

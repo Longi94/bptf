@@ -31,6 +31,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
 import com.tlongdev.bktf.R;
@@ -179,6 +180,7 @@ public class ItemChooserActivity extends BptfActivity implements ItemChooserView
                     itemName.setText(mItem.getName());
                     Glide.with(this)
                             .load(mItem.getIconUrl(this))
+                            .transition(DrawableTransitionOptions.withCrossFade())
                             .into(icon);
 
                     fab.show();

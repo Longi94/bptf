@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
@@ -64,7 +65,10 @@ public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.Vi
 
             holder.name.setText(item.getName());
 
-            Glide.with(mContext).load(item.getIconUrl(mContext)).into(holder.icon);
+            Glide.with(mContext)
+                    .load(item.getIconUrl(mContext))
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(holder.icon);
 
             holder.root.setOnClickListener(new View.OnClickListener() {
                 @Override

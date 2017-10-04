@@ -187,16 +187,16 @@ public class FavoritesWidgetService extends RemoteViewsService {
 
                 try {
                     Bitmap bitmap = Glide.with(mContext)
-                            .load(item.getIconUrl(mContext))
                             .asBitmap()
+                            .load(item.getIconUrl(mContext))
                             .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                             .get();
                     rv.setImageViewBitmap(R.id.icon, bitmap);
 
                     if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
                         bitmap = Glide.with(mContext)
-                                .load(item.getEffectUrl())
                                 .asBitmap()
+                                .load(item.getEffectUrl())
                                 .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                                 .get();
                         rv.setImageViewBitmap(R.id.effect, bitmap);

@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Item;
 
@@ -90,6 +91,7 @@ public class EffectAdapter extends BaseAdapter {
         text.setText(effect.getName());
         Glide.with(mContext)
                 .load(effect.getEffectUrl())
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into((ImageView) view.findViewById(R.id.effect));
     }
 

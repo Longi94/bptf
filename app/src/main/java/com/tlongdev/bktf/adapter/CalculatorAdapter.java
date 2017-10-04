@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Item;
@@ -73,14 +74,16 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
 
             Glide.with(mContext)
                     .load(item.getIconUrl(mContext))
+                    .transition(DrawableTransitionOptions.withCrossFade())
                     .into(holder.icon);
 
             if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
                 Glide.with(mContext)
                         .load(item.getEffectUrl())
+                        .transition(DrawableTransitionOptions.withCrossFade())
                         .into(holder.effect);
             } else {
-                Glide.clear(holder.effect);
+                Glide.with(mContext).clear(holder.effect);
                 holder.effect.setImageDrawable(null);
             }
 

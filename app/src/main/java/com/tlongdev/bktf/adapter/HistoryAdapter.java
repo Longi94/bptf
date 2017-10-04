@@ -29,6 +29,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -119,12 +121,17 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
                 holder.iconCard.setCardBackgroundColor(mItem.getColor(mContext, true));
 
+                RequestOptions options = new RequestOptions()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL);
+
                 Glide.with(mContext)
                         .load(mItem.getIconUrl(mContext))
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .apply(options)
                         .into(holder.icon);
                 Glide.with(mContext)
                         .load(mItem.getEffectUrl())
+                        .transition(DrawableTransitionOptions.withCrossFade())
                         .into(holder.effect);
 
                 holder.name.setText(mItem.getFormattedName(mContext));
