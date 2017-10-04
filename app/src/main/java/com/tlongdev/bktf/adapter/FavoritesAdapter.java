@@ -93,7 +93,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
             Glide.with(mContext).load(item.getIconUrl(mContext)).into(holder.icon);
 
             if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
-                Glide.with(mContext).load(item.getEffectUrl(mContext)).into(holder.effect);
+                Glide.with(mContext).load(item.getEffectUrl()).into(holder.effect);
             } else {
                 Glide.clear(holder.effect);
                 holder.effect.setImageDrawable(null);

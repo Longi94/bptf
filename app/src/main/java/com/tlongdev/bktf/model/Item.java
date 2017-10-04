@@ -570,10 +570,8 @@ public class Item implements Parcelable {
      *
      * @return Uri object
      */
-    public Uri getEffectUrl(Context context) {
-        String url = context.getString(R.string.link_icons);
-        return Uri.parse(url).buildUpon()
-                .appendQueryParameter("effect", String.valueOf(priceIndex)).build();
+    public String getEffectUrl() {
+        return "file:///android_asset/effect/" + priceIndex + ".png";
     }
 
     public String getBackpackTfUrl() {

@@ -124,7 +124,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(holder.icon);
                 Glide.with(mContext)
-                        .load(mItem.getEffectUrl(mContext))
+                        .load(mItem.getEffectUrl())
                         .into(holder.effect);
 
                 holder.name.setText(mItem.getFormattedName(mContext));

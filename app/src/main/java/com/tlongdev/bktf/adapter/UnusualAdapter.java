@@ -109,7 +109,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                 //We are showing the effects, no hats
                 case TYPE_EFFECTS:
 
-                    Glide.with(mContext).load(item.getEffectUrl(mContext)).into(holder.icon);
+                    Glide.with(mContext).load(item.getEffectUrl()).into(holder.icon);
 
                     holder.root.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -136,7 +136,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                     holder.name.setText(item.getName());
 
                     Glide.with(mContext).load(item.getIconUrl(mContext)).into(holder.icon);
-                    Glide.with(mContext).load(item.getEffectUrl(mContext)).into(holder.effect);
+                    Glide.with(mContext).load(item.getEffectUrl()).into(holder.effect);
 
                     holder.more.setOnClickListener(new View.OnClickListener() {
                         @Override

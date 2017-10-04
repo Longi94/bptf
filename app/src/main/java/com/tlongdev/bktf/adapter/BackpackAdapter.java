@@ -142,7 +142,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                     Glide.with(mContext).load(backpackItem.getIconUrl(mContext)).into(holder.icon);
 
                     if (backpackItem.getPriceIndex() != 0 && backpackItem.canHaveEffects()) {
-                        Glide.with(mContext).load(backpackItem.getEffectUrl(mContext)).into(holder.effect);
+                        Glide.with(mContext).load(backpackItem.getEffectUrl()).into(holder.effect);
                     }
 
                     if (!backpackItem.isTradable()) {

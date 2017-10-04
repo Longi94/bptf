@@ -187,7 +187,7 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
 
         if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
             Glide.with(this)
-                    .load(item.getEffectUrl(this))
+                    .load(item.getEffectUrl())
                     .dontAnimate()
                     .into(effectView);
         }

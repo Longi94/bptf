@@ -77,7 +77,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
 
             if (item.getPriceIndex() != 0 && item.canHaveEffects()) {
                 Glide.with(mContext)
-                        .load(item.getEffectUrl(mContext))
+                        .load(item.getEffectUrl())
                         .into(holder.effect);
             } else {
                 Glide.clear(holder.effect);
