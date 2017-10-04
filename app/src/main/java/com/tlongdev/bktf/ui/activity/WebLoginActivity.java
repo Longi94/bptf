@@ -36,7 +36,7 @@ public class WebLoginActivity extends BptfActivity {
 
         setTitle(null);
 
-        final String url = getString(R.string.link_steam_login);
+        final String url = getString(R.string.main_host) + getString(R.string.link_steam_login);
 
         mProgressBar.setMax(100);
         webView.setWebChromeClient(new WebChromeClient() {

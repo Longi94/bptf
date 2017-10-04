@@ -119,7 +119,7 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
                 }
             }
 
-            Uri uri = Uri.parse("https://dragonbra.in/bptf/legacy/prices").buildUpon()
+            Uri uri = Uri.parse(mContext.getString(R.string.main_host) + "/bptf/legacy/prices").buildUpon()
                     .appendQueryParameter("since", String.valueOf(latestUpdate))
                     .build();
 

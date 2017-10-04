@@ -554,7 +554,7 @@ public class Item implements Parcelable {
      * @return Uri object
      */
     public Uri getIconUrl(Context context) {
-        String url = context.getString(R.string.link_icons);
+        String url = context.getString(R.string.main_host) + context.getString(R.string.link_icons);
         Uri.Builder builder = Uri.parse(url).buildUpon()
                 .appendQueryParameter("defindex", String.valueOf(defindex));
         if (australium) {

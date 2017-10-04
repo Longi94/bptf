@@ -26,9 +26,6 @@ import retrofit2.http.GET;
  * @since 2016. 03. 10.
  */
 public interface TlongdevInterface {
-
-    String BASE_URL = "https://dragonbra.in/bptf/legacy/";
-
     @GET("item_schema")
     Call<TlongdevItemSchemaPayload> getItemSchema();
 }

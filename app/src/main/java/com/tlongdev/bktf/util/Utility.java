@@ -548,7 +548,9 @@ public class Utility {
     }
 
     public static Uri buildTf2OutpostSearchUrl(Context context, Item item) {
-        Uri.Builder builder = Uri.parse(context.getString(R.string.link_search_outpost)).buildUpon()
+        Uri.Builder builder = Uri.parse(context.getString(R.string.main_host) +
+                context.getString(R.string.link_search_outpost)
+        ).buildUpon()
                 .appendQueryParameter("defindex", String.valueOf(item.getDefindex()))
                 .appendQueryParameter("quality", String.valueOf(item.getQuality()))
                 .appendQueryParameter("uncraftable", item.isCraftable() ? "0" : "1")
