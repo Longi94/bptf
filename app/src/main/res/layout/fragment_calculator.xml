@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -28,80 +27,132 @@
                 android:background="?attr/colorPrimary"
                 app:layout_scrollFlags="scroll|enterAlways|snap"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:title="@string/title_calculator"/>
+                app:title="@string/title_calculator" />
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_gravity="top"
-                android:background="@color/primary"
-                android:orientation="horizontal">
+                android:background="@color/primary">
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/text_view_price_metal"
-                        android:layout_width="match_parent"
-                        android:layout_height="29.5dp"
-                        android:gravity="center"
-                        android:textColor="@android:color/white"/>
-
-                    <View
-                        style="@style/DividerHorizontal"
-                        android:layout_marginLeft="4dp"
-                        android:layout_marginRight="4dp"
-                        android:background="@android:color/white"/>
-
-
-                    <TextView
-                        android:id="@+id/text_view_price_buds"
-                        android:layout_width="match_parent"
-                        android:layout_height="29.5dp"
-                        android:gravity="center"
-                        android:textColor="@android:color/white"/>
-
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/text_view_price_metal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="0dp"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="0dp"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    ads:layout_constraintBottom_toTopOf="@+id/view6"
+                    ads:layout_constraintLeft_toLeftOf="parent"
+                    ads:layout_constraintRight_toRightOf="@+id/view6"
+                    ads:layout_constraintTop_toTopOf="parent"
+                    tools:text="1 ref" />
 
                 <View
+                    android:id="@+id/view4"
+                    style="@style/DividerHorizontal"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="0dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@android:color/white"
+                    ads:layout_constraintBottom_toBottomOf="parent"
+                    ads:layout_constraintLeft_toLeftOf="parent"
+                    ads:layout_constraintRight_toRightOf="parent"
+                    ads:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/text_view_price_buds"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="0dp"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="0dp"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    ads:layout_constraintBottom_toBottomOf="parent"
+                    ads:layout_constraintLeft_toLeftOf="parent"
+                    ads:layout_constraintRight_toRightOf="@+id/view6"
+                    ads:layout_constraintTop_toBottomOf="@+id/view6"
+                    tools:text="1 buds" />
+
+                <View
+                    android:id="@+id/view6"
                     style="@style/DividerVertical"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginTop="4dp"
-                    android:background="@android:color/white"/>
-
-                <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="0dp"
+                    android:background="@android:color/white"
+                    ads:layout_constraintBottom_toBottomOf="parent"
+                    ads:layout_constraintLeft_toLeftOf="parent"
+                    ads:layout_constraintRight_toLeftOf="@+id/view4"
+                    ads:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:id="@+id/text_view_price_keys"
-                        android:layout_width="match_parent"
-                        android:layout_height="29.5dp"
-                        android:gravity="center"
-                        android:textColor="@android:color/white"/>
+                <TextView
+                    android:id="@+id/text_view_price_keys"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="0dp"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="0dp"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    ads:layout_constraintBottom_toTopOf="@+id/view5"
+                    ads:layout_constraintLeft_toLeftOf="@+id/view5"
+                    ads:layout_constraintRight_toRightOf="parent"
+                    ads:layout_constraintTop_toTopOf="parent"
+                    tools:text="1 key" />
 
-                    <View
-                        style="@style/DividerHorizontal"
-                        android:layout_marginLeft="4dp"
-                        android:layout_marginRight="4dp"
-                        android:background="@android:color/white"/>
+                <View
+                    android:id="@+id/view5"
+                    style="@style/DividerHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="0dp"
+                    android:background="@android:color/white"
+                    ads:layout_constraintBottom_toBottomOf="parent"
+                    ads:layout_constraintLeft_toRightOf="@+id/view4"
+                    ads:layout_constraintRight_toRightOf="parent"
+                    ads:layout_constraintTop_toTopOf="parent" />
 
 
-                    <TextView
-                        android:id="@+id/text_view_price_usd"
-                        android:layout_width="match_parent"
-                        android:layout_height="29.5dp"
-                        android:gravity="center"
-                        android:textColor="@android:color/white"/>
+                <TextView
+                    android:id="@+id/text_view_price_usd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="0dp"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="0dp"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    ads:layout_constraintBottom_toBottomOf="parent"
+                    ads:layout_constraintLeft_toLeftOf="@+id/view5"
+                    ads:layout_constraintRight_toRightOf="parent"
+                    ads:layout_constraintTop_toBottomOf="@+id/view5"
+                    tools:text="1 usd" />
 
-                </LinearLayout>
-
-            </LinearLayout>
+            </android.support.constraint.ConstraintLayout>
 
         </android.support.design.widget.AppBarLayout>
 
@@ -117,7 +168,8 @@
             android:paddingTop="4dp"
             android:scrollbarStyle="outsideOverlay"
             android:scrollbars="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:listitem="@layout/list_calculator" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
@@ -125,7 +177,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_add_white_24dp"/>
+            android:src="@drawable/ic_add_white_24dp" />
 
     </android.support.design.widget.CoordinatorLayout>
 
@@ -135,6 +187,6 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         ads:adSize="BANNER"
-        ads:adUnitId="@string/BANNER_AD_UNIT_ID"/>
+        ads:adUnitId="@string/BANNER_AD_UNIT_ID" />
 
 </LinearLayout>

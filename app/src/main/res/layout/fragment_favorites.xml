@@ -42,7 +42,8 @@
             android:paddingTop="4dp"
             android:scrollbarStyle="outsideOverlay"
             android:scrollbars="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:listitem="@layout/list_favorites" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"

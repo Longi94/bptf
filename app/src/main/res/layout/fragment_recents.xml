@@ -24,93 +24,123 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:title="@string/title_home"/>
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@+id/list_changes_header"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@color/primary"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
+            android:baselineAligned="false">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.33"
+                tools:layout_editor_absoluteX="127dp"
+                tools:layout_editor_absoluteY="25dp" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.67"
+                tools:layout_editor_absoluteX="258dp"
+                tools:layout_editor_absoluteY="25dp" />
+
+            <TextView
+                android:id="@+id/text_view_metal_price"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="0dp"
+                android:drawableLeft="@drawable/ic_metal_white_18dp"
+                android:drawablePadding="2dp"
+                android:drawableStart="@drawable/ic_metal_white_18dp"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:textColor="#fff"
+                android:textSize="14sp"
+                ads:layout_constraintLeft_toLeftOf="parent"
+                ads:layout_constraintRight_toLeftOf="@+id/guideline"
+                ads:layout_constraintTop_toTopOf="parent"
+                tools:text="1 usd" />
 
-                <TextView
-                    android:id="@+id/text_view_metal_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:drawableLeft="@drawable/ic_metal_white_18dp"
-                    android:drawablePadding="2dp"
-                    android:drawableStart="@drawable/ic_metal_white_18dp"
-                    android:gravity="center"
-                    android:textColor="#fff"
-                    android:textSize="14sp"/>
-
-                <View
-                    android:id="@+id/image_view_metal_price"
-                    android:layout_width="match_parent"
-                    android:layout_height="4dp"
-                    android:background="#ff850000"/>
-
-            </LinearLayout>
-
-            <LinearLayout
+            <View
+                android:id="@+id/image_view_metal_price"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_height="4dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="0dp"
+                android:background="#ff850000"
+                ads:layout_constraintLeft_toLeftOf="parent"
+                ads:layout_constraintRight_toLeftOf="@+id/guideline"
+                ads:layout_constraintTop_toBottomOf="@+id/text_view_metal_price" />
+
+            <TextView
+                android:id="@+id/text_view_key_price"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="0dp"
+                android:drawableLeft="@drawable/ic_vpn_key_white_18dp"
+                android:drawablePadding="2dp"
+                android:drawableStart="@drawable/ic_vpn_key_white_18dp"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:textColor="#fff"
+                android:textSize="14sp"
+                ads:layout_constraintLeft_toLeftOf="@+id/guideline"
+                ads:layout_constraintRight_toLeftOf="@+id/guideline2"
+                ads:layout_constraintTop_toTopOf="parent"
+                tools:text="1 ref" />
 
-                <TextView
-                    android:id="@+id/text_view_key_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:drawableLeft="@drawable/ic_vpn_key_white_18dp"
-                    android:drawablePadding="2dp"
-                    android:drawableStart="@drawable/ic_vpn_key_white_18dp"
-                    android:gravity="center"
-                    android:textColor="#fff"
-                    android:textSize="14sp"/>
-
-                <View
-                    android:id="@+id/image_view_key_price"
-                    android:layout_width="match_parent"
-                    android:layout_height="4dp"
-                    android:background="#ff850000"/>
-
-            </LinearLayout>
-
-            <LinearLayout
+            <View
+                android:id="@+id/image_view_key_price"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_height="4dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="0dp"
+                android:background="#ff850000"
+                ads:layout_constraintHorizontal_bias="1.0"
+                ads:layout_constraintLeft_toLeftOf="@+id/guideline"
+                ads:layout_constraintRight_toLeftOf="@+id/guideline2"
+                ads:layout_constraintTop_toBottomOf="@+id/text_view_key_price" />
+
+            <TextView
+                android:id="@+id/text_view_buds_price"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="0dp"
+                android:drawableLeft="@drawable/ic_earbuds_18dp"
+                android:drawablePadding="2dp"
+                android:drawableStart="@drawable/ic_earbuds_18dp"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:textColor="#fff"
+                android:textSize="14sp"
+                ads:layout_constraintLeft_toLeftOf="@+id/guideline2"
+                ads:layout_constraintRight_toRightOf="parent"
+                ads:layout_constraintTop_toTopOf="parent"
+                tools:text="1 key" />
 
-                <TextView
-                    android:id="@+id/text_view_buds_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:drawableLeft="@drawable/ic_earbuds_18dp"
-                    android:drawablePadding="2dp"
-                    android:drawableStart="@drawable/ic_earbuds_18dp"
-                    android:gravity="center"
-                    android:textColor="#fff"
-                    android:textSize="14sp"/>
+            <View
+                android:id="@+id/image_view_buds_price"
+                android:layout_width="0dp"
+                android:layout_height="4dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="0dp"
+                android:background="#ff850000"
+                ads:layout_constraintLeft_toLeftOf="@+id/guideline2"
+                ads:layout_constraintRight_toRightOf="parent"
+                ads:layout_constraintTop_toBottomOf="@+id/text_view_buds_price" />
 
-                <View
-                    android:id="@+id/image_view_buds_price"
-                    android:layout_width="match_parent"
-                    android:layout_height="4dp"
-                    android:background="#ff850000"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -125,15 +155,16 @@
             android:layout_height="match_parent"
             android:clipChildren="false">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:padding="4dp"
-                android:scrollbars="none"/>
-
         </android.support.v4.widget.SwipeRefreshLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:padding="4dp"
+            android:scrollbars="none"
+            tools:listitem="@layout/list_recents" />
 
     </FrameLayout>
 
