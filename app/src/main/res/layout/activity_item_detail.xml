@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--suppress AndroidDomInspection -->
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--suppress AndroidDomInspection -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -38,28 +36,28 @@
                     android:scaleType="centerCrop"
                     android:visibility="gone"
                     app:layout_aspectRatio="100%"
-                    app:layout_widthPercent="100%"/>
+                    app:layout_widthPercent="100%" />
 
                 <ImageView
                     android:id="@+id/effect"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
                     app:layout_aspectRatio="100%"
-                    app:layout_widthPercent="100%"/>
+                    app:layout_widthPercent="100%" />
 
                 <ImageView
                     android:id="@+id/icon"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
                     app:layout_aspectRatio="100%"
-                    app:layout_widthPercent="100%"/>
+                    app:layout_widthPercent="100%" />
 
                 <ImageView
                     android:id="@+id/paint"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
                     app:layout_aspectRatio="100%"
-                    app:layout_widthPercent="100%"/>
+                    app:layout_widthPercent="100%" />
 
             </android.support.percent.PercentFrameLayout>
 
@@ -72,13 +70,15 @@
                 android:paddingTop="8dp"
                 android:textColor="@color/text_primary"
                 android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                tools:text="Item Name" />
 
             <TextView
                 android:id="@+id/text_view_level"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"/>
+                android:gravity="center"
+                tools:text="Level 0" />
 
             <TextView
                 android:id="@+id/text_view_effect_name"
@@ -86,7 +86,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/text_primary"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                tools:text="Effect Name" />
 
             <TextView
                 android:id="@+id/text_view_custom_name"
@@ -94,7 +95,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/text_primary"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                tools:text="Custom Name" />
 
             <TextView
                 android:id="@+id/text_view_custom_desc"
@@ -102,7 +104,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/text_primary"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                tools:text="Custom Description" />
 
             <TextView
                 android:id="@+id/text_view_crafted"
@@ -110,7 +113,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/text_primary"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                tools:text="Crafted Text" />
 
             <TextView
                 android:id="@+id/text_view_gifted"
@@ -118,14 +122,16 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/text_primary"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                tools:text="Gifted Text" />
 
             <TextView
                 android:id="@+id/text_view_origin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/text_primary"/>
+                android:textColor="@color/text_primary"
+                tools:text="Origin Text" />
 
             <TextView
                 android:id="@+id/text_view_paint"
@@ -133,7 +139,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/text_primary"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                tools:text="Paint Text" />
 
             <TextView
                 android:id="@+id/text_view_price"
@@ -142,7 +149,8 @@
                 android:gravity="center"
                 android:paddingTop="8dp"
                 android:textColor="@color/text_primary"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                tools:text="price" />
 
         </LinearLayout>
 

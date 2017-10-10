@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--Layout resources for items in the latest changes list.-->
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -23,114 +22,117 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Searching for user..."/>
+            android:text="Searching for user..." />
 
         <ProgressBar
             android:id="@+id/progress_bar"
             style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_margin="8dp"/>
+            android:layout_margin="8dp" />
 
     </LinearLayout>
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/price_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:minHeight="84dp"
-        android:orientation="horizontal">
-
-        <RelativeLayout
-            android:id="@+id/icon_background"
-            android:layout_width="84dp"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/quality"
-                android:layout_width="84dp"
-                android:layout_height="84dp"
-                android:layout_gravity="center"
-                android:contentDescription="@string/description_icon"
-                android:minHeight="84dp"
-                android:scaleType="centerCrop"
-                android:visibility="gone"/>
-
-            <ImageView
-                android:id="@+id/effect"
-                android:layout_width="84dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:contentDescription="@string/description_icon"
-                android:minHeight="84dp"
-                android:scaleType="fitCenter"/>
-
-            <ImageView
-                android:id="@+id/icon"
-                android:layout_width="84dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:contentDescription="@string/description_icon"
-                android:minHeight="84dp"
-                android:scaleType="fitCenter"/>
-
-        </RelativeLayout>
+        android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/quality"
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            card_view:srcCompat="@color/card_color" />
+
+        <ImageView
+            android:id="@+id/effect"
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            card_view:layout_constraintLeft_toLeftOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent"
+            card_view:srcCompat="@color/card_color" />
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            card_view:layout_constraintLeft_toLeftOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent"
+            card_view:srcCompat="@color/card_color" />
+
+        <ImageView
+            android:id="@+id/imageView4"
             android:layout_width="4dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/shadow_gradient_end"/>
+            android:layout_height="84dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            app:layout_constraintLeft_toRightOf="@+id/effect"
+            app:layout_constraintTop_toTopOf="parent"
+            card_view:srcCompat="@drawable/shadow_gradient_end" />
 
-        <RelativeLayout
+        <ImageView
+            android:id="@+id/more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="0dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:paddingBottom="8dp"
+            android:paddingEnd="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="4dp"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            card_view:srcCompat="@drawable/ic_more_vert_white_18dp" />
+
+        <TextView
+            android:id="@+id/name"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toRightOf="@+id/imageView4"
+            app:layout_constraintRight_toLeftOf="@+id/more"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="ItemName" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="26dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="26dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="8dp"
-                android:orientation="vertical">
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="0dp"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@+id/imageView4"
+            app:layout_constraintRight_toLeftOf="@+id/more"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            tools:text="price" />
 
-                <TextView
-                    android:id="@+id/name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_primary"
-                    android:textSize="16sp"/>
-
-                <TextView
-                    android:id="@+id/price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="13sp"/>
-
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/more"
-                android:layout_width="30dp"
-                android:layout_height="34dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:paddingBottom="8dp"
-                android:paddingEnd="4dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="4dp"
-                android:paddingStart="8dp"
-                android:paddingTop="8dp"
-                android:src="@drawable/ic_more_vert_white_18dp"
-                tools:ignore="MissingPrefix"/>
-
-        </RelativeLayout>
-
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>

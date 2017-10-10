@@ -147,20 +147,18 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     holder.name.setText(item.getFormattedName(mContext));
 
                     holder.icon.setImageDrawable(null);
-                    holder.background.setBackgroundColor(item.getColor(mContext, true));
+                    holder.quality.setBackgroundColor(item.getColor(mContext, true));
 
                     if (!item.isTradable()) {
-                        holder.quality.setVisibility(View.VISIBLE);
                         if (!item.isCraftable()) {
                             holder.quality.setImageResource(R.drawable.uncraft_untrad);
                         } else {
                             holder.quality.setImageResource(R.drawable.untrad);
                         }
                     } else if (!item.isCraftable()) {
-                        holder.quality.setVisibility(View.VISIBLE);
                         holder.quality.setImageResource(R.drawable.uncraft);
                     } else {
-                        holder.quality.setVisibility(View.GONE);
+                        holder.quality.setImageResource(0);
                     }
 
                     //Set the item icon
@@ -244,7 +242,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         @BindView(R.id.loading_layout) View loading;
         @BindView(R.id.price_layout) View priceLayout;
         @BindView(R.id.icon) ImageView icon;
-        @BindView(R.id.icon_background) View background;
         @BindView(R.id.effect) ImageView effect;
         @BindView(R.id.more) ImageView more;
         @BindView(R.id.quality) ImageView quality;

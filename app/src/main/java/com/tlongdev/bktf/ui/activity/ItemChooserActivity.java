@@ -19,9 +19,9 @@ package com.tlongdev.bktf.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -74,11 +74,12 @@ public class ItemChooserActivity extends BptfActivity implements ItemChooserView
     @BindView(R.id.tradable) CheckBox tradable;
     @BindView(R.id.craftable) CheckBox craftable;
     @BindView(R.id.australium) CheckBox australium;
-    @BindView(R.id.fab) FloatingActionButton fab;
 
     @SuppressWarnings("NullableProblems")
     @Nullable
     @InjectExtra(EXTRA_IS_FROM_CALCULATOR) boolean isFromCalculator = false;
+
+    private MenuItem doneItem;
 
     private Item mItem;
     private QualityAdapter qualityAdapter;
@@ -144,8 +145,6 @@ public class ItemChooserActivity extends BptfActivity implements ItemChooserView
 
         mItem = new Item();
 
-        fab.hide();
-
         mPresenter.loadEffects();
     }
 
@@ -161,6 +160,9 @@ public class ItemChooserActivity extends BptfActivity implements ItemChooserView
             case android.R.id.home:
                 setResult(RESULT_CANCELED);
                 finish();
+                break;
+            case R.id.action_done:
+                submit();
                 break;
         }
         return true;
@@ -183,7 +185,7 @@ public class ItemChooserActivity extends BptfActivity implements ItemChooserView
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .into(icon);
 
-                    fab.show();
+                    doneItem.setEnabled(true);
                 }
                 break;
         }
@@ -191,7 +193,6 @@ public class ItemChooserActivity extends BptfActivity implements ItemChooserView
     }
 
     @SuppressWarnings("WrongConstant")
-    @OnClick(R.id.fab)
     public void submit() {
         mItem.setQuality(qualityAdapter.getQualityId(qualitySpinner.getSelectedItemPosition()));
         if (mItem.getQuality() == Quality.UNUSUAL) {
@@ -215,6 +216,15 @@ public class ItemChooserActivity extends BptfActivity implements ItemChooserView
         setResult(RESULT_OK, result);
         finish();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_item_chooser, menu);
+        doneItem = menu.findItem(R.id.action_done);
+        return true;
+    }
+
 
     @OnClick(R.id.item)
     public void selectItem() {
