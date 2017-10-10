@@ -165,7 +165,7 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
 
     @Override
     public void privateBackpack() {
-
+        // TODO: 2017-10-10  
     }
 
     @Override

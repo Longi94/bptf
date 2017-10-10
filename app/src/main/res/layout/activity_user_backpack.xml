@@ -55,7 +55,8 @@
                     android:clipToPadding="false"
                     android:padding="2dp"
                     android:scrollbarStyle="outsideOverlay"
-                    android:scrollbars="vertical"/>
+                    android:scrollbars="vertical"
+                    tools:listitem="@layout/recycler_backpack" />
 
             </android.support.v4.widget.SwipeRefreshLayout>
 

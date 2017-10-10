@@ -96,9 +96,7 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
     @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbarLayout;
     @BindView(R.id.ad_view) AdView mAdView;
-    @BindView(R.id.private_text) TextView mPrivateBackpackText;
     @BindView(R.id.backpack) ImageView mBackpackButton;
-    @BindView(R.id.backpack_content) View mBackpackContent;
 
     private User mUser;
     private boolean mSearchedUser;

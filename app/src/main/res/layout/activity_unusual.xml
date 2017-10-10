@@ -57,7 +57,8 @@
             android:padding="4dp"
             android:scrollbarStyle="outsideOverlay"
             android:scrollbars="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:listitem="@layout/grid_unusual" />
 
     </android.support.design.widget.CoordinatorLayout>
 
