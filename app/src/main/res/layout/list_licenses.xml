@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -13,7 +14,8 @@
         android:textColor="@color/text_primary"
         android:textIsSelectable="true"
         android:textSize="16sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        tools:text="name" />
 
     <TextView
         android:id="@+id/link"
@@ -23,7 +25,8 @@
         android:paddingTop="8dp"
         android:textColor="@color/accent"
         android:textIsSelectable="true"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        tools:text="link" />
 
     <TextView
         android:id="@+id/license"
@@ -31,6 +34,7 @@
         android:layout_height="wrap_content"
         android:background="#505050"
         android:textIsSelectable="true"
-        android:typeface="monospace"/>
+        android:typeface="monospace"
+        tools:text="license text" />
 
 </LinearLayout>

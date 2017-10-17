@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--Layout resources for grid items with prices-->
-<!--suppress AndroidDomInspection -->
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--Layout resources for grid items with prices--><!--suppress AndroidDomInspection -->
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,76 +9,93 @@
     android:foreground="?attr/selectableItemBackground"
     card_view:cardBackgroundColor="@color/card_color">
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <android.support.percent.PercentFrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/tf2_unusual_color_dark">
-
-            <ImageView
-                android:id="@+id/effect"
-                app:layout_aspectRatio="100%"
-                app:layout_widthPercent="100%"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop"/>
-
-            <ImageView
-                android:id="@+id/icon"
-                app:layout_aspectRatio="100%"
-                app:layout_widthPercent="100%"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop"/>
-
-            <ImageView
-                android:id="@+id/more"
-                android:layout_width="30dp"
-                android:layout_height="34dp"
-                android:layout_gravity="top|end"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:paddingBottom="8dp"
-                android:paddingEnd="4dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="4dp"
-                android:paddingStart="8dp"
-                android:paddingTop="8dp"
-                android:src="@drawable/ic_more_vert_white_18dp"
-                tools:ignore="MissingPrefix"/>
-
-        </android.support.percent.PercentFrameLayout>
+        android:paddingBottom="8dp">
 
         <ImageView
-            android:layout_width="match_parent"
+            android:id="@+id/effect"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:background="@color/tf2_unusual_color_dark"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="H, 1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="4dp" />
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="H, 1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="4dp" />
+
+        <ImageView
+            android:id="@+id/more"
+            android:layout_width="30dp"
+            android:layout_height="34dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="0dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:paddingBottom="8dp"
+            android:paddingEnd="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="4dp"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:src="@drawable/ic_more_vert_white_18dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="0dp"
             android:layout_height="4dp"
-            android:src="@drawable/shadow_gradient_bottom"/>
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="0dp"
+            android:src="@drawable/shadow_gradient_bottom"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/icon" />
 
         <TextView
             android:id="@+id/name"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:lines="2"
-            android:textColor="@color/text_primary"/>
+            android:textColor="@color/text_primary"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            tools:text="Item Name" />
 
         <TextView
             android:id="@+id/price"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
             android:gravity="bottom|end"
             android:lines="2"
-            android:textColor="@color/text_secondary"/>
+            android:textColor="@color/text_secondary"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            tools:text="Item Price" />
 
-    </LinearLayout>
-
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>

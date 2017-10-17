@@ -1,37 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:foreground="?android:attr/selectableItemBackground"
-    android:gravity="center"
-    android:orientation="horizontal"
-    android:paddingEnd="4dp"
-    android:paddingLeft="4dp"
-    android:paddingRight="4dp"
-    android:paddingStart="4dp">
+    android:padding="4dp">
 
-    <android.support.percent.PercentFrameLayout
+    <ImageView
+        android:id="@+id/icon"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
-
-        <!--suppress AndroidDomInspection -->
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_weight="1"
-            app:layout_aspectRatio="100%"
-            app:layout_widthPercent="100%"/>
-
-    </android.support.percent.PercentFrameLayout>
+        android:layout_height="0dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/guideline3"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginStart="4dp"
-        android:layout_weight="5"/>
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.509"
+        tools:text="Item Name" />
 
-</LinearLayout>
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.17" />
+
+</android.support.constraint.ConstraintLayout>

@@ -89,20 +89,18 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
 
             holder.name.setText(item.getFormattedName(mContext));
 
-            holder.background.setBackgroundColor(item.getColor(mContext, true));
+            holder.quality.setBackgroundColor(item.getColor(mContext, true));
 
             if (!item.isTradable()) {
-                holder.quality.setVisibility(View.VISIBLE);
                 if (!item.isCraftable()) {
                     holder.quality.setImageResource(R.drawable.uncraft_untrad);
                 } else {
                     holder.quality.setImageResource(R.drawable.untrad);
                 }
             } else if (!item.isCraftable()) {
-                holder.quality.setVisibility(View.VISIBLE);
                 holder.quality.setImageResource(R.drawable.uncraft);
             } else {
-                holder.quality.setVisibility(View.GONE);
+                holder.quality.setImageResource(0);
             }
 
             if (item.getPrice() != null) {
@@ -195,7 +193,6 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
         @BindView(R.id.delete) ImageView delete;
         @BindView(R.id.quality) ImageView quality;
         @BindView(R.id.count) EditText count;
-        @BindView(R.id.icon_background) View background;
 
         /**
          * Constructor
