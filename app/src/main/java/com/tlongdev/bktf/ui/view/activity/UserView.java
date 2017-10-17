@@ -27,7 +27,5 @@ public interface UserView extends BaseView {
 
     void showData(User user);
 
-    void hideLoadingAnimation();
-
     void showError();
 }

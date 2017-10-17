@@ -119,11 +119,6 @@ public class UserActivity extends BptfActivity implements UserView {
     }
 
     @Override
-    public void hideLoadingAnimation() {
-        progressBar.setVisibility(View.GONE);
-    }
-
-    @Override
     public void showError() {
         progressBar.setVisibility(View.GONE);
         mErrorMessage.setVisibility(View.VISIBLE);
