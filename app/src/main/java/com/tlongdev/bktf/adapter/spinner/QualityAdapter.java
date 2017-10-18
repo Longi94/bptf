@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tlongdev.bktf.R;
@@ -56,7 +57,7 @@ public class QualityAdapter extends BaseAdapter {
             LayoutInflater lInflater = (LayoutInflater) mContext.getSystemService(
                     Activity.LAYOUT_INFLATER_SERVICE);
 
-            convertView = lInflater.inflate(R.layout.quality_spinner_item, null);
+            convertView = lInflater.inflate(R.layout.quality_spinner_item, parent, false);
         }
         setView(convertView, position);
         return convertView;
@@ -83,20 +84,21 @@ public class QualityAdapter extends BaseAdapter {
             LayoutInflater lInflater = (LayoutInflater) mContext.getSystemService(
                     Activity.LAYOUT_INFLATER_SERVICE);
 
-            convertView = lInflater.inflate(R.layout.quality_spinner_item, null);
+            convertView = lInflater.inflate(R.layout.quality_spinner_item, parent, false);
         }
         setView(convertView, position);
         return convertView;
     }
 
     private void setView(View view, int position) {
-        TextView text = (TextView) view.findViewById(R.id.text1);
+        TextView text = view.findViewById(R.id.text1);
         text.setText(QUALITIES[position]);
 
         quality.setQuality(QUALITY_IDS[position]);
 
         int color = quality.getColor(mContext, false);
-        text.getCompoundDrawables()[0].setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+        ImageView image = view.findViewById(R.id.quality);
+        image.getDrawable().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
     }
 
     public int getQualityId(int selectedItemPosition) {

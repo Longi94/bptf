@@ -62,7 +62,7 @@ public class EffectAdapter extends BaseAdapter {
             LayoutInflater lInflater = (LayoutInflater)mContext.getSystemService(
                     Activity.LAYOUT_INFLATER_SERVICE);
 
-            convertView = lInflater.inflate(R.layout.effect_spinner_item, null);
+            convertView = lInflater.inflate(R.layout.effect_spinner_item, parent, false);
         }
 
         setView(convertView, position);
@@ -75,7 +75,7 @@ public class EffectAdapter extends BaseAdapter {
             LayoutInflater lInflater = (LayoutInflater)mContext.getSystemService(
                     Activity.LAYOUT_INFLATER_SERVICE);
 
-            convertView = lInflater.inflate(R.layout.effect_spinner_item, null);
+            convertView = lInflater.inflate(R.layout.effect_spinner_item, parent, false);
         }
         setView(convertView, position);
         return convertView;
