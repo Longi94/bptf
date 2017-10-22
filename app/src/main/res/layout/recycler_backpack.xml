@@ -14,6 +14,8 @@
 
         <ImageView
             android:id="@+id/quality"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_gravity="center"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="h,1:1"
@@ -24,6 +26,8 @@
 
         <ImageView
             android:id="@+id/effect"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_gravity="center"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="h,1:1"
@@ -34,6 +38,8 @@
 
         <ImageView
             android:id="@+id/icon"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_gravity="center"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="h,1:1"
@@ -44,6 +50,8 @@
 
         <ImageView
             android:id="@+id/paint"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_gravity="center"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="h,1:1"

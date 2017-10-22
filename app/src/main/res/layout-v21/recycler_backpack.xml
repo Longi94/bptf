@@ -17,6 +17,8 @@
 
         <ImageView
             android:id="@+id/quality"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_gravity="center"
             android:scaleType="centerCrop"
             android:transitionName="quality_transition"
@@ -28,6 +30,8 @@
 
         <ImageView
             android:id="@+id/effect"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_gravity="center"
             android:scaleType="centerCrop"
             android:transitionName="quality_transition"
@@ -39,6 +43,8 @@
 
         <ImageView
             android:id="@+id/icon"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_gravity="center"
             android:scaleType="centerCrop"
             android:transitionName="quality_transition"
@@ -50,6 +56,8 @@
 
         <ImageView
             android:id="@+id/paint"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_gravity="center"
             android:scaleType="centerCrop"
             android:transitionName="quality_transition"
