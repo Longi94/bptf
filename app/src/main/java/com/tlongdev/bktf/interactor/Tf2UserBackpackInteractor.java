@@ -355,6 +355,9 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
                     case 134://Particle effect
                         values.put(UserBackpackEntry.COLUMN_ITEM_INDEX, attribute.getFloatValue());
                         break;
+                    case 2041://Taunt particle effect
+                        values.put(UserBackpackEntry.COLUMN_ITEM_INDEX, Integer.valueOf(attribute.getValue()));
+                        break;
                     case 142://Painted
                         values.put(UserBackpackEntry.COLUMN_PAINT, attribute.getFloatValue());
                         break;
