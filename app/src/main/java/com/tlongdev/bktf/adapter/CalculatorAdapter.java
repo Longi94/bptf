@@ -111,47 +111,41 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
 
             holder.count.setText(String.valueOf(mCountSet.get(position)));
 
-            holder.delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mDataSet.contains(item)){
-                        if (mListener != null) {
-                            //Notify listener that an item was deleted
-                            mListener.onItemDeleted(item, mCountSet.get(holder.getAdapterPosition()));
-                        }
-                        int removedPos = holder.getAdapterPosition();
-                        mDataSet.remove(removedPos);
-                        mCountSet.remove(removedPos);
-                        notifyItemRemoved(removedPos);
+            holder.delete.setOnClickListener(v -> {
+                if (mDataSet.contains(item)){
+                    if (mListener != null) {
+                        //Notify listener that an item was deleted
+                        mListener.onItemDeleted(item, mCountSet.get(holder.getAdapterPosition()));
                     }
+                    int removedPos = holder.getAdapterPosition();
+                    mDataSet.remove(removedPos);
+                    mCountSet.remove(removedPos);
+                    notifyItemRemoved(removedPos);
                 }
             });
 
-            holder.count.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (!hasFocus && mDataSet.contains(item)) {
-                        String countStr = holder.count.getText().toString();
+            holder.count.setOnFocusChangeListener((v, hasFocus) -> {
+                if (!hasFocus && mDataSet.contains(item)) {
+                    String countStr = holder.count.getText().toString();
 
-                        int count = 1;
-                        try {
-                            count = Integer.parseInt(countStr);
+                    int count = 1;
+                    try {
+                        count = Integer.parseInt(countStr);
 
-                            if (count < 1) {
-                                count = 1;
-                            }
-
-                            holder.count.setText(String.valueOf(count));
-                        } catch (NumberFormatException e) {
-                            holder.count.setText("1");
+                        if (count < 1) {
+                            count = 1;
                         }
 
-                        if (mListener != null && mCountSet.get(holder.getAdapterPosition()) != count) {
-                            mListener.onItemEdited(item, mCountSet.get(holder.getAdapterPosition()), count);
-                        }
-
-                        mCountSet.set(holder.getAdapterPosition(), count);
+                        holder.count.setText(String.valueOf(count));
+                    } catch (NumberFormatException e) {
+                        holder.count.setText("1");
                     }
+
+                    if (mListener != null && mCountSet.get(holder.getAdapterPosition()) != count) {
+                        mListener.onItemEdited(item, mCountSet.get(holder.getAdapterPosition()), count);
+                    }
+
+                    mCountSet.set(holder.getAdapterPosition(), count);
                 }
             });
         }

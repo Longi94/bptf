@@ -79,12 +79,9 @@ public class AdManager implements SharedPreferences.OnSharedPreferenceChangeList
             } else {
                 mInit = false;
                 final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        AdRequest adRequest = new AdRequest.Builder().build();
-                        adView.loadAd(adRequest);
-                    }
+                handler.postDelayed(() -> {
+                    AdRequest adRequest = new AdRequest.Builder().build();
+                    adView.loadAd(adRequest);
                 }, 1000);
             }
         }

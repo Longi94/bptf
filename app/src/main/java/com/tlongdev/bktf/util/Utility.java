@@ -34,7 +34,6 @@ import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -498,50 +497,47 @@ public class Utility {
 
         menu.getMenu().findItem(R.id.calculator).setEnabled(!isInCalculator(activity, item));
 
-        menu.setOnMenuItemClickListener(new android.widget.PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                Intent intent;
-                switch (menuItem.getItemId()) {
-                    case R.id.history:
-                        intent = new Intent(activity, PriceHistoryActivity.class);
-                        intent.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
-                        activity.startActivity(intent);
-                        break;
-                    case R.id.favorite:
-                        if (isFavorite(activity, item)) {
-                            removeFromFavorites(activity, item);
-                        } else {
-                            addToFavorites(activity, item);
-                        }
-                        break;
-                    case R.id.calculator:
-                        addToCalculator(activity, item);
-                        menuItem.setEnabled(false);
-                        break;
-                    case R.id.backpack_tf:
-                        CustomTabActivityHelper.openCustomTab(activity,
-                                new CustomTabsIntent.Builder().build(),
-                                Uri.parse(item.getBackpackTfUrl()),
-                                new WebViewFallback());
-                        break;
-                    case R.id.wiki:
-                        CustomTabActivityHelper.openCustomTab(activity,
-                                new CustomTabsIntent.Builder().build(),
-                                Uri.parse(item.getTf2WikiUrl()),
-                                new WebViewFallback());
-                        break;
-                    case R.id.tf2outpost:
-                        intent = new Intent(Intent.ACTION_VIEW, buildTf2OutpostSearchUrl(activity, item));
-                        activity.startActivity(intent);
-                        break;
-                    case R.id.bazaar_tf:
-                        intent = new Intent(Intent.ACTION_VIEW, buildBazaarSearchUrl(activity, item));
-                        activity.startActivity(intent);
-                        break;
-                }
-                return true;
+        menu.setOnMenuItemClickListener(menuItem -> {
+            Intent intent;
+            switch (menuItem.getItemId()) {
+                case R.id.history:
+                    intent = new Intent(activity, PriceHistoryActivity.class);
+                    intent.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
+                    activity.startActivity(intent);
+                    break;
+                case R.id.favorite:
+                    if (isFavorite(activity, item)) {
+                        removeFromFavorites(activity, item);
+                    } else {
+                        addToFavorites(activity, item);
+                    }
+                    break;
+                case R.id.calculator:
+                    addToCalculator(activity, item);
+                    menuItem.setEnabled(false);
+                    break;
+                case R.id.backpack_tf:
+                    CustomTabActivityHelper.openCustomTab(activity,
+                            new CustomTabsIntent.Builder().build(),
+                            Uri.parse(item.getBackpackTfUrl()),
+                            new WebViewFallback());
+                    break;
+                case R.id.wiki:
+                    CustomTabActivityHelper.openCustomTab(activity,
+                            new CustomTabsIntent.Builder().build(),
+                            Uri.parse(item.getTf2WikiUrl()),
+                            new WebViewFallback());
+                    break;
+                case R.id.tf2outpost:
+                    intent = new Intent(Intent.ACTION_VIEW, buildTf2OutpostSearchUrl(activity, item));
+                    activity.startActivity(intent);
+                    break;
+                case R.id.bazaar_tf:
+                    intent = new Intent(Intent.ACTION_VIEW, buildBazaarSearchUrl(activity, item));
+                    activity.startActivity(intent);
+                    break;
             }
+            return true;
         });
 
         return menu;

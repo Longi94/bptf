@@ -93,14 +93,9 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .into(holder.icon);
 
-                    holder.root.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (mListener != null) {
-                                mListener.onItemClicked(item.getDefindex(),
-                                        item.getName(),
-                                        false);
-                            }
+                    holder.root.setOnClickListener(v -> {
+                        if (mListener != null) {
+                            mListener.onItemClicked(item.getDefindex(), item.getName(), false);
                         }
                     });
                     holder.price.setText(mContext.getString(R.string.currency_key_plural,
@@ -118,14 +113,11 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .into(holder.icon);
 
-                    holder.root.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (mListener != null) {
-                                mListener.onItemClicked(item.getPriceIndex(),
-                                        Utility.getUnusualEffectName(mContext, item.getPriceIndex()),
-                                        true);
-                            }
+                    holder.root.setOnClickListener(v -> {
+                        if (mListener != null) {
+                            mListener.onItemClicked(item.getPriceIndex(),
+                                    Utility.getUnusualEffectName(mContext, item.getPriceIndex()),
+                                    true);
                         }
                     });
 
@@ -151,12 +143,9 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .into(holder.effect);
 
-                    holder.more.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (mListener != null) {
-                                mListener.onMoreClicked(v, item);
-                            }
+                    holder.more.setOnClickListener(v -> {
+                        if (mListener != null) {
+                            mListener.onMoreClicked(v, item);
                         }
                     });
                     break;

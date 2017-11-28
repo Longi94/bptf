@@ -56,12 +56,9 @@ public class LicensesAdapter extends RecyclerView.Adapter<LicensesAdapter.ViewHo
         holder.license.setText(license.getLicense());
         holder.link.setText(license.getUrl());
 
-        holder.link.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onLicenseClicked(license.getUrl());
-                }
+        holder.link.setOnClickListener(v -> {
+            if (mListener != null) {
+                mListener.onLicenseClicked(license.getUrl());
             }
         });
     }

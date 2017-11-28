@@ -70,31 +70,28 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
      * to reflect its new value.
      */
     private final static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener
-            = new Preference.OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object value) {
-            String stringValue = value.toString();
+            = (preference, value) -> {
+                String stringValue = value.toString();
 
-            if (preference instanceof ListPreference) {
-                // For list preferences, look up the correct display value in
-                // the preference's 'entries' list.
-                ListPreference listPreference = (ListPreference) preference;
-                int index = listPreference.findIndexOfValue(stringValue);
+                if (preference instanceof ListPreference) {
+                    // For list preferences, look up the correct display value in
+                    // the preference's 'entries' list.
+                    ListPreference listPreference = (ListPreference) preference;
+                    int index = listPreference.findIndexOfValue(stringValue);
 
-                // Set the summary to reflect the new value.
-                preference.setSummary(
-                        index >= 0
-                                ? listPreference.getEntries()[index]
-                                : null);
+                    // Set the summary to reflect the new value.
+                    preference.setSummary(
+                            index >= 0
+                                    ? listPreference.getEntries()[index]
+                                    : null);
 
-            } else {
-                // For all other preferences, set the summary to the value's
-                // simple string representation.
-                preference.setSummary(stringValue);
-            }
-            return true;
-        }
-    };
+                } else {
+                    // For all other preferences, set the summary to the value's
+                    // simple string representation.
+                    preference.setSummary(stringValue);
+                }
+                return true;
+            };
 
     /**
      * Binds a preference's summary to its value. More specifically, when the
@@ -181,42 +178,35 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         final SwitchPreference notifPref = (SwitchPreference) findPreference(getString(R.string.pref_price_notification));
         notifPref.setEnabled(!prefs.getString(getString(R.string.pref_auto_sync), "1").equals("0"));
 
-        findPreference(getString(R.string.pref_auto_sync)).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
+        findPreference(getString(R.string.pref_auto_sync)).setOnPreferenceChangeListener((preference, newValue) -> {
+            sBindPreferenceSummaryToValueListener.onPreferenceChange(preference, newValue);
 
-                sBindPreferenceSummaryToValueListener.onPreferenceChange(preference, newValue);
+            String value = (String) newValue;
+            notifPref.setEnabled(!value.equals("0"));
 
-                String value = (String) newValue;
-                notifPref.setEnabled(!value.equals("0"));
-
-                if (prefs.getBoolean(getString(R.string.pref_registered_topic_price_updates), false) == value.equals("0")) {
-                    if (!value.equals("0")) {
-                        FirebaseMessaging.getInstance().subscribeToTopic("/topics/price_updates");
-                    } else {
-                        FirebaseMessaging.getInstance().unsubscribeFromTopic("/topics/price_updates");
-                    }
+            if (prefs.getBoolean(getString(R.string.pref_registered_topic_price_updates), false) == value.equals("0")) {
+                if (!value.equals("0")) {
+                    FirebaseMessaging.getInstance().subscribeToTopic("/topics/price_updates");
+                } else {
+                    FirebaseMessaging.getInstance().unsubscribeFromTopic("/topics/price_updates");
                 }
-
-                return true;
             }
+
+            return true;
         });
 
-        findPreference(getString(R.string.pref_key_login)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                ProfileManager manager = ProfileManager.getInstance(getApplication());
-                if (manager.isSignedIn()) {
-                    manager.logOut();
-                    updateLoginPreference();
-                    Intent i = new Intent();
-                    i.putExtra("login_changed", true);
-                    setResult(RESULT_OK, i);
-                } else {
-                    startActivityForResult(new Intent(SettingsActivity.this, WebLoginActivity.class), 0);
-                }
-                return true;
+        findPreference(getString(R.string.pref_key_login)).setOnPreferenceClickListener(preference -> {
+            ProfileManager manager = ProfileManager.getInstance(getApplication());
+            if (manager.isSignedIn()) {
+                manager.logOut();
+                updateLoginPreference();
+                Intent i = new Intent();
+                i.putExtra("login_changed", true);
+                setResult(RESULT_OK, i);
+            } else {
+                startActivityForResult(new Intent(SettingsActivity.this, WebLoginActivity.class), 0);
             }
+            return true;
         });
     }
 

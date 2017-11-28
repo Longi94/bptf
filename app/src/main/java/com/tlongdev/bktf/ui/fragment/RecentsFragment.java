@@ -19,7 +19,6 @@ package com.tlongdev.bktf.ui.fragment;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -218,12 +217,9 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
     @Override
     public void showRefreshAnimation() {
         //Workaround for the circle not appearing
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                if (mSwipeRefreshLayout != null) {
-                    mSwipeRefreshLayout.setRefreshing(true);
-                }
+        mSwipeRefreshLayout.post(() -> {
+            if (mSwipeRefreshLayout != null) {
+                mSwipeRefreshLayout.setRefreshing(true);
             }
         });
     }
@@ -321,12 +317,8 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
         //Quit the app if the download failed.
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(mContext.getString(R.string.message_database_fail_network)).setCancelable(false).
-                setPositiveButton(mContext.getString(R.string.action_close), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        getActivity().finish();
-                    }
-                });
+                setPositiveButton(mContext.getString(R.string.action_close),
+                        (dialog, which) -> getActivity().finish());
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }

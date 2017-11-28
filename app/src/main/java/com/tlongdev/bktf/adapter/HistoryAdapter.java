@@ -38,7 +38,6 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.github.mikephil.charting.utils.Utils;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
@@ -169,16 +168,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         return mDataSet.size() + 1;
     }
 
-    private final static Comparator<Price> priceAgeComparator = new Comparator<Price>() {
-        @Override
-        public int compare(Price lhs, Price rhs) {
-            if (lhs.getLastUpdate() > rhs.getLastUpdate()) {
-                return 1;
-            } else if (lhs.getLastUpdate() < rhs.getLastUpdate()) {
-                return -1;
-            } else {
-                return 0;
-            }
+    private final static Comparator<Price> priceAgeComparator = (lhs, rhs) -> {
+        if (lhs.getLastUpdate() > rhs.getLastUpdate()) {
+            return 1;
+        } else if (lhs.getLastUpdate() < rhs.getLastUpdate()) {
+            return -1;
+        } else {
+            return 0;
         }
     };
 
@@ -246,12 +242,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             YAxis yAxis = chart.getAxisLeft();
             yAxis.setTextColor(textColor);
             yAxis.setStartAtZero(false);
-            yAxis.setValueFormatter(new YAxisValueFormatter() {
-                @Override
-                public String getFormattedValue(float value, YAxis yAxis) {
-                    return String.format("%s %s", Utility.formatDouble(value), mItem.getPrice().getCurrency());
-                }
-            });
+            yAxis.setValueFormatter((value, yAxis1) ->
+                    String.format("%s %s", Utility.formatDouble(value), mItem.getPrice().getCurrency()));
 
             ((LineDataSet) chart.getLineData().getDataSetByIndex(0)).setLineWidth(2.0f);
             ((LineDataSet) chart.getLineData().getDataSetByIndex(0)).setCircleRadius(2.2f);

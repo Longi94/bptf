@@ -197,47 +197,44 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
         menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
         menu.getMenu().findItem(R.id.favorite).setTitle("Remove from favorites");
         menu.getMenu().findItem(R.id.calculator).setEnabled(!Utility.isInCalculator(getActivity(), item));
-        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                Intent intent;
-                switch (menuItem.getItemId()) {
-                    case R.id.history:
-                        intent = new Intent(getActivity(), PriceHistoryActivity.class);
-                        intent.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
-                        startActivity(intent);
-                        break;
-                    case R.id.favorite:
-                        Utility.removeFromFavorites(getActivity(), item);
-                        mAdapter.removeItem(item);
-                        break;
-                    case R.id.calculator:
-                        Utility.addToCalculator(getActivity(), item);
-                        menuItem.setEnabled(false);
-                        break;
-                    case R.id.backpack_tf:
-                        CustomTabActivityHelper.openCustomTab(getActivity(),
-                                new CustomTabsIntent.Builder().build(),
-                                Uri.parse(item.getBackpackTfUrl()),
-                                new WebViewFallback());
-                        break;
-                    case R.id.wiki:
-                        CustomTabActivityHelper.openCustomTab(getActivity(),
-                                new CustomTabsIntent.Builder().build(),
-                                Uri.parse(item.getTf2WikiUrl()),
-                                new WebViewFallback());
-                        break;
-                    case R.id.tf2outpost:
-                        intent = new Intent(Intent.ACTION_VIEW, Utility.buildTf2OutpostSearchUrl(getActivity(), item));
-                        getActivity().startActivity(intent);
-                        break;
-                    case R.id.bazaar_tf:
-                        intent = new Intent(Intent.ACTION_VIEW, Utility.buildBazaarSearchUrl(getActivity(), item));
-                        getActivity().startActivity(intent);
-                        break;
-                }
-                return true;
+        menu.setOnMenuItemClickListener(menuItem -> {
+            Intent intent;
+            switch (menuItem.getItemId()) {
+                case R.id.history:
+                    intent = new Intent(getActivity(), PriceHistoryActivity.class);
+                    intent.putExtra(PriceHistoryActivity.EXTRA_ITEM, item);
+                    startActivity(intent);
+                    break;
+                case R.id.favorite:
+                    Utility.removeFromFavorites(getActivity(), item);
+                    mAdapter.removeItem(item);
+                    break;
+                case R.id.calculator:
+                    Utility.addToCalculator(getActivity(), item);
+                    menuItem.setEnabled(false);
+                    break;
+                case R.id.backpack_tf:
+                    CustomTabActivityHelper.openCustomTab(getActivity(),
+                            new CustomTabsIntent.Builder().build(),
+                            Uri.parse(item.getBackpackTfUrl()),
+                            new WebViewFallback());
+                    break;
+                case R.id.wiki:
+                    CustomTabActivityHelper.openCustomTab(getActivity(),
+                            new CustomTabsIntent.Builder().build(),
+                            Uri.parse(item.getTf2WikiUrl()),
+                            new WebViewFallback());
+                    break;
+                case R.id.tf2outpost:
+                    intent = new Intent(Intent.ACTION_VIEW, Utility.buildTf2OutpostSearchUrl(getActivity(), item));
+                    getActivity().startActivity(intent);
+                    break;
+                case R.id.bazaar_tf:
+                    intent = new Intent(Intent.ACTION_VIEW, Utility.buildBazaarSearchUrl(getActivity(), item));
+                    getActivity().startActivity(intent);
+                    break;
             }
+            return true;
         });
 
         menu.show();

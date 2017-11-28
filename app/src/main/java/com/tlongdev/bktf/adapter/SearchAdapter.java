@@ -83,12 +83,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     holder.priceLayout.setVisibility(View.VISIBLE);
 
                     //open the user activity when the user clicks on the view
-                    holder.root.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (mListener != null) {
-                                mListener.onUserClicked(mUser);
-                            }
+                    holder.root.setOnClickListener(v -> {
+                        if (mListener != null) {
+                            mListener.onUserClicked(mUser);
                         }
                     });
 
@@ -134,13 +131,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     item.setPriceIndex(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE_INDEX)));
                     item.setPrice(price);
 
-                    holder.more.setOnClickListener(new View.OnClickListener() {
-
-                        @Override
-                        public void onClick(View v) {
-                            if (mListener != null) {
-                                mListener.onMoreClicked(v, item);
-                            }
+                    holder.more.setOnClickListener(v -> {
+                        if (mListener != null) {
+                            mListener.onMoreClicked(v, item);
                         }
                     });
 

@@ -82,12 +82,9 @@ public class RecentsAdapter extends CursorRecyclerViewAdapter<RecentsAdapter.Vie
         item.setPriceIndex(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE_INDEX)));
         item.setPrice(price);
 
-        holder.more.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onMoreClicked(v, item);
-                }
+        holder.more.setOnClickListener(v -> {
+            if (mListener != null) {
+                mListener.onMoreClicked(v, item);
             }
         });
 

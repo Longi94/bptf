@@ -100,14 +100,11 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
         layout.requestLayout();
 
         //Return to the previous activity if the user taps outside te dialog.
-        ((View) cardView.getParent()).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= 21)
-                    finishAfterTransition();
-                else
-                    finish();
-            }
+        ((View) cardView.getParent()).setOnClickListener(v -> {
+            if (Build.VERSION.SDK_INT >= 21)
+                finishAfterTransition();
+            else
+                finish();
         });
         //Do nothing if the user taps on the card view itself
         cardView.setOnClickListener(null);

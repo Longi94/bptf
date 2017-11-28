@@ -70,12 +70,9 @@ public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.Vi
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(holder.icon);
 
-            holder.root.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onItemSelected(item.getDefindex(), item.getName());
-                    }
+            holder.root.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onItemSelected(item.getDefindex(), item.getName());
                 }
             });
         }

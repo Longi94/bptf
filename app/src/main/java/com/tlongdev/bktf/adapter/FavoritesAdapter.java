@@ -63,12 +63,9 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
 
             final Item item = mDataSet.get(position);
 
-            holder.more.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null) {
-                        mListener.onMoreClicked(v, item);
-                    }
+            holder.more.setOnClickListener(v -> {
+                if (mListener != null) {
+                    mListener.onMoreClicked(v, item);
                 }
             });
 

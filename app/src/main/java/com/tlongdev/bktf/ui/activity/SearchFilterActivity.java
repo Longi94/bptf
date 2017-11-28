@@ -22,7 +22,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -86,14 +85,11 @@ public class SearchFilterActivity extends BptfActivity {
         qualityAdapter = new QualityAdapter(this);
         qualitySpinner.setAdapter(qualityAdapter);
 
-        enableSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                qualitySpinner.setEnabled(isChecked);
-                tradable.setEnabled(isChecked);
-                craftable.setEnabled(isChecked);
-                australium.setEnabled(isChecked);
-            }
+        enableSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            qualitySpinner.setEnabled(isChecked);
+            tradable.setEnabled(isChecked);
+            craftable.setEnabled(isChecked);
+            australium.setEnabled(isChecked);
         });
 
         enableSwitch.setChecked(mEnabled);

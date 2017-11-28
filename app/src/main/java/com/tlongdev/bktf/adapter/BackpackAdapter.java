@@ -172,12 +172,9 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                         }
 
                     //The on click listener for an item
-                    holder.root.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (mListener != null) {
-                                mListener.OnItemClicked(holder, backpackItem);
-                            }
+                    holder.root.setOnClickListener(v -> {
+                        if (mListener != null) {
+                            mListener.OnItemClicked(holder, backpackItem);
                         }
                     });
                 }

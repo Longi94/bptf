@@ -388,12 +388,9 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
 
     @Override
     public void showRefreshingAnimation() {
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                if (mSwipeRefreshLayout != null) {
-                    mSwipeRefreshLayout.setRefreshing(true);
-                }
+        mSwipeRefreshLayout.post(() -> {
+            if (mSwipeRefreshLayout != null) {
+                mSwipeRefreshLayout.setRefreshing(true);
             }
         });
     }
