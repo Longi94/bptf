@@ -26,6 +26,7 @@ import android.support.annotation.NonNull;
 
 import com.tlongdev.bktf.data.BptfDatabase;
 import com.tlongdev.bktf.data.DatabaseHelper;
+import com.tlongdev.bktf.data.dao.OriginDao;
 import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 
 import javax.inject.Named;
@@ -51,6 +52,12 @@ public class StorageModule {
             database.execSQL("INSERT INTO unusual_schema_copy (_id, name) SELECT id, name FROM unusual_schema");
             database.execSQL("DROP TABLE unusual_schema");
             database.execSQL("ALTER TABLE unusual_schema_copy RENAME TO unusual_schema");
+
+            // migrate origins
+            database.execSQL("CREATE TABLE origin_names_copy (_id INTEGER NOT NULL PRIMARY KEY, name TEXT NOT NULL)");
+            database.execSQL("INSERT INTO origin_names_copy (_id, name) SELECT id, name FROM origin_names");
+            database.execSQL("DROP TABLE origin_names");
+            database.execSQL("ALTER TABLE origin_names_copy RENAME TO origin_names");
         }
     };
 
@@ -89,5 +96,11 @@ public class StorageModule {
     @Singleton
     UnusualSchemaDao provideUnusualSchemaDao(BptfDatabase database) {
         return database.unusualSchemaDao();
+    }
+
+    @Provides
+    @Singleton
+    OriginDao provideOriginDao(BptfDatabase database) {
+        return database.originDao();
     }
 }

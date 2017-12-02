@@ -44,7 +44,6 @@ import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
 import com.tlongdev.bktf.customtabs.WebViewFallback;
 import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
 import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
-import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Item;
@@ -70,34 +69,6 @@ public class Utility {
     private static final String LOG_TAG = Utility.class.getSimpleName();
 
     public static final double EPSILON = 0.0001;
-
-    /**
-     * Get the name of the origin.
-     *
-     * @param index index corresponding origin name
-     * @return the name of origin
-     */
-    public static String getOriginName(Context context, int index) {
-
-        Cursor cursor = context.getContentResolver().query(
-                OriginEntry.CONTENT_URI,
-                new String[]{OriginEntry.COLUMN_NAME},
-                OriginEntry.COLUMN_ID + " = ?",
-                new String[]{String.valueOf(index)},
-                null
-        );
-
-        String name = "";
-
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                name = cursor.getString(0);
-            }
-            cursor.close();
-        }
-
-        return name;
-    }
 
     /**
      * Check if the given steamId is a 64bit steamId using Regex.

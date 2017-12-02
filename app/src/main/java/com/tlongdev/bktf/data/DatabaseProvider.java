@@ -40,7 +40,6 @@ public class DatabaseProvider extends ContentProvider {
      */
     private static final int PRICE_LIST = 100;
     private static final int ITEM_SCHEMA = 101;
-    private static final int ORIGIN_NAMES = 102;
     private static final int BACKPACK = 104;
     private static final int BACKPACK_GUEST = 105;
     private static final int FAVORITES = 106;
@@ -76,7 +75,6 @@ public class DatabaseProvider extends ContentProvider {
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, DatabaseContract.PATH_PRICE_LIST, PRICE_LIST);
         matcher.addURI(authority, DatabaseContract.PATH_ITEM_SCHEMA, ITEM_SCHEMA);
-        matcher.addURI(authority, DatabaseContract.PATH_ORIGIN_NAMES, ORIGIN_NAMES);
         matcher.addURI(authority, DatabaseContract.PATH_DECORATED_WEAPONS, DECORATED_WEAPON);
         matcher.addURI(authority, DatabaseContract.PATH_BACKPACK, BACKPACK);
         matcher.addURI(authority, DatabaseContract.PATH_FAVORITES, FAVORITES);
@@ -105,9 +103,6 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             case ITEM_SCHEMA:
                 tableName = ItemSchemaEntry.TABLE_NAME;
-                break;
-            case ORIGIN_NAMES:
-                tableName = OriginEntry.TABLE_NAME;
                 break;
             case BACKPACK:
                 tableName = UserBackpackEntry.TABLE_NAME;
@@ -157,8 +152,6 @@ public class DatabaseProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_PRICE_LIST;
             case ITEM_SCHEMA:
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_ITEM_SCHEMA;
-            case ORIGIN_NAMES:
-                return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_ORIGIN_NAMES;
             case BACKPACK:
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_BACKPACK;
             case BACKPACK_GUEST:
@@ -188,10 +181,6 @@ public class DatabaseProvider extends ContentProvider {
             case ITEM_SCHEMA:
                 tableName = ItemSchemaEntry.TABLE_NAME;
                 returnUri = ItemSchemaEntry.CONTENT_URI;
-                break;
-            case ORIGIN_NAMES:
-                tableName = OriginEntry.TABLE_NAME;
-                returnUri = OriginEntry.CONTENT_URI;
                 break;
             case BACKPACK:
                 tableName = UserBackpackEntry.TABLE_NAME;
@@ -236,9 +225,6 @@ public class DatabaseProvider extends ContentProvider {
             case ITEM_SCHEMA:
                 rowsDeleted = db.delete(ItemSchemaEntry.TABLE_NAME, selection, selectionArgs);
                 break;
-            case ORIGIN_NAMES:
-                rowsDeleted = db.delete(OriginEntry.TABLE_NAME, selection, selectionArgs);
-                break;
             case BACKPACK:
                 rowsDeleted = db.delete(UserBackpackEntry.TABLE_NAME, selection, selectionArgs);
                 break;
@@ -278,9 +264,6 @@ public class DatabaseProvider extends ContentProvider {
             case ITEM_SCHEMA:
                 rowsUpdated = db.update(ItemSchemaEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
-            case ORIGIN_NAMES:
-                rowsUpdated = db.update(OriginEntry.TABLE_NAME, values, selection, selectionArgs);
-                break;
             case BACKPACK:
                 rowsUpdated = db.update(UserBackpackEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
@@ -317,9 +300,6 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             case ITEM_SCHEMA:
                 tableName = ItemSchemaEntry.TABLE_NAME;
-                break;
-            case ORIGIN_NAMES:
-                tableName = OriginEntry.TABLE_NAME;
                 break;
             case BACKPACK:
                 tableName = UserBackpackEntry.TABLE_NAME;

@@ -41,7 +41,6 @@ public final class DatabaseContract {
     // At least, let's hope not.  Don't be that dev, reader.  Don't be that dev.
     public static final String PATH_PRICE_LIST = "pricelist";
     public static final String PATH_ITEM_SCHEMA = "schema";
-    public static final String PATH_ORIGIN_NAMES = "origin_names";
     public static final String PATH_DECORATED_WEAPONS = "decorated_weapons";
     public static final String PATH_FAVORITES = "favorites";
     public static final String PATH_CALCULATOR = "calculator";
@@ -92,16 +91,6 @@ public final class DatabaseContract {
         public static final String COLUMN_TYPE_NAME = "type_name";
         public static final String COLUMN_PROPER_NAME = "proper_name";
         public static final String COLUMN_DESCRIPTION = "description";
-    }
-
-    public static final class OriginEntry implements BaseColumns {
-        public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_ORIGIN_NAMES).build();
-
-        public static final String TABLE_NAME = "origin_names";
-
-        public static final String COLUMN_ID = "id";
-        public static final String COLUMN_NAME = "name";
     }
 
     public static final class DecoratedWeaponEntry implements BaseColumns {

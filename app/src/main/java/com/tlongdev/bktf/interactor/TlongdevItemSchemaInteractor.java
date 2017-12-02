@@ -25,8 +25,9 @@ import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.DecoratedWeaponEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
-import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
+import com.tlongdev.bktf.data.dao.OriginDao;
 import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
+import com.tlongdev.bktf.data.entity.Origin;
 import com.tlongdev.bktf.data.entity.UnusualSchema;
 import com.tlongdev.bktf.network.TlongdevInterface;
 import com.tlongdev.bktf.network.model.tlongdev.TlongdevDecoratedWeapon;
@@ -59,6 +60,9 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
 
     @Inject
     UnusualSchemaDao unusualSchemaDao;
+
+    @Inject
+    OriginDao originDao;
 
     private final Callback mCallback;
     private String errorMessage;
@@ -128,25 +132,15 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
     }
 
     private void insertOrigins(List<TlongdevOrigin> origins) {
-        Vector<ContentValues> cVVectorOrigins = new Vector<>();
+        List<Origin> originEntities = new LinkedList<>();
 
         for (TlongdevOrigin origin : origins) {
-            //The DV that will contain all the data
-            ContentValues itemValues = new ContentValues();
-            itemValues.put(OriginEntry.COLUMN_ID, origin.getId());
-            itemValues.put(OriginEntry.COLUMN_NAME, origin.getName());
-
-            //Add the price to the CV vector
-            cVVectorOrigins.add(itemValues);
+            originEntities.add(new Origin(origin.getId(), origin.getName()));
         }
 
-        if (cVVectorOrigins.size() > 0) {
-            ContentValues[] cvArray = new ContentValues[cVVectorOrigins.size()];
-            cVVectorOrigins.toArray(cvArray);
-            //Insert all the data into the database
-            int rowsInserted = mContext.getContentResolver()
-                    .bulkInsert(OriginEntry.CONTENT_URI, cvArray);
-            Log.v(LOG_TAG, "inserted " + rowsInserted + " rows into origins");
+        if (originEntities.size() > 0) {
+            originDao.insertOrigins(originEntities);
+            Log.v(LOG_TAG, "inserted " + originEntities.size() + " rows into origins");
         }
 
         publishProgress();
@@ -161,7 +155,6 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
 
         if (schemas.size() > 0) {
             unusualSchemaDao.insertSchemas(schemas);
-            //Insert all the data into the database
             Log.v(LOG_TAG, "inserted " + schemas.size() + " rows into unusual_schema");
         }
 

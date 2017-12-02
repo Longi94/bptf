@@ -110,13 +110,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         " UNIQUE (id) ON CONFLICT REPLACE);";
 
         final String SQL_CREATE_ORIGIN_NAMES_TABLE =
-                "CREATE TABLE " + OriginEntry.TABLE_NAME + " (" +
-                        OriginEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "CREATE TABLE origin_names (" +
+                        "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
-                        OriginEntry.COLUMN_ID + " INTEGER NOT NULL, " +
-                        OriginEntry.COLUMN_NAME + " TEXT NOT NULL, " +
+                        "id INTEGER NOT NULL, " +
+                        "name TEXT NOT NULL, " +
 
-                        " UNIQUE (" + OriginEntry.COLUMN_ID + ") ON CONFLICT REPLACE);";
+                        " UNIQUE (id) ON CONFLICT REPLACE);";
 
         final String SQL_CREATE_DECORATED_WEAPONS_TABLE_TABLE =
                 "CREATE TABLE " + DecoratedWeaponEntry.TABLE_NAME + " (" +
@@ -242,7 +242,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + PriceEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ItemSchemaEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS unusual_schema");
-        db.execSQL("DROP TABLE IF EXISTS " + OriginEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS origin_names");
         db.execSQL("DROP TABLE IF EXISTS " + DecoratedWeaponEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + FavoritesEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + CalculatorEntry.TABLE_NAME);

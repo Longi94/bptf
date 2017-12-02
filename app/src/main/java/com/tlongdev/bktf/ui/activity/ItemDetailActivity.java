@@ -30,13 +30,13 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.data.dao.OriginDao;
 import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.model.Quality;
 import com.tlongdev.bktf.presenter.activity.ItemDetailPresenter;
 import com.tlongdev.bktf.ui.view.activity.ItemDetailView;
-import com.tlongdev.bktf.util.Utility;
 
 import javax.inject.Inject;
 
@@ -59,6 +59,8 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
     ItemDetailPresenter mPresenter;
     @Inject
     UnusualSchemaDao mUnusualSchemaDao;
+    @Inject
+    OriginDao mOriginDao;
 
     @InjectExtra(EXTRA_GUEST) boolean isGuest;
     @InjectExtra(EXTRA_ITEM_ID) int mId;
@@ -136,7 +138,8 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
         }
 
         //Set the origin of the item. Get the origin from the string array resource
-        origin.setText(String.format("%s: %s", getString(R.string.item_detail_origin), Utility.getOriginName(this, item.getOrigin())));
+        origin.setText(String.format("%s: %s", getString(R.string.item_detail_origin),
+                mOriginDao.getOrigin(item.getOrigin()).getName()));
 
         //Set the effect of the item (if any)
         if (item.getPriceIndex() != 0 && (item.getQuality() == Quality.UNUSUAL
