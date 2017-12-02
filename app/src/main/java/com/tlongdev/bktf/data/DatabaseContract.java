@@ -41,7 +41,6 @@ public final class DatabaseContract {
     // At least, let's hope not.  Don't be that dev, reader.  Don't be that dev.
     public static final String PATH_PRICE_LIST = "pricelist";
     public static final String PATH_ITEM_SCHEMA = "schema";
-    public static final String PATH_DECORATED_WEAPONS = "decorated_weapons";
     public static final String PATH_FAVORITES = "favorites";
     public static final String PATH_CALCULATOR = "calculator";
     public static final String PATH_BACKPACK = "backpack";
@@ -93,15 +92,6 @@ public final class DatabaseContract {
         public static final String COLUMN_DESCRIPTION = "description";
     }
 
-    public static final class DecoratedWeaponEntry implements BaseColumns {
-        public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_DECORATED_WEAPONS).build();
-
-        public static final String TABLE_NAME = "decorated_weapons";
-
-        public static final String COLUMN_DEFINDEX = "defindex";
-        public static final String COLUMN_GRADE = "grade";
-    }
     public static final class FavoritesEntry implements BaseColumns {
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_FAVORITES).build();

@@ -23,10 +23,11 @@ import android.util.Log;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract.DecoratedWeaponEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
+import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
 import com.tlongdev.bktf.data.dao.OriginDao;
 import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
+import com.tlongdev.bktf.data.entity.DecoratedWeapon;
 import com.tlongdev.bktf.data.entity.Origin;
 import com.tlongdev.bktf.data.entity.UnusualSchema;
 import com.tlongdev.bktf.network.TlongdevInterface;
@@ -63,6 +64,9 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
 
     @Inject
     OriginDao originDao;
+
+    @Inject
+    DecoratedWeaponDao decoratedWeaponDao;
 
     private final Callback mCallback;
     private String errorMessage;
@@ -162,25 +166,15 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
     }
 
     private void insertDecoratedWeapons(List<TlongdevDecoratedWeapon> weapons) {
-        Vector<ContentValues> cVVectorWeapons = new Vector<>();
+        List<DecoratedWeapon> decoratedWeapons = new LinkedList<>();
 
         for (TlongdevDecoratedWeapon weapon : weapons) {
-            //The DV that will contain all the data
-            ContentValues weaponValues = new ContentValues();
-            weaponValues.put(DecoratedWeaponEntry.COLUMN_DEFINDEX, weapon.getDefindex());
-            weaponValues.put(DecoratedWeaponEntry.COLUMN_GRADE, weapon.getGrade());
-
-            //Add the price to the CV vector
-            cVVectorWeapons.add(weaponValues);
+            decoratedWeapons.add(new DecoratedWeapon(weapon.getDefindex(), weapon.getGrade()));
         }
 
-        if (cVVectorWeapons.size() > 0) {
-            ContentValues[] cvArray = new ContentValues[cVVectorWeapons.size()];
-            cVVectorWeapons.toArray(cvArray);
-            //Insert all the data into the database
-            int rowsInserted = mContext.getContentResolver()
-                    .bulkInsert(DecoratedWeaponEntry.CONTENT_URI, cvArray);
-            Log.v(LOG_TAG, "inserted " + rowsInserted + " rows into decorated_weapons");
+        if (decoratedWeapons.size() > 0) {
+            decoratedWeaponDao.insertDecoratedWeapons(decoratedWeapons);
+            Log.v(LOG_TAG, "inserted " + decoratedWeapons.size() + " rows into decorated_weapons");
         }
 
         publishProgress();

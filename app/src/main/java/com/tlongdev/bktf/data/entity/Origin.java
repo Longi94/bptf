@@ -20,6 +20,9 @@ public class Origin {
     @NonNull
     private String name;
 
+    public Origin() {
+    }
+
     @Ignore
     public Origin(long id, @NonNull String name) {
         this.id = id;

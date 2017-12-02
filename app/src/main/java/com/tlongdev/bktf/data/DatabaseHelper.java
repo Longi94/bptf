@@ -119,13 +119,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         " UNIQUE (id) ON CONFLICT REPLACE);";
 
         final String SQL_CREATE_DECORATED_WEAPONS_TABLE_TABLE =
-                "CREATE TABLE " + DecoratedWeaponEntry.TABLE_NAME + " (" +
-                        DecoratedWeaponEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "CREATE TABLE decorated_weapons (" +
+                        "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
-                        DecoratedWeaponEntry.COLUMN_DEFINDEX + " INTEGER NOT NULL, " +
-                        DecoratedWeaponEntry.COLUMN_GRADE + " INTEGER NOT NULL, " +
+                        "defindex INTEGER NOT NULL, " +
+                        "grade INTEGER NOT NULL, " +
 
-                        " UNIQUE (" + DecoratedWeaponEntry.COLUMN_DEFINDEX + ") ON CONFLICT REPLACE);";
+                        " UNIQUE (defindex) ON CONFLICT REPLACE);";
 
         final String SQL_CREATE_FAVORITES_TABLE =
                 "CREATE TABLE " + FavoritesEntry.TABLE_NAME + " (" +
@@ -243,7 +243,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + ItemSchemaEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS unusual_schema");
         db.execSQL("DROP TABLE IF EXISTS origin_names");
-        db.execSQL("DROP TABLE IF EXISTS " + DecoratedWeaponEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS decorated_weapons");
         db.execSQL("DROP TABLE IF EXISTS " + FavoritesEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + CalculatorEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + UserBackpackEntry.TABLE_NAME);

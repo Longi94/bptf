@@ -26,6 +26,7 @@ import android.support.annotation.NonNull;
 
 import com.tlongdev.bktf.data.BptfDatabase;
 import com.tlongdev.bktf.data.DatabaseHelper;
+import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
 import com.tlongdev.bktf.data.dao.OriginDao;
 import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 
@@ -58,6 +59,12 @@ public class StorageModule {
             database.execSQL("INSERT INTO origin_names_copy (_id, name) SELECT id, name FROM origin_names");
             database.execSQL("DROP TABLE origin_names");
             database.execSQL("ALTER TABLE origin_names_copy RENAME TO origin_names");
+
+            // migrate decorated weapons
+            database.execSQL("CREATE TABLE IF NOT EXISTS decorated_weapons_copy (_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, defindex INTEGER NOT NULL, grade INTEGER NOT NULL)");
+            database.execSQL("INSERT INTO decorated_weapons_copy (_id, defindex, grade) SELECT _id, defindex, grade FROM decorated_weapons");
+            database.execSQL("DROP TABLE decorated_weapons");
+            database.execSQL("ALTER TABLE decorated_weapons_copy RENAME TO decorated_weapons");
         }
     };
 
@@ -102,5 +109,11 @@ public class StorageModule {
     @Singleton
     OriginDao provideOriginDao(BptfDatabase database) {
         return database.originDao();
+    }
+
+    @Provides
+    @Singleton
+    DecoratedWeaponDao provideDecoratedWeaponDao(BptfDatabase database) {
+        return database.decoratedWeaponDao();
     }
 }

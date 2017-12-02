@@ -17,6 +17,12 @@ android {
                 outputFileName = 'bptf-' + versionName + '.apk'
             }
         }
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
     buildTypes {
         release {

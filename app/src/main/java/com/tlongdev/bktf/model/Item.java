@@ -25,9 +25,10 @@ import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract.DecoratedWeaponEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
+import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
 import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
+import com.tlongdev.bktf.data.entity.DecoratedWeapon;
 
 import java.util.Locale;
 
@@ -336,7 +337,7 @@ public class Item implements Parcelable {
      * @return the color of the item
      */
     @SuppressLint("SwitchIntDef")
-    public int getColor(Context context, boolean isDark) {
+    public int getColor(Context context, DecoratedWeaponDao decoratedWeaponDao, boolean isDark) {
         switch (quality) {
             case Quality.GENUINE:
                 return isDark ? ContextCompat.getColor(context, R.color.tf2_genuine_color_dark)
@@ -369,7 +370,7 @@ public class Item implements Parcelable {
                 return isDark ? ContextCompat.getColor(context, R.color.tf2_collectors_color_dark)
                         : ContextCompat.getColor(context, R.color.tf2_collectors_color);
             case Quality.PAINTKITWEAPON:
-                return getDecoratedWeaponColor(context, isDark);
+                return getDecoratedWeaponColor(context, decoratedWeaponDao, isDark);
             default:
                 return isDark ? ContextCompat.getColor(context, R.color.tf2_normal_color_dark)
                         : ContextCompat.getColor(context, R.color.tf2_normal_color);
@@ -383,41 +384,30 @@ public class Item implements Parcelable {
      * @param isDark  whether to return the dark version
      * @return the desired color
      */
-    private int getDecoratedWeaponColor(Context context, boolean isDark) {
-        Cursor cursor = context.getContentResolver().query(
-                DecoratedWeaponEntry.CONTENT_URI,
-                new String[]{DecoratedWeaponEntry._ID, DecoratedWeaponEntry.COLUMN_GRADE},
-                DecoratedWeaponEntry.COLUMN_DEFINDEX + " = ?",
-                new String[]{String.valueOf(defindex)},
-                null
-        );
-
+    private int getDecoratedWeaponColor(Context context, DecoratedWeaponDao decoratedWeaponDao, boolean isDark) {
+        DecoratedWeapon decoratedWeapon = decoratedWeaponDao.getDecoratedWeapon(defindex);
         int colorResource = 0;
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                int grade = cursor.getInt(1);
-                switch (grade) {
-                    case 0:
-                        colorResource = isDark ? R.color.tf2_decorated_weapon_civilian_dark : R.color.tf2_decorated_weapon_civilian;
-                        break;
-                    case 1:
-                        colorResource = isDark ? R.color.tf2_decorated_weapon_freelance_dark : R.color.tf2_decorated_weapon_freelance;
-                        break;
-                    case 2:
-                        colorResource = isDark ? R.color.tf2_decorated_weapon_mercenary_dark : R.color.tf2_decorated_weapon_mercenary;
-                        break;
-                    case 3:
-                        colorResource = isDark ? R.color.tf2_decorated_weapon_commando_dark : R.color.tf2_decorated_weapon_commando;
-                        break;
-                    case 4:
-                        colorResource = isDark ? R.color.tf2_decorated_weapon_assassin_dark : R.color.tf2_decorated_weapon_assassin;
-                        break;
-                    case 5:
-                        colorResource = isDark ? R.color.tf2_decorated_weapon_elite_dark : R.color.tf2_decorated_weapon_elite;
-                        break;
-                }
+        if (decoratedWeapon != null) {
+            switch (decoratedWeapon.getGrade()) {
+                case 0:
+                    colorResource = isDark ? R.color.tf2_decorated_weapon_civilian_dark : R.color.tf2_decorated_weapon_civilian;
+                    break;
+                case 1:
+                    colorResource = isDark ? R.color.tf2_decorated_weapon_freelance_dark : R.color.tf2_decorated_weapon_freelance;
+                    break;
+                case 2:
+                    colorResource = isDark ? R.color.tf2_decorated_weapon_mercenary_dark : R.color.tf2_decorated_weapon_mercenary;
+                    break;
+                case 3:
+                    colorResource = isDark ? R.color.tf2_decorated_weapon_commando_dark : R.color.tf2_decorated_weapon_commando;
+                    break;
+                case 4:
+                    colorResource = isDark ? R.color.tf2_decorated_weapon_assassin_dark : R.color.tf2_decorated_weapon_assassin;
+                    break;
+                case 5:
+                    colorResource = isDark ? R.color.tf2_decorated_weapon_elite_dark : R.color.tf2_decorated_weapon_elite;
+                    break;
             }
-            cursor.close();
         }
         return colorResource == 0 ? ContextCompat.getColor(context, R.color.tf2_normal_color) : ContextCompat.getColor(context, colorResource);
     }
@@ -428,7 +418,7 @@ public class Item implements Parcelable {
      * @param type the type of the decorated weapon
      * @return the formatted description string
      */
-    public String getDecoratedWeaponDesc(Context context, String type) {
+    public String getDecoratedWeaponDesc(Context context, DecoratedWeaponDao decoratedWeaponDao, String type) {
         String wearStr;
         switch (weaponWear) {
             case 1045220557:
@@ -450,35 +440,25 @@ public class Item implements Parcelable {
                 throw new IllegalArgumentException("Invalid wear: " + weaponWear);
         }
 
-        Cursor cursor = context.getContentResolver().query(
-                DecoratedWeaponEntry.CONTENT_URI,
-                new String[]{DecoratedWeaponEntry._ID, DecoratedWeaponEntry.COLUMN_GRADE},
-                DecoratedWeaponEntry.COLUMN_DEFINDEX + " = ?",
-                new String[]{String.valueOf(defindex)},
-                null
-        );
+        DecoratedWeapon decoratedWeapon = decoratedWeaponDao.getDecoratedWeapon(defindex);
 
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                int grade = cursor.getInt(1);
-                switch (grade) {
-                    case 0:
-                        return "Civilian Grade " + type + " " + wearStr;
-                    case 1:
-                        return "Freelance Grade " + type + " " + wearStr;
-                    case 2:
-                        return "Mercenary Grade " + type + " " + wearStr;
-                    case 3:
-                        return "Commando Grade " + type + " " + wearStr;
-                    case 4:
-                        return "Assassin Grade " + type + " " + wearStr;
-                    case 5:
-                        return "Elite Grade " + type + " " + wearStr;
-                    default:
-                        throw new IllegalArgumentException("Invalid defindex: " + defindex);
-                }
+        if (decoratedWeapon != null) {
+            switch (decoratedWeapon.getGrade()) {
+                case 0:
+                    return "Civilian Grade " + type + " " + wearStr;
+                case 1:
+                    return "Freelance Grade " + type + " " + wearStr;
+                case 2:
+                    return "Mercenary Grade " + type + " " + wearStr;
+                case 3:
+                    return "Commando Grade " + type + " " + wearStr;
+                case 4:
+                    return "Assassin Grade " + type + " " + wearStr;
+                case 5:
+                    return "Elite Grade " + type + " " + wearStr;
+                default:
+                    throw new IllegalArgumentException("Invalid defindex: " + defindex);
             }
-            cursor.close();
         }
 
         return type + " " + wearStr;
