@@ -55,6 +55,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
+        // TODO: 2017-12-02 remove
+
         if (mContext.databaseList().length > 1) {
             mContext.deleteDatabase("pricelist.db");
             mContext.deleteDatabase("items.db");
@@ -99,13 +101,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         " UNIQUE (" + PriceEntry.COLUMN_DEFINDEX + ") ON CONFLICT REPLACE);";
 
         final String SQL_CREATE_UNUSUAL_SCHEMA_TABLE =
-                "CREATE TABLE " + UnusualSchemaEntry.TABLE_NAME + " (" +
-                        UnusualSchemaEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "CREATE TABLE unusual_schema (" +
+                        "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
-                        UnusualSchemaEntry.COLUMN_ID + " INTEGER NOT NULL, " +
-                        UnusualSchemaEntry.COLUMN_NAME + " TEXT NOT NULL, " +
+                        "id INTEGER NOT NULL, " +
+                        "name TEXT NOT NULL, " +
 
-                        " UNIQUE (" + UnusualSchemaEntry.COLUMN_ID + ") ON CONFLICT REPLACE);";
+                        " UNIQUE (id) ON CONFLICT REPLACE);";
 
         final String SQL_CREATE_ORIGIN_NAMES_TABLE =
                 "CREATE TABLE " + OriginEntry.TABLE_NAME + " (" +
@@ -239,7 +241,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + PriceEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ItemSchemaEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + UnusualSchemaEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS unusual_schema");
         db.execSQL("DROP TABLE IF EXISTS " + OriginEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DecoratedWeaponEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + FavoritesEntry.TABLE_NAME);

@@ -34,6 +34,7 @@ import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.model.User;
@@ -52,7 +53,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     private static final int VIEW_TYPE_USER = 1;
     private static final int VIEW_TYPE_LOADING = 2;
 
-    @Inject Context mContext;
+    @Inject
+    Context mContext;
+    @Inject
+    UnusualSchemaDao mUnusualSchemaDao;
 
     private Cursor mDataSet;
     private boolean mLoading;
@@ -137,7 +141,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                         }
                     });
 
-                    holder.name.setText(item.getFormattedName(mContext));
+                    holder.name.setText(item.getFormattedName(mContext, mUnusualSchemaDao));
 
                     holder.icon.setImageDrawable(null);
                     holder.quality.setBackgroundColor(item.getColor(mContext, true));

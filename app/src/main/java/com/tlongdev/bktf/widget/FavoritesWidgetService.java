@@ -35,6 +35,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.util.Utility;
@@ -72,8 +73,13 @@ public class FavoritesWidgetService extends RemoteViewsService {
         public static final int COLUMN_DIFFERENCE = 10;
         public static final int COLUMN_AUSTRALIUM = 11;
 
-        @Inject Context mContext;
-        @Inject @Named("readable") SQLiteDatabase mDatabase;
+        @Inject
+        Context mContext;
+        @Inject
+        @Named("readable")
+        SQLiteDatabase mDatabase;
+        @Inject
+        UnusualSchemaDao mUnusualSchemaDao;
 
         private Cursor mDataSet;
 
@@ -174,7 +180,7 @@ public class FavoritesWidgetService extends RemoteViewsService {
 
                 final long token = Binder.clearCallingIdentity();
                 try {
-                    rv.setTextViewText(R.id.name, item.getFormattedName(mContext));
+                    rv.setTextViewText(R.id.name, item.getFormattedName(mContext, mUnusualSchemaDao));
                 } finally {
                     Binder.restoreCallingIdentity(token);
                 }

@@ -29,6 +29,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.util.Utility;
@@ -55,7 +56,10 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
     public static final int TYPE_EFFECTS = 1;
     public static final int TYPE_SPECIFIC_HAT = 2;
 
-    @Inject Context mContext;
+    @Inject
+    Context mContext;
+    @Inject
+    UnusualSchemaDao mUnusualSchemaDao;
 
     private List<Item> mDataSet;
 
@@ -116,7 +120,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                     holder.root.setOnClickListener(v -> {
                         if (mListener != null) {
                             mListener.onItemClicked(item.getPriceIndex(),
-                                    Utility.getUnusualEffectName(mContext, item.getPriceIndex()),
+                                    mUnusualSchemaDao.getUnusualSchema(item.getPriceIndex()).getName(),
                                     true);
                         }
                     });

@@ -41,6 +41,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.Utils;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.util.Utility;
@@ -67,7 +68,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     private static final int VIEW_TYPE_HEADER = 0;
     private static final int VIEW_TYPE_NORMAL = 1;
 
-    @Inject Context mContext;
+    @Inject
+    Context mContext;
+    @Inject
+    UnusualSchemaDao mUnusualSchemaDao;
 
     private final List<Price> mDataSet;
     private final Item mItem;
@@ -133,7 +137,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .into(holder.effect);
 
-                holder.name.setText(mItem.getFormattedName(mContext));
+                holder.name.setText(mItem.getFormattedName(mContext, mUnusualSchemaDao));
 
                 if (!mItem.isTradable()) {
                     holder.quality.setVisibility(View.VISIBLE);

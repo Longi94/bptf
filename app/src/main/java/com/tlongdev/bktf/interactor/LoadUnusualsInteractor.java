@@ -24,7 +24,6 @@ import android.os.AsyncTask;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
-import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.model.Quality;
@@ -73,10 +72,10 @@ public class LoadUnusualsInteractor extends AsyncTask<Void, Void, Void> {
         //If defindex is -1, user is browsing by effects
         if (mDefindex != -1) {
             index = mDefindex;
-            nameColumn = UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_NAME;
-            joinOn = UnusualSchemaEntry.TABLE_NAME + " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + " = " + UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_ID;
+            nameColumn = "unusual_schema.name";
+            joinOn = "unusual_schema ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + " = unusual_schema._id";
             selection = selection + " AND " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = ? AND " +
-                    UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_NAME + " LIKE ?";
+                    "unusual_schema.name LIKE ?";
         } else {
             index = mIndex;
             nameColumn = ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME;

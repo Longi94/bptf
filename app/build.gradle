@@ -3,7 +3,7 @@ apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '27.0.1'
 
     defaultConfig {
         applicationId 'com.tlongdev.bktf'
@@ -42,6 +42,9 @@ dependencies {
     testCompile 'org.mockito:mockito-core:1.10.19'
     testCompile "org.robolectric:robolectric:3.1"
 
+    implementation "android.arch.persistence.room:runtime:1.0.0"
+    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
+
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
@@ -55,21 +58,21 @@ dependencies {
     compile('com.squareup.okhttp3:okhttp:3.9.0') {
         exclude group: 'com.squareup.okio', module: 'okio'
     }
-    compile 'com.android.support:support-annotations:26.0.0'
-    compile 'com.android.support:support-v4:26.0.0'
-    compile 'com.android.support:appcompat-v7:26.0.0'
-    compile 'com.android.support:cardview-v7:26.0.0'
+    compile 'com.android.support:support-annotations:27.0.1'
+    compile 'com.android.support:support-v4:26.1.0'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:cardview-v7:26.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:customtabs:26.0.0'
-    compile 'com.android.support:recyclerview-v7:26.0.0'
-    compile 'com.android.support:design:26.0.0'
-    compile 'com.android.support:percent:26.0.0'
+    compile 'com.android.support:customtabs:26.1.0'
+    compile 'com.android.support:recyclerview-v7:26.1.0'
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.android.support:percent:26.1.0'
     compile 'com.f2prateek.dart:dart:2.0.2'
-    compile 'com.google.android.gms:play-services-analytics:11.0.4'
+    compile 'com.google.android.gms:play-services-analytics:11.6.2'
     compile 'com.google.dagger:dagger:2.11'
-    compile 'com.google.firebase:firebase-ads:11.0.4'
-    compile 'com.google.firebase:firebase-core:11.0.4'
-    compile 'com.google.firebase:firebase-messaging:11.0.4'
+    compile 'com.google.firebase:firebase-ads:11.6.2'
+    compile 'com.google.firebase:firebase-core:11.6.2'
+    compile 'com.google.firebase:firebase-messaging:11.6.2'
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'
     compile 'com.github.bumptech.glide:glide:4.2.0'
     compile 'com.jakewharton:butterknife:8.8.1'

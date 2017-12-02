@@ -25,7 +25,6 @@ import android.os.AsyncTask;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
-import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.presenter.fragment.UnusualPresenter;
@@ -66,12 +65,12 @@ public class LoadUnusualEffectsInteractor extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
 
         String sql = "SELECT " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + "," +
-                UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_NAME + "," +
+                " unusual_schema.name," +
                 " AVG(" + Utility.getRawPriceQueryString(mContext) + ") avg_price " +
                 " FROM " + PriceEntry.TABLE_NAME +
-                " LEFT JOIN " + UnusualSchemaEntry.TABLE_NAME +
-                " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + " = " + UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_ID +
-                " WHERE " + UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_NAME + " LIKE ? AND " +
+                " LEFT JOIN unusual_schema" +
+                " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + " = unusual_schema._id " +
+                " WHERE unusual_schema.name LIKE ? AND " +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
                 PriceEntry.COLUMN_PRICE_INDEX + " != ? " +
                 " GROUP BY " + PriceEntry.COLUMN_PRICE_INDEX;
@@ -80,7 +79,7 @@ public class LoadUnusualEffectsInteractor extends AsyncTask<Void, Void, Void> {
 
         switch (mOrderBy) {
             case UnusualPresenter.ORDER_BY_NAME:
-                sql += " ORDER BY " + UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_NAME + " ASC";
+                sql += " ORDER BY unusual_schema.name ASC";
                 break;
             case UnusualPresenter.ORDER_BY_PRICE:
                 sql += " ORDER BY avg_price DESC";
@@ -98,7 +97,7 @@ public class LoadUnusualEffectsInteractor extends AsyncTask<Void, Void, Void> {
 
                 Item item = new Item();
                 item.setPriceIndex(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE_INDEX)));
-                item.setName(cursor.getString(cursor.getColumnIndex(UnusualSchemaEntry.COLUMN_NAME)));
+                item.setName(cursor.getString(cursor.getColumnIndex("name")));
                 item.setPrice(price);
 
                 mItems.add(item);

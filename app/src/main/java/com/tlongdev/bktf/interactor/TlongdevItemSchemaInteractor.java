@@ -21,13 +21,13 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.DecoratedWeaponEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
-import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
+import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
+import com.tlongdev.bktf.data.entity.UnusualSchema;
 import com.tlongdev.bktf.network.TlongdevInterface;
 import com.tlongdev.bktf.network.model.tlongdev.TlongdevDecoratedWeapon;
 import com.tlongdev.bktf.network.model.tlongdev.TlongdevItem;
@@ -36,6 +36,7 @@ import com.tlongdev.bktf.network.model.tlongdev.TlongdevOrigin;
 import com.tlongdev.bktf.network.model.tlongdev.TlongdevParticleName;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -50,8 +51,14 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
      */
     private static final String LOG_TAG = TlongdevItemSchemaInteractor.class.getSimpleName();
 
-    @Inject TlongdevInterface mTlongdevInterface;
-    @Inject Context mContext;
+    @Inject
+    TlongdevInterface mTlongdevInterface;
+
+    @Inject
+    Context mContext;
+
+    @Inject
+    UnusualSchemaDao unusualSchemaDao;
 
     private final Callback mCallback;
     private String errorMessage;
@@ -146,25 +153,16 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
     }
 
     private void insertParticles(List<TlongdevParticleName> particles) {
-        Vector<ContentValues> cVVectorParticles = new Vector<>();
+        List<UnusualSchema> schemas = new LinkedList<>();
 
         for (TlongdevParticleName particle : particles) {
-            //The DV that will contain all the data
-            ContentValues itemValues = new ContentValues();
-            itemValues.put(UnusualSchemaEntry.COLUMN_ID, particle.getId());
-            itemValues.put(UnusualSchemaEntry.COLUMN_NAME, particle.getName());
-
-            //Add the price to the CV vector
-            cVVectorParticles.add(itemValues);
+            schemas.add(new UnusualSchema(particle.getId(), particle.getName()));
         }
 
-        if (cVVectorParticles.size() > 0) {
-            ContentValues[] cvArray = new ContentValues[cVVectorParticles.size()];
-            cVVectorParticles.toArray(cvArray);
+        if (schemas.size() > 0) {
+            unusualSchemaDao.insertSchemas(schemas);
             //Insert all the data into the database
-            int rowsInserted = mContext.getContentResolver()
-                    .bulkInsert(UnusualSchemaEntry.CONTENT_URI, cvArray);
-            Log.v(LOG_TAG, "inserted " + rowsInserted + " rows into unusual_schema");
+            Log.v(LOG_TAG, "inserted " + schemas.size() + " rows into unusual_schema");
         }
 
         publishProgress();

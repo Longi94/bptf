@@ -29,6 +29,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 import com.tlongdev.bktf.model.Item;
 
 import java.util.List;
@@ -40,7 +41,10 @@ import butterknife.ButterKnife;
 
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.ViewHolder> {
 
-    @Inject Context mContext;
+    @Inject
+    Context mContext;
+    @Inject
+    UnusualSchemaDao mUnusualSchemaDao;
 
     private List<Item> mDataSet;
 
@@ -69,7 +73,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
                 }
             });
 
-            holder.name.setText(item.getFormattedName(mContext, false));
+            holder.name.setText(item.getFormattedName(mContext, mUnusualSchemaDao, false));
             holder.icon.setImageDrawable(null);
             holder.quality.setBackgroundColor(item.getColor(mContext, true));
 

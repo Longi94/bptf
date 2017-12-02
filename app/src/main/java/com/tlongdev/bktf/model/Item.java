@@ -27,7 +27,7 @@ import android.support.v4.content.ContextCompat;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.DecoratedWeaponEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
-import com.tlongdev.bktf.util.Utility;
+import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 
 import java.util.Locale;
 
@@ -187,7 +187,7 @@ public class Item implements Parcelable {
      * @return the formatted name
      */
     @SuppressLint("SwitchIntDef")
-    public String getFormattedName(Context context, boolean isProper) {
+    public String getFormattedName(Context context, UnusualSchemaDao unusualSchemaDao, boolean isProper) {
         //Empty string that will be appended.
         String formattedName = "";
 
@@ -241,7 +241,7 @@ public class Item implements Parcelable {
                 break;
             case Quality.UNUSUAL:
                 //Get the unusual effect name by its index
-                formattedName += Utility.getUnusualEffectName(context, priceIndex) + " ";
+                formattedName += unusualSchemaDao.getUnusualSchema(priceIndex).getName() + " ";
                 break;
             case Quality.COMMUNITY:
                 formattedName += context.getString(R.string.quality_community) + " ";
@@ -282,8 +282,8 @@ public class Item implements Parcelable {
      * @param context the context
      * @return the formatted name
      */
-    public String getFormattedName(Context context) {
-        return getFormattedName(context, false);
+    public String getFormattedName(Context context, UnusualSchemaDao unusualSchemaDao) {
+        return getFormattedName(context, unusualSchemaDao, false);
     }
 
     /**
@@ -293,13 +293,13 @@ public class Item implements Parcelable {
      * @param isProper whether the name needs the definite article (The)
      * @return the formatted name
      */
-    public String getSimpleFormattedName(Context context, boolean isProper) {
+    public String getSimpleFormattedName(Context context, UnusualSchemaDao unusualSchemaDao, boolean isProper) {
         if (quality == Quality.UNUSUAL) {
             return context.getString(R.string.quality_unusual) + " " + name;
         } else if (isProper && quality == Quality.UNIQUE) {
-            return getFormattedName(context, true);
+            return getFormattedName(context, unusualSchemaDao, true);
         } else {
-            return getFormattedName(context, false);
+            return getFormattedName(context, unusualSchemaDao, false);
         }
     }
 
@@ -309,8 +309,8 @@ public class Item implements Parcelable {
      * @param context the context
      * @return the formatted name
      */
-    public String getSimpleFormattedName(Context context) {
-        return getSimpleFormattedName(context, false);
+    public String getSimpleFormattedName(Context context, UnusualSchemaDao unusualSchemaDao) {
+        return getSimpleFormattedName(context, unusualSchemaDao, false);
     }
 
     /**

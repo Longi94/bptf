@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Long Tran
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,10 +17,16 @@
 package com.tlongdev.bktf.module;
 
 import android.app.Application;
+import android.arch.persistence.db.SupportSQLiteDatabase;
+import android.arch.persistence.room.Room;
+import android.arch.persistence.room.migration.Migration;
 import android.content.ContentResolver;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
+import com.tlongdev.bktf.data.BptfDatabase;
 import com.tlongdev.bktf.data.DatabaseHelper;
+import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -34,6 +40,19 @@ import dagger.Provides;
  */
 @Module
 public class StorageModule {
+
+    private static final Migration MIGRATION_9_10 = new Migration(9, 10) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            // migrating to room
+
+            // migrate unusual schema
+            database.execSQL("CREATE TABLE unusual_schema_copy (_id INTEGER NOT NULL PRIMARY KEY, name TEXT NOT NULL)");
+            database.execSQL("INSERT INTO unusual_schema_copy (_id, name) SELECT id, name FROM unusual_schema");
+            database.execSQL("DROP TABLE unusual_schema");
+            database.execSQL("ALTER TABLE unusual_schema_copy RENAME TO unusual_schema");
+        }
+    };
 
     @Provides
     @Singleton
@@ -53,5 +72,22 @@ public class StorageModule {
     @Singleton
     ContentResolver provideContentResolver(Application application) {
         return application.getContentResolver();
+    }
+
+    @Provides
+    @Singleton
+    BptfDatabase provideBptfDatabase(Application application) {
+        return Room.databaseBuilder(application, BptfDatabase.class, "bptf.db")
+                .addMigrations(
+                        MIGRATION_9_10
+                )
+                .allowMainThreadQueries()
+                .build();
+    }
+
+    @Provides
+    @Singleton
+    UnusualSchemaDao provideUnusualSchemaDao(BptfDatabase database) {
+        return database.unusualSchemaDao();
     }
 }

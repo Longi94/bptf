@@ -30,6 +30,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.model.Quality;
@@ -54,7 +55,10 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
     public static final String EXTRA_ITEM_TYPE = "type";
     public static final String EXTRA_PROPER_NAME = "proper";
 
-    @Inject ItemDetailPresenter mPresenter;
+    @Inject
+    ItemDetailPresenter mPresenter;
+    @Inject
+    UnusualSchemaDao mUnusualSchemaDao;
 
     @InjectExtra(EXTRA_GUEST) boolean isGuest;
     @InjectExtra(EXTRA_ITEM_ID) int mId;
@@ -122,7 +126,7 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
     public void showItemDetails(BackpackItem item) {
         item.setName(mItemName);
         //Set the name of the item
-        name.setText(item.getFormattedName(this, mProperName == 1));
+        name.setText(item.getFormattedName(this, mUnusualSchemaDao, mProperName == 1));
 
         //Set the level of the item, get the type from the intent
         if (item.getDefindex() >= 15000 && item.getDefindex() <= 15059) {
@@ -139,7 +143,7 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
                 || item.getQuality() == Quality.COMMUNITY
                 || item.getQuality() == Quality.SELF_MADE)) {
             effect.setText(String.format("%s: %s", getString(R.string.item_detail_effect),
-                    Utility.getUnusualEffectName(this, item.getPriceIndex())));
+                    mUnusualSchemaDao.getUnusualSchema(item.getPriceIndex()).getName()));
             effect.setVisibility(View.VISIBLE);
         }
 

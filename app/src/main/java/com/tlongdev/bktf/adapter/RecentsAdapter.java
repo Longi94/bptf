@@ -32,6 +32,7 @@ import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 
@@ -45,7 +46,10 @@ import butterknife.ButterKnife;
  */
 public class RecentsAdapter extends CursorRecyclerViewAdapter<RecentsAdapter.ViewHolder> {
 
-    @Inject Context mContext;
+    @Inject
+    Context mContext;
+    @Inject
+    UnusualSchemaDao mUnusualSchemaDao;
 
     private OnMoreListener mListener;
 
@@ -88,7 +92,7 @@ public class RecentsAdapter extends CursorRecyclerViewAdapter<RecentsAdapter.Vie
             }
         });
 
-        holder.name.setText(item.getFormattedName(mContext, false));
+        holder.name.setText(item.getFormattedName(mContext, mUnusualSchemaDao, false));
 
         //Set the change indicator of the item
         holder.difference.setTextColor(item.getPrice().getDifferenceColor());

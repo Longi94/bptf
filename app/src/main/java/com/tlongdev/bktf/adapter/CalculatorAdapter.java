@@ -29,6 +29,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 import com.tlongdev.bktf.model.Item;
 
 import java.util.List;
@@ -43,7 +44,10 @@ import butterknife.ButterKnife;
  */
 public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.ViewHolder> {
 
-    @Inject Context mContext;
+    @Inject
+    Context mContext;
+    @Inject
+    UnusualSchemaDao mUnusualSchemaDao;
 
     private List<Item> mDataSet;
     private List<Integer> mCountSet;
@@ -87,7 +91,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                 holder.effect.setImageDrawable(null);
             }
 
-            holder.name.setText(item.getFormattedName(mContext));
+            holder.name.setText(item.getFormattedName(mContext, mUnusualSchemaDao));
 
             holder.quality.setBackgroundColor(item.getColor(mContext, true));
 

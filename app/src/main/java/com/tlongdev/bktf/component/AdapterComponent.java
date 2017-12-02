@@ -25,6 +25,7 @@ import com.tlongdev.bktf.adapter.SearchAdapter;
 import com.tlongdev.bktf.adapter.SelectItemAdapter;
 import com.tlongdev.bktf.adapter.UnusualAdapter;
 import com.tlongdev.bktf.module.BptfAppModule;
+import com.tlongdev.bktf.module.StorageModule;
 
 import javax.inject.Singleton;
 
@@ -35,7 +36,7 @@ import dagger.Component;
  * @since 2016. 03. 24.
  */
 @Singleton
-@Component(modules = {BptfAppModule.class})
+@Component(modules = {BptfAppModule.class, StorageModule.class})
 public interface AdapterComponent {
     void inject(BackpackAdapter backpackAdapter);
 

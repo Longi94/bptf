@@ -46,7 +46,6 @@ import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
 import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
 import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
-import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
@@ -71,34 +70,6 @@ public class Utility {
     private static final String LOG_TAG = Utility.class.getSimpleName();
 
     public static final double EPSILON = 0.0001;
-
-    /**
-     * Get the name of the unusual effect.
-     *
-     * @param index index corresponding to the effect
-     * @return the name of the unusual effect
-     */
-    public static String getUnusualEffectName(Context context, int index) {
-
-        Cursor cursor = context.getContentResolver().query(
-                UnusualSchemaEntry.CONTENT_URI,
-                new String[]{UnusualSchemaEntry.COLUMN_NAME},
-                UnusualSchemaEntry.COLUMN_ID + " = ?",
-                new String[]{String.valueOf(index)},
-                null
-        );
-
-        String name = "";
-
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                name = cursor.getString(0);
-            }
-            cursor.close();
-        }
-
-        return name;
-    }
 
     /**
      * Get the name of the origin.
