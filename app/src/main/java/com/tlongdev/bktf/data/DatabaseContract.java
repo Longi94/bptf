@@ -40,7 +40,6 @@ public final class DatabaseContract {
     // as the ContentProvider hasn't been given any information on what to do with "givemeroot".
     // At least, let's hope not.  Don't be that dev, reader.  Don't be that dev.
     public static final String PATH_PRICE_LIST = "pricelist";
-    public static final String PATH_ITEM_SCHEMA = "schema";
     public static final String PATH_FAVORITES = "favorites";
     public static final String PATH_CALCULATOR = "calculator";
     public static final String PATH_BACKPACK = "backpack";
@@ -75,21 +74,6 @@ public final class DatabaseContract {
         public static Uri buildUri(long id) {
             return CONTENT_URI.buildUpon().appendPath("id").appendPath("" + id).build();
         }
-    }
-
-    /* Inner class that defines the table contents of the weather table */
-    public static final class ItemSchemaEntry implements BaseColumns {
-
-        public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_ITEM_SCHEMA).build();
-
-        public static final String TABLE_NAME = "item_schema";
-
-        public static final String COLUMN_DEFINDEX = "defindex";
-        public static final String COLUMN_ITEM_NAME = "item_name";
-        public static final String COLUMN_TYPE_NAME = "type_name";
-        public static final String COLUMN_PROPER_NAME = "proper_name";
-        public static final String COLUMN_DESCRIPTION = "description";
     }
 
     public static final class FavoritesEntry implements BaseColumns {

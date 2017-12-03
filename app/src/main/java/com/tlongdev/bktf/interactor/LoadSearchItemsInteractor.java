@@ -21,7 +21,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 
 import javax.inject.Inject;
@@ -61,7 +60,7 @@ public class LoadSearchItemsInteractor extends AsyncTask<Void, Void, Cursor> {
 
         String sql = "SELECT " +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + "," +
-                ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
+                "item_schema.item_name," +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + "," +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_TRADABLE + "," +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_CRAFTABLE + "," +
@@ -71,15 +70,15 @@ public class LoadSearchItemsInteractor extends AsyncTask<Void, Void, Cursor> {
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_HIGH + "," +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM +
                 " FROM " + PriceEntry.TABLE_NAME +
-                " LEFT JOIN " + ItemSchemaEntry.TABLE_NAME +
-                " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
+                " LEFT JOIN item_schema" +
+                " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = item_schema.defindex" +
                 " WHERE ";
 
         String query = mQuery != null && mQuery.length() > 0 ? "%" + mQuery + "%" : "ASDASD"; //stupid
         String[] selectionArgs;
 
         if (mFilter) {
-            sql += ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + " LIKE ? AND " +
+            sql += "item_schema.item_name LIKE ? AND " +
                     PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
                     PriceEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
                     PriceEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
@@ -88,7 +87,7 @@ public class LoadSearchItemsInteractor extends AsyncTask<Void, Void, Cursor> {
                     mFilterTradable ? "1" : "0", mFilterCraftable ? "1" : "0",
                     mFilterAustralium ? "1" : "0"};
         } else {
-            sql += ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + " LIKE ? AND " +
+            sql += "item_schema.item_name LIKE ? AND " +
                     "NOT(" + PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
                     PriceEntry.COLUMN_PRICE_INDEX + " != ?)";
             selectionArgs = new String[]{query, "5", "0"};

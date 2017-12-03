@@ -24,6 +24,7 @@ import com.tlongdev.bktf.adapter.RecentsAdapter;
 import com.tlongdev.bktf.adapter.SearchAdapter;
 import com.tlongdev.bktf.adapter.SelectItemAdapter;
 import com.tlongdev.bktf.adapter.UnusualAdapter;
+import com.tlongdev.bktf.adapter.spinner.QualityAdapter;
 import com.tlongdev.bktf.module.BptfAppModule;
 import com.tlongdev.bktf.module.StorageModule;
 
@@ -53,4 +54,6 @@ public interface AdapterComponent {
     void inject(SelectItemAdapter selectItemAdapter);
 
     void inject(UnusualAdapter unusualAdapter);
+
+    void inject(QualityAdapter qualityAdapter);
 }

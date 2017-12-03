@@ -32,8 +32,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
+import com.tlongdev.bktf.data.dao.ItemSchemaDao;
 import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
@@ -57,6 +58,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     Context mContext;
     @Inject
     UnusualSchemaDao mUnusualSchemaDao;
+    @Inject
+    DecoratedWeaponDao mDecoratedWeaponDao;
+    @Inject
+    ItemSchemaDao mItemSchemaDao;
 
     private Cursor mDataSet;
     private boolean mLoading;
@@ -127,7 +132,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     //Get all the data from the cursor
                     final Item item = new Item();
                     item.setDefindex(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_DEFINDEX)));
-                    item.setName(mDataSet.getString(mDataSet.getColumnIndex(ItemSchemaEntry.COLUMN_ITEM_NAME)));
+                    item.setName(mDataSet.getString(mDataSet.getColumnIndex("item_name")));
                     item.setQuality(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_QUALITY)));
                     item.setTradable(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_TRADABLE)) == 1);
                     item.setCraftable(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_CRAFTABLE)) == 1);
@@ -141,10 +146,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                         }
                     });
 
-                    holder.name.setText(item.getFormattedName(mContext, mUnusualSchemaDao));
+                    holder.name.setText(item.getFormattedName(mContext, mUnusualSchemaDao, mItemSchemaDao));
 
                     holder.icon.setImageDrawable(null);
-                    holder.quality.setBackgroundColor(item.getColor(mContext, true));
+                    holder.quality.setBackgroundColor(item.getColor(mContext, mDecoratedWeaponDao, true));
 
                     if (!item.isTradable()) {
                         if (!item.isCraftable()) {

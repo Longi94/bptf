@@ -29,7 +29,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.model.Item;
 
 import javax.inject.Inject;
@@ -60,8 +59,8 @@ public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.Vi
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (mDataSet != null && mDataSet.moveToPosition(position)) {
             final Item item = new Item();
-            item.setDefindex(mDataSet.getInt(mDataSet.getColumnIndex(ItemSchemaEntry.COLUMN_DEFINDEX)));
-            item.setName(mDataSet.getString(mDataSet.getColumnIndex(ItemSchemaEntry.COLUMN_ITEM_NAME)));
+            item.setDefindex(mDataSet.getInt(mDataSet.getColumnIndex("defindex")));
+            item.setName(mDataSet.getString(mDataSet.getColumnIndex("item_name")));
 
             holder.name.setText(item.getName());
 

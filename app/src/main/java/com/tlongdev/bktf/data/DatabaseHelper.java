@@ -89,16 +89,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         PriceEntry.COLUMN_WEAPON_WEAR + ") ON CONFLICT REPLACE);";
 
         final String SQL_CREATE_ITEM_SCHEMA_TABLE =
-                "CREATE TABLE " + ItemSchemaEntry.TABLE_NAME + " (" +
-                        ItemSchemaEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "CREATE TABLE item_schema (" +
+                        "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
-                        ItemSchemaEntry.COLUMN_DEFINDEX + " INTEGER NOT NULL, " +
-                        ItemSchemaEntry.COLUMN_ITEM_NAME + " INTEGER NOT NULL, " +
-                        ItemSchemaEntry.COLUMN_DESCRIPTION + " TEXT, " +
-                        ItemSchemaEntry.COLUMN_TYPE_NAME + " INTEGER NOT NULL, " +
-                        ItemSchemaEntry.COLUMN_PROPER_NAME + " INTEGER NOT NULL, " +
+                        "defindex INTEGER NOT NULL, " +
+                        "item_name INTEGER NOT NULL, " +
+                        "description TEXT, " +
+                        "type_name INTEGER NOT NULL, " +
+                        "proper_name INTEGER NOT NULL, " +
 
-                        " UNIQUE (" + PriceEntry.COLUMN_DEFINDEX + ") ON CONFLICT REPLACE);";
+                        " UNIQUE (defindex) ON CONFLICT REPLACE);";
 
         final String SQL_CREATE_UNUSUAL_SCHEMA_TABLE =
                 "CREATE TABLE unusual_schema (" +
@@ -240,7 +240,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + PriceEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + ItemSchemaEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS item_schema");
         db.execSQL("DROP TABLE IF EXISTS unusual_schema");
         db.execSQL("DROP TABLE IF EXISTS origin_names");
         db.execSQL("DROP TABLE IF EXISTS decorated_weapons");

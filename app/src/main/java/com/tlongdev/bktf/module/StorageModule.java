@@ -27,6 +27,7 @@ import android.support.annotation.NonNull;
 import com.tlongdev.bktf.data.BptfDatabase;
 import com.tlongdev.bktf.data.DatabaseHelper;
 import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
+import com.tlongdev.bktf.data.dao.ItemSchemaDao;
 import com.tlongdev.bktf.data.dao.OriginDao;
 import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 
@@ -61,10 +62,16 @@ public class StorageModule {
             database.execSQL("ALTER TABLE origin_names_copy RENAME TO origin_names");
 
             // migrate decorated weapons
-            database.execSQL("CREATE TABLE IF NOT EXISTS decorated_weapons_copy (_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, defindex INTEGER NOT NULL, grade INTEGER NOT NULL)");
+            database.execSQL("CREATE TABLE decorated_weapons_copy (_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, defindex INTEGER NOT NULL, grade INTEGER NOT NULL)");
             database.execSQL("INSERT INTO decorated_weapons_copy (_id, defindex, grade) SELECT _id, defindex, grade FROM decorated_weapons");
             database.execSQL("DROP TABLE decorated_weapons");
             database.execSQL("ALTER TABLE decorated_weapons_copy RENAME TO decorated_weapons");
+
+            // migrate item schema
+            database.execSQL("CREATE TABLE item_schema_copy (_id INTEGER NOT NULL, defindex INTEGER NOT NULL, item_name TEXT NOT NULL, description TEXT, type_name TEXT NOT NULL, proper_name INTEGER NOT NULL, PRIMARY KEY(_id))");
+            database.execSQL("INSERT INTO item_schema_copy (_id, defindex, item_name, description, type_name, proper_name) SELECT _id, defindex, item_name, description, type_name, proper_name FROM item_schema");
+            database.execSQL("DROP TABLE item_schema");
+            database.execSQL("ALTER TABLE item_schema_copy RENAME TO item_schema");
         }
     };
 
@@ -115,5 +122,11 @@ public class StorageModule {
     @Singleton
     DecoratedWeaponDao provideDecoratedWeaponDao(BptfDatabase database) {
         return database.decoratedWeaponDao();
+    }
+
+    @Provides
+    @Singleton
+    ItemSchemaDao provideItemSchemaDao(BptfDatabase database) {
+        return database.itemSchemaDao();
     }
 }

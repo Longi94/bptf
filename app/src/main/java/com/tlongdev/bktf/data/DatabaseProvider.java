@@ -39,7 +39,6 @@ public class DatabaseProvider extends ContentProvider {
      * URI matcher result codes
      */
     private static final int PRICE_LIST = 100;
-    private static final int ITEM_SCHEMA = 101;
     private static final int BACKPACK = 104;
     private static final int BACKPACK_GUEST = 105;
     private static final int FAVORITES = 106;
@@ -73,7 +72,6 @@ public class DatabaseProvider extends ContentProvider {
 
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, DatabaseContract.PATH_PRICE_LIST, PRICE_LIST);
-        matcher.addURI(authority, DatabaseContract.PATH_ITEM_SCHEMA, ITEM_SCHEMA);
         matcher.addURI(authority, DatabaseContract.PATH_BACKPACK, BACKPACK);
         matcher.addURI(authority, DatabaseContract.PATH_FAVORITES, FAVORITES);
         matcher.addURI(authority, DatabaseContract.PATH_CALCULATOR, CALCULATOR);
@@ -98,9 +96,6 @@ public class DatabaseProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
             case PRICE_LIST:
                 tableName = PriceEntry.TABLE_NAME;
-                break;
-            case ITEM_SCHEMA:
-                tableName = ItemSchemaEntry.TABLE_NAME;
                 break;
             case BACKPACK:
                 tableName = UserBackpackEntry.TABLE_NAME;
@@ -145,8 +140,6 @@ public class DatabaseProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
             case PRICE_LIST:
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_PRICE_LIST;
-            case ITEM_SCHEMA:
-                return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_ITEM_SCHEMA;
             case BACKPACK:
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_BACKPACK;
             case BACKPACK_GUEST:
@@ -170,10 +163,6 @@ public class DatabaseProvider extends ContentProvider {
             case PRICE_LIST:
                 tableName = PriceEntry.TABLE_NAME;
                 returnUri = PriceEntry.CONTENT_URI;
-                break;
-            case ITEM_SCHEMA:
-                tableName = ItemSchemaEntry.TABLE_NAME;
-                returnUri = ItemSchemaEntry.CONTENT_URI;
                 break;
             case BACKPACK:
                 tableName = UserBackpackEntry.TABLE_NAME;
@@ -211,9 +200,6 @@ public class DatabaseProvider extends ContentProvider {
             case PRICE_LIST:
                 rowsDeleted = db.delete(PriceEntry.TABLE_NAME, selection, selectionArgs);
                 break;
-            case ITEM_SCHEMA:
-                rowsDeleted = db.delete(ItemSchemaEntry.TABLE_NAME, selection, selectionArgs);
-                break;
             case BACKPACK:
                 rowsDeleted = db.delete(UserBackpackEntry.TABLE_NAME, selection, selectionArgs);
                 break;
@@ -247,9 +233,6 @@ public class DatabaseProvider extends ContentProvider {
             case PRICE_LIST:
                 rowsUpdated = db.update(PriceEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
-            case ITEM_SCHEMA:
-                rowsUpdated = db.update(ItemSchemaEntry.TABLE_NAME, values, selection, selectionArgs);
-                break;
             case BACKPACK:
                 rowsUpdated = db.update(UserBackpackEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
@@ -280,9 +263,6 @@ public class DatabaseProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
             case PRICE_LIST:
                 tableName = PriceEntry.TABLE_NAME;
-                break;
-            case ITEM_SCHEMA:
-                tableName = ItemSchemaEntry.TABLE_NAME;
                 break;
             case BACKPACK:
                 tableName = UserBackpackEntry.TABLE_NAME;
@@ -327,7 +307,7 @@ public class DatabaseProvider extends ContentProvider {
         Cursor cursor = mOpenHelper.getReadableDatabase().rawQuery("SELECT " +
                         PriceEntry.TABLE_NAME + "." + PriceEntry._ID + "," +
                         PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + "," +
-                        ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
+                        "item_schema.item_name," +
                         PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + "," +
                         PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_TRADABLE + "," +
                         PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_CRAFTABLE + "," +
@@ -339,8 +319,8 @@ public class DatabaseProvider extends ContentProvider {
                         PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DIFFERENCE + "," +
                         PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM +
                         " FROM " + PriceEntry.TABLE_NAME +
-                        " LEFT JOIN " + ItemSchemaEntry.TABLE_NAME +
-                        " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
+                        " LEFT JOIN item_schema" +
+                        " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = item_schema.defindex" +
                         " ORDER BY " + PriceEntry.COLUMN_LAST_UPDATE + " DESC",
                 null
         );

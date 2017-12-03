@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 /**
  * Created by lngtr on 2017-11-28.
  */
+@SuppressWarnings("NullableProblems")
 @Entity(tableName = "unusual_schema")
 public class UnusualSchema {
 

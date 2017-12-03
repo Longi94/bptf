@@ -82,7 +82,7 @@ public class SearchFilterActivity extends BptfActivity {
         getWindow().setAttributes(params);
         setFinishOnTouchOutside(false);
 
-        qualityAdapter = new QualityAdapter(this);
+        qualityAdapter = new QualityAdapter(mApplication);
         qualitySpinner.setAdapter(qualityAdapter);
 
         enableSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {

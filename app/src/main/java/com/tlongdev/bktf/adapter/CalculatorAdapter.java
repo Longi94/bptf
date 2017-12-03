@@ -29,6 +29,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
+import com.tlongdev.bktf.data.dao.ItemSchemaDao;
 import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 import com.tlongdev.bktf.model.Item;
 
@@ -48,6 +50,10 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
     Context mContext;
     @Inject
     UnusualSchemaDao mUnusualSchemaDao;
+    @Inject
+    DecoratedWeaponDao mDecoratedWeaponDao;
+    @Inject
+    ItemSchemaDao mItemSchemaDao;
 
     private List<Item> mDataSet;
     private List<Integer> mCountSet;
@@ -91,9 +97,9 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
                 holder.effect.setImageDrawable(null);
             }
 
-            holder.name.setText(item.getFormattedName(mContext, mUnusualSchemaDao));
+            holder.name.setText(item.getFormattedName(mContext, mUnusualSchemaDao, mItemSchemaDao));
 
-            holder.quality.setBackgroundColor(item.getColor(mContext, true));
+            holder.quality.setBackgroundColor(item.getColor(mContext, mDecoratedWeaponDao, true));
 
             if (!item.isTradable()) {
                 if (!item.isCraftable()) {

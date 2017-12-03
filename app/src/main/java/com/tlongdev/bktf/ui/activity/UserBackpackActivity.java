@@ -18,7 +18,6 @@ package com.tlongdev.bktf.ui.activity;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -37,7 +36,8 @@ import com.f2prateek.dart.InjectExtra;
 import com.google.android.gms.ads.AdView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.BackpackAdapter;
-import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
+import com.tlongdev.bktf.data.dao.ItemSchemaDao;
+import com.tlongdev.bktf.data.entity.ItemSchema;
 import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.presenter.activity.UserBackpackPresenter;
 import com.tlongdev.bktf.ui.view.activity.UserBackpackView;
@@ -59,7 +59,10 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
     public static final String EXTRA_GUEST = "guest";
     public static final String EXTRA_STEAM_ID = "steam_id";
 
-    @Inject UserBackpackPresenter mPresenter;
+    @Inject
+    UserBackpackPresenter mPresenter;
+    @Inject
+    ItemSchemaDao itemSchemaDao;
 
     @InjectExtra(EXTRA_NAME) String mUserName;
     //Boolean to decide which database table to load from
@@ -175,28 +178,12 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
         i.putExtra(ItemDetailActivity.EXTRA_ITEM_ID, backpackItem.getId());
         i.putExtra(ItemDetailActivity.EXTRA_GUEST, mIsGuest);
 
-        Cursor itemCursor = getContentResolver().query(
-                ItemSchemaEntry.CONTENT_URI,
-                new String[]{
-                        ItemSchemaEntry.COLUMN_ITEM_NAME,
-                        ItemSchemaEntry.COLUMN_TYPE_NAME,
-                        ItemSchemaEntry.COLUMN_PROPER_NAME
-                },
-                ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX + " = ?",
-                new String[]{String.valueOf(backpackItem.getDefindex())},
-                null
-        );
+        ItemSchema itemSchema = itemSchemaDao.getItemSchema(backpackItem.getDefindex());
 
-        if (itemCursor != null) {
-            if (itemCursor.moveToFirst()) {
-                i.putExtra(ItemDetailActivity.EXTRA_ITEM_NAME,
-                        itemCursor.getString(0));
-                i.putExtra(ItemDetailActivity.EXTRA_ITEM_TYPE,
-                        itemCursor.getString(1));
-                i.putExtra(ItemDetailActivity.EXTRA_PROPER_NAME,
-                        itemCursor.getInt(2));
-            }
-            itemCursor.close();
+        if (itemSchema != null) {
+            i.putExtra(ItemDetailActivity.EXTRA_ITEM_NAME, itemSchema.getItemName());
+            i.putExtra(ItemDetailActivity.EXTRA_ITEM_TYPE, itemSchema.getTypeName());
+            i.putExtra(ItemDetailActivity.EXTRA_PROPER_NAME, itemSchema.getProperName());
         }
 
         if (Build.VERSION.SDK_INT >= 23) {

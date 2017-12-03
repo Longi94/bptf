@@ -26,9 +26,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Quality;
+
+import javax.inject.Inject;
 
 public class QualityAdapter extends BaseAdapter {
 
@@ -41,14 +45,18 @@ public class QualityAdapter extends BaseAdapter {
             Quality.SELF_MADE, Quality.STRANGE, Quality.UNIQUE, Quality.UNUSUAL, Quality.VINTAGE
     };
 
+    @Inject
+    DecoratedWeaponDao mDecoratedWeaponDao;
+
     private final Item quality;
 
     private final Context mContext;
 
-    public QualityAdapter(Context context) {
+    public QualityAdapter(BptfApplication application) {
+        application.getAdapterComponent().inject(this);
         quality = new Item();
         quality.setDefindex(15059);
-        mContext = context;
+        mContext = application;
     }
 
     @Override
@@ -96,7 +104,7 @@ public class QualityAdapter extends BaseAdapter {
 
         quality.setQuality(QUALITY_IDS[position]);
 
-        int color = quality.getColor(mContext, false);
+        int color = quality.getColor(mContext, mDecoratedWeaponDao, false);
         ImageView image = view.findViewById(R.id.quality);
         image.getDrawable().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
     }

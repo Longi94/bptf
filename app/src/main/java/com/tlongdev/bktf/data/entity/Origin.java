@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 /**
  * Created by lngtr on 2017-12-02.
  */
+@SuppressWarnings("NullableProblems")
 @Entity(tableName = "origin_names")
 public class Origin {
 

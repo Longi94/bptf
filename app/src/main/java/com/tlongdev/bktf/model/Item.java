@@ -18,17 +18,17 @@ package com.tlongdev.bktf.model;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
+import com.tlongdev.bktf.data.dao.ItemSchemaDao;
 import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 import com.tlongdev.bktf.data.entity.DecoratedWeapon;
+import com.tlongdev.bktf.data.entity.ItemSchema;
 
 import java.util.Locale;
 
@@ -188,7 +188,8 @@ public class Item implements Parcelable {
      * @return the formatted name
      */
     @SuppressLint("SwitchIntDef")
-    public String getFormattedName(Context context, UnusualSchemaDao unusualSchemaDao, boolean isProper) {
+    public String getFormattedName(Context context, UnusualSchemaDao unusualSchemaDao,
+                                   ItemSchemaDao itemSchemaDao, boolean isProper) {
         //Empty string that will be appended.
         String formattedName = "";
 
@@ -203,19 +204,10 @@ public class Item implements Parcelable {
 
         //Handle strangifier names differently
         if (defindex == 6522) {
-            Cursor itemCursor = context.getContentResolver().query(
-                    ItemSchemaEntry.CONTENT_URI,
-                    new String[]{ItemSchemaEntry.COLUMN_ITEM_NAME, ItemSchemaEntry.COLUMN_TYPE_NAME, ItemSchemaEntry.COLUMN_PROPER_NAME},
-                    ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX + " = ?",
-                    new String[]{String.valueOf(priceIndex)},
-                    null
-            );
+            ItemSchema itemSchema = itemSchemaDao.getItemSchema(priceIndex);
 
-            if (itemCursor != null) {
-                if (itemCursor.moveToFirst()) {
-                    formattedName += itemCursor.getString(0) + " " + name;
-                }
-                itemCursor.close();
+            if (itemSchema != null) {
+                formattedName += itemSchema.getItemName() + " " + name;
             }
 
             return formattedName;
@@ -283,8 +275,8 @@ public class Item implements Parcelable {
      * @param context the context
      * @return the formatted name
      */
-    public String getFormattedName(Context context, UnusualSchemaDao unusualSchemaDao) {
-        return getFormattedName(context, unusualSchemaDao, false);
+    public String getFormattedName(Context context, UnusualSchemaDao unusualSchemaDao, ItemSchemaDao itemSchemaDao) {
+        return getFormattedName(context, unusualSchemaDao, itemSchemaDao, false);
     }
 
     /**
@@ -294,13 +286,13 @@ public class Item implements Parcelable {
      * @param isProper whether the name needs the definite article (The)
      * @return the formatted name
      */
-    public String getSimpleFormattedName(Context context, UnusualSchemaDao unusualSchemaDao, boolean isProper) {
+    public String getSimpleFormattedName(Context context, UnusualSchemaDao unusualSchemaDao, ItemSchemaDao itemSchemaDao, boolean isProper) {
         if (quality == Quality.UNUSUAL) {
             return context.getString(R.string.quality_unusual) + " " + name;
         } else if (isProper && quality == Quality.UNIQUE) {
-            return getFormattedName(context, unusualSchemaDao, true);
+            return getFormattedName(context, unusualSchemaDao, itemSchemaDao, true);
         } else {
-            return getFormattedName(context, unusualSchemaDao, false);
+            return getFormattedName(context, unusualSchemaDao, itemSchemaDao, false);
         }
     }
 
@@ -310,8 +302,8 @@ public class Item implements Parcelable {
      * @param context the context
      * @return the formatted name
      */
-    public String getSimpleFormattedName(Context context, UnusualSchemaDao unusualSchemaDao) {
-        return getSimpleFormattedName(context, unusualSchemaDao, false);
+    public String getSimpleFormattedName(Context context, UnusualSchemaDao unusualSchemaDao, ItemSchemaDao itemSchemaDao) {
+        return getSimpleFormattedName(context, unusualSchemaDao, itemSchemaDao, false);
     }
 
     /**

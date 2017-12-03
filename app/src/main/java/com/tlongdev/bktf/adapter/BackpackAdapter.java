@@ -31,6 +31,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
 import com.tlongdev.bktf.model.BackpackItem;
 
 import java.util.List;
@@ -48,7 +49,10 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
     public static final int VIEW_TYPE_ITEM = 0;
     public static final int VIEW_TYPE_HEADER = 1;
 
-    @Inject Context mContext;
+    @Inject
+    Context mContext;
+    @Inject
+    DecoratedWeaponDao mDecoratedWeaponDao;
 
     private List<BackpackItem> mDataSet;
 
@@ -138,7 +142,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                 if (backpackItem.getDefindex() != 0) {
 
                     //Set the background to the color of the quality
-                    holder.root.setCardBackgroundColor(backpackItem.getColor(mContext, true));
+                    holder.root.setCardBackgroundColor(backpackItem.getColor(mContext, mDecoratedWeaponDao, true));
 
                     Glide.with(mContext)
                             .load(backpackItem.getIconUrl(mContext))

@@ -30,6 +30,8 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
+import com.tlongdev.bktf.data.dao.ItemSchemaDao;
 import com.tlongdev.bktf.data.dao.OriginDao;
 import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 import com.tlongdev.bktf.model.BackpackItem;
@@ -61,10 +63,14 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
     UnusualSchemaDao mUnusualSchemaDao;
     @Inject
     OriginDao mOriginDao;
+    @Inject
+    DecoratedWeaponDao mDecoratedWeaponDao;
+    @Inject
+    ItemSchemaDao mItemSchemaDao;
 
     @InjectExtra(EXTRA_GUEST) boolean isGuest;
     @InjectExtra(EXTRA_ITEM_ID) int mId;
-    @InjectExtra(EXTRA_PROPER_NAME) int mProperName;
+    @InjectExtra(EXTRA_PROPER_NAME) boolean mProperName;
     @InjectExtra(EXTRA_ITEM_NAME) String mItemName;
     @InjectExtra(EXTRA_ITEM_TYPE) String mItemType;
 
@@ -128,11 +134,11 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
     public void showItemDetails(BackpackItem item) {
         item.setName(mItemName);
         //Set the name of the item
-        name.setText(item.getFormattedName(this, mUnusualSchemaDao, mProperName == 1));
+        name.setText(item.getFormattedName(this, mUnusualSchemaDao, mItemSchemaDao, mProperName));
 
         //Set the level of the item, get the type from the intent
         if (item.getDefindex() >= 15000 && item.getDefindex() <= 15059) {
-            level.setText(item.getDecoratedWeaponDesc(this, mItemType));
+            level.setText(item.getDecoratedWeaponDesc(this, mDecoratedWeaponDao, mItemType));
         } else {
             level.setText(getString(R.string.item_detail_level, item.getLevel(), mItemType));
         }
@@ -214,7 +220,7 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
                     .into(paintView);
         }
 
-        cardView.setCardBackgroundColor(item.getColor(this, true));
+        cardView.setCardBackgroundColor(item.getColor(this, mDecoratedWeaponDao, true));
 
         Price price = item.getPrice();
 

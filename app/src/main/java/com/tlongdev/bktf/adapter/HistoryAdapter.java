@@ -41,6 +41,8 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.Utils;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
+import com.tlongdev.bktf.data.dao.ItemSchemaDao;
 import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
@@ -72,6 +74,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     Context mContext;
     @Inject
     UnusualSchemaDao mUnusualSchemaDao;
+    @Inject
+    DecoratedWeaponDao mDecoratedWeaponDao;
+    @Inject
+    ItemSchemaDao mItemSchemaDao;
 
     private final List<Price> mDataSet;
     private final Item mItem;
@@ -122,7 +128,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             case VIEW_TYPE_HEADER:
                 buildChart(holder.historyChart);
 
-                holder.iconCard.setCardBackgroundColor(mItem.getColor(mContext, true));
+                holder.iconCard.setCardBackgroundColor(mItem.getColor(mContext, mDecoratedWeaponDao, true));
 
                 RequestOptions options = new RequestOptions()
                         .diskCacheStrategy(DiskCacheStrategy.ALL);
@@ -137,7 +143,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .into(holder.effect);
 
-                holder.name.setText(mItem.getFormattedName(mContext, mUnusualSchemaDao));
+                holder.name.setText(mItem.getFormattedName(mContext, mUnusualSchemaDao, mItemSchemaDao));
 
                 if (!mItem.isTradable()) {
                     holder.quality.setVisibility(View.VISIBLE);

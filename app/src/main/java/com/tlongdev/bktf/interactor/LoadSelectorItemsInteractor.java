@@ -16,12 +16,11 @@
 
 package com.tlongdev.bktf.interactor;
 
-import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
+import com.tlongdev.bktf.data.dao.ItemSchemaDao;
 
 import javax.inject.Inject;
 
@@ -31,7 +30,8 @@ import javax.inject.Inject;
  */
 public class LoadSelectorItemsInteractor extends AsyncTask<Void, Void, Cursor> {
 
-    @Inject ContentResolver mContentResolver;
+    @Inject
+    ItemSchemaDao itemSchemaDao;
 
     private final String mQuery;
     private final Callback mCallback;
@@ -44,25 +44,10 @@ public class LoadSelectorItemsInteractor extends AsyncTask<Void, Void, Cursor> {
 
     @Override
     protected Cursor doInBackground(Void... params) {
-        String[] selectionArgs = mQuery != null && mQuery.length() > 0 ?
-                new String[]{"%" + mQuery + "%"} : new String[]{"ASDASD"}; //stupid
-
-        Cursor cursor = mContentResolver.query(
-                ItemSchemaEntry.CONTENT_URI,
-                new String[]{
-                        ItemSchemaEntry._ID,
-                        ItemSchemaEntry.COLUMN_DEFINDEX,
-                        ItemSchemaEntry.COLUMN_ITEM_NAME
-                },
-                ItemSchemaEntry.COLUMN_ITEM_NAME + " LIKE ?",
-                selectionArgs,
-                ItemSchemaEntry.COLUMN_ITEM_NAME + " ASC"
-        );
-
-        if (cursor != null) {
-            cursor.getCount();
+        if (mQuery != null && mQuery.length() > 0) {
+            return itemSchemaDao.findItemSchemasCursor(mQuery);
         }
-        return cursor;
+        return null;
     }
 
     @Override

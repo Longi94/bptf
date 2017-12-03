@@ -29,6 +29,8 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
+import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
+import com.tlongdev.bktf.data.dao.ItemSchemaDao;
 import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 import com.tlongdev.bktf.model.Item;
 
@@ -45,6 +47,10 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
     Context mContext;
     @Inject
     UnusualSchemaDao mUnusualSchemaDao;
+    @Inject
+    ItemSchemaDao mItemSchemaDao;
+    @Inject
+    DecoratedWeaponDao mDecoratedWeaponDao;
 
     private List<Item> mDataSet;
 
@@ -73,9 +79,9 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
                 }
             });
 
-            holder.name.setText(item.getFormattedName(mContext, mUnusualSchemaDao, false));
+            holder.name.setText(item.getFormattedName(mContext, mUnusualSchemaDao, mItemSchemaDao, false));
             holder.icon.setImageDrawable(null);
-            holder.quality.setBackgroundColor(item.getColor(mContext, true));
+            holder.quality.setBackgroundColor(item.getColor(mContext, mDecoratedWeaponDao, true));
 
             if (!item.isTradable()) {
                 if (!item.isCraftable()) {

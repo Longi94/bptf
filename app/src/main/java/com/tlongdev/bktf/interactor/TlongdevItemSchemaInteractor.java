@@ -16,18 +16,18 @@
 
 package com.tlongdev.bktf.interactor;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
+import com.tlongdev.bktf.data.dao.ItemSchemaDao;
 import com.tlongdev.bktf.data.dao.OriginDao;
 import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 import com.tlongdev.bktf.data.entity.DecoratedWeapon;
+import com.tlongdev.bktf.data.entity.ItemSchema;
 import com.tlongdev.bktf.data.entity.Origin;
 import com.tlongdev.bktf.data.entity.UnusualSchema;
 import com.tlongdev.bktf.network.TlongdevInterface;
@@ -40,7 +40,6 @@ import com.tlongdev.bktf.network.model.tlongdev.TlongdevParticleName;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.inject.Inject;
 
@@ -67,6 +66,9 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
 
     @Inject
     DecoratedWeaponDao decoratedWeaponDao;
+
+    @Inject
+    ItemSchemaDao itemSchemaDao;
 
     private final Callback mCallback;
     private String errorMessage;
@@ -108,28 +110,16 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
     }
 
     private void insertItems(List<TlongdevItem> items) {
-        Vector<ContentValues> cVVectorItems = new Vector<>();
+        List<ItemSchema> schemas = new LinkedList<>();
 
         for (TlongdevItem item : items) {
-            //The DV that will contain all the data
-            ContentValues itemValues = new ContentValues();
-            itemValues.put(ItemSchemaEntry.COLUMN_DEFINDEX, item.getDefindex());
-            itemValues.put(ItemSchemaEntry.COLUMN_ITEM_NAME, item.getName());
-            itemValues.put(ItemSchemaEntry.COLUMN_TYPE_NAME, item.getTypeName());
-            itemValues.put(ItemSchemaEntry.COLUMN_DESCRIPTION, item.getDescription());
-            itemValues.put(ItemSchemaEntry.COLUMN_PROPER_NAME, item.getProperName());
-
-            //Add the price to the CV vector
-            cVVectorItems.add(itemValues);
+            schemas.add(new ItemSchema(item.getDefindex(), item.getName(), item.getDescription(),
+                    item.getTypeName(), item.getProperName() == 1));
         }
 
-        if (cVVectorItems.size() > 0) {
-            ContentValues[] cvArray = new ContentValues[cVVectorItems.size()];
-            cVVectorItems.toArray(cvArray);
-            //Insert all the data into the database
-            int rowsInserted = mContext.getContentResolver()
-                    .bulkInsert(ItemSchemaEntry.CONTENT_URI, cvArray);
-            Log.v(LOG_TAG, "inserted " + rowsInserted + " rows into item_schema");
+        if (schemas.size() > 0) {
+            itemSchemaDao.insertSchemas(schemas);
+            Log.v(LOG_TAG, "inserted " + schemas.size() + " rows into item_schema");
         }
 
         publishProgress();

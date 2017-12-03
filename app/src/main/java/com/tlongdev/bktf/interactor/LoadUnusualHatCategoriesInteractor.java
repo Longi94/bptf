@@ -24,7 +24,6 @@ import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
@@ -68,12 +67,12 @@ public class LoadUnusualHatCategoriesInteractor extends AsyncTask<Void, Void, Vo
 
         String sql = "SELECT " +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + "," +
-                ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
+                "item_schema.item_name," +
                 " AVG(" + Utility.getRawPriceQueryString(mContext) + ") avg_price " +
                 " FROM " + PriceEntry.TABLE_NAME +
-                " LEFT JOIN " + ItemSchemaEntry.TABLE_NAME +
-                " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
-                " WHERE " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + " LIKE ? AND " +
+                " LEFT JOIN item_schema" +
+                " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = item_schema.defindex" +
+                " WHERE item_name.item_name LIKE ? AND " +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
                 PriceEntry.COLUMN_PRICE_INDEX + " != ? " +
                 " GROUP BY " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX;
@@ -82,7 +81,7 @@ public class LoadUnusualHatCategoriesInteractor extends AsyncTask<Void, Void, Vo
 
         switch (mOrderBy) {
             case UnusualPresenter.ORDER_BY_NAME:
-                sql += " ORDER BY " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + " ASC";
+                sql += " ORDER BY item_schema.item_name ASC";
                 break;
             case UnusualPresenter.ORDER_BY_PRICE:
                 sql += " ORDER BY avg_price DESC";
@@ -100,7 +99,7 @@ public class LoadUnusualHatCategoriesInteractor extends AsyncTask<Void, Void, Vo
 
                 Item item = new Item();
                 item.setDefindex(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_DEFINDEX)));
-                item.setName(cursor.getString(cursor.getColumnIndex(ItemSchemaEntry.COLUMN_ITEM_NAME)));
+                item.setName(cursor.getString(cursor.getColumnIndex("item_name")));
                 item.setPrice(price);
 
                 mItems.add(item);

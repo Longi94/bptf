@@ -35,4 +35,6 @@ public interface ServiceComponent {
     void inject(FavoritesWidgetService.FavoritesRemoteViewsFactory favoritesRemoteViewsFactory);
 
     void inject(BptfMessagingService bptfMessagingService);
+
+    void inject(FavoritesWidgetService favoritesWidgetService);
 }

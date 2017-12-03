@@ -33,8 +33,9 @@ import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
-import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
+import com.tlongdev.bktf.data.dao.ItemSchemaDao;
 import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
@@ -47,8 +48,12 @@ import javax.inject.Named;
 
 public class FavoritesWidgetService extends RemoteViewsService {
 
+    @Inject
+    DecoratedWeaponDao mDecoratedWeaponDao;
+
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
+        ((BptfApplication) getApplication()).getServiceComponent().inject(this);
         return new FavoritesRemoteViewsFactory((BptfApplication) getApplication(), intent);
     }
 
@@ -80,6 +85,8 @@ public class FavoritesWidgetService extends RemoteViewsService {
         SQLiteDatabase mDatabase;
         @Inject
         UnusualSchemaDao mUnusualSchemaDao;
+        @Inject
+        ItemSchemaDao mItemSchemaDao;
 
         private Cursor mDataSet;
 
@@ -96,7 +103,7 @@ public class FavoritesWidgetService extends RemoteViewsService {
         public void onCreate() {
             sql = "SELECT " +
                     FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_DEFINDEX + "," +
-                    ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
+                    "item_schema.item_name," +
                     FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_QUALITY + "," +
                     FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_TRADABLE + "," +
                     FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_CRAFTABLE + "," +
@@ -115,9 +122,9 @@ public class FavoritesWidgetService extends RemoteViewsService {
                     " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_PRICE_INDEX + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX +
                     " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_QUALITY + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY +
                     " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_AUSTRALIUM + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM +
-                    " LEFT JOIN " + ItemSchemaEntry.TABLE_NAME +
-                    " ON " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
-                    " ORDER BY " + ItemSchemaEntry.COLUMN_ITEM_NAME + " ASC";
+                    " LEFT JOIN item_schema" +
+                    " ON " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_DEFINDEX + " = item_schema.defindex" +
+                    " ORDER BY item_name ASC";
 
 
             final long token = Binder.clearCallingIdentity();
@@ -180,7 +187,7 @@ public class FavoritesWidgetService extends RemoteViewsService {
 
                 final long token = Binder.clearCallingIdentity();
                 try {
-                    rv.setTextViewText(R.id.name, item.getFormattedName(mContext, mUnusualSchemaDao));
+                    rv.setTextViewText(R.id.name, item.getFormattedName(mContext, mUnusualSchemaDao, mItemSchemaDao));
                 } finally {
                     Binder.restoreCallingIdentity(token);
                 }
@@ -232,7 +239,7 @@ public class FavoritesWidgetService extends RemoteViewsService {
                     rv.setViewVisibility(R.id.quality, View.GONE);
                 }
 
-                rv.setInt(R.id.frame_layout, "setBackgroundColor", item.getColor(mContext, false));
+                rv.setInt(R.id.frame_layout, "setBackgroundColor", item.getColor(mContext, mDecoratedWeaponDao, false));
             }
             return rv;
         }
