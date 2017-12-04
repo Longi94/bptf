@@ -54,3 +54,4 @@ $RECYCLE.BIN/
 *.lnk
 
 /app/src/release/
+bptf.db
