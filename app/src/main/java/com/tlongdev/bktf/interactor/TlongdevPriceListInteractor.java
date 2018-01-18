@@ -180,7 +180,7 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
                     }
 
                     if (prices.size() > 0) {
-                        mPriceDao.insertPrices(prices);
+                        mPriceDao.insert(prices);
                         Log.v(LOG_TAG, "inserted " + prices.size() + " rows into prices table");
                     }
                     break;

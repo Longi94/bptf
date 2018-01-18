@@ -204,7 +204,7 @@ public class Item implements Parcelable {
 
         //Handle strangifier names differently
         if (defindex == 6522) {
-            ItemSchema itemSchema = itemSchemaDao.getItemSchema(priceIndex);
+            ItemSchema itemSchema = itemSchemaDao.find(priceIndex);
 
             if (itemSchema != null) {
                 formattedName += itemSchema.getItemName() + " " + name;
@@ -234,7 +234,7 @@ public class Item implements Parcelable {
                 break;
             case Quality.UNUSUAL:
                 //Get the unusual effect name by its index
-                formattedName += unusualSchemaDao.getUnusualSchema(priceIndex).getName() + " ";
+                formattedName += unusualSchemaDao.find(priceIndex).getName() + " ";
                 break;
             case Quality.COMMUNITY:
                 formattedName += context.getString(R.string.quality_community) + " ";
@@ -377,7 +377,7 @@ public class Item implements Parcelable {
      * @return the desired color
      */
     private int getDecoratedWeaponColor(Context context, DecoratedWeaponDao decoratedWeaponDao, boolean isDark) {
-        DecoratedWeapon decoratedWeapon = decoratedWeaponDao.getDecoratedWeapon(defindex);
+        DecoratedWeapon decoratedWeapon = decoratedWeaponDao.find(defindex);
         int colorResource = 0;
         if (decoratedWeapon != null) {
             switch (decoratedWeapon.getGrade()) {
@@ -432,7 +432,7 @@ public class Item implements Parcelable {
                 throw new IllegalArgumentException("Invalid wear: " + weaponWear);
         }
 
-        DecoratedWeapon decoratedWeapon = decoratedWeaponDao.getDecoratedWeapon(defindex);
+        DecoratedWeapon decoratedWeapon = decoratedWeaponDao.find(defindex);
 
         if (decoratedWeapon != null) {
             switch (decoratedWeapon.getGrade()) {

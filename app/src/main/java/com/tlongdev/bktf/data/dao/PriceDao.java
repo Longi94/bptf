@@ -10,13 +10,10 @@ import com.tlongdev.bktf.data.entity.Price;
 
 import java.util.Collection;
 
-/**
- * Created by lngtr on 2017-12-04.
- */
 @Dao
 public interface PriceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertPrices(Collection<Price> prices);
+    void insert(Collection<Price> prices);
 
     @Query("SELECT * FROM pricelist ORDER BY last_update DESC LIMIT 1")
     Price getNewestPrice();
@@ -29,8 +26,8 @@ public interface PriceDao {
             "  AND australium = :australium" +
             "  AND price_index = :priceIndex" +
             "  AND weapon_wear = :weaponWear")
-    Price findPrice(int defindex, int quality, boolean tradable, boolean craftable,
-                    boolean australium, int priceIndex, int weaponWear);
+    Price find(int defindex, int quality, boolean tradable, boolean craftable,
+               boolean australium, int priceIndex, int weaponWear);
 
     @Query("SELECT * FROM pricelist " +
             "WHERE defindex IN (143, 5002, 5021)" +
@@ -56,5 +53,5 @@ public interface PriceDao {
             "LEFT JOIN item_schema " +
             "       ON pricelist.defindex = item_schema.defindex " +
             "ORDER BY last_update DESC")
-    Cursor getPrices();
+    Cursor findAll();
 }

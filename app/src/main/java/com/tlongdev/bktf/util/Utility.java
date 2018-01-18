@@ -267,13 +267,13 @@ public class Utility {
         favorite.setAustralium(item.isAustralium());
         favorite.setWeaponWear(item.getWeaponWear());
 
-        favoriteDao.insertFavorite(favorite);
+        favoriteDao.insert(favorite);
 
         notifyPricesWidgets(context);
     }
 
     public static void removeFromFavorites(Context context, FavoriteDao favoriteDao, Item item) {
-        Favorite favorite = favoriteDao.findFavorite(
+        Favorite favorite = favoriteDao.find(
                 item.getDefindex(),
                 item.getQuality(),
                 item.isTradable(),
@@ -284,14 +284,14 @@ public class Utility {
         );
 
         if (favorite != null) {
-            favoriteDao.deleteFavorite(favorite);
+            favoriteDao.delete(favorite);
         }
 
         notifyPricesWidgets(context);
     }
 
     public static boolean isFavorite(FavoriteDao favoriteDao, Item item) {
-        Favorite favorite = favoriteDao.findFavorite(
+        Favorite favorite = favoriteDao.find(
                 item.getDefindex(),
                 item.getQuality(),
                 item.isTradable(),

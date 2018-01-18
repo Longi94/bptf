@@ -120,7 +120,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                     holder.root.setOnClickListener(v -> {
                         if (mListener != null) {
                             mListener.onItemClicked(item.getPriceIndex(),
-                                    mUnusualSchemaDao.getUnusualSchema(item.getPriceIndex()).getName(),
+                                    mUnusualSchemaDao.find(item.getPriceIndex()).getName(),
                                     true);
                         }
                     });

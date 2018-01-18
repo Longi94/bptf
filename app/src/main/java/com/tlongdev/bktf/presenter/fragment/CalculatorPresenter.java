@@ -86,7 +86,7 @@ public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalcul
     }
 
     public void addItem(Item item) {
-        com.tlongdev.bktf.data.entity.Price price = mPriceDao.findPrice(
+        com.tlongdev.bktf.data.entity.Price price = mPriceDao.find(
                 item.getDefindex(),
                 item.getQuality(),
                 item.isTradable(),

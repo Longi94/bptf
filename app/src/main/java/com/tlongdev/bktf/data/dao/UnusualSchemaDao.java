@@ -9,17 +9,14 @@ import com.tlongdev.bktf.data.entity.UnusualSchema;
 
 import java.util.Collection;
 
-/**
- * Created by lngtr on 2017-11-28.
- */
 @Dao
 public interface UnusualSchemaDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertSchemas(Collection<UnusualSchema> schemas);
+    void insert(Collection<UnusualSchema> schemas);
 
     @Query("SELECT * FROM unusual_schema")
-    UnusualSchema[] getFullSchema();
+    UnusualSchema[] findAll();
 
     @Query("SELECT * FROM unusual_schema WHERE _id = :id")
-    UnusualSchema getUnusualSchema(int id);
+    UnusualSchema find(int id);
 }

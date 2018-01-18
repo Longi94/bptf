@@ -9,14 +9,11 @@ import com.tlongdev.bktf.data.entity.DecoratedWeapon;
 
 import java.util.Collection;
 
-/**
- * Created by lngtr on 2017-12-02.
- */
 @Dao
 public interface DecoratedWeaponDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertDecoratedWeapons(Collection<DecoratedWeapon> origins);
+    void insert(Collection<DecoratedWeapon> origins);
 
     @Query("SELECT * FROM decorated_weapons WHERE defindex = :defindex")
-    DecoratedWeapon getDecoratedWeapon(int defindex);
+    DecoratedWeapon find(int defindex);
 }

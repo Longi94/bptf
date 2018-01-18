@@ -88,7 +88,7 @@ public class FavoritesPresenter implements Presenter<FavoritesView>,LoadFavorite
             favorite.setAustralium(false);
             favorite.setWeaponWear(0);
 
-            mFavoriteDao.insertFavorite(favorite);
+            mFavoriteDao.insert(favorite);
         }
 
         loadFavorites();

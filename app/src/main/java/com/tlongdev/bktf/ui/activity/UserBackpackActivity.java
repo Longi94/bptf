@@ -178,7 +178,7 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
         i.putExtra(ItemDetailActivity.EXTRA_ITEM_ID, backpackItem.getId());
         i.putExtra(ItemDetailActivity.EXTRA_GUEST, mIsGuest);
 
-        ItemSchema itemSchema = itemSchemaDao.getItemSchema(backpackItem.getDefindex());
+        ItemSchema itemSchema = itemSchemaDao.find(backpackItem.getDefindex());
 
         if (itemSchema != null) {
             i.putExtra(ItemDetailActivity.EXTRA_ITEM_NAME, itemSchema.getItemName());

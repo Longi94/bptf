@@ -145,14 +145,14 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
 
         //Set the origin of the item. Get the origin from the string array resource
         origin.setText(String.format("%s: %s", getString(R.string.item_detail_origin),
-                mOriginDao.getOrigin(item.getOrigin()).getName()));
+                mOriginDao.find(item.getOrigin()).getName()));
 
         //Set the effect of the item (if any)
         if (item.getPriceIndex() != 0 && (item.getQuality() == Quality.UNUSUAL
                 || item.getQuality() == Quality.COMMUNITY
                 || item.getQuality() == Quality.SELF_MADE)) {
             effect.setText(String.format("%s: %s", getString(R.string.item_detail_effect),
-                    mUnusualSchemaDao.getUnusualSchema(item.getPriceIndex()).getName()));
+                    mUnusualSchemaDao.find(item.getPriceIndex()).getName()));
             effect.setVisibility(View.VISIBLE);
         }
 

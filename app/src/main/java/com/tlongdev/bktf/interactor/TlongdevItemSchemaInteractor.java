@@ -118,7 +118,7 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
         }
 
         if (schemas.size() > 0) {
-            itemSchemaDao.insertSchemas(schemas);
+            itemSchemaDao.insert(schemas);
             Log.v(LOG_TAG, "inserted " + schemas.size() + " rows into item_schema");
         }
 
@@ -133,7 +133,7 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
         }
 
         if (originEntities.size() > 0) {
-            originDao.insertOrigins(originEntities);
+            originDao.insert(originEntities);
             Log.v(LOG_TAG, "inserted " + originEntities.size() + " rows into origins");
         }
 
@@ -148,7 +148,7 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
         }
 
         if (schemas.size() > 0) {
-            unusualSchemaDao.insertSchemas(schemas);
+            unusualSchemaDao.insert(schemas);
             Log.v(LOG_TAG, "inserted " + schemas.size() + " rows into unusual_schema");
         }
 
@@ -163,7 +163,7 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
         }
 
         if (decoratedWeapons.size() > 0) {
-            decoratedWeaponDao.insertDecoratedWeapons(decoratedWeapons);
+            decoratedWeaponDao.insert(decoratedWeapons);
             Log.v(LOG_TAG, "inserted " + decoratedWeapons.size() + " rows into decorated_weapons");
         }
 

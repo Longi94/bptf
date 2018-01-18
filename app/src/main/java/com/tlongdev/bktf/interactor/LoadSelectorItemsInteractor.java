@@ -31,7 +31,7 @@ import javax.inject.Inject;
 public class LoadSelectorItemsInteractor extends AsyncTask<Void, Void, Cursor> {
 
     @Inject
-    ItemSchemaDao itemSchemaDao;
+    ItemSchemaDao mItemSchemaDao;
 
     private final String mQuery;
     private final Callback mCallback;
@@ -45,7 +45,7 @@ public class LoadSelectorItemsInteractor extends AsyncTask<Void, Void, Cursor> {
     @Override
     protected Cursor doInBackground(Void... params) {
         if (mQuery != null && mQuery.length() > 0) {
-            return itemSchemaDao.findItemSchemasCursor(mQuery);
+            return mItemSchemaDao.find(mQuery);
         }
         return null;
     }
