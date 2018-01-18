@@ -17,10 +17,10 @@
 package com.tlongdev.bktf.widget;
 
 import android.appwidget.AppWidgetManager;
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.Binder;
 import android.view.View;
@@ -33,7 +33,6 @@ import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
 import com.tlongdev.bktf.data.dao.ItemSchemaDao;
 import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
@@ -82,7 +81,7 @@ public class FavoritesWidgetService extends RemoteViewsService {
         Context mContext;
         @Inject
         @Named("readable")
-        SQLiteDatabase mDatabase;
+        SupportSQLiteDatabase mDatabase;
         @Inject
         UnusualSchemaDao mUnusualSchemaDao;
         @Inject
@@ -108,20 +107,20 @@ public class FavoritesWidgetService extends RemoteViewsService {
                     FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_TRADABLE + "," +
                     FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_CRAFTABLE + "," +
                     FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_PRICE_INDEX + "," +
-                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_CURRENCY + "," +
-                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE + "," +
-                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_HIGH + "," +
+                    "pricelist.currency," +
+                    "pricelist.price," +
+                    "pricelist.max," +
                     Utility.getRawPriceQueryString(mContext) + "," +
-                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DIFFERENCE + "," +
+                    "pricelist.difference," +
                     FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_AUSTRALIUM +
                     " FROM " + FavoritesEntry.TABLE_NAME +
-                    " LEFT JOIN " + PriceEntry.TABLE_NAME +
-                    " ON " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_DEFINDEX + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX +
-                    " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_TRADABLE + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_TRADABLE +
-                    " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_CRAFTABLE + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_CRAFTABLE +
-                    " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_PRICE_INDEX + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX +
-                    " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_QUALITY + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY +
-                    " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_AUSTRALIUM + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM +
+                    " LEFT JOIN pricelist" +
+                    " ON " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_DEFINDEX + " = pricelist.defindex" +
+                    " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_TRADABLE + " = pricelist.tradable" +
+                    " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_CRAFTABLE + " = pricelist.craftable" +
+                    " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_PRICE_INDEX + " = pricelist.price_index" +
+                    " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_QUALITY + " = pricelist.quality" +
+                    " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_AUSTRALIUM + " = pricelist.australium" +
                     " LEFT JOIN item_schema" +
                     " ON " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_DEFINDEX + " = item_schema.defindex" +
                     " ORDER BY item_name ASC";
@@ -129,7 +128,7 @@ public class FavoritesWidgetService extends RemoteViewsService {
 
             final long token = Binder.clearCallingIdentity();
             try {
-                mDataSet = mDatabase.rawQuery(sql, null);
+                mDataSet = mDatabase.query(sql, null);
             } finally {
                 Binder.restoreCallingIdentity(token);
             }
@@ -142,7 +141,7 @@ public class FavoritesWidgetService extends RemoteViewsService {
             }
             final long token = Binder.clearCallingIdentity();
             try {
-                mDataSet = mDatabase.rawQuery(sql, null);
+                mDataSet = mDatabase.query(sql, null);
             } finally {
                 Binder.restoreCallingIdentity(token);
             }

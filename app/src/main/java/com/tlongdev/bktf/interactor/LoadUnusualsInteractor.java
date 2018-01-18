@@ -16,13 +16,12 @@
 
 package com.tlongdev.bktf.interactor;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.model.Quality;
@@ -40,7 +39,8 @@ import javax.inject.Named;
  */
 public class LoadUnusualsInteractor extends AsyncTask<Void, Void, Void> {
 
-    @Inject @Named("readable") SQLiteDatabase mDatabase;
+    @Inject @Named("readable")
+    SupportSQLiteDatabase mDatabase;
     @Inject Context mContext;
 
     private final Callback mCallback;
@@ -64,7 +64,7 @@ public class LoadUnusualsInteractor extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
 
         int index;
-        String selection = PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + " = ?";
+        String selection = "pricelist.quality = ?";
         String nameColumn;
         String joinOn;
 
@@ -72,52 +72,52 @@ public class LoadUnusualsInteractor extends AsyncTask<Void, Void, Void> {
         if (mDefindex != -1) {
             index = mDefindex;
             nameColumn = "unusual_schema.name";
-            joinOn = "unusual_schema ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + " = unusual_schema._id";
-            selection = selection + " AND " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = ? AND " +
+            joinOn = "unusual_schema ON pricelist.price_index = unusual_schema._id";
+            selection = selection + " AND pricelist.defindex = ? AND " +
                     "unusual_schema.name LIKE ?";
         } else {
             index = mIndex;
             nameColumn = "item_schema.item_name";
-            joinOn = "item_schema ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = item_schema.defindex";
-            selection = selection + " AND " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + " = ? AND " +
+            joinOn = "item_schema ON pricelist.defindex = item_schema.defindex";
+            selection = selection + " AND pricelist.price_index = ? AND " +
                     "item_schema.item_name LIKE ?";
         }
 
         String sql = "SELECT " +
-                PriceEntry.TABLE_NAME + "." + PriceEntry._ID + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + "," +
-                PriceEntry.COLUMN_PRICE_INDEX + "," +
-                PriceEntry.COLUMN_CURRENCY + "," +
-                PriceEntry.COLUMN_PRICE + "," +
-                PriceEntry.COLUMN_PRICE_HIGH + "," +
-                PriceEntry.COLUMN_LAST_UPDATE + "," +
-                PriceEntry.COLUMN_DIFFERENCE + "," +
+                "pricelist._id," +
+                "pricelist.defindex," +
+                "price_index," +
+                "currency," +
+                "price," +
+                "max," +
+                "last_update," +
+                "difference," +
                 nameColumn + " name" +
-                " FROM " + PriceEntry.TABLE_NAME +
+                " FROM pricelist" +
                 " LEFT JOIN " + joinOn +
                 " WHERE " + selection +
                 " ORDER BY " + Utility.getRawPriceQueryString(mContext) + " DESC";
 
         String[] selectionArgs = {"5", String.valueOf(index), "%" + mFilter + "%"};
 
-        Cursor cursor = mDatabase.rawQuery(sql, selectionArgs);
+        Cursor cursor = mDatabase.query(sql, selectionArgs);
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 Price price = new Price();
-                price.setValue(cursor.getDouble(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE)));
-                price.setHighValue(cursor.getDouble(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE_HIGH)));
-                price.setCurrency(cursor.getString(cursor.getColumnIndex(PriceEntry.COLUMN_CURRENCY)));
-                price.setDifference(cursor.getDouble(cursor.getColumnIndex(PriceEntry.COLUMN_DIFFERENCE)));
-                price.setLastUpdate(cursor.getLong(cursor.getColumnIndex(PriceEntry.COLUMN_LAST_UPDATE)));
+                price.setValue(cursor.getDouble(cursor.getColumnIndex("price")));
+                price.setHighValue(cursor.getDouble(cursor.getColumnIndex("max")));
+                price.setCurrency(cursor.getString(cursor.getColumnIndex("currency")));
+                price.setDifference(cursor.getDouble(cursor.getColumnIndex("difference")));
+                price.setLastUpdate(cursor.getLong(cursor.getColumnIndex("last_update")));
 
                 Item item = new Item();
                 item.setName(cursor.getString(cursor.getColumnIndex("name")));
                 item.setTradable(true);
                 item.setCraftable(true);
                 item.setAustralium(false);
-                item.setDefindex(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_DEFINDEX)));
-                item.setPriceIndex(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE_INDEX)));
+                item.setDefindex(cursor.getInt(cursor.getColumnIndex("defindex")));
+                item.setPriceIndex(cursor.getInt(cursor.getColumnIndex("price_index")));
                 item.setQuality(Quality.UNUSUAL);
                 item.setPrice(price);
 

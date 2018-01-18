@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 10,
-    "identityHash": "3f0531862002d7edf6f54d6de5b8c676",
+    "version": 1,
+    "identityHash": "637fd51d2e8d43d4b7aa129c1cd3d9a0",
     "entities": [
       {
         "tableName": "unusual_schema",
@@ -99,7 +99,7 @@
       },
       {
         "tableName": "item_schema",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER NOT NULL, `defindex` INTEGER NOT NULL, `item_name` TEXT NOT NULL, `description` TEXT, `type_name` TEXT NOT NULL, `proper_name` INTEGER NOT NULL, PRIMARY KEY(`_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `defindex` INTEGER NOT NULL, `item_name` TEXT NOT NULL, `description` TEXT, `type_name` TEXT NOT NULL, `proper_name` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -142,15 +142,122 @@
           "columnNames": [
             "_id"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "pricelist",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT, `defindex` INTEGER NOT NULL, `quality` INTEGER NOT NULL, `tradable` INTEGER NOT NULL, `craftable` INTEGER NOT NULL, `price_index` INTEGER NOT NULL, `australium` INTEGER NOT NULL, `weapon_wear` INTEGER NOT NULL, `price` REAL NOT NULL, `max` REAL, `last_update` INTEGER NOT NULL, `difference` REAL NOT NULL, `currency` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "defindex",
+            "columnName": "defindex",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quality",
+            "columnName": "quality",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tradable",
+            "columnName": "tradable",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "craftable",
+            "columnName": "craftable",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "priceIndex",
+            "columnName": "price_index",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "australium",
+            "columnName": "australium",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "weaponWear",
+            "columnName": "weapon_wear",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "price",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "highValue",
+            "columnName": "max",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastUpdate",
+            "columnName": "last_update",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "difference",
+            "columnName": "difference",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "currency",
+            "columnName": "currency",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "_id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_pricelist_defindex_quality_tradable_craftable_price_index_australium_weapon_wear",
+            "unique": true,
+            "columnNames": [
+              "defindex",
+              "quality",
+              "tradable",
+              "craftable",
+              "price_index",
+              "australium",
+              "weapon_wear"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_pricelist_defindex_quality_tradable_craftable_price_index_australium_weapon_wear` ON `${TABLE_NAME}` (`defindex`, `quality`, `tradable`, `craftable`, `price_index`, `australium`, `weapon_wear`)"
+          }
+        ],
         "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3f0531862002d7edf6f54d6de5b8c676\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"637fd51d2e8d43d4b7aa129c1cd3d9a0\")"
     ]
   }
 }

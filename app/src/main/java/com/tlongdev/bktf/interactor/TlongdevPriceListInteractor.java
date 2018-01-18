@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Long Tran
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,10 +16,8 @@
 
 package com.tlongdev.bktf.interactor;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -29,7 +27,8 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.data.dao.PriceDao;
+import com.tlongdev.bktf.data.entity.Price;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Quality;
 import com.tlongdev.bktf.network.TlongdevInterface;
@@ -37,7 +36,8 @@ import com.tlongdev.bktf.util.Utility;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Vector;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -52,10 +52,16 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
 
     private static final String LOG_TAG = TlongdevPriceListInteractor.class.getSimpleName();
 
-    @Inject SharedPreferences mPrefs;
-    @Inject SharedPreferences.Editor mEditor;
-    @Inject TlongdevInterface mTlongdevInterface;
-    @Inject Context mContext;
+    @Inject
+    SharedPreferences mPrefs;
+    @Inject
+    SharedPreferences.Editor mEditor;
+    @Inject
+    TlongdevInterface mTlongdevInterface;
+    @Inject
+    Context mContext;
+    @Inject
+    PriceDao mPriceDao;
 
     //Whether it's an update or full database download
     private boolean updateDatabase;
@@ -70,7 +76,7 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
     private Callback mCallback;
 
     //the variable that contains the birth time of the youngest price
-    private int latestUpdate = 0;
+    private long latestUpdate = 0;
 
     private int rowsInserted = 0;
 
@@ -104,18 +110,10 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
             //Get the youngest price from the database. If it's an update only prices newer than this
             //will be updated to speed up the update and reduce data usage.
             if (updateDatabase) {
-                String[] columns = {PriceEntry.COLUMN_LAST_UPDATE};
-                Cursor cursor = mContext.getContentResolver().query(
-                        PriceEntry.CONTENT_URI,
-                        columns,
-                        null,
-                        null,
-                        PriceEntry.COLUMN_LAST_UPDATE + " DESC LIMIT 1"
-                );
-                if (cursor != null) {
-                    if (cursor.moveToFirst())
-                        latestUpdate = cursor.getInt(0);
-                    cursor.close();
+                Price price = mPriceDao.getNewestPrice();
+
+                if (price != null) {
+                    latestUpdate = price.getLastUpdate();
                 }
             }
 
@@ -153,9 +151,8 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
         JsonFactory factory = new JsonFactory();
         JsonParser parser = factory.createParser(inputStream);
 
-        Vector<ContentValues> cVVector = new Vector<>();
+        List<Price> prices = new LinkedList<>();
         int retVal = 0;
-        int count = 0;
 
         //Not a JSON if it doesn't start with START OBJECT
         if (parser.nextToken() != JsonToken.START_OBJECT) {
@@ -175,23 +172,16 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
                 case "message":
                     errorMessage = parser.getText();
                     break;
-                case "count":
-                    count = parser.getIntValue();
-                    break;
                 case "prices":
 
                     while (parser.nextToken() != JsonToken.END_ARRAY) {
-                        ContentValues values = buildContentValues(parser);
-                        cVVector.add(values);
+                        Price price = buildPrice(parser);
+                        prices.add(price);
                     }
 
-                    if (cVVector.size() > 0) {
-                        ContentValues[] cvArray = new ContentValues[cVVector.size()];
-                        cVVector.toArray(cvArray);
-                        //Insert all the data into the database
-                        rowsInserted = mContext.getContentResolver()
-                                .bulkInsert(PriceEntry.CONTENT_URI, cvArray);
-                        Log.v(LOG_TAG, "inserted " + rowsInserted + " rows into prices table");
+                    if (prices.size() > 0) {
+                        mPriceDao.insertPrices(prices);
+                        Log.v(LOG_TAG, "inserted " + prices.size() + " rows into prices table");
                     }
                     break;
             }
@@ -202,8 +192,8 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
         return retVal;
     }
 
-    private ContentValues buildContentValues(JsonParser parser) throws IOException {
-        ContentValues values = new ContentValues();
+    private Price buildPrice(JsonParser parser) throws IOException {
+        Price price = new Price();
 
         int defindex = 0;
         int quality = 0;
@@ -220,50 +210,50 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
                     Item item = new Item();
                     item.setDefindex(parser.getIntValue());
                     defindex = item.getFixedDefindex();
-                    values.put(PriceEntry.COLUMN_DEFINDEX, defindex);
+                    price.setDefindex(defindex);
                     break;
                 case "quality":
                     quality = parser.getIntValue();
-                    values.put(PriceEntry.COLUMN_ITEM_QUALITY, quality);
+                    price.setQuality(quality);
                     break;
                 case "tradable":
                     tradable = parser.getIntValue();
-                    values.put(PriceEntry.COLUMN_ITEM_TRADABLE, tradable);
+                    price.setTradable(tradable == 1);
                     break;
                 case "craftable":
                     craftable = parser.getIntValue();
-                    values.put(PriceEntry.COLUMN_ITEM_CRAFTABLE, craftable);
+                    price.setCraftable(craftable == 1);
                     break;
                 case "price_index":
-                    values.put(PriceEntry.COLUMN_PRICE_INDEX, parser.getIntValue());
+                    price.setPriceIndex(parser.getIntValue());
                     break;
                 case "australium":
-                    values.put(PriceEntry.COLUMN_AUSTRALIUM, parser.getIntValue());
+                    price.setAustralium(parser.getIntValue() == 1);
                     break;
                 case "currency":
-                    values.put(PriceEntry.COLUMN_CURRENCY, parser.getText());
+                    price.setCurrency(parser.getText());
                     break;
                 case "value":
                     value = parser.getDoubleValue();
-                    values.put(PriceEntry.COLUMN_PRICE, value);
+                    price.setValue(value);
                     break;
                 case "value_high":
                     high = parser.getDoubleValue();
-                    values.put(PriceEntry.COLUMN_PRICE_HIGH, high);
+                    price.setHighValue(high);
                     break;
                 case "value_raw":
                     raw = parser.getDoubleValue();
                     break;
                 case "last_update":
-                    values.put(PriceEntry.COLUMN_LAST_UPDATE, parser.getLongValue());
+                    price.setLastUpdate(parser.getLongValue());
                     break;
                 case "difference":
-                    values.put(PriceEntry.COLUMN_DIFFERENCE, parser.getDoubleValue());
+                    price.setDifference(parser.getDoubleValue());
                     break;
             }
         }
 
-        values.put(PriceEntry.COLUMN_WEAPON_WEAR, 0);
+        price.setWeaponWear(0);
 
         if (quality == Quality.UNIQUE && tradable == 1 && craftable == 1) {
             if (defindex == 143) { //buds
@@ -287,7 +277,7 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
             }
         }
 
-        return values;
+        return price;
     }
 
     /**

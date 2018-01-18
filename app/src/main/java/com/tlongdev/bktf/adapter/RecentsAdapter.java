@@ -30,7 +30,6 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
 import com.tlongdev.bktf.data.dao.ItemSchemaDao;
 import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
@@ -74,21 +73,21 @@ public class RecentsAdapter extends CursorRecyclerViewAdapter<RecentsAdapter.Vie
     @Override
     public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
         Price price = new Price();
-        price.setValue(cursor.getDouble(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE)));
-        price.setHighValue(cursor.getDouble(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE_HIGH)));
-        price.setDifference(cursor.getDouble(cursor.getColumnIndex(PriceEntry.COLUMN_DIFFERENCE)));
-        price.setCurrency(cursor.getString(cursor.getColumnIndex(PriceEntry.COLUMN_CURRENCY)));
+        price.setValue(cursor.getDouble(cursor.getColumnIndex("price")));
+        price.setHighValue(cursor.getDouble(cursor.getColumnIndex("max")));
+        price.setDifference(cursor.getDouble(cursor.getColumnIndex("difference")));
+        price.setCurrency(cursor.getString(cursor.getColumnIndex("currency")));
         price.setRawValue(cursor.getDouble(cursor.getColumnIndex("raw_price")));
 
         //Get all the data from the cursor
         final Item item = new Item();
-        item.setDefindex(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_DEFINDEX)));
+        item.setDefindex(cursor.getInt(cursor.getColumnIndex("defindex")));
         item.setName(cursor.getString(cursor.getColumnIndex("item_name")));
-        item.setQuality(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_ITEM_QUALITY)));
-        item.setTradable(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_ITEM_TRADABLE)) == 1);
-        item.setCraftable(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_ITEM_CRAFTABLE)) == 1);
-        item.setAustralium(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_AUSTRALIUM)) == 1);
-        item.setPriceIndex(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE_INDEX)));
+        item.setQuality(cursor.getInt(cursor.getColumnIndex("quality")));
+        item.setTradable(cursor.getInt(cursor.getColumnIndex("tradable")) == 1);
+        item.setCraftable(cursor.getInt(cursor.getColumnIndex("craftable")) == 1);
+        item.setAustralium(cursor.getInt(cursor.getColumnIndex("australium")) == 1);
+        item.setPriceIndex(cursor.getInt(cursor.getColumnIndex("price_index")));
         item.setPrice(price);
 
         holder.more.setOnClickListener(v -> {

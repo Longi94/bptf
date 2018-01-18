@@ -16,13 +16,13 @@
 
 package com.tlongdev.bktf.presenter.fragment;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.widget.Toast;
 
@@ -30,7 +30,8 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.data.PriceListLoader;
+import com.tlongdev.bktf.data.dao.PriceDao;
 import com.tlongdev.bktf.interactor.LoadCurrencyPricesInteractor;
 import com.tlongdev.bktf.interactor.TlongdevItemSchemaInteractor;
 import com.tlongdev.bktf.interactor.TlongdevPriceListInteractor;
@@ -40,6 +41,7 @@ import com.tlongdev.bktf.ui.view.fragment.RecentsView;
 import com.tlongdev.bktf.util.Utility;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * @author Long
@@ -57,6 +59,12 @@ public class RecentsPresenter implements Presenter<RecentsView>,
     @Inject SharedPreferences.Editor mEditor;
     @Inject Tracker mTracker;
     @Inject Context mContext;
+    @Inject
+    PriceDao mPriceDao;
+
+    @Inject
+    @Named("readable")
+    SupportSQLiteDatabase mDatabase;
 
     private RecentsView mView;
     private final BptfApplication mApplication;
@@ -266,8 +274,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(mApplication,
-                PriceEntry.ALL_PRICES_URI, null, null, null, null);
+        return new PriceListLoader(mApplication, mPriceDao, mDatabase);
     }
 
     @Override

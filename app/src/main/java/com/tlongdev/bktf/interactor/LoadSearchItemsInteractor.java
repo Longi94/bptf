@@ -16,12 +16,11 @@
 
 package com.tlongdev.bktf.interactor;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -32,7 +31,8 @@ import javax.inject.Named;
  */
 public class LoadSearchItemsInteractor extends AsyncTask<Void, Void, Cursor> {
 
-    @Inject @Named("readable") SQLiteDatabase mDatabase;
+    @Inject @Named("readable")
+    SupportSQLiteDatabase mDatabase;
 
     private final String mQuery;
     private final boolean mFilter;
@@ -59,19 +59,19 @@ public class LoadSearchItemsInteractor extends AsyncTask<Void, Void, Cursor> {
     protected Cursor doInBackground(Void... params) {
 
         String sql = "SELECT " +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + "," +
+                "pricelist.defindex," +
                 "item_schema.item_name," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_TRADABLE + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_CRAFTABLE + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_CURRENCY + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_HIGH + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM +
-                " FROM " + PriceEntry.TABLE_NAME +
+                "pricelist.quality," +
+                "pricelist.tradable," +
+                "pricelist.craftable," +
+                "pricelist.price_index," +
+                "pricelist.currency," +
+                "pricelist.price," +
+                "pricelist.max," +
+                "pricelist.australium" +
+                " FROM pricelist" +
                 " LEFT JOIN item_schema" +
-                " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = item_schema.defindex" +
+                " ON pricelist.defindex = item_schema.defindex" +
                 " WHERE ";
 
         String query = mQuery != null && mQuery.length() > 0 ? "%" + mQuery + "%" : "ASDASD"; //stupid
@@ -79,21 +79,21 @@ public class LoadSearchItemsInteractor extends AsyncTask<Void, Void, Cursor> {
 
         if (mFilter) {
             sql += "item_schema.item_name LIKE ? AND " +
-                    PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
-                    PriceEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
-                    PriceEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
-                    PriceEntry.COLUMN_AUSTRALIUM + " = ?";
+                    "quality = ? AND " +
+                    "tradable = ? AND " +
+                    "craftable = ? AND " +
+                    "australium = ?";
             selectionArgs = new String[]{query, String.valueOf(mFilterQuality),
                     mFilterTradable ? "1" : "0", mFilterCraftable ? "1" : "0",
                     mFilterAustralium ? "1" : "0"};
         } else {
             sql += "item_schema.item_name LIKE ? AND " +
-                    "NOT(" + PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
-                    PriceEntry.COLUMN_PRICE_INDEX + " != ?)";
+                    "NOT(quality = ? AND " +
+                    "price_index != ?)";
             selectionArgs = new String[]{query, "5", "0"};
         }
 
-        Cursor cursor = mDatabase.rawQuery(sql, selectionArgs);
+        Cursor cursor = mDatabase.query(sql, selectionArgs);
 
         if (cursor != null) {
             if (cursor.getCount() > 0) {

@@ -17,15 +17,15 @@
 package com.tlongdev.bktf.module;
 
 import android.app.Application;
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Room;
 import android.content.ContentResolver;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.tlongdev.bktf.data.BptfDatabase;
-import com.tlongdev.bktf.data.DatabaseHelper;
 import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
 import com.tlongdev.bktf.data.dao.ItemSchemaDao;
 import com.tlongdev.bktf.data.dao.OriginDao;
+import com.tlongdev.bktf.data.dao.PriceDao;
 import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
 
 import javax.inject.Named;
@@ -44,15 +44,15 @@ public class StorageModule {
     @Provides
     @Singleton
     @Named("readable")
-    SQLiteDatabase provideReadableDatabase(Application application) {
-        return DatabaseHelper.getInstance(application).getReadableDatabase();
+    SupportSQLiteDatabase provideReadableDatabase(BptfDatabase database) {
+        return database.getOpenHelper().getReadableDatabase();
     }
 
     @Provides
     @Singleton
     @Named("writable")
-    SQLiteDatabase provideWritableDatabase(Application application) {
-        return DatabaseHelper.getInstance(application).getWritableDatabase();
+    SupportSQLiteDatabase provideWritableDatabase(BptfDatabase database) {
+        return database.getOpenHelper().getWritableDatabase();
     }
 
     @Provides
@@ -64,10 +64,7 @@ public class StorageModule {
     @Provides
     @Singleton
     BptfDatabase provideBptfDatabase(Application application) {
-        return Room.databaseBuilder(application, BptfDatabase.class, "bptf.db")
-                .addMigrations(
-                        BptfDatabase.MIGRATION_9_10
-                )
+        return Room.databaseBuilder(application, BptfDatabase.class, BptfDatabase.DATABASE_NAME)
                 .allowMainThreadQueries()
                 .build();
     }
@@ -94,5 +91,11 @@ public class StorageModule {
     @Singleton
     ItemSchemaDao provideItemSchemaDao(BptfDatabase database) {
         return database.itemSchemaDao();
+    }
+
+    @Provides
+    @Singleton
+    PriceDao providePriceDao(BptfDatabase database) {
+        return database.priceDao();
     }
 }

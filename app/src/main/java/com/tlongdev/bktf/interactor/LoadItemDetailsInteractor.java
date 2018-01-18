@@ -21,8 +21,8 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
+import com.tlongdev.bktf.data.dao.PriceDao;
 import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.model.Price;
 
@@ -35,6 +35,8 @@ import javax.inject.Inject;
 public class LoadItemDetailsInteractor extends AsyncTask<Void, Void, BackpackItem> {
 
     @Inject ContentResolver mContentResolver;
+    @Inject
+    PriceDao mPriceDao;
 
     private final int mId;
     private final boolean mGuest;
@@ -102,41 +104,15 @@ public class LoadItemDetailsInteractor extends AsyncTask<Void, Void, BackpackIte
             cursor.close();
         }
 
-        cursor = mContentResolver.query(
-                PriceEntry.CONTENT_URI,
-                new String[]{
-                        PriceEntry._ID,
-                        PriceEntry.COLUMN_PRICE,
-                        PriceEntry.COLUMN_PRICE_HIGH,
-                        PriceEntry.COLUMN_CURRENCY
-                },
-                PriceEntry.COLUMN_DEFINDEX + " = ? AND " +
-                        PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
-                        PriceEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
-                        PriceEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
-                        PriceEntry.COLUMN_PRICE_INDEX + " = ? AND " +
-                        PriceEntry.COLUMN_AUSTRALIUM + " = ?",
-                new String[]{
-                        String.valueOf(item.getDefindex()),
-                        String.valueOf(item.getQuality()),
-                        String.valueOf(item.isTradable() ? 1 : 0),
-                        String.valueOf(item.isCraftable() ? 1 : 0),
-                        String.valueOf(item.getPriceIndex()),
-                        String.valueOf(item.isAustralium() ? 1 : 0)
-                },
-                null
-        );
+        com.tlongdev.bktf.data.entity.Price price = mPriceDao.getNewestPrice();
 
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                Price price = new Price();
-                price.setValue(cursor.getDouble(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE)));
-                price.setHighValue(cursor.getDouble(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE_HIGH)));
-                price.setCurrency(cursor.getString(cursor.getColumnIndex(PriceEntry.COLUMN_CURRENCY)));
+        if (price != null) {
+            Price itemPrice = new Price();
+            itemPrice.setValue(price.getValue());
+            itemPrice.setHighValue(price.getHighValue());
+            itemPrice.setCurrency(price.getCurrency());
 
-                item.setPrice(price);
-            }
-            cursor.close();
+            item.setPrice(itemPrice);
         }
         return item;
     }

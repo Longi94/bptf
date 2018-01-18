@@ -16,15 +16,14 @@
 
 package com.tlongdev.bktf.interactor;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.presenter.fragment.UnusualPresenter;
@@ -42,7 +41,8 @@ import javax.inject.Named;
  */
 public class LoadUnusualEffectsInteractor extends AsyncTask<Void, Void, Void> {
 
-    @Inject @Named("readable") SQLiteDatabase mDatabase;
+    @Inject @Named("readable")
+    SupportSQLiteDatabase mDatabase;
     @Inject SharedPreferences mPrefs;
     @Inject Context mContext;
 
@@ -64,16 +64,16 @@ public class LoadUnusualEffectsInteractor extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
-        String sql = "SELECT " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + "," +
+        String sql = "SELECT pricelist.price_index," +
                 " unusual_schema.name," +
                 " AVG(" + Utility.getRawPriceQueryString(mContext) + ") avg_price " +
-                " FROM " + PriceEntry.TABLE_NAME +
+                " FROM pricelist" +
                 " LEFT JOIN unusual_schema" +
-                " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + " = unusual_schema._id " +
+                " ON pricelist.price_index = unusual_schema._id " +
                 " WHERE unusual_schema.name LIKE ? AND " +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
-                PriceEntry.COLUMN_PRICE_INDEX + " != ? " +
-                " GROUP BY " + PriceEntry.COLUMN_PRICE_INDEX;
+                "pricelist.quality = ? AND " +
+                "price_index != ? " +
+                " GROUP BY price_index";
 
         String[] selectionArgs = {"%" + mFilter + "%", "5", "0"};
 
@@ -86,7 +86,7 @@ public class LoadUnusualEffectsInteractor extends AsyncTask<Void, Void, Void> {
                 break;
         }
 
-        Cursor cursor = mDatabase.rawQuery(sql, selectionArgs);
+        Cursor cursor = mDatabase.query(sql, selectionArgs);
 
         double rawKeyPrice = Utility.getDouble(mPrefs, mContext.getString(R.string.pref_key_raw), 1);
 
@@ -96,7 +96,7 @@ public class LoadUnusualEffectsInteractor extends AsyncTask<Void, Void, Void> {
                 price.setValue(cursor.getDouble(cursor.getColumnIndex("avg_price")) / rawKeyPrice);
 
                 Item item = new Item();
-                item.setPriceIndex(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE_INDEX)));
+                item.setPriceIndex(cursor.getInt(cursor.getColumnIndex("price_index")));
                 item.setName(cursor.getString(cursor.getColumnIndex("name")));
                 item.setPrice(price);
 

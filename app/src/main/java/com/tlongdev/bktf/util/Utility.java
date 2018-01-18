@@ -44,7 +44,6 @@ import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
 import com.tlongdev.bktf.customtabs.WebViewFallback;
 import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
 import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
@@ -229,29 +228,29 @@ public class Utility {
         double usdMultiplier = usd.getConvertedPrice(context, Currency.METAL, false);
         double budMultiplier = bud.getConvertedPrice(context, Currency.METAL, false);
 
-        return " CASE WHEN " + PriceEntry.COLUMN_PRICE_HIGH + " IS NULL THEN ( " +
-                " CASE WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'keys' THEN ( " +
-                PriceEntry.COLUMN_PRICE + " * " + keyMultiplier +
-                " ) WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'earbuds' THEN ( " +
-                PriceEntry.COLUMN_PRICE + " * " + budMultiplier +
-                " ) WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'usd' THEN ( " +
-                PriceEntry.COLUMN_PRICE + " * " + usdMultiplier +
-                " ) WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'hat' THEN ( " +
-                PriceEntry.COLUMN_PRICE + " * 1.22 " +
+        return " CASE WHEN max IS NULL THEN ( " +
+                " CASE WHEN currency = 'keys' THEN ( " +
+                "price * " + keyMultiplier +
+                " ) WHEN currency = 'earbuds' THEN ( " +
+                "price * " + budMultiplier +
+                " ) WHEN currency = 'usd' THEN ( " +
+                "price * " + usdMultiplier +
+                " ) WHEN currency = 'hat' THEN ( " +
+                "price * 1.22 " +
                 " ) ELSE ( " +
-                PriceEntry.COLUMN_PRICE +
+                "price" +
                 " ) END " +
                 " ) ELSE (" +
-                " CASE WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'keys' THEN ( " +
-                " ( " + PriceEntry.COLUMN_PRICE + " + " + PriceEntry.COLUMN_PRICE_HIGH + ") / 2 * " + keyMultiplier +
-                " ) WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'earbuds' THEN ( " +
-                " ( " + PriceEntry.COLUMN_PRICE + " + " + PriceEntry.COLUMN_PRICE_HIGH + ") / 2 * " + budMultiplier +
-                " ) WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'usd' THEN ( " +
-                " ( " + PriceEntry.COLUMN_PRICE + " + " + PriceEntry.COLUMN_PRICE_HIGH + ") / 2 * " + usdMultiplier +
-                " ) WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'hat' THEN ( " +
-                " ( " + PriceEntry.COLUMN_PRICE + " + " + PriceEntry.COLUMN_PRICE_HIGH + ") / 2 * 1.22 " +
+                " CASE WHEN currency = 'keys' THEN ( " +
+                " ( price + max) / 2 * " + keyMultiplier +
+                " ) WHEN currency = 'earbuds' THEN ( " +
+                " ( price + max) / 2 * " + budMultiplier +
+                " ) WHEN currency = 'usd' THEN ( " +
+                " ( price + max) / 2 * " + usdMultiplier +
+                " ) WHEN currency = 'hat' THEN ( " +
+                " ( price + max) / 2 * 1.22 " +
                 " ) ELSE ( " +
-                " ( " + PriceEntry.COLUMN_PRICE + " + " + PriceEntry.COLUMN_PRICE_HIGH + ") / 2 " +
+                " ( price + max) / 2 " +
                 " ) END " +
                 " ) END ";
     }

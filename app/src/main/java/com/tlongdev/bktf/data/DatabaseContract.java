@@ -39,42 +39,9 @@ public final class DatabaseContract {
     // looking at weather data. content://com.example.android.sunshine.app/givemeroot/ will fail,
     // as the ContentProvider hasn't been given any information on what to do with "givemeroot".
     // At least, let's hope not.  Don't be that dev, reader.  Don't be that dev.
-    public static final String PATH_PRICE_LIST = "pricelist";
     public static final String PATH_FAVORITES = "favorites";
     public static final String PATH_CALCULATOR = "calculator";
     public static final String PATH_BACKPACK = "backpack";
-
-
-    /* Inner class that defines the table contents of the weather table */
-    public static final class PriceEntry implements BaseColumns {
-
-        public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_PRICE_LIST).build();
-
-        public static final Uri ALL_PRICES_URI = BASE_CONTENT_URI.buildUpon()
-                .appendPath(PATH_PRICE_LIST)
-                .appendPath("all")
-                .build();
-
-        public static final String TABLE_NAME = "pricelist";
-
-        public static final String COLUMN_DEFINDEX = "defindex";
-        public static final String COLUMN_ITEM_QUALITY = "quality";
-        public static final String COLUMN_ITEM_TRADABLE = "tradable";
-        public static final String COLUMN_ITEM_CRAFTABLE = "craftable";
-        public static final String COLUMN_PRICE_INDEX = "price_index";
-        public static final String COLUMN_AUSTRALIUM = "australium";
-        public static final String COLUMN_PRICE = "price";
-        public static final String COLUMN_PRICE_HIGH = "max";
-        public static final String COLUMN_CURRENCY = "currency";
-        public static final String COLUMN_LAST_UPDATE = "last_update";
-        public static final String COLUMN_DIFFERENCE = "difference";
-        public static final String COLUMN_WEAPON_WEAR = "weapon_wear";
-
-        public static Uri buildUri(long id) {
-            return CONTENT_URI.buildUpon().appendPath("id").appendPath("" + id).build();
-        }
-    }
 
     public static final class FavoritesEntry implements BaseColumns {
         public static final Uri CONTENT_URI =

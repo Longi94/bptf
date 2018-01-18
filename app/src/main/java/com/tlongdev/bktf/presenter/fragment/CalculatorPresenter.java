@@ -18,20 +18,18 @@ package com.tlongdev.bktf.presenter.fragment;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.database.Cursor;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.adapter.CalculatorAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.data.dao.PriceDao;
 import com.tlongdev.bktf.interactor.LoadCalculatorItemsInteractor;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.presenter.Presenter;
 import com.tlongdev.bktf.ui.view.fragment.CalculatorView;
-import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
 
@@ -43,27 +41,10 @@ import javax.inject.Inject;
  */
 public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalculatorItemsInteractor.Callback, CalculatorAdapter.OnItemEditListener {
 
-    /**
-     * The columns to query
-     */
-    private static final String[] PRICE_LIST_COLUMNS = {
-            PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
-            null,
-    };
-
-    /**
-     * the selection
-     */
-    private static final String mSelection =
-            PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = ? AND " +
-                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
-                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
-                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
-                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + " = ? AND " +
-                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM + " = ? AND " +
-                    PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_WEAPON_WEAR + " = ?";
-
-    @Inject ContentResolver mContentResolver;
+    @Inject
+    ContentResolver mContentResolver;
+    @Inject
+    PriceDao mPriceDao;
 
     private CalculatorView mView;
 
@@ -78,7 +59,6 @@ public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalcul
         application.getPresenterComponent().inject(this);
         mApplication = application;
         mTotalPrice.setCurrency(Currency.METAL);
-        PRICE_LIST_COLUMNS[1] = Utility.getRawPriceQueryString(application) + " price_raw";
     }
 
     @Override
@@ -106,29 +86,20 @@ public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalcul
     }
 
     public void addItem(Item item) {
-        Cursor cursor = mContentResolver.query(
-                PriceEntry.CONTENT_URI,
-                PRICE_LIST_COLUMNS,
-                mSelection,
-                new String[]{
-                        String.valueOf(item.getDefindex()),
-                        String.valueOf(item.getQuality()),
-                        String.valueOf(item.isTradable() ? 1 : 0),
-                        String.valueOf(item.isCraftable() ? 1 : 0),
-                        String.valueOf(item.getPriceIndex()),
-                        String.valueOf(item.isAustralium() ? 1 : 0),
-                        String.valueOf(item.getWeaponWear()),
-                },
-                null
+        com.tlongdev.bktf.data.entity.Price price = mPriceDao.findPrice(
+                item.getDefindex(),
+                item.getQuality(),
+                item.isTradable(),
+                item.isCraftable(),
+                item.isAustralium(),
+                item.getPriceIndex(),
+                item.getWeaponWear()
         );
 
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                Price price = new Price();
-                price.setRawValue(cursor.getDouble(cursor.getColumnIndex("price_raw")));
-                item.setPrice(price);
-            }
-            cursor.close();
+        if (price != null) {
+            Price itemPrice = new Price();
+            itemPrice.setRawValue(price.getRawValue());
+            item.setPrice(itemPrice);
         }
 
         if (item.getPrice() != null) {

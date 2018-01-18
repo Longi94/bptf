@@ -64,29 +64,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         final String SQL_CREATE_PRICE_LIST_TABLE =
-                "CREATE TABLE " + PriceEntry.TABLE_NAME + " (" +
-                        PriceEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "CREATE TABLE pricelist (" +
+                        "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
-                        PriceEntry.COLUMN_DEFINDEX + " INTEGER NOT NULL, " +
-                        PriceEntry.COLUMN_ITEM_QUALITY + " INTEGER NOT NULL, " +
-                        PriceEntry.COLUMN_ITEM_TRADABLE + " INTEGER NOT NULL, " +
-                        PriceEntry.COLUMN_ITEM_CRAFTABLE + " INTEGER NOT NULL, " +
-                        PriceEntry.COLUMN_PRICE_INDEX + " INTEGER NOT NULL, " +
-                        PriceEntry.COLUMN_AUSTRALIUM + " INTEGER NOT NULL, " +
-                        PriceEntry.COLUMN_CURRENCY + " TEXT NOT NULL, " +
-                        PriceEntry.COLUMN_PRICE + " REAL NOT NULL, " +
-                        PriceEntry.COLUMN_PRICE_HIGH + " REAL, " +
-                        PriceEntry.COLUMN_LAST_UPDATE + " INTEGER NOT NULL, " +
-                        PriceEntry.COLUMN_DIFFERENCE + " REAL NOT NULL, " +
-                        PriceEntry.COLUMN_WEAPON_WEAR + " INTEGER NOT NULL, " +
+                        "defindex INTEGER NOT NULL, " +
+                        "quality INTEGER NOT NULL, " +
+                        "tradable INTEGER NOT NULL, " +
+                        "craftable INTEGER NOT NULL, " +
+                        "price_index INTEGER NOT NULL, " +
+                        "australium INTEGER NOT NULL, " +
+                        "currency TEXT NOT NULL, " +
+                        "price REAL NOT NULL, " +
+                        "max REAL, " +
+                        "last_update INTEGER NOT NULL, " +
+                        "difference REAL NOT NULL, " +
+                        "weapon_wear INTEGER NOT NULL, " +
 
-                        " UNIQUE (" + PriceEntry.COLUMN_DEFINDEX + ", " +
-                        PriceEntry.COLUMN_ITEM_QUALITY + ", " +
-                        PriceEntry.COLUMN_ITEM_TRADABLE + ", " +
-                        PriceEntry.COLUMN_ITEM_CRAFTABLE + ", " +
-                        PriceEntry.COLUMN_PRICE_INDEX + ", " +
-                        PriceEntry.COLUMN_AUSTRALIUM + ", " +
-                        PriceEntry.COLUMN_WEAPON_WEAR + ") ON CONFLICT REPLACE);";
+                        " UNIQUE (defindex, " +
+                        "quality, " +
+                        "tradable, " +
+                        "craftable, " +
+                        "price_index, " +
+                        "australium, " +
+                        "weapon_wear) ON CONFLICT REPLACE);";
 
         final String SQL_CREATE_ITEM_SCHEMA_TABLE =
                 "CREATE TABLE item_schema (" +
@@ -239,7 +239,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + PriceEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS pricelist");
         db.execSQL("DROP TABLE IF EXISTS item_schema");
         db.execSQL("DROP TABLE IF EXISTS unusual_schema");
         db.execSQL("DROP TABLE IF EXISTS origin_names");

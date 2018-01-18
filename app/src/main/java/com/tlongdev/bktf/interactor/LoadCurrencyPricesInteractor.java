@@ -16,15 +16,11 @@
 
 package com.tlongdev.bktf.interactor;
 
-import android.content.ContentResolver;
-import android.content.Context;
-import android.database.Cursor;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
+import com.tlongdev.bktf.data.dao.PriceDao;
 import com.tlongdev.bktf.model.Price;
-import com.tlongdev.bktf.util.Utility;
 
 import javax.inject.Inject;
 
@@ -34,8 +30,8 @@ import javax.inject.Inject;
  */
 public class LoadCurrencyPricesInteractor extends AsyncTask<Void, Void, Void> {
 
-    @Inject ContentResolver mContentResolver;
-    @Inject Context mContext;
+    @Inject
+    PriceDao mPriceDao;
 
     private Price mMetalPrice;
     private Price mKeyPrice;
@@ -52,54 +48,36 @@ public class LoadCurrencyPricesInteractor extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
-        Cursor cursor = mContentResolver.query(
-                PriceEntry.CONTENT_URI,
-                new String[]{
-                        PriceEntry.COLUMN_DEFINDEX,
-                        PriceEntry.COLUMN_PRICE,
-                        PriceEntry.COLUMN_PRICE_HIGH,
-                        PriceEntry.COLUMN_DIFFERENCE,
-                        PriceEntry.COLUMN_CURRENCY,
-                        Utility.getRawPriceQueryString(mContext)
-                },
-                PriceEntry.COLUMN_DEFINDEX + " IN (143, 5002, 5021) AND " +
-                        PriceEntry.COLUMN_ITEM_QUALITY + " = 6 AND " +
-                        PriceEntry.COLUMN_ITEM_TRADABLE + " = 1 AND " +
-                        PriceEntry.COLUMN_ITEM_CRAFTABLE + " = 1",
-                null,
-                null
-        );
+        com.tlongdev.bktf.data.entity.Price[] prices = mPriceDao.getCurrencyPrices();
+
         mBudPrice = new Price();
         mMetalPrice = new Price();
         mKeyPrice = new Price();
 
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                switch (cursor.getInt(0)) {
-                    case 143:
-                        mBudPrice.setValue(cursor.getDouble(1));
-                        mBudPrice.setHighValue(cursor.getDouble(2));
-                        mBudPrice.setDifference(cursor.getDouble(3));
-                        mBudPrice.setCurrency(cursor.getString(4));
-                        mBudPrice.setRawValue(cursor.getDouble(5));
-                        break;
-                    case 5002:
-                        mMetalPrice.setValue(cursor.getDouble(1));
-                        mMetalPrice.setHighValue(cursor.getDouble(2));
-                        mMetalPrice.setDifference(cursor.getDouble(3));
-                        mMetalPrice.setCurrency(cursor.getString(4));
-                        mMetalPrice.setRawValue(cursor.getDouble(5));
-                        break;
-                    case 5021:
-                        mKeyPrice.setValue(cursor.getDouble(1));
-                        mKeyPrice.setHighValue(cursor.getDouble(2));
-                        mKeyPrice.setDifference(cursor.getDouble(3));
-                        mKeyPrice.setCurrency(cursor.getString(4));
-                        mKeyPrice.setRawValue(cursor.getDouble(5));
-                        break;
-                }
+        for (com.tlongdev.bktf.data.entity.Price price : prices) {
+            switch (price.getDefindex()) {
+                case 143:
+                    mBudPrice.setValue(price.getValue());
+                    mBudPrice.setHighValue(price.getHighValue());
+                    mBudPrice.setDifference(price.getDifference());
+                    mBudPrice.setCurrency(price.getCurrency());
+                    mBudPrice.setRawValue(price.getRawValue());
+                    break;
+                case 5002:
+                    mMetalPrice.setValue(price.getValue());
+                    mMetalPrice.setHighValue(price.getHighValue());
+                    mMetalPrice.setDifference(price.getDifference());
+                    mMetalPrice.setCurrency(price.getCurrency());
+                    mMetalPrice.setRawValue(price.getRawValue());
+                    break;
+                case 5021:
+                    mKeyPrice.setValue(price.getValue());
+                    mKeyPrice.setHighValue(price.getHighValue());
+                    mKeyPrice.setDifference(price.getDifference());
+                    mKeyPrice.setCurrency(price.getCurrency());
+                    mKeyPrice.setRawValue(price.getRawValue());
+                    break;
             }
-            cursor.close();
         }
 
         return null;

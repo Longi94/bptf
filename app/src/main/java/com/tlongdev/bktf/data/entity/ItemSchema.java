@@ -13,7 +13,7 @@ import android.support.annotation.NonNull;
 @Entity(tableName = "item_schema")
 public class ItemSchema {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")
     private long id;
 

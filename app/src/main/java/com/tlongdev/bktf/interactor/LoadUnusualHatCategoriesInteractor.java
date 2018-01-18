@@ -16,15 +16,14 @@
 
 package com.tlongdev.bktf.interactor;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.presenter.fragment.UnusualPresenter;
@@ -42,7 +41,8 @@ import javax.inject.Named;
  */
 public class LoadUnusualHatCategoriesInteractor extends AsyncTask<Void, Void, Void> {
 
-    @Inject @Named("readable") SQLiteDatabase mDatabase;
+    @Inject @Named("readable")
+    SupportSQLiteDatabase mDatabase;
     @Inject SharedPreferences mPrefs;
     @Inject Context mContext;
 
@@ -66,16 +66,16 @@ public class LoadUnusualHatCategoriesInteractor extends AsyncTask<Void, Void, Vo
     protected Void doInBackground(Void... params) {
 
         String sql = "SELECT " +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + "," +
+                "pricelist.defindex," +
                 "item_schema.item_name," +
                 " AVG(" + Utility.getRawPriceQueryString(mContext) + ") avg_price " +
-                " FROM " + PriceEntry.TABLE_NAME +
+                " FROM pricelist" +
                 " LEFT JOIN item_schema" +
-                " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = item_schema.defindex" +
-                " WHERE item_name.item_name LIKE ? AND " +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
-                PriceEntry.COLUMN_PRICE_INDEX + " != ? " +
-                " GROUP BY " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX;
+                " ON pricelist.defindex = item_schema.defindex" +
+                " WHERE item_schema.item_name LIKE ? AND " +
+                "pricelist.quality = ? AND " +
+                "price_index != ? " +
+                " GROUP BY pricelist.defindex";
 
         String[] selectionArgs = {"%" + mFilter + "%", "5", "0"};
 
@@ -88,7 +88,7 @@ public class LoadUnusualHatCategoriesInteractor extends AsyncTask<Void, Void, Vo
                 break;
         }
 
-        Cursor cursor = mDatabase.rawQuery(sql, selectionArgs);
+        Cursor cursor = mDatabase.query(sql, selectionArgs);
 
         double rawKeyPrice = Utility.getDouble(mPrefs, mContext.getString(R.string.pref_key_raw), 1);
 
@@ -98,7 +98,7 @@ public class LoadUnusualHatCategoriesInteractor extends AsyncTask<Void, Void, Vo
                 price.setValue(cursor.getDouble(cursor.getColumnIndex("avg_price")) / rawKeyPrice);
 
                 Item item = new Item();
-                item.setDefindex(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_DEFINDEX)));
+                item.setDefindex(cursor.getInt(cursor.getColumnIndex("defindex")));
                 item.setName(cursor.getString(cursor.getColumnIndex("item_name")));
                 item.setPrice(price);
 

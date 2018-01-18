@@ -16,14 +16,13 @@
 
 package com.tlongdev.bktf.interactor;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.util.Utility;
@@ -40,7 +39,8 @@ import javax.inject.Named;
  */
 public class LoadCalculatorItemsInteractor extends AsyncTask<Void, Void, Void> {
 
-    @Inject @Named("readable") SQLiteDatabase mDatabase;
+    @Inject @Named("readable")
+    SupportSQLiteDatabase mDatabase;
     @Inject Context mContext;
 
     private final List<Item> mItems = new LinkedList<>();
@@ -66,25 +66,25 @@ public class LoadCalculatorItemsInteractor extends AsyncTask<Void, Void, Void> {
                 CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_ITEM_CRAFTABLE + "," +
                 CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_PRICE_INDEX + "," +
                 CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_COUNT + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_CURRENCY + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_HIGH + "," +
+                "pricelist.currency," +
+                "pricelist.price," +
+                "pricelist.max," +
                 Utility.getRawPriceQueryString(mContext) + " price_raw," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DIFFERENCE + "," +
+                "pricelist.difference," +
                 CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_AUSTRALIUM +
                 " FROM " + CalculatorEntry.TABLE_NAME +
-                " LEFT JOIN " + PriceEntry.TABLE_NAME +
-                " ON " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_DEFINDEX + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX +
-                " AND " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_ITEM_TRADABLE + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_TRADABLE +
-                " AND " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_ITEM_CRAFTABLE + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_CRAFTABLE +
-                " AND " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_PRICE_INDEX + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX +
-                " AND " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_ITEM_QUALITY + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY +
-                " AND " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_AUSTRALIUM + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM +
+                " LEFT JOIN pricelist" +
+                " ON " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_DEFINDEX + " = pricelist.defindex" +
+                " AND " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_ITEM_TRADABLE + " = pricelist.tradable" +
+                " AND " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_ITEM_CRAFTABLE + " = pricelist.craftable" +
+                " AND " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_PRICE_INDEX + " = pricelist.price_index" +
+                " AND " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_ITEM_QUALITY + " = pricelist.quality" +
+                " AND " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_AUSTRALIUM + " = pricelist.australium" +
                 " LEFT JOIN item_schema" +
                 " ON " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_DEFINDEX + " = item_schema.defindex" +
                 " ORDER BY item_name ASC";
 
-        Cursor cursor = mDatabase.rawQuery(sql, null);
+        Cursor cursor = mDatabase.query(sql, null);
 
         if (cursor != null) {
             mTotalValue = 0;
@@ -100,13 +100,13 @@ public class LoadCalculatorItemsInteractor extends AsyncTask<Void, Void, Void> {
                 item.setPriceIndex(cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_PRICE_INDEX)));
 
                 int count = cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_COUNT));
-                if (cursor.getString(cursor.getColumnIndex(PriceEntry.COLUMN_CURRENCY)) != null) {
+                if (cursor.getString(cursor.getColumnIndex("currency")) != null) {
                     Price price = new Price();
-                    price.setValue(cursor.getDouble(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE)));
-                    price.setHighValue(cursor.getDouble(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE_HIGH)));
+                    price.setValue(cursor.getDouble(cursor.getColumnIndex("price")));
+                    price.setHighValue(cursor.getDouble(cursor.getColumnIndex("max")));
                     price.setRawValue(cursor.getDouble(cursor.getColumnIndex("price_raw")));
-                    price.setDifference(cursor.getDouble(cursor.getColumnIndex(PriceEntry.COLUMN_DIFFERENCE)));
-                    price.setCurrency(cursor.getString(cursor.getColumnIndex(PriceEntry.COLUMN_CURRENCY)));
+                    price.setDifference(cursor.getDouble(cursor.getColumnIndex("difference")));
+                    price.setCurrency(cursor.getString(cursor.getColumnIndex("currency")));
                     item.setPrice(price);
 
                     mTotalValue += item.getPrice().getRawValue() * count;

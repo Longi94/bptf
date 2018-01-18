@@ -32,7 +32,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
 import com.tlongdev.bktf.data.dao.ItemSchemaDao;
 import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
@@ -125,19 +124,19 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     holder.loading.setVisibility(View.GONE);
 
                     Price price = new Price();
-                    price.setValue(mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE)));
-                    price.setHighValue(mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE_HIGH)));
-                    price.setCurrency(mDataSet.getString(mDataSet.getColumnIndex(PriceEntry.COLUMN_CURRENCY)));
+                    price.setValue(mDataSet.getDouble(mDataSet.getColumnIndex("price")));
+                    price.setHighValue(mDataSet.getDouble(mDataSet.getColumnIndex("max")));
+                    price.setCurrency(mDataSet.getString(mDataSet.getColumnIndex("currency")));
 
                     //Get all the data from the cursor
                     final Item item = new Item();
-                    item.setDefindex(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_DEFINDEX)));
+                    item.setDefindex(mDataSet.getInt(mDataSet.getColumnIndex("defindex")));
                     item.setName(mDataSet.getString(mDataSet.getColumnIndex("item_name")));
-                    item.setQuality(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_QUALITY)));
-                    item.setTradable(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_TRADABLE)) == 1);
-                    item.setCraftable(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_ITEM_CRAFTABLE)) == 1);
-                    item.setAustralium(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_AUSTRALIUM)) == 1);
-                    item.setPriceIndex(mDataSet.getInt(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE_INDEX)));
+                    item.setQuality(mDataSet.getInt(mDataSet.getColumnIndex("quality")));
+                    item.setTradable(mDataSet.getInt(mDataSet.getColumnIndex("tradable")) == 1);
+                    item.setCraftable(mDataSet.getInt(mDataSet.getColumnIndex("craftable")) == 1);
+                    item.setAustralium(mDataSet.getInt(mDataSet.getColumnIndex("australium")) == 1);
+                    item.setPriceIndex(mDataSet.getInt(mDataSet.getColumnIndex("price_index")));
                     item.setPrice(price);
 
                     holder.more.setOnClickListener(v -> {

@@ -24,8 +24,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import com.tlongdev.bktf.data.DatabaseContract.*;
-import com.tlongdev.bktf.util.Utility;
+import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
+import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
+import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
 
 public class DatabaseProvider extends ContentProvider {
 
@@ -38,12 +39,10 @@ public class DatabaseProvider extends ContentProvider {
     /**
      * URI matcher result codes
      */
-    private static final int PRICE_LIST = 100;
     private static final int BACKPACK = 104;
     private static final int BACKPACK_GUEST = 105;
     private static final int FAVORITES = 106;
     private static final int CALCULATOR = 107;
-    private static final int ALL_PRICES = 109;
 
     /**
      * The URI Matcher used by this content provider
@@ -71,12 +70,10 @@ public class DatabaseProvider extends ContentProvider {
         final String authority = DatabaseContract.CONTENT_AUTHORITY;
 
         // For each type of URI you want to add, create a corresponding code.
-        matcher.addURI(authority, DatabaseContract.PATH_PRICE_LIST, PRICE_LIST);
         matcher.addURI(authority, DatabaseContract.PATH_BACKPACK, BACKPACK);
         matcher.addURI(authority, DatabaseContract.PATH_FAVORITES, FAVORITES);
         matcher.addURI(authority, DatabaseContract.PATH_CALCULATOR, CALCULATOR);
         matcher.addURI(authority, DatabaseContract.PATH_BACKPACK + "/guest", BACKPACK_GUEST);
-        matcher.addURI(authority, DatabaseContract.PATH_PRICE_LIST + "/all", ALL_PRICES);
 
         return matcher;
     }
@@ -94,9 +91,6 @@ public class DatabaseProvider extends ContentProvider {
         Cursor retCursor;
         String tableName;
         switch (sUriMatcher.match(uri)) {
-            case PRICE_LIST:
-                tableName = PriceEntry.TABLE_NAME;
-                break;
             case BACKPACK:
                 tableName = UserBackpackEntry.TABLE_NAME;
                 break;
@@ -109,12 +103,6 @@ public class DatabaseProvider extends ContentProvider {
             case CALCULATOR:
                 tableName = CalculatorEntry.TABLE_NAME;
                 break;
-            case ALL_PRICES:
-                retCursor = queryAllPrices();
-                if (getContext() != null && retCursor != null) {
-                    retCursor.setNotificationUri(getContext().getContentResolver(), uri);
-                }
-                return retCursor;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -138,8 +126,6 @@ public class DatabaseProvider extends ContentProvider {
     @Override
     public String getType(@NonNull Uri uri) {
         switch (sUriMatcher.match(uri)) {
-            case PRICE_LIST:
-                return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_PRICE_LIST;
             case BACKPACK:
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_BACKPACK;
             case BACKPACK_GUEST:
@@ -160,10 +146,6 @@ public class DatabaseProvider extends ContentProvider {
         long _id;
         String tableName;
         switch (sUriMatcher.match(uri)) {
-            case PRICE_LIST:
-                tableName = PriceEntry.TABLE_NAME;
-                returnUri = PriceEntry.CONTENT_URI;
-                break;
             case BACKPACK:
                 tableName = UserBackpackEntry.TABLE_NAME;
                 returnUri = UserBackpackEntry.CONTENT_URI;
@@ -196,10 +178,6 @@ public class DatabaseProvider extends ContentProvider {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         int rowsDeleted;
         switch (sUriMatcher.match(uri)) {
-
-            case PRICE_LIST:
-                rowsDeleted = db.delete(PriceEntry.TABLE_NAME, selection, selectionArgs);
-                break;
             case BACKPACK:
                 rowsDeleted = db.delete(UserBackpackEntry.TABLE_NAME, selection, selectionArgs);
                 break;
@@ -230,9 +208,6 @@ public class DatabaseProvider extends ContentProvider {
         int rowsUpdated;
 
         switch (sUriMatcher.match(uri)) {
-            case PRICE_LIST:
-                rowsUpdated = db.update(PriceEntry.TABLE_NAME, values, selection, selectionArgs);
-                break;
             case BACKPACK:
                 rowsUpdated = db.update(UserBackpackEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
@@ -261,9 +236,6 @@ public class DatabaseProvider extends ContentProvider {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         String tableName;
         switch (sUriMatcher.match(uri)) {
-            case PRICE_LIST:
-                tableName = PriceEntry.TABLE_NAME;
-                break;
             case BACKPACK:
                 tableName = UserBackpackEntry.TABLE_NAME;
                 break;
@@ -301,37 +273,5 @@ public class DatabaseProvider extends ContentProvider {
         }
 
         return returnCount;
-    }
-
-    private Cursor queryAllPrices() {
-        Cursor cursor = mOpenHelper.getReadableDatabase().rawQuery("SELECT " +
-                        PriceEntry.TABLE_NAME + "." + PriceEntry._ID + "," +
-                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + "," +
-                        "item_schema.item_name," +
-                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + "," +
-                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_TRADABLE + "," +
-                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_CRAFTABLE + "," +
-                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + "," +
-                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_CURRENCY + "," +
-                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE + "," +
-                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_HIGH + "," +
-                        Utility.getRawPriceQueryString(getContext()) + " raw_price," +
-                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DIFFERENCE + "," +
-                        PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM +
-                        " FROM " + PriceEntry.TABLE_NAME +
-                        " LEFT JOIN item_schema" +
-                        " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = item_schema.defindex" +
-                        " ORDER BY " + PriceEntry.COLUMN_LAST_UPDATE + " DESC",
-                null
-        );
-
-        //Raw query is lazy, it won't actually query until we actually ask for the data.
-        if (cursor != null) {
-            if (cursor.getCount() > 0) {
-                return cursor;
-            }
-        }
-
-        return cursor;
     }
 }

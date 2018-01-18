@@ -106,6 +106,10 @@ public class Price implements Parcelable {
         this.highValue = highValue;
     }
 
+    public void setHighValue(Double highValue) {
+        this.highValue = highValue == null ? 0 : highValue;
+    }
+
     public double getRawValue() {
         return rawValue;
     }

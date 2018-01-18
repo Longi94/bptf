@@ -16,15 +16,14 @@
 
 package com.tlongdev.bktf.interactor;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
 import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
-import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.util.Utility;
@@ -41,7 +40,8 @@ import javax.inject.Named;
  */
 public class LoadFavoritesInteractor extends AsyncTask<Void, Void, Void> {
 
-    @Inject @Named("readable") SQLiteDatabase mDatabase;
+    @Inject @Named("readable")
+    SupportSQLiteDatabase mDatabase;
     @Inject Context mContext;
 
     private final Callback mCallback;
@@ -64,25 +64,25 @@ public class LoadFavoritesInteractor extends AsyncTask<Void, Void, Void> {
                 FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_TRADABLE + "," +
                 FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_CRAFTABLE + "," +
                 FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_PRICE_INDEX + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_CURRENCY + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE + "," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_HIGH + "," +
+                "pricelist.currency," +
+                "pricelist.price," +
+                "pricelist.max," +
                 Utility.getRawPriceQueryString(mContext) + " price_raw," +
-                PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DIFFERENCE + "," +
+                "pricelist.difference," +
                 FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_AUSTRALIUM +
                 " FROM " + FavoritesEntry.TABLE_NAME +
-                " LEFT JOIN " + PriceEntry.TABLE_NAME +
-                " ON " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_DEFINDEX + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX +
-                " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_TRADABLE + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_TRADABLE +
-                " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_CRAFTABLE + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_CRAFTABLE +
-                " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_PRICE_INDEX + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX +
-                " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_QUALITY + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY +
-                " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_AUSTRALIUM + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_AUSTRALIUM +
+                " LEFT JOIN pricelist" +
+                " ON " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_DEFINDEX + " = pricelist.defindex" +
+                " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_TRADABLE + " = pricelist.tradable" +
+                " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_CRAFTABLE + " = pricelist.craftable" +
+                " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_PRICE_INDEX + " = pricelist.price_index" +
+                " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_QUALITY + " = pricelist.quality" +
+                " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_AUSTRALIUM + " = pricelist.australium" +
                 " LEFT JOIN item_schema" +
                 " ON " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_DEFINDEX + " = item_schema.defindex" +
                 " ORDER BY item_name ASC";
 
-        Cursor cursor = mDatabase.rawQuery(sql, null);
+        Cursor cursor = mDatabase.query(sql, null);
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -95,13 +95,13 @@ public class LoadFavoritesInteractor extends AsyncTask<Void, Void, Void> {
                 item.setAustralium(cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_AUSTRALIUM)) == 1);
                 item.setPriceIndex(cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_PRICE_INDEX)));
 
-                if (cursor.getString(cursor.getColumnIndex(PriceEntry.COLUMN_CURRENCY)) != null) {
+                if (cursor.getString(cursor.getColumnIndex("currency")) != null) {
                     Price price = new Price();
-                    price.setValue(cursor.getDouble(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE)));
-                    price.setHighValue(cursor.getDouble(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE_HIGH)));
+                    price.setValue(cursor.getDouble(cursor.getColumnIndex("price")));
+                    price.setHighValue(cursor.getDouble(cursor.getColumnIndex("max")));
                     price.setRawValue(cursor.getDouble(cursor.getColumnIndex("price_raw")));
-                    price.setDifference(cursor.getDouble(cursor.getColumnIndex(PriceEntry.COLUMN_DIFFERENCE)));
-                    price.setCurrency(cursor.getString(cursor.getColumnIndex(PriceEntry.COLUMN_CURRENCY)));
+                    price.setDifference(cursor.getDouble(cursor.getColumnIndex("difference")));
+                    price.setCurrency(cursor.getString(cursor.getColumnIndex("currency")));
                     item.setPrice(price);
                 }
 
