@@ -23,6 +23,7 @@ import android.content.ContentResolver;
 
 import com.tlongdev.bktf.data.BptfDatabase;
 import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
+import com.tlongdev.bktf.data.dao.FavoriteDao;
 import com.tlongdev.bktf.data.dao.ItemSchemaDao;
 import com.tlongdev.bktf.data.dao.OriginDao;
 import com.tlongdev.bktf.data.dao.PriceDao;
@@ -97,5 +98,11 @@ public class StorageModule {
     @Singleton
     PriceDao providePriceDao(BptfDatabase database) {
         return database.priceDao();
+    }
+
+    @Provides
+    @Singleton
+    FavoriteDao provideFavoriteDao(BptfDatabase database) {
+        return database.favoriteDao();
     }
 }

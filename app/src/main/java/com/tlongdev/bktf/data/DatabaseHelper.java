@@ -63,90 +63,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             mContext.deleteDatabase("backpack.db");
         }
 
-        final String SQL_CREATE_PRICE_LIST_TABLE =
-                "CREATE TABLE pricelist (" +
-                        "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-
-                        "defindex INTEGER NOT NULL, " +
-                        "quality INTEGER NOT NULL, " +
-                        "tradable INTEGER NOT NULL, " +
-                        "craftable INTEGER NOT NULL, " +
-                        "price_index INTEGER NOT NULL, " +
-                        "australium INTEGER NOT NULL, " +
-                        "currency TEXT NOT NULL, " +
-                        "price REAL NOT NULL, " +
-                        "max REAL, " +
-                        "last_update INTEGER NOT NULL, " +
-                        "difference REAL NOT NULL, " +
-                        "weapon_wear INTEGER NOT NULL, " +
-
-                        " UNIQUE (defindex, " +
-                        "quality, " +
-                        "tradable, " +
-                        "craftable, " +
-                        "price_index, " +
-                        "australium, " +
-                        "weapon_wear) ON CONFLICT REPLACE);";
-
-        final String SQL_CREATE_ITEM_SCHEMA_TABLE =
-                "CREATE TABLE item_schema (" +
-                        "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-
-                        "defindex INTEGER NOT NULL, " +
-                        "item_name INTEGER NOT NULL, " +
-                        "description TEXT, " +
-                        "type_name INTEGER NOT NULL, " +
-                        "proper_name INTEGER NOT NULL, " +
-
-                        " UNIQUE (defindex) ON CONFLICT REPLACE);";
-
-        final String SQL_CREATE_UNUSUAL_SCHEMA_TABLE =
-                "CREATE TABLE unusual_schema (" +
-                        "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-
-                        "id INTEGER NOT NULL, " +
-                        "name TEXT NOT NULL, " +
-
-                        " UNIQUE (id) ON CONFLICT REPLACE);";
-
-        final String SQL_CREATE_ORIGIN_NAMES_TABLE =
-                "CREATE TABLE origin_names (" +
-                        "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-
-                        "id INTEGER NOT NULL, " +
-                        "name TEXT NOT NULL, " +
-
-                        " UNIQUE (id) ON CONFLICT REPLACE);";
-
-        final String SQL_CREATE_DECORATED_WEAPONS_TABLE_TABLE =
-                "CREATE TABLE decorated_weapons (" +
-                        "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-
-                        "defindex INTEGER NOT NULL, " +
-                        "grade INTEGER NOT NULL, " +
-
-                        " UNIQUE (defindex) ON CONFLICT REPLACE);";
-
-        final String SQL_CREATE_FAVORITES_TABLE =
-                "CREATE TABLE " + FavoritesEntry.TABLE_NAME + " (" +
-                        FavoritesEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-
-                        FavoritesEntry.COLUMN_DEFINDEX + " INTEGER NOT NULL, " +
-                        FavoritesEntry.COLUMN_ITEM_QUALITY + " INTEGER NOT NULL, " +
-                        FavoritesEntry.COLUMN_ITEM_TRADABLE + " INTEGER NOT NULL, " +
-                        FavoritesEntry.COLUMN_ITEM_CRAFTABLE + " INTEGER NOT NULL, " +
-                        FavoritesEntry.COLUMN_PRICE_INDEX + " INTEGER NOT NULL, " +
-                        FavoritesEntry.COLUMN_AUSTRALIUM + " INTEGER NOT NULL, " +
-                        FavoritesEntry.COLUMN_WEAPON_WEAR + " INTEGER NOT NULL, " +
-
-                        " UNIQUE (" + FavoritesEntry.COLUMN_DEFINDEX + ", " +
-                        FavoritesEntry.COLUMN_ITEM_QUALITY + ", " +
-                        FavoritesEntry.COLUMN_ITEM_TRADABLE + ", " +
-                        FavoritesEntry.COLUMN_ITEM_CRAFTABLE + ", " +
-                        FavoritesEntry.COLUMN_PRICE_INDEX + ", " +
-                        FavoritesEntry.COLUMN_AUSTRALIUM + ", " +
-                        FavoritesEntry.COLUMN_WEAPON_WEAR + ") ON CONFLICT REPLACE);";
-
         final String SQL_CREATE_CALCULATOR_TABLE =
                 "CREATE TABLE " + CalculatorEntry.TABLE_NAME + " (" +
                         CalculatorEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -226,12 +142,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         " UNIQUE (" + UserBackpackEntry.COLUMN_POSITION + ", " +
                         UserBackpackEntry.COLUMN_UNIQUE_ID + ") ON CONFLICT REPLACE);";
 
-        db.execSQL(SQL_CREATE_PRICE_LIST_TABLE);
-        db.execSQL(SQL_CREATE_ITEM_SCHEMA_TABLE);
-        db.execSQL(SQL_CREATE_UNUSUAL_SCHEMA_TABLE);
-        db.execSQL(SQL_CREATE_ORIGIN_NAMES_TABLE);
-        db.execSQL(SQL_CREATE_DECORATED_WEAPONS_TABLE_TABLE);
-        db.execSQL(SQL_CREATE_FAVORITES_TABLE);
         db.execSQL(SQL_CREATE_CALCULATOR_TABLE);
         db.execSQL(SQL_CREATE_BACKPACK_TABLE);
         db.execSQL(SQL_CREATE_GUEST_BACKPACK_TABLE);
@@ -244,7 +154,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS unusual_schema");
         db.execSQL("DROP TABLE IF EXISTS origin_names");
         db.execSQL("DROP TABLE IF EXISTS decorated_weapons");
-        db.execSQL("DROP TABLE IF EXISTS " + FavoritesEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS favorites");
         db.execSQL("DROP TABLE IF EXISTS " + CalculatorEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + UserBackpackEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + UserBackpackEntry.TABLE_NAME_GUEST);

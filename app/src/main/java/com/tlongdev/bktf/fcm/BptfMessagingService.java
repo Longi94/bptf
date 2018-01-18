@@ -29,7 +29,6 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
 import com.tlongdev.bktf.interactor.TlongdevPriceListInteractor;
 import com.tlongdev.bktf.util.Utility;
 
@@ -94,16 +93,16 @@ public class BptfMessagingService extends FirebaseMessagingService {
         if (!prefs.getBoolean(getString(R.string.pref_price_notification), false)) return;
 
         String sql = "SELECT " +
-                FavoritesEntry.TABLE_NAME + "." + FavoritesEntry._ID + "," +
+                "favorites._id," +
                 "pricelist.last_update" +
-                " FROM " + FavoritesEntry.TABLE_NAME +
+                " FROM favorites" +
                 " LEFT JOIN pricelist" +
-                " ON " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_DEFINDEX + " = pricelist.defindex" +
-                " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_TRADABLE + " = pricelist.tradable" +
-                " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_CRAFTABLE + " = pricelist.craftable" +
-                " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_PRICE_INDEX + " = pricelist.price_index" +
-                " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_QUALITY + " = pricelist.quality" +
-                " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_AUSTRALIUM + " = pricelist.australium";
+                " ON favorites.defindex = pricelist.defindex" +
+                " AND favorites.tradable = pricelist.tradable" +
+                " AND favorites.craftable = pricelist.craftable" +
+                " AND favorites.price_index = pricelist.price_index" +
+                " AND favorites.quality = pricelist.quality" +
+                " AND favorites.australium = pricelist.australium";
 
         Cursor cursor = mDatabase.query(sql, null);
 

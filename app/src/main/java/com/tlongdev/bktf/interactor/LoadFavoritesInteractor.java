@@ -23,7 +23,6 @@ import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
-import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.util.Utility;
@@ -58,28 +57,28 @@ public class LoadFavoritesInteractor extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
 
         String sql = "SELECT " +
-                FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_DEFINDEX + "," +
+                "favorites.defindex," +
                 "item_schema.item_name," +
-                FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_QUALITY + "," +
-                FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_TRADABLE + "," +
-                FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_CRAFTABLE + "," +
-                FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_PRICE_INDEX + "," +
+                "favorites.quality," +
+                "favorites.tradable," +
+                "favorites.craftable," +
+                "favorites.price_index," +
                 "pricelist.currency," +
                 "pricelist.price," +
                 "pricelist.max," +
                 Utility.getRawPriceQueryString(mContext) + " price_raw," +
                 "pricelist.difference," +
-                FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_AUSTRALIUM +
-                " FROM " + FavoritesEntry.TABLE_NAME +
+                "favorites.australium" +
+                " FROM favorites" +
                 " LEFT JOIN pricelist" +
-                " ON " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_DEFINDEX + " = pricelist.defindex" +
-                " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_TRADABLE + " = pricelist.tradable" +
-                " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_CRAFTABLE + " = pricelist.craftable" +
-                " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_PRICE_INDEX + " = pricelist.price_index" +
-                " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_QUALITY + " = pricelist.quality" +
-                " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_AUSTRALIUM + " = pricelist.australium" +
+                " ON favorites.defindex = pricelist.defindex" +
+                " AND favorites.tradable = pricelist.tradable" +
+                " AND favorites.craftable = pricelist.craftable" +
+                " AND favorites.price_index = pricelist.price_index" +
+                " AND favorites.quality = pricelist.quality" +
+                " AND favorites.australium = pricelist.australium" +
                 " LEFT JOIN item_schema" +
-                " ON " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_DEFINDEX + " = item_schema.defindex" +
+                " ON favorites.defindex = item_schema.defindex" +
                 " ORDER BY item_name ASC";
 
         Cursor cursor = mDatabase.query(sql, null);

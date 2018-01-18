@@ -32,6 +32,7 @@ import android.view.View;
 import com.google.android.gms.ads.AdView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.SearchAdapter;
+import com.tlongdev.bktf.data.dao.FavoriteDao;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Quality;
 import com.tlongdev.bktf.model.User;
@@ -46,7 +47,11 @@ import butterknife.OnClick;
 
 public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui.view.activity.SearchView, SearchAdapter.OnSearchClickListener {
 
-    @Inject SearchPresenter mPresenter;
+    @Inject
+    SearchPresenter mPresenter;
+
+    @Inject
+    FavoriteDao mFavoriteDao;
 
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
     @BindView(R.id.toolbar) Toolbar mToolbar;
@@ -206,7 +211,7 @@ public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui
 
     @Override
     public void onMoreClicked(View view, final Item item) {
-        Utility.createItemPopupMenu(this, view, item).show();
+        Utility.createItemPopupMenu(this, view, mFavoriteDao, item).show();
     }
 
     @Override

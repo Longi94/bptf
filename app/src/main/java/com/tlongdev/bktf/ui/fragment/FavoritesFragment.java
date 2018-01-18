@@ -44,6 +44,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.FavoritesAdapter;
 import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
 import com.tlongdev.bktf.customtabs.WebViewFallback;
+import com.tlongdev.bktf.data.dao.FavoriteDao;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.presenter.fragment.FavoritesPresenter;
 import com.tlongdev.bktf.ui.activity.ItemChooserActivity;
@@ -68,7 +69,11 @@ import butterknife.Unbinder;
 public class FavoritesFragment extends BptfFragment implements FavoritesView,
         FavoritesAdapter.OnMoreListener {
 
-    @Inject FavoritesPresenter mPresenter;
+    @Inject
+    FavoritesPresenter mPresenter;
+
+    @Inject
+    FavoriteDao mFavoriteDao;
 
     @BindView(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
     @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
@@ -153,7 +158,8 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
         switch (requestCode) {
             case MainActivity.REQUEST_NEW_ITEM:
                 if (resultCode == Activity.RESULT_OK) {
-                    Utility.addToFavorites(getActivity(), (Item) data.getParcelableExtra(ItemChooserActivity.EXTRA_ITEM));
+                    Utility.addToFavorites(getActivity(), mFavoriteDao,
+                            data.getParcelableExtra(ItemChooserActivity.EXTRA_ITEM));
                     mPresenter.loadFavorites();
                 }
         }
@@ -206,7 +212,7 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
                     startActivity(intent);
                     break;
                 case R.id.favorite:
-                    Utility.removeFromFavorites(getActivity(), item);
+                    Utility.removeFromFavorites(getActivity(), mFavoriteDao, item);
                     mAdapter.removeItem(item);
                     break;
                 case R.id.calculator:

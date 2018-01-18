@@ -46,6 +46,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.RecentsAdapter;
+import com.tlongdev.bktf.data.dao.FavoriteDao;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.presenter.fragment.RecentsPresenter;
@@ -65,7 +66,11 @@ import butterknife.Unbinder;
 public class RecentsFragment extends BptfFragment implements RecentsView,
         SwipeRefreshLayout.OnRefreshListener, RecentsAdapter.OnMoreListener {
 
-    @Inject RecentsPresenter mPresenter;
+    @Inject
+    RecentsPresenter mPresenter;
+
+    @Inject
+    FavoriteDao mFavoriteDao;
 
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
@@ -325,6 +330,6 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
 
     @Override
     public void onMoreClicked(View view, Item item) {
-        Utility.createItemPopupMenu(getActivity(), view, item).show();
+        Utility.createItemPopupMenu(getActivity(), view, mFavoriteDao, item).show();
     }
 }

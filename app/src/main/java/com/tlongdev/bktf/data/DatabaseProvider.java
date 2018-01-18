@@ -25,7 +25,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
-import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
 import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
 
 public class DatabaseProvider extends ContentProvider {
@@ -41,7 +40,6 @@ public class DatabaseProvider extends ContentProvider {
      */
     private static final int BACKPACK = 104;
     private static final int BACKPACK_GUEST = 105;
-    private static final int FAVORITES = 106;
     private static final int CALCULATOR = 107;
 
     /**
@@ -71,7 +69,6 @@ public class DatabaseProvider extends ContentProvider {
 
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, DatabaseContract.PATH_BACKPACK, BACKPACK);
-        matcher.addURI(authority, DatabaseContract.PATH_FAVORITES, FAVORITES);
         matcher.addURI(authority, DatabaseContract.PATH_CALCULATOR, CALCULATOR);
         matcher.addURI(authority, DatabaseContract.PATH_BACKPACK + "/guest", BACKPACK_GUEST);
 
@@ -96,9 +93,6 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             case BACKPACK_GUEST:
                 tableName = UserBackpackEntry.TABLE_NAME_GUEST;
-                break;
-            case FAVORITES:
-                tableName = FavoritesEntry.TABLE_NAME;
                 break;
             case CALCULATOR:
                 tableName = CalculatorEntry.TABLE_NAME;
@@ -130,8 +124,6 @@ public class DatabaseProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_BACKPACK;
             case BACKPACK_GUEST:
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_BACKPACK;
-            case FAVORITES:
-                return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_FAVORITES;
             case CALCULATOR:
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_CALCULATOR;
             default:
@@ -153,10 +145,6 @@ public class DatabaseProvider extends ContentProvider {
             case BACKPACK_GUEST:
                 tableName = UserBackpackEntry.TABLE_NAME_GUEST;
                 returnUri = UserBackpackEntry.CONTENT_URI_GUEST;
-                break;
-            case FAVORITES:
-                tableName = FavoritesEntry.TABLE_NAME;
-                returnUri = FavoritesEntry.CONTENT_URI;
                 break;
             case CALCULATOR:
                 tableName = CalculatorEntry.TABLE_NAME;
@@ -183,9 +171,6 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             case BACKPACK_GUEST:
                 rowsDeleted = db.delete(UserBackpackEntry.TABLE_NAME_GUEST, selection, selectionArgs);
-                break;
-            case FAVORITES:
-                rowsDeleted = db.delete(FavoritesEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             case CALCULATOR:
                 rowsDeleted = db.delete(CalculatorEntry.TABLE_NAME, selection, selectionArgs);
@@ -214,9 +199,6 @@ public class DatabaseProvider extends ContentProvider {
             case BACKPACK_GUEST:
                 rowsUpdated = db.update(UserBackpackEntry.TABLE_NAME_GUEST, values, selection, selectionArgs);
                 break;
-            case FAVORITES:
-                rowsUpdated = db.update(FavoritesEntry.TABLE_NAME, values, selection, selectionArgs);
-                break;
             case CALCULATOR:
                 rowsUpdated = db.update(CalculatorEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
@@ -241,9 +223,6 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             case BACKPACK_GUEST:
                 tableName = UserBackpackEntry.TABLE_NAME_GUEST;
-                break;
-            case FAVORITES:
-                tableName = FavoritesEntry.TABLE_NAME;
                 break;
             case CALCULATOR:
                 tableName = CalculatorEntry.TABLE_NAME;

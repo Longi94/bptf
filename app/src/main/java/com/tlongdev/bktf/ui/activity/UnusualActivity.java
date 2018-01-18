@@ -33,6 +33,7 @@ import com.f2prateek.dart.InjectExtra;
 import com.google.android.gms.ads.AdView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.UnusualAdapter;
+import com.tlongdev.bktf.data.dao.FavoriteDao;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.presenter.activity.UnusualPresenter;
 import com.tlongdev.bktf.ui.view.activity.UnusualView;
@@ -54,7 +55,11 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
     public static final String EXTRA_NAME = "name";
     public static final String EXTRA_PRICE_INDEX = "index";
 
-    @Inject UnusualPresenter mPresenter;
+    @Inject
+    UnusualPresenter mPresenter;
+
+    @Inject
+    FavoriteDao mFavoriteDao;
 
     @SuppressWarnings("NullableProblems")
     @Nullable
@@ -141,7 +146,7 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
 
     @Override
     public void onMoreClicked(View view, final Item item) {
-        Utility.createItemPopupMenu(this, view, item).show();
+        Utility.createItemPopupMenu(this, view, mFavoriteDao, item).show();
     }
 
     @Override

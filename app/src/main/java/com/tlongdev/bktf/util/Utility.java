@@ -43,7 +43,8 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
 import com.tlongdev.bktf.customtabs.WebViewFallback;
 import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
-import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
+import com.tlongdev.bktf.data.dao.FavoriteDao;
+import com.tlongdev.bktf.data.entity.Favorite;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
@@ -255,74 +256,53 @@ public class Utility {
                 " ) END ";
     }
 
-    public static void addToFavorites(Context context, Item item) {
+    public static void addToFavorites(Context context, FavoriteDao favoriteDao, Item item) {
 
-        ContentValues cv = new ContentValues();
+        Favorite favorite = new Favorite();
 
-        cv.put(FavoritesEntry.COLUMN_DEFINDEX, item.getDefindex());
-        cv.put(FavoritesEntry.COLUMN_ITEM_QUALITY, item.getQuality());
-        cv.put(FavoritesEntry.COLUMN_ITEM_TRADABLE, item.isTradable() ? 1 : 0);
-        cv.put(FavoritesEntry.COLUMN_ITEM_CRAFTABLE, item.isCraftable() ? 1 : 0);
-        cv.put(FavoritesEntry.COLUMN_PRICE_INDEX, item.getPriceIndex());
-        cv.put(FavoritesEntry.COLUMN_AUSTRALIUM, item.isAustralium() ? 1 : 0);
-        cv.put(FavoritesEntry.COLUMN_WEAPON_WEAR, item.getWeaponWear());
+        favorite.setDefindex(item.getDefindex());
+        favorite.setQuality(item.getQuality());
+        favorite.setTradable(item.isTradable());
+        favorite.setCraftable(item.isCraftable());
+        favorite.setPriceIndex(item.getPriceIndex());
+        favorite.setAustralium(item.isAustralium());
+        favorite.setWeaponWear(item.getWeaponWear());
 
-        context.getContentResolver().insert(FavoritesEntry.CONTENT_URI, cv);
-
-        notifyPricesWidgets(context);
-    }
-
-    public static void removeFromFavorites(Context context, Item item) {
-        context.getContentResolver().delete(FavoritesEntry.CONTENT_URI,
-                FavoritesEntry.COLUMN_DEFINDEX + " = ? AND " +
-                        FavoritesEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
-                        FavoritesEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
-                        FavoritesEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
-                        FavoritesEntry.COLUMN_PRICE_INDEX + " = ? AND " +
-                        FavoritesEntry.COLUMN_AUSTRALIUM + " = ? AND " +
-                        FavoritesEntry.COLUMN_WEAPON_WEAR + " = ?",
-                new String[]{String.valueOf(item.getDefindex()),
-                        String.valueOf(item.getQuality()),
-                        item.isTradable() ? "1" : "0",
-                        item.isCraftable() ? "1" : "0",
-                        String.valueOf(item.getPriceIndex()),
-                        item.isAustralium() ? "1" : "0",
-                        String.valueOf(item.getWeaponWear())
-                });
+        favoriteDao.insertFavorite(favorite);
 
         notifyPricesWidgets(context);
     }
 
-    public static boolean isFavorite(Context context, Item item) {
-        Cursor cursor = context.getContentResolver().query(
-                FavoritesEntry.CONTENT_URI,
-                null,
-                FavoritesEntry.COLUMN_DEFINDEX + " = ? AND " +
-                        FavoritesEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
-                        FavoritesEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
-                        FavoritesEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
-                        FavoritesEntry.COLUMN_PRICE_INDEX + " = ? AND " +
-                        FavoritesEntry.COLUMN_AUSTRALIUM + " = ? AND " +
-                        FavoritesEntry.COLUMN_WEAPON_WEAR + " = ?",
-                new String[]{String.valueOf(item.getDefindex()),
-                        String.valueOf(item.getQuality()),
-                        item.isTradable() ? "1" : "0",
-                        item.isCraftable() ? "1" : "0",
-                        String.valueOf(item.getPriceIndex()),
-                        item.isAustralium() ? "1" : "0",
-                        String.valueOf(item.getWeaponWear())
-                },
-                null
+    public static void removeFromFavorites(Context context, FavoriteDao favoriteDao, Item item) {
+        Favorite favorite = favoriteDao.findFavorite(
+                item.getDefindex(),
+                item.getQuality(),
+                item.isTradable(),
+                item.isCraftable(),
+                item.isAustralium(),
+                item.getPriceIndex(),
+                item.getWeaponWear()
         );
 
-        boolean result = false;
-
-        if (cursor != null) {
-            result = cursor.getCount() > 0;
-            cursor.close();
+        if (favorite != null) {
+            favoriteDao.deleteFavorite(favorite);
         }
 
-        return result;
+        notifyPricesWidgets(context);
+    }
+
+    public static boolean isFavorite(FavoriteDao favoriteDao, Item item) {
+        Favorite favorite = favoriteDao.findFavorite(
+                item.getDefindex(),
+                item.getQuality(),
+                item.isTradable(),
+                item.isCraftable(),
+                item.isAustralium(),
+                item.getPriceIndex(),
+                item.getWeaponWear()
+        );
+
+        return favorite != null;
     }
 
     public static boolean isInCalculator(Context context, Item item) {
@@ -428,13 +408,13 @@ public class Utility {
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
-    public static PopupMenu createItemPopupMenu(final Activity activity, View anchor, final Item item) {
+    public static PopupMenu createItemPopupMenu(final Activity activity, View anchor, FavoriteDao favoriteDao, final Item item) {
         PopupMenu menu = new PopupMenu(activity, anchor);
 
         menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
 
         menu.getMenu().findItem(R.id.favorite).setTitle(
-                isFavorite(activity, item) ? "Remove from favorites" : "Add to favorites");
+                isFavorite(favoriteDao, item) ? "Remove from favorites" : "Add to favorites");
 
         menu.getMenu().findItem(R.id.calculator).setEnabled(!isInCalculator(activity, item));
 
@@ -447,10 +427,10 @@ public class Utility {
                     activity.startActivity(intent);
                     break;
                 case R.id.favorite:
-                    if (isFavorite(activity, item)) {
-                        removeFromFavorites(activity, item);
+                    if (isFavorite(favoriteDao, item)) {
+                        removeFromFavorites(activity, favoriteDao, item);
                     } else {
-                        addToFavorites(activity, item);
+                        addToFavorites(activity, favoriteDao, item);
                     }
                     break;
                 case R.id.calculator:

@@ -32,7 +32,6 @@ import com.bumptech.glide.request.target.Target;
 import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
 import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
 import com.tlongdev.bktf.data.dao.ItemSchemaDao;
 import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
@@ -101,28 +100,28 @@ public class FavoritesWidgetService extends RemoteViewsService {
         @Override
         public void onCreate() {
             sql = "SELECT " +
-                    FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_DEFINDEX + "," +
+                    "favorites.defindex," +
                     "item_schema.item_name," +
-                    FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_QUALITY + "," +
-                    FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_TRADABLE + "," +
-                    FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_CRAFTABLE + "," +
-                    FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_PRICE_INDEX + "," +
+                    "favorites.quality," +
+                    "favorites.tradable," +
+                    "favorites.craftable," +
+                    "favorites.price_index," +
                     "pricelist.currency," +
                     "pricelist.price," +
                     "pricelist.max," +
                     Utility.getRawPriceQueryString(mContext) + "," +
                     "pricelist.difference," +
-                    FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_AUSTRALIUM +
-                    " FROM " + FavoritesEntry.TABLE_NAME +
+                    "favorites.australium" +
+                    " FROM favorites" +
                     " LEFT JOIN pricelist" +
-                    " ON " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_DEFINDEX + " = pricelist.defindex" +
-                    " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_TRADABLE + " = pricelist.tradable" +
-                    " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_CRAFTABLE + " = pricelist.craftable" +
-                    " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_PRICE_INDEX + " = pricelist.price_index" +
-                    " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_ITEM_QUALITY + " = pricelist.quality" +
-                    " AND " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_AUSTRALIUM + " = pricelist.australium" +
+                    " ON favorites.defindex = pricelist.defindex" +
+                    " AND favorites.tradable = pricelist.tradable" +
+                    " AND favorites.craftable = pricelist.craftable" +
+                    " AND favorites.price_index = pricelist.price_index" +
+                    " AND favorites.quality = pricelist.quality" +
+                    " AND favorites.australium = pricelist.australium" +
                     " LEFT JOIN item_schema" +
-                    " ON " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_DEFINDEX + " = item_schema.defindex" +
+                    " ON favorites.defindex = item_schema.defindex" +
                     " ORDER BY item_name ASC";
 
 
