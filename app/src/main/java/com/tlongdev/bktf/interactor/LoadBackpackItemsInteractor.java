@@ -16,13 +16,10 @@
 
 package com.tlongdev.bktf.interactor;
 
-import android.content.ContentResolver;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
+import com.tlongdev.bktf.data.dao.BackpackDao;
 import com.tlongdev.bktf.model.BackpackItem;
 
 import java.util.LinkedList;
@@ -36,20 +33,8 @@ import javax.inject.Inject;
  */
 public class LoadBackpackItemsInteractor extends AsyncTask<Void, Void, Void> {
 
-    private static final String[] PROJECTION = new String[]{
-            UserBackpackEntry._ID,
-            UserBackpackEntry.COLUMN_DEFINDEX,
-            UserBackpackEntry.COLUMN_QUALITY,
-            UserBackpackEntry.COLUMN_CRAFT_NUMBER,
-            UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE,
-            UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT,
-            UserBackpackEntry.COLUMN_ITEM_INDEX,
-            UserBackpackEntry.COLUMN_PAINT,
-            UserBackpackEntry.COLUMN_AUSTRALIUM,
-            UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR
-    };
-
-    @Inject ContentResolver mContentResolver;
+    @Inject
+    BackpackDao mBackpackDao;
 
     private final Callback mCallback;
     private final boolean mGuest;
@@ -65,38 +50,41 @@ public class LoadBackpackItemsInteractor extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-
         mItems = new LinkedList<>();
         mNewItems = new LinkedList<>();
 
-        Uri uri = mGuest ? UserBackpackEntry.CONTENT_URI_GUEST : UserBackpackEntry.CONTENT_URI;
+        List<com.tlongdev.bktf.data.entity.BackpackItem> items = mBackpackDao.findAll(mGuest);
 
-        Cursor cursor = mContentResolver.query(uri, PROJECTION,
-                UserBackpackEntry.COLUMN_POSITION + " >= ?",
-                new String[]{"1"},
-                UserBackpackEntry.COLUMN_POSITION + " ASC"
-        );
-
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                mItems.add(mapCursor(cursor));
+        for (com.tlongdev.bktf.data.entity.BackpackItem item : items) {
+            if (item.getPosition() == -1) {
+                mNewItems.add(mapItem(item));
+            } else {
+                mItems.add(mapItem(item));
             }
-            cursor.close();
         }
 
-        cursor = mContentResolver.query(uri, PROJECTION,
-                UserBackpackEntry.COLUMN_POSITION + " = ?",
-                new String[]{"-1"},
-                UserBackpackEntry.COLUMN_POSITION + " ASC"
-        );
-
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                mNewItems.add(mapCursor(cursor));
-            }
-            cursor.close();
-        }
         return null;
+    }
+
+    private BackpackItem mapItem(com.tlongdev.bktf.data.entity.BackpackItem item) {
+        BackpackItem backpackItem = new BackpackItem();
+        backpackItem.setId(item.getId().intValue());
+        backpackItem.setDefindex(item.getDefindex());
+        backpackItem.setQuality(item.getQuality());
+        if (item.getCraftNumber() != null) {
+            backpackItem.setCraftNumber(item.getCraftNumber());
+        }
+        backpackItem.setTradable(!item.getFlagCannotTrade());
+        backpackItem.setCraftable(!item.getFlagCannotCraft());
+        backpackItem.setPriceIndex(item.getItemIndex());
+        if (item.getPaint() != null) {
+            backpackItem.setPaint(item.getPaint());
+        }
+        backpackItem.setAustralium(item.getAustralium());
+        if (item.getWeaponWear() != null) {
+            backpackItem.setWeaponWear(item.getWeaponWear());
+        }
+        return backpackItem;
     }
 
     @Override
@@ -104,22 +92,6 @@ public class LoadBackpackItemsInteractor extends AsyncTask<Void, Void, Void> {
         if (mCallback != null) {
             mCallback.onLoadBackpackItemFinished(mItems, mNewItems);
         }
-    }
-
-    @SuppressWarnings("WrongConstant")
-    private BackpackItem mapCursor(Cursor cursor) {
-        BackpackItem backpackItem = new BackpackItem();
-        backpackItem.setId(cursor.getInt(0));
-        backpackItem.setDefindex(cursor.getInt(1));
-        backpackItem.setQuality(cursor.getInt(2));
-        backpackItem.setCraftNumber(cursor.getInt(3));
-        backpackItem.setTradable(cursor.getInt(4) == 0);
-        backpackItem.setCraftable(cursor.getInt(5) == 0);
-        backpackItem.setPriceIndex(cursor.getInt(6));
-        backpackItem.setPaint(cursor.getInt(7));
-        backpackItem.setAustralium(cursor.getInt(8) == 1);
-        backpackItem.setWeaponWear(cursor.getInt(9));
-        return backpackItem;
     }
 
     public interface Callback {

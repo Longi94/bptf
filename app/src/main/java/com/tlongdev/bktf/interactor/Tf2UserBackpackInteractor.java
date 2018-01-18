@@ -1,12 +1,12 @@
 /**
  * Copyright 2015 Long Tran
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,15 +16,14 @@
 
 package com.tlongdev.bktf.interactor;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
+import com.tlongdev.bktf.data.dao.BackpackDao;
+import com.tlongdev.bktf.data.entity.BackpackItem;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.network.Tf2Interface;
 import com.tlongdev.bktf.network.model.tf2.PlayerItem;
@@ -36,7 +35,6 @@ import com.tlongdev.bktf.util.Utility;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.inject.Inject;
 
@@ -53,9 +51,14 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
     //with empty items so the backpack is correctly shown.
     private List<Integer> slotNumbers;
 
-    @Inject Tf2Interface mTf2Interface;
-    @Inject Context mContext;
-    @Inject ProfileManager mProfileManager;
+    @Inject
+    Tf2Interface mTf2Interface;
+    @Inject
+    Context mContext;
+    @Inject
+    ProfileManager mProfileManager;
+    @Inject
+    BackpackDao mBackpackDao;
 
     //Indicates which table to insert data into
     private final boolean mIsGuest;
@@ -133,7 +136,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
     private int saveItems(PlayerItemsPayload payload) {
         switch (payload.getResult().getStatus()) {
             case 1:
-                Vector<ContentValues> cVVector = new Vector<>();
+                List<BackpackItem> backpackItems = new LinkedList<>();
 
                 List<PlayerItem> items = payload.getResult().getItems();
 
@@ -147,39 +150,22 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
                 }
 
                 for (PlayerItem item : items) {
-                    ContentValues values = buildContentValues(item);
-                    if (values != null) {
-                        cVVector.add(values);
+                    BackpackItem backpackItem = buildContentValues(item);
+                    if (backpackItem != null) {
+                        backpackItems.add(backpackItem);
                     }
                 }
 
                 //Fill in the empty slots with empty items
-                fillInEmptySlots(cVVector);
+                fillInEmptySlots(backpackItems);
 
                 //Add the items to the database
-                if (cVVector.size() > 0) {
-                    //Create an array
-                    ContentValues[] cvArray = new ContentValues[cVVector.size()];
-                    cVVector.toArray(cvArray);
+                if (backpackItems.size() > 0) {
+                    mBackpackDao.deleteAll(mIsGuest);
+                    Log.v(LOG_TAG, "nuked backpack table, guest:" + mIsGuest);
 
-                    //Content uri based on which table to insert into
-                    Uri contentUri;
-                    if (!mIsGuest) {
-                        contentUri = UserBackpackEntry.CONTENT_URI;
-                    } else {
-                        contentUri = UserBackpackEntry.CONTENT_URI_GUEST;
-                    }
-
-                    //Clear the database first
-                    int rowsDeleted = mContext.getContentResolver().delete(contentUri, null, null);
-
-                    Log.v(LOG_TAG, "deleted " + rowsDeleted + " rows");
-
-                    //Insert all the data into the database
-                    int rowsInserted = mContext.getContentResolver()
-                            .bulkInsert(contentUri, cvArray);
-
-                    Log.v(LOG_TAG, "inserted " + rowsInserted + " rows");
+                    mBackpackDao.insert(backpackItems);
+                    Log.v(LOG_TAG, "inserted " + backpackItems.size() + " rows into backpack");
 
                     rawMetal = Utility.getRawMetal(rawRef, rawRec, rawScraps);
                 }
@@ -204,7 +190,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
      * @param playerItem the object containing the data
      * @return the ContentValues object containing the data from the PlayerItem
      */
-    private ContentValues buildContentValues(PlayerItem playerItem) {
+    private BackpackItem buildContentValues(PlayerItem playerItem) {
 
         //Get the inventory token
         long inventoryToken = playerItem.getInventory();
@@ -212,9 +198,6 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
             //Item hasn't been found yet
             return null;
         }
-
-        //The CV object that will contain the data
-        ContentValues values = new ContentValues();
 
         //Get the defindex
         int defindex = playerItem.getDefindex();
@@ -240,107 +223,65 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
         item.setDefindex(defindex);
         defindex = item.getFixedDefindex();
 
-        //Save the unique ID
-        values.put(UserBackpackEntry.COLUMN_UNIQUE_ID, playerItem.getId());
-
-        //Save the original ID
-        values.put(UserBackpackEntry.COLUMN_ORIGINAL_ID, playerItem.getOriginalId());
-
-        //Save the defindex
-        values.put(UserBackpackEntry.COLUMN_DEFINDEX, defindex);
-
-        //Save the level
-        values.put(UserBackpackEntry.COLUMN_LEVEL, playerItem.getLevel());
-
-        //Save the origin type
-        values.put(UserBackpackEntry.COLUMN_ORIGIN, playerItem.getOrigin());
-
-        //Save the tradability
-        values.put(UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE, playerItem.isFlagCannotTrade() ? 1 : 0);
-
-        //Save the craftability
-        values.put(UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT, playerItem.isFlagCannotCraft() ? 1 : 0);
+        BackpackItem backpackItem = new BackpackItem();
+        backpackItem.setGuest(mIsGuest);
+        backpackItem.setDefindex(defindex);
+        backpackItem.setUniqueId(playerItem.getId());
+        backpackItem.setOriginalId(playerItem.getOriginalId());
+        backpackItem.setDefindex(playerItem.getDefindex());
+        backpackItem.setLevel(playerItem.getLevel());
+        backpackItem.setOrigin(playerItem.getOrigin());
+        backpackItem.setFlagCannotTrade(playerItem.isFlagCannotTrade());
+        backpackItem.setFlagCannotCraft(playerItem.isFlagCannotCraft());
 
         if (inventoryToken >= 3221225472L /*11000000000000000000000000000000*/) {
-            //The jsonItem doesn't have a designated place i the backpack yet. It's a new jsonItem.
-            values.put(UserBackpackEntry.COLUMN_POSITION, -1);
+            backpackItem.setPosition(-1);
         } else {
-            //Save the position of the jsonItem
             int position = (int) (inventoryToken % ((Double) Math.pow(2, 16)).intValue());
-            values.put(UserBackpackEntry.COLUMN_POSITION, position);
+            backpackItem.setPosition(position);
 
             //The position doesn't need to be filled with an empty jsonItem.
             slotNumbers.remove(Integer.valueOf(position));
         }
 
-        //Save the quality of the jsonItem
-        values.put(UserBackpackEntry.COLUMN_QUALITY, playerItem.getQuality());
-
-        //Save the custom name of the jsonItem
-        values.put(UserBackpackEntry.COLUMN_CUSTOM_NAME, playerItem.getCustomName());
-
-        //Save the custom description of the jsonItem
-        values.put(UserBackpackEntry.COLUMN_CUSTOM_DESCRIPTION, playerItem.getCustomDesc());
+        backpackItem.setQuality(playerItem.getQuality());
+        backpackItem.setCustomName(playerItem.getCustomName());
+        backpackItem.setCustomDescription(playerItem.getCustomDesc());
 
         //Save the content of the jsonItem TODO show the content of a gift
         // TODO: 2016. 03. 14. values.put(UserBackpackEntry.COLUMN_CONTAINED_ITEM, );
 
         //Get the other attributes from the attributes JSON object
-        values = addAttributes(values, playerItem);
-
-        if (!values.containsKey(UserBackpackEntry.COLUMN_ITEM_INDEX)) {
-            values.put(UserBackpackEntry.COLUMN_ITEM_INDEX, 0);
-        }
-
-        if (!values.containsKey(UserBackpackEntry.COLUMN_AUSTRALIUM)) {
-            values.put(UserBackpackEntry.COLUMN_AUSTRALIUM, 0);
-        }
+        addAttributes(backpackItem, playerItem);
 
         //Save the equipped property of the jsonItem
-        if (playerItem.getEquipped() != null)
-            values.put(UserBackpackEntry.COLUMN_EQUIPPED, 1);
-        else
-            values.put(UserBackpackEntry.COLUMN_EQUIPPED, 0);
+        backpackItem.setEquipped(playerItem.getEquipped() != null);
 
-        return values;
+        return backpackItem;
     }
 
     /**
      * Fill in the given vector with empty item slots
      *
-     * @param cVVector the vector to be filled
+     * @param backpackItems the vector to be filled
      */
-    private void fillInEmptySlots(Vector<ContentValues> cVVector) {
+    private void fillInEmptySlots(List<BackpackItem> backpackItems) {
         //Add an empty item to each empty slot
         for (int i : slotNumbers) {
-            ContentValues values = new ContentValues();
-
-            values.put(UserBackpackEntry.COLUMN_UNIQUE_ID, 0);
-            values.put(UserBackpackEntry.COLUMN_ORIGINAL_ID, 0);
-            values.put(UserBackpackEntry.COLUMN_DEFINDEX, 0);
-            values.put(UserBackpackEntry.COLUMN_LEVEL, 0);
-            values.put(UserBackpackEntry.COLUMN_ORIGIN, 0);
-            values.put(UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE, 0);
-            values.put(UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT, 0);
-            values.put(UserBackpackEntry.COLUMN_POSITION, i);
-            values.put(UserBackpackEntry.COLUMN_QUALITY, 0);
-            values.put(UserBackpackEntry.COLUMN_ITEM_INDEX, 0);
-            values.put(UserBackpackEntry.COLUMN_CRAFT_NUMBER, 0);
-            values.put(UserBackpackEntry.COLUMN_AUSTRALIUM, 0);
-            values.put(UserBackpackEntry.COLUMN_EQUIPPED, 0);
-
-            cVVector.add(values);
+            BackpackItem item = new BackpackItem();
+            item.setPosition(i);
+            item.setGuest(mIsGuest);
+            backpackItems.add(item);
         }
     }
 
     /**
      * Add all the attributes of the item to the contentvalues
      *
-     * @param values the ContentValues the attributes will be added to
-     * @param item   json string containing the attributes
-     * @return the extended contentvalues
+     * @param backpackItem the ContentValues the attributes will be added to
+     * @param item         json string containing the attributes
      */
-    private ContentValues addAttributes(ContentValues values, PlayerItem item) {
+    private void addAttributes(BackpackItem backpackItem, PlayerItem item) {
         if (item.getAttributes() != null) {
             //Get the attributes from the json
             List<PlayerItemAttribute> attributes = item.getAttributes();
@@ -350,30 +291,28 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
 
                 switch (attribute.getDefindex()) {
                     case 133://Medal number
-                        values.put(UserBackpackEntry.COLUMN_ITEM_INDEX, attribute.getFloatValue());
+                        backpackItem.setItemIndex((int) attribute.getFloatValue());
                         break;
                     case 134://Particle effect
-                        values.put(UserBackpackEntry.COLUMN_ITEM_INDEX, attribute.getFloatValue());
+                        backpackItem.setItemIndex((int) attribute.getFloatValue());
                         break;
                     case 2041://Taunt particle effect
-                        values.put(UserBackpackEntry.COLUMN_ITEM_INDEX, Integer.valueOf(attribute.getValue()));
+                        backpackItem.setItemIndex(Integer.parseInt(attribute.getValue()));
                         break;
                     case 142://Painted
-                        values.put(UserBackpackEntry.COLUMN_PAINT, attribute.getFloatValue());
+                        backpackItem.setPosition((int) attribute.getFloatValue());
                         break;
                     case 186://Gifted by
-                        values.put(UserBackpackEntry.COLUMN_GIFTER_NAME,
-                                attribute.getAccountInfo().getPersonaName());
+                        backpackItem.setGifterName(attribute.getAccountInfo().getPersonaName());
                         break;
                     case 187://Crate series
-                        values.put(UserBackpackEntry.COLUMN_ITEM_INDEX, attribute.getFloatValue());
+                        backpackItem.setItemIndex((int) attribute.getFloatValue());
                         break;
                     case 228://Crafted by
-                        values.put(UserBackpackEntry.COLUMN_CREATOR_NAME,
-                                attribute.getAccountInfo().getPersonaName());
+                        backpackItem.setCreatorName(attribute.getAccountInfo().getPersonaName());
                         break;
                     case 229://Craft number
-                        values.put(UserBackpackEntry.COLUMN_CRAFT_NUMBER, Integer.parseInt(attribute.getValue()));
+                        backpackItem.setCraftNumber(Integer.parseInt(attribute.getValue()));
                         break;
                     case 725://Decorated weapon wear
                         /*
@@ -383,7 +322,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
                         1061997773 - Well Worn
                         1065353216 - Battle Scarred
                         */
-                        values.put(UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR, Long.parseLong(attribute.getValue()));
+                        backpackItem.setWeaponWear(Integer.parseInt(attribute.getValue()));
                         break;
                     case 2013://TODO Killstreaker
                         break;
@@ -392,7 +331,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
                     case 2025://TODO Killstreak tier
                         break;
                     case 2027://Is australium
-                        values.put(UserBackpackEntry.COLUMN_AUSTRALIUM, attribute.getFloatValue());
+                        backpackItem.setAustralium(attribute.getFloatValue() == 1);
                         break;
                     default:
                         //Unused attribute
@@ -400,7 +339,6 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
                 }
             }
         }
-        return values;
     }
 
     /**

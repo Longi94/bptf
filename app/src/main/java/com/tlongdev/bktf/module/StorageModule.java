@@ -19,9 +19,9 @@ package com.tlongdev.bktf.module;
 import android.app.Application;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Room;
-import android.content.ContentResolver;
 
 import com.tlongdev.bktf.data.BptfDatabase;
+import com.tlongdev.bktf.data.dao.BackpackDao;
 import com.tlongdev.bktf.data.dao.CalculatorDao;
 import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
 import com.tlongdev.bktf.data.dao.FavoriteDao;
@@ -55,12 +55,6 @@ public class StorageModule {
     @Named("writable")
     SupportSQLiteDatabase provideWritableDatabase(BptfDatabase database) {
         return database.getOpenHelper().getWritableDatabase();
-    }
-
-    @Provides
-    @Singleton
-    ContentResolver provideContentResolver(Application application) {
-        return application.getContentResolver();
     }
 
     @Provides
@@ -111,5 +105,11 @@ public class StorageModule {
     @Singleton
     CalculatorDao provideCalculatorDao(BptfDatabase database) {
         return database.calculatorDao();
+    }
+
+    @Provides
+    @Singleton
+    BackpackDao provideBackpackDao(BptfDatabase database) {
+        return database.backpackDao();
     }
 }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c15984370d81abbed75bc76d10e889c6",
+    "identityHash": "407ba3dda3ac10dc28d52c5e3d0b541d",
     "entities": [
       {
         "tableName": "unusual_schema",
@@ -413,11 +413,157 @@
           }
         ],
         "foreignKeys": []
+      },
+      {
+        "tableName": "backpack",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT, `position` INTEGER NOT NULL, `unique_id` INTEGER NOT NULL, `original_id` INTEGER NOT NULL, `defindex` INTEGER NOT NULL, `level` INTEGER NOT NULL, `origin` INTEGER NOT NULL, `flag_cannot_trade` INTEGER NOT NULL, `flag_cannot_craft` INTEGER NOT NULL, `quality` INTEGER NOT NULL, `custom_name` TEXT, `custom_description` TEXT, `equipped` INTEGER NOT NULL, `item_index` INTEGER NOT NULL, `paint` INTEGER, `craft_number` INTEGER, `creator_name` TEXT, `gifter_name` TEXT, `contained_item` TEXT, `australium` INTEGER NOT NULL, `weapon_wear` INTEGER, `guest` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "uniqueId",
+            "columnName": "unique_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "originalId",
+            "columnName": "original_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "defindex",
+            "columnName": "defindex",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "level",
+            "columnName": "level",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "origin",
+            "columnName": "origin",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "flagCannotTrade",
+            "columnName": "flag_cannot_trade",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "flagCannotCraft",
+            "columnName": "flag_cannot_craft",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quality",
+            "columnName": "quality",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "customName",
+            "columnName": "custom_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "customDescription",
+            "columnName": "custom_description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "equipped",
+            "columnName": "equipped",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "itemIndex",
+            "columnName": "item_index",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "paint",
+            "columnName": "paint",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "craftNumber",
+            "columnName": "craft_number",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "creatorName",
+            "columnName": "creator_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "gifterName",
+            "columnName": "gifter_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "containedItem",
+            "columnName": "contained_item",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "australium",
+            "columnName": "australium",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "weaponWear",
+            "columnName": "weapon_wear",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "guest",
+            "columnName": "guest",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "_id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"c15984370d81abbed75bc76d10e889c6\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"407ba3dda3ac10dc28d52c5e3d0b541d\")"
     ]
   }
 }

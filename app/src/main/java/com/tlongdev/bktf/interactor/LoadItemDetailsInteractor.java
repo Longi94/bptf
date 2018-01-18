@@ -16,12 +16,10 @@
 
 package com.tlongdev.bktf.interactor;
 
-import android.content.ContentResolver;
-import android.database.Cursor;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
+import com.tlongdev.bktf.data.dao.BackpackDao;
 import com.tlongdev.bktf.data.dao.PriceDao;
 import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.model.Price;
@@ -34,9 +32,11 @@ import javax.inject.Inject;
  */
 public class LoadItemDetailsInteractor extends AsyncTask<Void, Void, BackpackItem> {
 
-    @Inject ContentResolver mContentResolver;
     @Inject
     PriceDao mPriceDao;
+
+    @Inject
+    BackpackDao mBackpackDao;
 
     private final int mId;
     private final boolean mGuest;
@@ -54,54 +54,27 @@ public class LoadItemDetailsInteractor extends AsyncTask<Void, Void, BackpackIte
     @Override
     protected BackpackItem doInBackground(Void... params) {
 
+        com.tlongdev.bktf.data.entity.BackpackItem entity = mBackpackDao.find(mId, mGuest);
+
         BackpackItem item = new BackpackItem();
 
-        Cursor cursor = mContentResolver.query(
-                mGuest ? UserBackpackEntry.CONTENT_URI_GUEST : UserBackpackEntry.CONTENT_URI,
-                new String[]{
-                        UserBackpackEntry._ID,
-                        UserBackpackEntry.COLUMN_DEFINDEX,
-                        UserBackpackEntry.COLUMN_QUALITY,
-                        UserBackpackEntry.COLUMN_CRAFT_NUMBER,
-                        UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE,
-                        UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT,
-                        UserBackpackEntry.COLUMN_ITEM_INDEX,
-                        UserBackpackEntry.COLUMN_PAINT,
-                        UserBackpackEntry.COLUMN_AUSTRALIUM,
-                        UserBackpackEntry.COLUMN_CREATOR_NAME,
-                        UserBackpackEntry.COLUMN_GIFTER_NAME,
-                        UserBackpackEntry.COLUMN_CUSTOM_NAME,
-                        UserBackpackEntry.COLUMN_CUSTOM_DESCRIPTION,
-                        UserBackpackEntry.COLUMN_LEVEL,
-                        UserBackpackEntry.COLUMN_EQUIPPED,
-                        UserBackpackEntry.COLUMN_ORIGIN,
-                        UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR
-                },
-                UserBackpackEntry._ID + " = ?",
-                new String[]{String.valueOf(mId)},
-                null
-        );
-
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                item.setDefindex(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_DEFINDEX)));
-                item.setQuality(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_QUALITY)));
-                item.setCraftNumber(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_CRAFT_NUMBER)));
-                item.setTradable(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE)) == 0);
-                item.setCraftable(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT)) == 0);
-                item.setPriceIndex(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_ITEM_INDEX)));
-                item.setPaint(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_PAINT)));
-                item.setAustralium(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_AUSTRALIUM)) == 1);
-                item.setCreatorName(cursor.getString(cursor.getColumnIndex(UserBackpackEntry.COLUMN_CREATOR_NAME)));
-                item.setGifterName(cursor.getString(cursor.getColumnIndex(UserBackpackEntry.COLUMN_GIFTER_NAME)));
-                item.setCustomName(cursor.getString(cursor.getColumnIndex(UserBackpackEntry.COLUMN_CUSTOM_NAME)));
-                item.setCustomDescription(cursor.getString(cursor.getColumnIndex(UserBackpackEntry.COLUMN_CUSTOM_DESCRIPTION)));
-                item.setLevel(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_LEVEL)));
-                item.setEquipped(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_EQUIPPED)) == 1);
-                item.setOrigin(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_ORIGIN)));
-                item.setWeaponWear(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR)));
-            }
-            cursor.close();
+        if (entity != null) {
+            item.setDefindex(entity.getDefindex());
+            item.setQuality(entity.getQuality());
+            item.setCraftNumber(entity.getCraftNumber());
+            item.setTradable(!entity.getFlagCannotTrade());
+            item.setCraftable(!entity.getFlagCannotCraft());
+            item.setPriceIndex(entity.getItemIndex());
+            item.setPaint(entity.getPaint());
+            item.setAustralium(entity.getAustralium());
+            item.setCreatorName(entity.getCreatorName());
+            item.setGifterName(entity.getGifterName());
+            item.setCustomName(entity.getCustomName());
+            item.setCustomDescription(entity.getCustomName());
+            item.setLevel(entity.getLevel());
+            item.setEquipped(entity.getEquipped());
+            item.setOrigin(entity.getOrigin());
+            item.setWeaponWear(entity.getWeaponWear());
         }
 
         com.tlongdev.bktf.data.entity.Price price = mPriceDao.getNewestPrice();

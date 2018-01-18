@@ -3,6 +3,7 @@ package com.tlongdev.bktf.data;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
+import com.tlongdev.bktf.data.dao.BackpackDao;
 import com.tlongdev.bktf.data.dao.CalculatorDao;
 import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
 import com.tlongdev.bktf.data.dao.FavoriteDao;
@@ -10,6 +11,7 @@ import com.tlongdev.bktf.data.dao.ItemSchemaDao;
 import com.tlongdev.bktf.data.dao.OriginDao;
 import com.tlongdev.bktf.data.dao.PriceDao;
 import com.tlongdev.bktf.data.dao.UnusualSchemaDao;
+import com.tlongdev.bktf.data.entity.BackpackItem;
 import com.tlongdev.bktf.data.entity.CalculatorItem;
 import com.tlongdev.bktf.data.entity.DecoratedWeapon;
 import com.tlongdev.bktf.data.entity.Favorite;
@@ -29,7 +31,8 @@ import com.tlongdev.bktf.data.entity.UnusualSchema;
                 ItemSchema.class,
                 Price.class,
                 Favorite.class,
-                CalculatorItem.class
+                CalculatorItem.class,
+                BackpackItem.class
         },
         version = 1
 )
@@ -49,4 +52,6 @@ public abstract class BptfDatabase extends RoomDatabase {
     public abstract FavoriteDao favoriteDao();
 
     public abstract CalculatorDao calculatorDao();
+
+    public abstract BackpackDao backpackDao();
 }
