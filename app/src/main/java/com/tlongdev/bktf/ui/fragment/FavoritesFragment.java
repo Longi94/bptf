@@ -44,6 +44,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.FavoritesAdapter;
 import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
 import com.tlongdev.bktf.customtabs.WebViewFallback;
+import com.tlongdev.bktf.data.dao.CalculatorDao;
 import com.tlongdev.bktf.data.dao.FavoriteDao;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.presenter.fragment.FavoritesPresenter;
@@ -74,6 +75,9 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
 
     @Inject
     FavoriteDao mFavoriteDao;
+
+    @Inject
+    CalculatorDao mCalculatorDao;
 
     @BindView(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
     @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
@@ -202,7 +206,7 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
         PopupMenu menu = new PopupMenu(getActivity(), view);
         menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
         menu.getMenu().findItem(R.id.favorite).setTitle("Remove from favorites");
-        menu.getMenu().findItem(R.id.calculator).setEnabled(!Utility.isInCalculator(getActivity(), item));
+        menu.getMenu().findItem(R.id.calculator).setEnabled(!Utility.isInCalculator(mCalculatorDao, item));
         menu.setOnMenuItemClickListener(menuItem -> {
             Intent intent;
             switch (menuItem.getItemId()) {
@@ -216,7 +220,7 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
                     mAdapter.removeItem(item);
                     break;
                 case R.id.calculator:
-                    Utility.addToCalculator(getActivity(), item);
+                    Utility.addToCalculator(mCalculatorDao, item);
                     menuItem.setEnabled(false);
                     break;
                 case R.id.backpack_tf:

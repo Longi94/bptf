@@ -33,6 +33,7 @@ import com.f2prateek.dart.InjectExtra;
 import com.google.android.gms.ads.AdView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.UnusualAdapter;
+import com.tlongdev.bktf.data.dao.CalculatorDao;
 import com.tlongdev.bktf.data.dao.FavoriteDao;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.presenter.activity.UnusualPresenter;
@@ -60,6 +61,9 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
 
     @Inject
     FavoriteDao mFavoriteDao;
+
+    @Inject
+    CalculatorDao mCalculatorDao;
 
     @SuppressWarnings("NullableProblems")
     @Nullable
@@ -146,7 +150,7 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
 
     @Override
     public void onMoreClicked(View view, final Item item) {
-        Utility.createItemPopupMenu(this, view, mFavoriteDao, item).show();
+        Utility.createItemPopupMenu(this, view, mFavoriteDao, mCalculatorDao, item).show();
     }
 
     @Override

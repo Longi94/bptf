@@ -22,7 +22,6 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.util.Utility;
@@ -86,13 +85,13 @@ public class LoadFavoritesInteractor extends AsyncTask<Void, Void, Void> {
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 Item item = new Item();
-                item.setDefindex(cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_DEFINDEX)));
+                item.setDefindex(cursor.getInt(cursor.getColumnIndex("defindex")));
                 item.setName(cursor.getString(cursor.getColumnIndex("item_name")));
-                item.setQuality(cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_ITEM_QUALITY)));
-                item.setTradable(cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_ITEM_TRADABLE)) == 1);
-                item.setCraftable(cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_ITEM_CRAFTABLE)) == 1);
-                item.setAustralium(cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_AUSTRALIUM)) == 1);
-                item.setPriceIndex(cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_PRICE_INDEX)));
+                item.setQuality(cursor.getInt(cursor.getColumnIndex("quality")));
+                item.setTradable(cursor.getInt(cursor.getColumnIndex("tradable")) == 1);
+                item.setCraftable(cursor.getInt(cursor.getColumnIndex("craftable")) == 1);
+                item.setAustralium(cursor.getInt(cursor.getColumnIndex("australium")) == 1);
+                item.setPriceIndex(cursor.getInt(cursor.getColumnIndex("pric_index")));
 
                 if (cursor.getString(cursor.getColumnIndex("currency")) != null) {
                     Price price = new Price();

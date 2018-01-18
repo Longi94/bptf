@@ -22,6 +22,7 @@ import android.arch.persistence.room.Room;
 import android.content.ContentResolver;
 
 import com.tlongdev.bktf.data.BptfDatabase;
+import com.tlongdev.bktf.data.dao.CalculatorDao;
 import com.tlongdev.bktf.data.dao.DecoratedWeaponDao;
 import com.tlongdev.bktf.data.dao.FavoriteDao;
 import com.tlongdev.bktf.data.dao.ItemSchemaDao;
@@ -104,5 +105,11 @@ public class StorageModule {
     @Singleton
     FavoriteDao provideFavoriteDao(BptfDatabase database) {
         return database.favoriteDao();
+    }
+
+    @Provides
+    @Singleton
+    CalculatorDao provideCalculatorDao(BptfDatabase database) {
+        return database.calculatorDao();
     }
 }

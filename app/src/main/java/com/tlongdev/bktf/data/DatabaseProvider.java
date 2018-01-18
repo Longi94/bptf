@@ -24,7 +24,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
 import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
 
 public class DatabaseProvider extends ContentProvider {
@@ -40,7 +39,6 @@ public class DatabaseProvider extends ContentProvider {
      */
     private static final int BACKPACK = 104;
     private static final int BACKPACK_GUEST = 105;
-    private static final int CALCULATOR = 107;
 
     /**
      * The URI Matcher used by this content provider
@@ -69,7 +67,6 @@ public class DatabaseProvider extends ContentProvider {
 
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, DatabaseContract.PATH_BACKPACK, BACKPACK);
-        matcher.addURI(authority, DatabaseContract.PATH_CALCULATOR, CALCULATOR);
         matcher.addURI(authority, DatabaseContract.PATH_BACKPACK + "/guest", BACKPACK_GUEST);
 
         return matcher;
@@ -93,9 +90,6 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             case BACKPACK_GUEST:
                 tableName = UserBackpackEntry.TABLE_NAME_GUEST;
-                break;
-            case CALCULATOR:
-                tableName = CalculatorEntry.TABLE_NAME;
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -124,8 +118,6 @@ public class DatabaseProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_BACKPACK;
             case BACKPACK_GUEST:
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_BACKPACK;
-            case CALCULATOR:
-                return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_CALCULATOR;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -145,10 +137,6 @@ public class DatabaseProvider extends ContentProvider {
             case BACKPACK_GUEST:
                 tableName = UserBackpackEntry.TABLE_NAME_GUEST;
                 returnUri = UserBackpackEntry.CONTENT_URI_GUEST;
-                break;
-            case CALCULATOR:
-                tableName = CalculatorEntry.TABLE_NAME;
-                returnUri = CalculatorEntry.CONTENT_URI;
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -171,9 +159,6 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             case BACKPACK_GUEST:
                 rowsDeleted = db.delete(UserBackpackEntry.TABLE_NAME_GUEST, selection, selectionArgs);
-                break;
-            case CALCULATOR:
-                rowsDeleted = db.delete(CalculatorEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -199,9 +184,6 @@ public class DatabaseProvider extends ContentProvider {
             case BACKPACK_GUEST:
                 rowsUpdated = db.update(UserBackpackEntry.TABLE_NAME_GUEST, values, selection, selectionArgs);
                 break;
-            case CALCULATOR:
-                rowsUpdated = db.update(CalculatorEntry.TABLE_NAME, values, selection, selectionArgs);
-                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -223,9 +205,6 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             case BACKPACK_GUEST:
                 tableName = UserBackpackEntry.TABLE_NAME_GUEST;
-                break;
-            case CALCULATOR:
-                tableName = CalculatorEntry.TABLE_NAME;
                 break;
             default:
                 return super.bulkInsert(uri, values);

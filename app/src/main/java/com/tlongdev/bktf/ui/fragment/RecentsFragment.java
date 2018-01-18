@@ -46,6 +46,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.RecentsAdapter;
+import com.tlongdev.bktf.data.dao.CalculatorDao;
 import com.tlongdev.bktf.data.dao.FavoriteDao;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
@@ -71,6 +72,9 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
 
     @Inject
     FavoriteDao mFavoriteDao;
+
+    @Inject
+    CalculatorDao mCalculatorDao;
 
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
@@ -330,6 +334,6 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
 
     @Override
     public void onMoreClicked(View view, Item item) {
-        Utility.createItemPopupMenu(getActivity(), view, mFavoriteDao, item).show();
+        Utility.createItemPopupMenu(getActivity(), view, mFavoriteDao, mCalculatorDao, item).show();
     }
 }

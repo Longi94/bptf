@@ -16,18 +16,17 @@
 
 package com.tlongdev.bktf.presenter.activity;
 
-import android.content.ContentResolver;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
+import com.tlongdev.bktf.data.dao.CalculatorDao;
 import com.tlongdev.bktf.interactor.LoadUnusualEffectsInteractor;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.presenter.Presenter;
 import com.tlongdev.bktf.presenter.fragment.UnusualPresenter;
 import com.tlongdev.bktf.ui.view.activity.ItemChooserView;
+import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
 
@@ -39,7 +38,8 @@ import javax.inject.Inject;
  */
 public class ItemChooserPresenter implements Presenter<ItemChooserView>,LoadUnusualEffectsInteractor.Callback {
 
-    @Inject ContentResolver mContentResolver;
+    @Inject
+    CalculatorDao mCalculatorDao;
 
     private ItemChooserView mView;
     private final BptfApplication mApplication;
@@ -74,34 +74,9 @@ public class ItemChooserPresenter implements Presenter<ItemChooserView>,LoadUnus
     }
 
     public boolean checkCalculator(Item item) {
-        Cursor cursor = mContentResolver.query(
-                CalculatorEntry.CONTENT_URI,
-                null,
-                CalculatorEntry.COLUMN_DEFINDEX + " = ? AND " +
-                        CalculatorEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
-                        CalculatorEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
-                        CalculatorEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
-                        CalculatorEntry.COLUMN_PRICE_INDEX + " = ? AND " +
-                        CalculatorEntry.COLUMN_AUSTRALIUM + " = ? AND " +
-                        CalculatorEntry.COLUMN_WEAPON_WEAR + " = ?",
-                new String[]{String.valueOf(item.getDefindex()),
-                        String.valueOf(item.getQuality()),
-                        item.isTradable() ? "1" : "0",
-                        item.isCraftable() ? "1" : "0",
-                        String.valueOf(item.getPriceIndex()),
-                        item.isAustralium() ? "1" : "0",
-                        String.valueOf(item.getWeaponWear())
-                },
-                null
-        );
-
-        if (cursor != null) {
-            if (cursor.getCount() > 0) {
-                cursor.close();
-                mView.showToast("You have already added this item", Toast.LENGTH_SHORT);
-                return false;
-            }
-            cursor.close();
+        if (Utility.isInCalculator(mCalculatorDao, item)) {
+            mView.showToast("You have already added this item", Toast.LENGTH_SHORT);
+            return false;
         }
         return true;
     }

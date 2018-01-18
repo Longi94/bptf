@@ -32,6 +32,7 @@ import android.view.View;
 import com.google.android.gms.ads.AdView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.SearchAdapter;
+import com.tlongdev.bktf.data.dao.CalculatorDao;
 import com.tlongdev.bktf.data.dao.FavoriteDao;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Quality;
@@ -52,6 +53,9 @@ public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui
 
     @Inject
     FavoriteDao mFavoriteDao;
+
+    @Inject
+    CalculatorDao mCalculatorDao;
 
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
     @BindView(R.id.toolbar) Toolbar mToolbar;
@@ -211,7 +215,7 @@ public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui
 
     @Override
     public void onMoreClicked(View view, final Item item) {
-        Utility.createItemPopupMenu(this, view, mFavoriteDao, item).show();
+        Utility.createItemPopupMenu(this, view, mFavoriteDao, mCalculatorDao, item).show();
     }
 
     @Override

@@ -16,20 +16,20 @@
 
 package com.tlongdev.bktf.presenter.fragment;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.adapter.CalculatorAdapter;
-import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
+import com.tlongdev.bktf.data.dao.CalculatorDao;
 import com.tlongdev.bktf.data.dao.PriceDao;
+import com.tlongdev.bktf.data.entity.CalculatorItem;
 import com.tlongdev.bktf.interactor.LoadCalculatorItemsInteractor;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.presenter.Presenter;
 import com.tlongdev.bktf.ui.view.fragment.CalculatorView;
+import com.tlongdev.bktf.util.Utility;
 
 import java.util.List;
 
@@ -42,9 +42,9 @@ import javax.inject.Inject;
 public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalculatorItemsInteractor.Callback, CalculatorAdapter.OnItemEditListener {
 
     @Inject
-    ContentResolver mContentResolver;
-    @Inject
     PriceDao mPriceDao;
+    @Inject
+    CalculatorDao mCalculatorDao;
 
     private CalculatorView mView;
 
@@ -110,18 +110,8 @@ public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalcul
             mView.updatePrices(mTotalPrice);
         }
 
-        ContentValues cv = new ContentValues();
+        Utility.addToCalculator(mCalculatorDao, item);
 
-        cv.put(CalculatorEntry.COLUMN_DEFINDEX, item.getDefindex());
-        cv.put(CalculatorEntry.COLUMN_ITEM_QUALITY, item.getQuality());
-        cv.put(CalculatorEntry.COLUMN_ITEM_TRADABLE, item.isTradable() ? 1 : 0);
-        cv.put(CalculatorEntry.COLUMN_ITEM_CRAFTABLE, item.isCraftable() ? 1 : 0);
-        cv.put(CalculatorEntry.COLUMN_PRICE_INDEX, item.getPriceIndex());
-        cv.put(CalculatorEntry.COLUMN_AUSTRALIUM, item.isAustralium() ? 1 : 0);
-        cv.put(CalculatorEntry.COLUMN_WEAPON_WEAR, item.getWeaponWear());
-        cv.put(CalculatorEntry.COLUMN_COUNT, 1);
-
-        mContentResolver.insert(CalculatorEntry.CONTENT_URI, cv);
         loadItems();
     }
 
@@ -132,7 +122,7 @@ public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalcul
             mView.clearItems();
         }
 
-        mContentResolver.delete(CalculatorEntry.CONTENT_URI, null, null);
+        mCalculatorDao.deleteAll();
     }
 
     @Override
@@ -146,22 +136,17 @@ public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalcul
             mView.updatePrices(mTotalPrice);
         }
 
-        mContentResolver.delete(CalculatorEntry.CONTENT_URI,
-                CalculatorEntry.COLUMN_DEFINDEX + " = ? AND " +
-                        CalculatorEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
-                        CalculatorEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
-                        CalculatorEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
-                        CalculatorEntry.COLUMN_PRICE_INDEX + " = ? AND " +
-                        CalculatorEntry.COLUMN_AUSTRALIUM + " = ? AND " +
-                        CalculatorEntry.COLUMN_WEAPON_WEAR + " = ?",
-                new String[]{String.valueOf(item.getDefindex()),
-                        String.valueOf(item.getQuality()),
-                        item.isTradable() ? "1" : "0",
-                        item.isCraftable() ? "1" : "0",
-                        String.valueOf(item.getPriceIndex()),
-                        item.isAustralium() ? "1" : "0",
-                        String.valueOf(item.getWeaponWear())
-                });
+        CalculatorItem calculatorItem = mCalculatorDao.find(
+                item.getDefindex(),
+                item.getQuality(),
+                item.isTradable(),
+                item.isCraftable(),
+                item.isAustralium(),
+                item.getPriceIndex(),
+                item.getWeaponWear()
+        );
+
+        mCalculatorDao.delete(calculatorItem);
     }
 
     @Override
@@ -178,27 +163,20 @@ public class CalculatorPresenter implements Presenter<CalculatorView>,LoadCalcul
             mView.updatePrices(mTotalPrice);
         }
 
+        CalculatorItem calculatorItem = mCalculatorDao.find(
+                item.getDefindex(),
+                item.getQuality(),
+                item.isTradable(),
+                item.isCraftable(),
+                item.isAustralium(),
+                item.getPriceIndex(),
+                item.getWeaponWear()
+        );
 
-        ContentValues values = new ContentValues();
-        values.put(CalculatorEntry.COLUMN_COUNT, newCount);
-
-        mContentResolver.update(CalculatorEntry.CONTENT_URI,
-                values,
-                CalculatorEntry.COLUMN_DEFINDEX + " = ? AND " +
-                        CalculatorEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
-                        CalculatorEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
-                        CalculatorEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
-                        CalculatorEntry.COLUMN_PRICE_INDEX + " = ? AND " +
-                        CalculatorEntry.COLUMN_AUSTRALIUM + " = ? AND " +
-                        CalculatorEntry.COLUMN_WEAPON_WEAR + " = ?",
-                new String[]{String.valueOf(item.getDefindex()),
-                        String.valueOf(item.getQuality()),
-                        item.isTradable() ? "1" : "0",
-                        item.isCraftable() ? "1" : "0",
-                        String.valueOf(item.getPriceIndex()),
-                        item.isAustralium() ? "1" : "0",
-                        String.valueOf(item.getWeaponWear())
-                });
+        if (calculatorItem != null) {
+            calculatorItem.setCount(newCount);
+            mCalculatorDao.update(calculatorItem);
+        }
     }
 
     public Price getTotalPrice() {

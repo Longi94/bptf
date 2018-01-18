@@ -22,7 +22,6 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.util.Utility;
@@ -59,29 +58,29 @@ public class LoadCalculatorItemsInteractor extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
 
         String sql = "SELECT " +
-                CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_DEFINDEX + "," +
+                "calculator.defindex," +
                 "item_schema.item_name," +
-                CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_ITEM_QUALITY + "," +
-                CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_ITEM_TRADABLE + "," +
-                CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_ITEM_CRAFTABLE + "," +
-                CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_PRICE_INDEX + "," +
-                CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_COUNT + "," +
+                "calculator.quality," +
+                "calculator.tradable," +
+                "calculator.craftable," +
+                "calculator.price_index," +
+                "calculator.count," +
                 "pricelist.currency," +
                 "pricelist.price," +
                 "pricelist.max," +
                 Utility.getRawPriceQueryString(mContext) + " price_raw," +
                 "pricelist.difference," +
-                CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_AUSTRALIUM +
-                " FROM " + CalculatorEntry.TABLE_NAME +
+                "calculator.australium" +
+                " FROM calculator" +
                 " LEFT JOIN pricelist" +
-                " ON " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_DEFINDEX + " = pricelist.defindex" +
-                " AND " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_ITEM_TRADABLE + " = pricelist.tradable" +
-                " AND " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_ITEM_CRAFTABLE + " = pricelist.craftable" +
-                " AND " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_PRICE_INDEX + " = pricelist.price_index" +
-                " AND " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_ITEM_QUALITY + " = pricelist.quality" +
-                " AND " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_AUSTRALIUM + " = pricelist.australium" +
+                " ON calculator.defindex = pricelist.defindex" +
+                " AND calculator.tradable = pricelist.tradable" +
+                " AND calculator.craftable = pricelist.craftable" +
+                " AND calculator.price_index = pricelist.price_index" +
+                " AND calculator.quality = pricelist.quality" +
+                " AND calculator.australium = pricelist.australium" +
                 " LEFT JOIN item_schema" +
-                " ON " + CalculatorEntry.TABLE_NAME + "." + CalculatorEntry.COLUMN_DEFINDEX + " = item_schema.defindex" +
+                " ON calculator.defindex = item_schema.defindex" +
                 " ORDER BY item_name ASC";
 
         Cursor cursor = mDatabase.query(sql, null);
@@ -91,15 +90,15 @@ public class LoadCalculatorItemsInteractor extends AsyncTask<Void, Void, Void> {
 
             while (cursor.moveToNext()) {
                 Item item = new Item();
-                item.setDefindex(cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_DEFINDEX)));
+                item.setDefindex(cursor.getInt(cursor.getColumnIndex("defindex")));
                 item.setName(cursor.getString(cursor.getColumnIndex("item_name")));
-                item.setQuality(cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_ITEM_QUALITY)));
-                item.setTradable(cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_ITEM_TRADABLE)) == 1);
-                item.setCraftable(cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_ITEM_CRAFTABLE)) == 1);
-                item.setAustralium(cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_AUSTRALIUM)) == 1);
-                item.setPriceIndex(cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_PRICE_INDEX)));
+                item.setQuality(cursor.getInt(cursor.getColumnIndex("quality")));
+                item.setTradable(cursor.getInt(cursor.getColumnIndex("tradable")) == 1);
+                item.setCraftable(cursor.getInt(cursor.getColumnIndex("craftable")) == 1);
+                item.setAustralium(cursor.getInt(cursor.getColumnIndex("australium")) == 1);
+                item.setPriceIndex(cursor.getInt(cursor.getColumnIndex("price_index")));
 
-                int count = cursor.getInt(cursor.getColumnIndex(CalculatorEntry.COLUMN_COUNT));
+                int count = cursor.getInt(cursor.getColumnIndex("count"));
                 if (cursor.getString(cursor.getColumnIndex("currency")) != null) {
                     Price price = new Price();
                     price.setValue(cursor.getDouble(cursor.getColumnIndex("price")));

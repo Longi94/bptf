@@ -63,27 +63,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             mContext.deleteDatabase("backpack.db");
         }
 
-        final String SQL_CREATE_CALCULATOR_TABLE =
-                "CREATE TABLE " + CalculatorEntry.TABLE_NAME + " (" +
-                        CalculatorEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-
-                        CalculatorEntry.COLUMN_DEFINDEX + " INTEGER NOT NULL, " +
-                        CalculatorEntry.COLUMN_ITEM_QUALITY + " INTEGER NOT NULL, " +
-                        CalculatorEntry.COLUMN_ITEM_TRADABLE + " INTEGER NOT NULL, " +
-                        CalculatorEntry.COLUMN_ITEM_CRAFTABLE + " INTEGER NOT NULL, " +
-                        CalculatorEntry.COLUMN_PRICE_INDEX + " INTEGER NOT NULL, " +
-                        CalculatorEntry.COLUMN_AUSTRALIUM + " INTEGER NOT NULL, " +
-                        CalculatorEntry.COLUMN_WEAPON_WEAR + " INTEGER NOT NULL, " +
-                        CalculatorEntry.COLUMN_COUNT + " INTEGER NOT NULL, " +
-
-                        " UNIQUE (" + CalculatorEntry.COLUMN_DEFINDEX + ", " +
-                        CalculatorEntry.COLUMN_ITEM_QUALITY + ", " +
-                        CalculatorEntry.COLUMN_ITEM_TRADABLE + ", " +
-                        CalculatorEntry.COLUMN_ITEM_CRAFTABLE + ", " +
-                        CalculatorEntry.COLUMN_PRICE_INDEX + ", " +
-                        CalculatorEntry.COLUMN_AUSTRALIUM + ", " +
-                        CalculatorEntry.COLUMN_WEAPON_WEAR + ") ON CONFLICT REPLACE);";
-
         final String SQL_CREATE_BACKPACK_TABLE =
                 "CREATE TABLE " + UserBackpackEntry.TABLE_NAME + " (" +
                         UserBackpackEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -142,20 +121,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         " UNIQUE (" + UserBackpackEntry.COLUMN_POSITION + ", " +
                         UserBackpackEntry.COLUMN_UNIQUE_ID + ") ON CONFLICT REPLACE);";
 
-        db.execSQL(SQL_CREATE_CALCULATOR_TABLE);
         db.execSQL(SQL_CREATE_BACKPACK_TABLE);
         db.execSQL(SQL_CREATE_GUEST_BACKPACK_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS pricelist");
-        db.execSQL("DROP TABLE IF EXISTS item_schema");
-        db.execSQL("DROP TABLE IF EXISTS unusual_schema");
-        db.execSQL("DROP TABLE IF EXISTS origin_names");
-        db.execSQL("DROP TABLE IF EXISTS decorated_weapons");
-        db.execSQL("DROP TABLE IF EXISTS favorites");
-        db.execSQL("DROP TABLE IF EXISTS " + CalculatorEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + UserBackpackEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + UserBackpackEntry.TABLE_NAME_GUEST);
 

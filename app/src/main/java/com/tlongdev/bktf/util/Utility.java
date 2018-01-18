@@ -22,11 +22,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -42,8 +40,9 @@ import android.widget.PopupMenu;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
 import com.tlongdev.bktf.customtabs.WebViewFallback;
-import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
+import com.tlongdev.bktf.data.dao.CalculatorDao;
 import com.tlongdev.bktf.data.dao.FavoriteDao;
+import com.tlongdev.bktf.data.entity.CalculatorItem;
 import com.tlongdev.bktf.data.entity.Favorite;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Item;
@@ -305,51 +304,32 @@ public class Utility {
         return favorite != null;
     }
 
-    public static boolean isInCalculator(Context context, Item item) {
-        Cursor cursor = context.getContentResolver().query(
-                CalculatorEntry.CONTENT_URI,
-                null,
-                CalculatorEntry.COLUMN_DEFINDEX + " = ? AND " +
-                        CalculatorEntry.COLUMN_ITEM_QUALITY + " = ? AND " +
-                        CalculatorEntry.COLUMN_ITEM_TRADABLE + " = ? AND " +
-                        CalculatorEntry.COLUMN_ITEM_CRAFTABLE + " = ? AND " +
-                        CalculatorEntry.COLUMN_PRICE_INDEX + " = ? AND " +
-                        CalculatorEntry.COLUMN_AUSTRALIUM + " = ? AND " +
-                        CalculatorEntry.COLUMN_WEAPON_WEAR + " = ?",
-                new String[]{String.valueOf(item.getDefindex()),
-                        String.valueOf(item.getQuality()),
-                        item.isTradable() ? "1" : "0",
-                        item.isCraftable() ? "1" : "0",
-                        String.valueOf(item.getPriceIndex()),
-                        item.isAustralium() ? "1" : "0",
-                        String.valueOf(item.getWeaponWear())
-                },
-                null
+    public static boolean isInCalculator(CalculatorDao calculatorDao, Item item) {
+        CalculatorItem calculatorItem = calculatorDao.find(
+                item.getDefindex(),
+                item.getQuality(),
+                item.isTradable(),
+                item.isCraftable(),
+                item.isAustralium(),
+                item.getPriceIndex(),
+                item.getWeaponWear()
         );
 
-        boolean result = false;
-
-        if (cursor != null) {
-            result = cursor.getCount() > 0;
-            cursor.close();
-        }
-
-        return result;
+        return calculatorItem != null;
     }
 
-    public static void addToCalculator(Context context, Item item) {
-        ContentValues cv = new ContentValues();
+    public static void addToCalculator(CalculatorDao calculatorDao, Item item) {
+        CalculatorItem calculatorItem = new CalculatorItem();
 
-        cv.put(CalculatorEntry.COLUMN_DEFINDEX, item.getDefindex());
-        cv.put(CalculatorEntry.COLUMN_ITEM_QUALITY, item.getQuality());
-        cv.put(CalculatorEntry.COLUMN_ITEM_TRADABLE, item.isTradable() ? 1 : 0);
-        cv.put(CalculatorEntry.COLUMN_ITEM_CRAFTABLE, item.isCraftable() ? 1 : 0);
-        cv.put(CalculatorEntry.COLUMN_PRICE_INDEX, item.getPriceIndex());
-        cv.put(CalculatorEntry.COLUMN_AUSTRALIUM, item.isAustralium() ? 1 : 0);
-        cv.put(CalculatorEntry.COLUMN_WEAPON_WEAR, item.getWeaponWear());
-        cv.put(CalculatorEntry.COLUMN_COUNT, 1);
+        calculatorItem.setDefindex(item.getDefindex());
+        calculatorItem.setQuality(item.getQuality());
+        calculatorItem.setTradable(item.isTradable());
+        calculatorItem.setCraftable(item.isCraftable());
+        calculatorItem.setPriceIndex(item.getPriceIndex());
+        calculatorItem.setAustralium(item.isAustralium());
+        calculatorItem.setWeaponWear(item.getWeaponWear());
 
-        context.getContentResolver().insert(CalculatorEntry.CONTENT_URI, cv);
+        calculatorDao.insert(calculatorItem);
     }
 
     public static void createSimpleNotification(Context context, int id, String title, String message) {
@@ -408,7 +388,9 @@ public class Utility {
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
-    public static PopupMenu createItemPopupMenu(final Activity activity, View anchor, FavoriteDao favoriteDao, final Item item) {
+    public static PopupMenu createItemPopupMenu(final Activity activity, View anchor,
+                                                FavoriteDao favoriteDao, CalculatorDao calculatorDao,
+                                                final Item item) {
         PopupMenu menu = new PopupMenu(activity, anchor);
 
         menu.getMenuInflater().inflate(R.menu.popup_item, menu.getMenu());
@@ -416,7 +398,7 @@ public class Utility {
         menu.getMenu().findItem(R.id.favorite).setTitle(
                 isFavorite(favoriteDao, item) ? "Remove from favorites" : "Add to favorites");
 
-        menu.getMenu().findItem(R.id.calculator).setEnabled(!isInCalculator(activity, item));
+        menu.getMenu().findItem(R.id.calculator).setEnabled(!isInCalculator(calculatorDao, item));
 
         menu.setOnMenuItemClickListener(menuItem -> {
             Intent intent;
@@ -434,7 +416,7 @@ public class Utility {
                     }
                     break;
                 case R.id.calculator:
-                    addToCalculator(activity, item);
+                    addToCalculator(calculatorDao, item);
                     menuItem.setEnabled(false);
                     break;
                 case R.id.backpack_tf:
