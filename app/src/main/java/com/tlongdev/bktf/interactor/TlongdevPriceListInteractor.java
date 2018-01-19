@@ -22,20 +22,21 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.dao.PriceDao;
 import com.tlongdev.bktf.data.entity.Price;
+import com.tlongdev.bktf.flatbuffers.Prices;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Quality;
 import com.tlongdev.bktf.network.TlongdevInterface;
 import com.tlongdev.bktf.util.Utility;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -117,7 +118,7 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
                 }
             }
 
-            Uri uri = Uri.parse(mContext.getString(R.string.main_host) + "/bptf/legacy/prices").buildUpon()
+            Uri uri = Uri.parse(mContext.getString(R.string.main_host) + "/fbs/prices").buildUpon()
                     .appendQueryParameter("since", String.valueOf(latestUpdate))
                     .build();
 
@@ -129,7 +130,7 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
             Response response = client.newCall(request).execute();
 
             if (response.body() != null) {
-                return parseJson(response.body().byteStream());
+                return parseFlatBuffer(response.body().byteStream());
             } else if (response.code() >= 500) {
                 errorMessage = "Server error: " + response.code();
             } else if (response.code() >= 400) {
@@ -146,126 +147,63 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
         return -1;
     }
 
-    private int parseJson(InputStream inputStream) throws IOException {
-        //Create a parser from the input stream for fast parsing and low impact on memory
-        JsonFactory factory = new JsonFactory();
-        JsonParser parser = factory.createParser(inputStream);
+    private Integer parseFlatBuffer(InputStream inputStream) throws IOException {
+        ByteBuffer buffer = ByteBuffer.wrap(IOUtils.toByteArray(inputStream));
+        Prices pricesBuf = Prices.getRootAsPrices(buffer);
 
         List<Price> prices = new LinkedList<>();
-        int retVal = 0;
 
-        //Not a JSON if it doesn't start with START OBJECT
-        if (parser.nextToken() != JsonToken.START_OBJECT) {
-            return -1;
+        for (int i = 0; i < pricesBuf.pricesLength(); i++) {
+            com.tlongdev.bktf.flatbuffers.Price priceBuf = pricesBuf.prices(i);
+            Price price = readBuf(priceBuf);
+            prices.add(price);
         }
 
-        while (parser.nextToken() != JsonToken.END_OBJECT) {
-            String name = parser.getCurrentName();
-            parser.nextToken();
-
-            switch (name) {
-                case "success":
-                    if (parser.getIntValue() == 0) {
-                        retVal = 1;
-                    }
-                    break;
-                case "message":
-                    errorMessage = parser.getText();
-                    break;
-                case "prices":
-
-                    while (parser.nextToken() != JsonToken.END_ARRAY) {
-                        Price price = buildPrice(parser);
-                        prices.add(price);
-                    }
-
-                    if (prices.size() > 0) {
-                        mPriceDao.insert(prices);
-                        Log.v(LOG_TAG, "inserted " + prices.size() + " rows into prices table");
-                    }
-                    break;
-            }
+        if (prices.size() > 0) {
+            mPriceDao.insert(prices);
+            Log.v(LOG_TAG, "inserted " + prices.size() + " rows into prices table");
         }
 
-        parser.close();
-
-        return retVal;
+        return 0;
     }
 
-    private Price buildPrice(JsonParser parser) throws IOException {
+    private Price readBuf(com.tlongdev.bktf.flatbuffers.Price priceBuf) {
         Price price = new Price();
 
-        int defindex = 0;
-        int quality = 0;
-        int tradable = 0;
-        int craftable = 0;
-        double value = 0;
-        Double high = null;
-        double raw = 0;
+        int defindex = priceBuf.defindex();
+        int quality = (int) priceBuf.quality();
+        boolean tradable = priceBuf.tradable();
+        boolean craftable = priceBuf.craftable();
+        double value = priceBuf.price();
+        double high = priceBuf.priceMax();
+        double raw = priceBuf.raw();
 
-        while (parser.nextToken() != JsonToken.END_OBJECT) {
-            parser.nextToken();
-            switch (parser.getCurrentName()) {
-                case "defindex":
-                    Item item = new Item();
-                    item.setDefindex(parser.getIntValue());
-                    defindex = item.getFixedDefindex();
-                    price.setDefindex(defindex);
-                    break;
-                case "quality":
-                    quality = parser.getIntValue();
-                    price.setQuality(quality);
-                    break;
-                case "tradable":
-                    tradable = parser.getIntValue();
-                    price.setTradable(tradable == 1);
-                    break;
-                case "craftable":
-                    craftable = parser.getIntValue();
-                    price.setCraftable(craftable == 1);
-                    break;
-                case "price_index":
-                    price.setPriceIndex(parser.getIntValue());
-                    break;
-                case "australium":
-                    price.setAustralium(parser.getIntValue() == 1);
-                    break;
-                case "currency":
-                    price.setCurrency(parser.getText());
-                    break;
-                case "value":
-                    value = parser.getDoubleValue();
-                    price.setValue(value);
-                    break;
-                case "value_high":
-                    high = parser.getDoubleValue();
-                    price.setHighValue(high);
-                    break;
-                case "value_raw":
-                    raw = parser.getDoubleValue();
-                    break;
-                case "last_update":
-                    price.setLastUpdate(parser.getLongValue());
-                    break;
-                case "difference":
-                    price.setDifference(parser.getDoubleValue());
-                    break;
-            }
-        }
+        Item item = new Item();
+        item.setDefindex(defindex);
+        defindex = item.getFixedDefindex();
+        price.setDefindex(defindex);
 
+        price.setDefindex(defindex);
+        price.setQuality(quality);
+        price.setTradable(tradable);
+        price.setCraftable(craftable);
+        price.setPriceIndex(priceBuf.priceIndex());
+        price.setAustralium(priceBuf.australium());
+        price.setCurrency(priceBuf.currency());
+        price.setValue(value);
+        price.setHighValue(high);
+        price.setLastUpdate(priceBuf.updateTs());
+        price.setDifference((double) priceBuf.difference());
         price.setWeaponWear(0);
 
-        if (quality == Quality.UNIQUE && tradable == 1 && craftable == 1) {
+        if (quality == Quality.UNIQUE && tradable && craftable) {
             if (defindex == 143) { //buds
                 Utility.putDouble(mEditor, mContext.getString(R.string.pref_buds_raw), raw);
                 mEditor.apply();
             } else if (defindex == 5002) { //metal
-
-                double highPrice = high == null ? 0 : high;
-
-                if (highPrice > value) {
+                if (high > value) {
                     //If the metal has a high price, save the average as raw.
-                    Utility.putDouble(mEditor, mContext.getString(R.string.pref_metal_raw_usd), ((value + highPrice) / 2));
+                    Utility.putDouble(mEditor, mContext.getString(R.string.pref_metal_raw_usd), ((value + high) / 2));
                 } else {
                     //save as raw price
                     Utility.putDouble(mEditor, mContext.getString(R.string.pref_metal_raw_usd), value);

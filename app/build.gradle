@@ -84,6 +84,8 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.8.1'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    compile 'commons-io:commons-io:2.6'
+
 }
 
 apply plugin: 'com.google.gms.google-services'
