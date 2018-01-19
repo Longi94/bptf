@@ -1,0 +1,23 @@
+namespace com.tlongdev.bktf.flatbuffers;
+
+table Price {
+  defindex:int;
+  quality:short;
+  tradable:bool;
+  craftable:bool;
+  priceIndex:int;
+  australium:bool;
+  price:float;
+  priceMax:float;
+  raw:float;
+  currency:string;
+  updateTs:long;
+  difference:float;
+  weaponWear:int;
+}
+
+table Prices {
+  prices:[Price];
+}
+
+root_type Prices;
