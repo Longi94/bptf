@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -272,8 +273,8 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
                     lastOnlineText.setText(String.format("%s %s", getString(R.string.user_page_last_online), getString(R.string.filler_unknown)));
                 } else {
                     //Player is offline, show how long was it since the player was last online
-                    lastOnlineText.setText(String.format("%s %s", getString(R.string.user_page_last_online), Utility.formatLastOnlineTime(mContext,
-                            System.currentTimeMillis() - lastOnline * 1000L)));
+                    lastOnlineText.setText(String.format("%s %s", getString(R.string.user_page_last_online),
+                            DateUtils.getRelativeTimeSpanString(System.currentTimeMillis() - lastOnline * 1000L).toString()));
                 }
                 lastOnlineText.setTextColor(ContextCompat.getColor(mContext, R.color.text_primary));
                 break;

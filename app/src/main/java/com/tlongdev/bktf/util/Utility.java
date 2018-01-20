@@ -137,55 +137,6 @@ public class Utility {
     }
 
     /**
-     * Format the timestamp to a user friendly string that is the same as on steam profile pages.
-     *
-     * @param time timestamp to be formatted
-     * @return formatted string
-     */
-    public static String formatLastOnlineTime(Context context, long time) {
-        //If the time is longer than 2 days tho format is X days ago.
-        if (time >= 172800000L) {
-            long days = time / 86400000;
-            return context.getString(R.string.time_passed_day_plural, days);
-        }
-        //If the time is longer than an hour, the format is X hour(s) Y minute(s) ago.
-        if (time >= 3600000L) {
-            long hours = time / 3600000;
-            if (time % 3600000L == 0) {
-                if (hours == 1)
-                    return context.getString(R.string.time_passed_hour, hours);
-                else {
-                    return context.getString(R.string.time_passed_hour_plural, hours);
-                }
-            } else {
-                long minutes = (time % 3600000L) / 60000;
-                if (hours == 1)
-                    if (minutes == 1)
-                        return context.getString(R.string.time_measure_hour_minute, hours, minutes);
-                    else
-                        return context.getString(R.string.time_measure_hour_minute_p, hours, minutes);
-                else {
-                    if (minutes == 1)
-                        return context.getString(R.string.time_measure_hour_p_minute, hours, minutes);
-                    else
-                        return context.getString(R.string.time_measure_hour_p_minute_p, hours, minutes);
-                }
-            }
-        }
-        //Else it was less than an hour ago, the format is X minute(s) ago.
-        else {
-            long minutes = time / 60000;
-            if (minutes == 0) {
-                return context.getString(R.string.time_measure_just_now);
-            } else if (minutes == 1) {
-                return context.getString(R.string.time_passed_minute, 1);
-            } else {
-                return context.getString(R.string.time_passed_minute_plural, minutes);
-            }
-        }
-    }
-
-    /**
      * Check whether the user if connected to the internet.
      *
      * @param context context for accessing system service
