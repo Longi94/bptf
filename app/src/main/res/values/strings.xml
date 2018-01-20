@@ -110,20 +110,6 @@
     <string name="currency_key" formatted="false" translatable="true">%s key</string>
     <string name="currency_key_plural" formatted="false" translatable="true">%s keys</string>
 
-    <!--Parametrized time values-->
-
-    <string name="time_measure_hour_minute" formatted="false" translatable="true">%d hour %d minute ago</string>
-    <string name="time_measure_hour_p_minute" formatted="false" translatable="true">%d hours %d minute ago</string>
-    <string name="time_measure_hour_minute_p" formatted="false" translatable="true">%d hour %d minutes ago</string>
-    <string name="time_measure_hour_p_minute_p" formatted="false" translatable="true">%d hours %d minutes ago</string>
-    <string name="time_measure_just_now" translatable="true">Just now</string>
-    <string name="time_passed_day" formatted="false" translatable="true">%d day ago</string>
-    <string name="time_passed_day_plural" formatted="false" translatable="true">%d days ago</string>
-    <string name="time_passed_hour" formatted="false" translatable="true">%d hour ago</string>
-    <string name="time_passed_hour_plural" formatted="false" translatable="true">%d hours ago</string>
-    <string name="time_passed_minute" formatted="false" translatable="true">%d minute ago</string>
-    <string name="time_passed_minute_plural" formatted="false" translatable="true">%d minutes ago</string>
-
     <!--Paint names-->
 
     <string name="paint_green" translatable="true">Indubitably Green</string>
