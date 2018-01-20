@@ -11,10 +11,6 @@
 
 -dontwarn okio.**
 
--dontwarn com.tlongdev.bktf.util.GlideConfiguration
--keep class com.tlongdev.bktf.util.GlideConfiguration { *; }
--keep interface com.tlongdev.bktf.util.GlideConfiguration { *; }
-
 #ButterKnife
 -keep class butterknife.** { *; }
 -dontwarn butterknife.internal.**
