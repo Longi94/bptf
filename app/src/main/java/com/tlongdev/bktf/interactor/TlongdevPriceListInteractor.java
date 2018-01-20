@@ -26,10 +26,9 @@ import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.dao.PriceDao;
 import com.tlongdev.bktf.data.entity.Price;
-import com.tlongdev.bktf.flatbuffers.Prices;
+import com.tlongdev.bktf.flatbuffers.prices.Prices;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Quality;
-import com.tlongdev.bktf.network.TlongdevInterface;
 import com.tlongdev.bktf.util.Utility;
 
 import org.apache.commons.io.IOUtils;
@@ -57,8 +56,6 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
     SharedPreferences mPrefs;
     @Inject
     SharedPreferences.Editor mEditor;
-    @Inject
-    TlongdevInterface mTlongdevInterface;
     @Inject
     Context mContext;
     @Inject
@@ -154,7 +151,7 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
         List<Price> prices = new LinkedList<>();
 
         for (int i = 0; i < pricesBuf.pricesLength(); i++) {
-            com.tlongdev.bktf.flatbuffers.Price priceBuf = pricesBuf.prices(i);
+            com.tlongdev.bktf.flatbuffers.prices.Price priceBuf = pricesBuf.prices(i);
             Price price = readBuf(priceBuf);
             prices.add(price);
         }
@@ -167,7 +164,7 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
         return 0;
     }
 
-    private Price readBuf(com.tlongdev.bktf.flatbuffers.Price priceBuf) {
+    private Price readBuf(com.tlongdev.bktf.flatbuffers.prices.Price priceBuf) {
         Price price = new Price();
 
         int defindex = priceBuf.defindex();

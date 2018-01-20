@@ -1,0 +1,33 @@
+namespace com.tlongdev.bktf.flatbuffers.itemschema;
+
+table Origin {
+  id:int;
+  name:string;
+}
+
+table Item {
+  defindex:int;
+  name:string;
+  description:string;
+  type:string;
+  proper:bool;
+}
+
+table Particle {
+  id:int;
+  name:string;
+}
+
+table DecoratedWeapon {
+  defindex:int;
+  grade:int;
+}
+
+table ItemSchema {
+  origins:[Origin];
+  items:[Item];
+  particle:[Particle];
+  decoratedWeapon:[DecoratedWeapon];
+}
+
+root_type ItemSchema;

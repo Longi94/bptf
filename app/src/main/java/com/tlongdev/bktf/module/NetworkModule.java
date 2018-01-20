@@ -24,7 +24,6 @@ import com.tlongdev.bktf.network.BackpackTfInterface;
 import com.tlongdev.bktf.network.FixerIoInterface;
 import com.tlongdev.bktf.network.SteamUserInterface;
 import com.tlongdev.bktf.network.Tf2Interface;
-import com.tlongdev.bktf.network.TlongdevInterface;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -89,12 +88,6 @@ public class NetworkModule {
                 .baseUrl(FixerIoInterface.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
-    }
-
-    @Provides
-    @Singleton
-    TlongdevInterface provideTlongdevInterface(@Named("tlongdev") Retrofit retrofit) {
-        return retrofit.create(TlongdevInterface.class);
     }
 
     @Provides
