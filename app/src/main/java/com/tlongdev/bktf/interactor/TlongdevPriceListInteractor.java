@@ -27,11 +27,10 @@ import android.util.Log;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
-import com.tlongdev.bktf.flatbuffers.Prices;
-import com.tlongdev.bktf.flatbuffers.Price;
+import com.tlongdev.bktf.flatbuffers.prices.Prices;
+import com.tlongdev.bktf.flatbuffers.prices.Price;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Quality;
-import com.tlongdev.bktf.network.TlongdevInterface;
 import com.tlongdev.bktf.util.Utility;
 
 import org.apache.commons.io.IOUtils;
@@ -54,10 +53,12 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
 
     private static final String LOG_TAG = TlongdevPriceListInteractor.class.getSimpleName();
 
-    @Inject SharedPreferences mPrefs;
-    @Inject SharedPreferences.Editor mEditor;
-    @Inject TlongdevInterface mTlongdevInterface;
-    @Inject Context mContext;
+    @Inject
+    SharedPreferences mPrefs;
+    @Inject
+    SharedPreferences.Editor mEditor;
+    @Inject
+    Context mContext;
 
     //Whether it's an update or full database download
     private boolean updateDatabase;

@@ -1,4 +1,4 @@
-namespace com.tlongdev.bktf.flatbuffers;
+namespace com.tlongdev.bktf.flatbuffers.prices;
 
 table Price {
   defindex:int;
