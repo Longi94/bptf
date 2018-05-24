@@ -43,8 +43,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.RecentsAdapter;
 import com.tlongdev.bktf.model.Item;
@@ -79,7 +77,6 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
     @BindView(R.id.image_view_metal_price) View metalPriceImage;
     @BindView(R.id.image_view_key_price) View keyPriceImage;
     @BindView(R.id.image_view_buds_price) View budsPriceImage;
-    @BindView(R.id.ad_view) AdView mAdView;
 
     /**
      * Adapter of the recycler view
@@ -146,8 +143,6 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
         mSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(mContext, R.color.accent));
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        mAdManager.addAdView(mAdView);
-
         if (savedInstanceState != null) {
             updateCurrencyHeader(
                     (Price) savedInstanceState.getParcelable(RecentsPresenter.STATE_METAL),
@@ -166,17 +161,9 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mTracker.setScreenName(RecentsFragment.class.getName());
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mPresenter.detachView();
-        mAdManager.removeAdView(mAdView);
         mUnbinder.unbind();
     }
 

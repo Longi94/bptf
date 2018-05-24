@@ -18,10 +18,6 @@ package com.tlongdev.bktf;
 
 import android.app.Application;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.component.ActivityComponent;
 import com.tlongdev.bktf.component.AdapterComponent;
 import com.tlongdev.bktf.component.DaggerActivityComponent;
@@ -38,15 +34,11 @@ import com.tlongdev.bktf.module.BptfAppModule;
 import com.tlongdev.bktf.module.NetworkModule;
 import com.tlongdev.bktf.module.PresenterModule;
 import com.tlongdev.bktf.module.StorageModule;
-import com.tlongdev.bktf.util.ProfileManager;
-
-import io.fabric.sdk.android.Fabric;
 
 /**
  * This is a subclass of {@link Application} used to provide shared objects for this app.
  */
 public class BptfApplication extends Application {
-    private Tracker mTracker;
 
     private ActivityComponent mActivityComponent;
 
@@ -63,9 +55,6 @@ public class BptfApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (!BuildConfig.DEBUG) {
-            Fabric.with(this, new Crashlytics(), new Answers());
-        }
 
         BptfAppModule appModule = new BptfAppModule(this);
         StorageModule storageModule = new StorageModule();
@@ -100,32 +89,6 @@ public class BptfApplication extends Application {
                 .bptfAppModule(appModule)
                 .storageModule(storageModule)
                 .build();
-
-        if (!BuildConfig.DEBUG) {
-            ProfileManager manager = ProfileManager.getInstance(this);
-            if (manager.isSignedIn()) {
-                Crashlytics.setUserIdentifier(manager.getResolvedSteamId());
-            }
-        }
-    }
-
-    /**
-     * Gets the default {@link Tracker} for this {@link Application}.
-     * @return tracker
-     */
-    synchronized public Tracker getDefaultTracker() {
-        startTracking();
-        return mTracker;
-    }
-
-    public void startTracking() {
-        if (mTracker == null) {
-            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-            // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
-            mTracker = analytics.newTracker(R.xml.bptf_config);
-
-            analytics.enableAutoActivityReports(this);
-        }
     }
 
     public ActivityComponent getActivityComponent() {

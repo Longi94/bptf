@@ -19,8 +19,6 @@ package com.tlongdev.bktf.presenter.activity;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.interactor.GetUserDataInteractor;
 import com.tlongdev.bktf.interactor.Tf2UserBackpackInteractor;
@@ -38,7 +36,6 @@ import javax.inject.Inject;
 public class LoginPresenter implements Presenter<LoginView>, GetUserDataInteractor.Callback,
         Tf2UserBackpackInteractor.Callback {
 
-    @Inject Tracker mTracker;
     @Inject ProfileManager mProfileManager;
 
     private LoginView mView;
@@ -66,11 +63,6 @@ public class LoginPresenter implements Presenter<LoginView>, GetUserDataInteract
 
         GetUserDataInteractor interactor = new GetUserDataInteractor(mApplication, user, true, this);
         interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Request")
-                .setAction("UserData")
-                .build());
     }
 
     @Override
@@ -79,11 +71,6 @@ public class LoginPresenter implements Presenter<LoginView>, GetUserDataInteract
                 mApplication, user, false, this
         );
         interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Request")
-                .setAction("UserBackpack")
-                .build());
     }
 
     @Override

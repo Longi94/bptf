@@ -21,10 +21,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.ads.AdManager;
 import com.tlongdev.bktf.ui.NavigationDrawerManager;
 import com.tlongdev.bktf.util.CurrencyRatesManager;
 import com.tlongdev.bktf.util.ProfileManager;
@@ -67,12 +65,6 @@ public class BptfAppModule {
 
     @Provides
     @Singleton
-    Tracker provideTracker(Application application) {
-        return ((BptfApplication) application).getDefaultTracker();
-    }
-
-    @Provides
-    @Singleton
     SharedPreferences.Editor provideEditor(SharedPreferences prefs) {
         return prefs.edit();
     }
@@ -87,12 +79,6 @@ public class BptfAppModule {
     @Singleton
     ProfileManager provideProfileManager(Application application) {
         return ProfileManager.getInstance(application);
-    }
-
-    @Provides
-    @Singleton
-    AdManager provideAdManager(Application application) {
-        return new AdManager(application);
     }
 
     @Provides

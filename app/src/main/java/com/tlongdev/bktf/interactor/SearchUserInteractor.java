@@ -19,7 +19,6 @@ package com.tlongdev.bktf.interactor;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.model.User;

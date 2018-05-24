@@ -22,8 +22,6 @@ import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.interactor.GetUserDataInteractor;
@@ -44,7 +42,6 @@ public class UserPresenter implements Presenter<UserView>, GetUserDataInteractor
 
     @Inject SharedPreferences mPrefs;
     @Inject SharedPreferences.Editor mEditor;
-    @Inject Tracker mTracker;
     @Inject Context mContext;
     @Inject ProfileManager mProfileManager;
 
@@ -91,11 +88,6 @@ public class UserPresenter implements Presenter<UserView>, GetUserDataInteractor
                 mApplication, user, false, this
         );
         interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Request")
-                .setAction("UserBackpack")
-                .build());
     }
 
     @Override
@@ -114,11 +106,6 @@ public class UserPresenter implements Presenter<UserView>, GetUserDataInteractor
         interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         mLoading = true;
-
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Request")
-                .setAction("UserData")
-                .build());
     }
 
     @Override

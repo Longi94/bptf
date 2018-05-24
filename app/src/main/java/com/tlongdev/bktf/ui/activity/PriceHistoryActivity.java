@@ -31,8 +31,6 @@ import android.widget.TextView;
 
 import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.HistoryAdapter;
 import com.tlongdev.bktf.interactor.BackpackTfPriceHistoryInteractor;
@@ -63,7 +61,6 @@ public class PriceHistoryActivity extends BptfActivity implements PriceHistoryVi
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.fail_text) TextView failText;
     @BindView(R.id.toolbar) Toolbar mToolbar;
-    @BindView(R.id.ad_view) AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,23 +85,16 @@ public class PriceHistoryActivity extends BptfActivity implements PriceHistoryVi
 
         if (Utility.isNetworkAvailable(this)) {
             mPresenter.loadPriceHistory(mItem);
-            mTracker.send(new HitBuilders.EventBuilder()
-                    .setCategory("Request")
-                    .setAction("PriceHistory")
-                    .build());
         } else {
             progressBar.setVisibility(View.GONE);
             failText.setVisibility(View.VISIBLE);
         }
-
-        mAdManager.addAdView(mAdView);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.detachView();
-        mAdManager.removeAdView(mAdView);
     }
 
     @Override

@@ -133,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
 
         BptfApplication application = (BptfApplication) getApplication();
         application.getActivityComponent().inject(this);
-        application.startTracking();
 
         //Set the default values for all preferences when the app is first loaded
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);

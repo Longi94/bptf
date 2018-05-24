@@ -25,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Item;
@@ -109,7 +108,6 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
                     //Properly format the price
                     holder.price.setText(item.getPrice().getFormattedPrice(mContext));
                 } catch (Throwable t) {
-                    Crashlytics.logException(t);
                     t.printStackTrace();
                 }
             } else {

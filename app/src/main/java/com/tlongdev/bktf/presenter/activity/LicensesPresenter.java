@@ -18,7 +18,6 @@ package com.tlongdev.bktf.presenter.activity;
 
 import android.content.Context;
 
-import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.License;
@@ -63,7 +62,6 @@ public class LicensesPresenter implements Presenter<LicensesView> {
         try {
             licenses = ParseLicenseXml.Parse(mContext.getResources().getXml(R.xml.licenses));
         } catch (XmlPullParserException | IOException e) {
-            Crashlytics.logException(e);
             e.printStackTrace();
         }
         mView.showLicenses(licenses);

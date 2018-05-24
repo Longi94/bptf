@@ -38,8 +38,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.FavoritesAdapter;
 import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
@@ -73,7 +71,6 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
     @BindView(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
     @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
-    @BindView(R.id.ad_view) AdView mAdView;
 
     private FavoritesAdapter mAdapter;
     private Unbinder mUnbinder;
@@ -122,8 +119,6 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), columnCount));
         mRecyclerView.setAdapter(mAdapter);
 
-        mAdManager.addAdView(mAdView);
-
         return rootView;
     }
 
@@ -134,16 +129,8 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mTracker.setScreenName(FavoritesFragment.class.getName());
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mAdManager.removeAdView(mAdView);
         mPresenter.detachView();
         mUnbinder.unbind();
     }

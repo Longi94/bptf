@@ -43,8 +43,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
 import com.tlongdev.bktf.customtabs.WebViewFallback;
@@ -96,7 +94,6 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
     @BindView(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
     @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbarLayout;
-    @BindView(R.id.ad_view) AdView mAdView;
     @BindView(R.id.private_text) TextView mPrivateBackpackText;
     @BindView(R.id.backpack) ImageView mBackpackButton;
     @BindView(R.id.backpack_content) View mBackpackContent;
@@ -169,8 +166,6 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
         //Update all the views to show te user data
         updateUserPage(mUser);
 
-        mAdManager.addAdView(mAdView);
-
         return rootView;
     }
 
@@ -181,15 +176,12 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
     public void onResume() {
         super.onResume();
         mPresenter.getUserDataIfNeeded();
-        mTracker.setScreenName(UserFragment.class.getName());
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mPresenter.detachView();
-        mAdManager.removeAdView(mAdView);
         mUnbinder.unbind();
     }
 

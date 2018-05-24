@@ -21,21 +21,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.ads.AdManager;
 import com.tlongdev.bktf.ui.view.BaseView;
-
-import javax.inject.Inject;
 
 /**
  * @author Long
  * @since 2016. 03. 21.
  */
 public abstract class BptfFragment extends Fragment implements BaseView {
-
-    @Inject Tracker mTracker;
-    @Inject AdManager mAdManager;
 
     protected BptfApplication mApplication;
 
