@@ -1,24 +1,23 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
 
 def getKey(Properties properties, String name, String defaultValue) {
     return properties.containsKey(name) ? properties.getProperty(name) : defaultValue
 }
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '25.0.0'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.tlongdev.bktf"
         minSdkVersion 14
-        targetSdkVersion 24
+        targetSdkVersion 27
         versionCode 51
         versionName "2.2.3"
 
         applicationVariants.all { variant ->
-            variant.outputs.each { output ->
-                output.outputFile = new File((String) output.outputFile.parent, "bptf-" + versionName + ".apk")
+            variant.outputs.all { output ->
+                outputFileName  = "bptf-" + versionName + ".apk"
             }
         }
 
@@ -49,34 +48,35 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs', excludes: ['*sources.jar'])
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:1.10.19'
-    testCompile "org.robolectric:robolectric:3.1"
+    def support_version = '27.1.1'
+    implementation fileTree(include: ['*.jar'], dir: 'libs', excludes: ['*sources.jar'])
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:1.10.19'
+    testImplementation "org.robolectric:robolectric:3.1"
 
-    apt 'com.jakewharton:butterknife-compiler:8.1.0'
-    apt 'com.google.dagger:dagger-compiler:2.5'
-    provided 'com.f2prateek.dart:dart-processor:2.0.0'
-    provided 'org.glassfish:javax.annotation:10.0-b28'
-    compile('com.squareup.okhttp3:okhttp:3.3.1') {
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.1.0'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.5'
+    annotationProcessor 'com.f2prateek.dart:dart-processor:2.0.0'
+    compileOnly 'org.glassfish:javax.annotation:10.0-b28'
+    implementation('com.squareup.okhttp3:okhttp:3.3.1') {
         exclude group: 'com.squareup.okio', module: 'okio'
     }
-    compile 'com.android.support:support-annotations:24.0.0'
-    compile 'com.android.support:support-v4:24.0.0'
-    compile 'com.android.support:appcompat-v7:24.0.0'
-    compile 'com.android.support:cardview-v7:24.0.0'
-    compile 'com.android.support:customtabs:24.0.0'
-    compile 'com.android.support:recyclerview-v7:24.0.0'
-    compile 'com.android.support:design:24.0.0'
-    compile 'com.android.support:percent:24.0.0'
-    compile 'com.f2prateek.dart:dart:2.0.0'
-    compile 'com.google.dagger:dagger:2.5'
-    compile 'com.google.firebase:firebase-messaging:9.2.1'
-    compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.jakewharton:butterknife:8.1.0'
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    implementation "com.android.support:support-annotations:$support_version"
+    implementation "com.android.support:support-v4:$support_version"
+    implementation "com.android.support:appcompat-v7:$support_version"
+    implementation "com.android.support:cardview-v7:$support_version"
+    implementation "com.android.support:customtabs:$support_version"
+    implementation "com.android.support:recyclerview-v7:$support_version"
+    implementation "com.android.support:design:$support_version"
+    implementation "com.android.support:percent:$support_version"
+    implementation 'com.f2prateek.dart:dart:2.0.0'
+    implementation 'com.google.dagger:dagger:2.5'
+    implementation 'com.google.firebase:firebase-messaging:17.0.0'
+    implementation 'com.github.PhilJay:MPAndroidChart:v2.2.5'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.jakewharton:butterknife:8.1.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.1.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
