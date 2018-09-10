@@ -36,9 +36,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.CalculatorAdapter;
 import com.tlongdev.bktf.model.Currency;
@@ -74,7 +71,6 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView {
     @BindView(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
     @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
-    @BindView(R.id.ad_view) AdView mAdView;
 
     private CalculatorAdapter mAdapter;
     private Unbinder mUnbinder;
@@ -124,8 +120,6 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView {
         priceBuds.setText(getString(R.string.currency_bud_plural, "0"));
         priceUsd.setText("$0");
 
-        mAdManager.addAdView(mAdView);
-
         return rootView;
     }
 
@@ -136,17 +130,9 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mTracker.setScreenName(CalculatorFragment.class.getName());
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mPresenter.detachView();
-        mAdManager.removeAdView(mAdView);
         mUnbinder.unbind();
     }
 
@@ -206,7 +192,6 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView {
             priceBuds.setText(totalPrice.getFormattedPrice(getActivity(), Currency.BUD));
             priceUsd.setText(totalPrice.getFormattedPrice(getActivity(), Currency.USD));
         } catch (Throwable t) {
-            Crashlytics.logException(t);
             t.printStackTrace();
         }
     }

@@ -23,22 +23,15 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-import com.tlongdev.bktf.ads.AdManager;
 import com.tlongdev.bktf.ui.view.BaseView;
-
-import javax.inject.Inject;
 
 /**
  * @author Long
  * @since 2016. 03. 21.
  */
 public abstract class BptfActivity extends AppCompatActivity implements BaseView {
-
-    @Inject Tracker mTracker;
-    @Inject AdManager mAdManager;
 
     protected BptfApplication mApplication;
 

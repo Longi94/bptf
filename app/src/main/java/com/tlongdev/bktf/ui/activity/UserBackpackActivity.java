@@ -34,7 +34,6 @@ import android.widget.ProgressBar;
 
 import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
-import com.google.android.gms.ads.AdView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.BackpackAdapter;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
@@ -67,7 +66,6 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
     @InjectExtra(EXTRA_STEAM_ID) String mSteamId;
 
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
-    @BindView(R.id.ad_view) AdView mAdView;
     @BindView(R.id.progress_bar) ProgressBar mProgressBar;
     @BindView(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -127,8 +125,6 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        mAdManager.addAdView(mAdView);
-
         mPresenter.getBackpackItems(mSteamId, mIsGuest);
     }
 
@@ -136,7 +132,6 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.detachView();
-        mAdManager.removeAdView(mAdView);
     }
 
     /**
@@ -165,7 +160,7 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
 
     @Override
     public void privateBackpack() {
-        // TODO: 2017-10-10  
+        // TODO: 2017-10-10
     }
 
     @Override

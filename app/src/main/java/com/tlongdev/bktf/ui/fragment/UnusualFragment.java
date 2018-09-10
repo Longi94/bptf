@@ -37,8 +37,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.UnusualAdapter;
 import com.tlongdev.bktf.model.Item;
@@ -69,7 +67,6 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
     @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.search) EditText mSearchInput;
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
-    @BindView(R.id.ad_view) AdView mAdView;
 
     /**
      * the current sort type
@@ -132,7 +129,6 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
         mRecyclerView.setAdapter(mAdapter);
 
         mSearchInput.addTextChangedListener(this);
-        mAdManager.addAdView(mAdView);
 
         return rootView;
     }
@@ -144,17 +140,9 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mTracker.setScreenName(UnusualFragment.class.getName());
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mPresenter.detachView();
-        mAdManager.removeAdView(mAdView);
         mUnbinder.unbind();
     }
 

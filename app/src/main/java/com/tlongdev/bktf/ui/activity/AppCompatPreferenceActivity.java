@@ -31,19 +31,14 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
-
-import javax.inject.Inject;
 
 /**
  * A {@link android.preference.PreferenceActivity} which implements and proxies the necessary calls
  * to be used with AppCompat.
  */
 public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
-
-    @Inject Tracker mTracker;
 
     private AppCompatDelegate mDelegate;
     protected BptfApplication mApplication;

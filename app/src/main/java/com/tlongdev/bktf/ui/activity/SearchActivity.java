@@ -29,7 +29,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.android.gms.ads.AdView;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.SearchAdapter;
 import com.tlongdev.bktf.model.Item;
@@ -50,7 +49,6 @@ public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui
 
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
     @BindView(R.id.toolbar) Toolbar mToolbar;
-    @BindView(R.id.ad_view) AdView mAdView;
 
     //The adapter of the recyclerview
     private SearchAdapter mAdapter;
@@ -95,15 +93,12 @@ public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui
         mAdapter.setListener(this);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, columnCount));
         mRecyclerView.setAdapter(mAdapter);
-
-        mAdManager.addAdView(mAdView);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.detachView();
-        mAdManager.removeAdView(mAdView);
 
         mAdapter.closeCursor();
     }

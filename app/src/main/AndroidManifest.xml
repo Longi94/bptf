@@ -143,11 +143,9 @@
             android:name=".ui.activity.WebActivity"
             android:theme="@style/AppTheme">
         </activity>
-        <activity
-            android:name="com.google.android.gms.ads.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
 
-        <service android:name=".fcm.BptfMessagingService">
+        <service
+            android:name=".fcm.BptfMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>

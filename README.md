@@ -7,9 +7,7 @@ The unofficial backpack.tf mobile application
 Fork this repository and contribute by creating a pull request. Notable contributions will be credited in the application. See the [contributing guidelines](https://github.com/Longi94/bptf/blob/master/CONTRIBUTING.md) before contributing.
 
 ### 3rd party libraries
-- [Answers](https://fabric.io/kits/android/answers)
 - [Butter Knife](http://jakewharton.github.io/butterknife/)
-- [Crashlytics](https://try.crashlytics.com/)
 - [Dagger 2](http://google.github.io/dagger/)
 - [Dart 2](https://github.com/f2prateek/dart)
 - [Glide](https://github.com/bumptech/glide)

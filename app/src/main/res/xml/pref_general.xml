@@ -25,14 +25,4 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Advertisements">
-
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="@string/pref_ads_enabled"
-            android:summary="Turn on ads to support the development!"
-            android:title="Show ads"/>
-
-    </PreferenceCategory>
-
 </PreferenceScreen>

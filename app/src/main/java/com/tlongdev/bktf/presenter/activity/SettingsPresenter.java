@@ -19,8 +19,6 @@ package com.tlongdev.bktf.presenter.activity;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.interactor.GetUserDataInteractor;
 import com.tlongdev.bktf.model.User;
@@ -36,7 +34,6 @@ import javax.inject.Inject;
  */
 public class SettingsPresenter implements Presenter<SettingsView>, GetUserDataInteractor.Callback {
 
-    @Inject Tracker mTracker;
     @Inject ProfileManager mProfileManager;
 
     private SettingsView mView;
@@ -64,11 +61,6 @@ public class SettingsPresenter implements Presenter<SettingsView>, GetUserDataIn
 
         GetUserDataInteractor interactor = new GetUserDataInteractor(mApplication, user, true, this);
         interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Request")
-                .setAction("UserData")
-                .build());
     }
 
     @Override

@@ -29,7 +29,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
-import com.crashlytics.android.Crashlytics;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
@@ -173,7 +172,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     try {
                         holder.price.setText(item.getPrice().getFormattedPrice(mContext));
                     } catch (Throwable t) {
-                        Crashlytics.logException(t);
                         t.printStackTrace();
                     }
                 }

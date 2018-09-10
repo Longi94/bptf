@@ -26,8 +26,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
@@ -55,7 +53,6 @@ public class RecentsPresenter implements Presenter<RecentsView>,
 
     @Inject SharedPreferences mPrefs;
     @Inject SharedPreferences.Editor mEditor;
-    @Inject Tracker mTracker;
     @Inject Context mContext;
 
     private RecentsView mView;
@@ -140,23 +137,11 @@ public class RecentsPresenter implements Presenter<RecentsView>,
         interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         mLoading = true;
-
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Request")
-                .setAction("Refresh")
-                .setLabel("Prices")
-                .build());
     }
 
     private void callTlongdevItemSchema() {
         TlongdevItemSchemaInteractor task = new TlongdevItemSchemaInteractor(mApplication, this);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Request")
-                .setAction("Refresh")
-                .setLabel("ItemSchema")
-                .build());
     }
 
     public void loadCurrencyPrices() {

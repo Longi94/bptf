@@ -33,9 +33,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.analytics.HitBuilders;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.model.Currency;
 import com.tlongdev.bktf.model.Price;
@@ -67,7 +64,6 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
     @BindView(R.id.edit_text_keys) EditText inputKeys;
     @BindView(R.id.edit_text_metal) EditText inputMetal;
     @BindView(R.id.edit_text_usd) EditText inputUsd;
-    @BindView(R.id.ad_view) AdView mAdView;
 
     /**
      * the view that is currently in focus
@@ -125,7 +121,6 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
                         }
                     }
                 } catch (Throwable t) {
-                    Crashlytics.logException(t);
                     t.printStackTrace();
                 }
             }
@@ -157,7 +152,6 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
                         }
                     }
                 } catch (Throwable t) {
-                    Crashlytics.logException(t);
                     t.printStackTrace();
                 }
             }
@@ -189,7 +183,6 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
                         }
                     }
                 } catch (Throwable t) {
-                    Crashlytics.logException(t);
                     t.printStackTrace();
                 }
             }
@@ -221,7 +214,6 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
                         }
                     }
                 } catch (Throwable t) {
-                    Crashlytics.logException(t);
                     t.printStackTrace();
                 }
             }
@@ -241,11 +233,8 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
             inputMetal.setText(String.valueOf(Utility.formatDouble(mTempPrice.getConvertedPrice(getActivity(), Currency.METAL, false))));
             inputUsd.setText(String.valueOf(Utility.formatDouble(mTempPrice.getConvertedPrice(getActivity(), Currency.USD, false))));
         } catch (Throwable t) {
-            Crashlytics.logException(t);
             t.printStackTrace();
         }
-
-        mAdManager.addAdView(mAdView);
 
         return rootView;
     }
@@ -253,15 +242,12 @@ public class ConverterFragment extends BptfFragment implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
-        mTracker.setScreenName(ConverterFragment.class.getName());
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
         Utility.hideKeyboard(getActivity());
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mAdManager.removeAdView(mAdView);
         mUnbinder.unbind();
     }
 
