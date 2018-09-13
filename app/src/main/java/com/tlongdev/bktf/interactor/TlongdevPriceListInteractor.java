@@ -28,6 +28,7 @@ import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.flatbuffers.Prices;
+import com.tlongdev.bktf.flatbuffers.Price;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Quality;
 import com.tlongdev.bktf.network.TlongdevInterface;
@@ -156,7 +157,7 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
         Vector<ContentValues> cVVector = new Vector<>();
 
         for (int i = 0; i < pricesBuf.pricesLength(); i++) {
-            com.tlongdev.bktf.flatbuffers.Price priceBuf = pricesBuf.prices(i);
+            Price priceBuf = pricesBuf.prices(i);
             ContentValues values = buildContentValues(priceBuf);
             cVVector.add(values);
         }
