@@ -28,13 +28,10 @@ import com.tlongdev.bktf.data.DatabaseContract.DecoratedWeaponEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
 import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
-import com.tlongdev.bktf.network.TlongdevInterface;
-import com.tlongdev.bktf.network.model.tlongdev.TlongdevDecoratedWeapon;
-import com.tlongdev.bktf.network.model.tlongdev.TlongdevItem;
-import com.tlongdev.bktf.network.model.tlongdev.TlongdevItemSchemaPayload;
-import com.tlongdev.bktf.network.model.tlongdev.TlongdevOrigin;
-import com.tlongdev.bktf.network.model.tlongdev.TlongdevParticleName;
+import com.tlongdev.bktf.flatbuffers.itemschema.DecoratedWeapon;
 import com.tlongdev.bktf.flatbuffers.itemschema.Item;
+import com.tlongdev.bktf.flatbuffers.itemschema.ItemSchema;
+import com.tlongdev.bktf.flatbuffers.itemschema.Origin;
 import com.tlongdev.bktf.flatbuffers.itemschema.Particle;
 
 import org.apache.commons.io.IOUtils;
@@ -42,7 +39,6 @@ import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.util.List;
 import java.util.Vector;
 
 import javax.inject.Inject;
@@ -57,9 +53,6 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
      * Log tag for logging.
      */
     private static final String LOG_TAG = TlongdevItemSchemaInteractor.class.getSimpleName();
-
-    @Inject
-    TlongdevInterface mTlongdevInterface;
 
     @Inject
     Context mContext;
@@ -106,8 +99,7 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
     private int parseFlatBuffers(InputStream inputStream) throws IOException {
         ByteBuffer buffer = ByteBuffer.wrap(IOUtils.toByteArray(inputStream));
 
-        com.tlongdev.bktf.flatbuffers.itemschema.ItemSchema schema =
-                com.tlongdev.bktf.flatbuffers.itemschema.ItemSchema.getRootAsItemSchema(buffer);
+        ItemSchema schema = ItemSchema.getRootAsItemSchema(buffer);
 
         insertItems(schema);
         insertOrigins(schema);
@@ -117,7 +109,7 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
         return 0;
     }
 
-    private void insertItems(com.tlongdev.bktf.flatbuffers.itemschema.ItemSchema schema) {
+    private void insertItems(ItemSchema schema) {
         Vector<ContentValues> cVVectorItems = new Vector<>();
 
         for (int i = 0; i < schema.itemsLength(); i++) {
@@ -147,11 +139,11 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
         publishProgress();
     }
 
-    private void insertOrigins(com.tlongdev.bktf.flatbuffers.itemschema.ItemSchema schema) {
+    private void insertOrigins(ItemSchema schema) {
         Vector<ContentValues> cVVectorOrigins = new Vector<>();
 
         for (int i = 0; i < schema.originsLength(); i++) {
-            com.tlongdev.bktf.flatbuffers.itemschema.Origin origin = schema.origins(i);
+            Origin origin = schema.origins(i);
 
             //The DV that will contain all the data
             ContentValues itemValues = new ContentValues();
@@ -174,10 +166,12 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
         publishProgress();
     }
 
-    private void insertParticles(com.tlongdev.bktf.flatbuffers.itemschema.ItemSchema schema) {
+    private void insertParticles(ItemSchema schema) {
         Vector<ContentValues> cVVectorParticles = new Vector<>();
 
         for (int i = 0; i < schema.particleLength(); i++) {
+            Particle particle = schema.particle(i);
+
             //The DV that will contain all the data
             ContentValues itemValues = new ContentValues();
             itemValues.put(UnusualSchemaEntry.COLUMN_ID, particle.id());
@@ -199,11 +193,11 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
         publishProgress();
     }
 
-    private void insertDecoratedWeapons(com.tlongdev.bktf.flatbuffers.itemschema.ItemSchema schema) {
+    private void insertDecoratedWeapons(ItemSchema schema) {
         Vector<ContentValues> cVVectorWeapons = new Vector<>();
 
         for (int i = 0; i < schema.decoratedWeaponLength(); i++) {
-            com.tlongdev.bktf.flatbuffers.itemschema.DecoratedWeapon weapon = schema.decoratedWeapon(i);
+            DecoratedWeapon weapon = schema.decoratedWeapon(i);
             //The DV that will contain all the data
             ContentValues weaponValues = new ContentValues();
             weaponValues.put(DecoratedWeaponEntry.COLUMN_DEFINDEX, weapon.defindex());
