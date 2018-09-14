@@ -3,7 +3,6 @@ package com.tlongdev.bktf.model;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
@@ -45,6 +44,10 @@ public class Item implements Parcelable {
 
     private Price price;
 
+    private String image;
+
+    private String imageLarge;
+
     public static final Parcelable.Creator<Item> CREATOR = new Creator<Item>() {
         @Override
         public Item createFromParcel(Parcel source) {
@@ -68,6 +71,8 @@ public class Item implements Parcelable {
         priceIndex = source.readInt();
         weaponWear = source.readInt();
         price = source.readParcelable(Price.class.getClassLoader());
+        image = source.readString();
+        imageLarge = source.readString();
     }
 
     @Override
@@ -86,6 +91,8 @@ public class Item implements Parcelable {
         dest.writeInt(priceIndex);
         dest.writeInt(weaponWear);
         dest.writeParcelable(price, flags);
+        dest.writeString(image);
+        dest.writeString(imageLarge);
     }
 
     public Item() {}
@@ -161,6 +168,22 @@ public class Item implements Parcelable {
 
     public void setPrice(Price price) {
         this.price = price;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getImageLarge() {
+        return imageLarge;
+    }
+
+    public void setImageLarge(String imageLarge) {
+        this.imageLarge = imageLarge;
     }
 
     /**
@@ -537,16 +560,15 @@ public class Item implements Parcelable {
      *
      * @return Uri object
      */
-    public Uri getIconUrl(Context context) {
-        String url = context.getString(R.string.main_host) + context.getString(R.string.link_icons);
-        Uri.Builder builder = Uri.parse(url).buildUpon()
-                .appendQueryParameter("defindex", String.valueOf(defindex));
+    public String getIconUrl(Context context) {
         if (australium) {
-            builder.appendQueryParameter("australium", "1");
+            // TODO: 2018-09-14
+            //builder.appendQueryParameter("australium", "1");
         } else if (weaponWear > 0) {
-            builder.appendQueryParameter("wear", String.valueOf(weaponWear));
+            // TODO: 2018-09-14
+            //builder.appendQueryParameter("wear", String.valueOf(weaponWear));
         }
-        return builder.build();
+        return getImage();
     }
 
     /**

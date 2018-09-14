@@ -53,6 +53,7 @@ public class LoadUnusualHatCategoriesInteractor extends AsyncTask<Void, Void, Vo
         String sql = "SELECT " +
                 PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + "," +
                 ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + "," +
+                ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_IMAGE + "," +
                 " AVG(" + Utility.getRawPriceQueryString(mContext) + ") avg_price " +
                 " FROM " + PriceEntry.TABLE_NAME +
                 " LEFT JOIN " + ItemSchemaEntry.TABLE_NAME +
@@ -85,6 +86,7 @@ public class LoadUnusualHatCategoriesInteractor extends AsyncTask<Void, Void, Vo
                 Item item = new Item();
                 item.setDefindex(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_DEFINDEX)));
                 item.setName(cursor.getString(cursor.getColumnIndex(ItemSchemaEntry.COLUMN_ITEM_NAME)));
+                item.setImage(cursor.getString(cursor.getColumnIndex(ItemSchemaEntry.COLUMN_IMAGE)));
                 item.setPrice(price);
 
                 mItems.add(item);

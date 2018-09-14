@@ -58,6 +58,7 @@ public class RecentsAdapter extends CursorRecyclerViewAdapter<RecentsAdapter.Vie
         final Item item = new Item();
         item.setDefindex(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_DEFINDEX)));
         item.setName(cursor.getString(cursor.getColumnIndex(ItemSchemaEntry.COLUMN_ITEM_NAME)));
+        item.setImage(cursor.getString(cursor.getColumnIndex(ItemSchemaEntry.COLUMN_IMAGE)));
         item.setQuality(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_ITEM_QUALITY)));
         item.setTradable(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_ITEM_TRADABLE)) == 1);
         item.setCraftable(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_ITEM_CRAFTABLE)) == 1);

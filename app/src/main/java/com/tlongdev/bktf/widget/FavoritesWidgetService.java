@@ -54,6 +54,7 @@ public class FavoritesWidgetService extends RemoteViewsService {
         public static final int COLUMN_PRICE_RAW = 9;
         public static final int COLUMN_DIFFERENCE = 10;
         public static final int COLUMN_AUSTRALIUM = 11;
+        public static final int COLUMN_IMAGE = 12;
 
         @Inject Context mContext;
         @Inject @Named("readable") SQLiteDatabase mDatabase;
@@ -83,7 +84,8 @@ public class FavoritesWidgetService extends RemoteViewsService {
                     PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_HIGH + "," +
                     Utility.getRawPriceQueryString(mContext) + "," +
                     PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DIFFERENCE + "," +
-                    FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_AUSTRALIUM +
+                    FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_AUSTRALIUM + "," +
+                    ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_IMAGE +
                     " FROM " + FavoritesEntry.TABLE_NAME +
                     " LEFT JOIN " + PriceEntry.TABLE_NAME +
                     " ON " + FavoritesEntry.TABLE_NAME + "." + FavoritesEntry.COLUMN_DEFINDEX + " = " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX +
@@ -139,6 +141,7 @@ public class FavoritesWidgetService extends RemoteViewsService {
                 Item item = new Item();
                 item.setDefindex(mDataSet.getInt(COLUMN_DEFINDEX));
                 item.setName(mDataSet.getString(COLUMN_NAME));
+                item.setImage(mDataSet.getString(COLUMN_IMAGE));
                 item.setQuality(mDataSet.getInt(COLUMN_QUALITY));
                 item.setTradable(mDataSet.getInt(COLUMN_TRADABLE) == 1);
                 item.setCraftable(mDataSet.getInt(COLUMN_CRAFTABLE) == 1);

@@ -26,7 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return ourInstance;
     }
 
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 10;
     public static final String DATABASE_NAME = "bptf.db";
 
     private final Context mContext;
@@ -79,6 +79,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         ItemSchemaEntry.COLUMN_DESCRIPTION + " TEXT, " +
                         ItemSchemaEntry.COLUMN_TYPE_NAME + " INTEGER NOT NULL, " +
                         ItemSchemaEntry.COLUMN_PROPER_NAME + " INTEGER NOT NULL, " +
+                        ItemSchemaEntry.COLUMN_IMAGE_LARGE + " TEXT, " +
+                        ItemSchemaEntry.COLUMN_IMAGE + " TEXT, " +
 
                         " UNIQUE (" + PriceEntry.COLUMN_DEFINDEX + ") ON CONFLICT REPLACE);";
 

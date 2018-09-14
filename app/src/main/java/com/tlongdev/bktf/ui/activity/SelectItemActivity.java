@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.SelectItemAdapter;
+import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.presenter.activity.SelectItemPresenter;
 import com.tlongdev.bktf.ui.view.activity.SelectItemView;
 
@@ -22,8 +23,7 @@ import butterknife.ButterKnife;
 public class SelectItemActivity extends BptfActivity implements SelectItemView, TextWatcher,
         SelectItemAdapter.OnItemSelectedListener {
 
-    public static final String EXTRA_DEFINDEX = "defindex";
-    public static final String EXTRA_NAME = "name";
+    public static final String EXTRA_ITEM = "item";
 
     @Inject SelectItemPresenter mPresenter;
 
@@ -75,10 +75,9 @@ public class SelectItemActivity extends BptfActivity implements SelectItemView, 
     }
 
     @Override
-    public void onItemSelected(int defindex, String name) {
+    public void onItemSelected(Item item) {
         Intent result = new Intent();
-        result.putExtra(EXTRA_DEFINDEX, defindex);
-        result.putExtra(EXTRA_NAME, name);
+        result.putExtra(EXTRA_ITEM, item);
         setResult(RESULT_OK, result);
         finish();
     }

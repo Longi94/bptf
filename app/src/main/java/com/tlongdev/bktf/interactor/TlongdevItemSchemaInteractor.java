@@ -106,6 +106,8 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
             itemValues.put(ItemSchemaEntry.COLUMN_TYPE_NAME, item.type());
             itemValues.put(ItemSchemaEntry.COLUMN_DESCRIPTION, item.description());
             itemValues.put(ItemSchemaEntry.COLUMN_PROPER_NAME, item.proper());
+            itemValues.put(ItemSchemaEntry.COLUMN_IMAGE, item.image());
+            itemValues.put(ItemSchemaEntry.COLUMN_IMAGE_LARGE, item.imageLarge());
 
             //Add the price to the CV vector
             cVVectorItems.add(itemValues);

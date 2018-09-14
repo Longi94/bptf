@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
+import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
 import com.tlongdev.bktf.model.BackpackItem;
@@ -82,6 +83,24 @@ public class LoadItemDetailsInteractor extends AsyncTask<Void, Void, BackpackIte
                 item.setEquipped(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_EQUIPPED)) == 1);
                 item.setOrigin(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_ORIGIN)));
                 item.setWeaponWear(cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR)));
+            }
+            cursor.close();
+        }
+
+        cursor = mContentResolver.query(
+                ItemSchemaEntry.CONTENT_URI,
+                new String[]{
+                        ItemSchemaEntry._ID,
+                        ItemSchemaEntry.COLUMN_IMAGE,
+                },
+                ItemSchemaEntry.COLUMN_DEFINDEX + " = ?",
+                new String[]{String.valueOf(item.getDefindex())},
+                null
+        );
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                item.setImage(cursor.getString(cursor.getColumnIndex(ItemSchemaEntry.COLUMN_IMAGE)));
             }
             cursor.close();
         }

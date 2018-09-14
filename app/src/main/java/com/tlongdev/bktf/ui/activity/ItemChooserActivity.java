@@ -157,8 +157,10 @@ public class ItemChooserActivity extends BptfActivity implements ItemChooserView
         switch (requestCode) {
             case SELECT_ITEM:
                 if (resultCode == RESULT_OK) {
-                    mItem.setDefindex(data.getIntExtra(SelectItemActivity.EXTRA_DEFINDEX, -1));
-                    mItem.setName(data.getStringExtra(SelectItemActivity.EXTRA_NAME));
+                    Item item = data.getParcelableExtra(SelectItemActivity.EXTRA_ITEM);
+                    mItem.setDefindex(item.getDefindex());
+                    mItem.setName(item.getName());
+                    mItem.setImage(item.getImage());
 
                     icon.setVisibility(View.VISIBLE);
                     itemText.setVisibility(View.GONE);

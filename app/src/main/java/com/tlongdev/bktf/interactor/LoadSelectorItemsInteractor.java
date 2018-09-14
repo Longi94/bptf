@@ -36,7 +36,8 @@ public class LoadSelectorItemsInteractor extends AsyncTask<Void, Void, Cursor> {
                 new String[]{
                         ItemSchemaEntry._ID,
                         ItemSchemaEntry.COLUMN_DEFINDEX,
-                        ItemSchemaEntry.COLUMN_ITEM_NAME
+                        ItemSchemaEntry.COLUMN_ITEM_NAME,
+                        ItemSchemaEntry.COLUMN_IMAGE
                 },
                 ItemSchemaEntry.COLUMN_ITEM_NAME + " LIKE ?",
                 selectionArgs,

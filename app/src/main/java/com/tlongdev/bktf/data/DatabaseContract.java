@@ -77,6 +77,8 @@ public final class DatabaseContract {
         public static final String COLUMN_TYPE_NAME = "type_name";
         public static final String COLUMN_PROPER_NAME = "proper_name";
         public static final String COLUMN_DESCRIPTION = "description";
+        public static final String COLUMN_IMAGE_LARGE = "image_large";
+        public static final String COLUMN_IMAGE = "image";
     }
 
     public static final class UnusualSchemaEntry implements BaseColumns {

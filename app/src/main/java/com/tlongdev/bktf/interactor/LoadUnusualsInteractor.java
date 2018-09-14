@@ -53,6 +53,7 @@ public class LoadUnusualsInteractor extends AsyncTask<Void, Void, Void> {
         String selection = PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + " = ?";
         String nameColumn;
         String joinOn;
+        String imageColumn = "";
 
         //If defindex is -1, user is browsing by effects
         if (mDefindex != -1) {
@@ -67,6 +68,7 @@ public class LoadUnusualsInteractor extends AsyncTask<Void, Void, Void> {
             joinOn = ItemSchemaEntry.TABLE_NAME + " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX;
             selection = selection + " AND " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + " = ? AND " +
                     ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + " LIKE ?";
+            imageColumn = ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_IMAGE;
         }
 
         String sql = "SELECT " +
@@ -78,7 +80,8 @@ public class LoadUnusualsInteractor extends AsyncTask<Void, Void, Void> {
                 PriceEntry.COLUMN_PRICE_HIGH + "," +
                 PriceEntry.COLUMN_LAST_UPDATE + "," +
                 PriceEntry.COLUMN_DIFFERENCE + "," +
-                nameColumn + " name" +
+                nameColumn + " name," +
+                imageColumn +
                 " FROM " + PriceEntry.TABLE_NAME +
                 " LEFT JOIN " + joinOn +
                 " WHERE " + selection +
@@ -106,6 +109,9 @@ public class LoadUnusualsInteractor extends AsyncTask<Void, Void, Void> {
                 item.setPriceIndex(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE_INDEX)));
                 item.setQuality(Quality.UNUSUAL);
                 item.setPrice(price);
+                if (mDefindex == -1) {
+                    item.setImage(cursor.getString(cursor.getColumnIndex(ItemSchemaEntry.COLUMN_IMAGE)));
+                }
 
                 mItems.add(item);
             }

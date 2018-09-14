@@ -11,6 +11,8 @@ table Item {
   description:string;
   type:string;
   proper:bool;
+  image:string;
+  imageLarge:string;
 }
 
 table Particle {

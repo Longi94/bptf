@@ -46,6 +46,7 @@ public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.Vi
             final Item item = new Item();
             item.setDefindex(mDataSet.getInt(mDataSet.getColumnIndex(ItemSchemaEntry.COLUMN_DEFINDEX)));
             item.setName(mDataSet.getString(mDataSet.getColumnIndex(ItemSchemaEntry.COLUMN_ITEM_NAME)));
+            item.setImage(mDataSet.getString(mDataSet.getColumnIndex(ItemSchemaEntry.COLUMN_IMAGE)));
 
             holder.name.setText(item.getName());
 
@@ -56,7 +57,7 @@ public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.Vi
 
             holder.root.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onItemSelected(item.getDefindex(), item.getName());
+                    listener.onItemSelected(item);
                 }
             });
         }
@@ -102,6 +103,6 @@ public class SelectItemAdapter extends RecyclerView.Adapter<SelectItemAdapter.Vi
     }
 
     public interface OnItemSelectedListener {
-        void onItemSelected(int defindex, String name);
+        void onItemSelected(Item item);
     }
 }

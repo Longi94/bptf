@@ -1,11 +1,11 @@
 package com.tlongdev.bktf.interactor;
 
-import android.content.ContentResolver;
 import android.database.Cursor;
-import android.net.Uri;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
+import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.UserBackpackEntry;
 import com.tlongdev.bktf.model.BackpackItem;
 
@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * @author Long
@@ -20,20 +21,8 @@ import javax.inject.Inject;
  */
 public class LoadBackpackItemsInteractor extends AsyncTask<Void, Void, Void> {
 
-    private static final String[] PROJECTION = new String[]{
-            UserBackpackEntry._ID,
-            UserBackpackEntry.COLUMN_DEFINDEX,
-            UserBackpackEntry.COLUMN_QUALITY,
-            UserBackpackEntry.COLUMN_CRAFT_NUMBER,
-            UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE,
-            UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT,
-            UserBackpackEntry.COLUMN_ITEM_INDEX,
-            UserBackpackEntry.COLUMN_PAINT,
-            UserBackpackEntry.COLUMN_AUSTRALIUM,
-            UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR
-    };
-
-    @Inject ContentResolver mContentResolver;
+    @Inject @Named("readable")
+    SQLiteDatabase mDatabase;
 
     private final Callback mCallback;
     private final boolean mGuest;
@@ -53,30 +42,35 @@ public class LoadBackpackItemsInteractor extends AsyncTask<Void, Void, Void> {
         mItems = new LinkedList<>();
         mNewItems = new LinkedList<>();
 
-        Uri uri = mGuest ? UserBackpackEntry.CONTENT_URI_GUEST : UserBackpackEntry.CONTENT_URI;
+        String tableName = mGuest ? UserBackpackEntry.TABLE_NAME_GUEST : UserBackpackEntry.TABLE_NAME;
 
-        Cursor cursor = mContentResolver.query(uri, PROJECTION,
-                UserBackpackEntry.COLUMN_POSITION + " >= ?",
-                new String[]{"1"},
-                UserBackpackEntry.COLUMN_POSITION + " ASC"
-        );
+        String sql = "SELECT " +
+                tableName + "." + UserBackpackEntry._ID + "," +
+                tableName + "." + UserBackpackEntry.COLUMN_DEFINDEX + "," +
+                tableName + "." + UserBackpackEntry.COLUMN_QUALITY + "," +
+                tableName + "." + UserBackpackEntry.COLUMN_CRAFT_NUMBER + "," +
+                tableName + "." + UserBackpackEntry.COLUMN_FLAG_CANNOT_TRADE + "," +
+                tableName + "." + UserBackpackEntry.COLUMN_FLAG_CANNOT_CRAFT + "," +
+                tableName + "." + UserBackpackEntry.COLUMN_ITEM_INDEX + "," +
+                tableName + "." + UserBackpackEntry.COLUMN_PAINT + "," +
+                tableName + "." + UserBackpackEntry.COLUMN_AUSTRALIUM + "," +
+                tableName + "." + UserBackpackEntry.COLUMN_DECORATED_WEAPON_WEAR + "," +
+                tableName + "." + UserBackpackEntry.COLUMN_POSITION + "," +
+                ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_IMAGE +
+                " FROM " + tableName +
+                " LEFT JOIN " + ItemSchemaEntry.TABLE_NAME +
+                " ON " + tableName + "." + UserBackpackEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
+                " ORDER BY " + UserBackpackEntry.COLUMN_POSITION + " ASC";
+
+        Cursor cursor = mDatabase.rawQuery(sql, null);
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                mItems.add(mapCursor(cursor));
-            }
-            cursor.close();
-        }
-
-        cursor = mContentResolver.query(uri, PROJECTION,
-                UserBackpackEntry.COLUMN_POSITION + " = ?",
-                new String[]{"-1"},
-                UserBackpackEntry.COLUMN_POSITION + " ASC"
-        );
-
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                mNewItems.add(mapCursor(cursor));
+                if (cursor.getInt(cursor.getColumnIndex(UserBackpackEntry.COLUMN_POSITION)) == -1) {
+                    mNewItems.add(mapCursor(cursor));
+                } else {
+                    mItems.add(mapCursor(cursor));
+                }
             }
             cursor.close();
         }
@@ -103,6 +97,7 @@ public class LoadBackpackItemsInteractor extends AsyncTask<Void, Void, Void> {
         backpackItem.setPaint(cursor.getInt(7));
         backpackItem.setAustralium(cursor.getInt(8) == 1);
         backpackItem.setWeaponWear(cursor.getInt(9));
+        backpackItem.setImage(cursor.getString(11));
         return backpackItem;
     }
 
