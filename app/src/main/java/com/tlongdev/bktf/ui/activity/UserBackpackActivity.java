@@ -14,7 +14,9 @@ import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
@@ -52,6 +54,8 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
     @BindView(R.id.progress_bar) ProgressBar mProgressBar;
     @BindView(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.privateBackpackIcon) ImageView privateBackpackIcon;
+    @BindView(R.id.privateBackpackText) TextView privateBackpackText;
 
     //Adapters used for the listview
     private BackpackAdapter mAdapter;
@@ -70,7 +74,7 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
 
         mPresenter.attachView(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         //Show the home button as back button
@@ -144,7 +148,9 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
 
     @Override
     public void privateBackpack() {
-        // TODO: 2017-10-10
+        mProgressBar.setVisibility(View.GONE);
+        privateBackpackIcon.setVisibility(View.VISIBLE);
+        privateBackpackText.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -184,18 +190,18 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
             if (holder.quality.getVisibility() == View.VISIBLE) {
                 options = ActivityOptions
                         .makeSceneTransitionAnimation(this,
-                                Pair.create((View) holder.icon, "icon_transition"),
-                                Pair.create((View) holder.effect, "effect_transition"),
-                                Pair.create((View) holder.paint, "paint_transition"),
-                                Pair.create((View) holder.quality, "quality_transition"),
-                                Pair.create((View) holder.root, "background_transition"));
+                                Pair.create(holder.icon, "icon_transition"),
+                                Pair.create(holder.effect, "effect_transition"),
+                                Pair.create(holder.paint, "paint_transition"),
+                                Pair.create(holder.quality, "quality_transition"),
+                                Pair.create(holder.root, "background_transition"));
             } else {
                 options = ActivityOptions
                         .makeSceneTransitionAnimation(this,
-                                Pair.create((View) holder.icon, "icon_transition"),
-                                Pair.create((View) holder.effect, "effect_transition"),
-                                Pair.create((View) holder.paint, "paint_transition"),
-                                Pair.create((View) holder.root, "background_transition"));
+                                Pair.create(holder.icon, "icon_transition"),
+                                Pair.create(holder.effect, "effect_transition"),
+                                Pair.create(holder.paint, "paint_transition"),
+                                Pair.create(holder.root, "background_transition"));
             }
             startActivity(i, options.toBundle());
         } else if (Build.VERSION.SDK_INT >= 21) {

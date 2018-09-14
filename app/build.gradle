@@ -16,6 +16,8 @@ android {
                 outputFileName  = "bptf-" + versionName + ".apk"
             }
         }
+
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
