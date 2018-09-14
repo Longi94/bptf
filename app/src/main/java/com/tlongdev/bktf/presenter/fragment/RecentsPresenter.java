@@ -177,6 +177,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,
     public void onPriceListFailed(String errorMessage) {
         if (mView != null) {
             mView.showPricesError(errorMessage);
+            mView.hideRefreshingAnimation();
         }
     }
 
@@ -214,6 +215,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,
     public void onItemSchemaFailed(String errorMessage) {
         if (mView != null) {
             mView.showItemSchemaError(errorMessage);
+            mView.hideRefreshingAnimation();
         }
     }
 
