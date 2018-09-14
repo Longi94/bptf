@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:drawablePadding="4dp"
-                    android:drawableStart="@drawable/ic_metal_white_18dp"
+                    android:drawableStart="@drawable/ic_nut"
                     android:inputType="number"
                     android:lines="1"
                     android:scrollHorizontally="true"/>
@@ -82,7 +82,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:drawablePadding="4dp"
-                    android:drawableStart="@drawable/ic_vpn_key_white_18dp"
+                    android:drawableStart="@drawable/ic_key"
                     android:inputType="number"
                     android:lines="1"
                     android:scrollHorizontally="true"/>
@@ -93,7 +93,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:drawablePadding="4dp"
-                    android:drawableStart="@drawable/ic_attach_money_white_24dp"
+                    android:drawableStart="@drawable/ic_currency_usd"
                     android:inputType="number"
                     android:lines="1"
                     android:scrollHorizontally="true"/>

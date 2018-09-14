@@ -115,7 +115,7 @@
             android:contentDescription="@string/description_delete"
             android:foreground="?attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
-            android:src="@drawable/ic_close_white_48dp"
+            android:src="@drawable/ic_close"
             tools:ignore="MissingPrefix"/>
 
     </LinearLayout>

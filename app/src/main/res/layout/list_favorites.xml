@@ -73,7 +73,7 @@
             android:paddingTop="8dp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            card_view:srcCompat="@drawable/ic_more_vert_white_18dp" />
+            card_view:srcCompat="@drawable/ic_dot_vertical" />
 
         <TextView
             android:id="@+id/difference"

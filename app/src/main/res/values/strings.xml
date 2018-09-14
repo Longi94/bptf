@@ -66,13 +66,10 @@
     <string name="user_page_link_tf2tp" translatable="false">TF2TP</string>
     <string name="user_page_usd" translatable="false">USD</string>
     <string name="user_page_vac" translatable="false">VAC</string>
-    <string name="user_page_keys" translatable="true">RAW KEYS</string>
     <string name="user_page_last_online" translatable="true">Last online:</string>
     <string name="user_page_link_community" translatable="true">COMMUNITY</string>
-    <string name="user_page_metal" translatable="true">RAW METAL</string>
     <string name="user_page_refined" translatable="true">REFINED</string>
     <string name="user_page_reputation" translatable="true">Reputation</string>
-    <string name="user_page_slots" translatable="true">SLOTS</string>
     <string name="user_page_trade_status" translatable="true">TRADE</string>
     <string name="user_page_trust" translatable="true">TRUST</string>
     <string name="user_page_user_since" translatable="true">Steam user since</string>
@@ -144,8 +141,6 @@
 
     <!--Possible messages for the user-->
 
-    <string name="message_private_backpack" formatted="false" translatable="true">%s\'s backpack is private</string>
-    <string name="message_private_backpack_own" translatable="true">Your backpack is private</string>
     <string name="message_send_email" translatable="true">Send email…</string>
     <string name="message_database_create" translatable="true">Creating prices database…</string>
     <string name="message_database_fail_network" translatable="true">Failed to download database. Check your internet connection and try again.</string>
@@ -175,7 +170,6 @@
 
     <string name="navigation_drawer_close" translatable="true">Close navigation drawer</string>
     <string name="navigation_drawer_open" translatable="true">Open navigation drawer</string>
-    <string name="placeholder_slots_used" translatable="false">\?/?</string>
     <string name="placeholder_unknown" translatable="false">\?</string>
     <string name="header_new_items" translatable="true">New items</string>
     <string name="header_page" formatted="false" translatable="true">Page %d</string>
@@ -183,8 +177,6 @@
     <string name="message_item_schema_create">Creating item schema database…</string>
     <string name="pref_last_item_schema_update">pref_last_item_schema_update</string>
     <string name="title_user">User Profile</string>
-    <string name="title_activity_login">Login</string>
-    <string name="login_steam_id"><u>What is my steam ID?</u></string>
     <string name="pref_key_login">pref_key_login</string>
     <string name="pref_initial_load_v2">pref_initial_load_v2</string>
     <string name="title_activity_price_history">History</string>
@@ -197,15 +189,10 @@
     <string name="add_currencies_title">Add currencies</string>
     <string name="title_activity_about">About</string>
 
-    <string name="pref_title_steam">Steam group</string>
     <string name="title_activity_licenses">Open source licenses</string>
     <string name="pref_title_github_repo">Source code</string>
     <string name="title_activity_search_filter">SearchFilterActivity</string>
     <string name="pref_user_data">pref_user_data</string>
-    <string name="pref_ads_enabled">pref_ads_enabled</string>
     <string name="pref_currency_rates">pref_currency_rates</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

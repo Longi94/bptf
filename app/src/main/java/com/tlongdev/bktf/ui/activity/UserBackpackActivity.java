@@ -112,7 +112,7 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
         mRecyclerView.setAdapter(mAdapter);
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        // TODO: 2018-09-14  
+        // TODO: 2018-09-14
         mSwipeRefreshLayout.setEnabled(false);
 
         mPresenter.getBackpackItems(mSteamId, mIsGuest);
