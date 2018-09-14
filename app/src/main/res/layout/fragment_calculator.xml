@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -46,10 +45,10 @@
                     android:layout_marginTop="0dp"
                     android:gravity="center"
                     android:textColor="@android:color/white"
-                    ads:layout_constraintBottom_toTopOf="@+id/view6"
-                    ads:layout_constraintLeft_toLeftOf="parent"
-                    ads:layout_constraintRight_toRightOf="@+id/view6"
-                    ads:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/view6"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="@+id/view6"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:text="1 ref" />
 
                 <View
@@ -62,10 +61,10 @@
                     android:layout_marginRight="0dp"
                     android:layout_marginTop="8dp"
                     android:background="@android:color/white"
-                    ads:layout_constraintBottom_toBottomOf="parent"
-                    ads:layout_constraintLeft_toLeftOf="parent"
-                    ads:layout_constraintRight_toRightOf="parent"
-                    ads:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
                 <TextView
@@ -80,10 +79,10 @@
                     android:layout_marginTop="0dp"
                     android:gravity="center"
                     android:textColor="@android:color/white"
-                    ads:layout_constraintBottom_toBottomOf="parent"
-                    ads:layout_constraintLeft_toLeftOf="parent"
-                    ads:layout_constraintRight_toRightOf="@+id/view6"
-                    ads:layout_constraintTop_toBottomOf="@+id/view6"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="@+id/view6"
+                    app:layout_constraintTop_toBottomOf="@+id/view6"
                     tools:text="1 buds" />
 
                 <View
@@ -96,10 +95,10 @@
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="0dp"
                     android:background="@android:color/white"
-                    ads:layout_constraintBottom_toBottomOf="parent"
-                    ads:layout_constraintLeft_toLeftOf="parent"
-                    ads:layout_constraintRight_toLeftOf="@+id/view4"
-                    ads:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@+id/view4"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/text_view_price_keys"
@@ -113,10 +112,10 @@
                     android:layout_marginTop="0dp"
                     android:gravity="center"
                     android:textColor="@android:color/white"
-                    ads:layout_constraintBottom_toTopOf="@+id/view5"
-                    ads:layout_constraintLeft_toLeftOf="@+id/view5"
-                    ads:layout_constraintRight_toRightOf="parent"
-                    ads:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/view5"
+                    app:layout_constraintLeft_toLeftOf="@+id/view5"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:text="1 key" />
 
                 <View
@@ -128,10 +127,10 @@
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="0dp"
                     android:background="@android:color/white"
-                    ads:layout_constraintBottom_toBottomOf="parent"
-                    ads:layout_constraintLeft_toRightOf="@+id/view4"
-                    ads:layout_constraintRight_toRightOf="parent"
-                    ads:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/view4"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
                 <TextView
@@ -146,10 +145,10 @@
                     android:layout_marginTop="0dp"
                     android:gravity="center"
                     android:textColor="@android:color/white"
-                    ads:layout_constraintBottom_toBottomOf="parent"
-                    ads:layout_constraintLeft_toLeftOf="@+id/view5"
-                    ads:layout_constraintRight_toRightOf="parent"
-                    ads:layout_constraintTop_toBottomOf="@+id/view5"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="@+id/view5"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view5"
                     tools:text="1 usd" />
 
             </android.support.constraint.ConstraintLayout>
@@ -177,7 +176,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_add" />
+            app:srcCompat="@drawable/ic_add" />
 
     </android.support.design.widget.CoordinatorLayout>
 
