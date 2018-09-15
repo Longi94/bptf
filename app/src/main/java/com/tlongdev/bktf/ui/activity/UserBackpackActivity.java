@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Pair;
+import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -115,7 +116,7 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
         // TODO: 2018-09-14
         mSwipeRefreshLayout.setEnabled(false);
 
-        mPresenter.getBackpackItems(mSteamId, mIsGuest);
+        mPresenter.getBackpackItems(mSteamId);
     }
 
     @Override
@@ -140,8 +141,8 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
     }
 
     @Override
-    public void showItems(List<BackpackItem> items, List<BackpackItem> newItems) {
-        mAdapter.setDataSet(items, newItems);
+    public void showItems(SparseArray<BackpackItem> items, List<BackpackItem> newItems, int backpackSlots) {
+        mAdapter.setDataSet(items, newItems, backpackSlots);
         mAdapter.notifyDataSetChanged();
 
         mProgressBar.setVisibility(View.GONE);
@@ -159,8 +160,7 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
     public void OnItemClicked(BackpackAdapter.ViewHolder holder, BackpackItem backpackItem) {
         //Open the ItemDetailActivity and send some extra data to it
         Intent i = new Intent(this, ItemDetailActivity.class);
-        i.putExtra(ItemDetailActivity.EXTRA_ITEM_ID, backpackItem.getId());
-        i.putExtra(ItemDetailActivity.EXTRA_GUEST, mIsGuest);
+        i.putExtra(ItemDetailActivity.EXTRA_ITEM, backpackItem);
 
         Cursor itemCursor = getContentResolver().query(
                 ItemSchemaEntry.CONTENT_URI,

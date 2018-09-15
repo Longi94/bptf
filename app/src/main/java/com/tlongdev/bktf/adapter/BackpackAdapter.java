@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,14 +30,18 @@ import butterknife.ButterKnife;
  */
 public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHolder> {
 
+    private static final BackpackItem EMPTY = new BackpackItem();
+
     public static final int VIEW_TYPE_ITEM = 0;
     public static final int VIEW_TYPE_HEADER = 1;
 
     @Inject Context mContext;
 
-    private List<BackpackItem> mDataSet;
+    private SparseArray<BackpackItem> mDataSet;
 
     private List<BackpackItem> mDataSetNew;
+
+    private int mBackpackSlots;
 
     private int newItemSlots = 0;
 
@@ -100,11 +105,11 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
                     } else {
                         //Item is not a new item
                         backpackItem = mDataSet.get((position - newItemSlots) -
-                                ((position - newItemSlots) / 51) - 1);
+                                ((position - newItemSlots) / 51) - 1, EMPTY);
                     }
                 } else {
                     //There is no new item in the backpack
-                    backpackItem = mDataSet.get(position - (position / 51) - 1);
+                    backpackItem = mDataSet.get(position - (position / 51) - 1, EMPTY);
                 }
 
                 Glide.with(mContext).clear(holder.icon);
@@ -169,7 +174,7 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
     @Override
     public int getItemCount() {
         //Magic. Not really.
-        int count = mDataSet == null ? 0 : mDataSet.size() + mDataSet.size() / 50;
+        int count = mDataSet == null ? 0 : mBackpackSlots + mBackpackSlots / 50;
         if (newItemSlots > 0) {
             return count + newItemSlots;
         } else {
@@ -202,9 +207,10 @@ public class BackpackAdapter extends RecyclerView.Adapter<BackpackAdapter.ViewHo
         }
     }
 
-    public void setDataSet(List<BackpackItem> items, List<BackpackItem> newItems) {
+    public void setDataSet(SparseArray<BackpackItem> items, List<BackpackItem> newItems, int backpackSlots) {
         mDataSet = items;
         mDataSetNew = newItems;
+        mBackpackSlots = backpackSlots;
         if (mDataSetNew != null && mDataSetNew.size() > 0) {
             newItemSlots = mDataSetNew.size() - mDataSetNew.size() % 5 + 6;
         }

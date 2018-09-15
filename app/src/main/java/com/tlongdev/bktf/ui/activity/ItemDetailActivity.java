@@ -32,16 +32,14 @@ import butterknife.ButterKnife;
 public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
 
     //Keys for the extra data in the intent
-    public static final String EXTRA_ITEM_ID = "id";
-    public static final String EXTRA_GUEST = "guest";
+    public static final String EXTRA_ITEM = "item";
     public static final String EXTRA_ITEM_NAME = "name";
     public static final String EXTRA_ITEM_TYPE = "type";
     public static final String EXTRA_PROPER_NAME = "proper";
 
     @Inject ItemDetailPresenter mPresenter;
 
-    @InjectExtra(EXTRA_GUEST) boolean isGuest;
-    @InjectExtra(EXTRA_ITEM_ID) int mId;
+    @InjectExtra(EXTRA_ITEM) BackpackItem mItem;
     @InjectExtra(EXTRA_PROPER_NAME) int mProperName;
     @InjectExtra(EXTRA_ITEM_NAME) String mItemName;
     @InjectExtra(EXTRA_ITEM_TYPE) String mItemType;
@@ -93,7 +91,7 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
         //Do nothing if the user taps on the card view itself
         cardView.setOnClickListener(null);
 
-        mPresenter.loadItemDetails(mId, isGuest);
+        mPresenter.loadItemDetails(mItem);
     }
 
     @Override
@@ -103,7 +101,11 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
     }
 
     @Override
-    public void showItemDetails(BackpackItem item) {
+    public void showItemDetails(Price price) {
+        mItem.setPrice(price);
+
+        BackpackItem item = mItem;
+
         item.setName(mItemName);
         //Set the name of the item
         name.setText(item.getFormattedName(this, mProperName == 1));
@@ -192,8 +194,6 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
         }
 
         cardView.setCardBackgroundColor(item.getColor(this, true));
-
-        Price price = item.getPrice();
 
         if (price != null) {
             //Show the priceView

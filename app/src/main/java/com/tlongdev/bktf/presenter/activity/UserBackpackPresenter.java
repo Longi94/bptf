@@ -1,9 +1,9 @@
 package com.tlongdev.bktf.presenter.activity;
 
 import android.os.AsyncTask;
+import android.util.SparseArray;
 
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.interactor.LoadBackpackItemsInteractor;
 import com.tlongdev.bktf.interactor.Tf2UserBackpackInteractor;
 import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.presenter.Presenter;
@@ -15,13 +15,12 @@ import java.util.List;
  * @author Long
  * @since 2016. 03. 18.
  */
-public class UserBackpackPresenter implements Presenter<UserBackpackView>,LoadBackpackItemsInteractor.Callback, Tf2UserBackpackInteractor.Callback {
+public class UserBackpackPresenter implements Presenter<UserBackpackView>,
+        Tf2UserBackpackInteractor.Callback {
 
     private UserBackpackView mView;
 
     private final BptfApplication mApplication;
-
-    private boolean isGuest;
 
     public UserBackpackPresenter(BptfApplication application) {
         application.getPresenterComponent().inject(this);
@@ -38,31 +37,19 @@ public class UserBackpackPresenter implements Presenter<UserBackpackView>,LoadBa
         mView = null;
     }
 
-    public void loadBackpackItems(boolean guest) {
-        LoadBackpackItemsInteractor interactor = new LoadBackpackItemsInteractor(
-                mApplication, guest, this
-        );
-        interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    @Override
-    public void onLoadBackpackItemFinished(List<BackpackItem> items, List<BackpackItem> newItems) {
-        if (mView != null) {
-            mView.showItems(items, newItems);
-        }
-    }
-
-    public void getBackpackItems(String steamId, boolean isGuest) {
-        this.isGuest = isGuest;
+    public void getBackpackItems(String steamId) {
         Tf2UserBackpackInteractor interactor = new Tf2UserBackpackInteractor(
-                mApplication, steamId, isGuest, this
+                mApplication, steamId, this
         );
         interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
-    public void onUserBackpackFinished(double rawMetal, int rawKeys, int backpackSlots, int itemCount) {
-        loadBackpackItems(isGuest);
+    public void onUserBackpackFinished(List<BackpackItem> newItems, SparseArray<BackpackItem> items,
+                                       double rawMetal, int rawKeys, int backpackSlots, int itemCount) {
+        if (mView != null) {
+            mView.showItems(items, newItems, backpackSlots);
+        }
     }
 
     @Override

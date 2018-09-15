@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.interactor.LoadItemDetailsInteractor;
 import com.tlongdev.bktf.model.BackpackItem;
+import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.presenter.Presenter;
 import com.tlongdev.bktf.ui.view.activity.ItemDetailView;
 
@@ -31,17 +32,17 @@ public class ItemDetailPresenter implements Presenter<ItemDetailView>,LoadItemDe
         mView = null;
     }
 
-    public void loadItemDetails(int id, boolean guest) {
+    public void loadItemDetails(BackpackItem backpackItem) {
         LoadItemDetailsInteractor interactor = new LoadItemDetailsInteractor(
-                mApplication, id, guest, this
+                mApplication, backpackItem, this
         );
         interactor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
-    public void onItemDetailsLoaded(BackpackItem item) {
+    public void onItemDetailsLoaded(Price price) {
         if (mView != null) {
-            mView.showItemDetails(item);
+            mView.showItemDetails(price);
         }
     }
 }

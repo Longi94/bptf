@@ -10,8 +10,8 @@ public class BackpackItem extends Item {
 
     private int id;
 
-    private int uniqueId;
-    private int originalId;
+    private long uniqueId;
+    private long originalId;
     private int level;
     private int origin;
     private int paint;
@@ -41,8 +41,8 @@ public class BackpackItem extends Item {
 
     private BackpackItem(Parcel source) {
         super(source);
-        uniqueId = source.readInt();
-        originalId = source.readInt();
+        uniqueId = source.readLong();
+        originalId = source.readLong();
         level = source.readInt();
         origin = source.readInt();
         paint = source.readInt();
@@ -66,8 +66,8 @@ public class BackpackItem extends Item {
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
 
-        dest.writeInt(uniqueId);
-        dest.writeInt(originalId);
+        dest.writeLong(uniqueId);
+        dest.writeLong(originalId);
         dest.writeInt(level);
         dest.writeInt(origin);
         dest.writeInt(paint);
@@ -82,19 +82,19 @@ public class BackpackItem extends Item {
         dest.writeByte((byte) (equipped ? 1 : 0));
     }
 
-    public int getUniqueId() {
+    public long getUniqueId() {
         return uniqueId;
     }
 
-    public void setUniqueId(int uniqueId) {
+    public void setUniqueId(long uniqueId) {
         this.uniqueId = uniqueId;
     }
 
-    public int getOriginalId() {
+    public long getOriginalId() {
         return originalId;
     }
 
-    public void setOriginalId(int originalId) {
+    public void setOriginalId(long originalId) {
         this.originalId = originalId;
     }
 

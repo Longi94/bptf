@@ -2,6 +2,7 @@ package com.tlongdev.bktf.interactor;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
@@ -27,6 +28,8 @@ import retrofit2.Response;
  * @since 2016. 03. 19.
  */
 public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer> {
+
+    private static final String TAG = GetSearchedUserDataInteractor.class.getSimpleName();
 
     @Inject BackpackTfInterface mBackpackTfInterface;
     @Inject SteamUserInterface mSteamUserInterface;
@@ -65,6 +68,8 @@ public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer
         try {
             //Check if the given steamid is a resolved 64bit steamId
             if (!Utility.isSteamId(mSteamId)) {
+                Log.i(TAG, "Resolving steam id of " + mSteamId);
+
                 //First we try to resolve the steamId if the provided one isn't a 64bit steamId
                 Response<VanityUrl> response = mSteamUserInterface.resolveVanityUrl(
                         mContext.getString(R.string.api_key_steam_web), mSteamId).execute();
@@ -85,10 +90,14 @@ public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer
                 }
             }
 
+            Log.i(TAG, "Resolved id " + mSteamId);
+
             mUser = new User();
 
             //Save the resolved steamId
             mUser.setResolvedSteamId(mSteamId);
+
+            Log.i(TAG, "Fetching data from backpack.tf for id " + mSteamId);
 
             Response<BackpackTfPayload> bptfResponse = mBackpackTfInterface.getUserData(mSteamId).execute();
 
@@ -101,6 +110,8 @@ public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer
                 errorMessage = "Client error: " + bptfResponse.raw().code();
                 return -1;
             }
+
+            Log.i(TAG, "Fetching data from steam api for id " + mSteamId);
 
             Response<UserSummariesPayload> steamResponse =
                     mSteamUserInterface.getUserSummaries(
@@ -131,6 +142,7 @@ public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer
     @Override
     protected void onPostExecute(Integer integer) {
         //Finished fetching the backpack
+        Log.i(TAG, "Finished loading user data for " + mSteamId);
         if (mCallback != null) {
             if (integer >= 0) {
                 //notify the mCallback, that the fetching has finished.

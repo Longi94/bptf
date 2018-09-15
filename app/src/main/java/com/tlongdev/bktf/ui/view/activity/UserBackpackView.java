@@ -1,5 +1,7 @@
 package com.tlongdev.bktf.ui.view.activity;
 
+import android.util.SparseArray;
+
 import com.tlongdev.bktf.model.BackpackItem;
 import com.tlongdev.bktf.ui.view.BaseView;
 
@@ -11,7 +13,7 @@ import java.util.List;
  */
 public interface UserBackpackView extends BaseView {
 
-    void showItems(List<BackpackItem> items, List<BackpackItem> newItems);
+    void showItems(SparseArray<BackpackItem> items, List<BackpackItem> newItems, int backpackSlots);
 
     void privateBackpack();
 }
