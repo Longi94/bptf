@@ -12,6 +12,7 @@ import com.tlongdev.bktf.model.Price;
 import com.tlongdev.bktf.network.BackpackTfInterface;
 import com.tlongdev.bktf.network.model.bptf.BackpackTfPriceHistory;
 import com.tlongdev.bktf.network.model.bptf.BackpackTfPriceHistoryPayload;
+import com.tlongdev.bktf.util.HttpUtil;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -74,10 +75,8 @@ public class BackpackTfPriceHistoryInteractor extends AsyncTask<Void, Void, Inte
                 }
 
                 return 0;
-            } else if (response.raw().code() >= 500) {
-                errorMessage = "Server error: " + response.raw().code();
             } else if (response.raw().code() >= 400) {
-                errorMessage = "Client error: " + response.raw().code();
+                errorMessage = HttpUtil.buildErrorMessage(response);
             }
 
             return -1;

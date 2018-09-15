@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
@@ -152,6 +153,15 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
     @Override
     public void privateBackpack() {
         mProgressBar.setVisibility(View.GONE);
+        privateBackpackIcon.setVisibility(View.VISIBLE);
+        privateBackpackText.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showError(String errorMessage) {
+        mProgressBar.setVisibility(View.GONE);
+        privateBackpackIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_emoticon_sad));
+        privateBackpackText.setText("Something went wrong!\n" + errorMessage);
         privateBackpackIcon.setVisibility(View.VISIBLE);
         privateBackpackText.setVisibility(View.VISIBLE);
     }

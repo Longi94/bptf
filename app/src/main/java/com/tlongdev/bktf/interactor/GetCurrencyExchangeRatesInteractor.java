@@ -7,6 +7,7 @@ import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.network.FixerIoInterface;
 import com.tlongdev.bktf.network.model.fixerio.CurrencyRates;
+import com.tlongdev.bktf.util.HttpUtil;
 
 import java.io.IOException;
 import java.util.Map;
@@ -42,11 +43,8 @@ public class GetCurrencyExchangeRatesInteractor extends AsyncTask<Void, Void, In
             if (response.body() != null) {
                 mRates = response.body().getRates();
                 return 0;
-            } else if (response.raw().code() >= 500) {
-                mErrorMessage = "Server error: " + response.raw().code();
-                return -1;
             } else if (response.raw().code() >= 400) {
-                mErrorMessage = "Client error: " + response.raw().code();
+                mErrorMessage = HttpUtil.buildErrorMessage(response);
                 return -1;
             }
         } catch (IOException e) {

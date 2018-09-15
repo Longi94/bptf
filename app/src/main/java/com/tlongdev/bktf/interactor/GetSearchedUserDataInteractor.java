@@ -15,6 +15,7 @@ import com.tlongdev.bktf.network.model.steam.UserSummariesPayload;
 import com.tlongdev.bktf.network.model.steam.UserSummariesPlayer;
 import com.tlongdev.bktf.network.model.steam.UserSummariesResponse;
 import com.tlongdev.bktf.network.model.steam.VanityUrl;
+import com.tlongdev.bktf.util.HttpUtil;
 import com.tlongdev.bktf.util.Utility;
 
 import java.io.IOException;
@@ -81,11 +82,8 @@ public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer
                         return -1;
                     }
                     mSteamId = vanityUrl.getResponse().getSteamid();
-                } else if (response.raw().code() >= 500) {
-                    errorMessage = "Server error: " + response.raw().code();
-                    return 1;
                 } else if (response.raw().code() >= 400) {
-                    errorMessage = "Client error: " + response.raw().code();
+                    errorMessage = HttpUtil.buildErrorMessage(response);
                     return 1;
                 }
             }
@@ -103,11 +101,8 @@ public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer
 
             if (bptfResponse.body() != null) {
                 saveUserData(bptfResponse.body());
-            } else if (bptfResponse.raw().code() >= 500) {
-                errorMessage = "Server error: " + bptfResponse.raw().code();
-                return -1;
             } else if (bptfResponse.raw().code() >= 400) {
-                errorMessage = "Client error: " + bptfResponse.raw().code();
+                errorMessage = HttpUtil.buildErrorMessage(bptfResponse);
                 return -1;
             }
 
@@ -119,11 +114,8 @@ public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer
 
             if (steamResponse.body() != null) {
                 saveSteamData(steamResponse.body());
-            } else if (steamResponse.raw().code() >= 500) {
-                errorMessage = "Server error: " + steamResponse.raw().code();
-                return -1;
             } else if (steamResponse.raw().code() >= 400) {
-                errorMessage = "Client error: " + steamResponse.raw().code();
+                errorMessage = HttpUtil.buildErrorMessage(steamResponse);
                 return -1;
             }
 

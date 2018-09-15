@@ -16,4 +16,6 @@ public interface UserBackpackView extends BaseView {
     void showItems(SparseArray<BackpackItem> items, List<BackpackItem> newItems, int backpackSlots);
 
     void privateBackpack();
+
+    void showError(String errorMessage);
 }

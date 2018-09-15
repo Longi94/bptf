@@ -1,5 +1,6 @@
 package com.tlongdev.bktf.interactor;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -15,6 +16,7 @@ import com.tlongdev.bktf.network.Tf2Interface;
 import com.tlongdev.bktf.network.model.tf2.PlayerItem;
 import com.tlongdev.bktf.network.model.tf2.PlayerItemAttribute;
 import com.tlongdev.bktf.network.model.tf2.PlayerItemsPayload;
+import com.tlongdev.bktf.util.HttpUtil;
 import com.tlongdev.bktf.util.ProfileManager;
 import com.tlongdev.bktf.util.Utility;
 
@@ -83,6 +85,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
                 null, null, null
         );
 
+        @SuppressLint("UseSparseArrays")
         Map<Integer, String> images = new HashMap<>();
 
         if (cursor != null) {
@@ -101,11 +104,8 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
             if (response.body() != null) {
                 Log.i(TAG, "Parsing backpack data...");
                 return saveItems(response.body(), images);
-            } else if (response.raw().code() >= 500) {
-                errorMessage = "Server error: " + response.raw().code();
-                return -1;
             } else if (response.raw().code() >= 400) {
-                errorMessage = "Client error: " + response.raw().code();
+                errorMessage = HttpUtil.buildErrorMessage(response);
                 return -1;
             }
             return -1;

@@ -17,6 +17,7 @@ import com.tlongdev.bktf.flatbuffers.itemschema.Item;
 import com.tlongdev.bktf.flatbuffers.itemschema.ItemSchema;
 import com.tlongdev.bktf.flatbuffers.itemschema.Origin;
 import com.tlongdev.bktf.flatbuffers.itemschema.Particle;
+import com.tlongdev.bktf.util.HttpUtil;
 
 import org.apache.commons.io.IOUtils;
 
@@ -66,10 +67,8 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
 
             if (response.body() != null) {
                 return parseFlatBuffers(response.body().byteStream());
-            } else if (response.code() >= 500) {
-                errorMessage = "Server error: " + response.code();
             } else if (response.code() >= 400) {
-                errorMessage = "Client error: " + response.code();
+                errorMessage = HttpUtil.buildErrorMessage(response);
             }
             return -1;
         } catch (IOException e) {

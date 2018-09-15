@@ -61,6 +61,8 @@ public class UserBackpackPresenter implements Presenter<UserBackpackView>,
 
     @Override
     public void onUserBackpackFailed(String errorMessage) {
-
+        if (mView != null) {
+            mView.showError(errorMessage);
+        }
     }
 }

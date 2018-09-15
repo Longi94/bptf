@@ -11,10 +11,11 @@ import android.util.Log;
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
-import com.tlongdev.bktf.flatbuffers.prices.Prices;
 import com.tlongdev.bktf.flatbuffers.prices.Price;
+import com.tlongdev.bktf.flatbuffers.prices.Prices;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.model.Quality;
+import com.tlongdev.bktf.util.HttpUtil;
 import com.tlongdev.bktf.util.Utility;
 
 import org.apache.commons.io.IOUtils;
@@ -119,10 +120,8 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
 
             if (response.body() != null) {
                 return parseFlatBuffer(response.body().byteStream());
-            } else if (response.code() >= 500) {
-                errorMessage = "Server error: " + response.code();
             } else if (response.code() >= 400) {
-                errorMessage = "Client error: " + response.code();
+                errorMessage = HttpUtil.buildErrorMessage(response);
             }
             return -1;
 
@@ -159,7 +158,7 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
         return 0;
     }
 
-    private ContentValues buildContentValues(Price priceBuf) throws IOException {
+    private ContentValues buildContentValues(Price priceBuf) {
         ContentValues values = new ContentValues();
 
         int defindex = priceBuf.defindex();
