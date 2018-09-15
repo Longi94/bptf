@@ -18,6 +18,7 @@ import com.tlongdev.bktf.module.BptfAppModule;
 import com.tlongdev.bktf.module.NetworkModule;
 import com.tlongdev.bktf.module.PresenterModule;
 import com.tlongdev.bktf.module.StorageModule;
+import com.tlongdev.bktf.util.IconUtil;
 
 /**
  * This is a subclass of {@link Application} used to provide shared objects for this app.
@@ -73,6 +74,8 @@ public class BptfApplication extends Application {
                 .bptfAppModule(appModule)
                 .storageModule(storageModule)
                 .build();
+
+        IconUtil.loadIcons(this);
     }
 
     public ActivityComponent getActivityComponent() {

@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.DecoratedWeaponEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
+import com.tlongdev.bktf.util.IconUtil;
 import com.tlongdev.bktf.util.Utility;
 
 import java.util.Locale;
@@ -562,8 +563,10 @@ public class Item implements Parcelable {
      */
     public String getIconUrl(Context context) {
         if (australium) {
-            // TODO: 2018-09-14
-            //builder.appendQueryParameter("australium", "1");
+            String ausIcon = IconUtil.getAustraliumIcon(defindex);
+            if (ausIcon != null) {
+                return ausIcon + "/128x128";
+            }
         } else if (weaponWear > 0) {
             // TODO: 2018-09-14
             //builder.appendQueryParameter("wear", String.valueOf(weaponWear));
