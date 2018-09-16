@@ -294,7 +294,7 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
                 } else {
                     //Player is offline, show how long was it since the player was last online
                     lastOnlineText.setText(String.format("%s %s", getString(R.string.user_page_last_online),
-                            DateUtils.getRelativeTimeSpanString(System.currentTimeMillis() - lastOnline * 1000L).toString()));
+                            DateUtils.getRelativeTimeSpanString(lastOnline * 1000L)));
                 }
                 lastOnlineText.setTextColor(ContextCompat.getColor(mContext, R.color.text_primary));
                 break;
