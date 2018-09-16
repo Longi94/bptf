@@ -8,9 +8,8 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -84,18 +83,8 @@ public class CalculatorFragment extends BptfFragment implements CalculatorView {
         mAdapter = new CalculatorAdapter(mApplication);
         mAdapter.setListener(mPresenter);
 
-        DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
-        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-
-        int columnCount = 1;
-        if (dpWidth >= 720) {
-            columnCount = 3;
-        } else if (dpWidth >= 600) {
-            columnCount = 2;
-        }
-
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), columnCount));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
 
         priceMetal.setText(getString(R.string.currency_metal, "0"));

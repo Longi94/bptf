@@ -10,9 +10,8 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -87,18 +86,8 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
         mAdapter = new FavoritesAdapter(mApplication);
         mAdapter.setListener(this);
 
-        DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
-        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-
-        int columnCount = 1;
-        if (dpWidth >= 720) {
-            columnCount = 3;
-        } else if (dpWidth >= 600) {
-            columnCount = 2;
-        }
-
         //Setup the recycler view
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), columnCount));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
 
         return rootView;

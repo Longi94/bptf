@@ -12,9 +12,8 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -106,18 +105,8 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
         mAdapter = new RecentsAdapter(mApplication);
         mAdapter.setListener(this);
 
-        DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
-        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-
-        int columnCount = 1;
-        if (dpWidth >= 720) {
-            columnCount = 3;
-        } else if (dpWidth >= 600) {
-            columnCount = 2;
-        }
-
         //Setup the recycler view
-        mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, columnCount));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setVisibility(View.GONE);
 

@@ -4,11 +4,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -62,20 +61,10 @@ public class SearchActivity extends BptfActivity implements com.tlongdev.bktf.ui
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-
-        int columnCount = 1;
-        if (dpWidth >= 720) {
-            columnCount = 3;
-        } else if (dpWidth >= 600) {
-            columnCount = 2;
-        }
-
         //Initialize the list
         mAdapter = new SearchAdapter(mApplication);
         mAdapter.setListener(this);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, columnCount));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
     }
 
