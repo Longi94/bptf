@@ -10,7 +10,6 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.NavUtils;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -98,7 +97,7 @@ public class AboutActivity extends AppCompatPreferenceActivity implements Shared
         // insert at top
         root.addView(toolbar, 0);
 
-        setSupportActionBar((Toolbar) toolbar.findViewById(R.id.toolbar));
+        setSupportActionBar(toolbar.findViewById(R.id.toolbar));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

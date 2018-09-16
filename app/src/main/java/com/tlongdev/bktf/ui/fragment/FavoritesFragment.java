@@ -12,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -83,7 +82,7 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
         mPresenter.attachView(this);
 
         //Set the toolbar to the main activity's action bar
-        ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
+        ((AppCompatActivity) getActivity()).setSupportActionBar(rootView.findViewById(R.id.toolbar));
 
         mAdapter = new FavoritesAdapter(mApplication);
         mAdapter.setListener(this);
@@ -123,7 +122,7 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
         switch (requestCode) {
             case MainActivity.REQUEST_NEW_ITEM:
                 if (resultCode == Activity.RESULT_OK) {
-                    Utility.addToFavorites(getActivity(), (Item) data.getParcelableExtra(ItemChooserActivity.EXTRA_ITEM));
+                    Utility.addToFavorites(getActivity(), data.getParcelableExtra(ItemChooserActivity.EXTRA_ITEM));
                     mPresenter.loadFavorites();
                 }
         }

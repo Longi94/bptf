@@ -14,7 +14,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -102,7 +101,7 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
         mPresenter.attachView(this);
 
         //Set the toolbar to the main activity's action bar
-        ((AppCompatActivity) mContext).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
+        ((AppCompatActivity) mContext).setSupportActionBar(rootView.findViewById(R.id.toolbar));
 
         mAdapter = new RecentsAdapter(mApplication);
         mAdapter.setListener(this);
@@ -128,9 +127,9 @@ public class RecentsFragment extends BptfFragment implements RecentsView,
 
         if (savedInstanceState != null) {
             updateCurrencyHeader(
-                    (Price) savedInstanceState.getParcelable(RecentsPresenter.STATE_METAL),
-                    (Price) savedInstanceState.getParcelable(RecentsPresenter.STATE_KEY),
-                    (Price) savedInstanceState.getParcelable(RecentsPresenter.STATE_BUDS)
+                    savedInstanceState.getParcelable(RecentsPresenter.STATE_METAL),
+                    savedInstanceState.getParcelable(RecentsPresenter.STATE_KEY),
+                    savedInstanceState.getParcelable(RecentsPresenter.STATE_BUDS)
             );
         }
 

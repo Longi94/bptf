@@ -71,7 +71,7 @@ public class EffectAdapter extends BaseAdapter {
         }
 
         Item effect = mDataSet.get(position);
-        TextView text = (TextView) view.findViewById(R.id.text1);
+        TextView text = view.findViewById(R.id.text1);
         text.setText(effect.getName());
         Glide.with(mContext)
                 .load(effect.getEffectUrl())

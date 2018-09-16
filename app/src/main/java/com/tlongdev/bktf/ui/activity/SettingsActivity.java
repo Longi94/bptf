@@ -10,7 +10,6 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -114,7 +113,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         // insert at top
         root.addView(toolbar, 0);
 
-        setSupportActionBar((Toolbar) toolbar.findViewById(R.id.toolbar));
+        setSupportActionBar(toolbar.findViewById(R.id.toolbar));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
