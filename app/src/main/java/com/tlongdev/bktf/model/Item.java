@@ -49,6 +49,10 @@ public class Item implements Parcelable {
 
     private String imageLarge;
 
+    private int warPaint;
+
+    private boolean festivized;
+
     public static final Parcelable.Creator<Item> CREATOR = new Creator<Item>() {
         @Override
         public Item createFromParcel(Parcel source) {
@@ -74,6 +78,8 @@ public class Item implements Parcelable {
         price = source.readParcelable(Price.class.getClassLoader());
         image = source.readString();
         imageLarge = source.readString();
+        warPaint = source.readInt();
+        festivized = source.readByte() != 0;
     }
 
     @Override
@@ -94,6 +100,8 @@ public class Item implements Parcelable {
         dest.writeParcelable(price, flags);
         dest.writeString(image);
         dest.writeString(imageLarge);
+        dest.writeInt(warPaint);
+        dest.writeByte((byte) (festivized ? 1 : 0));
     }
 
     public Item() {}
@@ -185,6 +193,22 @@ public class Item implements Parcelable {
 
     public void setImageLarge(String imageLarge) {
         this.imageLarge = imageLarge;
+    }
+
+    public int getWarPaint() {
+        return warPaint;
+    }
+
+    public void setWarPaint(int warPaint) {
+        this.warPaint = warPaint;
+    }
+
+    public boolean isFestivized() {
+        return festivized;
+    }
+
+    public void setFestivized(boolean festivized) {
+        this.festivized = festivized;
     }
 
     /**
@@ -571,9 +595,9 @@ public class Item implements Parcelable {
             if (ausIcon != null) {
                 return ausIcon + "/128x128";
             }
-        } else if (weaponWear > 0) {
-            // TODO: 2018-09-14
-            //builder.appendQueryParameter("wear", String.valueOf(weaponWear));
+        } else if (warPaint > 0) {
+            return String.format(Locale.getDefault(), "https://scrap.tf/img/items/warpaint/%s_%d_%d_%d.png",
+                    getName(), warPaint, Utility.wearIdToIconInt(getWeaponWear()), festivized ? 1 : 0);
         }
         return getImage();
     }

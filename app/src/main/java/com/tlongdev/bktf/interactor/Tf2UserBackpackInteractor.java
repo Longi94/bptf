@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.util.Pair;
 import android.util.SparseArray;
 
 import com.tlongdev.bktf.BptfApplication;
@@ -79,18 +80,20 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
         Cursor cursor = mContext.getContentResolver().query(
                 ItemSchemaEntry.CONTENT_URI,
                 new String[]{
-                        ItemSchemaEntry.COLUMN_IMAGE,
-                        ItemSchemaEntry.COLUMN_DEFINDEX
+                        ItemSchemaEntry.COLUMN_DEFINDEX,
+                        ItemSchemaEntry.COLUMN_ITEM_NAME,
+                        ItemSchemaEntry.COLUMN_IMAGE
                 },
                 null, null, null
         );
 
         @SuppressLint("UseSparseArrays")
-        Map<Integer, String> images = new HashMap<>();
+        Map<Integer, Pair<String, String>> schema = new HashMap<>();
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                images.put(cursor.getInt(1), cursor.getString(0));
+                schema.put(cursor.getInt(0),
+                        new Pair<>(cursor.getString(1), cursor.getString(2)));
             }
             cursor.close();
         }
@@ -103,7 +106,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
 
             if (response.body() != null) {
                 Log.i(TAG, "Parsing backpack data...");
-                return saveItems(response.body(), images);
+                return saveItems(response.body(), schema);
             } else if (response.raw().code() >= 400) {
                 errorMessage = HttpUtil.buildErrorMessage(response);
                 return -1;
@@ -138,7 +141,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
         }
     }
 
-    private int saveItems(PlayerItemsPayload payload, Map<Integer, String> images) {
+    private int saveItems(PlayerItemsPayload payload, Map<Integer, Pair<String, String>> schema) {
         switch (payload.getResult().getStatus()) {
             case 1:
                 List<PlayerItem> items = payload.getResult().getItems();
@@ -149,7 +152,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
                 mItems = new SparseArray<>();
 
                 for (PlayerItem item : items) {
-                    mapItem(item, images);
+                    mapItem(item, schema);
                 }
 
                 rawMetal = Utility.getRawMetal(rawRef, rawRec, rawScraps);
@@ -168,7 +171,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
         }
     }
 
-    private void mapItem(PlayerItem playerItem, Map<Integer, String> images) {
+    private void mapItem(PlayerItem playerItem, Map<Integer, Pair<String, String>> schema) {
 
         //Get the inventory token
         long inventoryToken = playerItem.getInventory();
@@ -212,7 +215,11 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
         //Save the defindex
         backpackItem.setDefindex(defindex);
 
-        backpackItem.setImage(images.get(defindex));
+        Pair<String, String> schemaItem = schema.get(defindex);
+        if (schemaItem != null) {
+            backpackItem.setName(schemaItem.first);
+            backpackItem.setImage(schemaItem.second);
+        }
 
         //Save the level
         backpackItem.setLevel(playerItem.getLevel());
@@ -304,7 +311,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
                         backpackItem.setWeaponWear(Integer.parseInt(attribute.getValue()));
                         break;
                     case 834:// War Pain
-                        // TODO: 2018-09-15
+                        backpackItem.setWarPaint(Integer.parseInt(attribute.getValue()));
                         break;
                     case 2013://TODO Killstreaker
                         break;
@@ -315,6 +322,8 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
                     case 2027://Is australium
                         backpackItem.setAustralium(attribute.getFloatValue() > 0);
                         break;
+                    case 2053:// Is festivized
+                        backpackItem.setFestivized(attribute.getFloatValue() > 0);
                     default:
                         //Unused attribute
                         break;

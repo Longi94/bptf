@@ -511,5 +511,22 @@ public class Utility {
 
         return builder.appendQueryParameter("sp", sp).build();
     }
+
+    public static int wearIdToIconInt(int wear) {
+        switch (wear) {
+            case 1045220557: // Factory New
+                return 1;
+            case 1053609165: // Minimal Wear
+                return 2;
+            case 1058642330: // Field-Tested
+                return 3;
+            case 1061997773: // Well Worn
+                return 4;
+            case 1065353216: // Battle Scarred
+                return 5;
+            default:
+                return 0;
+        }
+    }
 }
 
