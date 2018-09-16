@@ -64,6 +64,13 @@ public class UserPresenter implements Presenter<UserView>, GetSearchedUserDataIn
     }
 
     @Override
+    public void onSteamInfo(User user) {
+        if (mView != null) {
+            mView.showPartial(user);
+        }
+    }
+
+    @Override
     public void onUserInfoFailed(String errorMessage) {
         mLoaded = false;
         if (mView != null) {

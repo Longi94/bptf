@@ -95,17 +95,6 @@ public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer
             //Save the resolved steamId
             mUser.setResolvedSteamId(mSteamId);
 
-            Log.i(TAG, "Fetching data from backpack.tf for id " + mSteamId);
-
-            Response<BackpackTfPayload> bptfResponse = mBackpackTfInterface.getUserData(mSteamId).execute();
-
-            if (bptfResponse.body() != null) {
-                saveUserData(bptfResponse.body());
-            } else if (bptfResponse.raw().code() >= 400) {
-                errorMessage = HttpUtil.buildErrorMessage(bptfResponse);
-                return -1;
-            }
-
             Log.i(TAG, "Fetching data from steam api for id " + mSteamId);
 
             Response<UserSummariesPayload> steamResponse =
@@ -119,12 +108,32 @@ public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer
                 return -1;
             }
 
+            publishProgress();
+
+            Log.i(TAG, "Fetching data from backpack.tf for id " + mSteamId);
+
+            Response<BackpackTfPayload> bptfResponse = mBackpackTfInterface.getUserData(mSteamId).execute();
+
+            if (bptfResponse.body() != null) {
+                saveUserData(bptfResponse.body());
+            } else if (bptfResponse.raw().code() >= 400) {
+                errorMessage = HttpUtil.buildErrorMessage(bptfResponse);
+                return -1;
+            }
+
             return 0;
         } catch (IOException e) {
             //There was a network error
             errorMessage = mContext.getString(R.string.error_network);
             e.printStackTrace();
             return -1;
+        }
+    }
+
+    @Override
+    protected void onProgressUpdate(Void... values) {
+        if (mCallback != null) {
+            mCallback.onSteamInfo(mUser);
         }
     }
 
@@ -216,6 +225,8 @@ public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer
          * @param user the user
          */
         void onUserInfoFinished(User user);
+
+        void onSteamInfo(User user);
 
         void onUserInfoFailed(String errorMessage);
     }

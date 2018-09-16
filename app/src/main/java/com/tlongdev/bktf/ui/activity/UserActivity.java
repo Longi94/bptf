@@ -47,6 +47,8 @@ public class UserActivity extends BptfActivity implements UserView {
 
     @InjectExtra(STEAM_ID_KEY) String steamId;
 
+    private UserFragment mFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,10 +95,17 @@ public class UserActivity extends BptfActivity implements UserView {
 
     @Override
     public void showData(User user) {
+        mFragment.showFullData(user);
+    }
+
+    @Override
+    public void showPartial(User user) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setCustomAnimations(R.anim.simple_fade_in, R.anim.simple_fade_out);
-        transaction.replace(R.id.container, UserFragment.newInstance(user));
+
+        mFragment = UserFragment.newInstance(user);
+        transaction.replace(R.id.container, mFragment);
         transaction.commit();
 
         progressBar.setVisibility(View.GONE);

@@ -12,4 +12,6 @@ public interface UserView extends BaseView {
     void showData(User user);
 
     void showError();
+
+    void showPartial(User user);
 }

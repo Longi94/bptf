@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.Group;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -79,6 +80,10 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
     @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbarLayout;
     @BindView(R.id.backpack) ImageView mBackpackButton;
+    @BindView(R.id.backpackInfoGroup) Group mBackpackInfoGroup;
+    @BindView(R.id.backpackLoadingGroup) Group mBackpackLoadingGroup;
+    @BindView(R.id.reputationInfoGroup) Group mReputationInfoGroup;
+    @BindView(R.id.reputationLoadingGroup) Group mReputationLoadingGroup;
 
     private User mUser;
     private boolean mSearchedUser;
@@ -235,6 +240,29 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
 
     @Override
     public void updateUserPage(User user) {
+        showSteamData();
+        if (!mSearchedUser) {
+            showBackpackTfData();
+        }
+    }
+
+    @Override
+    public void showRefreshingAnimation() {
+        mSwipeRefreshLayout.post(() -> {
+            if (mSwipeRefreshLayout != null) {
+                mSwipeRefreshLayout.setRefreshing(true);
+            }
+        });
+    }
+
+    @Override
+    public void hideRefreshingAnimation() {
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    private void showSteamData() {
         //Download avatar if needed.
         RequestOptions options = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.ALL);
@@ -247,14 +275,6 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
         //Set the player name
         String name = mUser.getName();
         mCollapsingToolbarLayout.setTitle(name);
-
-        if (mUser.isBanned()) {
-            //Set player name to red and cross name out if banned
-            // TODO: 2015. 10. 22.
-        }
-
-        //Set the player reputation.
-        playerReputation.setText(String.valueOf(mUser.getReputation()));
 
         //Set the 'user since' text
         long profileCreated = mUser.getProfileCreated();
@@ -307,6 +327,16 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
                 lastOnlineText.setTextColor(ContextCompat.getColor(mContext, R.color.player_in_game));
                 break;
         }
+    }
+
+    private void showBackpackTfData() {
+        if (mUser.isBanned()) {
+            //Set player name to red and cross name out if banned
+            // TODO: 2015. 10. 22.
+        }
+
+        //Set the player reputation.
+        playerReputation.setText(String.valueOf(mUser.getReputation()));
 
         //Load drawables for player statuses
         Drawable statusOk = ContextCompat.getDrawable(getActivity(), R.drawable.ic_check);
@@ -361,21 +391,15 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
         //Set the trust score and color the background according to it.
         trustPositive.setText(String.format(Locale.ENGLISH, "+%d", mUser.getTrustPositive()));
         trustNegative.setText(String.format(Locale.ENGLISH, "-%d", mUser.getTrustNegative()));
+
+        mReputationInfoGroup.setVisibility(View.VISIBLE);
+        mReputationLoadingGroup.setVisibility(View.GONE);
+        mBackpackInfoGroup.setVisibility(View.VISIBLE);
+        mBackpackLoadingGroup.setVisibility(View.GONE);
     }
 
-    @Override
-    public void showRefreshingAnimation() {
-        mSwipeRefreshLayout.post(() -> {
-            if (mSwipeRefreshLayout != null) {
-                mSwipeRefreshLayout.setRefreshing(true);
-            }
-        });
-    }
-
-    @Override
-    public void hideRefreshingAnimation() {
-        if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setRefreshing(false);
-        }
+    public void showFullData(User user) {
+        mUser = user;
+        showBackpackTfData();
     }
 }
