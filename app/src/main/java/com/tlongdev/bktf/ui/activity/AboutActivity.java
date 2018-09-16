@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import com.tlongdev.bktf.BuildConfig;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
-import com.tlongdev.bktf.customtabs.WebViewFallback;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -153,8 +152,7 @@ public class AboutActivity extends AppCompatPreferenceActivity implements Shared
                 CustomTabActivityHelper.openCustomTab(AboutActivity.this,
                         new CustomTabsIntent.Builder().build(),
                         Uri.parse("https://play.google.com/store/apps/details?id=" +
-                                appPackageName),
-                        new WebViewFallback());
+                                appPackageName));
             }
             return true;
         });

@@ -25,7 +25,6 @@ import android.widget.PopupMenu;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.adapter.FavoritesAdapter;
 import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
-import com.tlongdev.bktf.customtabs.WebViewFallback;
 import com.tlongdev.bktf.model.Item;
 import com.tlongdev.bktf.presenter.fragment.FavoritesPresenter;
 import com.tlongdev.bktf.ui.activity.ItemChooserActivity;
@@ -187,14 +186,12 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
                 case R.id.backpack_tf:
                     CustomTabActivityHelper.openCustomTab(getActivity(),
                             new CustomTabsIntent.Builder().build(),
-                            Uri.parse(item.getBackpackTfUrl()),
-                            new WebViewFallback());
+                            Uri.parse(item.getBackpackTfUrl()));
                     break;
                 case R.id.wiki:
                     CustomTabActivityHelper.openCustomTab(getActivity(),
                             new CustomTabsIntent.Builder().build(),
-                            Uri.parse(item.getTf2WikiUrl()),
-                            new WebViewFallback());
+                            Uri.parse(item.getTf2WikiUrl()));
                     break;
                 case R.id.tf2outpost:
                     intent = new Intent(Intent.ACTION_VIEW, Utility.buildTf2OutpostSearchUrl(getActivity(), item));

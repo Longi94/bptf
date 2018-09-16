@@ -24,7 +24,6 @@ import android.widget.PopupMenu;
 
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
-import com.tlongdev.bktf.customtabs.WebViewFallback;
 import com.tlongdev.bktf.data.DatabaseContract.CalculatorEntry;
 import com.tlongdev.bktf.data.DatabaseContract.FavoritesEntry;
 import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
@@ -453,14 +452,12 @@ public class Utility {
                 case R.id.backpack_tf:
                     CustomTabActivityHelper.openCustomTab(activity,
                             new CustomTabsIntent.Builder().build(),
-                            Uri.parse(item.getBackpackTfUrl()),
-                            new WebViewFallback());
+                            Uri.parse(item.getBackpackTfUrl()));
                     break;
                 case R.id.wiki:
                     CustomTabActivityHelper.openCustomTab(activity,
                             new CustomTabsIntent.Builder().build(),
-                            Uri.parse(item.getTf2WikiUrl()),
-                            new WebViewFallback());
+                            Uri.parse(item.getTf2WikiUrl()));
                     break;
                 case R.id.tf2outpost:
                     intent = new Intent(Intent.ACTION_VIEW, buildTf2OutpostSearchUrl(activity, item));

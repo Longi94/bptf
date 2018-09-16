@@ -1,6 +1,7 @@
 package com.tlongdev.bktf.customtabs;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.customtabs.CustomTabsClient;
@@ -25,7 +26,7 @@ public class CustomTabActivityHelper implements ServiceConnectionCallback {
     private ConnectionCallback mConnectionCallback;
 
     /**
-     * Opens the URL on a Custom Tab if possible. Otherwise falls back to opening it on a WebView.
+     * Opens the URL on a Custom Tab if possible. Otherwise falls back to the provided implementation.
      *
      * @param activity The host activity.
      * @param customTabsIntent a CustomTabsIntent to be used if Custom Tabs is available.
@@ -43,6 +44,8 @@ public class CustomTabActivityHelper implements ServiceConnectionCallback {
         if (packageName == null) {
             if (fallback != null) {
                 fallback.openUri(activity, uri);
+            } else {
+                activity.startActivity(new Intent(Intent.ACTION_VIEW, uri));
             }
         } else {
             customTabsIntent.intent.setPackage(packageName);
@@ -50,6 +53,19 @@ public class CustomTabActivityHelper implements ServiceConnectionCallback {
                     ContextCompat.getColor(activity, R.color.primary));
             customTabsIntent.launchUrl(activity, uri);
         }
+    }
+
+    /**
+     * Opens the URL on a Custom Tab if possible. Otherwise falls back to Intent.ACTION_VIEW
+     *
+     * @param activity The host activity.
+     * @param customTabsIntent a CustomTabsIntent to be used if Custom Tabs is available.
+     * @param uri the Uri to be opened.
+     */
+    public static void openCustomTab(Activity activity,
+                                     CustomTabsIntent customTabsIntent,
+                                     Uri uri) {
+        openCustomTab(activity, customTabsIntent, uri, null);
     }
 
     /**

@@ -3,6 +3,7 @@ package com.tlongdev.bktf.ui.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -29,7 +30,7 @@ import javax.inject.Inject;
  * handset devices, settings are presented as a single list. On tablets,
  * settings are split by category, with category headers shown to the left of
  * the list of settings.
- *
+ * <p>
  * See <a href="http://developer.android.com/design/patterns/settings.html">
  * Android Design: Settings</a> for design guidelines and the <a
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
@@ -45,7 +46,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
     @SuppressWarnings("unused")
     private static final String LOG_TAG = SettingsActivity.class.getSimpleName();
 
-    @Inject SettingsPresenter mPresenter;
+    @Inject
+    SettingsPresenter mPresenter;
 
     private ProgressDialog mLoadingDialog;
 
@@ -55,27 +57,27 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
      */
     private final static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener
             = (preference, value) -> {
-                String stringValue = value.toString();
+        String stringValue = value.toString();
 
-                if (preference instanceof ListPreference) {
-                    // For list preferences, look up the correct display value in
-                    // the preference's 'entries' list.
-                    ListPreference listPreference = (ListPreference) preference;
-                    int index = listPreference.findIndexOfValue(stringValue);
+        if (preference instanceof ListPreference) {
+            // For list preferences, look up the correct display value in
+            // the preference's 'entries' list.
+            ListPreference listPreference = (ListPreference) preference;
+            int index = listPreference.findIndexOfValue(stringValue);
 
-                    // Set the summary to reflect the new value.
-                    preference.setSummary(
-                            index >= 0
-                                    ? listPreference.getEntries()[index]
-                                    : null);
+            // Set the summary to reflect the new value.
+            preference.setSummary(
+                    index >= 0
+                            ? listPreference.getEntries()[index]
+                            : null);
 
-                } else {
-                    // For all other preferences, set the summary to the value's
-                    // simple string representation.
-                    preference.setSummary(stringValue);
-                }
-                return true;
-            };
+        } else {
+            // For all other preferences, set the summary to the value's
+            // simple string representation.
+            preference.setSummary(stringValue);
+        }
+        return true;
+    };
 
     /**
      * Binds a preference's summary to its value. More specifically, when the
@@ -130,6 +132,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         super.onPostCreate(savedInstanceState);
 
         setupSimplePreferencesScreen();
+
+        checkLogin();
     }
 
     @Override
@@ -188,7 +192,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
                 i.putExtra("login_changed", true);
                 setResult(RESULT_OK, i);
             } else {
-                startActivityForResult(new Intent(SettingsActivity.this, WebLoginActivity.class), 0);
+                String loginUrl = getString(R.string.main_host) + getString(R.string.link_steam_login);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(loginUrl));
+                startActivity(intent);
             }
             return true;
         });
@@ -202,15 +208,25 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements
         //Start the appropriate services if these settings have been changed
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            mPresenter.login(data.getStringExtra(WebLoginActivity.EXTRA_STEAM_ID));
-            mLoadingDialog = ProgressDialog.show(this, null, "Please wait...", true, false);
-        } else {
-            updateLoginPreference();
+    private void checkLogin() {
+        ProfileManager manager = ProfileManager.getInstance(getApplication());
+        if (manager.isSignedIn()) {
+            return;
         }
-        super.onActivityResult(requestCode, resultCode, data);
+
+        Uri data = getIntent().getData();
+
+        if (data != null && "bptf".equals(data.getScheme())) {
+            if ("login".equals(data.getHost())) {
+                String id = data.getQueryParameter("id");
+                if (id != null) {
+                    mPresenter.login(id);
+                    mLoadingDialog = ProgressDialog.show(this, null, "Please wait...", true, false);
+                }
+            } else if ("cancel".equals(data.getHost())) {
+                // TODO: 2018-09-16
+            }
+        }
     }
 
     private void updateLoginPreference() {

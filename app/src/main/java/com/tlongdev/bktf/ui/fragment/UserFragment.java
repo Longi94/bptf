@@ -33,7 +33,6 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.customtabs.CustomTabActivityHelper;
-import com.tlongdev.bktf.customtabs.WebViewFallback;
 import com.tlongdev.bktf.model.User;
 import com.tlongdev.bktf.presenter.fragment.UserPresenter;
 import com.tlongdev.bktf.ui.activity.SearchActivity;
@@ -225,8 +224,7 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
 
         //Open link in the device default web browser
         CustomTabsIntent intent = new CustomTabsIntent.Builder().build();
-        CustomTabActivityHelper.openCustomTab(getActivity(), intent, webPage,
-                new WebViewFallback());
+        CustomTabActivityHelper.openCustomTab(getActivity(), intent, webPage);
     }
 
     @OnClick(R.id.backpack)

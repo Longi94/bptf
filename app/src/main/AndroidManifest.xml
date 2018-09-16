@@ -15,7 +15,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
 
         <provider
             android:name=".data.DatabaseProvider"
@@ -40,6 +41,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activity.MainActivity"/>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="bptf"
+                    android:host="login" />
+
+            </intent-filter>
         </activity>
         <activity
             android:name=".ui.activity.UnusualActivity"
@@ -139,10 +149,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activity.SearchActivity"/>
         </activity>
-        <activity
-            android:name=".ui.activity.WebActivity"
-            android:theme="@style/AppTheme">
-        </activity>
 
         <service
             android:name=".fcm.BptfMessagingService">
@@ -151,13 +157,6 @@
             </intent-filter>
         </service>
 
-        <activity
-            android:name=".ui.activity.WebLoginActivity"
-            android:parentActivityName=".ui.activity.SettingsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activity.SettingsActivity"/>
-        </activity>
     </application>
 
 </manifest>
