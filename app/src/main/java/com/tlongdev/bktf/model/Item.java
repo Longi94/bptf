@@ -11,6 +11,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.DecoratedWeaponEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.util.IconUtil;
+import com.tlongdev.bktf.util.NameUtil;
 import com.tlongdev.bktf.util.Utility;
 
 import java.util.Locale;
@@ -49,7 +50,7 @@ public class Item implements Parcelable {
 
     private String imageLarge;
 
-    private int warPaint;
+    private int warPaint = -1;
 
     private boolean festivized;
 
@@ -300,11 +301,17 @@ public class Item implements Parcelable {
                 break;
         }
 
+        if (festivized) {
+            builder.append("Festivized ");
+        }
+
         if (australium) {
             builder.append("Australium ");
         }
 
-        if (isProper) {
+        if (quality == Quality.PAINTKITWEAPON && warPaint > -1) {
+            builder.append(NameUtil.getWarPaintName(warPaint)).append(' ');
+        } else if (isProper) {
             builder.append("The ");
         }
 
@@ -595,7 +602,7 @@ public class Item implements Parcelable {
             if (ausIcon != null) {
                 return ausIcon + "/128x128";
             }
-        } else if (warPaint > 0) {
+        } else if (warPaint > -1) {
             return String.format(Locale.getDefault(), "https://scrap.tf/img/items/warpaint/%s_%d_%d_%d.png",
                     getName(), warPaint, Utility.wearIdToIconInt(getWeaponWear()), festivized ? 1 : 0);
         }
