@@ -11,7 +11,6 @@
     <!--links with env vars-->
     <string name="link_search_outpost" translatable="false">/bptf/outpost_search</string>
     <string name="link_steam_login" translatable="false">/bptf/openid</string>
-    <string name="link_icons" translatable="false">/bptf/icon</string>
 
     <string name="gcm_sender_id" translatable="false">999648321586</string>
 

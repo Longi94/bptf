@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
-    android:foreground="?attr/selectableItemBackground"
+    android:background="?attr/selectableItemBackground"
     card_view:cardBackgroundColor="@color/card_color">
 
     <android.support.constraint.ConstraintLayout
@@ -44,13 +44,10 @@
             android:layout_width="30dp"
             android:layout_height="34dp"
             android:layout_marginEnd="0dp"
-            android:layout_marginRight="0dp"
             android:layout_marginTop="0dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:paddingBottom="8dp"
             android:paddingEnd="4dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="4dp"
             android:paddingStart="8dp"
             android:paddingTop="8dp"
             app:srcCompat="@drawable/ic_dot_vertical"
@@ -73,7 +70,6 @@
             android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:lines="2"
@@ -87,7 +83,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             android:gravity="bottom|end"
             android:lines="2"

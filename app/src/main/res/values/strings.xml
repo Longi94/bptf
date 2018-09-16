@@ -34,7 +34,7 @@
     <string name="title_activity_unusual" translatable="false">UnusualActivity</string>
     <string name="title_activity_user_backpack" translatable="false">UserBackpackActivity</string>
     <string name="title_calculator" translatable="true">Calculator</string>
-    <string name="title_custom_backpack" formatted="false" translatable="true">%s\'s backpack</string>
+    <string name="title_custom_backpack" translatable="true">%s\'s backpack</string>
     <string name="title_effects" translatable="true">Effects</string>
     <string name="title_home" translatable="true">Latest Changes</string>
     <string name="title_prices" translatable="true">Unusual Prices</string>
@@ -83,7 +83,7 @@
 
     <!--Resources for item details-->
 
-    <string name="item_detail_level" formatted="false" translatable="true">Level %d %s</string>
+    <string name="item_detail_level" translatable="true">Level %d %s</string>
     <string name="item_detail_origin" translatable="true">Origin</string>
     <string name="item_detail_effect" translatable="true">Effect</string>
     <string name="item_detail_custom_name" translatable="true">Custom name</string>
@@ -100,12 +100,12 @@
 
     <!--Parametrized currencies-->
 
-    <string name="currency_bud" formatted="false" translatable="true">%s bud</string>
-    <string name="currency_bud_plural" formatted="false" translatable="true">%s buds</string>
-    <string name="currency_metal" formatted="false" translatable="true">%s ref</string>
-    <string name="currency_metal_plural" formatted="false" translatable="true">%s ref</string>
-    <string name="currency_key" formatted="false" translatable="true">%s key</string>
-    <string name="currency_key_plural" formatted="false" translatable="true">%s keys</string>
+    <string name="currency_bud" translatable="true">%s bud</string>
+    <string name="currency_bud_plural" translatable="true">%s buds</string>
+    <string name="currency_metal" translatable="true">%s ref</string>
+    <string name="currency_metal_plural" translatable="true">%s ref</string>
+    <string name="currency_key" translatable="true">%s key</string>
+    <string name="currency_key_plural" translatable="true">%s keys</string>
 
     <!--Paint names-->
 
@@ -172,7 +172,7 @@
     <string name="navigation_drawer_open" translatable="true">Open navigation drawer</string>
     <string name="placeholder_unknown" translatable="false">\?</string>
     <string name="header_new_items" translatable="true">New items</string>
-    <string name="header_page" formatted="false" translatable="true">Page %d</string>
+    <string name="header_page" translatable="true">Page %d</string>
     <string name="title_converter">Converter</string>
     <string name="message_item_schema_create">Creating item schema database…</string>
     <string name="pref_last_item_schema_update">pref_last_item_schema_update</string>
