@@ -2,7 +2,6 @@ package com.tlongdev.bktf.customtabs;
 
 import android.app.Activity;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.customtabs.CustomTabsClient;
 import android.support.customtabs.CustomTabsIntent;
@@ -41,7 +40,7 @@ public class CustomTabActivityHelper implements ServiceConnectionCallback {
 
         //If we cant find a package name, it means there's no browser that supports
         //Chrome Custom Tabs installed. So, we fallback to the webview
-        if (packageName == null || Build.VERSION.SDK_INT < 15) {
+        if (packageName == null) {
             if (fallback != null) {
                 fallback.openUri(activity, uri);
             }

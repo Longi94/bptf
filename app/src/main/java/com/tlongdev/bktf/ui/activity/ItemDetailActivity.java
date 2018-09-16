@@ -1,6 +1,5 @@
 package com.tlongdev.bktf.ui.activity;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.text.Html;
@@ -83,10 +82,7 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
 
         //Return to the previous activity if the user taps outside te dialog.
         ((View) cardView.getParent()).setOnClickListener(v -> {
-            if (Build.VERSION.SDK_INT >= 21)
-                finishAfterTransition();
-            else
-                finish();
+            finishAfterTransition();
         });
         //Do nothing if the user taps on the card view itself
         cardView.setOnClickListener(null);

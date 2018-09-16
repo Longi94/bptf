@@ -216,14 +216,12 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
                                 Pair.create(holder.root, "background_transition"));
             }
             startActivity(i, options.toBundle());
-        } else if (Build.VERSION.SDK_INT >= 21) {
+        } else {
             //Fancy shared elements transition if above 20
             @SuppressWarnings("unchecked")
             ActivityOptions options = ActivityOptions
                     .makeSceneTransitionAnimation(this, holder.root, "background_transition");
             startActivity(i, options.toBundle());
-        } else {
-            startActivity(i);
         }
     }
 
