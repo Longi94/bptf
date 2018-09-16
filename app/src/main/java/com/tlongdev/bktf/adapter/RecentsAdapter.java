@@ -73,6 +73,7 @@ public class RecentsAdapter extends CursorRecyclerViewAdapter<RecentsAdapter.Vie
         });
 
         holder.name.setText(item.getFormattedName(mContext, false));
+        holder.name.setSelected(true);
 
         //Set the change indicator of the item
         holder.difference.setTextColor(item.getPrice().getDifferenceColor());

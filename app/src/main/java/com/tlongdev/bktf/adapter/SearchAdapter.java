@@ -2,6 +2,8 @@ package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,23 +49,30 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         application.getAdapterComponent().inject(this);
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_search, parent, false);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        int layout;
+
+        switch (viewType) {
+            case VIEW_TYPE_LOADING:
+                layout = R.layout.list_search_loading;
+                break;
+            default:
+                layout = R.layout.list_search;
+        }
+        View v = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
         return new ViewHolder(v);
     }
 
-    @SuppressWarnings("WrongConstant")
+    @SuppressWarnings({"WrongConstant", "ConstantConditions"})
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         switch (getItemViewType(position)) {
             //We found a user, show some info
             case VIEW_TYPE_USER:
                 holder.more.setVisibility(View.GONE);
                 if (mUser != null) {
-                    holder.loading.setVisibility(View.GONE);
-                    holder.priceLayout.setVisibility(View.VISIBLE);
 
                     //open the user activity when the user clicks on the view
                     holder.root.setOnClickListener(v -> {
@@ -83,20 +92,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                             .into(holder.icon);
                 }
                 break;
-            //Lading view, searching for the user
-            case VIEW_TYPE_LOADING:
-                holder.loading.setVisibility(View.VISIBLE);
-                holder.priceLayout.setVisibility(View.GONE);
-
-                holder.name.setText(null);
-                holder.icon.setImageDrawable(null);
-                break;
             //Simple price view
             case VIEW_TYPE_PRICE:
                 if (mDataSet != null && mDataSet.moveToPosition(position - (getItemCount() - mDataSet.getCount()))) {
-                    holder.priceLayout.setVisibility(View.VISIBLE);
-                    holder.more.setVisibility(View.VISIBLE);
-                    holder.loading.setVisibility(View.GONE);
 
                     Price price = new Price();
                     price.setValue(mDataSet.getDouble(mDataSet.getColumnIndex(PriceEntry.COLUMN_PRICE)));
@@ -215,14 +213,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     class ViewHolder extends RecyclerView.ViewHolder {
 
         final View root;
-        @BindView(R.id.loading_layout) View loading;
-        @BindView(R.id.price_layout) View priceLayout;
-        @BindView(R.id.icon) ImageView icon;
-        @BindView(R.id.effect) ImageView effect;
-        @BindView(R.id.more) ImageView more;
-        @BindView(R.id.quality) ImageView quality;
-        @BindView(R.id.name) TextView name;
-        @BindView(R.id.price) TextView price;
+        @Nullable @BindView(R.id.icon) ImageView icon;
+        @Nullable @BindView(R.id.effect) ImageView effect;
+        @Nullable @BindView(R.id.more) ImageView more;
+        @Nullable @BindView(R.id.quality) ImageView quality;
+        @Nullable @BindView(R.id.name) TextView name;
+        @Nullable @BindView(R.id.price) TextView price;
 
         public ViewHolder(View view) {
             super(view);
