@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.text.Html;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -54,7 +53,6 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
     @BindView(R.id.text_view_origin) TextView origin;
     @BindView(R.id.text_view_paint) TextView paint;
     @BindView(R.id.text_view_price) TextView priceView;
-    @BindView(R.id.image_layout) FrameLayout layout;
 
     //References to the image view
     @BindView(R.id.icon) ImageView icon;
@@ -74,16 +72,9 @@ public class ItemDetailActivity extends BptfActivity implements ItemDetailView {
 
         mPresenter.attachView(this);
 
-        //Scale the icon, so the width of the image view is on third of the screen's width
-        int screenWidth = getResources().getDisplayMetrics().widthPixels;
-        layout.getLayoutParams().width = screenWidth / 3;
-        layout.getLayoutParams().height = screenWidth / 3;
-        layout.requestLayout();
-
         //Return to the previous activity if the user taps outside te dialog.
-        ((View) cardView.getParent()).setOnClickListener(v -> {
-            finishAfterTransition();
-        });
+        ((View) cardView.getParent()).setOnClickListener(v -> finishAfterTransition());
+
         //Do nothing if the user taps on the card view itself
         cardView.setOnClickListener(null);
 
