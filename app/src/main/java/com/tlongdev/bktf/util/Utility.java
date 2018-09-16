@@ -220,7 +220,8 @@ public class Utility {
         double usdMultiplier = usd.getConvertedPrice(context, Currency.METAL, false);
         double budMultiplier = bud.getConvertedPrice(context, Currency.METAL, false);
 
-        return " CASE WHEN " + PriceEntry.COLUMN_PRICE_HIGH + " IS NULL THEN ( " +
+        return " CASE WHEN " + PriceEntry.COLUMN_PRICE_HIGH + " IS NULL OR "
+                + PriceEntry.COLUMN_PRICE_HIGH + " < " + PriceEntry.COLUMN_PRICE +  " THEN ( " +
                 " CASE WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'keys' THEN ( " +
                 PriceEntry.COLUMN_PRICE + " * " + keyMultiplier +
                 " ) WHEN " + PriceEntry.COLUMN_CURRENCY + " = 'earbuds' THEN ( " +
