@@ -197,15 +197,15 @@ public class Item implements Parcelable {
     @SuppressLint("SwitchIntDef")
     public String getFormattedName(Context context, boolean isProper) {
         //Empty string that will be appended.
-        String formattedName = "";
+        StringBuilder builder = new StringBuilder();
 
         //Check tradability
         if (!tradable) {
-            formattedName += context.getString(R.string.quality_non_tradable) + " ";
+            builder.append(context.getString(R.string.quality_non_tradable)).append(' ');
         }
         //Check craftability
         if (!craftable) {
-            formattedName += context.getString(R.string.quality_non_craftable) + " ";
+            builder.append(context.getString(R.string.quality_non_craftable)).append(' ');
         }
 
         //Handle strangifier names differently
@@ -220,12 +220,12 @@ public class Item implements Parcelable {
 
             if (itemCursor != null) {
                 if (itemCursor.moveToFirst()) {
-                    formattedName += itemCursor.getString(0) + " " + name;
+                    builder.append(itemCursor.getString(0)).append(' ').append(name);
                 }
                 itemCursor.close();
             }
 
-            return formattedName;
+            return builder.toString();
         } else
             //TODO Handle chemistry set names differently
             if (defindex == 20001) {
@@ -235,13 +235,13 @@ public class Item implements Parcelable {
         //Switch case for the quality
         switch (quality) {
             case Quality.NORMAL:
-                formattedName += context.getString(R.string.quality_normal) + " ";
+                builder.append(context.getString(R.string.quality_normal)).append(' ');
                 break;
             case Quality.GENUINE:
-                formattedName += context.getString(R.string.quality_genuine) + " ";
+                builder.append(context.getString(R.string.quality_genuine)).append(' ');
                 break;
             case Quality.VINTAGE:
-                formattedName += context.getString(R.string.quality_vintage) + " ";
+                builder.append(context.getString(R.string.quality_vintage)).append(' ');
                 break;
             case Quality.UNIQUE:
                 if (priceIndex > 0) //A unique item with a number
@@ -249,39 +249,43 @@ public class Item implements Parcelable {
                 break;
             case Quality.UNUSUAL:
                 //Get the unusual effect name by its index
-                formattedName += Utility.getUnusualEffectName(context, priceIndex) + " ";
+                builder.append(Utility.getUnusualEffectName(context, priceIndex)).append(' ');
                 break;
             case Quality.COMMUNITY:
-                formattedName += context.getString(R.string.quality_community) + " ";
+                builder.append(context.getString(R.string.quality_community)).append(' ');
                 break;
             case Quality.VALVE:
-                formattedName += context.getString(R.string.quality_valve) + " ";
+                builder.append(context.getString(R.string.quality_valve)).append(' ');
                 break;
             case Quality.SELF_MADE:
-                formattedName += context.getString(R.string.quality_self_made) + " ";
+                builder.append(context.getString(R.string.quality_self_made)).append(' ');
                 break;
             case Quality.STRANGE:
-                formattedName += context.getString(R.string.quality_strange) + " ";
+                builder.append(context.getString(R.string.quality_strange)).append(' ');
                 break;
             case Quality.HAUNTED:
-                formattedName += context.getString(R.string.quality_haunted) + " ";
+                builder.append(context.getString(R.string.quality_haunted)).append(' ');
                 break;
             case Quality.COLLECTORS:
-                formattedName += context.getString(R.string.quality_collectors) + " ";
+                builder.append(context.getString(R.string.quality_collectors)).append(' ');
                 break;
             case Quality.PAINTKITWEAPON:
                 break;
             default:
-                formattedName += context.getString(R.string.quality_normal) + " ";
+                builder.append(context.getString(R.string.quality_normal)).append(' ');
                 break;
         }
 
         if (australium) {
-            formattedName += "Australium ";
+            builder.append("Australium ");
+        }
+
+        if (isProper) {
+            builder.append("The ");
         }
 
         //Append the item name to the end.
-        return isProper ? formattedName + "The " + name : formattedName + name;
+        return builder.append(name).toString();
     }
 
     /**
@@ -471,17 +475,17 @@ public class Item implements Parcelable {
                 int grade = cursor.getInt(1);
                 switch (grade) {
                     case 0:
-                        return "Civilian Grade " + type + " " + wearStr;
+                        return String.format("Civilian Grade %s %s", type, wearStr);
                     case 1:
-                        return "Freelance Grade " + type + " " + wearStr;
+                        return String.format("Freelance Grade %s %s", type, wearStr);
                     case 2:
-                        return "Mercenary Grade " + type + " " + wearStr;
+                        return String.format("Mercenary Grade %s %s", type, wearStr);
                     case 3:
-                        return "Commando Grade " + type + " " + wearStr;
+                        return String.format("Commando Grade %s %s", type, wearStr);
                     case 4:
-                        return "Assassin Grade " + type + " " + wearStr;
+                        return String.format("Assassin Grade %s %s", type, wearStr);
                     case 5:
-                        return "Elite Grade " + type + " " + wearStr;
+                        return String.format("Elite Grade %s %s", type, wearStr);
                     default:
                         throw new IllegalArgumentException("Invalid defindex: " + defindex);
                 }
@@ -489,7 +493,7 @@ public class Item implements Parcelable {
             cursor.close();
         }
 
-        return type + " " + wearStr;
+        return String.format("%s %s", type, wearStr);
     }
 
     /**

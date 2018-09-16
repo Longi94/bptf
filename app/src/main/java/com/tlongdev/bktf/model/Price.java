@@ -23,6 +23,8 @@ public class Price implements Parcelable {
     @SuppressWarnings("unused")
     private static final String LOG_TAG = Price.class.getSimpleName();
 
+    private static final DecimalFormat PRICE_FORMAT = new DecimalFormat("0.##");
+
     private double value;
 
     private double highValue;
@@ -132,7 +134,7 @@ public class Price implements Parcelable {
      */
     public String getFormattedPrice(Context context, @Currency.Enum String targetCurrency) {
         //Initial string, that will be appended.
-        String product = "";
+        StringBuilder builder = new StringBuilder();
 
         //Convert the prices first
         double low = getConvertedPrice(context, targetCurrency, false);
@@ -141,46 +143,33 @@ public class Price implements Parcelable {
             high = getConvertedPrice(context, targetCurrency, true);
 
         //Check if the price is an int
-        if ((int) low == low)
-            product += (int) low;
-            //Check if the double has fraction smaller than 0.01, if so we need to format the double
-        else if ((String.valueOf(low)).substring((String.valueOf(low)).indexOf('.') + 1).length() > 2)
-            product += new DecimalFormat("#.##").format(low);
-        else
-            product += low;
+        builder.append(PRICE_FORMAT.format(low));
 
         if (high > low) {
-            //Check if the price is an int
-            if ((int) high == high)
-                product += "-" + (int) high;
-                //Check if the double has fraction smaller than 0.01, if so we need to format the double
-            else if ((String.valueOf(high)).substring((String.valueOf(high)).indexOf('.') + 1).length() > 2)
-                product += "-" + new DecimalFormat("#.##").format(high);
-            else
-                product += "-" + high;
+            builder.append('-').append(PRICE_FORMAT.format(high));
         }
 
         //Append the string with the proper currency, plural ir needed.
         switch (targetCurrency) {
             case Currency.BUD:
                 if (low == 1.0 && high == 0.0)
-                    return context.getString(R.string.currency_bud, product);
+                    return context.getString(R.string.currency_bud, builder.toString());
                 else
-                    return context.getString(R.string.currency_bud_plural, product);
+                    return context.getString(R.string.currency_bud_plural, builder.toString());
             case Currency.METAL:
-                return context.getString(R.string.currency_metal, product);
+                return context.getString(R.string.currency_metal, builder.toString());
             case Currency.KEY:
                 if (low == 1.0 && high == 0.0)
-                    return context.getString(R.string.currency_key, product);
+                    return context.getString(R.string.currency_key, builder.toString());
                 else
-                    return context.getString(R.string.currency_key_plural, product);
+                    return context.getString(R.string.currency_key_plural, builder.toString());
             case Currency.USD:
-                return "$" + product;
+                return "$" + builder.toString();
             case Currency.HAT:
                 if (low == 1.0 && high == 0.0)
-                    return product + " hat";
+                    return builder.append(" hat").toString();
                 else
-                    return product + " hats";
+                    return builder.append(" hats").toString();
             default:
                 //App should never reach this code
                 Log.e(LOG_TAG, "Error formatting price");
