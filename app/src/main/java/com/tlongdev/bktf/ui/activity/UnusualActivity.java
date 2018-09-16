@@ -3,12 +3,11 @@ package com.tlongdev.bktf.ui.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.EditText;
 
@@ -75,17 +74,13 @@ public class UnusualActivity extends BptfActivity implements UnusualView, TextWa
         //Set the action bar title to the current hat/effect name
         setTitle(mName);
 
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        int columnCount = Math.max(3, (int) Math.floor(dpWidth / 120.0));
-
         //Initialize adapter
         mAdapter = new UnusualAdapter(mApplication);
         mAdapter.setType(UnusualAdapter.TYPE_SPECIFIC_HAT);
         mAdapter.setListener(this);
 
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, columnCount));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mSearchInput.addTextChangedListener(this);
         mSearchInput.setHint(mDefindex != -1 ? "Effect" : "Name");

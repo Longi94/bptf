@@ -1,85 +1,91 @@
-<?xml version="1.0" encoding="utf-8"?><!--Layout resources for grid items with prices--><!--suppress AndroidDomInspection -->
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    android:background="?attr/selectableItemBackground"
-    card_view:cardBackgroundColor="@color/card_color">
+    android:layout_height="88dp"
+    android:background="?android:attr/selectableItemBackground">
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/quality"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/effect"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/tf2_unusual_color_dark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/more"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_dot_vertical" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingBottom="8dp">
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:ellipsize="marquee"
+        android:fadingEdge="horizontal"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textColor="@color/text_primary"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toRightOf="@+id/quality"
+        app:layout_constraintRight_toLeftOf="@+id/more"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="ItemName" />
 
-        <ImageView
-            android:id="@+id/effect"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:background="@color/tf2_unusual_color_dark"
-            android:scaleType="centerCrop"
-            app:layout_constraintDimensionRatio="H, 1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="4dp" />
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:singleLine="true"
+        android:textAllCaps="true"
+        android:textColor="@color/text_secondary"
+        android:textSize="12sp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toRightOf="@+id/quality"
+        app:layout_constraintRight_toLeftOf="@+id/more"
+        app:layout_constraintTop_toBottomOf="@+id/name"
+        tools:text="price" />
 
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:elevation="8dp"
-            android:layout_gravity="center"
-            android:scaleType="centerCrop"
-            app:layout_constraintDimensionRatio="H, 1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="4dp" />
-
-        <ImageView
-            android:id="@+id/more"
-            android:layout_width="30dp"
-            android:layout_height="34dp"
-            android:layout_marginEnd="0dp"
-            android:layout_marginTop="0dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:paddingBottom="8dp"
-            android:paddingEnd="4dp"
-            android:paddingStart="8dp"
-            android:paddingTop="8dp"
-            app:srcCompat="@drawable/ic_dot_vertical"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="12dp"
-            android:lines="2"
-            android:textColor="@color/text_primary"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/icon"
-            tools:text="Item Name" />
-
-        <TextView
-            android:id="@+id/price"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            android:gravity="bottom|end"
-            android:lines="2"
-            android:textColor="@color/text_secondary"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/name"
-            tools:text="Item Price" />
-
-    </android.support.constraint.ConstraintLayout>
-
-</android.support.v7.widget.CardView>
+</android.support.constraint.ConstraintLayout>

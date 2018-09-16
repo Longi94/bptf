@@ -52,23 +52,20 @@ public class LoadUnusualsInteractor extends AsyncTask<Void, Void, Void> {
         int index;
         String selection = PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_ITEM_QUALITY + " = ?";
         String nameColumn;
-        String joinOn;
-        String imageColumn = "";
+        String joinOn = "";
 
         //If defindex is -1, user is browsing by effects
         if (mDefindex != -1) {
             index = mDefindex;
             nameColumn = UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_NAME;
-            joinOn = UnusualSchemaEntry.TABLE_NAME + " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + " = " + UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_ID;
+            joinOn = " LEFT JOIN " + UnusualSchemaEntry.TABLE_NAME + " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + " = " + UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_ID;
             selection = selection + " AND " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = ? AND " +
                     UnusualSchemaEntry.TABLE_NAME + "." + UnusualSchemaEntry.COLUMN_NAME + " LIKE ?";
         } else {
             index = mIndex;
             nameColumn = ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME;
-            joinOn = ItemSchemaEntry.TABLE_NAME + " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX;
             selection = selection + " AND " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_PRICE_INDEX + " = ? AND " +
                     ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_ITEM_NAME + " LIKE ?";
-            imageColumn = ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_IMAGE;
         }
 
         String sql = "SELECT " +
@@ -81,9 +78,10 @@ public class LoadUnusualsInteractor extends AsyncTask<Void, Void, Void> {
                 PriceEntry.COLUMN_LAST_UPDATE + "," +
                 PriceEntry.COLUMN_DIFFERENCE + "," +
                 nameColumn + " name," +
-                imageColumn +
+                ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_IMAGE +
                 " FROM " + PriceEntry.TABLE_NAME +
-                " LEFT JOIN " + joinOn +
+                " LEFT JOIN " + ItemSchemaEntry.TABLE_NAME + " ON " + PriceEntry.TABLE_NAME + "." + PriceEntry.COLUMN_DEFINDEX + " = " + ItemSchemaEntry.TABLE_NAME + "." + ItemSchemaEntry.COLUMN_DEFINDEX +
+                " " + joinOn +
                 " WHERE " + selection +
                 " ORDER BY " + Utility.getRawPriceQueryString(mContext) + " DESC";
 
@@ -109,9 +107,7 @@ public class LoadUnusualsInteractor extends AsyncTask<Void, Void, Void> {
                 item.setPriceIndex(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE_INDEX)));
                 item.setQuality(Quality.UNUSUAL);
                 item.setPrice(price);
-                if (mDefindex == -1) {
-                    item.setImage(cursor.getString(cursor.getColumnIndex(ItemSchemaEntry.COLUMN_IMAGE)));
-                }
+                item.setImage(cursor.getString(cursor.getColumnIndex(ItemSchemaEntry.COLUMN_IMAGE)));
 
                 mItems.add(item);
             }

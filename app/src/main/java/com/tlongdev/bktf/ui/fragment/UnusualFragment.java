@@ -7,11 +7,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -101,12 +100,8 @@ public class UnusualFragment extends BptfFragment implements UnusualView,
         //Set the toolbar to the main activity's action bar
         ((AppCompatActivity) getActivity()).setSupportActionBar(rootView.findViewById(R.id.toolbar));
 
-        DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
-        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        int columnCount = Math.max(3, (int) Math.floor(dpWidth / 120.0));
-
         //init the recycler view
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), columnCount));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAdapter = new UnusualAdapter(mApplication);
         mAdapter.setListener(this);
         mRecyclerView.setAdapter(mAdapter);
