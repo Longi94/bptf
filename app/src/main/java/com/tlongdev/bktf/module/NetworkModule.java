@@ -1,9 +1,6 @@
 package com.tlongdev.bktf.module;
 
-import android.content.Context;
-
 import com.google.gson.Gson;
-import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.network.BackpackTfInterface;
 import com.tlongdev.bktf.network.FixerIoInterface;
 import com.tlongdev.bktf.network.SteamUserInterface;
@@ -23,16 +20,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 @Module
 public class NetworkModule {
-
-    @Provides
-    @Singleton
-    @Named("tlongdev")
-    Retrofit provideTlongdevRetrofit(Context context, Gson gson) {
-        return new Retrofit.Builder()
-                .baseUrl(context.getString(R.string.main_host) + "/bptf/legacy/")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-    }
 
     @Provides
     @Singleton
