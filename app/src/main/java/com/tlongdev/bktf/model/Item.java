@@ -621,15 +621,15 @@ public class Item implements Parcelable {
     public String getBackpackTfUrl() {
         String url;
         if (!australium) {
-            url = String.format(Locale.ENGLISH, "http://backpack.tf/stats/%d/%d/%d/%d", quality, defindex, tradable ? 1 : 0, craftable ? 1 : 0);
+            url = String.format(Locale.ENGLISH, "https://backpack.tf/stats/%d/%d/%d/%d", quality, defindex, tradable ? 1 : 0, craftable ? 1 : 0);
         } else {
-            url = String.format(Locale.ENGLISH, "http://backpack.tf/stats/%d/%s/%d/%d", quality, "Australium " + name, tradable ? 1 : 0, craftable ? 1 : 0);
+            url = String.format(Locale.ENGLISH, "https://backpack.tf/stats/%d/%s/%d/%d", quality, "Australium " + name, tradable ? 1 : 0, craftable ? 1 : 0);
         }
 
         return priceIndex > 0 ? url + "/" + priceIndex : url;
     }
 
     public String getTf2WikiUrl() {
-        return String.format(Locale.ENGLISH, "http://wiki.teamfortress.com/scripts/itemredirect.php?id=%d&lang=en_US", defindex);
+        return String.format(Locale.ENGLISH, "https://wiki.teamfortress.com/scripts/itemredirect.php?id=%d&lang=en_US", defindex);
     }
 }

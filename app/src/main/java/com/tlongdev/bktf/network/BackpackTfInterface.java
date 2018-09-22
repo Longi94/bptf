@@ -13,7 +13,7 @@ import retrofit2.http.Query;
  */
 public interface BackpackTfInterface {
 
-    String BASE_URL = "http://backpack.tf/api/";
+    String BASE_URL = "https://backpack.tf/api/";
 
     @GET("IGetUsers/v3/")
     Call<BackpackTfPayload> getUserData(@Query("steamids") String steamId);

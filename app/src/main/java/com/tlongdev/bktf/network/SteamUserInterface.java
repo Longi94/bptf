@@ -13,7 +13,7 @@ import retrofit2.http.Query;
  */
 public interface SteamUserInterface {
 
-    String BASE_URL = "http://api.steampowered.com/ISteamUser/";
+    String BASE_URL = "https://api.steampowered.com/ISteamUser/";
 
     @GET("ResolveVanityURL/v0001/")
     Call<VanityUrl> resolveVanityUrl(@Query("key") String apiKey, @Query("vanityurl") String vanityUrl);

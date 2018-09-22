@@ -11,7 +11,7 @@ import retrofit2.http.Query;
  * @since 2016. 03. 14.
  */
 public interface Tf2Interface {
-    String BASE_URL = "http://api.steampowered.com/IEconItems_440/";
+    String BASE_URL = "https://api.steampowered.com/IEconItems_440/";
 
     @GET("GetPlayerItems/v0001/")
     Call<PlayerItemsPayload> getUserBackpack(@Query("key") String apiKey, @Query("SteamID") String steamId);

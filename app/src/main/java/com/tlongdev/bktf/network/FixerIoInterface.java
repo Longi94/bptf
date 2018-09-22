@@ -12,7 +12,7 @@ import retrofit2.http.Query;
  */
 public interface FixerIoInterface {
 
-    String BASE_URL = "http://api.fixer.io/";
+    String BASE_URL = "https://api.fixer.io/";
 
     @GET("latest")
     Call<CurrencyRates> getCurrencyRates(@Query("base") String base);
