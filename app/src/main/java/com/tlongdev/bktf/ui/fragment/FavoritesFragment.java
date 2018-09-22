@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.AppBarLayout;
@@ -70,7 +71,7 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_favorites, container, false);
@@ -94,7 +95,7 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mPresenter.loadFavorites();
     }
@@ -182,12 +183,14 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
                             Uri.parse(item.getTf2WikiUrl()));
                     break;
                 case R.id.tf2outpost:
-                    intent = new Intent(Intent.ACTION_VIEW, Utility.buildTf2OutpostSearchUrl(getActivity(), item));
-                    getActivity().startActivity(intent);
+                    CustomTabActivityHelper.openCustomTab(getActivity(),
+                            new CustomTabsIntent.Builder().build(),
+                            Utility.buildTf2OutpostSearchUrl(getActivity(), item));
                     break;
                 case R.id.bazaar_tf:
-                    intent = new Intent(Intent.ACTION_VIEW, Utility.buildBazaarSearchUrl(getActivity(), item));
-                    getActivity().startActivity(intent);
+                    CustomTabActivityHelper.openCustomTab(getActivity(),
+                            new CustomTabsIntent.Builder().build(),
+                            Utility.buildBazaarSearchUrl(getActivity(), item));
                     break;
             }
             return true;

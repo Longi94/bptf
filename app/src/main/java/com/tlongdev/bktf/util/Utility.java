@@ -461,12 +461,14 @@ public class Utility {
                             Uri.parse(item.getTf2WikiUrl()));
                     break;
                 case R.id.tf2outpost:
-                    intent = new Intent(Intent.ACTION_VIEW, buildTf2OutpostSearchUrl(activity, item));
-                    activity.startActivity(intent);
+                    CustomTabActivityHelper.openCustomTab(activity,
+                            new CustomTabsIntent.Builder().build(),
+                            buildTf2OutpostSearchUrl(activity, item));
                     break;
                 case R.id.bazaar_tf:
-                    intent = new Intent(Intent.ACTION_VIEW, buildBazaarSearchUrl(activity, item));
-                    activity.startActivity(intent);
+                    CustomTabActivityHelper.openCustomTab(activity,
+                            new CustomTabsIntent.Builder().build(),
+                            buildBazaarSearchUrl(activity, item));
                     break;
             }
             return true;

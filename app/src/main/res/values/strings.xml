@@ -60,10 +60,11 @@
 
     <!--Resources for user page-->
 
+    <string name="user_page_link_backpack_tf" translatable="false">Backpack.tf</string>
     <string name="user_page_link_bazaar" translatable="false">Bazaar.tf</string>
     <string name="user_page_link_steamrep" translatable="false">STEAMREP</string>
     <string name="user_page_link_tf2op" translatable="false">TF2Outpost</string>
-    <string name="user_page_link_tf2tp" translatable="false">TF2TP</string>
+    <string name="user_page_link_rep_tf" translatable="false">REP.TF</string>
     <string name="user_page_usd" translatable="false">USD</string>
     <string name="user_page_vac" translatable="false">VAC</string>
     <string name="user_page_last_online" translatable="true">Last online:</string>

@@ -29,7 +29,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <Button
-        android:id="@+id/button_bazaar_tf"
+        android:id="@+id/button_backpack_tf"
         style="?buttonBarButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,10 +37,23 @@
         android:layout_marginRight="16dp"
         android:layout_marginTop="16dp"
         android:clickable="true"
-        android:text="@string/user_page_link_bazaar"
+        android:text="@string/user_page_link_backpack_tf"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+    <Button
+        android:id="@+id/button_bazaar_tf"
+        style="?buttonBarButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:clickable="true"
+        android:text="@string/user_page_link_bazaar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_backpack_tf" />
 
     <Button
         android:id="@+id/button_tf2op"
@@ -56,14 +69,14 @@
         app:layout_constraintTop_toBottomOf="@+id/button_bazaar_tf" />
 
     <Button
-        android:id="@+id/button_tf2tp"
+        android:id="@+id/button_rep_tf"
         style="?buttonBarButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:clickable="true"
-        android:text="@string/user_page_link_tf2tp"
+        android:text="@string/user_page_link_rep_tf"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_tf2op" />
@@ -79,7 +92,7 @@
         android:text="@string/user_page_link_steamrep"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_tf2tp" />
+        app:layout_constraintTop_toBottomOf="@+id/button_rep_tf" />
 
     <Button
         android:id="@+id/button_steam_community"

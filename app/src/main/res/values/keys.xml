@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--URLs-->
+    <string name="link_backpack_tf" translatable="false">https://backpack.tf/profiles/</string>
     <string name="link_bazaar_tf" translatable="false">https://bazaar.tf/profiles/</string>
     <string name="link_steamrep" translatable="false">https://steamrep.com/profiles/</string>
     <string name="link_tf2op" translatable="false">https://www.tf2outpost.com/user/</string>
-    <string name="link_tf2tp" translatable="false">https://tf2tp.com/user/</string>
+    <string name="link_rep_tf" translatable="false">https://rep.tf/</string>
     <string name="link_steam_community" translatable="false">https://steamcommunity.com/profiles/</string>
     <string name="link_search_bazaar" translatable="false">https://bazaar.tf/search/</string>
 
