@@ -1,6 +1,7 @@
 package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,8 +42,9 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
         application.getAdapterComponent().inject(this);
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_calculator, parent, false);
@@ -50,11 +52,17 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
         if (mDataSet != null && mDataSet.size() > position) {
 
             final Item item = mDataSet.get(position);
+
+            holder.name.setSelected(false);
+            holder.root.setOnClickListener(v -> {
+                holder.name.setSelected(false);
+                holder.name.setSelected(true);
+            });
 
             Glide.with(mContext)
                     .load(item.getIconUrl(mContext))
@@ -164,6 +172,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
+        public View root;
         @BindView(R.id.icon) ImageView icon;
         @BindView(R.id.name) TextView name;
         @BindView(R.id.price) TextView price;
@@ -179,6 +188,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<CalculatorAdapter.Vi
          */
         public ViewHolder(View view) {
             super(view);
+            root = view;
             ButterKnife.bind(this, view);
         }
     }

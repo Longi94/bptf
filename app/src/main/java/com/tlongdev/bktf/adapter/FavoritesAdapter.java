@@ -1,6 +1,7 @@
 package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,15 +34,16 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         application.getAdapterComponent().inject(this);
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_recents, parent, false);
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         if (mDataSet != null && mDataSet.size() > position) {
 
             final Item item = mDataSet.get(position);
@@ -50,6 +52,12 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
                 if (mListener != null) {
                     mListener.onMoreClicked(v, item);
                 }
+            });
+
+            holder.name.setSelected(false);
+            holder.root.setOnClickListener(v -> {
+                holder.name.setSelected(false);
+                holder.name.setSelected(true);
             });
 
             holder.name.setText(item.getFormattedName(mContext, false));

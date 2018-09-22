@@ -61,7 +61,7 @@
         android:layout_marginRight="16dp"
         android:ellipsize="marquee"
         android:fadingEdge="horizontal"
-        android:marqueeRepeatLimit="marquee_forever"
+        android:marqueeRepeatLimit="1"
         android:scrollHorizontally="true"
         android:singleLine="true"
         android:textColor="@color/text_primary"

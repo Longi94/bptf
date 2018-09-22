@@ -2,6 +2,7 @@ package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
 import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +34,7 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
 
     @IntDef({TYPE_HATS, TYPE_EFFECTS, TYPE_SPECIFIC_HAT})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface UnusualAdapterType{}
+    @interface UnusualAdapterType{}
 
     public static final int TYPE_HATS = 0;
     public static final int TYPE_EFFECTS = 1;
@@ -55,15 +56,16 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
         application.getAdapterComponent().inject(this);
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.grid_unusual, parent, false);
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         if (mDataSet != null) {
 
             final Item item = mDataSet.get(position);
@@ -82,6 +84,14 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                             mListener.onItemClicked(item.getDefindex(), item.getName(), false);
                         }
                     });
+
+                    holder.name.setSelected(false);
+                    holder.root.setOnLongClickListener(v -> {
+                        holder.name.setSelected(false);
+                        holder.name.setSelected(true);
+                        return true;
+                    });
+
                     holder.price.setText(mContext.getString(R.string.currency_key_plural,
                             Utility.formatDouble(item.getPrice().getValue())));
 
@@ -105,6 +115,13 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                         }
                     });
 
+                    holder.name.setSelected(false);
+                    holder.root.setOnLongClickListener(v -> {
+                        holder.name.setSelected(false);
+                        holder.name.setSelected(true);
+                        return true;
+                    });
+
                     holder.price.setText(mContext.getString(R.string.currency_key_plural,
                             Utility.formatDouble(item.getPrice().getValue())));
 
@@ -115,6 +132,12 @@ public class UnusualAdapter extends RecyclerView.Adapter<UnusualAdapter.ViewHold
                 //We are showing both that icon and the effect for a specific hat or effect
                 case TYPE_SPECIFIC_HAT:
                     holder.price.setText(item.getPrice().getFormattedPrice(mContext, Currency.KEY));
+
+                    holder.name.setSelected(false);
+                    holder.root.setOnClickListener(v -> {
+                        holder.name.setSelected(false);
+                        holder.name.setSelected(true);
+                    });
 
                     holder.name.setText(item.getName());
 
