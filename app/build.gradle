@@ -41,12 +41,12 @@ dependencies {
     def support_version = '27.1.1'
     implementation fileTree(include: ['*.jar'], dir: 'libs', excludes: ['*sources.jar'])
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:1.10.19'
+    testImplementation 'org.mockito:mockito-core:2.21.0'
     testImplementation "org.robolectric:robolectric:3.1"
 
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.14.1'
     annotationProcessor 'com.f2prateek.dart:dart-processor:2.0.2'
     implementation('com.squareup.okhttp3:okhttp:3.9.0') {
         exclude group: 'com.squareup.okio', module: 'okio'
@@ -61,13 +61,13 @@ dependencies {
     implementation "com.android.support:design:$support_version"
     implementation "com.android.support:percent:$support_version"
     implementation 'com.f2prateek.dart:dart:2.0.2'
-    implementation 'com.google.dagger:dagger:2.11'
-    implementation 'com.google.firebase:firebase-messaging:17.0.0'
+    implementation 'com.google.dagger:dagger:2.14.1'
+    implementation 'com.google.firebase:firebase-messaging:17.3.2'
     implementation 'com.github.PhilJay:MPAndroidChart:v2.2.5'
-    implementation 'com.github.bumptech.glide:glide:4.2.0'
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
     implementation 'com.jakewharton:butterknife:8.8.1'
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'commons-io:commons-io:2.6'
 }
 

@@ -1,6 +1,5 @@
 package com.tlongdev.bktf.util;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
@@ -13,8 +12,8 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import java.security.MessageDigest;
 
 public class CircleTransform extends BitmapTransformation {
-    public CircleTransform(Context context) {
-        super(context);
+    public CircleTransform() {
+        super();
     }
 
     @Override
@@ -44,7 +43,7 @@ public class CircleTransform extends BitmapTransformation {
     }
 
     @Override
-    public void updateDiskCacheKey(MessageDigest messageDigest) {
+    public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
 
     }
 }

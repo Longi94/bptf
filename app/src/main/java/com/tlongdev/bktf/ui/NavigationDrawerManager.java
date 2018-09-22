@@ -74,7 +74,7 @@ public class NavigationDrawerManager implements ProfileManager.OnUpdateListener 
 
         RequestOptions options = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .transforms(new CircleTransform(mContext));
+                .transforms(new CircleTransform());
         Glide.with(mContext)
                 .load(R.drawable.steam_default_avatar)
                 .transition(DrawableTransitionOptions.withCrossFade())
@@ -110,7 +110,7 @@ public class NavigationDrawerManager implements ProfileManager.OnUpdateListener 
         //Download the avatar (if needed) and set it
         RequestOptions options = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .transforms(new CircleTransform(mContext));
+                .transforms(new CircleTransform());
         Glide.with(mContext)
                 .load(user.getAvatarUrl())
                 .transition(DrawableTransitionOptions.withCrossFade())
