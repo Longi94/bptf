@@ -9,7 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 52
-        versionName "2.3.3"
+        versionName "2.3.0"
 
         applicationVariants.all { variant ->
             variant.outputs.all { output ->
