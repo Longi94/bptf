@@ -13,4 +13,6 @@ public interface UserView extends BaseView {
     void hideRefreshingAnimation();
 
     void updateUserPage(User user);
+
+    void showError(String errorMessage);
 }

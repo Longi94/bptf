@@ -112,8 +112,12 @@ public class UserActivity extends BptfActivity implements UserView {
     }
 
     @Override
-    public void showError() {
+    public void showError(String errorMessage) {
         progressBar.setVisibility(View.GONE);
         mErrorMessage.setVisibility(View.VISIBLE);
+
+        if (errorMessage != null) {
+            mFragment.showError(errorMessage);
+        }
     }
 }

@@ -12,6 +12,7 @@ import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +25,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -193,7 +193,7 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
         //Get the steam id, do nothing if there is no steam id
         String steamId = mUser.getResolvedSteamId();
         if (steamId == null || steamId.equals("")) {
-            showToast("bptf: " + getString(R.string.error_no_steam_id), Toast.LENGTH_SHORT);
+            Snackbar.make(mCoordinatorLayout, getString(R.string.error_no_steam_id), Snackbar.LENGTH_SHORT).show();
             return;
         }
 
@@ -257,6 +257,11 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
+    }
+
+    @Override
+    public void showError(String errorMessage) {
+        Snackbar.make(mCoordinatorLayout, errorMessage, Snackbar.LENGTH_SHORT).show();
     }
 
     private void showSteamData() {

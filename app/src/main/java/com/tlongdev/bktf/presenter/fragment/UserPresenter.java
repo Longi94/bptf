@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.widget.Toast;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
@@ -80,7 +79,7 @@ public class UserPresenter implements Presenter<UserView>, GetUserDataInteractor
         mLoading = false;
         if (mView != null) {
             mView.hideRefreshingAnimation();
-            mView.showToast("bptf: " + errorMessage, Toast.LENGTH_SHORT);
+            mView.showError(errorMessage);
         }
     }
 
@@ -99,7 +98,7 @@ public class UserPresenter implements Presenter<UserView>, GetUserDataInteractor
             getUserData(true);
         } else {
             //There is no internet connection, notify the user
-            mView.showToast("bptf: " + mContext.getString(R.string.error_no_network), Toast.LENGTH_SHORT);
+            mView.showError(mContext.getString(R.string.error_no_network));
             mView.hideRefreshingAnimation();
         }
     }

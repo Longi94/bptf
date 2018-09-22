@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.widget.Toast;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
@@ -109,7 +108,7 @@ public class RecentsPresenter implements Presenter<RecentsView>,
             callTlongdevPrices(true, true);
         } else {
             mLoading = false;
-            mView.showToast("bptf: " + mContext.getString(R.string.error_no_network), Toast.LENGTH_SHORT);
+            mView.showPricesError(mContext.getString(R.string.error_no_network));
             mView.hideRefreshingAnimation();
         }
     }

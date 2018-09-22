@@ -1,7 +1,6 @@
 package com.tlongdev.bktf.presenter.activity;
 
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.interactor.GetSearchedUserDataInteractor;
@@ -74,8 +73,7 @@ public class UserPresenter implements Presenter<UserView>, GetSearchedUserDataIn
     public void onUserInfoFailed(String errorMessage) {
         mLoaded = false;
         if (mView != null) {
-            mView.showError();
-            mView.showToast(errorMessage, Toast.LENGTH_SHORT);
+            mView.showError(errorMessage);
         }
     }
 }
