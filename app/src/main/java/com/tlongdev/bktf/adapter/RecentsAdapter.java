@@ -2,6 +2,7 @@ package com.tlongdev.bktf.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,8 +38,9 @@ public class RecentsAdapter extends CursorRecyclerViewAdapter<RecentsAdapter.Vie
         application.getAdapterComponent().inject(this);
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_recents, parent, false);
         return new ViewHolder(v);
@@ -66,6 +68,12 @@ public class RecentsAdapter extends CursorRecyclerViewAdapter<RecentsAdapter.Vie
         item.setPriceIndex(cursor.getInt(cursor.getColumnIndex(PriceEntry.COLUMN_PRICE_INDEX)));
         item.setPrice(price);
 
+        holder.name.setSelected(false);
+        holder.root.setOnClickListener(v -> {
+            holder.name.setSelected(false);
+            holder.name.setSelected(true);
+        });
+
         holder.more.setOnClickListener(v -> {
             if (mListener != null) {
                 mListener.onMoreClicked(v, item);
@@ -73,7 +81,6 @@ public class RecentsAdapter extends CursorRecyclerViewAdapter<RecentsAdapter.Vie
         });
 
         holder.name.setText(item.getFormattedName(mContext, false));
-        holder.name.setSelected(true);
 
         //Set the change indicator of the item
         holder.difference.setTextColor(item.getPrice().getDifferenceColor());
