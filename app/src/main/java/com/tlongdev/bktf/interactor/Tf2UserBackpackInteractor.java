@@ -114,7 +114,7 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
             return -1;
 
         } catch (IOException e) {
-            errorMessage = mContext.getString(R.string.error_network);
+            errorMessage = e.getMessage();
             Log.e(TAG, "Failed to fetch backpack", e);
             return -1;
         }

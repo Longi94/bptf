@@ -74,8 +74,8 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
             return -1;
         } catch (IOException e) {
             //There was a network error
-            errorMessage = mContext.getString(R.string.error_network);
-            e.printStackTrace();
+            errorMessage = e.getMessage();
+            Log.e(LOG_TAG, "network error", e);
         }
         return -1;
     }

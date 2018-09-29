@@ -149,7 +149,6 @@
     <!--Error messages-->
 
     <string name="error_no_steam_id" translatable="true">no steamID provided</string>
-    <string name="error_network" translatable="true">network error</string>
     <string name="error_no_network" translatable="true">no connection</string>
 
     <!--Quality names-->

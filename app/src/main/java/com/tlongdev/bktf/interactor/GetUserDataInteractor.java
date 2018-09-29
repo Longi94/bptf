@@ -3,6 +3,7 @@ package com.tlongdev.bktf.interactor;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.tlongdev.bktf.BptfApplication;
 import com.tlongdev.bktf.R;
@@ -29,6 +30,8 @@ import retrofit2.Response;
  * Task for fetching data about the user in the background.
  */
 public class GetUserDataInteractor extends AsyncTask<Void, Void, Integer> {
+
+    private static final String TAG = GetUserDataInteractor.class.getSimpleName();
 
     @Inject BackpackTfInterface mBackpackTfInterface;
     @Inject SteamUserInterface mSteamUserInterface;
@@ -132,8 +135,8 @@ public class GetUserDataInteractor extends AsyncTask<Void, Void, Integer> {
             return 0;
         } catch (IOException e) {
             //There was a network error
-            errorMessage = mContext.getString(R.string.error_network);
-            e.printStackTrace();
+            errorMessage = e.getMessage();
+            Log.e(TAG, "network error", e);
             return -1;
         }
     }

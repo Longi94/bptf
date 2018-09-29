@@ -2,9 +2,9 @@ package com.tlongdev.bktf.interactor;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.tlongdev.bktf.BptfApplication;
-import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.network.FixerIoInterface;
 import com.tlongdev.bktf.network.model.fixerio.CurrencyRates;
 import com.tlongdev.bktf.util.HttpUtil;
@@ -21,6 +21,8 @@ import retrofit2.Response;
  * @since 2016. 05. 09.
  */
 public class GetCurrencyExchangeRatesInteractor extends AsyncTask<Void, Void, Integer> {
+
+    private static final String TAG = GetCurrencyExchangeRatesInteractor.class.getSimpleName();
 
     @Inject FixerIoInterface mFixerIoInterface;
     @Inject Context mContext;
@@ -48,8 +50,8 @@ public class GetCurrencyExchangeRatesInteractor extends AsyncTask<Void, Void, In
                 return -1;
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            mErrorMessage = mContext.getString(R.string.error_network);
+            mErrorMessage = e.getMessage();
+            Log.e(TAG, "network error", e);
         }
         return -1;
     }
