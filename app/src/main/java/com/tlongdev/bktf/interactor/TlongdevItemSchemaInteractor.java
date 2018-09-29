@@ -56,7 +56,7 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
 
         try {
 
-            Uri uri = Uri.parse(mContext.getString(R.string.main_host) + "/fbs/item_schema").buildUpon()
+            Uri uri = Uri.parse(mContext.getString(R.string.main_host) + "/bptf/fbs/item_schema").buildUpon()
                     .build();
 
             OkHttpClient client = new OkHttpClient();
