@@ -1,6 +1,7 @@
 package com.tlongdev.bktf;
 
 import android.app.Application;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.tlongdev.bktf.component.ActivityComponent;
 import com.tlongdev.bktf.component.AdapterComponent;
@@ -14,6 +15,7 @@ import com.tlongdev.bktf.component.FragmentComponent;
 import com.tlongdev.bktf.component.InteractorComponent;
 import com.tlongdev.bktf.component.PresenterComponent;
 import com.tlongdev.bktf.component.ServiceComponent;
+import com.tlongdev.bktf.data.DatabaseHelper;
 import com.tlongdev.bktf.module.BptfAppModule;
 import com.tlongdev.bktf.module.NetworkModule;
 import com.tlongdev.bktf.module.PresenterModule;
@@ -78,6 +80,9 @@ public class BptfApplication extends Application {
 
         IconUtil.loadIcons(this);
         NameUtil.loadWarPaintNames(this);
+
+        // Call this to trigger db updates before views
+        SQLiteDatabase db = DatabaseHelper.getInstance(this).getReadableDatabase();
     }
 
     public ActivityComponent getActivityComponent() {
