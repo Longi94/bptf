@@ -21,9 +21,10 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard_general.pro', 'disable_logs.pro'
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard_general.pro', 'disable_logs.pro', 'okhttp3.pro', 'retrofit2.pro'
         }
         debug {
         }
