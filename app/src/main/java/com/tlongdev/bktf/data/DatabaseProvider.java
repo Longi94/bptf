@@ -26,8 +26,6 @@ public class DatabaseProvider extends ContentProvider {
     private static final int ITEM_SCHEMA = 101;
     private static final int ORIGIN_NAMES = 102;
     private static final int UNUSUAL_SCHEMA = 103;
-    private static final int BACKPACK = 104;
-    private static final int BACKPACK_GUEST = 105;
     private static final int FAVORITES = 106;
     private static final int CALCULATOR = 107;
     private static final int DECORATED_WEAPON = 108;
@@ -64,10 +62,8 @@ public class DatabaseProvider extends ContentProvider {
         matcher.addURI(authority, DatabaseContract.PATH_UNUSUAL_SCHEMA, UNUSUAL_SCHEMA);
         matcher.addURI(authority, DatabaseContract.PATH_ORIGIN_NAMES, ORIGIN_NAMES);
         matcher.addURI(authority, DatabaseContract.PATH_DECORATED_WEAPONS, DECORATED_WEAPON);
-        matcher.addURI(authority, DatabaseContract.PATH_BACKPACK, BACKPACK);
         matcher.addURI(authority, DatabaseContract.PATH_FAVORITES, FAVORITES);
         matcher.addURI(authority, DatabaseContract.PATH_CALCULATOR, CALCULATOR);
-        matcher.addURI(authority, DatabaseContract.PATH_BACKPACK + "/guest", BACKPACK_GUEST);
         matcher.addURI(authority, DatabaseContract.PATH_PRICE_LIST + "/all", ALL_PRICES);
 
         return matcher;
@@ -97,12 +93,6 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             case ORIGIN_NAMES:
                 tableName = OriginEntry.TABLE_NAME;
-                break;
-            case BACKPACK:
-                tableName = UserBackpackEntry.TABLE_NAME;
-                break;
-            case BACKPACK_GUEST:
-                tableName = UserBackpackEntry.TABLE_NAME_GUEST;
                 break;
             case FAVORITES:
                 tableName = FavoritesEntry.TABLE_NAME;
@@ -150,10 +140,6 @@ public class DatabaseProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_UNUSUAL_SCHEMA;
             case ORIGIN_NAMES:
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_ORIGIN_NAMES;
-            case BACKPACK:
-                return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_BACKPACK;
-            case BACKPACK_GUEST:
-                return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_BACKPACK;
             case FAVORITES:
                 return "vnd.android.cursor.dir/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_FAVORITES;
             case CALCULATOR:
@@ -187,14 +173,6 @@ public class DatabaseProvider extends ContentProvider {
             case ORIGIN_NAMES:
                 tableName = OriginEntry.TABLE_NAME;
                 returnUri = OriginEntry.CONTENT_URI;
-                break;
-            case BACKPACK:
-                tableName = UserBackpackEntry.TABLE_NAME;
-                returnUri = UserBackpackEntry.CONTENT_URI;
-                break;
-            case BACKPACK_GUEST:
-                tableName = UserBackpackEntry.TABLE_NAME_GUEST;
-                returnUri = UserBackpackEntry.CONTENT_URI_GUEST;
                 break;
             case FAVORITES:
                 tableName = FavoritesEntry.TABLE_NAME;
@@ -237,12 +215,6 @@ public class DatabaseProvider extends ContentProvider {
             case ORIGIN_NAMES:
                 rowsDeleted = db.delete(OriginEntry.TABLE_NAME, selection, selectionArgs);
                 break;
-            case BACKPACK:
-                rowsDeleted = db.delete(UserBackpackEntry.TABLE_NAME, selection, selectionArgs);
-                break;
-            case BACKPACK_GUEST:
-                rowsDeleted = db.delete(UserBackpackEntry.TABLE_NAME_GUEST, selection, selectionArgs);
-                break;
             case FAVORITES:
                 rowsDeleted = db.delete(FavoritesEntry.TABLE_NAME, selection, selectionArgs);
                 break;
@@ -282,12 +254,6 @@ public class DatabaseProvider extends ContentProvider {
             case ORIGIN_NAMES:
                 rowsUpdated = db.update(OriginEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
-            case BACKPACK:
-                rowsUpdated = db.update(UserBackpackEntry.TABLE_NAME, values, selection, selectionArgs);
-                break;
-            case BACKPACK_GUEST:
-                rowsUpdated = db.update(UserBackpackEntry.TABLE_NAME_GUEST, values, selection, selectionArgs);
-                break;
             case FAVORITES:
                 rowsUpdated = db.update(FavoritesEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
@@ -324,12 +290,6 @@ public class DatabaseProvider extends ContentProvider {
                 break;
             case ORIGIN_NAMES:
                 tableName = OriginEntry.TABLE_NAME;
-                break;
-            case BACKPACK:
-                tableName = UserBackpackEntry.TABLE_NAME;
-                break;
-            case BACKPACK_GUEST:
-                tableName = UserBackpackEntry.TABLE_NAME_GUEST;
                 break;
             case FAVORITES:
                 tableName = FavoritesEntry.TABLE_NAME;

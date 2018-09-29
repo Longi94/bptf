@@ -233,7 +233,6 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
     public void onBackpackClick() {
         Intent i = new Intent(getActivity(), UserBackpackActivity.class);
         i.putExtra(UserBackpackActivity.EXTRA_NAME, mCollapsingToolbarLayout.getTitle());
-        i.putExtra(UserBackpackActivity.EXTRA_GUEST, mSearchedUser);
         i.putExtra(UserBackpackActivity.EXTRA_STEAM_ID, mUser.getResolvedSteamId());
         startActivity(i);
     }

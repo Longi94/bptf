@@ -140,42 +140,4 @@ public final class DatabaseContract {
         public static final String COLUMN_WEAPON_WEAR = "weapon_wear";
         public static final String COLUMN_COUNT = "item_count";
     }
-
-    public static final class UserBackpackEntry implements BaseColumns {
-
-        public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_BACKPACK).build();
-
-        public static final Uri CONTENT_URI_GUEST =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_BACKPACK).appendPath("guest").build();
-
-        public static final String CONTENT_TYPE =
-                "vnd.android.cursor.dir/" + CONTENT_AUTHORITY + "/" + PATH_BACKPACK;
-        public static final String CONTENT_ITEM_TYPE =
-                "vnd.android.cursor.item/" + CONTENT_AUTHORITY + "/" + PATH_BACKPACK;
-
-        public static final String TABLE_NAME = "backpack";
-        public static final String TABLE_NAME_GUEST = "backpack_guest";
-
-        public static final String COLUMN_POSITION = "position";
-        public static final String COLUMN_UNIQUE_ID = "unique_id";
-        public static final String COLUMN_ORIGINAL_ID = "original_id";
-        public static final String COLUMN_DEFINDEX = "defindex";
-        public static final String COLUMN_LEVEL = "level";
-        public static final String COLUMN_ORIGIN = "origin";
-        public static final String COLUMN_FLAG_CANNOT_TRADE = "flag_cannot_trade";
-        public static final String COLUMN_FLAG_CANNOT_CRAFT = "flag_cannot_craft";
-        public static final String COLUMN_QUALITY = "quality";
-        public static final String COLUMN_CUSTOM_NAME = "custom_name";
-        public static final String COLUMN_CUSTOM_DESCRIPTION = "custom_description";
-        public static final String COLUMN_EQUIPPED = "equipped";
-        public static final String COLUMN_ITEM_INDEX = "item_index";
-        public static final String COLUMN_PAINT = "paint";
-        public static final String COLUMN_CRAFT_NUMBER = "craft_index";
-        public static final String COLUMN_CREATOR_NAME = "creator_name";
-        public static final String COLUMN_GIFTER_NAME = "gifter_name";
-        public static final String COLUMN_CONTAINED_ITEM = "contained_item";
-        public static final String COLUMN_AUSTRALIUM = "australium";
-        public static final String COLUMN_DECORATED_WEAPON_WEAR = "weapon_wear";
-    }
 }

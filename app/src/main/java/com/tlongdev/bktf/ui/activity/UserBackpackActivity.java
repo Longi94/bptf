@@ -43,14 +43,11 @@ public class UserBackpackActivity extends BptfActivity implements UserBackpackVi
 
     //Keys for extra data in the intent
     public static final String EXTRA_NAME = "name";
-    public static final String EXTRA_GUEST = "guest";
     public static final String EXTRA_STEAM_ID = "steam_id";
 
     @Inject UserBackpackPresenter mPresenter;
 
     @InjectExtra(EXTRA_NAME) String mUserName;
-    //Boolean to decide which database table to load from
-    @InjectExtra(EXTRA_GUEST) boolean mIsGuest;
     @InjectExtra(EXTRA_STEAM_ID) String mSteamId;
 
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
