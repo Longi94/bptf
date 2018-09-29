@@ -1,6 +1,6 @@
 package com.tlongdev.bktf.interactor;
 
-import android.content.Context;
+import android.app.Application;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -32,9 +32,14 @@ public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer
 
     private static final String TAG = GetSearchedUserDataInteractor.class.getSimpleName();
 
-    @Inject BackpackTfInterface mBackpackTfInterface;
-    @Inject SteamUserInterface mSteamUserInterface;
-    @Inject Context mContext;
+    @Inject
+    BackpackTfInterface mBackpackTfInterface;
+
+    @Inject
+    SteamUserInterface mSteamUserInterface;
+
+    @Inject
+    Application mContext;
 
     //The error message that will be presented to the user, when an error occurs
     private String errorMessage;
@@ -124,8 +129,9 @@ public class GetSearchedUserDataInteractor extends AsyncTask<Void, Void, Integer
             return 0;
         } catch (IOException e) {
             //There was a network error
-            errorMessage = mContext.getString(R.string.error_network);
-            e.printStackTrace();
+            //There was a network error
+            errorMessage = e.getMessage();
+            Log.e(TAG, "network error", e);
             return -1;
         }
     }

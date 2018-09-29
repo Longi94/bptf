@@ -27,7 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private static final int DATABASE_VERSION = 10;
-    public static final String DATABASE_NAME = "bptf.db";
+    private static final String DATABASE_NAME = "bptf.db";
 
     private final Context mContext;
 

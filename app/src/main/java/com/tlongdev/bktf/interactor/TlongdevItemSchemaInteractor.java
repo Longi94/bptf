@@ -1,7 +1,7 @@
 package com.tlongdev.bktf.interactor;
 
+import android.app.Application;
 import android.content.ContentValues;
-import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -41,7 +41,7 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
     private static final String LOG_TAG = TlongdevItemSchemaInteractor.class.getSimpleName();
 
     @Inject
-    Context mContext;
+    Application mContext;
 
     private final Callback mCallback;
     private String errorMessage;

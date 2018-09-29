@@ -1,6 +1,6 @@
 package com.tlongdev.bktf.interactor;
 
-import android.content.Context;
+import android.app.Application;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -24,8 +24,11 @@ public class GetCurrencyExchangeRatesInteractor extends AsyncTask<Void, Void, In
 
     private static final String TAG = GetCurrencyExchangeRatesInteractor.class.getSimpleName();
 
-    @Inject FixerIoInterface mFixerIoInterface;
-    @Inject Context mContext;
+    @Inject
+    FixerIoInterface mFixerIoInterface;
+
+    @Inject
+    Application mContext;
 
     private Callback mCallback;
 

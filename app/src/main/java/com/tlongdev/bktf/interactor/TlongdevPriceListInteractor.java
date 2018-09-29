@@ -1,7 +1,7 @@
 package com.tlongdev.bktf.interactor;
 
+import android.app.Application;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -40,10 +40,12 @@ public class TlongdevPriceListInteractor extends AsyncTask<Void, Integer, Intege
 
     @Inject
     SharedPreferences mPrefs;
+
     @Inject
     SharedPreferences.Editor mEditor;
+
     @Inject
-    Context mContext;
+    Application mContext;
 
     //Whether it's an update or full database download
     private boolean updateDatabase;

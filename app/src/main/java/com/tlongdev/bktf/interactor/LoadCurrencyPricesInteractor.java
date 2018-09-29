@@ -1,7 +1,7 @@
 package com.tlongdev.bktf.interactor;
 
+import android.app.Application;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 
@@ -20,8 +20,9 @@ public class LoadCurrencyPricesInteractor extends AsyncTask<Void, Void, Void> {
 
     @Inject
     ContentResolver mContentResolver;
+
     @Inject
-    Context mContext;
+    Application mContext;
 
     private Price mMetalPrice;
     private Price mKeyPrice;

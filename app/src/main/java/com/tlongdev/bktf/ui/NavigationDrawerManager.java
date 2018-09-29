@@ -1,5 +1,6 @@
 package com.tlongdev.bktf.ui;
 
+import android.app.Application;
 import android.content.Context;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,7 +33,7 @@ public class NavigationDrawerManager implements ProfileManager.OnUpdateListener 
     private MenuItem mUserMenuItem;
     private Context mContext;
 
-    public NavigationDrawerManager(Context context) {
+    public NavigationDrawerManager(Application context) {
         mProfileManager = ProfileManager.getInstance(context);
         mProfileManager.addOnProfileUpdateListener(this);
     }

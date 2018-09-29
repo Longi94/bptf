@@ -1,7 +1,7 @@
 package com.tlongdev.bktf.interactor;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.app.Application;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -40,8 +40,10 @@ public class Tf2UserBackpackInteractor extends AsyncTask<Void, Void, Integer> {
 
     @Inject
     Tf2Interface mTf2Interface;
+
     @Inject
-    Context mContext;
+    Application mContext;
+
     @Inject
     ProfileManager mProfileManager;
 

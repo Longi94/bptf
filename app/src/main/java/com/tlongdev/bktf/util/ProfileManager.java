@@ -1,6 +1,6 @@
 package com.tlongdev.bktf.util;
 
-import android.content.Context;
+import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -18,7 +18,7 @@ public class ProfileManager {
 
     private static ProfileManager ourInstance;
 
-    public static ProfileManager getInstance(Context context) {
+    public static ProfileManager getInstance(Application context) {
         if (ourInstance == null) {
             ourInstance = new ProfileManager(context);
         }
@@ -27,13 +27,13 @@ public class ProfileManager {
 
     private SharedPreferences mPrefs;
     private Gson mGson;
-    private Context mContext;
+    private Application mContext;
 
     private User mUserCache;
 
     private List<OnUpdateListener> mListeners = new LinkedList<>();
 
-    private ProfileManager(Context context) {
+    private ProfileManager(Application context) {
         mContext = context;
         mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         mGson = new Gson();

@@ -1,6 +1,6 @@
 package com.tlongdev.bktf.interactor;
 
-import android.content.Context;
+import android.app.Application;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -27,9 +27,15 @@ import javax.inject.Named;
  */
 public class LoadUnusualEffectsInteractor extends AsyncTask<Void, Void, Void> {
 
-    @Inject @Named("readable") SQLiteDatabase mDatabase;
-    @Inject SharedPreferences mPrefs;
-    @Inject Context mContext;
+    @Inject
+    @Named("readable")
+    SQLiteDatabase mDatabase;
+
+    @Inject
+    SharedPreferences mPrefs;
+
+    @Inject
+    Application mContext;
 
     @UnusualPresenter.UnusualOrder
     private final int mOrderBy;

@@ -1,6 +1,6 @@
 package com.tlongdev.bktf.interactor;
 
-import android.content.Context;
+import android.app.Application;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -26,8 +26,12 @@ import javax.inject.Named;
  */
 public class LoadFavoritesInteractor extends AsyncTask<Void, Void, Void> {
 
-    @Inject @Named("readable") SQLiteDatabase mDatabase;
-    @Inject Context mContext;
+    @Inject
+    @Named("readable")
+    SQLiteDatabase mDatabase;
+
+    @Inject
+    Application mContext;
 
     private final Callback mCallback;
 

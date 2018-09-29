@@ -1,6 +1,6 @@
 package com.tlongdev.bktf.interactor;
 
-import android.content.Context;
+import android.app.Application;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -29,7 +29,7 @@ public class BackpackTfPriceHistoryInteractor extends AsyncTask<Void, Void, Inte
      */
     @SuppressWarnings("unused")
     private static final String LOG_TAG = BackpackTfPriceHistoryInteractor.class.getSimpleName();
-    private final Context mContext;
+    private final Application mContext;
 
     @Inject BackpackTfInterface mBackpackTfInterface;
 

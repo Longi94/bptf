@@ -1,6 +1,6 @@
 package com.tlongdev.bktf.interactor;
 
-import android.content.Context;
+import android.app.Application;
 import android.os.AsyncTask;
 
 import com.tlongdev.bktf.BptfApplication;
@@ -25,8 +25,11 @@ import retrofit2.Response;
  */
 public class SearchUserInteractor extends AsyncTask<Void, Void, Integer> {
 
-    @Inject SteamUserInterface mInterface;
-    @Inject Context mContext;
+    @Inject
+    SteamUserInterface mInterface;
+
+    @Inject
+    Application mContext;
 
     private String mQuery;
     private final Callback mCallback;

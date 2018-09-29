@@ -1,6 +1,6 @@
 package com.tlongdev.bktf.interactor;
 
-import android.content.Context;
+import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -33,11 +33,20 @@ public class GetUserDataInteractor extends AsyncTask<Void, Void, Integer> {
 
     private static final String TAG = GetUserDataInteractor.class.getSimpleName();
 
-    @Inject BackpackTfInterface mBackpackTfInterface;
-    @Inject SteamUserInterface mSteamUserInterface;
-    @Inject SharedPreferences mPrefs;
-    @Inject Context mContext;
-    @Inject ProfileManager mProfileManager;
+    @Inject
+    BackpackTfInterface mBackpackTfInterface;
+
+    @Inject
+    SteamUserInterface mSteamUserInterface;
+
+    @Inject
+    SharedPreferences mPrefs;
+
+    @Inject
+    Application mContext;
+
+    @Inject
+    ProfileManager mProfileManager;
 
     //Whether it was a user initiated update
     private final boolean manualSync;
