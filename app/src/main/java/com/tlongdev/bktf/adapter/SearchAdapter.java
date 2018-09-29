@@ -81,12 +81,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                         }
                     });
 
-                    holder.name.setSelected(false);
-                    holder.root.setOnClickListener(v -> {
-                        holder.name.setSelected(false);
-                        holder.name.setSelected(true);
-                    });
-
                     holder.name.setText(mUser.getName());
 
                     RequestOptions options = new RequestOptions()
