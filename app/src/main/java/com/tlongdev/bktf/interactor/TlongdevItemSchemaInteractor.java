@@ -11,6 +11,7 @@ import com.tlongdev.bktf.R;
 import com.tlongdev.bktf.data.DatabaseContract.DecoratedWeaponEntry;
 import com.tlongdev.bktf.data.DatabaseContract.ItemSchemaEntry;
 import com.tlongdev.bktf.data.DatabaseContract.OriginEntry;
+import com.tlongdev.bktf.data.DatabaseContract.PriceEntry;
 import com.tlongdev.bktf.data.DatabaseContract.UnusualSchemaEntry;
 import com.tlongdev.bktf.flatbuffers.itemschema.DecoratedWeapon;
 import com.tlongdev.bktf.flatbuffers.itemschema.Item;
@@ -211,6 +212,7 @@ public class TlongdevItemSchemaInteractor extends AsyncTask<Void, Void, Integer>
             switch (integer) {
                 case 0:
                     mCallback.onItemSchemaFinished();
+                    mContext.getContentResolver().notifyChange(PriceEntry.ALL_PRICES_URI, null);
                     break;
                 case -1:
                     mCallback.onItemSchemaFailed(errorMessage);
