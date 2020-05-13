@@ -53,7 +53,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-/app/src/release/
+/app/src/release/res/values/keys.xml
+/app/src/release/google-services.json
 bptf.db
 /app/release/
 /app/google-services.json
