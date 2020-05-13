@@ -615,7 +615,7 @@ public class Item implements Parcelable {
      * @return Uri object
      */
     public String getEffectUrl() {
-        return "file:///android_asset/effect/" + priceIndex + ".png";
+        return "https://backpack.tf/images/440/particles/" + priceIndex + "_94x94.png";
     }
 
     public String getBackpackTfUrl() {
