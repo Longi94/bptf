@@ -56,19 +56,6 @@
         app:layout_constraintTop_toBottomOf="@+id/button_backpack_tf" />
 
     <Button
-        android:id="@+id/button_tf2op"
-        style="?buttonBarButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:clickable="true"
-        android:text="@string/user_page_link_tf2op"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_bazaar_tf" />
-
-    <Button
         android:id="@+id/button_rep_tf"
         style="?buttonBarButtonStyle"
         android:layout_width="wrap_content"
@@ -79,7 +66,7 @@
         android:text="@string/user_page_link_rep_tf"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_tf2op" />
+        app:layout_constraintTop_toBottomOf="@+id/button_bazaar_tf" />
 
     <Button
         android:id="@+id/button_steamrep"

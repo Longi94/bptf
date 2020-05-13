@@ -185,7 +185,7 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
         return true;
     }
 
-    @OnClick({R.id.button_bazaar_tf, R.id.button_steamrep, R.id.button_tf2op, R.id.button_rep_tf,
+    @OnClick({R.id.button_bazaar_tf, R.id.button_steamrep, R.id.button_rep_tf,
             R.id.button_steam_community, R.id.button_backpack_tf})
     public void onClick(View v) {
         //Handle all the buttons here
@@ -207,9 +207,6 @@ public class UserFragment extends BptfFragment implements UserView, View.OnClick
                 break;
             case R.id.button_steamrep:
                 url = getString(R.string.link_steamrep);
-                break;
-            case R.id.button_tf2op:
-                url = getString(R.string.link_tf2op);
                 break;
             case R.id.button_rep_tf:
                 url = getString(R.string.link_rep_tf);

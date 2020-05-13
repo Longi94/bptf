@@ -22,10 +22,6 @@
         android:title="Wiki" />
 
     <item
-        android:id="@+id/tf2outpost"
-        android:title="TF2Outpost" />
-
-    <item
         android:id="@+id/bazaar_tf"
         android:title="bazaar.tf" />
 

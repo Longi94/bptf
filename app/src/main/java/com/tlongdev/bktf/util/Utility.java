@@ -460,11 +460,6 @@ public class Utility {
                             new CustomTabsIntent.Builder().build(),
                             Uri.parse(item.getTf2WikiUrl()));
                     break;
-                case R.id.tf2outpost:
-                    CustomTabActivityHelper.openCustomTab(activity,
-                            new CustomTabsIntent.Builder().build(),
-                            buildTf2OutpostSearchUrl(activity, item));
-                    break;
                 case R.id.bazaar_tf:
                     CustomTabActivityHelper.openCustomTab(activity,
                             new CustomTabsIntent.Builder().build(),
@@ -475,24 +470,6 @@ public class Utility {
         });
 
         return menu;
-    }
-
-    public static Uri buildTf2OutpostSearchUrl(Context context, Item item) {
-        Uri.Builder builder = Uri.parse(context.getString(R.string.main_host) +
-                context.getString(R.string.link_search_outpost)
-        ).buildUpon()
-                .appendQueryParameter("defindex", String.valueOf(item.getDefindex()))
-                .appendQueryParameter("quality", String.valueOf(item.getQuality()))
-                .appendQueryParameter("uncraftable", item.isCraftable() ? "0" : "1")
-                .appendQueryParameter("australium", item.isAustralium() ? "1" : "0");
-
-        if (item.canHaveEffects()) {
-            builder.appendQueryParameter("effect", String.valueOf(item.getPriceIndex()));
-        } else if (item.getPriceIndex() > 0) {
-            builder.appendQueryParameter("crate", String.valueOf(item.getPriceIndex()));
-        }
-
-        return builder.build();
     }
 
     public static Uri buildBazaarSearchUrl(Context context, Item item) {

@@ -182,11 +182,6 @@ public class FavoritesFragment extends BptfFragment implements FavoritesView,
                             new CustomTabsIntent.Builder().build(),
                             Uri.parse(item.getTf2WikiUrl()));
                     break;
-                case R.id.tf2outpost:
-                    CustomTabActivityHelper.openCustomTab(getActivity(),
-                            new CustomTabsIntent.Builder().build(),
-                            Utility.buildTf2OutpostSearchUrl(getActivity(), item));
-                    break;
                 case R.id.bazaar_tf:
                     CustomTabActivityHelper.openCustomTab(getActivity(),
                             new CustomTabsIntent.Builder().build(),

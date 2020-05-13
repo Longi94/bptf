@@ -4,13 +4,11 @@
     <string name="link_backpack_tf" translatable="false">https://backpack.tf/profiles/</string>
     <string name="link_bazaar_tf" translatable="false">https://bazaar.tf/profiles/</string>
     <string name="link_steamrep" translatable="false">https://steamrep.com/profiles/</string>
-    <string name="link_tf2op" translatable="false">https://www.tf2outpost.com/user/</string>
     <string name="link_rep_tf" translatable="false">https://rep.tf/</string>
     <string name="link_steam_community" translatable="false">https://steamcommunity.com/profiles/</string>
     <string name="link_search_bazaar" translatable="false">https://bazaar.tf/search/</string>
 
     <!--links with env vars-->
-    <string name="link_search_outpost" translatable="false">/bptf/outpost_search</string>
     <string name="link_steam_login" translatable="false">/bptf/openid</string>
 
     <string name="gcm_sender_id" translatable="false">999648321586</string>
